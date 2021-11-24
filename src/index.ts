@@ -61,7 +61,6 @@ const activate = (app: JupyterFrontEnd, restorer: ILayoutRestorer) => {
     contentType: 'file'
   });
   console.log('upyterLab extension jupytercad is activated!');
-  
 };
 
 const plugin: JupyterFrontEndPlugin<void> = {

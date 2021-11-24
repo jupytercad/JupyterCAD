@@ -66,7 +66,9 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
     return {};
   }
 
-  fromJSON(data: PartialJSONObject): void {}
+  fromJSON(data: PartialJSONObject): void {
+    console.log('calling from json');
+  }
 
   initialize(): void {
     // nothing to do
@@ -85,7 +87,7 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
 }
 
 export type JupyterCadDocChange = {
-contextChange?: MapChange;
+  contextChange?: MapChange;
   contentChange?: string;
 };
 
