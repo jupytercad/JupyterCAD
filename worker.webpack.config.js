@@ -15,6 +15,10 @@ const resolve = {
     fs: false,
     child_process: false,
     crypto: false
+  },
+  extensions: [".ts", ".js"],
+  alias:{
+    './types.js': path.resolve(__dirname,'lib', 'types.js')
   }
 };
 
@@ -30,6 +34,11 @@ module.exports = [
       rules
     },
     devtool: 'source-map',
-    resolve
+    resolve,
+    // plugins: [
+    //   new WatchIgnorePlugin({
+    //     paths: [path.resolve(__dirname, 'lib', 'types.js')]
+    //   })
+    // ]
   }
 ];

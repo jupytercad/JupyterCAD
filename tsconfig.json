@@ -22,5 +22,6 @@
     "skipLibCheck": true,
     "lib": ["ES2019", "WebWorker", "DOM"]
   },
-  "include": ["src/*"]
+  "include": ["src/*"],
+  "exclude": ["src/worker.ts"]
 }
