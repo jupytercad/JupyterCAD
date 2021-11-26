@@ -99,7 +99,8 @@ export class JupyterCadModelFactory
    * @returns The model
    */
   createNew(languagePreference?: string, modelDB?: IModelDB): JupyterCadModel {
-    return new JupyterCadModel(languagePreference, modelDB);
+    const model = new JupyterCadModel(languagePreference, modelDB);
+    return model;
   }
 
   private _disposed = false;

@@ -35,12 +35,15 @@ export class JupyterCadPanel extends Widget {
     super();
     this.addClass('jp-jupytercad-panel');
     const content = document.createElement('div');
-    content.innerText = 'hello';
     this.node.appendChild(content);
-    context.ready.then(value => {
-      console.log('value', value);
-
-      // content.innerText = value
+    context.ready.then(() => {
+      const model = context.model as JupyterCadModel;
+      const worker = model.startWorker();
+      console.log('worker', worker);
+      worker.postMessage({ message: 'hello' });
+      worker.onmessage = msg => {
+        console.log('msg', msg);
+      };
     });
   }
 

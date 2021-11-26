@@ -18,7 +18,9 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "es2017",
-    "types": []
+    "types": [],
+    "skipLibCheck": true,
+    "lib": ["ES2019", "WebWorker", "DOM"]
   },
   "include": ["src/*"]
 }

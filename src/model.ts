@@ -12,6 +12,9 @@ import { YDocument, MapChange } from '@jupyterlab/shared-models';
 
 import * as Y from 'yjs';
 
+// import initOpenCascade, { OpenCascadeInstance } from 'opencascade.js';
+// import worker from './worker?raw';
+
 export class JupyterCadModel implements DocumentRegistry.IModel {
   constructor(languagePreference?: string, modelDB?: IModelDB) {
     this.modelDB = modelDB || new ModelDB();
@@ -52,7 +55,7 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   }
 
   toString(): string {
-    return JSON.stringify(this.modelDB.getValue('content'));
+    return this.modelDB.getValue('content') as string;
   }
 
   fromString(data: string): void {
@@ -74,6 +77,15 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
     // nothing to do
   }
 
+  startWorker(): Worker {
+    if (!JupyterCadModel.worker) {
+      JupyterCadModel.worker = new Worker(
+        new URL('./worker', (import.meta as any).url)
+      );
+    }
+    return JupyterCadModel.worker;
+  }
+
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
   readonly modelDB: IModelDB;
@@ -84,6 +96,8 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   private _isDisposed = false;
   private _contentChanged = new Signal<this, void>(this);
   private _stateChanged = new Signal<this, IChangedArgs<any>>(this);
+
+  static worker: Worker;
 }
 
 export type JupyterCadDocChange = {

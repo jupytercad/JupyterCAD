@@ -28,11 +28,12 @@
     "url": "https://github.com/trungleduc/jupytercad.git"
   },
   "scripts": {
-    "build": "jlpm run build:lib && jlpm run build:labextension:dev",
+    "build": "jlpm run build:lib && jlpm run build:worker && jlpm run build:labextension:dev",
     "build:prod": "jlpm run clean && jlpm run build:lib && jlpm run build:labextension",
     "build:labextension": "jupyter labextension build .",
     "build:labextension:dev": "jupyter labextension build --development True .",
     "build:lib": "tsc",
+    "build:worker": "webpack --config worker.webpack.config.js",
     "clean": "jlpm run clean:lib",
     "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
     "clean:labextension": "rimraf jupytercad/labextension",
@@ -45,18 +46,24 @@
     "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
-    "@jupyterlab/application": "^3.1.0"
+    "@jupyterlab/application": "^3.1.0",
+    "opencascade.js": "^2.0.0-beta.371bbb0"
   },
   "devDependencies": {
     "@jupyterlab/builder": "^3.1.0",
+    "@types/node": "^16.11.10",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
+    "copy-webpack-plugin": "^10.0.0",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-prettier": "^3.1.4", 
+    "eslint-plugin-prettier": "^3.1.4",
+    "file-loader": "^6.2.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.1.1",
     "rimraf": "^3.0.2",
+    "source-map-loader": "^3.0.0",
+    "ts-loader": "^9.2.6",
     "typescript": "~4.1.3"
   },
   "sideEffects": [
@@ -67,9 +74,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "jupyterlab": { 
+  "jupyterlab": {
     "extension": true,
-    "outputDir": "jupytercad/labextension"
+    "outputDir": "jupytercad/labextension",
+    "webpackConfig": "./extension.webpack.config.js"
   },
   "jupyter-releaser": {
     "hooks": {
