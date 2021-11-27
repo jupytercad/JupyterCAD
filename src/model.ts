@@ -112,7 +112,7 @@ export class JupyterCadDoc extends YDocument<JupyterCadDocChange> {
   }
 
   dispose(): void {
-    console.log('called');
+    console.log('called dispose');
   }
 
   public static create(): JupyterCadDoc {

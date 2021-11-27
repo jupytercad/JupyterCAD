@@ -6,6 +6,13 @@ import { Signal } from '@lumino/signaling';
 
 import { JupyterCadModel } from './model';
 
+import {
+  IMainMessage,
+  IWorkerMessage,
+  WorkerAction,
+  MainAction
+} from './types';
+
 export class JupyterCadWidget extends DocumentWidget<
   JupyterCadPanel,
   JupyterCadModel
@@ -34,15 +41,20 @@ export class JupyterCadPanel extends Widget {
   constructor(context: DocumentRegistry.IContext<JupyterCadModel>) {
     super();
     this.addClass('jp-jupytercad-panel');
+    this._context = context;
+    this.messageHandler = this.messageHandler.bind(this);
     const content = document.createElement('div');
     this.node.appendChild(content);
-    context.ready.then(() => {
+    this._context.ready.then(() => {
       const model = context.model as JupyterCadModel;
-      const worker = model.startWorker();
-      console.log('worker', worker);
-      worker.postMessage({ message: 'hello' });
-      worker.onmessage = msg => {
-        console.log('msg', msg);
+      this._worker = model.startWorker();
+      console.log('worker', this._worker);
+      this.postMessage({
+        action: WorkerAction.LOAD_FILE,
+        payload: { fileName: this._context.path, content: model.toString() }
+      });
+      this._worker.onmessage = msgEvent => {
+        this.messageHandler(msgEvent.data);
       };
     });
   }
@@ -57,4 +69,22 @@ export class JupyterCadPanel extends Widget {
     Signal.clearData(this);
     super.dispose();
   }
+
+  messageHandler(msg: IMainMessage): void {
+    const { action, payload } = msg;
+    switch (action) {
+      case MainAction.DISPLAY_SHAPE: {
+        console.log(payload);
+        break;
+      }
+    }
+  }
+
+  private postMessage = (msg: IWorkerMessage) => {
+    if (this._worker) {
+      this._worker.postMessage(msg);
+    }
+  };
+  private _context: DocumentRegistry.IContext<JupyterCadModel>;
+  private _worker?: Worker = undefined;
 }

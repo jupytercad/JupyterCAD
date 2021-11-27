@@ -1,6 +1,12 @@
 const path = require('path');
 const rules = [
-  { test: /\.ts$/, loader: 'ts-loader' },
+  {
+    test: /\.ts$/,
+    loader: 'ts-loader',
+    options: {
+      configFile: path.resolve('./tsconfig.worker.json')
+    }
+  },
   { test: /\.js$/, loader: 'source-map-loader' },
   { test: /\.css$/, use: ['style-loader', 'css-loader'] },
   {
@@ -17,14 +23,11 @@ const resolve = {
     crypto: false
   },
   extensions: [".ts", ".js"],
-  alias:{
-    './types.js': path.resolve(__dirname,'lib', 'types.js')
-  }
 };
 
 module.exports = [
   {
-    entry: './src/worker.ts',
+    entry: './src/worker/worker.ts',
     output: {
       filename: 'worker.js',
       path: path.resolve(__dirname, 'lib'),
@@ -35,10 +38,6 @@ module.exports = [
     },
     devtool: 'source-map',
     resolve,
-    // plugins: [
-    //   new WatchIgnorePlugin({
-    //     paths: [path.resolve(__dirname, 'lib', 'types.js')]
-    //   })
-    // ]
+
   }
 ];
