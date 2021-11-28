@@ -74,7 +74,7 @@ export class JupyterCadPanel extends Widget {
     const { action, payload } = msg;
     switch (action) {
       case MainAction.DISPLAY_SHAPE: {
-        console.log(payload);
+        console.log('in main ', payload);
         break;
       }
     }
