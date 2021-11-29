@@ -1,4 +1,3 @@
-
 import initOpenCascade, { OpenCascadeInstance } from 'opencascade.js';
 import {
   WorkerAction,
@@ -17,6 +16,7 @@ let occ: OpenCascadeInstance;
 
 self.onmessage = async (event: MessageEvent): Promise<void> => {
   if (!occ) {
+    console.log('loading occ')
     occ = await initOpenCascade();
     (self as any).occ = occ;
     console.log('initialized occ');
@@ -28,7 +28,7 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
       const result = WorkerHandler[action](payload);
       sendToMain({
         action: MainAction.DISPLAY_SHAPE,
-        payload: { content: result }
+        payload: { faceList: result.faceList, edgeList: result.edgeList }
       });
       break;
     }

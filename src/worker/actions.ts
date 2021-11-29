@@ -31,7 +31,7 @@ interface IFace {
 function _shapeToThree(shapes: Array<TopoDS_Shape>): any {
   const oc = getOcc();
   const maxDeviation = 0.5;
-  let facelist: Array<IFace> = [],
+  let faceList: Array<IFace> = [],
     edgeList = [];
   // let fullShapeEdgeHashes2 = {};
   let triangulations: Array<Handle_Poly_Triangulation> = [];
@@ -184,7 +184,7 @@ function _shapeToThree(shapes: Array<TopoDS_Shape>): any {
         // }
       }
       thisFace.number_of_triangles = validFaceTriCount;
-      facelist.push(thisFace);
+      faceList.push(thisFace);
       triangulations.push(myT);
       curFace += 1;
       expl.Next();
@@ -194,7 +194,7 @@ function _shapeToThree(shapes: Array<TopoDS_Shape>): any {
     
   });
 
-  return { facelist, edgeList };
+  return { faceList, edgeList };
 }
 
 function loadFile(payload: {
@@ -216,6 +216,7 @@ function loadFile(payload: {
     // stepShape.DumpJson(stream, 1)
     console.log('converted successfully!', numRootsTransferred, stepShape);
     const result = _shapeToThree([stepShape]);
+    occ.FS.unlink("/" + fakeFileName);
     return result;
   } else {
     console.error('Something in OCCT went wrong trying to read ');

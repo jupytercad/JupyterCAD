@@ -31,7 +31,8 @@ export enum MainAction {
 export interface IDisplayShape {
   action: MainAction.DISPLAY_SHAPE;
   payload: {
-    content: any;
+    edgeList: any;
+    faceList: any;
   };
 }
 
