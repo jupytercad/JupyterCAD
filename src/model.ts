@@ -77,7 +77,7 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
     // nothing to do
   }
 
-  startWorker(): Worker {
+  getWorker(): Worker {
     if (!JupyterCadModel.worker) {
       JupyterCadModel.worker = new Worker(
         new URL('./worker', (import.meta as any).url)
