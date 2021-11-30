@@ -70,7 +70,7 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   }
 
   fromJSON(data: PartialJSONObject): void {
-    console.log('calling from json');
+    console.log('');
   }
 
   initialize(): void {

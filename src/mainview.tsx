@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
+import { v4 as uuid } from 'uuid';
 import { JupyterCadModel } from './model';
 
 import {
   IMainMessage,
   IWorkerMessage,
   WorkerAction,
-  MainAction
+  MainAction,
+  IDisplayShape
 } from './types';
 
 import * as THREE from 'three';
@@ -39,25 +41,27 @@ export class MainView extends React.Component<IProps, IStates> {
     // this.progressData = { time_step: -1, data: {} };
     this._resizeTimeout = null;
     this.state = {
-      id: 'id',
+      id: uuid(),
       bgColor: LIGHT_BG
     };
 
     this._context = props.context;
     this._context.ready.then(() => {
-      const model = this._context.model as JupyterCadModel;
-      this._worker = model.getWorker();
+      this._model = this._context.model as JupyterCadModel;
+      this._worker = this._model.getWorker();
       this._messageChannel = new MessageChannel();
       this._messageChannel.port1.onmessage = msgEvent => {
-        console.log('recived', msgEvent.data);
         this.messageHandler(msgEvent.data);
       };
-      console.log('worker', this._worker, this._messageChannel.port2);
+      this.postMessage(
+        { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
+        this._messageChannel.port2
+      );
+      // this.postMessage({
+      //   action: WorkerAction.LOAD_FILE,
+      //   payload: { fileName: this._context.path, content: model.toString() }
+      // });
 
-      this.postMessage({
-        action: WorkerAction.LOAD_FILE,
-        payload: { fileName: this._context.path, content: model.toString() }
-      });
       // this._worker.addEventListener(
       //   'message',
       //   msgEvent => {
@@ -71,18 +75,15 @@ export class MainView extends React.Component<IProps, IStates> {
     });
   }
   componentDidMount(): void {
-    console.log('componentDidMount');
     window.addEventListener('resize', this.handleWindowResize);
     this.generateScene();
   }
 
   componentDidUpdate(oldProps: IProps, oldState: IStates): void {
-    console.log('componentDidUpdate');
     this.resizeCanvasToDisplaySize();
   }
 
   componentWillUnmount(): void {
-    console.log('componentWillUnmount');
     window.cancelAnimationFrame(this._requestID);
     window.removeEventListener('resize', this.handleWindowResize);
     this._controls.dispose();
@@ -140,7 +141,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
   sceneSetup = (): void => {
     if (this.divRef.current !== null) {
-      console.log(this._requestID, this._refLength);
       this._camera = new THREE.PerspectiveCamera(90, 2, 0.1, 1000);
       this._camera.position.set(8, 8, 8);
       this._camera.up.set(0, 0, 1);
@@ -234,106 +234,121 @@ export class MainView extends React.Component<IProps, IStates> {
   };
 
   messageHandler = (msg: IMainMessage): void => {
-    const { action, payload } = msg;
-    switch (action) {
+    switch (msg.action) {
       case MainAction.DISPLAY_SHAPE: {
-        console.log('in main ', payload);
-        const { faceList } = payload;
-        const mainObject = new THREE.Group();
-        mainObject.name = 'shape';
-
-        const vertices: Array<any> = [];
-        const normals: Array<any> = [];
-        const triangles: Array<any> = [];
-        const uvs: Array<any> = [];
-        const colors: Array<any> = [];
-        let vInd = 0;
-        let globalFaceIndex = 0;
-        faceList.forEach(face => {
-          // Copy Vertices into three.js Vector3 List
-          vertices.push(...face.vertex_coord);
-          normals.push(...face.normal_coord);
-          uvs.push(...face.uv_coord);
-
-          // Sort Triangles into a three.js Face List
-          for (let i = 0; i < face.tri_indexes.length; i += 3) {
-            triangles.push(
-              face.tri_indexes[i + 0] + vInd,
-              face.tri_indexes[i + 1] + vInd,
-              face.tri_indexes[i + 2] + vInd
-            );
-          }
-
-          // Use Vertex Color to label this face's indices for raycast picking
-          for (let i = 0; i < face.vertex_coord.length; i += 3) {
-            colors.push(face.face_index, globalFaceIndex, 0);
-          }
-
-          globalFaceIndex++;
-          vInd += face.vertex_coord.length / 3;
-        });
-
-        // Compile the connected vertices and faces into a model
-        // And add to the scene
-        const material = new THREE.MeshPhongMaterial({
-          color: '#434442',
-          side: THREE.DoubleSide,
-          wireframe: false,
-          flatShading: false,
-          shininess: 40
-        });
-
-        const geometry = new THREE.BufferGeometry();
-        geometry.setIndex(triangles);
-        geometry.setAttribute(
-          'position',
-          new THREE.Float32BufferAttribute(vertices, 3)
-        );
-        geometry.setAttribute(
-          'normal',
-          new THREE.Float32BufferAttribute(normals, 3)
-        );
-        geometry.setAttribute(
-          'color',
-          new THREE.Float32BufferAttribute(colors, 3)
-        );
-        geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
-        geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(uvs, 2));
-        geometry.computeBoundingSphere();
-        geometry.computeBoundingBox();
-        const bbox = geometry.boundingBox;
-        const boxSizeVec = new THREE.Vector3();
-        bbox.getSize(boxSizeVec);
-        this._refLength = Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z);
-
-        this._camera.lookAt(this._scene.position);
-        this._camera.position.set(
-          2 * this._refLength,
-          2 * this._refLength,
-          2 * this._refLength
-        );
-        this._camera.far = 40 * this._refLength;
-        this._gridHelper.scale.multiplyScalar(this._refLength / 5);
-        for (let index = 0; index < this._sceneAxe.length; index++) {
-          this._sceneAxe[index].scale.multiplyScalar(this._refLength / 5);
-        }
-
-        const model = new THREE.Mesh(geometry, material);
-        model.castShadow = true;
-        model.name = 'Model Faces';
-        mainObject.add(model);
-        this._scene.add(mainObject);
-        console.log('Generation Complete!');
+        this.shapeToMesh(msg.payload);
         break;
+      }
+      case MainAction.INITIALIZED: {
+        this.postMessage({
+          action: WorkerAction.LOAD_FILE,
+          payload: {
+            fileName: this._context.path,
+            content: this._model!.toString()
+          }
+        });
       }
     }
   };
 
-  private postMessage = (msg: IWorkerMessage) => {
-    if (this._worker && this._messageChannel) {
-      console.log('send to worker via', this._messageChannel.port2);
+  private shapeToMesh = (payload: IDisplayShape['payload']) => {
+    const { faceList } = payload;
 
-      this._worker.postMessage(msg, [this._messageChannel.port2]);
+    const mainObject = new THREE.Group();
+    mainObject.name = 'shape';
+
+    const vertices: Array<any> = [];
+    const normals: Array<any> = [];
+    const triangles: Array<any> = [];
+    const uvs: Array<any> = [];
+    const colors: Array<any> = [];
+    let vInd = 0;
+    let globalFaceIndex = 0;
+    faceList.forEach(face => {
+      // Copy Vertices into three.js Vector3 List
+      vertices.push(...face.vertex_coord);
+      normals.push(...face.normal_coord);
+      uvs.push(...face.uv_coord);
+
+      // Sort Triangles into a three.js Face List
+      for (let i = 0; i < face.tri_indexes.length; i += 3) {
+        triangles.push(
+          face.tri_indexes[i + 0] + vInd,
+          face.tri_indexes[i + 1] + vInd,
+          face.tri_indexes[i + 2] + vInd
+        );
+      }
+
+      // Use Vertex Color to label this face's indices for raycast picking
+      for (let i = 0; i < face.vertex_coord.length; i += 3) {
+        colors.push(face.face_index, globalFaceIndex, 0);
+      }
+
+      globalFaceIndex++;
+      vInd += face.vertex_coord.length / 3;
+    });
+
+    // Compile the connected vertices and faces into a model
+    // And add to the scene
+    const material = new THREE.MeshPhongMaterial({
+      color: '#434442',
+      side: THREE.DoubleSide,
+      wireframe: false,
+      flatShading: false,
+      shininess: 40
+    });
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setIndex(triangles);
+    geometry.setAttribute(
+      'position',
+      new THREE.Float32BufferAttribute(vertices, 3)
+    );
+    geometry.setAttribute(
+      'normal',
+      new THREE.Float32BufferAttribute(normals, 3)
+    );
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(uvs, 2));
+    geometry.computeBoundingSphere();
+    geometry.computeBoundingBox();
+    const bbox = geometry.boundingBox;
+    const boxSizeVec = new THREE.Vector3();
+    bbox.getSize(boxSizeVec);
+    this._refLength = Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z);
+
+    this._camera.lookAt(this._scene.position);
+    this._camera.position.set(
+      2 * this._refLength,
+      2 * this._refLength,
+      2 * this._refLength
+    );
+    this._camera.far = 40 * this._refLength;
+    this._gridHelper.scale.multiplyScalar(this._refLength / 5);
+    for (let index = 0; index < this._sceneAxe.length; index++) {
+      this._sceneAxe[index].scale.multiplyScalar(this._refLength / 5);
+    }
+
+    const model = new THREE.Mesh(geometry, material);
+    model.castShadow = true;
+    model.name = 'Model Faces';
+    mainObject.add(model);
+    this._scene.add(mainObject);
+    console.log('Generation Complete!');
+  };
+
+  private postMessage = (
+    msg: Omit<IWorkerMessage, 'id'>,
+    port?: MessagePort
+  ) => {
+    if (this._worker) {
+      const newMsg = { ...msg, id: this.state.id };
+      if (port) {
+        this._worker.postMessage(newMsg, [port]);
+      } else {
+        this._worker.postMessage(newMsg);
+      }
     }
   };
 
@@ -350,9 +365,10 @@ export class MainView extends React.Component<IProps, IStates> {
     );
   }
 
-  divRef = React.createRef<HTMLDivElement>(); // Reference of render div
+  private divRef = React.createRef<HTMLDivElement>(); // Reference of render div
 
   private _context: DocumentRegistry.IContext<JupyterCadModel>;
+  private _model?: JupyterCadModel = undefined;
   private _worker?: Worker = undefined;
   private _messageChannel?: MessageChannel;
 

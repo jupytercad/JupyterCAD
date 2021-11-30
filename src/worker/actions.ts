@@ -28,6 +28,7 @@ interface IFace {
   tri_indexes: Array<any>;
   number_of_triangles: number;
 }
+
 function _shapeToThree(shapes: Array<TopoDS_Shape>): any {
   const oc = getOcc();
   const maxDeviation = 0.5;
@@ -190,8 +191,6 @@ function _shapeToThree(shapes: Array<TopoDS_Shape>): any {
       expl.Next();
       faceIdx += 1;
     }
-    console.log('faceIdx', faceIdx);
-    
   });
 
   return { faceList, edgeList };
@@ -209,14 +208,14 @@ function loadFile(payload: {
   const readResult = reader.ReadFile(fakeFileName);
   if (readResult === occ.IFSelect_ReturnStatus.IFSelect_RetDone) {
     console.log('file loaded successfully!     Converting to OCC now...');
-    const numRootsTransferred = reader.TransferRoots(
+    reader.TransferRoots(
       new occ.Message_ProgressRange_1()
     ); // Translate all transferable roots to OpenCascade
     const stepShape = reader.OneShape(); // Obtain the results of translation
     // stepShape.DumpJson(stream, 1)
-    console.log('converted successfully!', numRootsTransferred, stepShape);
+    console.log(fileName + ' converted successfully!');
     const result = _shapeToThree([stepShape]);
-    occ.FS.unlink("/" + fakeFileName);
+    occ.FS.unlink('/' + fakeFileName);
     return result;
   } else {
     console.error('Something in OCCT went wrong trying to read ');

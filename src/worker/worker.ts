@@ -3,46 +3,57 @@ import {
   WorkerAction,
   IWorkerMessage,
   MainAction,
-  IMainMessage
+  IMainMessage,
+  IDict
 } from '../types';
 import WorkerHandler from './actions';
 
-// const workerHandler: { [key: string]: () => void } = {};
-const sendToMain = (msg: IMainMessage, port: MessagePort) => {
-  console.log('send back to main', port);
-  
-  port.postMessage(msg);
-};
-
 let occ: OpenCascadeInstance;
+let ports: IDict<MessagePort> = {};
+let lock = false;
 
-self.onmessage = async (event: MessageEvent): Promise<void> => {
-  if (!occ) {
-    console.log('loading occ')
+const registerWorker = async (id: string, port: MessagePort) => {
+  if (!lock) {
+    lock = true;
     occ = await initOpenCascade();
     (self as any).occ = occ;
-    console.log('initialized occ');
-  }
-  const message = event.data as IWorkerMessage;
-  const sourcePort = event.ports[0];
-  console.log('received in worker from', event.ports);
-  
-  const { action, payload } = message;
-  switch (action) {
-    case WorkerAction.LOAD_FILE: {
-      const result = WorkerHandler[action](payload);
-      sendToMain({
-        action: MainAction.DISPLAY_SHAPE,
-        payload: { faceList: result.faceList, edgeList: result.edgeList }
-      }, sourcePort);
-      break;
+    ports[id] = port;
+    for (const id of Object.keys(ports)) {
+      sendToMain({ action: MainAction.INITIALIZED, payload: false }, id);
     }
-    case WorkerAction.SAVE_FILE: {
-      console.log(payload);
-      break;
+  } else {
+    ports[id] = port;
+    if (occ) {
+      sendToMain({ action: MainAction.INITIALIZED, payload: false }, id);
     }
   }
+};
 
-  // const fileText = model.toString();
-  // const fileName = 'file.stp';
+const sendToMain = (msg: IMainMessage, id: string) => {
+  if (id in ports) {
+    ports[id].postMessage(msg);
+  }
+};
+
+self.onmessage = async (event: MessageEvent): Promise<void> => {
+  const message = event.data as IWorkerMessage;
+  const { id } = message;
+  switch (message.action) {
+    case WorkerAction.REGISTER: {
+      const port = event.ports[0];
+      await registerWorker(id, port);
+      break;
+    }
+    case WorkerAction.LOAD_FILE: {
+      const result = WorkerHandler[message.action](message.payload);
+      sendToMain(
+        {
+          action: MainAction.DISPLAY_SHAPE,
+          payload: { faceList: result.faceList, edgeList: result.edgeList }
+        },
+        id
+      );
+      break;
+    }
+  }
 };
