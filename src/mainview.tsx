@@ -26,6 +26,7 @@ interface IProps {
 interface IStates {
   id: string;
   bgColor: string;
+  loading: boolean;
 }
 
 export class MainView extends React.Component<IProps, IStates> {
@@ -43,7 +44,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this.state = {
       id: uuid(),
-      bgColor: LIGHT_BG
+      bgColor: LIGHT_BG,
+      loading: true
     };
 
     this._context = props.context;
@@ -327,6 +329,7 @@ export class MainView extends React.Component<IProps, IStates> {
     model.name = 'Model Faces';
     mainObject.add(model);
     this._scene.add(mainObject);
+    this.setState(old => ({ ...old, loading: false }));
     console.log('Generation Complete!');
   };
 
@@ -347,13 +350,27 @@ export class MainView extends React.Component<IProps, IStates> {
   render(): JSX.Element {
     return (
       <div
-        ref={this.divRef}
         style={{
           width: '100%',
-          height: 'calc(100%)',
-          background: this.state.bgColor //"radial-gradient(#efeded, #8f9091)"
+          height: 'calc(100%)'
         }}
-      />
+      >
+        <div
+          className={'jpcad-Spinner'}
+          style={{ display: this.state.loading ? 'flex' : 'none' }}
+        >
+          {' '}
+          <div className={'jpcad-SpinnerContent'}></div>{' '}
+        </div>
+        <div
+          ref={this.divRef}
+          style={{
+            width: '100%',
+            height: 'calc(100%)',
+            background: this.state.bgColor //"radial-gradient(#efeded, #8f9091)"
+          }}
+        />
+      </div>
     );
   }
 
