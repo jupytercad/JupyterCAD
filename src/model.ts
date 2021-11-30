@@ -32,6 +32,13 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
     return this._stateChanged;
   }
 
+  get themeChanged(): Signal<
+    this,
+    IChangedArgs<string, string | null, string>
+  > {
+    return this._themeChanged;
+  }
+
   dispose(): void {
     if (this._isDisposed) {
       return;
@@ -96,6 +103,7 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   private _isDisposed = false;
   private _contentChanged = new Signal<this, void>(this);
   private _stateChanged = new Signal<this, IChangedArgs<any>>(this);
+  private _themeChanged = new Signal<this, IChangedArgs<any>>(this);
 
   static worker: Worker;
 }

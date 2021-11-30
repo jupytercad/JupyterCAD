@@ -3,7 +3,12 @@ import {
   JupyterFrontEndPlugin,
   ILayoutRestorer
 } from '@jupyterlab/application';
-import { WidgetTracker, IWidgetTracker } from '@jupyterlab/apputils';
+import {
+  WidgetTracker,
+  IWidgetTracker,
+  IThemeManager
+} from '@jupyterlab/apputils';
+
 import { Token } from '@lumino/coreutils';
 import { JupyterCadWidgetFactory, JupyterCadModelFactory } from './factory';
 import { JupyterCadWidget } from './widget';
@@ -14,7 +19,11 @@ export const IExampleDocTracker = new Token<IWidgetTracker<JupyterCadWidget>>(
   'exampleDocTracker'
 );
 
-const activate = (app: JupyterFrontEnd, restorer: ILayoutRestorer) => {
+const activate = (
+  app: JupyterFrontEnd,
+  restorer: ILayoutRestorer,
+  themeManager: IThemeManager
+): void => {
   const namespace = 'jupytercad';
 
   const tracker = new WidgetTracker<JupyterCadWidget>({ namespace });
@@ -42,6 +51,10 @@ const activate = (app: JupyterFrontEnd, restorer: ILayoutRestorer) => {
     widget.context.pathChanged.connect(() => {
       tracker.save(widget);
     });
+    themeManager.themeChanged.connect((_, changes) =>
+      widget.context.model.themeChanged.emit(changes)
+    );
+
     tracker.add(widget);
   });
   // Registering the widget factory
@@ -56,17 +69,17 @@ const activate = (app: JupyterFrontEnd, restorer: ILayoutRestorer) => {
     name: 'stp',
     displayName: 'STEP',
     mimeTypes: ['text'],
-    extensions: ['.stp'],
+    extensions: ['.stp', '.STP', '.step', '.STEP'],
     fileFormat: 'text',
     contentType: 'file'
   });
-  console.log('upyterLab extension jupytercad is activated!');
+  console.log('JupyterLab extension jupytercad is activated!');
 };
 
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:plugin',
   autoStart: true,
-  requires: [ILayoutRestorer],
+  requires: [ILayoutRestorer, IThemeManager],
   activate
 };
 
