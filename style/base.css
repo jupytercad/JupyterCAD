@@ -1,0 +1,49 @@
+.jpcad-Spinner {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  background: #00000075;
+}
+
+.jpcad-SpinnerContent {
+  border: solid #f376269e;
+  margin: 50px auto;
+  text-indent: -9999em;
+  width: 6em;
+  height: 6em;
+  border-radius: 50%;
+  position: relative;
+  animation: load3 1s infinite linear, fadeIn 1s;
+}
+
+.jpcad-SpinnerContent:before {
+  width: 50%;
+  height: 50%;
+  background: #f3762605;
+  border-radius: 100% 0 100% 0;
+  box-shadow: inset 6px 5px 0 1px #f37626;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+}
+
+.jpcad-SpinnerContent:after {
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
