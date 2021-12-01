@@ -16,9 +16,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
-// const DARK_BG = 'linear-gradient(rgb(0, 0, 42), rgb(82, 87, 110))';
+const DARK_BG = 'linear-gradient(rgb(0, 0, 42), rgb(82, 87, 110))';
 const LIGHT_BG = 'radial-gradient(#efeded, #8f9091)';
-
+const BG_COLOR = { 'JupyterLab Dark': DARK_BG, 'JupyterLab Light': LIGHT_BG };
 interface IProps {
   context: DocumentRegistry.IContext<JupyterCadModel>;
 }
@@ -26,6 +26,7 @@ interface IProps {
 interface IStates {
   id: string;
   bgColor: string;
+  loading: boolean;
 }
 
 export class MainView extends React.Component<IProps, IStates> {
@@ -40,9 +41,11 @@ export class MainView extends React.Component<IProps, IStates> {
     // this.computedScene = {};
     // this.progressData = { time_step: -1, data: {} };
     this._resizeTimeout = null;
+
     this.state = {
       id: uuid(),
-      bgColor: LIGHT_BG
+      bgColor: LIGHT_BG,
+      loading: true
     };
 
     this._context = props.context;
@@ -57,21 +60,9 @@ export class MainView extends React.Component<IProps, IStates> {
         { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
         this._messageChannel.port2
       );
-      // this.postMessage({
-      //   action: WorkerAction.LOAD_FILE,
-      //   payload: { fileName: this._context.path, content: model.toString() }
-      // });
-
-      // this._worker.addEventListener(
-      //   'message',
-      //   msgEvent => {
-      //     console.log('recived', msgEvent.data);
-
-      //     this.messageHandler(msgEvent.data);
-      //   },
-      //   false
-      // );
-      // this._worker.onmessage = msgEvent => {};
+      this._model.themeChanged.connect((_, arg) => {
+        this.handleThemeChange(arg.newValue);
+      });
     });
   }
   componentDidMount(): void {
@@ -89,6 +80,9 @@ export class MainView extends React.Component<IProps, IStates> {
     this._controls.dispose();
   }
 
+  handleThemeChange = (newTheme: string): void => {
+    this.setState(old => ({ ...old, bgColor: BG_COLOR[newTheme] }));
+  };
   handleWindowResize = () => {
     clearTimeout(this._resizeTimeout);
     this._resizeTimeout = setTimeout(() => {
@@ -184,9 +178,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._renderer = new THREE.WebGLRenderer({
         alpha: true,
-        antialias: false
+        antialias: true
       });
-      this._renderer.setPixelRatio(window.devicePixelRatio);
+      // this._renderer.setPixelRatio(window.devicePixelRatio);
       this._renderer.setClearColor(0x000000, 0);
       this._renderer.setSize(500, 500, false);
       this.divRef.current.appendChild(this._renderer.domElement); // mount using React ref
@@ -335,6 +329,7 @@ export class MainView extends React.Component<IProps, IStates> {
     model.name = 'Model Faces';
     mainObject.add(model);
     this._scene.add(mainObject);
+    this.setState(old => ({ ...old, loading: false }));
     console.log('Generation Complete!');
   };
 
@@ -355,13 +350,27 @@ export class MainView extends React.Component<IProps, IStates> {
   render(): JSX.Element {
     return (
       <div
-        ref={this.divRef}
         style={{
           width: '100%',
-          height: 'calc(100%)',
-          background: this.state.bgColor //"radial-gradient(#efeded, #8f9091)"
+          height: 'calc(100%)'
         }}
-      />
+      >
+        <div
+          className={'jpcad-Spinner'}
+          style={{ display: this.state.loading ? 'flex' : 'none' }}
+        >
+          {' '}
+          <div className={'jpcad-SpinnerContent'}></div>{' '}
+        </div>
+        <div
+          ref={this.divRef}
+          style={{
+            width: '100%',
+            height: 'calc(100%)',
+            background: this.state.bgColor //"radial-gradient(#efeded, #8f9091)"
+          }}
+        />
+      </div>
     );
   }
 
