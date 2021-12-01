@@ -47,3 +47,15 @@
   bottom: 0;
   right: 0;
 }
+
+.jpcad-camera-client {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  z-index: 10;
+  background-color: var(--jp-private-notebook-active-color);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
