@@ -178,9 +178,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._renderer = new THREE.WebGLRenderer({
         alpha: true,
-        antialias: false
+        antialias: true
       });
-      this._renderer.setPixelRatio(window.devicePixelRatio);
+      // this._renderer.setPixelRatio(window.devicePixelRatio);
       this._renderer.setClearColor(0x000000, 0);
       this._renderer.setSize(500, 500, false);
       this.divRef.current.appendChild(this._renderer.domElement); // mount using React ref
