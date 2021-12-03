@@ -15,9 +15,9 @@ import { JupyterCadWidget } from './widget';
 
 const FACTORY = 'Jupytercad Factory';
 
-export const IExampleDocTracker = new Token<IWidgetTracker<JupyterCadWidget>>(
-  'exampleDocTracker'
-);
+export const IJupyterCadDocTracker = new Token<
+  IWidgetTracker<JupyterCadWidget>
+>('jupyterCadDocTracker');
 
 const activate = (
   app: JupyterFrontEnd,
@@ -25,7 +25,6 @@ const activate = (
   themeManager: IThemeManager
 ): void => {
   const namespace = 'jupytercad';
-
   const tracker = new WidgetTracker<JupyterCadWidget>({ namespace });
 
   if (restorer) {
@@ -63,7 +62,6 @@ const activate = (
   // Creating and registering the model factory for our custom DocumentModel
   const modelFactory = new JupyterCadModelFactory();
   app.docRegistry.addModelFactory(modelFactory);
-
   // register the filetype
   app.docRegistry.addFileType({
     name: 'stp',
