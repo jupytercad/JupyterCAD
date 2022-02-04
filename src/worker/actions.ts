@@ -207,7 +207,7 @@ function loadFile(payload: {
   const reader = new occ.STEPControl_Reader_1();
   const readResult = reader.ReadFile(fakeFileName);
   if (readResult === occ.IFSelect_ReturnStatus.IFSelect_RetDone) {
-    console.log('file loaded successfully!     Converting to OCC now...');
+    // console.log('file loaded successfully!     Converting to OCC now...');
     reader.TransferRoots(new occ.Message_ProgressRange_1()); // Translate all transferable roots to OpenCascade
     const stepShape = reader.OneShape(); // Obtain the results of translation
     // stepShape.DumpJson(stream, 1)
