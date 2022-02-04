@@ -10,6 +10,8 @@ import { IChangedArgs } from '@jupyterlab/coreutils';
 
 import { YDocument, MapChange } from '@jupyterlab/shared-models';
 
+import { IDict, Position } from './types';
+
 import * as Y from 'yjs';
 
 // import initOpenCascade, { OpenCascadeInstance } from 'opencascade.js';
@@ -18,6 +20,9 @@ import * as Y from 'yjs';
 export class JupyterCadModel implements DocumentRegistry.IModel {
   constructor(languagePreference?: string, modelDB?: IModelDB) {
     this.modelDB = modelDB || new ModelDB();
+    console.log('clientID', this.sharedModel.awareness.clientID);
+
+    this.sharedModel.awareness.on('change', this._onCameraChanged);
   }
 
   get isDisposed(): boolean {
@@ -40,6 +45,8 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   }
 
   dispose(): void {
+    console.log('dispose JupyterCadModel');
+
     if (this._isDisposed) {
       return;
     }
@@ -62,14 +69,14 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   }
 
   toString(): string {
-    return this.modelDB.getValue('content') as string;
+    const content = this.sharedModel.getContent('content') || '';
+    return content;
   }
 
   fromString(data: string): void {
-    if (!this.modelDB.has('content')) {
-      this.modelDB.createValue('content');
-    }
-    this.modelDB.setValue('content', data);
+    this.sharedModel.transact(() => {
+      this.sharedModel.setContent('content', data);
+    });
   }
 
   toJSON(): PartialJSONObject {
@@ -93,6 +100,23 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
     return JupyterCadModel.worker;
   }
 
+  syncCamera(pos: Position | undefined): void {
+    this.sharedModel.awareness.setLocalStateField('mouse', pos);
+  }
+
+  getClientId(): number {
+    return this.sharedModel.awareness.clientID;
+  }
+
+  get cameraChanged(): ISignal<this, Map<number, any>> {
+    return this._cameraChanged;
+  }
+
+  private _onCameraChanged = () => {
+    const clients = this.sharedModel.awareness.getStates();
+    this._cameraChanged.emit(clients);
+  };
+
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
   readonly modelDB: IModelDB;
@@ -104,6 +128,7 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   private _contentChanged = new Signal<this, void>(this);
   private _stateChanged = new Signal<this, IChangedArgs<any>>(this);
   private _themeChanged = new Signal<this, IChangedArgs<any>>(this);
+  private _cameraChanged = new Signal<this, Map<number, any>>(this);
 
   static worker: Worker;
 }

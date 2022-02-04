@@ -42,7 +42,7 @@
     "eslint": "eslint . --ext .ts,.tsx --fix",
     "eslint:check": "eslint . --ext .ts,.tsx",
     "install:extension": "jlpm run build",
-    "watch": "run-p watch:src watch:worker",
+    "watch": "run-p watch:worker watch:src watch:labextension",
     "watch:src": "tsc -w",
     "watch:worker": "webpack --config worker.webpack.config.js --watch",
     "watch:labextension": "jupyter labextension watch ."
@@ -50,7 +50,8 @@
   "dependencies": {
     "@jupyterlab/application": "^3.1.0",
     "@jupyterlab/apputils": "^3.1.0",
-    "opencascade.js": "^2.0.0-beta.371bbb0",
+    "@types/three": "^0.134.0",
+    "opencascade.js": "2.0.0-beta.371bbb0",
     "three": "^0.135.0",
     "uuid": "^8.3.2"
   },
