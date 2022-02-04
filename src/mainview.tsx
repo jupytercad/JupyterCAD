@@ -8,7 +8,9 @@ import {
   IWorkerMessage,
   WorkerAction,
   MainAction,
-  IDisplayShape
+  IDisplayShape,
+  IDict,
+  Position
 } from './types';
 
 import * as THREE from 'three';
@@ -16,17 +18,28 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
-const DARK_BG = 'linear-gradient(rgb(0, 0, 42), rgb(82, 87, 110))';
-const LIGHT_BG = 'radial-gradient(#efeded, #8f9091)';
-const BG_COLOR = { 'JupyterLab Dark': DARK_BG, 'JupyterLab Light': LIGHT_BG };
+
+type THEME_TYPE = 'JupyterLab Dark' | 'JupyterLab Light';
+const DARK_THEME: THEME_TYPE = 'JupyterLab Dark';
+const LIGHT_THEME: THEME_TYPE = 'JupyterLab Light';
+
+const BG_COLOR = {
+  [DARK_THEME]: 'linear-gradient(rgb(0, 0, 42), rgb(82, 87, 110))',
+  [LIGHT_THEME]: 'radial-gradient(#efeded, #8f9091)'
+};
+const GRID_COLOR = {
+  [DARK_THEME]: 0x4f6882,
+  [LIGHT_THEME]: 0x888888
+};
+
 interface IProps {
   context: DocumentRegistry.IContext<JupyterCadModel>;
 }
 
 interface IStates {
   id: string;
-  bgColor: string;
   loading: boolean;
+  theme: THEME_TYPE;
 }
 
 export class MainView extends React.Component<IProps, IStates> {
@@ -41,14 +54,18 @@ export class MainView extends React.Component<IProps, IStates> {
     // this.computedScene = {};
     // this.progressData = { time_step: -1, data: {} };
     this._resizeTimeout = null;
-
+    const theme = ((window as any).jupyterlabTheme ||
+      LIGHT_THEME) as THEME_TYPE;
+    console.log('in main', (window as any).jupyterlabTheme);
+    
     this.state = {
       id: uuid(),
-      bgColor: LIGHT_BG,
+      theme,
       loading: true
     };
 
     this._context = props.context;
+    this._cameraClients = {};
     this._context.ready.then(() => {
       this._model = this._context.model as JupyterCadModel;
       this._worker = this._model.getWorker();
@@ -61,8 +78,11 @@ export class MainView extends React.Component<IProps, IStates> {
         this._messageChannel.port2
       );
       this._model.themeChanged.connect((_, arg) => {
-        this.handleThemeChange(arg.newValue);
+        console.log('theme changed', arg);
+
+        this.handleThemeChange(arg.newValue as THEME_TYPE);
       });
+      this._model.cameraChanged.connect(this._onCameraChanged);
     });
   }
   componentDidMount(): void {
@@ -80,8 +100,8 @@ export class MainView extends React.Component<IProps, IStates> {
     this._controls.dispose();
   }
 
-  handleThemeChange = (newTheme: string): void => {
-    this.setState(old => ({ ...old, bgColor: BG_COLOR[newTheme] }));
+  handleThemeChange = (newTheme: THEME_TYPE): void => {
+    this.setState(old => ({ ...old, theme: newTheme }));
   };
   handleWindowResize = () => {
     clearTimeout(this._resizeTimeout);
@@ -145,8 +165,10 @@ export class MainView extends React.Component<IProps, IStates> {
       this._gridHelper = new THREE.GridHelper(
         size,
         divisions,
-        0x888888,
-        0x888888
+        GRID_COLOR[this.state.theme],
+        GRID_COLOR[this.state.theme]
+        // 0x888888,
+        // 0x888888
       );
       this._gridHelper.geometry.rotateX(Math.PI / 2);
 
@@ -162,12 +184,12 @@ export class MainView extends React.Component<IProps, IStates> {
       this._scene.add(lights[0]);
       this._camera.add(lights[1]);
 
-      const light2 = new THREE.DirectionalLight(0xffffff);
+      const light2 = new THREE.SpotLight(0xffffff, 1);
       light2.castShadow = true;
-      light2.shadow.camera.top = 200;
-      light2.shadow.camera.bottom = -200;
-      light2.shadow.camera.left = -200;
-      light2.shadow.camera.right = 200;
+      // light2.shadow.camera.top = 200;
+      // light2.shadow.camera.bottom = -200;
+      // light2.shadow.camera.left = -200;
+      // light2.shadow.camera.right = 200;
       light2.shadow.radius = 32;
       light2.shadow.mapSize.width = 128;
       light2.shadow.mapSize.height = 128;
@@ -189,7 +211,6 @@ export class MainView extends React.Component<IProps, IStates> {
         this._camera,
         this._renderer.domElement
       );
-      // var controls = new TrackballControls(this.camera, this.renderer.domElement);
       controls.rotateSpeed = 1.0;
       controls.zoomSpeed = 1.2;
       controls.panSpeed = 0.8;
@@ -199,6 +220,31 @@ export class MainView extends React.Component<IProps, IStates> {
         this._scene.position.z
       );
       this._controls = controls;
+
+      const canvas = this._renderer.domElement;
+      canvas.addEventListener('mousedown', event => {
+        this._mouseDown = true;
+      });
+      canvas.addEventListener('mouseup', event => {
+        this._mouseDown = false;
+      });
+      canvas.addEventListener('mouseleave', event => {
+        this._model.syncCamera(undefined);
+      });
+      ['wheel', 'mousemove'].forEach(evtName => {
+        canvas.addEventListener(
+          evtName as any,
+          (event: MouseEvent | WheelEvent) => {
+            this._model.syncCamera({
+              offsetX: event.offsetX,
+              offsetY: event.offsetY,
+              x: this._camera.position.x,
+              y: this._camera.position.y,
+              z: this._camera.position.z
+            });
+          }
+        );
+      });
     }
   };
   startAnimationLoop = (): void => {
@@ -309,7 +355,9 @@ export class MainView extends React.Component<IProps, IStates> {
     geometry.computeBoundingBox();
     const bbox = geometry.boundingBox;
     const boxSizeVec = new THREE.Vector3();
-    bbox.getSize(boxSizeVec);
+    if (bbox) {
+      bbox.getSize(boxSizeVec);
+    }
     this._refLength = Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z);
 
     this._camera.lookAt(this._scene.position);
@@ -347,6 +395,63 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   };
 
+  private _onCameraChanged = (
+    sender: JupyterCadModel,
+    clients: Map<number, any>
+  ): void => {
+    clients.forEach((client, key) => {
+      if (this._context.model.getClientId() !== key) {
+        const id = key.toString();
+        const mouse = client.mouse as Position;
+        if (mouse && this._cameraClients[id]) {
+          if (mouse.offsetX > 0) {
+            this._cameraClients[id]!.style.left = mouse.offsetX + 'px';
+          }
+          if (mouse.offsetY > 0) {
+            this._cameraClients[id]!.style.top = mouse.offsetY + 'px';
+          }
+          if (!this._mouseDown) {
+            this._camera.position.set(mouse.x, mouse.y, mouse.z);
+          }
+        } else if (mouse && !this._cameraClients[id]) {
+          const el = document.createElement('div');
+          el.className = 'jpcad-camera-client';
+          el.style.left = mouse.offsetX + 'px';
+          el.style.top = mouse.offsetY + 'px';
+          el.style.backgroundColor = client.user.color;
+          el.innerText = client.user.name;
+          this._cameraClients[id] = el;
+          this._cameraRef.current?.appendChild(el);
+        } else if (!mouse && this._cameraClients[id]) {
+          this._cameraRef.current?.removeChild(this._cameraClients[id]!);
+          this._cameraClients[id] = undefined;
+        }
+
+        // if (client.mouse) {
+        //   const cameraPos = client.mouse as Position;
+        //   if (el) {
+        //     el.style.left = cameraPos.offsetX + 'px';
+        //     el.style.top = cameraPos.offsetY + 'px';
+        //   } else {
+        //     const newEl = document.createElement('div');
+        //     newEl.className = 'jpcad-camera-client';
+        //     newEl.style.left = cameraPos.offsetX + 'px';
+        //     newEl.style.top = cameraPos.offsetY + 'px';
+        //     newEl.style.backgroundColor = client.user.color;
+        //     newEl.innerText = client.user.name;
+        //     this._cameraClients[id] = el;
+        //     this._cameraRef.current?.appendChild(newEl);
+        //   }
+        // } else {
+        //   if (el) {
+        //     this._cameraRef.current?.removeChild(el);
+        //     this._cameraClients[id] = undefined;
+        //   }
+        // }
+      }
+    });
+  };
+
   render(): JSX.Element {
     return (
       <div
@@ -362,12 +467,13 @@ export class MainView extends React.Component<IProps, IStates> {
           {' '}
           <div className={'jpcad-SpinnerContent'}></div>{' '}
         </div>
+        <div ref={this._cameraRef}></div>
         <div
           ref={this.divRef}
           style={{
             width: '100%',
             height: 'calc(100%)',
-            background: this.state.bgColor //"radial-gradient(#efeded, #8f9091)"
+            background: BG_COLOR[this.state.theme] //"radial-gradient(#efeded, #8f9091)"
           }}
         />
       </div>
@@ -375,9 +481,10 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   private divRef = React.createRef<HTMLDivElement>(); // Reference of render div
+  private _cameraRef = React.createRef<HTMLDivElement>();
 
   private _context: DocumentRegistry.IContext<JupyterCadModel>;
-  private _model?: JupyterCadModel = undefined;
+  private _model: JupyterCadModel;
   private _worker?: Worker = undefined;
   private _messageChannel?: MessageChannel;
 
@@ -391,4 +498,6 @@ export class MainView extends React.Component<IProps, IStates> {
   private _sceneAxe: (THREE.ArrowHelper | Line2)[]; // Array of  X, Y and Z axe
   private _controls: any; // Threejs control
   private _resizeTimeout: any;
+  private _mouseDown = false;
+  private _cameraClients: IDict<HTMLElement | undefined>;
 }

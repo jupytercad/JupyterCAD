@@ -53,3 +53,11 @@ export interface IWorkerInitialized {
 }
 
 export type IMainMessage = IDisplayShape | IWorkerInitialized;
+
+export type Position = {
+  offsetX: number;
+  offsetY: number;
+  x: number;
+  y: number;
+  z: number;
+};
