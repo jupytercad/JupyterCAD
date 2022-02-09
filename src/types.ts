@@ -4,6 +4,8 @@ export interface IDict<T = any> {
   [key: string]: T;
 }
 
+export type ValueOf<T> = T[keyof T];
+
 /**
  * Action definitions for worker
  */
@@ -29,7 +31,7 @@ export interface ILoadFile extends IMainId {
   action: WorkerAction.LOAD_FILE;
   payload: {
     fileName: string;
-    content: PartialJSONObject;
+    content: IMainViewSharedState;
   };
 }
 
@@ -76,13 +78,24 @@ export enum PrimitiveShapes {
   BOX = 'Box',
   SPHERE = 'Sphere'
 }
+
+export interface IJcadObject {
+  id: string;
+  shape: PrimitiveShapes;
+  parameters: IDict;
+  visible: boolean;
+  operator?: Array<IDict>;
+  dependencies?: Array<string>;
+}
+
 export interface IJcadModel {
-  objects: Array<{
-    id: string;
-    shape: PrimitiveShapes;
-    parameters: IDict;
-    visible: boolean;
-    operator?: Array<IDict>;
-    dependencies?: Array<string>;
-  }>;
+  objects: Array<IJcadObject>;
+}
+
+export interface IMainViewSharedState {
+  id?: number;
+  objects?: Array<IJcadObject>;
+}
+export interface IControlViewSharedState {
+  key?: string;
 }

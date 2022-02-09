@@ -59,3 +59,33 @@
   justify-content: center;
   align-items: center;
 }
+
+.jpcad-control-panel {
+  color: var(--jp-ui-font-color1);
+  background: var(--jp-layout-color1);
+  height: 100%;
+}
+
+.jpcad-control-panel * {
+  font-family: var(--jp-ui-font-family);
+}
+
+.jpcad-control-panel-title {
+  border-bottom: solid var(--jp-border-width) var(--jp-border-color1);
+  box-shadow: var(--jp-toolbar-box-shadow);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 24px;
+  height: var(--jp-debugger-header-height);
+  background-color: var(--jp-layout-color2);
+}
+
+.jpcad-control-panel-title h2 {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color1);
+  padding-left: 8px;
+  padding-right: 4px;
+}

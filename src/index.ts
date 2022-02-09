@@ -1,31 +1,28 @@
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin,
-  ILayoutRestorer
+  ILayoutRestorer,
+  ILabShell
 } from '@jupyterlab/application';
-import {
-  WidgetTracker,
-  IWidgetTracker,
-  IThemeManager
-} from '@jupyterlab/apputils';
+import { WidgetTracker, IThemeManager } from '@jupyterlab/apputils';
 
-import { Token } from '@lumino/coreutils';
 import { JupyterCadWidgetFactory, JupyterCadModelFactory } from './factory';
 import { JupyterCadWidget } from './widget';
+import { PanelWidget } from './panelview/widget';
+import { IJupyterCadDocTracker, IJupyterCadTracker } from './token';
+import { jcLightIcon } from './tools';
 
 const FACTORY = 'Jupytercad Factory';
-
-export const IJupyterCadDocTracker = new Token<
-  IWidgetTracker<JupyterCadWidget>
->('jupyterCadDocTracker');
+const NAME_SPACE = 'jupytercad';
 
 const activate = (
   app: JupyterFrontEnd,
   restorer: ILayoutRestorer,
   themeManager: IThemeManager
-): void => {
-  const namespace = 'jupytercad';
-  const tracker = new WidgetTracker<JupyterCadWidget>({ namespace });
+): IJupyterCadTracker => {
+  const tracker = new WidgetTracker<JupyterCadWidget>({
+    namespace: NAME_SPACE
+  });
 
   if (restorer) {
     restorer.restore(tracker, {
@@ -72,13 +69,36 @@ const activate = (
     contentType: 'file'
   });
   console.log('JupyterLab extension jupytercad is activated!');
+  return tracker;
 };
 
-const plugin: JupyterFrontEndPlugin<void> = {
+const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
   id: 'jupytercad:plugin',
   autoStart: true,
   requires: [ILayoutRestorer, IThemeManager],
+  provides: IJupyterCadDocTracker,
   activate
 };
 
-export default plugin;
+const controlPanel: JupyterFrontEndPlugin<void> = {
+  id: 'jupytercad:controlpanel',
+  autoStart: true,
+  requires: [ILayoutRestorer, ILabShell, IJupyterCadDocTracker],
+  activate: (
+    app: JupyterFrontEnd,
+    restorer: ILayoutRestorer,
+    shell: ILabShell,
+    tracker: IJupyterCadTracker
+  ) => {
+    const controlPanel = new PanelWidget(tracker);
+    controlPanel.id = 'jupytercad::controlPanel';
+    controlPanel.title.caption = 'JupyterCad Control Panel';
+    controlPanel.title.icon = jcLightIcon;
+    if (restorer) {
+      restorer.add(controlPanel, NAME_SPACE);
+    }
+    app.shell.add(controlPanel, 'left', { rank: 2000 });
+  }
+};
+
+export default [plugin, controlPanel];
