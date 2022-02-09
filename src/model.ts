@@ -69,7 +69,7 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   }
 
   toString(): string {
-    const content = this.sharedModel.getContent('content') || '';
+    const content = this.sharedModel.getContent('content') || '{}';
     return content;
   }
 
@@ -80,7 +80,7 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   }
 
   toJSON(): PartialJSONObject {
-    return {};
+    return JSON.parse(this.toString());
   }
 
   fromJSON(data: PartialJSONObject): void {

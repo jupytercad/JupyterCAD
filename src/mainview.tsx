@@ -56,8 +56,6 @@ export class MainView extends React.Component<IProps, IStates> {
     this._resizeTimeout = null;
     const theme = ((window as any).jupyterlabTheme ||
       LIGHT_THEME) as THEME_TYPE;
-    console.log('in main', (window as any).jupyterlabTheme);
-    
     this.state = {
       id: uuid(),
       theme,
@@ -78,8 +76,6 @@ export class MainView extends React.Component<IProps, IStates> {
         this._messageChannel.port2
       );
       this._model.themeChanged.connect((_, arg) => {
-        console.log('theme changed', arg);
-
         this.handleThemeChange(arg.newValue as THEME_TYPE);
       });
       this._model.cameraChanged.connect(this._onCameraChanged);
@@ -98,6 +94,12 @@ export class MainView extends React.Component<IProps, IStates> {
     window.cancelAnimationFrame(this._requestID);
     window.removeEventListener('resize', this.handleWindowResize);
     this._controls.dispose();
+    this.postMessage({
+      action: WorkerAction.CLOSE_FILE,
+      payload: {
+        fileName: this._context.path
+      }
+    });
   }
 
   handleThemeChange = (newTheme: THEME_TYPE): void => {
@@ -284,7 +286,7 @@ export class MainView extends React.Component<IProps, IStates> {
           action: WorkerAction.LOAD_FILE,
           payload: {
             fileName: this._context.path,
-            content: this._model!.toString()
+            content: this._model!.toJSON()
           }
         });
       }
@@ -359,7 +361,9 @@ export class MainView extends React.Component<IProps, IStates> {
       bbox.getSize(boxSizeVec);
     }
     this._refLength = Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z);
-
+    if (this._refLength === 0) {
+      this._refLength = 1;
+    }
     this._camera.lookAt(this._scene.position);
     this._camera.position.set(
       2 * this._refLength,

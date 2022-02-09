@@ -1,0 +1,19 @@
+{
+    "objects": [
+        {
+            "id": "xxx",
+            "visible": true,
+            "shape": "Box",
+            "parameters": {
+                "x": 1,
+                "y": 5,
+                "z": 2,
+                "centered": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ]
+}
