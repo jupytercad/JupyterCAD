@@ -1,12 +1,15 @@
-import { WorkerAction, IDict } from '../types';
+import { WorkerAction, IDict, IJcadModel } from '../types';
 import {
   OpenCascadeInstance,
   TopoDS_Shape,
   Handle_Poly_Triangulation
 } from 'opencascade.js';
-
+import { PrimitiveShapesFactory } from './occapi';
+import { MODELS } from './worker';
+import { IOperatorArg } from './token';
 let occ: OpenCascadeInstance;
-function getOcc(): OpenCascadeInstance {
+
+export function getOcc(): OpenCascadeInstance {
   if (!occ) {
     occ = (self as any).occ as OpenCascadeInstance;
   }
@@ -29,7 +32,10 @@ interface IFace {
   number_of_triangles: number;
 }
 
-function _shapeToThree(shapes: Array<TopoDS_Shape>): any {
+function shapeToThree(shapes: Array<TopoDS_Shape>): {
+  faceList: any[];
+  edgeList: any[];
+} {
   const oc = getOcc();
   const maxDeviation = 0.5;
   let faceList: Array<IFace> = [],
@@ -196,29 +202,29 @@ function _shapeToThree(shapes: Array<TopoDS_Shape>): any {
   return { faceList, edgeList };
 }
 
+function buildModel(model: IJcadModel): TopoDS_Shape[] {
+  const occShapes: TopoDS_Shape[] = [];
+  const { objects } = model;
+
+  objects.forEach(object => {
+    console.log('object', object);
+
+    const { shape, parameters } = object;
+
+    const occShape = PrimitiveShapesFactory[shape](parameters as IOperatorArg);
+    occShapes.push(occShape);
+  });
+  return occShapes;
+}
+
 function loadFile(payload: {
   fileName: string;
-  content: string;
+  content: IJcadModel;
 }): IDict | null {
-  const occ = getOcc();
-  const { fileName, content } = payload;
-  const fakeFileName = fileName.split('/').join('_');
-  occ.FS.createDataFile('/', fakeFileName, content, true, true, true);
-  const reader = new occ.STEPControl_Reader_1();
-  const readResult = reader.ReadFile(fakeFileName);
-  if (readResult === occ.IFSelect_ReturnStatus.IFSelect_RetDone) {
-    // console.log('file loaded successfully!     Converting to OCC now...');
-    reader.TransferRoots(new occ.Message_ProgressRange_1()); // Translate all transferable roots to OpenCascade
-    const stepShape = reader.OneShape(); // Obtain the results of translation
-    // stepShape.DumpJson(stream, 1)
-    console.log(fileName + ' converted successfully!');
-    const result = _shapeToThree([stepShape]);
-    occ.FS.unlink('/' + fakeFileName);
-    return result;
-  } else {
-    console.error('Something in OCCT went wrong trying to read ');
-    return null;
-  }
+  const { content } = payload;
+  const shapeList = buildModel(content);
+  const result = shapeToThree(shapeList);
+  return result;
 }
 
 let WorkerHandler: {

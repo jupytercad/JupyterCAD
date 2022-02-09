@@ -1,3 +1,5 @@
+import { PartialJSONObject } from '@lumino/coreutils';
+
 export interface IDict<T = any> {
   [key: string]: T;
 }
@@ -8,6 +10,7 @@ export interface IDict<T = any> {
 export enum WorkerAction {
   LOAD_FILE = 'LOAD_FILE',
   SAVE_FILE = 'SAVE_FILE',
+  CLOSE_FILE = 'CLOSE_FILE',
   REGISTER = 'REGISTER'
 }
 
@@ -26,11 +29,18 @@ export interface ILoadFile extends IMainId {
   action: WorkerAction.LOAD_FILE;
   payload: {
     fileName: string;
-    content: string;
+    content: PartialJSONObject;
   };
 }
 
-export type IWorkerMessage = ILoadFile | IRegister;
+export interface ICloseFile extends IMainId {
+  action: WorkerAction.CLOSE_FILE;
+  payload: {
+    fileName: string;
+  };
+}
+
+export type IWorkerMessage = ILoadFile | IRegister | ICloseFile;
 
 /**
  * Action definitions for main thread
@@ -61,3 +71,18 @@ export type Position = {
   y: number;
   z: number;
 };
+
+export enum PrimitiveShapes {
+  BOX = 'Box',
+  SPHERE = 'Sphere'
+}
+export interface IJcadModel {
+  objects: Array<{
+    id: string;
+    shape: PrimitiveShapes;
+    parameters: IDict;
+    visible: boolean;
+    operator?: Array<IDict>;
+    dependencies?: Array<string>;
+  }>;
+}

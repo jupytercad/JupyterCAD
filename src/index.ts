@@ -40,8 +40,8 @@ const activate = (
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-model',
-    fileTypes: ['stp'],
-    defaultFor: ['stp']
+    fileTypes: ['jcad'],
+    defaultFor: ['jcad']
   });
 
   // Add the widget to the tracker when it's created
@@ -64,10 +64,10 @@ const activate = (
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype
   app.docRegistry.addFileType({
-    name: 'stp',
-    displayName: 'STEP',
-    mimeTypes: ['text'],
-    extensions: ['.stp', '.STP', '.step', '.STEP'],
+    name: 'jcad',
+    displayName: 'JCAD',
+    mimeTypes: ['text/json'],
+    extensions: ['.jcad', '.JCAD'],
     fileFormat: 'text',
     contentType: 'file'
   });
