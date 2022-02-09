@@ -1,6 +1,6 @@
 import { getOcc } from './actions';
 import { TopoDS_Shape } from 'opencascade.js';
-import { IOperatorArg, IBox, ISphere, IAllOperatorFunc } from './token';
+import { IOperatorArg, IBox, ISphere, IAllOperatorFunc } from './types';
 import { hashCode } from './utils';
 import { PrimitiveShapes } from '../types';
 const SHAPE_CACHE = new Map<string, TopoDS_Shape>();
@@ -11,9 +11,12 @@ export function operatorCache<T>(
 ) {
   return (args: T): TopoDS_Shape => {
     const hash = `${name}-${hashCode(JSON.stringify(args))}`;
-    console.log('hash', hash);
+    console.log('hash', args,  hash);
 
-    if (SHAPE_CACHE.has(hash)) {
+    if (SHAPE_CACHE.has(hash)) 
+    {
+      console.log('reuse', args);
+      
       return SHAPE_CACHE.get(hash)!;
     } else {
       const shape = ops(args);

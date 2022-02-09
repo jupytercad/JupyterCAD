@@ -5,8 +5,7 @@ import {
   Handle_Poly_Triangulation
 } from 'opencascade.js';
 import { PrimitiveShapesFactory } from './occapi';
-import { MODELS } from './worker';
-import { IOperatorArg } from './token';
+import { IOperatorArg } from './types';
 let occ: OpenCascadeInstance;
 
 export function getOcc(): OpenCascadeInstance {

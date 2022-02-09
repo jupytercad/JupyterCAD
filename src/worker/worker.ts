@@ -8,12 +8,9 @@ import {
 } from '../types';
 import WorkerHandler from './actions';
 
-import { OpenCascadeModel } from './model';
 let occ: OpenCascadeInstance;
 let ports: IDict<MessagePort> = {};
 let lock = false;
-
-export const MODELS = new Map<string, OpenCascadeModel>()
 
 const registerWorker = async (id: string, port: MessagePort) => {
   if (!lock) {
@@ -48,11 +45,6 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
       break;
     }
     case WorkerAction.LOAD_FILE: {
-      console.log('payload', message.payload);
-      if(!MODELS.has(message.payload.fileName)){
-        const model = new OpenCascadeModel()
-        MODELS.set(message.payload.fileName, model)
-      }
       const result = WorkerHandler[message.action](message.payload);
       sendToMain(
         {
@@ -64,7 +56,6 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
       break;
     }
     case WorkerAction.CLOSE_FILE: {
-      MODELS.delete(message.payload.fileName);
       break;
     }
   }
