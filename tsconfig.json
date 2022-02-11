@@ -23,5 +23,5 @@
     "skipLibCheck": true,
     "lib": ["ES2019", "WebWorker", "DOM"]
   },
-  "include": ["src/*", "src/panelview/*"]
+  "include": ["src/*", "src/panelview/*.*"]
 }

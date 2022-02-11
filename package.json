@@ -48,16 +48,17 @@
     "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
-    "@jupyterlab/application": "^3.1.0",
-    "@jupyterlab/apputils": "^3.1.0",
-    "@jupyterlab/observables": "^4.2.9",
+    "@jupyterlab/application": "^4.0.0-alpha.4",
+    "@jupyterlab/apputils": "^4.0.0-alpha.4",
+    "@jupyterlab/observables": "^5.0.0-alpha.4",
+    "@jupyterlab/ui-components": "^4.0.0-alpha.19",
     "@types/three": "^0.134.0",
     "opencascade.js": "2.0.0-beta.371bbb0",
     "three": "^0.135.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@jupyterlab/builder": "^3.1.0",
+    "@jupyterlab/builder": "^4.0.0-alpha.4",
     "@types/node": "^16.11.10",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
