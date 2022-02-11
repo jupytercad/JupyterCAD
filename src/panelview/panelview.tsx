@@ -1,5 +1,10 @@
 import * as React from 'react';
 
+import { SidePanel } from '@jupyterlab/ui-components';
+import { MessageLoop } from '@lumino/messaging';
+import { Panel, Widget } from '@lumino/widgets';
+import { ObjectTree } from './objecttree';
+import { ObjectProperties } from './objectproperties';
 import { JupyterCadDoc } from '../model';
 import {
   IControlViewSharedState,
@@ -18,7 +23,19 @@ interface IStates {
   controlViewState: IControlViewSharedState;
 }
 
-export default class MainView extends React.Component<IProps, IStates> {
+export class SidePanelWidget extends SidePanel {
+  constructor(children: Widget[]) {
+    super();
+    this.addClass('jpcad-sidepanel-widget');
+    children.forEach(child => {
+      console.log('adding', child);
+
+      this.addWidget(child);
+    });
+  }
+}
+
+export default class PanelView extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
     this.updateSharedState = debounce(
@@ -105,7 +122,8 @@ export default class MainView extends React.Component<IProps, IStates> {
         <div className="jpcad-control-panel-title">
           <h2>{this.props.filePath}</h2>
         </div>
-        <div>
+        <div style={{ height: 'calc(100% - 25px)' }} ref={this._divRef} />
+        {/* <div>
           <div>
             <label htmlFor="">X</label>
             <input
@@ -148,12 +166,12 @@ export default class MainView extends React.Component<IProps, IStates> {
               onChange={e => this.onSliderChange('z', e.target.value)}
             />
           </div>
-        </div>
+        </div> */}
       </div>
     );
   }
 
-  _defaultColorMap: string;
+  private _divRef = React.createRef<HTMLDivElement>();
   updateSharedState: (
     key: keyof IMainViewSharedState,
     value: ValueOf<IMainViewSharedState>

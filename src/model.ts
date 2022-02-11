@@ -74,8 +74,15 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   }
 
   toString(): string {
-    const content = this.sharedModel.getContent('content') || '{}';
-    return content;
+    const content = this.sharedModel.getMainViewState();
+    console.log('content');
+    let contentString: string;
+    if (!content || Object.keys(content).length === 0) {
+      contentString = this.sharedModel.getContent('content') || '{}';
+    } else {
+      contentString = JSON.stringify(content, null, 2);
+    }
+    return contentString;
   }
 
   fromString(data: string): void {
@@ -89,7 +96,7 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   }
 
   fromJSON(data: PartialJSONObject): void {
-    console.log('');
+    // nothing to do
   }
 
   initialize(): void {

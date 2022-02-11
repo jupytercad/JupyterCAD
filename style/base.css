@@ -89,3 +89,21 @@
   padding-left: 8px;
   padding-right: 4px;
 }
+
+.jpcad-sidepanel-widget {
+  height: 100%;
+}
+
+.jpcad-sidebar-treepanel {
+  display: flex;
+  flex-direction: column;
+  min-height: 50px;
+  padding-top: 3px;
+}
+
+.jpcad-sidebar-propertiespanel {
+  display: flex;
+  flex-direction: column;
+  min-height: 50px;
+  padding-top: 3px;
+}
