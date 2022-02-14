@@ -28,6 +28,18 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.6.tgz#d5e0706cf8c6acd8c6032f8d54070af261bbbb2f"
   integrity sha512-ws57AidsDvREKrZKYffXddNkyaF14iHNHm8VQnZH6t99E8gczjNN0GpvcGny0imC80yQ0tHz1xVUKk/KFQSUyA==
 
+"@emotion/is-prop-valid@^1.1.0":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-1.1.1.tgz#cbd843d409dfaad90f9404e7c0404c55eae8c134"
+  integrity sha512-bW1Tos67CZkOURLc0OalnfxtSXQJMrAMV0jZTVGJUPSOd4qgjF3+tTD5CwJM13PHA8cltGW1WGbbvV9NpvUZPw==
+  dependencies:
+    "@emotion/memoize" "^0.7.4"
+
+"@emotion/memoize@^0.7.4":
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/@emotion/memoize/-/memoize-0.7.5.tgz#2c40f81449a4e554e9fc6396910ed4843ec2be50"
+  integrity sha512-igX9a37DR2ZPGYtV6suZ6whr8pTFtyHL3K/oLUotxpSVO2ASaprmAe2Dkq7tBo7CRY7MMDrAa9nuQP9/YG8FxQ==
+
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.3.tgz#9e42981ef035beb3dd49add17acb96e8ff6f394c"
@@ -561,6 +573,14 @@
     "@lumino/properties" "^1.8.1"
     "@lumino/signaling" "^1.10.1"
     "@lumino/virtualdom" "^1.14.1"
+
+"@naisutech/react-tree@^2.0.12":
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/@naisutech/react-tree/-/react-tree-2.0.12.tgz#17a4e092a13932882824fbf98913364163cfc4fb"
+  integrity sha512-+Q0PWXQyGSTNh7p0FyFVsPxFEVdodtX+4XMGBrib7/PGuN23/qsPZqtG2WT1AE52wtsV3DiLghgwbxwigrzTDg==
+  dependencies:
+    "@emotion/is-prop-valid" "^1.1.0"
+    nanoid "^3.1.23"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -3823,7 +3843,7 @@ mv@2.1.1:
     ncp "~2.0.0"
     rimraf "~2.4.0"
 
-nanoid@^3.2.0:
+nanoid@^3.1.23, nanoid@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.2.0.tgz#62667522da6673971cca916a6d3eff3f415ff80c"
   integrity sha512-fmsZYa9lpn69Ad5eDn7FMcnnSR+8R34W9qJEijxYhTbfOWzr22n1QxCMzXLK+ODyW2973V3Fux959iQoUxzUIA==

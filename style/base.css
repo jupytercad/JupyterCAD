@@ -107,3 +107,12 @@
   min-height: 50px;
   padding-top: 3px;
 }
+
+.jpcad-treeview-wrapper {
+  overflow: auto;
+  height: 100%;
+}
+
+.jpcad-treeview-wrapper > div {
+  padding: 0 !important;
+}
