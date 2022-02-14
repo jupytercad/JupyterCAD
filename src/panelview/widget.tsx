@@ -1,52 +1,44 @@
 import * as React from 'react';
-import { SidePanel } from '@jupyterlab/ui-components';
+
 import { ReactWidget } from '@jupyterlab/apputils';
-import PanelView from './panelview';
+import { SidePanel } from '@jupyterlab/ui-components';
 import { Panel, Widget } from '@lumino/widgets';
+
 import { JupyterCadDoc } from '../model';
 import { IJupyterCadTracker } from '../token';
-import { ObjectTree } from './objecttree';
+import { ControlPanelModel } from './model';
 import { ObjectProperties } from './objectproperties';
+import { ObjectTree } from './objecttree';
+import PanelView from './panelview';
 
 export class PanelWidget extends SidePanel {
   constructor(tracker: IJupyterCadTracker) {
     super();
     this.addClass('jpcad-sidepanel-widget');
-    this._tracker = tracker;
-    this._filePath = tracker.currentWidget?.context.localPath;
-    this._sharedModel = tracker.currentWidget?.context.model.sharedModel;
-
+    this._model = new ControlPanelModel();
     const header = new PanelWidget.Header();
     this.header.addWidget(header);
-    const tree = new ObjectTree({});
-    const properties = new ObjectProperties({});
+    const tree = new ObjectTree({ tracker, controlPanelModel: this._model });
+    const properties = new ObjectProperties({
+      tracker,
+      controlPanelModel: this._model
+    });
     this.addWidget(tree);
     this.addWidget(properties);
     tracker.currentChanged.connect((_, changed) => {
       if (changed) {
-        this._filePath = changed.context.localPath;
-        header.title.label = this._filePath;
-        this._sharedModel = changed.context.model.sharedModel;
+        header.title.label = changed.context.localPath;
       } else {
-        this._filePath = undefined;
-        this._sharedModel = undefined;
+        header.title.label = '-';
       }
-      this.update();
+      // this.update();
     });
   }
 
   dispose(): void {
     super.dispose();
   }
-
-  // render(): JSX.Element {
-  //   return (
-  //     <PanelView filePath={this._filePath} sharedModel={this._sharedModel} />
-  //   );
-  // }
-  private _tracker: IJupyterCadTracker;
-  private _filePath: string | undefined;
-  private _sharedModel: JupyterCadDoc | undefined;
+  private _model: ControlPanelModel;
 }
 
 export namespace PanelWidget {

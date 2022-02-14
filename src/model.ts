@@ -50,8 +50,6 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   }
 
   dispose(): void {
-    console.log('dispose JupyterCadModel');
-
     if (this._isDisposed) {
       return;
     }
@@ -75,7 +73,6 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
 
   toString(): string {
     const content = this.sharedModel.getMainViewState();
-    console.log('content');
     let contentString: string;
     if (!content || Object.keys(content).length === 0) {
       contentString = this.sharedModel.getContent('content') || '{}';
@@ -161,7 +158,7 @@ export class JupyterCadDoc extends YDocument<JupyterCadDocChange> {
   }
 
   dispose(): void {
-    console.log('called dispose');
+    //** */
   }
 
   public static create(): JupyterCadDoc {
