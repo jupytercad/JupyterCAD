@@ -31,7 +31,7 @@ export interface ILoadFile extends IMainId {
   action: WorkerAction.LOAD_FILE;
   payload: {
     fileName: string;
-    content: IMainViewSharedState;
+    content: IJCadContent;
   };
 }
 
@@ -92,10 +92,7 @@ export interface IJcadModel {
   objects: Array<IJcadObject>;
 }
 
-export interface IMainViewSharedState {
+export interface IJCadContent {
   id?: number;
-  objects?: Array<IJcadObject>;
-}
-export interface IControlViewSharedState {
-  key?: string;
+  objects: { [key: string]: IJcadObject };
 }

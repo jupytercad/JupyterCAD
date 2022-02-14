@@ -9,7 +9,6 @@ import { IJupyterCadTracker } from '../token';
 import { ControlPanelModel } from './model';
 import { ObjectProperties } from './objectproperties';
 import { ObjectTree } from './objecttree';
-import PanelView from './panelview';
 
 export class PanelWidget extends SidePanel {
   constructor(tracker: IJupyterCadTracker) {

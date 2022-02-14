@@ -7,9 +7,8 @@ import { Panel } from '@lumino/widgets';
 import { JupyterCadDoc } from '../model';
 import { IJupyterCadTracker } from '../token';
 import {
-  IControlViewSharedState,
   IJcadObject,
-  IMainViewSharedState
+  IJCadContent
 } from '../types';
 import { ControlPanelModel } from './model';
 import { ObjectPropertiesForm } from './formbuilder';
@@ -56,8 +55,7 @@ export class ObjectPropertiesWidget extends ReactWidget {
 }
 
 interface IStates {
-  controlViewState?: IControlViewSharedState;
-  mainViewState?: IMainViewSharedState;
+  mainViewState?: IJCadContent;
   selectedObjectData?: { [key: string]: any };
   selectedObject?: string;
 }
@@ -74,21 +72,21 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     this.state = {};
     this.onSharedModelPropChange(this.props.sharedModel);
     this.props.controlPanelModel.stateChanged.connect((changed, value) => {
-      const selected = value.newValue as string;
-      if (selected && selected.includes('#')) {
-        const [id, type] = selected.split('#');
-        const objectData = this.state.mainViewState?.objects?.filter(
-          obj => obj.id === id
-        );
-        if (objectData) {
-          const selectedObjectData = objectData[0][type];
-          this.setState(old => ({
-            ...old,
-            selectedObjectData,
-            selectedObject: id
-          }));
-        }
-      }
+      // const selected = value.newValue as string;
+      // if (selected && selected.includes('#')) {
+      //   const [id, type] = selected.split('#');
+      //   const objectData = this.state.mainViewState?.objects?.filter(
+      //     obj => obj.id === id
+      //   );
+      //   if (objectData) {
+      //     const selectedObjectData = objectData[0][type];
+      //     this.setState(old => ({
+      //       ...old,
+      //       selectedObjectData,
+      //       selectedObject: id
+      //     }));
+      //   }
+      // }
     });
   }
 
@@ -103,59 +101,58 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   }
 
   onSharedModelPropChange(sharedModel?: JupyterCadDoc): void {
-    if (sharedModel) {
-      sharedModel.mainViewStateChanged.connect(this.sharedMainViewModelChanged);
-      this.setState(
-        old => {
-          return {
-            ...old,
-            mainViewState: sharedModel.getMainViewState(),
-            controlViewState: sharedModel.getControlViewState()
-          };
-        },
-        () => console.log('new state', this.state)
-      );
-    }
+    // if (sharedModel) {
+    //   sharedModel.mainViewStateChanged.connect(this.sharedMainViewModelChanged);
+    //   this.setState(
+    //     old => {
+    //       return {
+    //         ...old,
+    //         mainViewState: sharedModel.getMainViewState()
+    //       };
+    //     },
+    //     () => console.log('new state', this.state)
+    //   );
+    // }
   }
 
-  sharedMainViewModelChanged = (_, changed: IMainViewSharedState): void => {
-    this.setState(
-      old => {
-        const newState = {
-          ...old,
-          mainViewState: { ...old.mainViewState, ...changed }
-        };
-        const selectedObjectDataList = newState.mainViewState.objects?.filter(
-          obj => obj.id === newState.selectedObject
-        );
-        if (selectedObjectDataList && selectedObjectDataList[0]) {
-          newState.selectedObjectData = selectedObjectDataList[0].parameters;
-        }
-        return newState;
-      },
-      () => console.log('new state', this.state)
-    );
+  sharedMainViewModelChanged = (_, changed: IJCadContent): void => {
+    // this.setState(
+    //   old => {
+    //     const newState = {
+    //       ...old,
+    //       mainViewState: { ...old.mainViewState, ...changed }
+    //     };
+    //     const selectedObjectDataList = newState.mainViewState.objects?.filter(
+    //       obj => obj.id === newState.selectedObject
+    //     );
+    //     if (selectedObjectDataList && selectedObjectDataList[0]) {
+    //       newState.selectedObjectData = selectedObjectDataList[0].parameters;
+    //     }
+    //     return newState;
+    //   },
+    //   () => console.log('new state', this.state)
+    // );
   };
 
   syncObjectProperties(
     objectId: string | undefined,
     properties: { [key: string]: any }
   ) {
-    if (!this.props.sharedModel || !objectId) {
-      return;
-    }
-    const objects = [
-      ...this.props.sharedModel.getMainViewStateByKey('objects')
-    ] as IJcadObject[];
-    console.log('objects', objects);
+    // if (!this.props.sharedModel || !objectId) {
+    //   return;
+    // }
+    // const objects = [
+    //   ...this.props.sharedModel.getMainViewStateByKey('objects')
+    // ] as IJcadObject[];
+    // console.log('objects', objects);
 
-    const currentObj = objects.filter(obj => obj.id === objectId);
-    if (currentObj.length > 0) {
-      currentObj[0].parameters = { ...currentObj[0].parameters, ...properties };
-    }
-    console.log('new object', objects);
+    // const currentObj = objects.filter(obj => obj.id === objectId);
+    // if (currentObj.length > 0) {
+    //   currentObj[0].parameters = { ...currentObj[0].parameters, ...properties };
+    // }
+    // console.log('new object', objects);
 
-    this.props.sharedModel.setMainViewState('objects', objects);
+    // this.props.sharedModel.setMainViewState('objects', objects);
   }
 
   render(): React.ReactNode {
