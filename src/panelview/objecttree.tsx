@@ -7,7 +7,7 @@ import Tree from '@naisutech/react-tree';
 
 import { JupyterCadDoc } from '../model';
 import { IJupyterCadTracker } from '../token';
-import { IControlViewSharedState, IMainViewSharedState } from '../types';
+import { IJCadContent } from '../types';
 import { ControlPanelModel } from './model';
 
 export class ObjectTree extends PanelWithToolbar {
@@ -55,8 +55,7 @@ class ObjectTreeWidget extends ReactWidget {
 }
 
 interface IStates {
-  controlViewState?: IControlViewSharedState;
-  mainViewState?: IMainViewSharedState;
+  mainViewState?: IJCadContent;
 }
 
 interface IProps {
@@ -82,22 +81,21 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   }
 
   onSharedModelPropChange(sharedModel?: JupyterCadDoc): void {
-    if (sharedModel) {
-      sharedModel.mainViewStateChanged.connect(this.sharedMainViewModelChanged);
-      this.setState(
-        old => {
-          return {
-            ...old,
-            mainViewState: sharedModel.getMainViewState(),
-            controlViewState: sharedModel.getControlViewState()
-          };
-        },
-        () => console.log('new state', this.state)
-      );
-    }
+    // if (sharedModel) {
+    //   sharedModel.mainViewStateChanged.connect(this.sharedMainViewModelChanged);
+    //   this.setState(
+    //     old => {
+    //       return {
+    //         ...old,
+    //         mainViewState: sharedModel.getMainViewState()
+    //       };
+    //     },
+    //     () => console.log('new state', this.state)
+    //   );
+    // }
   }
 
-  sharedMainViewModelChanged = (_, changed: IMainViewSharedState): void => {
+  sharedMainViewModelChanged = (_, changed: IJCadContent): void => {
     this.setState(
       old => {
         const newState = {
@@ -111,27 +109,27 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   };
 
   stateToTree = () => {
-    const nodes = (this.state.mainViewState?.objects ?? []).map(jcadObject => {
-      return {
-        id: jcadObject.id,
-        label: `Object (#${jcadObject.id})`,
-        parentId: null,
-        items: [
-          {
-            id: `${jcadObject.id}#parameters`,
-            label: 'Shape',
-            parentId: jcadObject.id
-          },
-          {
-            id: `${jcadObject.id}#operator`,
-            label: 'Operators',
-            parentId: jcadObject.id
-          }
-        ]
-      };
-    });
+    // const nodes = (this.state.mainViewState?.objects ?? []).map(jcadObject => {
+    //   return {
+    //     id: jcadObject.id,
+    //     label: `Object (#${jcadObject.id})`,
+    //     parentId: null,
+    //     items: [
+    //       {
+    //         id: `${jcadObject.id}#parameters`,
+    //         label: 'Shape',
+    //         parentId: jcadObject.id
+    //       },
+    //       {
+    //         id: `${jcadObject.id}#operator`,
+    //         label: 'Operators',
+    //         parentId: jcadObject.id
+    //       }
+    //     ]
+    //   };
+    // });
 
-    return nodes;
+    return [];
   };
 
   render(): React.ReactNode {
