@@ -1,7 +1,6 @@
 {
-  "objects": [
-    {
-      "id": "123456",
+  "objects": {
+    "123456": {
       "visible": true,
       "shape": "Box",
       "parameters": {
@@ -15,5 +14,5 @@
         ]
       }
     }
-  ]
+  }
 }

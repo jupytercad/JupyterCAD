@@ -1,11 +1,9 @@
-import { WorkerAction, IDict, IJcadModel } from '../types';
-import {
-  OpenCascadeInstance,
-  TopoDS_Shape,
-  Handle_Poly_Triangulation
-} from 'opencascade.js';
+import { Handle_Poly_Triangulation, OpenCascadeInstance, TopoDS_Shape } from 'opencascade.js';
+
+import { IDict, IJCadContent, IJcadModel, WorkerAction } from '../types';
 import { PrimitiveShapesFactory } from './occapi';
 import { IOperatorArg } from './types';
+
 let occ: OpenCascadeInstance;
 
 export function getOcc(): OpenCascadeInstance {
@@ -201,13 +199,11 @@ function shapeToThree(shapes: Array<TopoDS_Shape>): {
   return { faceList, edgeList };
 }
 
-function buildModel(model: IJcadModel): TopoDS_Shape[] {
+function buildModel(model: IJCadContent): TopoDS_Shape[] {
   const occShapes: TopoDS_Shape[] = [];
   const { objects } = model;
 
-  objects.forEach(object => {
-    console.log('object', object);
-
+  Object.entries(objects).forEach(([id, object]) => {
     const { shape, parameters } = object;
 
     const occShape = PrimitiveShapesFactory[shape](parameters as IOperatorArg);
@@ -218,7 +214,7 @@ function buildModel(model: IJcadModel): TopoDS_Shape[] {
 
 function loadFile(payload: {
   fileName: string;
-  content: IJcadModel;
+  content: IJCadContent;
 }): IDict | null {
   const { content } = payload;
   const shapeList = buildModel(content);
