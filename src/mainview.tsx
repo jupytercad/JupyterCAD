@@ -286,7 +286,8 @@ export class MainView extends React.Component<IProps, IStates> {
         if (!this._model) {
           return;
         }
-        // let content = this._model.sharedModel.getMainViewState();
+
+        let content = this._model.getContent();
         // this._model.sharedModel.mainViewStateChanged.connect((_, changed) => {
         //   const id = changed.id;
         //   this.postMessage({
@@ -297,23 +298,14 @@ export class MainView extends React.Component<IProps, IStates> {
         //     }
         //   });
         // });
-        // if (Object.keys(content).length === 0) {
-        //   content = this._model.toJSON() as IJCadContent;
-        //   for (const [key, value] of Object.entries(content)) {
-        //     this._model.sharedModel.setMainViewState(
-        //       key as keyof IJCadContent,
-        //       value
-        //     );
-        //   }
-        // } else {
-        //   this.postMessage({
-        //     action: WorkerAction.LOAD_FILE,
-        //     payload: {
-        //       fileName: this._context.path,
-        //       content
-        //     }
-        //   });
-        // }
+
+        this.postMessage({
+          action: WorkerAction.LOAD_FILE,
+          payload: {
+            fileName: this._context.path,
+            content
+          }
+        });
       }
     }
   };

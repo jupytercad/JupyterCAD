@@ -89,10 +89,11 @@ export interface IJcadObject {
 }
 
 export interface IJcadModel {
-  objects: Array<IJcadObject>;
+  [key: string]: IJcadObject;
 }
 
 export interface IJCadContent {
   id?: number;
-  objects: { [key: string]: IJcadObject };
+  objects: IJcadModel;
+  options?: IDict;
 }

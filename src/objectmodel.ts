@@ -1,41 +1,46 @@
 import * as Y from 'yjs';
 
 import { MapChange, YDocument } from '@jupyterlab/shared-models';
-import { IJcadObject } from './types';
-
+import { IJcadObject, ValueOf } from './types';
+import { ISignal, Signal } from '@lumino/signaling';
 export type IJcadObjectDocChange = {
   contextChange?: MapChange;
   objectChange?: MapChange;
 };
-export class JcadObjectDoc extends YDocument<IJcadObjectDocChange> {
-  constructor() {
-    super();
-    this._geometryObject = this.ydoc.getMap('geometryObject');
-    this._geometryObject.observe(this._objectObserver);
+export class JcadObjectDoc extends Y.Map<any> {
+  constructor(entries?: Iterable<readonly [string, any]> | undefined) {
+    super(entries);
+    this.observe(this._objectObserver);
   }
 
-  get object(): Y.Map<any> {
-    return this._geometryObject;
-  }
-
-  public setProperty(key: string, value: any): void {
-    this._geometryObject.set(key, value);
-  }
-
-  public getProperty(key: string): any | undefined {
-    return this._geometryObject.get(key);
-  }
-
-  public toJson(): IJcadObject {
+  public getObject(): IJcadObject {
     const values = {} as IJcadObject;
-    for (const [key, value] of this._geometryObject.entries()) {
-      values[key] = value;
+    for (const [key, value] of this.entries()) {
+      if (key !== 'id') {
+        values[key] = value;
+      }
     }
+
     return values;
   }
 
+  public getProperty(key: keyof IJcadObject): ValueOf<IJcadObject> | undefined {
+    return this.get(key);
+  }
+
+  public setProperty(
+    key: keyof IJcadObject,
+    value: ValueOf<IJcadObject>
+  ): void {
+    this.set(key, value);
+  }
+
+  get changed(): ISignal<this, IJcadObjectDocChange> {
+    return this._changed;
+  }
+
   dispose(): void {
-    this._geometryObject.unobserve(this._objectObserver);
+    this.unobserve(this._objectObserver);
   }
 
   private _objectObserver = (event: Y.YMapEvent<any>): void => {
@@ -46,6 +51,5 @@ export class JcadObjectDoc extends YDocument<IJcadObjectDocChange> {
   public static create(): JcadObjectDoc {
     return new JcadObjectDoc();
   }
-
-  private _geometryObject: Y.Map<any>;
+  private _changed: Signal<this, IJcadObjectDocChange>;
 }
