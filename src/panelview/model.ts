@@ -1,25 +1,42 @@
-import { ObservableMap, IObservableMap } from '@jupyterlab/observables';
-import { ISignal, Signal } from '@lumino/signaling';
-export interface IControlPanelState {
-  activatedObject: string;
-}
+import { ObservableMap } from '@jupyterlab/observables';
+import { ISignal } from '@lumino/signaling';
 
-type IStateValue = string | number;
-type ISateChangedSignal = ISignal<
-  ObservableMap<IStateValue>,
-  IObservableMap.IChangedArgs<IStateValue>
->;
-export class ControlPanelModel {
-  constructor() {
+import { IJupyterCadTracker } from '../token';
+import {
+  IControlPanelModel,
+  IControlPanelState,
+  IJupyterCadDoc,
+  IJupyterCadModel,
+  IJupyterCadWidget,
+  ISateChangedSignal,
+  IStateValue
+} from '../types';
+
+export class ControlPanelModel implements IControlPanelModel {
+  constructor(options: ControlPanelModel.IOptions) {
     const state = { activatedObject: '' };
     this._state = new ObservableMap({ values: state });
     this._stateChanged = this._state.changed;
+    this._tracker = options.tracker;
+    this._documentChanged = this._tracker.currentChanged;
   }
-  get state(): ObservableMap<string | number> {
+  get state(): ObservableMap<IStateValue> {
     return this._state;
   }
   get stateChanged(): ISateChangedSignal {
     return this._stateChanged;
+  }
+  get documentChanged(): ISignal<IJupyterCadTracker, IJupyterCadWidget | null> {
+    return this._documentChanged;
+  }
+  get filePath(): string | undefined {
+    return this._tracker.currentWidget?.context.localPath;
+  }
+  get jcadModel(): IJupyterCadModel | undefined {
+    return this._tracker.currentWidget?.context.model;
+  }
+  get sharedModel(): IJupyterCadDoc | undefined {
+    return this._tracker.currentWidget?.context.model.sharedModel;
   }
   set(key: keyof IControlPanelState, value: IStateValue): void {
     this._state.set(key, value);
@@ -30,7 +47,23 @@ export class ControlPanelModel {
   has(key: keyof IControlPanelState): boolean {
     return this._state.has(key);
   }
+  disconnect(f: any): void {
+    this._tracker.forEach(w =>
+      w.context.model.sharedModelChanged.disconnect(f)
+    );
+  }
 
   private readonly _stateChanged: ISateChangedSignal;
   private readonly _state: ObservableMap<IStateValue>;
+  private readonly _tracker: IJupyterCadTracker;
+  private _documentChanged: ISignal<
+    IJupyterCadTracker,
+    IJupyterCadWidget | null
+  >;
+}
+
+namespace ControlPanelModel {
+  export interface IOptions {
+    tracker: IJupyterCadTracker;
+  }
 }

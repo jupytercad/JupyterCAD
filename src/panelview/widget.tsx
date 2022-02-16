@@ -1,30 +1,26 @@
+import { SidePanel } from '@jupyterlab/ui-components';
+import { Widget } from '@lumino/widgets';
 import * as React from 'react';
 
-import { ReactWidget } from '@jupyterlab/apputils';
-import { SidePanel } from '@jupyterlab/ui-components';
-import { Panel, Widget } from '@lumino/widgets';
-
 import { JupyterCadDoc } from '../model';
-import { IJupyterCadTracker } from '../token';
-import { ControlPanelModel } from './model';
+import { IControlPanelModel } from '../types';
 import { ObjectProperties } from './objectproperties';
 import { ObjectTree } from './objecttree';
 
 export class PanelWidget extends SidePanel {
-  constructor(tracker: IJupyterCadTracker) {
+  constructor(options: PanelWidget.IOptions) {
     super();
     this.addClass('jpcad-sidepanel-widget');
-    this._model = new ControlPanelModel();
+    this._model = options.model;
     const header = new PanelWidget.Header();
     this.header.addWidget(header);
-    const tree = new ObjectTree({ tracker, controlPanelModel: this._model });
+    const tree = new ObjectTree({ controlPanelModel: this._model });
     const properties = new ObjectProperties({
-      tracker,
       controlPanelModel: this._model
     });
     this.addWidget(tree);
     this.addWidget(properties);
-    tracker.currentChanged.connect((_, changed) => {
+    this._model.documentChanged.connect((_, changed) => {
       if (changed) {
         header.title.label = changed.context.localPath;
       } else {
@@ -37,11 +33,14 @@ export class PanelWidget extends SidePanel {
   dispose(): void {
     super.dispose();
   }
-  private _model: ControlPanelModel;
+  private _model: IControlPanelModel;
 }
 
 export namespace PanelWidget {
-  interface IProps {
+  export interface IOptions {
+    model: IControlPanelModel;
+  }
+  export interface IProps {
     filePath?: string;
     sharedModel?: JupyterCadDoc;
   }
@@ -54,15 +53,13 @@ export namespace PanelWidget {
      * Instantiate a new sidebar header.
      */
     constructor() {
-      super({ node: Private.createHeader() });
+      super({ node: createHeader() });
       this.title.changed.connect(_ => {
         this.node.textContent = this.title.label;
       });
     }
   }
-}
 
-namespace Private {
   /**
    * Create a sidebar header node.
    */

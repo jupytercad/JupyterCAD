@@ -1,132 +1,115 @@
-import * as React from 'react';
-
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
 import Tree from '@naisutech/react-tree';
+import * as React from 'react';
 
-import { JupyterCadDoc } from '../model';
-import { IJupyterCadTracker } from '../token';
-import { IJCadContent } from '../types';
-import { ControlPanelModel } from './model';
+import {
+  IControlPanelModel,
+  IDict,
+  IJcadModel,
+  IJupyterCadDocChange
+} from '../types';
 
 export class ObjectTree extends PanelWithToolbar {
   constructor(params: ObjectTree.IOptions) {
     super(params);
     this.title.label = 'Objects tree';
-    this._body = new ObjectTreeWidget(params);
-    this.addWidget(this._body);
+    const body = ReactWidget.create(
+      <ObjectTreeReact cpModel={params.controlPanelModel} />
+    );
+    this.addWidget(body);
     this.addClass('jpcad-sidebar-treepanel');
   }
-
-  private _body: ObjectTreeWidget;
 }
 
 class ObjectTreeWidget extends ReactWidget {
   constructor(private params: ObjectTree.IOptions) {
     super();
-    const tracker = params.tracker;
-    this._filePath = tracker.currentWidget?.context.localPath;
-    this._sharedModel = tracker.currentWidget?.context.model.sharedModel;
-    tracker.currentChanged.connect((_, changed) => {
-      if (changed) {
-        this._filePath = changed.context.localPath;
-        this._sharedModel = changed.context.model.sharedModel;
-      } else {
-        this._filePath = undefined;
-        this._sharedModel = undefined;
-      }
-      this.update();
-    });
+    this._model = params.controlPanelModel;
   }
 
   render(): JSX.Element {
     return (
       <ObjectTreeReact
-        filePath={this._filePath}
-        sharedModel={this._sharedModel}
-        controlPanelModel={this.params.controlPanelModel}
+        // filePath={this._filePath}
+        cpModel={this._model}
+        // jcadModel={this._jcadModel}
       />
     );
   }
 
-  private _filePath: string | undefined;
-  private _sharedModel: JupyterCadDoc | undefined;
+  private _model: IControlPanelModel;
 }
 
 interface IStates {
-  mainViewState?: IJCadContent;
+  jcadOption?: IDict;
+  filePath?: string;
+  jcadObject?: IJcadModel;
 }
 
 interface IProps {
-  filePath?: string;
-  sharedModel?: JupyterCadDoc;
-  controlPanelModel: ControlPanelModel;
+  // filePath?: string;
+  // jcadModel?: JupyterCadModel;
+  cpModel: IControlPanelModel;
 }
 class ObjectTreeReact extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
     this.state = {};
-    this.onSharedModelPropChange(this.props.sharedModel);
+    this.props.cpModel.jcadModel?.sharedModelChanged.connect(
+      this.sharedJcadModelChanged
+    );
+    this.props.cpModel.documentChanged.connect((_, changed) => {
+      if (changed) {
+        // this.props.cpModel.disconnect(this.sharedJcadModelChanged);
+        // changed.context.model.sharedModelChanged.connect(
+        //   this.sharedJcadModelChanged
+        // );
+        // this.setState(old => ({
+        //   ...old,
+        //   filePath: changed.context.localPath,
+        //   jcadObject: this.props.cpModel.jcadModel?.getAllObject()
+        // }));
+      }
+    });
   }
 
-  componentDidUpdate(oldProps, oldState): void {
-    if (oldProps.sharedModel === this.props.sharedModel) {
+  sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
+    const jcadModel = this.props.cpModel.jcadModel;
+    if (!jcadModel || !jcadModel.getAllObject) {
       return;
     }
-    if (oldProps.sharedModel) {
-      oldProps.sharedModel.changed.disconnect(this.sharedMainViewModelChanged);
-    }
-    this.onSharedModelPropChange(this.props.sharedModel);
-  }
-
-  onSharedModelPropChange(sharedModel?: JupyterCadDoc): void {
-    // if (sharedModel) {
-    //   sharedModel.mainViewStateChanged.connect(this.sharedMainViewModelChanged);
-    //   this.setState(
-    //     old => {
-    //       return {
-    //         ...old,
-    //         mainViewState: sharedModel.getMainViewState()
-    //       };
-    //     },
-    //     () => console.log('new state', this.state)
-    //   );
-    // }
-  }
-
-  sharedMainViewModelChanged = (_, changed: IJCadContent): void => {
-    this.setState(
-      old => {
-        const newState = {
-          ...old,
-          mainViewState: { ...old.mainViewState, ...changed }
-        };
-        return newState;
-      },
-      () => console.log('new state', this.state)
-    );
+    this.setState(old => ({
+      ...old,
+      jcadObject: jcadModel.getAllObject()
+    }));
   };
 
   stateToTree = () => {
+    if (this.state.jcadObject) {
+      return Object.entries(this.state.jcadObject).map(([id, obj]) => {
+        return {
+          id: id,
+          label: `Object (#${id})`,
+          parentId: null,
+          items: [
+            {
+              id: `${id}#parameters`,
+              label: 'Shape',
+              parentId: id
+            },
+            {
+              id: `${id}#operator`,
+              label: 'Operators',
+              parentId: id
+            }
+          ]
+        };
+      });
+    }
     // const nodes = (this.state.mainViewState?.objects ?? []).map(jcadObject => {
-    //   return {
-    //     id: jcadObject.id,
-    //     label: `Object (#${jcadObject.id})`,
-    //     parentId: null,
-    //     items: [
-    //       {
-    //         id: `${jcadObject.id}#parameters`,
-    //         label: 'Shape',
-    //         parentId: jcadObject.id
-    //       },
-    //       {
-    //         id: `${jcadObject.id}#operator`,
-    //         label: 'Operators',
-    //         parentId: jcadObject.id
-    //       }
-    //     ]
-    //   };
+
     // });
 
     return [];
@@ -134,6 +117,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
 
   render(): React.ReactNode {
     const data = this.stateToTree();
+
     return (
       <div className="jpcad-treeview-wrapper">
         <Tree
@@ -141,7 +125,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
           theme="light"
           onSelect={id => {
             if (id && id.length > 0) {
-              this.props.controlPanelModel.set('activatedObject', id[0]);
+              this.props.cpModel.set('activatedObject', id[0]);
             }
           }}
         />
@@ -155,7 +139,6 @@ export namespace ObjectTree {
    */
   export interface IOptions extends Panel.IOptions {
     id?: string;
-    tracker: IJupyterCadTracker;
-    controlPanelModel: ControlPanelModel;
+    controlPanelModel: IControlPanelModel;
   }
 }

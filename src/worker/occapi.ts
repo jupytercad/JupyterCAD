@@ -28,7 +28,6 @@ function _Box(arg: IBox) {
 function _Sphere(arg: ISphere) {
   const oc = getOcc();
   const { center, radius } = arg;
-  console.log(center, radius);
 
   let box = new oc.BRepPrimAPI_MakeBox_2(1, 3, 2);
   return box.Shape();

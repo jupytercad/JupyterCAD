@@ -1,8 +1,8 @@
 import { IWidgetTracker } from '@jupyterlab/apputils';
-import { JupyterCadWidget } from './widget';
+import { IJupyterCadWidget } from './types';
 import { Token } from '@lumino/coreutils';
 
-export type IJupyterCadTracker = IWidgetTracker<JupyterCadWidget>;
+export type IJupyterCadTracker = IWidgetTracker<IJupyterCadWidget>;
 
 export const IJupyterCadDocTracker = new Token<IJupyterCadTracker>(
   'jupyterCadDocTracker'

@@ -11,6 +11,7 @@ import { JupyterCadWidget } from './widget';
 import { PanelWidget } from './panelview/widget';
 import { IJupyterCadDocTracker, IJupyterCadTracker } from './token';
 import { jcLightIcon } from './tools';
+import { ControlPanelModel } from './panelview/model';
 
 const FACTORY = 'Jupytercad Factory';
 const NAME_SPACE = 'jupytercad';
@@ -90,7 +91,9 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     shell: ILabShell,
     tracker: IJupyterCadTracker
   ) => {
-    const controlPanel = new PanelWidget(tracker);
+    const controlModel = new ControlPanelModel({ tracker });
+    tracker.currentChanged;
+    const controlPanel = new PanelWidget({ model: controlModel });
     controlPanel.id = 'jupytercad::controlPanel';
     controlPanel.title.caption = 'JupyterCad Control Panel';
     controlPanel.title.icon = jcLightIcon;
