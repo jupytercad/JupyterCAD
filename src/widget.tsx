@@ -55,10 +55,7 @@ export class JupyterCadPanel extends ReactWidget {
   }
 
   render(): JSX.Element {
-    console.log('render');
-    
-    return <div>Hello</div>
-    // return <MainView context={this._context} />;
+    return <MainView context={this._context} />;
   }
 
   private _context: DocumentRegistry.IContext<JupyterCadModel>;

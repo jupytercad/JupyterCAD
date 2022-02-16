@@ -23,25 +23,6 @@ export class ObjectTree extends PanelWithToolbar {
   }
 }
 
-class ObjectTreeWidget extends ReactWidget {
-  constructor(private params: ObjectTree.IOptions) {
-    super();
-    this._model = params.controlPanelModel;
-  }
-
-  render(): JSX.Element {
-    return (
-      <ObjectTreeReact
-        // filePath={this._filePath}
-        cpModel={this._model}
-        // jcadModel={this._jcadModel}
-      />
-    );
-  }
-
-  private _model: IControlPanelModel;
-}
-
 interface IStates {
   jcadOption?: IDict;
   filePath?: string;
@@ -56,33 +37,33 @@ interface IProps {
 class ObjectTreeReact extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      filePath: this.props.cpModel.filePath,
+      jcadObject: this.props.cpModel.jcadModel?.getAllObject()
+    };
     this.props.cpModel.jcadModel?.sharedModelChanged.connect(
       this.sharedJcadModelChanged
     );
     this.props.cpModel.documentChanged.connect((_, changed) => {
       if (changed) {
-        // this.props.cpModel.disconnect(this.sharedJcadModelChanged);
-        // changed.context.model.sharedModelChanged.connect(
-        //   this.sharedJcadModelChanged
-        // );
-        // this.setState(old => ({
-        //   ...old,
-        //   filePath: changed.context.localPath,
-        //   jcadObject: this.props.cpModel.jcadModel?.getAllObject()
-        // }));
+        this.props.cpModel.disconnect(this.sharedJcadModelChanged);
+        changed.context.model.sharedModelChanged.connect(
+          this.sharedJcadModelChanged
+        );
+        this.setState(old => ({
+          ...old,
+          filePath: changed.context.localPath,
+          jcadObject: this.props.cpModel.jcadModel?.getAllObject()
+        }));
       }
     });
   }
 
   sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
-    const jcadModel = this.props.cpModel.jcadModel;
-    if (!jcadModel || !jcadModel.getAllObject) {
-      return;
-    }
+
     this.setState(old => ({
       ...old,
-      jcadObject: jcadModel.getAllObject()
+      jcadObject: this.props.cpModel.jcadModel?.getAllObject()
     }));
   };
 

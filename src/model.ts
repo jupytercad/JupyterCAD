@@ -4,12 +4,15 @@ import { YDocument } from '@jupyterlab/shared-models';
 import { PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import * as Y from 'yjs';
-
 import { JcadObjectDoc } from './objectmodel';
+
+// import { JcadObjectDoc } from './objectmodel';
 import {
   IJCadContent,
   IJcadModel,
+  IJcadObject,
   IJcadObjectDoc,
+  // IJcadObjectDoc,
   IJupyterCadDoc,
   IJupyterCadDocChange,
   IJupyterCadModel,
@@ -76,18 +79,14 @@ export class JupyterCadModel implements IJupyterCadModel {
   }
 
   fromString(data: string): void {
-    console.log('call from string');
-
     const jsonData: IJCadContent = JSON.parse(data);
     this.sharedModel.transact(() => {
       for (const [id, obj] of Object.entries(jsonData.objects)) {
         const entries = Object.entries({ ...obj, id });
-        const jcadObj = new JcadObjectDoc(entries);
+        const jcadObj = new Y.Map<any>(entries);
         this.sharedModel.setObject(id, jcadObj);
       }
       const options = jsonData.options;
-      console.log('option', options);
-
       if (options) {
         for (const [opt, val] of Object.entries(options)) {
           this.sharedModel.setOption(opt, val);
@@ -105,9 +104,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   }
 
   initialize(): void {
-    console.log('initialize', this.getContent());
-
-    // nothing to do
+    //
   }
 
   getWorker(): Worker {
@@ -123,7 +120,14 @@ export class JupyterCadModel implements IJupyterCadModel {
     const content: IJCadContent = { objects: {}, options: {} };
     const sharedContent = this.sharedModel.objects;
     sharedContent.forEach((obj, id) => {
-      content.objects[id] = obj.getObject();
+      const newObj = {};
+      for (const [key, value] of obj.entries()) {
+        if (key !== 'id') {
+          newObj[key] = value;
+        }
+      }
+
+      content.objects[id] = newObj as IJcadObject;
     });
     const sharedOption = this.sharedModel.options;
     if (sharedOption) {
@@ -137,10 +141,8 @@ export class JupyterCadModel implements IJupyterCadModel {
   getAllObject(): IJcadModel {
     const all: IJcadModel = {};
     this.sharedModel.objects.forEach((value, key) => {
-      console.log(key, value);
-
-      if (key && value && value.getObject) {
-        all[key] = value.getObject();
+      if (value) {
+        all[key] = JcadObjectDoc.yMapToJcadObject(value);
       }
     });
     return all;
@@ -193,10 +195,6 @@ export class JupyterCadDoc
   constructor() {
     super();
     this._objects = this.ydoc.getMap<IJcadObjectDoc>('objects');
-    console.log('new cadmodel');
-    this._objects.forEach((value, key) => {
-      console.log('key', key, value.getObject());
-    });
     this._options = this.ydoc.getMap<any>('option');
     this._objects.observe(this._objectsObserver);
     // this._options.observe(this._optionsObserver);
@@ -216,15 +214,12 @@ export class JupyterCadDoc
     return this._options;
   }
 
-  public getObject(key: string): IJcadObjectDoc | undefined {
+  public getObjectById(key: string): IJcadObjectDoc | undefined {
     return this._objects.get(key);
   }
 
   public setObject(key: string, value: IJcadObjectDoc): void {
     this._objects.set(key, value);
-    value.changed.connect((e, c) => {
-      this._changed.emit({});
-    });
   }
 
   public getOption(key: string): any {
@@ -240,12 +235,23 @@ export class JupyterCadDoc
   }
 
   private _objectsObserver = (event: Y.YMapEvent<any>): void => {
-    const objectChange = [];
-    console.log('received data', event.keys);
+    event.changes.keys.forEach((val, key) => {
+      if (val.action === 'add') {
+        this._objects.get(key)?.observe(this.emitChange);
+      } else if (val.action === 'delete') {
+        val.oldValue.unobserve(this.emitChange);
+      }
+    });
 
+    const objectChange = [];
     this._changed.emit({ objectChange });
+  };
+
+  private emitChange = () => {
+    this._changed.emit({});
   };
 
   private _objects: Y.Map<IJcadObjectDoc>;
   private _options: Y.Map<any>;
+  private initialized = false;
 }
