@@ -46,8 +46,7 @@ interface IStates {
 export class MainView extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
-    console.log('model', props.context.model.toJSON());
-    
+ 
     this._geometry = new THREE.BufferGeometry();
     this._geometry.setDrawRange(0, 3 * 10000);
     this._refLength = 0;
@@ -67,22 +66,23 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._context = props.context;
     this._cameraClients = {};
-    // this._context.ready.then(() => {
-    //   this._model = this._context.model as JupyterCadModel;
-    //   this._worker = this._model.getWorker();
-    //   this._messageChannel = new MessageChannel();
-    //   this._messageChannel.port1.onmessage = msgEvent => {
-    //     this.messageHandler(msgEvent.data);
-    //   };
-    //   // this.postMessage(
-    //   //   { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
-    //   //   this._messageChannel.port2
-    //   // );
-    //   this._model.themeChanged.connect((_, arg) => {
-    //     this.handleThemeChange(arg.newValue as THEME_TYPE);
-    //   });
-    //   this._model.cameraChanged.connect(this._onCameraChanged);
-    // });
+    this._context.ready.then(() => {
+      this._model = this._context.model as JupyterCadModel;
+
+      this._worker = this._model.getWorker();
+      this._messageChannel = new MessageChannel();
+      this._messageChannel.port1.onmessage = msgEvent => {
+        this.messageHandler(msgEvent.data);
+      };
+      this.postMessage(
+        { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
+        this._messageChannel.port2
+      );
+      this._model.themeChanged.connect((_, arg) => {
+        this.handleThemeChange(arg.newValue as THEME_TYPE);
+      });
+      this._model.cameraChanged.connect(this._onCameraChanged);
+    });
   }
   componentDidMount(): void {
     window.addEventListener('resize', this.handleWindowResize);
@@ -285,18 +285,17 @@ export class MainView extends React.Component<IProps, IStates> {
         break;
       }
       case MainAction.INITIALIZED: {
-        return
         if (!this._model) {
           return;
         }
         const render = () => {
-          // this.postMessage({
-          //   action: WorkerAction.LOAD_FILE,
-          //   payload: {
-          //     fileName: this._context.path,
-          //     content: this._model.getContent()
-          //   }
-          // });
+          this.postMessage({
+            action: WorkerAction.LOAD_FILE,
+            payload: {
+              fileName: this._context.path,
+              content: this._model.getContent()
+            }
+          });
         };
         this._model.sharedModelChanged.connect(render);
         render();

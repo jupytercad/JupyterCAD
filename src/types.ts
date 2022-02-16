@@ -93,12 +93,12 @@ export interface IJcadObjectDocChange {
   objectChange?: MapChange;
 }
 
-export interface IJcadObjectDoc extends Y.Map<any> {
-  getObject(): IJcadObject;
-  getProperty(key: keyof IJcadObject): ValueOf<IJcadObject> | undefined;
-  setProperty(key: keyof IJcadObject, value: ValueOf<IJcadObject>): void;
-  changed: ISignal<IJcadObjectDoc, IJcadObjectDocChange>;
-}
+// export interface IJcadObjectDoc extends Y.Map<any> {
+//   getObject(): IJcadObject;
+//   getProperty(key: keyof IJcadObject): ValueOf<IJcadObject> | undefined;
+//   setProperty(key: keyof IJcadObject, value: ValueOf<IJcadObject>): void;
+//   changed: ISignal<IJcadObjectDoc, IJcadObjectDocChange>;
+// }
 
 export interface IJupyterCadDocChange {
   contextChange?: MapChange;
@@ -110,11 +110,11 @@ export interface IJupyterCadDocChange {
   }>;
   optionChange?: MapChange;
 }
-
+export type IJcadObjectDoc = Y.Map<any>;
 export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   objects: Y.Map<IJcadObjectDoc>;
   options: Y.Map<any>;
-  getObject(key: string): IJcadObjectDoc | undefined;
+  getObjectById(key: string): IJcadObjectDoc | undefined;
   setObject(key: string, value: IJcadObjectDoc): void;
   getOption(key: string): any;
   setOption(key: string, value: any): void;

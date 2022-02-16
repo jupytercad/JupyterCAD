@@ -4,9 +4,9 @@
       "visible": true,
       "shape": "Box",
       "parameters": {
-        "x": 5,
-        "y": 5,
-        "z": 5,
+        "x": 7,
+        "y": 15,
+        "z": 19,
         "centered": [
           0,
           0,
@@ -15,5 +15,7 @@
       }
     }
   },
-  "options":{"foo": 1}
+  "options": {
+    "foo": 1
+  }
 }

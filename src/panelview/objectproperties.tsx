@@ -39,21 +39,24 @@ interface IProps {
 class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      filePath: this.props.cpModel.filePath,
+      jcadObject: this.props.cpModel.jcadModel?.getAllObject()
+    };
     this.props.cpModel.jcadModel?.sharedModelChanged.connect(
       this.sharedJcadModelChanged
     );
     this.props.cpModel.documentChanged.connect((_, changed) => {
       if (changed) {
         // this.props.cpModel.disconnect(this.sharedJcadModelChanged);
-        // changed.context.model.sharedModelChanged.connect(
-        //   this.sharedJcadModelChanged
-        // );
-        // this.setState(old => ({
-        //   ...old,
-        //   filePath: changed.context.localPath,
-        //   jcadObject: this.props.cpModel.jcadModel?.getAllObject()
-        // }));
+        changed.context.model.sharedModelChanged.connect(
+          this.sharedJcadModelChanged
+        );
+        this.setState(old => ({
+          ...old,
+          filePath: changed.context.localPath,
+          jcadObject: this.props.cpModel.jcadModel?.getAllObject()
+        }));
       }
     });
     this.props.cpModel.stateChanged.connect((changed, value) => {
@@ -74,10 +77,27 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   }
 
   sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
-    this.setState(old => ({
-      ...old,
-      jcadObject: this.props.cpModel.jcadModel?.getAllObject()
-    }));
+    this.setState(old => {
+      if (old.selectedObject) {
+        const jcadObject = this.props.cpModel.jcadModel?.getAllObject();
+        if (jcadObject) {
+          const selectedObjectData =
+            jcadObject[old.selectedObject]['parameters'];
+          return {
+            ...old,
+            jcadObject: jcadObject,
+            selectedObjectData
+          };
+        } else {
+          return old;
+        }
+      } else {
+        return {
+          ...old,
+          jcadObject: this.props.cpModel.jcadModel?.getAllObject()
+        };
+      }
+    });
   };
 
   syncObjectProperties(
@@ -89,13 +109,13 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     }
 
     const currentYMap =
-      this.props.cpModel.jcadModel?.sharedModel.getObject(objectId);
+      this.props.cpModel.jcadModel?.sharedModel.getObjectById(objectId);
     if (currentYMap) {
       const newParams = {
-        ...(currentYMap.getProperty('parameters') as IDict),
+        ...(currentYMap.get('parameters') as IDict),
         ...properties
       };
-      currentYMap?.setProperty('parameters', newParams);
+      currentYMap?.set('parameters', newParams);
     }
   }
 
