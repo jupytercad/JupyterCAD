@@ -1,13 +1,12 @@
 {
-  "objects": [
-    {
-      "id": "xxxxx",
+  "objects": {
+    "1": {
       "visible": true,
       "shape": "Box",
       "parameters": {
-        "x": 8,
-        "y": 5,
-        "z": 4,
+        "x": 3,
+        "y": 3,
+        "z": 3,
         "centered": [
           0,
           0,
@@ -15,5 +14,5 @@
         ]
       }
     }
-  ]
+  }
 }

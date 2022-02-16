@@ -13,7 +13,6 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
     this.state = { internalData: { ...this.props.sourceData } };
-    console.log('this.state', this.state);
   }
 
   setStateByKey = (key: string, value: any) => {
@@ -41,8 +40,6 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
       return [];
     }
     const inputs: JSX.Element[] = [];
-    console.log('data to build form ', this.props.sourceData);
-
     for (const [key, value] of Object.entries(this.props.sourceData)) {
       let input: JSX.Element;
       if (typeof value === 'string' || typeof value === 'number') {

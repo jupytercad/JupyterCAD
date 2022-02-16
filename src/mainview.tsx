@@ -1,24 +1,24 @@
 import * as React from 'react';
-import { DocumentRegistry } from '@jupyterlab/docregistry';
-import { v4 as uuid } from 'uuid';
-import { JupyterCadModel } from './model';
-
-import {
-  IMainMessage,
-  IWorkerMessage,
-  WorkerAction,
-  MainAction,
-  IDisplayShape,
-  IDict,
-  Position,
-  IJCadContent
-} from './types';
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
+import { v4 as uuid } from 'uuid';
+
+import { DocumentRegistry } from '@jupyterlab/docregistry';
+
+import { JupyterCadModel } from './model';
+import {
+  IDict,
+  IDisplayShape,
+  IJCadContent,
+  IMainMessage,
+  IWorkerMessage,
+  MainAction,
+  Position,
+  WorkerAction
+} from './types';
 
 type THEME_TYPE = 'JupyterLab Dark' | 'JupyterLab Light';
 const DARK_THEME: THEME_TYPE = 'JupyterLab Dark';
@@ -46,6 +46,8 @@ interface IStates {
 export class MainView extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
+    console.log('model', props.context.model.toJSON());
+    
     this._geometry = new THREE.BufferGeometry();
     this._geometry.setDrawRange(0, 3 * 10000);
     this._refLength = 0;
@@ -65,22 +67,22 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._context = props.context;
     this._cameraClients = {};
-    this._context.ready.then(() => {
-      this._model = this._context.model as JupyterCadModel;
-      this._worker = this._model.getWorker();
-      this._messageChannel = new MessageChannel();
-      this._messageChannel.port1.onmessage = msgEvent => {
-        this.messageHandler(msgEvent.data);
-      };
-      this.postMessage(
-        { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
-        this._messageChannel.port2
-      );
-      this._model.themeChanged.connect((_, arg) => {
-        this.handleThemeChange(arg.newValue as THEME_TYPE);
-      });
-      this._model.cameraChanged.connect(this._onCameraChanged);
-    });
+    // this._context.ready.then(() => {
+    //   this._model = this._context.model as JupyterCadModel;
+    //   this._worker = this._model.getWorker();
+    //   this._messageChannel = new MessageChannel();
+    //   this._messageChannel.port1.onmessage = msgEvent => {
+    //     this.messageHandler(msgEvent.data);
+    //   };
+    //   // this.postMessage(
+    //   //   { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
+    //   //   this._messageChannel.port2
+    //   // );
+    //   this._model.themeChanged.connect((_, arg) => {
+    //     this.handleThemeChange(arg.newValue as THEME_TYPE);
+    //   });
+    //   this._model.cameraChanged.connect(this._onCameraChanged);
+    // });
   }
   componentDidMount(): void {
     window.addEventListener('resize', this.handleWindowResize);
@@ -283,29 +285,21 @@ export class MainView extends React.Component<IProps, IStates> {
         break;
       }
       case MainAction.INITIALIZED: {
+        return
         if (!this._model) {
           return;
         }
-
-        let content = this._model.getContent();
-        // this._model.sharedModel.mainViewStateChanged.connect((_, changed) => {
-        //   const id = changed.id;
-        //   this.postMessage({
-        //     action: WorkerAction.LOAD_FILE,
-        //     payload: {
-        //       fileName: this._context.path,
-        //       content: this._model.sharedModel.getMainViewState()
-        //     }
-        //   });
-        // });
-
-        this.postMessage({
-          action: WorkerAction.LOAD_FILE,
-          payload: {
-            fileName: this._context.path,
-            content
-          }
-        });
+        const render = () => {
+          // this.postMessage({
+          //   action: WorkerAction.LOAD_FILE,
+          //   payload: {
+          //     fileName: this._context.path,
+          //     content: this._model.getContent()
+          //   }
+          // });
+        };
+        this._model.sharedModelChanged.connect(render);
+        render();
       }
     }
   };
@@ -403,7 +397,6 @@ export class MainView extends React.Component<IProps, IStates> {
     mainObject.add(model);
     this._scene.add(mainObject);
     this.setState(old => ({ ...old, loading: false }));
-    console.log('Generation Complete!');
   };
 
   private postMessage = (
