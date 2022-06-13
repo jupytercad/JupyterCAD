@@ -14,4 +14,3 @@ export interface ISphere {
 }
 export type IAllOperatorFunc = IOperatorFunc<IBox> | IOperatorFunc<ISphere>;
 export type IOperatorArg = IBox & ISphere;
-

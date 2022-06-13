@@ -48,9 +48,9 @@
     "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
-    "@jupyterlab/application": "^4.0.0-alpha.4",
-    "@jupyterlab/apputils": "^4.0.0-alpha.4",
-    "@jupyterlab/observables": "^5.0.0-alpha.4",
+    "@jupyterlab/application": "^4.0.0-alpha.11",
+    "@jupyterlab/apputils": "^4.0.0-alpha.11",
+    "@jupyterlab/observables": "^5.0.0-alpha.11",
     "@jupyterlab/ui-components": "^4.0.0-alpha.19",
     "@naisutech/react-tree": "^2.0.12",
     "@types/three": "^0.134.0",
@@ -59,7 +59,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@jupyterlab/builder": "^4.0.0-alpha.4",
+    "@jupyterlab/builder": "^4.0.0-alpha.11",
     "@types/node": "^16.11.10",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",

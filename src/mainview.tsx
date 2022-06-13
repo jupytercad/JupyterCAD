@@ -1,3 +1,4 @@
+import { DocumentRegistry } from '@jupyterlab/docregistry';
 import * as React from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -6,13 +7,10 @@ import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 import { v4 as uuid } from 'uuid';
 
-import { DocumentRegistry } from '@jupyterlab/docregistry';
-
 import { JupyterCadModel } from './model';
 import {
   IDict,
   IDisplayShape,
-  IJCadContent,
   IMainMessage,
   IWorkerMessage,
   MainAction,
@@ -46,7 +44,7 @@ interface IStates {
 export class MainView extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
- 
+
     this._geometry = new THREE.BufferGeometry();
     this._geometry.setDrawRange(0, 3 * 10000);
     this._refLength = 0;

@@ -1,6 +1,6 @@
 import { getOcc } from './actions';
 import { TopoDS_Shape } from 'opencascade.js';
-import { IOperatorArg, IBox, ISphere, IAllOperatorFunc } from './types';
+import { IBox, ISphere, IAllOperatorFunc } from './types';
 import { hashCode } from './utils';
 import { PrimitiveShapes } from '../types';
 const SHAPE_CACHE = new Map<string, TopoDS_Shape>();
@@ -19,18 +19,14 @@ export function operatorCache<T>(name: string, ops: (args: T) => TopoDS_Shape) {
   };
 }
 
-function _Box(arg: IBox) {
-  const { x, y, z, center = [0, 0, 0] } = arg;
+function _Box(arg: IBox): TopoDS_Shape {
+  const { x, y, z } = arg;
   const oc = getOcc();
-  let box = new oc.BRepPrimAPI_MakeBox_2(x, y, z);
+  const box = new oc.BRepPrimAPI_MakeBox_2(x, y, z);
   return box.Shape();
 }
-function _Sphere(arg: ISphere) {
-  const oc = getOcc();
-  const { center, radius } = arg;
-
-  let box = new oc.BRepPrimAPI_MakeBox_2(1, 3, 2);
-  return box.Shape();
+function _Sphere(arg: ISphere): TopoDS_Shape {
+  throw Error('Not implemented');
 }
 
 const Box = operatorCache<IBox>('Box', _Box);

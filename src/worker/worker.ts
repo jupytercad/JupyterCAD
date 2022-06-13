@@ -1,4 +1,4 @@
-import initOpenCascade, { OpenCascadeInstance, TopoDS_Shape } from 'opencascade.js';
+import initOpenCascade, { OpenCascadeInstance } from 'opencascade.js';
 import {
   WorkerAction,
   IWorkerMessage,
@@ -9,7 +9,7 @@ import {
 import WorkerHandler from './actions';
 
 let occ: OpenCascadeInstance;
-let ports: IDict<MessagePort> = {};
+const ports: IDict<MessagePort> = {};
 let lock = false;
 
 const registerWorker = async (id: string, port: MessagePort) => {

@@ -4,23 +4,18 @@ import { YDocument } from '@jupyterlab/shared-models';
 import { PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import * as Y from 'yjs';
-import { JcadObjectDoc } from './objectmodel';
 
-// import { JcadObjectDoc } from './objectmodel';
+import { yMapToJcadObject } from './tools';
 import {
   IJCadContent,
   IJcadModel,
   IJcadObject,
   IJcadObjectDoc,
-  // IJcadObjectDoc,
   IJupyterCadDoc,
   IJupyterCadDocChange,
   IJupyterCadModel,
   Position
 } from './types';
-
-// import initOpenCascade, { OpenCascadeInstance } from 'opencascade.js';
-// import worker from './worker?raw';
 
 export class JupyterCadModel implements IJupyterCadModel {
   constructor(languagePreference?: string, modelDB?: IModelDB) {
@@ -142,7 +137,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     const all: IJcadModel = {};
     this.sharedModel.objects.forEach((value, key) => {
       if (value) {
-        all[key] = JcadObjectDoc.yMapToJcadObject(value);
+        all[key] = yMapToJcadObject(value);
       }
     });
     return all;
@@ -253,5 +248,4 @@ export class JupyterCadDoc
 
   private _objects: Y.Map<IJcadObjectDoc>;
   private _options: Y.Map<any>;
-  private initialized = false;
 }

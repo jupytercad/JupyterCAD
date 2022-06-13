@@ -1,6 +1,5 @@
 import { SidePanel } from '@jupyterlab/ui-components';
 import { Widget } from '@lumino/widgets';
-import * as React from 'react';
 
 import { JupyterCadDoc } from '../model';
 import { IControlPanelModel } from '../types';

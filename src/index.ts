@@ -1,17 +1,17 @@
 import {
-  JupyterFrontEnd,
-  JupyterFrontEndPlugin,
+  ILabShell,
   ILayoutRestorer,
-  ILabShell
+  JupyterFrontEnd,
+  JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import { WidgetTracker, IThemeManager } from '@jupyterlab/apputils';
+import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
-import { JupyterCadWidgetFactory, JupyterCadModelFactory } from './factory';
-import { JupyterCadWidget } from './widget';
+import { JupyterCadModelFactory, JupyterCadWidgetFactory } from './factory';
+import { ControlPanelModel } from './panelview/model';
 import { PanelWidget } from './panelview/widget';
 import { IJupyterCadDocTracker, IJupyterCadTracker } from './token';
 import { jcLightIcon } from './tools';
-import { ControlPanelModel } from './panelview/model';
+import { JupyterCadWidget } from './widget';
 
 const FACTORY = 'Jupytercad Factory';
 const NAME_SPACE = 'jupytercad';
