@@ -1,8 +1,9 @@
+import * as React from 'react';
+
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
 import Tree from '@naisutech/react-tree';
-import * as React from 'react';
 
 import {
   IControlPanelModel,
@@ -60,7 +61,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   }
 
   sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
-
     this.setState(old => ({
       ...old,
       jcadObject: this.props.cpModel.jcadModel?.getAllObject()

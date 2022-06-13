@@ -1,11 +1,10 @@
-import * as Y from 'yjs';
-
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { MapChange, YDocument } from '@jupyterlab/shared-models';
 import { ReactWidget } from '@jupyterlab/ui-components';
 import { ISignal, Signal } from '@lumino/signaling';
+import * as Y from 'yjs';
 
 import { IJupyterCadTracker } from './token';
 

@@ -7,7 +7,6 @@ import {
   IControlPanelModel,
   IDict,
   IJcadModel,
-  IJcadObject,
   IJupyterCadDocChange
 } from '../types';
 import { ObjectPropertiesForm } from './formbuilder';
