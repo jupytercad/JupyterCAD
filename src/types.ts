@@ -7,6 +7,7 @@ import { ISignal, Signal } from '@lumino/signaling';
 import * as Y from 'yjs';
 
 import { IJupyterCadTracker } from './token';
+import { IJCadContent, IJCadModel } from './_interface/jcad';
 
 export interface IDict<T = any> {
   [key: string]: T;
@@ -82,11 +83,6 @@ export type Position = {
   z: number;
 };
 
-export enum PrimitiveShapes {
-  BOX = 'Box',
-  SPHERE = 'Sphere'
-}
-
 export interface IJcadObjectDocChange {
   contextChange?: MapChange;
   objectChange?: MapChange;
@@ -109,12 +105,12 @@ export interface IJupyterCadDocChange {
   }>;
   optionChange?: MapChange;
 }
-export type IJcadObjectDoc = Y.Map<any>;
+export type IJCadObjectDoc = Y.Map<any>;
 export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
-  objects: Y.Map<IJcadObjectDoc>;
+  objects: Y.Array<IJCadObjectDoc>;
   options: Y.Map<any>;
-  getObjectById(key: string): IJcadObjectDoc | undefined;
-  setObject(key: string, value: IJcadObjectDoc): void;
+  getObjectById(key: string): IJCadObjectDoc | undefined;
+  addObject(value: IJCadObjectDoc): void;
   getOption(key: string): any;
   setOption(key: string, value: any): void;
 }
@@ -130,30 +126,10 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   sharedModel: IJupyterCadDoc;
   getWorker(): Worker;
   getContent(): IJCadContent;
-  getAllObject(): IJcadModel;
+  getAllObject(): IJCadModel;
   syncCamera(pos: Position | undefined): void;
   getClientId(): number;
 }
-
-export interface IJcadObject {
-  id: string;
-  shape: PrimitiveShapes;
-  parameters: IDict;
-  visible: boolean;
-  operator?: Array<IDict>;
-  dependencies?: Array<string>;
-}
-
-export interface IJcadModel {
-  [key: string]: IJcadObject;
-}
-
-export interface IJCadContent {
-  id?: number;
-  objects: IJcadModel;
-  options?: IDict;
-}
-
 export interface IControlPanelState {
   activatedObject: string;
 }

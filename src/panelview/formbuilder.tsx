@@ -1,21 +1,29 @@
 import * as React from 'react';
-
+// import { Form } from '@rjsf/core';
+import { IDict } from '../types';
 interface IStates {
-  internalData?: { [key: string]: any };
+  internalData?: IDict;
+  schema?: IDict;
 }
 
 interface IProps {
-  sourceData: { [key: string]: any } | undefined;
-  syncData: (properties: { [key: string]: any }) => void;
+  sourceData: IDict | undefined;
+  syncData: (properties: IDict) => void;
+  schema?: IDict;
 }
 
 export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
-    this.state = { internalData: { ...this.props.sourceData } };
+    console.log('this props', this.props);
+
+    this.state = {
+      internalData: { ...this.props.sourceData },
+      schema: props.schema
+    };
   }
 
-  setStateByKey = (key: string, value: any) => {
+  setStateByKey = (key: string, value: any): void => {
     const floatValue = parseFloat(value);
     if (Number.isNaN(floatValue)) {
       return;
@@ -29,13 +37,13 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
     );
   };
 
-  componentDidUpdate(prevProps: IProps, prevState: IStates) {
+  componentDidUpdate(prevProps: IProps, prevState: IStates): void {
     if (prevProps.sourceData !== this.props.sourceData) {
       this.setState(old => ({ ...old, internalData: this.props.sourceData }));
     }
   }
 
-  buildForm() {
+  buildForm(): JSX.Element[] {
     if (!this.props.sourceData || !this.state.internalData) {
       return [];
     }
@@ -60,6 +68,16 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   }
 
   render(): React.ReactNode {
+    console.log('render', this.props.schema);
+
+    // if (this.props.schema) {
+    //   return (
+    //     <div>
+    //       <Form schema={this.props.schema as any} />
+    //     </div>
+    //   );
+    // } else {
     return <div>{this.buildForm()}</div>;
+    // }
   }
 }

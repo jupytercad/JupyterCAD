@@ -4,7 +4,8 @@ import {
   TopoDS_Shape
 } from 'opencascade.js';
 
-import { IDict, IJCadContent, WorkerAction } from '../types';
+import { IDict, WorkerAction } from '../types';
+import { IJCadContent } from '../_interface/jcad';
 import { PrimitiveShapesFactory } from './occapi';
 import { IOperatorArg } from './types';
 
@@ -190,11 +191,14 @@ function buildModel(model: IJCadContent): TopoDS_Shape[] {
   const occShapes: TopoDS_Shape[] = [];
   const { objects } = model;
 
-  Object.entries(objects).forEach(([id, object]) => {
+  objects.forEach(object => {
     const { shape, parameters } = object;
-
-    const occShape = PrimitiveShapesFactory[shape](parameters as IOperatorArg);
-    occShapes.push(occShape);
+    if (shape) {
+      const occShape = PrimitiveShapesFactory[shape](
+        parameters as IOperatorArg
+      );
+      occShapes.push(occShape);
+    }
   });
   return occShapes;
 }

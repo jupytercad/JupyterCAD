@@ -1,0 +1,32 @@
+{
+    "type": "object",
+    "description": "Box",
+    "title": "IBox",
+    "required": [
+        "x",
+        "y",
+        "z"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "x": {
+            "type": "number",
+            "description": "Dimension in X-axis"
+        },
+        "y": {
+            "type": "number",
+            "description": "Dimension in Y-axis"
+        },
+        "z": {
+            "type": "number",
+            "description": "Dimension in Z-axis"
+        },
+        "center": {
+            "type": "array",
+            "description": "Coordinate of the center",
+            "items": {
+                "type": "number"
+            }
+        }
+    }
+}

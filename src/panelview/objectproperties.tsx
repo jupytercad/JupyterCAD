@@ -2,15 +2,12 @@ import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
 import * as React from 'react';
+import { itemFromId } from '../tools';
 
-import {
-  IControlPanelModel,
-  IDict,
-  IJcadModel,
-  IJupyterCadDocChange
-} from '../types';
+import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
+import { IJCadModel } from '../_interface/jcad';
 import { ObjectPropertiesForm } from './formbuilder';
-
+import formSchema from '../_interface/forms.json';
 export class ObjectProperties extends PanelWithToolbar {
   constructor(params: ObjectProperties.IOptions) {
     super(params);
@@ -26,9 +23,10 @@ export class ObjectProperties extends PanelWithToolbar {
 interface IStates {
   jcadOption?: IDict;
   filePath?: string;
-  jcadObject?: IJcadModel;
+  jcadObject?: IJCadModel;
   selectedObjectData?: IDict;
   selectedObject?: string;
+  schema?: IDict;
 }
 
 interface IProps {
@@ -59,16 +57,29 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       }
     });
     this.props.cpModel.stateChanged.connect((changed, value) => {
+      console.log('cpModel changed');
+
       const selected = value.newValue as string;
       if (selected && selected.includes('#')) {
         const [id, type] = selected.split('#');
         const objectData = this.state.jcadObject;
         if (objectData) {
-          const selectedObjectData = objectData[id][type];
+          let schema;
+          const selectedObj = itemFromId(id, objectData);
+          if (!selectedObj) {
+            return;
+          }
+          
+          if (selectedObj.shape) {
+            schema = formSchema[selectedObj.shape];
+            console.log('formSchema', formSchema, schema);
+          }
+          const selectedObjectData = selectedObj[type];
           this.setState(old => ({
             ...old,
             selectedObjectData,
-            selectedObject: id
+            selectedObject: id,
+            schema
           }));
         }
       }
@@ -76,12 +87,17 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   }
 
   sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
+    console.log('changed', changed);
+
     this.setState(old => {
       if (old.selectedObject) {
         const jcadObject = this.props.cpModel.jcadModel?.getAllObject();
         if (jcadObject) {
-          const selectedObjectData =
-            jcadObject[old.selectedObject]['parameters'];
+          const selectedObj = itemFromId(old.selectedObject, jcadObject);
+          if (!selectedObj) {
+            return old;
+          }
+          const selectedObjectData = selectedObj['parameters'];
           return {
             ...old,
             jcadObject: jcadObject,
@@ -119,9 +135,12 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   }
 
   render(): React.ReactNode {
+    console.log('rerender', this.state.schema);
+    
     return (
       <div>
         <ObjectPropertiesForm
+          schema={this.state.schema}
           sourceData={this.state.selectedObjectData}
           syncData={(properties: { [key: string]: any }) => {
             this.syncObjectProperties(this.state.selectedObject, properties);
