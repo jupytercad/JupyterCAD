@@ -1,4 +1,9 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["src/worker/*.*", "src/types.ts",  "src/token.ts"]
+  "include": [
+    "src/worker/*.*",
+    "src/types.ts",
+    "src/token.ts",
+    "src/_interface/*.*"
+  ]
 }

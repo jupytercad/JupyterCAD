@@ -372,20 +372,26 @@ export class MainView extends React.Component<IProps, IStates> {
     if (bbox) {
       bbox.getSize(boxSizeVec);
     }
-    this._refLength = Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z);
-    if (this._refLength === 0) {
-      this._refLength = 1;
-    }
+    const oldRefLength = this._refLength || 1;
+    this._refLength =
+      Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
+
     this._camera.lookAt(this._scene.position);
-    this._camera.position.set(
-      2 * this._refLength,
-      2 * this._refLength,
-      2 * this._refLength
-    );
-    this._camera.far = 40 * this._refLength;
-    this._gridHelper.scale.multiplyScalar(this._refLength / 5);
-    for (let index = 0; index < this._sceneAxe.length; index++) {
-      this._sceneAxe[index].scale.multiplyScalar(this._refLength / 5);
+    if (oldRefLength !== this._refLength) {
+      console.log(oldRefLength, this._refLength);
+
+      this._camera.position.set(
+        10 * this._refLength,
+        10 * this._refLength,
+        10 * this._refLength
+      );
+      this._camera.far = 200 * this._refLength;
+      this._gridHelper.scale.multiplyScalar(this._refLength / oldRefLength);
+      for (let index = 0; index < this._sceneAxe.length; index++) {
+        this._sceneAxe[index].scale.multiplyScalar(
+          this._refLength / oldRefLength
+        );
+      }
     }
 
     const model = new THREE.Mesh(geometry, material);

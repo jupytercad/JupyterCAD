@@ -3,14 +3,10 @@ import * as React from 'react';
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import Tree from '@naisutech/react-tree';
+import Tree, { Leaf } from '@naisutech/react-tree';
 
-import {
-  IControlPanelModel,
-  IDict,
-  IJcadModel,
-  IJupyterCadDocChange
-} from '../types';
+import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
+import { IJCadModel } from '../_interface/jcad';
 
 export class ObjectTree extends PanelWithToolbar {
   constructor(params: ObjectTree.IOptions) {
@@ -27,7 +23,7 @@ export class ObjectTree extends PanelWithToolbar {
 interface IStates {
   jcadOption?: IDict;
   filePath?: string;
-  jcadObject?: IJcadModel;
+  jcadObject?: IJCadModel;
 }
 
 interface IProps {
@@ -69,23 +65,29 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
 
   stateToTree = () => {
     if (this.state.jcadObject) {
-      return Object.entries(this.state.jcadObject).map(([id, obj]) => {
+      return this.state.jcadObject.map(obj => {
+        console.log('obj', obj);
+        const id = obj.id;
+        const items: Leaf[] = [];
+        if (obj.shape) {
+          items.push({
+            id: `${id}#shape#${obj.shape}`,
+            label: 'Shape',
+            parentId: id
+          });
+        }
+        if (obj.operators) {
+          items.push({
+            id: `${id}#operator`,
+            label: 'Operators',
+            parentId: id
+          });
+        }
         return {
           id: id,
           label: `Object (#${id})`,
           parentId: null,
-          items: [
-            {
-              id: `${id}#parameters`,
-              label: 'Shape',
-              parentId: id
-            },
-            {
-              id: `${id}#operator`,
-              label: 'Operators',
-              parentId: id
-            }
-          ]
+          items
         };
       });
     }

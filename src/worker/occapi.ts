@@ -1,8 +1,10 @@
 import { getOcc } from './actions';
 import { TopoDS_Shape } from 'opencascade.js';
-import { IBox, ISphere, IAllOperatorFunc } from './types';
+import { IAllOperatorFunc } from './types';
 import { hashCode } from './utils';
-import { PrimitiveShapes } from '../types';
+import { PrimitiveShapes } from '../_interface/jcad';
+import { IBox } from '../_interface/box';
+import { ISphere } from '../_interface/sphere';
 const SHAPE_CACHE = new Map<string, TopoDS_Shape>();
 
 export function operatorCache<T>(name: string, ops: (args: T) => TopoDS_Shape) {
