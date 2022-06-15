@@ -1,3 +1,5 @@
+@import url('~@fluentui/react/dist/css/fabric.min.css');
+
 .jpcad-Spinner {
   position: absolute;
   display: flex;
@@ -115,4 +117,48 @@
 
 .jpcad-treeview-wrapper > div {
   padding: 0 !important;
+}
+.jpcad-sidebar-propertiespanel > div {
+  overflow: auto;
+}
+
+.jpcad-property-outer {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.ms-Label {
+  font-size: 14px!important;
+  margin: 0px!important;
+  padding: 5px 0px!important;
+}
+
+div.field.field-array > label+span {
+  display: none;
+}
+
+.btn.btn-info {
+  outline: transparent;
+  position: relative;
+  font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  font-weight: 400;
+  box-sizing: border-box;
+  border: 1px solid rgb(0, 120, 212);
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  padding: 0px 16px;
+  border-radius: 2px;
+  min-width: 80px;
+  height: 32px;
+  background-color: rgb(0, 120, 212);
+  color: rgb(255, 255, 255);
+  user-select: none;
+}
+
+.ms-Grid-col.field{
+  margin-bottom: 5px!important;
 }

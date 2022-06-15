@@ -1,11 +1,11 @@
 import * as React from 'react';
-// import { Form } from '@rjsf/core';
+import Form from '@rjsf/fluent-ui';
 import { IDict } from '../types';
+
 interface IStates {
   internalData?: IDict;
   schema?: IDict;
 }
-
 interface IProps {
   sourceData: IDict | undefined;
   syncData: (properties: IDict) => void;
@@ -15,7 +15,6 @@ interface IProps {
 export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
-    console.log('this props', this.props);
 
     this.state = {
       internalData: { ...this.props.sourceData },
@@ -48,6 +47,7 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
       return [];
     }
     const inputs: JSX.Element[] = [];
+
     for (const [key, value] of Object.entries(this.props.sourceData)) {
       let input: JSX.Element;
       if (typeof value === 'string' || typeof value === 'number') {
@@ -68,16 +68,20 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   }
 
   render(): React.ReactNode {
-    console.log('render', this.props.schema);
-
-    // if (this.props.schema) {
-    //   return (
-    //     <div>
-    //       <Form schema={this.props.schema as any} />
-    //     </div>
-    //   );
-    // } else {
-    return <div>{this.buildForm()}</div>;
-    // }
+    if (this.props.schema) {
+      return (
+        <div className="jpcad-property-outer">
+          <Form
+            schema={this.props.schema as any}
+            onSubmit={e => {
+              console.log(e.formData);
+            }}
+            formData={this.state.internalData}
+          />
+        </div>
+      );
+    } else {
+      return <div>{this.buildForm()}</div>;
+    }
   }
 }

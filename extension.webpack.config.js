@@ -14,6 +14,9 @@ module.exports = {
     ]
   },
   resolve: {
+    alias: {
+      '@fluentui': path.resolve(__dirname, './node_modules/@fluentui'),
+    },
     fallback: {
       fs: false,
       child_process: false,

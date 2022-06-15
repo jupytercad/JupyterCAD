@@ -57,11 +57,9 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       }
     });
     this.props.cpModel.stateChanged.connect((changed, value) => {
-      console.log('cpModel changed');
-
       const selected = value.newValue as string;
       if (selected && selected.includes('#')) {
-        const [id, type] = selected.split('#');
+        const id = selected.split('#')[0];
         const objectData = this.state.jcadObject;
         if (objectData) {
           let schema;
@@ -69,12 +67,11 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
           if (!selectedObj) {
             return;
           }
-          
+
           if (selectedObj.shape) {
             schema = formSchema[selectedObj.shape];
-            console.log('formSchema', formSchema, schema);
           }
-          const selectedObjectData = selectedObj[type];
+          const selectedObjectData = selectedObj['parameters'];
           this.setState(old => ({
             ...old,
             selectedObjectData,
@@ -87,8 +84,6 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   }
 
   sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
-    console.log('changed', changed);
-
     this.setState(old => {
       if (old.selectedObject) {
         const jcadObject = this.props.cpModel.jcadModel?.getAllObject();
@@ -135,8 +130,6 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   }
 
   render(): React.ReactNode {
-    console.log('rerender', this.state.schema);
-    
     return (
       <div>
         <ObjectPropertiesForm

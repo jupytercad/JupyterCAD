@@ -378,8 +378,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._camera.lookAt(this._scene.position);
     if (oldRefLength !== this._refLength) {
-      console.log(oldRefLength, this._refLength);
-
       this._camera.position.set(
         10 * this._refLength,
         10 * this._refLength,

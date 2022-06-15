@@ -66,7 +66,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   stateToTree = () => {
     if (this.state.jcadObject) {
       return this.state.jcadObject.map(obj => {
-        console.log('obj', obj);
         const id = obj.id;
         const items: Leaf[] = [];
         if (obj.shape) {
