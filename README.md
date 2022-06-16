@@ -1,8 +1,7 @@
 # jupytercad
 
-[![Github Actions Status](https://github.com/trungleduc/jupytercad/workflows/Build/badge.svg)](https://github.com/trungleduc/jupytercad/actions/workflows/build.yml)[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/trungleduc/jupytercad/main?urlpath=lab)
 
-A JupyterLab extension for 3D modelling.
+A JupyterLab extension for 3D geometry modeling.
 
 
 
