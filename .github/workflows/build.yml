@@ -93,4 +93,4 @@ jobs:
         pip install myextension.tar.gz
         pip install "jupyterlab>=4.0.0a25"
         jupyter labextension list 2>&1 | grep -ie "jupytercad.*OK"
-        python -m jupyterlab.browser_check --no-chrome-test
+
