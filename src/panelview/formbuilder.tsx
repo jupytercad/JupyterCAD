@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Form from '@rjsf/fluent-ui';
 import { IDict } from '../types';
+import { ISubmitEvent } from '@rjsf/core';
 
 interface IStates {
   internalData?: IDict;
@@ -67,16 +68,41 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
     return inputs;
   }
 
+  generateUiSchema(schema: IDict): IDict {
+    const uiSchema = {};
+    Object.entries(schema['properties'] as IDict).forEach(([k, v]) => {
+      if (v['type'] === 'array') {
+        uiSchema[k] = {
+          'ui:options': {
+            orderable: false
+          }
+        };
+      }
+    });
+    return uiSchema;
+  }
+
+  onFormSubmit = (e: ISubmitEvent<any>): void => {
+    const internalData = { ...this.state.internalData };
+    Object.entries(e.formData).forEach(([k, v]) => (internalData[k] = v));
+    this.setState(
+      old => ({
+        ...old,
+        internalData
+      }),
+      () => this.props.syncData(e.formData)
+    );
+  };
+
   render(): React.ReactNode {
     if (this.props.schema) {
       return (
         <div className="jpcad-property-outer">
           <Form
             schema={this.props.schema as any}
-            onSubmit={e => {
-              console.log(e.formData);
-            }}
+            onSubmit={this.onFormSubmit}
             formData={this.state.internalData}
+            uiSchema={this.generateUiSchema(this.props.schema)}
           />
         </div>
       );

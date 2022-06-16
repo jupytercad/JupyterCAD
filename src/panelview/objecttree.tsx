@@ -52,6 +52,12 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
           filePath: changed.context.localPath,
           jcadObject: this.props.cpModel.jcadModel?.getAllObject()
         }));
+      } else {
+        this.setState({
+          filePath: undefined,
+          jcadObject: undefined,
+          jcadOption: undefined
+        });
       }
     });
   }

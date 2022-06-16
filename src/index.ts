@@ -92,7 +92,6 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     tracker: IJupyterCadTracker
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
-    tracker.currentChanged;
     const controlPanel = new PanelWidget({ model: controlModel });
     controlPanel.id = 'jupytercad::controlPanel';
     controlPanel.title.caption = 'JupyterCad Control Panel';
