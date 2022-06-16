@@ -45,7 +45,6 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     );
     this.props.cpModel.documentChanged.connect((_, changed) => {
       if (changed) {
-        // this.props.cpModel.disconnect(this.sharedJcadModelChanged);
         changed.context.model.sharedModelChanged.connect(
           this.sharedJcadModelChanged
         );
@@ -54,6 +53,15 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
           filePath: changed.context.localPath,
           jcadObject: this.props.cpModel.jcadModel?.getAllObject()
         }));
+      } else {
+        this.setState({
+          jcadOption: undefined,
+          filePath: undefined,
+          jcadObject: undefined,
+          selectedObjectData: undefined,
+          selectedObject: undefined,
+          schema: undefined
+        });
       }
     });
     this.props.cpModel.stateChanged.connect((changed, value) => {
