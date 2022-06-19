@@ -1,23 +1,22 @@
-import * as React from 'react';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
-import { v4 as uuid } from 'uuid';
-import { JupyterCadModel } from './model';
-
-import {
-  IMainMessage,
-  IWorkerMessage,
-  WorkerAction,
-  MainAction,
-  IDisplayShape,
-  IDict,
-  Position
-} from './types';
-
+import * as React from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
+import { v4 as uuid } from 'uuid';
+
+import { JupyterCadModel } from './model';
+import {
+  IDict,
+  IDisplayShape,
+  IMainMessage,
+  IWorkerMessage,
+  MainAction,
+  Position,
+  WorkerAction
+} from './types';
 
 type THEME_TYPE = 'JupyterLab Dark' | 'JupyterLab Light';
 const DARK_THEME: THEME_TYPE = 'JupyterLab Dark';
@@ -45,6 +44,7 @@ interface IStates {
 export class MainView extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
+
     this._geometry = new THREE.BufferGeometry();
     this._geometry.setDrawRange(0, 3 * 10000);
     this._refLength = 0;
@@ -56,8 +56,6 @@ export class MainView extends React.Component<IProps, IStates> {
     this._resizeTimeout = null;
     const theme = ((window as any).jupyterlabTheme ||
       LIGHT_THEME) as THEME_TYPE;
-    console.log('in main', (window as any).jupyterlabTheme);
-    
     this.state = {
       id: uuid(),
       theme,
@@ -68,6 +66,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._cameraClients = {};
     this._context.ready.then(() => {
       this._model = this._context.model as JupyterCadModel;
+
       this._worker = this._model.getWorker();
       this._messageChannel = new MessageChannel();
       this._messageChannel.port1.onmessage = msgEvent => {
@@ -78,8 +77,6 @@ export class MainView extends React.Component<IProps, IStates> {
         this._messageChannel.port2
       );
       this._model.themeChanged.connect((_, arg) => {
-        console.log('theme changed', arg);
-
         this.handleThemeChange(arg.newValue as THEME_TYPE);
       });
       this._model.cameraChanged.connect(this._onCameraChanged);
@@ -98,6 +95,12 @@ export class MainView extends React.Component<IProps, IStates> {
     window.cancelAnimationFrame(this._requestID);
     window.removeEventListener('resize', this.handleWindowResize);
     this._controls.dispose();
+    this.postMessage({
+      action: WorkerAction.CLOSE_FILE,
+      payload: {
+        fileName: this._context.path
+      }
+    });
   }
 
   handleThemeChange = (newTheme: THEME_TYPE): void => {
@@ -280,18 +283,29 @@ export class MainView extends React.Component<IProps, IStates> {
         break;
       }
       case MainAction.INITIALIZED: {
-        this.postMessage({
-          action: WorkerAction.LOAD_FILE,
-          payload: {
-            fileName: this._context.path,
-            content: this._model!.toString()
-          }
-        });
+        if (!this._model) {
+          return;
+        }
+        const render = () => {
+          this.postMessage({
+            action: WorkerAction.LOAD_FILE,
+            payload: {
+              fileName: this._context.path,
+              content: this._model.getContent()
+            }
+          });
+        };
+        this._model.sharedModelChanged.connect(render);
+        render();
       }
     }
   };
 
   private shapeToMesh = (payload: IDisplayShape['payload']) => {
+    const old = this._scene.getObjectByName('shape');
+    if (old) {
+      this._scene.remove(old);
+    }
     const { faceList } = payload;
 
     const mainObject = new THREE.Group();
@@ -358,18 +372,24 @@ export class MainView extends React.Component<IProps, IStates> {
     if (bbox) {
       bbox.getSize(boxSizeVec);
     }
-    this._refLength = Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z);
+    const oldRefLength = this._refLength || 1;
+    this._refLength =
+      Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
 
     this._camera.lookAt(this._scene.position);
-    this._camera.position.set(
-      2 * this._refLength,
-      2 * this._refLength,
-      2 * this._refLength
-    );
-    this._camera.far = 40 * this._refLength;
-    this._gridHelper.scale.multiplyScalar(this._refLength / 5);
-    for (let index = 0; index < this._sceneAxe.length; index++) {
-      this._sceneAxe[index].scale.multiplyScalar(this._refLength / 5);
+    if (oldRefLength !== this._refLength) {
+      this._camera.position.set(
+        10 * this._refLength,
+        10 * this._refLength,
+        10 * this._refLength
+      );
+      this._camera.far = 200 * this._refLength;
+      this._gridHelper.scale.multiplyScalar(this._refLength / oldRefLength);
+      for (let index = 0; index < this._sceneAxe.length; index++) {
+        this._sceneAxe[index].scale.multiplyScalar(
+          this._refLength / oldRefLength
+        );
+      }
     }
 
     const model = new THREE.Mesh(geometry, material);
@@ -378,7 +398,6 @@ export class MainView extends React.Component<IProps, IStates> {
     mainObject.add(model);
     this._scene.add(mainObject);
     this.setState(old => ({ ...old, loading: false }));
-    console.log('Generation Complete!');
   };
 
   private postMessage = (

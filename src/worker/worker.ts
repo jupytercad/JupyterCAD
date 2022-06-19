@@ -9,7 +9,7 @@ import {
 import WorkerHandler from './actions';
 
 let occ: OpenCascadeInstance;
-let ports: IDict<MessagePort> = {};
+const ports: IDict<MessagePort> = {};
 let lock = false;
 
 const registerWorker = async (id: string, port: MessagePort) => {
@@ -53,6 +53,9 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
         },
         id
       );
+      break;
+    }
+    case WorkerAction.CLOSE_FILE: {
       break;
     }
   }

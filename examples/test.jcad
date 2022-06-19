@@ -1,0 +1,37 @@
+{
+  "objects": [
+    {
+      "id": "123456",
+      "visible": true,
+      "shape": "Box",
+      "parameters": {
+        "x": 7,
+        "y": 15,
+        "z": 19,
+        "center": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+        {
+      "id": "12523456",
+      "visible": true,
+      "shape": "Box",
+      "parameters": {
+        "x": 5,
+        "y": 25,
+        "z": 9,
+        "center": [
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ],
+  "options": {
+    "foo": 1
+  }
+}
