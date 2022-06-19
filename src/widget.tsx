@@ -1,19 +1,17 @@
-import { DocumentRegistry, DocumentWidget } from '@jupyterlab/docregistry';
-
 import * as React from 'react';
 
 import { ReactWidget } from '@jupyterlab/apputils';
-
+import { DocumentRegistry, DocumentWidget } from '@jupyterlab/docregistry';
 import { Signal } from '@lumino/signaling';
 
-import { JupyterCadModel } from './model';
-
 import { MainView } from './mainview';
+import { JupyterCadModel } from './model';
+import { IJupyterCadWidget } from './types';
 
-export class JupyterCadWidget extends DocumentWidget<
-  JupyterCadPanel,
-  JupyterCadModel
-> {
+export class JupyterCadWidget
+  extends DocumentWidget<JupyterCadPanel, JupyterCadModel>
+  implements IJupyterCadWidget
+{
   constructor(
     options: DocumentWidget.IOptions<JupyterCadPanel, JupyterCadModel>
   ) {

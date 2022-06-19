@@ -1,12 +1,9 @@
 import { ABCWidgetFactory, DocumentRegistry } from '@jupyterlab/docregistry';
-
 import { IModelDB } from '@jupyterlab/observables';
-
 import { Contents } from '@jupyterlab/services';
 
-import { JupyterCadWidget, JupyterCadPanel } from './widget';
-
 import { JupyterCadModel } from './model';
+import { JupyterCadPanel, JupyterCadWidget } from './widget';
 
 export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   JupyterCadWidget,

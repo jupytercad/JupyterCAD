@@ -1,27 +1,27 @@
-import { DocumentRegistry } from '@jupyterlab/docregistry';
-
-import { IModelDB, ModelDB } from '@jupyterlab/observables';
-
-import { ISignal, Signal } from '@lumino/signaling';
-
-import { PartialJSONObject } from '@lumino/coreutils';
-
-import { IChangedArgs } from '@jupyterlab/coreutils';
-
-import { YDocument, MapChange } from '@jupyterlab/shared-models';
-
-import { IDict, Position } from './types';
-
+import Ajv from 'ajv';
 import * as Y from 'yjs';
 
-// import initOpenCascade, { OpenCascadeInstance } from 'opencascade.js';
-// import worker from './worker?raw';
+import { IChangedArgs } from '@jupyterlab/coreutils';
+import { IModelDB, ModelDB } from '@jupyterlab/observables';
+import { YDocument } from '@jupyterlab/shared-models';
+import { PartialJSONObject } from '@lumino/coreutils';
+import { ISignal, Signal } from '@lumino/signaling';
 
-export class JupyterCadModel implements DocumentRegistry.IModel {
+import { IJCadContent, IJCadModel } from './_interface/jcad';
+import jcadSchema from './schema/jcad.json';
+import {
+  IJCadObjectDoc,
+  IJupyterCadDoc,
+  IJupyterCadDocChange,
+  IJupyterCadModel,
+  Position
+} from './types';
+import { yMapToJcadObject } from './tools';
+
+export class JupyterCadModel implements IJupyterCadModel {
   constructor(languagePreference?: string, modelDB?: IModelDB) {
     this.modelDB = modelDB || new ModelDB();
-    console.log('clientID', this.sharedModel.awareness.clientID);
-
+    this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onCameraChanged);
   }
 
@@ -37,6 +37,10 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
     return this._stateChanged;
   }
 
+  get sharedModelChanged(): ISignal<this, IJupyterCadDocChange> {
+    return this._sharedModelChanged;
+  }
+
   get themeChanged(): Signal<
     this,
     IChangedArgs<string, string | null, string>
@@ -45,8 +49,6 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   }
 
   dispose(): void {
-    console.log('dispose JupyterCadModel');
-
     if (this._isDisposed) {
       return;
     }
@@ -69,26 +71,43 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   }
 
   toString(): string {
-    const content = this.sharedModel.getContent('content') || '';
-    return content;
+    return JSON.stringify(this.getContent(), null, 2);
   }
 
   fromString(data: string): void {
+    const jsonData: IJCadContent = JSON.parse(data);
+    const ajv = new Ajv();
+    const validate = ajv.compile(jcadSchema);
+    const valid = validate(jsonData);
+    if (!valid) {
+      throw Error('File format error');
+    }
+
     this.sharedModel.transact(() => {
-      this.sharedModel.setContent('content', data);
+      for (const obj of jsonData.objects) {
+        const entries = Object.entries(obj);
+        const jcadObj = new Y.Map<any>(entries);
+        this.sharedModel.addObject(jcadObj);
+      }
+      const options = jsonData.options;
+      if (options) {
+        for (const [opt, val] of Object.entries(options)) {
+          this.sharedModel.setOption(opt, val);
+        }
+      }
     });
   }
 
   toJSON(): PartialJSONObject {
-    return {};
+    return JSON.parse(this.toString());
   }
 
   fromJSON(data: PartialJSONObject): void {
-    console.log('');
+    // nothing to do
   }
 
   initialize(): void {
-    // nothing to do
+    //
   }
 
   getWorker(): Worker {
@@ -98,6 +117,30 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
       );
     }
     return JupyterCadModel.worker;
+  }
+
+  getContent(): IJCadContent {
+    const content: IJCadContent = { objects: [], options: {} };
+    const sharedContent = this.sharedModel.objects;
+    sharedContent.forEach((obj, id) => {
+      const newObj = yMapToJcadObject(obj);
+      content.objects[id] = newObj;
+    });
+    const sharedOption = this.sharedModel.options;
+    if (sharedOption) {
+      sharedOption.forEach((obj, id) => {
+        content.options![id] = obj;
+      });
+    }
+    return content;
+  }
+
+  getAllObject(): IJCadModel {
+    const all: IJCadModel = [];
+    this.sharedModel.objects.forEach(obj => {
+      all.push(yMapToJcadObject(obj));
+    });
+    return all;
   }
 
   syncCamera(pos: Position | undefined): void {
@@ -117,6 +160,13 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
     this._cameraChanged.emit(clients);
   };
 
+  private _onSharedModelChanged = (
+    sender: IJupyterCadDoc,
+    changes: IJupyterCadDocChange
+  ): void => {
+    this._sharedModelChanged.emit(changes);
+  };
+
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
   readonly modelDB: IModelDB;
@@ -129,36 +179,78 @@ export class JupyterCadModel implements DocumentRegistry.IModel {
   private _stateChanged = new Signal<this, IChangedArgs<any>>(this);
   private _themeChanged = new Signal<this, IChangedArgs<any>>(this);
   private _cameraChanged = new Signal<this, Map<number, any>>(this);
-
+  private _sharedModelChanged = new Signal<this, IJupyterCadDocChange>(this);
   static worker: Worker;
 }
 
-export type JupyterCadDocChange = {
-  contextChange?: MapChange;
-  contentChange?: string;
-};
-
-export class JupyterCadDoc extends YDocument<JupyterCadDocChange> {
+export class JupyterCadDoc
+  extends YDocument<IJupyterCadDocChange>
+  implements IJupyterCadDoc
+{
   constructor() {
     super();
-    this._content = this.ydoc.getMap('content');
+    this._objects = this.ydoc.getArray<IJCadObjectDoc>('objects');
+    this._options = this.ydoc.getMap<any>('option');
+    this._objects.observe(this._objectsObserver);
   }
 
   dispose(): void {
-    console.log('called dispose');
+    this._objects.unobserve(this._objectsObserver);
+    // this._options.unobserve(this._optionsObserver);
   }
 
-  public static create(): JupyterCadDoc {
+  get objects(): Y.Array<IJCadObjectDoc> {
+    return this._objects;
+  }
+  get options(): Y.Map<any> {
+    return this._options;
+  }
+
+  public getObjectById(key: string): IJCadObjectDoc | undefined {
+    for (const iterator of this._objects) {
+      if (iterator.get('id') === key) {
+        return iterator;
+      }
+    }
+    return undefined;
+  }
+
+  public addObject(value: IJCadObjectDoc): void {
+    this._objects.push([value]);
+  }
+
+  public getOption(key: string): any {
+    return this._options.get(key);
+  }
+
+  public setOption(key: string, value: any): void {
+    this._options.set(key, value);
+  }
+
+  public static create(): IJupyterCadDoc {
     return new JupyterCadDoc();
   }
 
-  public getContent(key: string): any {
-    return this._content.get(key);
-  }
+  private _objectsObserver = (event: Y.YArrayEvent<IJCadObjectDoc>): void => {
+    event.changes.added.forEach(item => {
+      const type = (item.content as Y.ContentType)
+        .type as Y.Map<IJCadObjectDoc>;
+      type.observe(this.emitChange);
+    });
+    event.changes.deleted.forEach(item => {
+      const type = (item.content as Y.ContentType)
+        .type as Y.Map<IJCadObjectDoc>;
+      type.unobserve(this.emitChange);
+    });
 
-  public setContent(key: string, value: any): void {
-    this._content.set(key, value);
-  }
+    const objectChange = [];
+    this._changed.emit({ objectChange });
+  };
 
-  private _content: Y.Map<any>;
+  private emitChange = () => {
+    this._changed.emit({});
+  };
+
+  private _objects: Y.Array<IJCadObjectDoc>;
+  private _options: Y.Map<any>;
 }

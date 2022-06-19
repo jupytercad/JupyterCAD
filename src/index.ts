@@ -1,31 +1,29 @@
 import {
+  ILabShell,
+  ILayoutRestorer,
   JupyterFrontEnd,
-  JupyterFrontEndPlugin,
-  ILayoutRestorer
+  JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import {
-  WidgetTracker,
-  IWidgetTracker,
-  IThemeManager
-} from '@jupyterlab/apputils';
+import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
-import { Token } from '@lumino/coreutils';
-import { JupyterCadWidgetFactory, JupyterCadModelFactory } from './factory';
+import { JupyterCadModelFactory, JupyterCadWidgetFactory } from './factory';
+import { ControlPanelModel } from './panelview/model';
+import { PanelWidget } from './panelview/widget';
+import { IJupyterCadDocTracker, IJupyterCadTracker } from './token';
+import { jcLightIcon } from './tools';
 import { JupyterCadWidget } from './widget';
 
 const FACTORY = 'Jupytercad Factory';
-
-export const IJupyterCadDocTracker = new Token<
-  IWidgetTracker<JupyterCadWidget>
->('jupyterCadDocTracker');
+const NAME_SPACE = 'jupytercad';
 
 const activate = (
   app: JupyterFrontEnd,
   restorer: ILayoutRestorer,
   themeManager: IThemeManager
-): void => {
-  const namespace = 'jupytercad';
-  const tracker = new WidgetTracker<JupyterCadWidget>({ namespace });
+): IJupyterCadTracker => {
+  const tracker = new WidgetTracker<JupyterCadWidget>({
+    namespace: NAME_SPACE
+  });
 
   if (restorer) {
     restorer.restore(tracker, {
@@ -40,8 +38,8 @@ const activate = (
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-model',
-    fileTypes: ['stp'],
-    defaultFor: ['stp']
+    fileTypes: ['jcad'],
+    defaultFor: ['jcad']
   });
 
   // Add the widget to the tracker when it's created
@@ -64,21 +62,45 @@ const activate = (
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype
   app.docRegistry.addFileType({
-    name: 'stp',
-    displayName: 'STEP',
-    mimeTypes: ['text'],
-    extensions: ['.stp', '.STP', '.step', '.STEP'],
+    name: 'jcad',
+    displayName: 'JCAD',
+    mimeTypes: ['text/json'],
+    extensions: ['.jcad', '.JCAD'],
     fileFormat: 'text',
     contentType: 'file'
   });
   console.log('JupyterLab extension jupytercad is activated!');
+  return tracker;
 };
 
-const plugin: JupyterFrontEndPlugin<void> = {
+const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
   id: 'jupytercad:plugin',
   autoStart: true,
   requires: [ILayoutRestorer, IThemeManager],
+  provides: IJupyterCadDocTracker,
   activate
 };
 
-export default plugin;
+const controlPanel: JupyterFrontEndPlugin<void> = {
+  id: 'jupytercad:controlpanel',
+  autoStart: true,
+  requires: [ILayoutRestorer, ILabShell, IJupyterCadDocTracker],
+  activate: (
+    app: JupyterFrontEnd,
+    restorer: ILayoutRestorer,
+    shell: ILabShell,
+    tracker: IJupyterCadTracker
+  ) => {
+    const controlModel = new ControlPanelModel({ tracker });
+    const controlPanel = new PanelWidget({ model: controlModel });
+    controlPanel.id = 'jupytercad::controlPanel';
+    controlPanel.title.caption = 'JupyterCad Control Panel';
+    controlPanel.title.icon = jcLightIcon;
+    if (restorer) {
+      restorer.add(controlPanel, NAME_SPACE);
+    }
+    app.shell.add(controlPanel, 'left', { rank: 2000 });
+  }
+};
+
+export default [plugin, controlPanel];
