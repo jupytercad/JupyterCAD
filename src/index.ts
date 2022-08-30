@@ -67,7 +67,7 @@ const activate = (
     mimeTypes: ['text/json'],
     extensions: ['.jcad', '.JCAD'],
     fileFormat: 'text',
-    contentType: 'file'
+    contentType: 'jcad'
   });
   console.log('JupyterLab extension jupytercad is activated!');
   return tracker;
