@@ -128,12 +128,14 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
 
     const currentYMap =
       this.props.cpModel.jcadModel?.sharedModel.getObjectById(objectId);
+    console.log('currentYMap', currentYMap);
+
     if (currentYMap) {
       const newParams = {
         ...(currentYMap.get('parameters') as IDict),
         ...properties
       };
-      currentYMap?.set('parameters', newParams);
+      currentYMap.set('parameters', newParams);
     }
   }
 

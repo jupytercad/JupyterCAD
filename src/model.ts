@@ -1,11 +1,10 @@
-import Ajv from 'ajv';
-import * as Y from 'yjs';
-
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { IModelDB, ModelDB } from '@jupyterlab/observables';
 import { YDocument } from '@jupyterlab/shared-models';
 import { PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
+import Ajv from 'ajv';
+import * as Y from 'yjs';
 
 import { IJCadContent, IJCadModel } from './_interface/jcad';
 import jcadSchema from './schema/jcad.json';
@@ -189,13 +188,16 @@ export class JupyterCadDoc
 {
   constructor() {
     super();
+
     this._objects = this.ydoc.getArray<IJCadObjectDoc>('objects');
-    this._options = this.ydoc.getMap<any>('option');
+    this._options = this.ydoc.getMap<any>('options');
+    console.log('objects', this._objects.toArray(), this._options.toJSON());
+
     this._objects.observe(this._objectsObserver);
   }
 
   dispose(): void {
-    this._objects.unobserve(this._objectsObserver);
+    // this._objects.unobserve(this._objectsObserver);
     // this._options.unobserve(this._optionsObserver);
   }
 
@@ -233,16 +235,18 @@ export class JupyterCadDoc
 
   private _objectsObserver = (event: Y.YArrayEvent<IJCadObjectDoc>): void => {
     event.changes.added.forEach(item => {
-      const type = (item.content as Y.ContentType)
-        .type as Y.Map<IJCadObjectDoc>;
+      const type = (item.content as Y.ContentType).type as Y.Map<any>;
+      console.log('adding', item, type.toJSON());
+
       type.observe(this.emitChange);
     });
     event.changes.deleted.forEach(item => {
-      const type = (item.content as Y.ContentType)
-        .type as Y.Map<IJCadObjectDoc>;
-      type.unobserve(this.emitChange);
+      // const type = (item.content as Y.ContentType)
+      //   .type as Y.Map<IJCadObjectDoc>;
+      // type.unobserve(this.emitChange);
+      console.log('delete', item, item.content);
     });
-
+    console.log('############', this._objects.toArray());
     const objectChange = [];
     this._changed.emit({ objectChange });
   };

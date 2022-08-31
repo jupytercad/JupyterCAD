@@ -1,6 +1,6 @@
 import json
 from jupyter_ydoc.ydoc import YBaseDoc
-
+import y_py as Y
 
 class YJCad(YBaseDoc):
     def __init__(self, *args, **kwargs):
@@ -13,15 +13,20 @@ class YJCad(YBaseDoc):
     @property
     def source(self):
         objects = self._yobjects.to_json()
-        option = self._yoption.to_json()
+        option = self._yoptions.to_json()
         return dict(objects=objects, option=option)
 
     @source.setter
     def source(self, value):
-        print('in jcad', value)
         valueDict = json.loads(value)
+        newObj = []
+        for obj in  valueDict['objects']:
+            newObj.append(Y.YMap(obj))
         with self._ydoc.begin_transaction() as t:
-            self._yobjects.extend(t, valueDict['objects'])
+            length = len(self._yobjects)
+            self._yobjects.delete_range(t, 0, length)
+
+            self._yobjects.extend(t, newObj)
             self._yoptions.update(t, valueDict['options'].items())
 
     def observe(self, callback):
