@@ -1,68 +1,60 @@
 {
-    "type": "object",
-    "title": "IJCadContent",
-    "required": [
-        "objects"
-    ],
-    "additionalProperties": false,
-    "properties": {
-        "objects": {
-            "$ref": "#/definitions/jcadModel"
-        },
-        "options": {
-            "type": "object"
-        }
+  "type": "object",
+  "title": "IJCadContent",
+  "required": ["objects"],
+  "additionalProperties": false,
+  "properties": {
+    "objects": {
+      "$ref": "#/definitions/jcadModel"
     },
-    "definitions": {
-        "primitiveShapes": {
-            "type": "string",
-            "enum": [
-                "Box",
-                "Sphere"
-            ]
-        },
-        "jcadObject": {
-            "title": "IJCadObject",
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-                "id",
-                "visible"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "visible": {
-                    "type": "boolean"
-                },
-                "shape": {
-                    "$ref": "#/definitions/primitiveShapes"
-                },
-                "parameters": {
-                    "type": "object"
-                },
-                "operators": {
-                    "type": "array",
-                    "items": {
-                        "type": "object"
-                    }
-                },
-                "dependencies": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "jcadModel": {
-            "title": "IJCadModel",
-            "type": "array",
-            "default": [],
-            "items": {
-                "$ref": "#/definitions/jcadObject"
-            }
-        }
+    "options": {
+      "type": "object"
     }
+  },
+  "definitions": {
+    "primitiveShapes": {
+      "type": "string",
+      "enum": ["Box", "Sphere"]
+    },
+    "jcadObject": {
+      "title": "IJCadObject",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "visible"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "shape": {
+          "$ref": "#/definitions/primitiveShapes"
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "operators": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "jcadModel": {
+      "title": "IJCadModel",
+      "type": "array",
+      "default": [],
+      "items": {
+        "$ref": "#/definitions/jcadObject"
+      }
+    }
+  }
 }

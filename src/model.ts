@@ -191,7 +191,6 @@ export class JupyterCadDoc
 
     this._objects = this.ydoc.getArray<IJCadObjectDoc>('objects');
     this._options = this.ydoc.getMap<any>('options');
-    console.log('objects', this._objects.toArray(), this._options.toJSON());
 
     this._objects.observe(this._objectsObserver);
   }
@@ -236,17 +235,12 @@ export class JupyterCadDoc
   private _objectsObserver = (event: Y.YArrayEvent<IJCadObjectDoc>): void => {
     event.changes.added.forEach(item => {
       const type = (item.content as Y.ContentType).type as Y.Map<any>;
-      console.log('adding', item, type.toJSON());
-
       type.observe(this.emitChange);
     });
     event.changes.deleted.forEach(item => {
-      // const type = (item.content as Y.ContentType)
-      //   .type as Y.Map<IJCadObjectDoc>;
-      // type.unobserve(this.emitChange);
-      console.log('delete', item, item.content);
+      const type = (item.content as Y.ContentType).type as Y.Map<any>;
+      type.unobserve(this.emitChange);
     });
-    console.log('############', this._objects.toArray());
     const objectChange = [];
     this._changed.emit({ objectChange });
   };

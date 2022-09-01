@@ -279,8 +279,6 @@ export class MainView extends React.Component<IProps, IStates> {
   messageHandler = (msg: IMainMessage): void => {
     switch (msg.action) {
       case MainAction.DISPLAY_SHAPE: {
-        console.log('shape to mesh', msg);
-        
         this.shapeToMesh(msg.payload);
         break;
       }

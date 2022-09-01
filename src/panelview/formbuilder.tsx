@@ -85,8 +85,6 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   onFormSubmit = (e: ISubmitEvent<any>): void => {
     const internalData = { ...this.state.internalData };
     Object.entries(e.formData).forEach(([k, v]) => (internalData[k] = v));
-    console.log('submit', internalData, e.formData);
-    
     this.setState(
       old => ({
         ...old,

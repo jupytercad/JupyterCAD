@@ -45,11 +45,7 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
       break;
     }
     case WorkerAction.LOAD_FILE: {
-      console.log('load file', message);
-
       const result = WorkerHandler[message.action](message.payload);
-      console.log('ret', result);
-
       sendToMain(
         {
           action: MainAction.DISPLAY_SHAPE,

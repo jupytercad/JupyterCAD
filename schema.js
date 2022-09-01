@@ -9,7 +9,7 @@ files.forEach(file => {
   const rawData = fs.readFileSync(path.join(schemaPath, file));
   const data = JSON.parse(rawData);
   if (data['description']) {
-    const {description, title, ...props} = data
+    const { description, title, ...props } = data;
     allSchema[description] = props;
   }
 });

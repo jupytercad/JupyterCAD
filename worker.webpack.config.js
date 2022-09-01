@@ -22,7 +22,7 @@ const resolve = {
     child_process: false,
     crypto: false
   },
-  extensions: [".ts", ".js"],
+  extensions: ['.ts', '.js']
 };
 
 module.exports = [
@@ -37,7 +37,6 @@ module.exports = [
       rules
     },
     // devtool: 'source-map',
-    resolve,
-
+    resolve
   }
 ];
