@@ -81,6 +81,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     if (!valid) {
       throw Error('File format error');
     }
+    console.log('json data', jsonData);
 
     this.sharedModel.transact(() => {
       for (const obj of jsonData.objects) {

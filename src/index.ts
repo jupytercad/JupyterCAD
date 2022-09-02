@@ -7,6 +7,7 @@ import {
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
 import { JupyterCadModelFactory, JupyterCadWidgetFactory } from './factory';
+import fcplugin from './fcplugin/plugins';
 import { ControlPanelModel } from './panelview/model';
 import { PanelWidget } from './panelview/widget';
 import { IJupyterCadDocTracker, IJupyterCadTracker } from './token';
@@ -103,4 +104,4 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
   }
 };
 
-export default [plugin, controlPanel];
+export default [plugin, controlPanel, fcplugin];

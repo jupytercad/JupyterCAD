@@ -1,37 +1,37 @@
 {
   "objects": [
     {
-      "shape": "Box",
-      "visible": true,
-      "id": "123456",
       "parameters": {
         "x": 7.0,
         "z": 19.0,
+        "y": 15.0,
         "center": [
           0.0,
           0.0,
           0.0
-        ],
-        "y": 15.0
-      }
+        ]
+      },
+      "visible": true,
+      "id": "123456",
+      "shape": "Box"
     },
     {
+      "shape": "Box",
       "parameters": {
+        "x": 10.0,
+        "y": 25.0,
+        "z": 9.0,
         "center": [
           0.0,
           0.0,
           0.0
-        ],
-        "x": 10.0,
-        "z": 9.0,
-        "y": 25.0
+        ]
       },
       "id": "12523456",
-      "visible": true,
-      "shape": "Box"
+      "visible": true
     }
   ],
-  "option": {
+  "options": {
     "foo": 1.0
   }
 }
