@@ -22,9 +22,9 @@ export function operatorCache<T>(name: string, ops: (args: T) => TopoDS_Shape) {
 }
 
 function _Box(arg: IBox): TopoDS_Shape {
-  const { x, y, z } = arg;
+  const { Length, Width, Height } = arg;
   const oc = getOcc();
-  const box = new oc.BRepPrimAPI_MakeBox_2(x, y, z);
+  const box = new oc.BRepPrimAPI_MakeBox_2(Length, Width, Height);
   return box.Shape();
 }
 function _Sphere(arg: ISphere): TopoDS_Shape {
@@ -36,4 +36,4 @@ const Sphere = operatorCache<ISphere>('Sphere', _Sphere);
 
 export const PrimitiveShapesFactory: {
   [key in PrimitiveShapes]: IAllOperatorFunc;
-} = { Box, Sphere };
+} = { 'Part::Box': Box, 'Part::Sphere': Sphere };

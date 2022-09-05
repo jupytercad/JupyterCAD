@@ -13,6 +13,7 @@ class YFCStd(YBaseDoc):
         self._yobjects = self._ydoc.get_array('objects')
         self._yoptions = self._ydoc.get_map('options')
         self._virtual_file = FCStd()
+    
     @property
     def source(self):
         objects = self._yobjects.to_json()
@@ -24,20 +25,8 @@ class YFCStd(YBaseDoc):
         print('value', len(value))
         self._virtual_file.load(value)
         valueDict = {
-            'objects': [
-                {
-                    'shape': 'Box',
-                    'visible': True,
-                    'id': '123456',
-                    'parameters': {
-                        'x': 7.0,
-                        'z': 19.0,
-                        'center': [0.0, 0.0, 0.0],
-                        'y': 15.0,
-                    },
-                }
-            ],
-            'options': {'foo': 1},
+            'objects': self._virtual_file.objects,
+            'options': self._virtual_file.options
         }
         newObj = []
         for obj in valueDict['objects']:

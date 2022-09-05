@@ -2,10 +2,10 @@
   "objects": [
     {
       "parameters": {
-        "x": 7.0,
-        "z": 19.0,
-        "y": 15.0,
-        "center": [
+        "Length": 7.0,
+        "Height": 19.0,
+        "Width": 15.0,
+        "Placement": [
           0.0,
           0.0,
           0.0
@@ -13,15 +13,15 @@
       },
       "visible": true,
       "id": "123456",
-      "shape": "Box"
+      "shape": "Part::Box" 
     },
     {
-      "shape": "Box",
+      "shape": "Part::Box",
       "parameters": {
-        "x": 10.0,
-        "y": 25.0,
-        "z": 9.0,
-        "center": [
+        "Length": 10.0,
+        "Width": 25.0,
+        "Height": 9.0,
+        "Placement": [
           0.0,
           0.0,
           0.0

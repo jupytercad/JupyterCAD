@@ -2,24 +2,24 @@
   "type": "object",
   "description": "Box",
   "title": "IBox",
-  "required": ["x", "y", "z"],
+  "required": ["Length", "Width", "Height"],
   "additionalProperties": false,
   "properties": {
-    "x": {
+    "Length": {
       "type": "number",
-      "description": "Dimension in X-axis"
+      "description": "The length of the box"
     },
-    "y": {
+    "Width": {
       "type": "number",
-      "description": "Dimension in Y-axis"
+      "description": "The width of the box"
     },
-    "z": {
+    "Height": {
       "type": "number",
-      "description": "Dimension in Z-axis"
+      "description": "The height of the box"
     },
-    "center": {
+    "Placement": {
       "type": "array",
-      "description": "Coordinate of the center",
+      "description": "Position of the box",
       "items": {
         "type": "number"
       }
