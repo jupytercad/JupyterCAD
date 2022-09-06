@@ -69,7 +69,12 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   }
 
   generateUiSchema(schema: IDict): IDict {
-    const uiSchema = {};
+    const uiSchema = {
+      additionalProperties: {
+        'ui:label': false,
+        classNames: 'jpcad-hidden-field'
+      }
+    };
     Object.entries(schema['properties'] as IDict).forEach(([k, v]) => {
       if (v['type'] === 'array') {
         uiSchema[k] = {
@@ -96,10 +101,11 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
 
   render(): React.ReactNode {
     if (this.props.schema) {
+      const schema = { ...this.props.schema, additionalProperties: true };
       return (
         <div className="jpcad-property-outer">
           <Form
-            schema={this.props.schema as any}
+            schema={schema}
             onSubmit={this.onFormSubmit}
             formData={this.state.internalData}
             uiSchema={this.generateUiSchema(this.props.schema)}

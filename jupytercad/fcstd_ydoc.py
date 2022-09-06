@@ -8,35 +8,31 @@ from jupytercad.freecad.loader import FCStd
 class YFCStd(YBaseDoc):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print('######', args, kwargs)
         self._ysource = self._ydoc.get_text('source')
         self._yobjects = self._ydoc.get_array('objects')
         self._yoptions = self._ydoc.get_map('options')
         self._virtual_file = FCStd()
-    
+
     @property
     def source(self):
-        objects = self._yobjects.to_json()
+        fc_objects = self._yobjects.to_json()
         options = self._yoptions.to_json()
-        return json.dumps(dict(objects=objects, options=options), indent=2)
+        self._virtual_file.save(fc_objects, options)
+        return self._virtual_file.sources
 
     @source.setter
     def source(self, value):
-        print('value', len(value))
-        self._virtual_file.load(value)
-        valueDict = {
-            'objects': self._virtual_file.objects,
-            'options': self._virtual_file.options
-        }
+        virtual_file = self._virtual_file
+        virtual_file.load(value)
         newObj = []
-        for obj in valueDict['objects']:
+        for obj in virtual_file.objects:
             newObj.append(Y.YMap(obj))
         with self._ydoc.begin_transaction() as t:
             length = len(self._yobjects)
             self._yobjects.delete_range(t, 0, length)
 
             self._yobjects.extend(t, newObj)
-            self._yoptions.update(t, valueDict['options'].items())
+            self._yoptions.update(t, virtual_file.options.items())
 
     def observe(self, callback):
         self.unobserve()

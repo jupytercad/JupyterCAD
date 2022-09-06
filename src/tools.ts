@@ -32,8 +32,8 @@ export function yMapToJcadObject(ymap: Y.Map<any>): IJCadObject {
   return values;
 }
 
-export function itemFromId<T extends { id: string }>(
-  id: string,
+export function itemFromId<T extends { id: number }>(
+  id: number,
   arr: T[]
 ): T | undefined {
   for (const it of arr) {

@@ -127,6 +127,9 @@
   padding-right: 10px;
 }
 
+.jpcad-hidden-field {
+  display: none;
+}
 .ms-Label {
   font-size: 14px !important;
   margin: 0px !important;

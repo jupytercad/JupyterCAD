@@ -81,8 +81,6 @@ export class JupyterCadModel implements IJupyterCadModel {
     if (!valid) {
       throw Error('File format error');
     }
-    console.log('json data', jsonData);
-
     this.sharedModel.transact(() => {
       for (const obj of jsonData.objects) {
         const entries = Object.entries(obj);
@@ -208,7 +206,7 @@ export class JupyterCadDoc
     return this._options;
   }
 
-  public getObjectById(key: string): IJCadObjectDoc | undefined {
+  public getObjectById(key: number): IJCadObjectDoc | undefined {
     for (const iterator of this._objects) {
       if (iterator.get('id') === key) {
         return iterator;

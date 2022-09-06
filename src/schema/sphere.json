@@ -1,7 +1,7 @@
 {
   "type": "object",
   "title": "ISphere",
-  "description": "Sphere",
+  "description": "Part::Sphere",
   "required": ["radius"],
   "additionalProperties": false,
   "properties": {

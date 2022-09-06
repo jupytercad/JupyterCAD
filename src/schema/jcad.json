@@ -23,6 +23,9 @@
       "required": ["id", "visible"],
       "properties": {
         "id": {
+          "type": "number"
+        },
+        "name": {
           "type": "string"
         },
         "visible": {

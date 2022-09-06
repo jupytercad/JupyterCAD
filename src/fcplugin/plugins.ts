@@ -1,3 +1,5 @@
+import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
+import { IJupyterCadDocTracker } from './../token';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
@@ -8,7 +10,11 @@ import { JupyterCadFCModelFactory } from './factory';
 
 const FACTORY = 'Jupytercad Freecad Factory';
 
-const activate = (app: JupyterFrontEnd): void => {
+const activate = (
+  app: JupyterFrontEnd,
+  tracker: WidgetTracker,
+  themeManager: IThemeManager
+): void => {
   // Creating the widget factory to register it so the document manager knows about
   // our new DocumentWidget
   const widgetFactory = new JupyterCadWidgetFactory({
@@ -33,10 +39,22 @@ const activate = (app: JupyterFrontEnd): void => {
     fileFormat: 'base64',
     contentType: 'FCStd'
   });
+  widgetFactory.widgetCreated.connect((sender, widget) => {
+    // Notify the instance tracker if restore data needs to update.
+    widget.context.pathChanged.connect(() => {
+      tracker.save(widget);
+    });
+    themeManager.themeChanged.connect((_, changes) =>
+      widget.context.model.themeChanged.emit(changes)
+    );
+
+    tracker.add(widget);
+  });
 };
 
 const fcplugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:fcplugin',
+  requires: [IJupyterCadDocTracker, IThemeManager],
   autoStart: true,
   activate
 };

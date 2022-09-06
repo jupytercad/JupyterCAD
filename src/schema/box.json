@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "description": "Box",
+  "description": "Part::Box",
   "title": "IBox",
   "required": ["Length", "Width", "Height"],
   "additionalProperties": false,
@@ -16,13 +16,6 @@
     "Height": {
       "type": "number",
       "description": "The height of the box"
-    },
-    "Placement": {
-      "type": "array",
-      "description": "Position of the box",
-      "items": {
-        "type": "number"
-      }
     }
   }
 }
