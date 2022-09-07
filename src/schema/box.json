@@ -2,7 +2,7 @@
   "type": "object",
   "description": "Part::Box",
   "title": "IBox",
-  "required": ["Length", "Width", "Height"],
+  "required": ["Length", "Width", "Height", "Placement"],
   "additionalProperties": false,
   "properties": {
     "Length": {
@@ -16,6 +16,10 @@
     "Height": {
       "type": "number",
       "description": "The height of the box"
+    },
+    "Placement": {
+      "$ref": "./placement.json"
     }
+ 
   }
 }

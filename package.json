@@ -29,7 +29,7 @@
   },
   "scripts": {
     "build": "jlpm build:schema && jlpm run build:lib && jlpm run build:worker && jlpm run build:labextension:dev",
-    "build:schema": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions && node schema.js",
+    "build:schema": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions --cwd ./src/schema && cd src/schema && node ../../schema.js",
     "build:prod": "jlpm run clean && jlpm build:schema && jlpm run build:worker:prod && jlpm run build:lib && jlpm run build:labextension",
     "build:labextension": "jupyter labextension build .",
     "build:labextension:dev": "jupyter labextension build --development True .",
@@ -67,6 +67,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@apidevtools/json-schema-ref-parser": "^9.0.9",
     "@jupyterlab/builder": "^4.0.0-alpha.11",
     "@types/node": "^16.11.10",
     "@typescript-eslint/eslint-plugin": "^4.8.1",

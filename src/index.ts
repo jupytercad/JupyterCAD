@@ -26,14 +26,6 @@ const activate = (
     namespace: NAME_SPACE
   });
 
-  if (restorer) {
-    restorer.restore(tracker, {
-      command: 'docmanager:open',
-      args: widget => ({ path: widget.context.path, factory: FACTORY }),
-      name: widget => widget.context.path
-    });
-  }
-
   // Creating the widget factory to register it so the document manager knows about
   // our new DocumentWidget
   const widgetFactory = new JupyterCadWidgetFactory({

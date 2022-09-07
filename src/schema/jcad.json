@@ -14,7 +14,7 @@
   "definitions": {
     "primitiveShapes": {
       "type": "string",
-      "enum": ["Part::Box", "Part::Sphere"]
+      "enum": ["Part::Box", "Part::Cylinder"]
     },
     "jcadObject": {
       "title": "IJCadObject",

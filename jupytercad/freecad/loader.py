@@ -1,9 +1,11 @@
-import json
 from typing import Dict
 import freecad as fc
 import tempfile
 import base64
 import os
+
+from .props.base_prop import BaseProp
+from . import props as Props
 
 
 class FCStd:
@@ -13,6 +15,10 @@ class FCStd:
         self._options = {}
         self._id = None
         self._visible = True
+        self._prop_handlers: Dict[str, BaseProp] = {}
+        for Cls in Props.__dict__.values():
+            if isinstance(Cls, type) and issubclass(Cls, BaseProp):
+                self._prop_handlers[Cls.name()] = Cls
 
     @property
     def sources(self):
@@ -57,13 +63,16 @@ class FCStd:
             py_obj = objects[obj_name]
             fc_file.addObject(py_obj['shape'], py_obj['name'])
         to_update = [x for x in new_objs if x in current_objs] + to_add
+        
         for obj_name in to_update:
             py_obj = new_objs[obj_name]
             fc_obj = fc_file.getObject(py_obj['name'])
             for prop, prop_value in py_obj['parameters'].items():
                 prop_type = fc_obj.getTypeIdOfProperty(prop)
-                if prop_type in ['App::PropertyLength']:
-                    setattr(fc_obj, prop, prop_value)
+                prop_handler = self._prop_handlers.get(prop_type, None)
+                if prop_handler is not None:
+                    fc_value = prop_handler.jcad_to_fc(prop_value)
+                    setattr(fc_obj, prop, fc_value)
 
         fc_file.save()
         fc_file.recompute()
@@ -83,14 +92,10 @@ class FCStd:
         for prop in obj.PropertiesList:
             prop_type = obj.getTypeIdOfProperty(prop)
             prop_value = getattr(obj, prop)
-            if prop_type == 'Part::PropertyPartShape':
-                continue
-            if prop_type == 'App::PropertyLength':
-                value = prop_value.Value
+            prop_handler = self._prop_handlers.get(prop_type, None)
+            if prop_handler is not None:
+                value = prop_handler.fc_to_jcad(prop_value)
             else:
-                try:
-                    value = json.loads(json.dumps(prop_value))
-                except Exception:
-                    value = str(prop_value)
+                value = None
             obj_data['parameters'][prop] = value
         return obj_data

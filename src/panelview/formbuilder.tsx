@@ -68,13 +68,7 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
     return inputs;
   }
 
-  generateUiSchema(schema: IDict): IDict {
-    const uiSchema = {
-      additionalProperties: {
-        'ui:label': false,
-        classNames: 'jpcad-hidden-field'
-      }
-    };
+  removeArrayButton(schema: IDict, uiSchema: IDict): void {
     Object.entries(schema['properties'] as IDict).forEach(([k, v]) => {
       if (v['type'] === 'array') {
         uiSchema[k] = {
@@ -82,8 +76,21 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
             orderable: false
           }
         };
+      } else if (v['type'] === 'object') {
+        uiSchema[k] = {};
+        this.removeArrayButton(v, uiSchema[k]);
       }
     });
+  }
+
+  generateUiSchema(schema: IDict): IDict {
+    const uiSchema = {
+      additionalProperties: {
+        'ui:label': false,
+        classNames: 'jpcad-hidden-field'
+      }
+    };
+    this.removeArrayButton(schema, uiSchema);
     return uiSchema;
   }
 
