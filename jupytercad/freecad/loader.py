@@ -1,11 +1,19 @@
 from typing import Dict
-import freecad as fc
 import tempfile
 import base64
 import os
 
 from .props.base_prop import BaseProp
 from . import props as Props
+import logging
+
+logger = logging.getLogger(__file__)
+
+try:
+    import freecad as fc
+except ImportError:
+    logger.warn('[JupyterCad] Freecad is not installed!')
+    fc = None
 
 
 class FCStd:
@@ -33,6 +41,8 @@ class FCStd:
         return self._options
 
     def load(self, base64_content: str) -> None:
+        if not fc:
+            return
         self._sources = base64_content
         with tempfile.NamedTemporaryFile(delete=False, suffix='.FCStd') as tmp:
             file_content = base64.b64decode(base64_content)
@@ -45,7 +55,7 @@ class FCStd:
 
     def save(self, objects: Dict, options: Dict) -> None:
 
-        if len(self._sources) == 0:
+        if not fc or len(self._sources) == 0:
             return
 
         with tempfile.NamedTemporaryFile(delete=False, suffix='.FCStd') as tmp:
@@ -63,7 +73,7 @@ class FCStd:
             py_obj = objects[obj_name]
             fc_file.addObject(py_obj['shape'], py_obj['name'])
         to_update = [x for x in new_objs if x in current_objs] + to_add
-        
+
         for obj_name in to_update:
             py_obj = new_objs[obj_name]
             fc_obj = fc_file.getObject(py_obj['name'])

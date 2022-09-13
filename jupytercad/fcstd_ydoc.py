@@ -1,4 +1,3 @@
-import json
 from jupyter_ydoc.ydoc import YBaseDoc
 import y_py as Y
 

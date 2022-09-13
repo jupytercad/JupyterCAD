@@ -1,7 +1,11 @@
 import math
 from typing import Any
-import freecad as fc
 from .base_prop import BaseProp
+
+try:
+    import freecad as fc
+except ImportError:
+    fc = None
 
 
 class App_PropertyPlacement(BaseProp):
@@ -27,6 +31,9 @@ class App_PropertyPlacement(BaseProp):
 
     @staticmethod
     def jcad_to_fc(prop_value: Any) -> Any:
+        if not fc:
+            return
+
         base = fc.app.Base.Vector(prop_value['Position'])
         axis = fc.app.Base.Vector(prop_value['Axis'])
         angle = prop_value['Angle']

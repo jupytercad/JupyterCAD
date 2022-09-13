@@ -4,7 +4,6 @@ from .base_prop import BaseProp
 
 
 class App_PropertyLength(BaseProp):
-
     @staticmethod
     def name() -> str:
         return 'App::PropertyLength'
