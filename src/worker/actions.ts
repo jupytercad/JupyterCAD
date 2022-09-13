@@ -208,8 +208,6 @@ function loadFile(payload: {
   content: IJCadContent;
 }): IDict | null {
   const { content } = payload;
-  console.log('content', content);
-  
   const shapeList = buildModel(content);
   const result = shapeToThree(shapeList);
   return result;

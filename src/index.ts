@@ -8,6 +8,7 @@ import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
 import { JupyterCadModelFactory, JupyterCadWidgetFactory } from './factory';
 import fcplugin from './fcplugin/plugins';
+import { JupyterCadModel } from './model';
 import { ControlPanelModel } from './panelview/model';
 import { PanelWidget } from './panelview/widget';
 import { IJupyterCadDocTracker, IJupyterCadTracker } from './token';
@@ -26,6 +27,9 @@ const activate = (
     namespace: NAME_SPACE
   });
 
+  JupyterCadModel.worker = new Worker(
+    new URL('./worker', (import.meta as any).url)
+  );
   // Creating the widget factory to register it so the document manager knows about
   // our new DocumentWidget
   const widgetFactory = new JupyterCadWidgetFactory({

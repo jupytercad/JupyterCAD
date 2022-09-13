@@ -2,14 +2,12 @@
   "objects": [
     {
       "visible": true,
-      "shape": "Part::Box",
       "parameters": {
-        "Height": 19.0,
         "Length": 7.0,
+        "Width": 15.0,
         "Placement": {
-          "Angle": 0.0,
           "Axis": [
-            0.0,
+            1.0,
             0.0,
             0.0
           ],
@@ -17,27 +15,29 @@
             0.0,
             0.0,
             0.0
-          ]
+          ],
+          "Angle": 0.0
         },
-        "Width": 15.0
+        "Height": 19.0
       },
-      "id": 123456.0
+      "id": 123456.0,
+      "shape": "Part::Box"
     },
     {
       "visible": true,
       "parameters": {
+        "Height": 9.0,
         "Width": 25.0,
         "Length": 10.0,
-        "Height": 9.0,
         "Placement": {
-          "Axis": [
+          "Angle": 2.0,
+          "Position": [
             0.0,
             0.0,
             0.0
           ],
-          "Angle": 2.0,
-          "Position": [
-            0.0,
+          "Axis": [
+            1.0,
             0.0,
             0.0
           ]

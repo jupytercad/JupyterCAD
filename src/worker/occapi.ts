@@ -1,7 +1,7 @@
 import { getOcc } from './actions';
 import { TopoDS_Shape } from 'opencascade.js';
 import { IAllOperatorFunc } from './types';
-import { hashCode } from './utils';
+import { hashCode, toRad } from './utils';
 import { PrimitiveShapes } from '../_interface/jcad';
 import { IBox } from '../_interface/box';
 import { ICylinder } from '../_interface/cylinder';
@@ -31,11 +31,12 @@ function setShapePlacement(
 ): TopoDS_Shape {
   const oc = getOcc();
   const trsf = new oc.gp_Trsf_1();
+
   const ax = new oc.gp_Ax1_2(
     new oc.gp_Pnt_3(0, 0, 0),
     new oc.gp_Dir_4(placement.Axis[0], placement.Axis[1], placement.Axis[2])
   );
-  const angle = (placement.Angle * Math.PI) / 180;
+  const angle = toRad(placement.Angle);
   trsf.SetRotation_1(ax, angle);
   trsf.SetTranslationPart(
     new oc.gp_Vec_4(
@@ -56,14 +57,21 @@ function _Box(arg: IBox): TopoDS_Shape {
   const shape = box.Shape();
   return setShapePlacement(shape, Placement);
 }
+
 function _Cylinder(arg: ICylinder): TopoDS_Shape {
-  console.log('arg', arg);
-  
-  throw Error('Not implemented');
+  const { Radius, Height, Angle, Placement } = arg;
+  const oc = getOcc();
+  const cylinder = new oc.BRepPrimAPI_MakeCylinder_2(
+    Radius,
+    Height,
+    toRad(Angle)
+  );
+  const shape = cylinder.Shape();
+  return setShapePlacement(shape, Placement);
 }
 
 const Box = operatorCache<IBox>('Box', _Box);
-const Cylinder = operatorCache<ICylinder>('Sphere', _Cylinder);
+const Cylinder = operatorCache<ICylinder>('Cylinder', _Cylinder);
 
 export const PrimitiveShapesFactory: {
   [key in PrimitiveShapes]: IAllOperatorFunc;

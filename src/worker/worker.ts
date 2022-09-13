@@ -10,22 +10,22 @@ import WorkerHandler from './actions';
 
 let occ: OpenCascadeInstance;
 const ports: IDict<MessagePort> = {};
-let lock = false;
+console.log('Initializing OCC...');
+
+initOpenCascade().then(occInstance => {
+  console.log('Done!');
+  occ = occInstance;
+
+  (self as any).occ = occ;
+  for (const id of Object.keys(ports)) {
+    sendToMain({ action: MainAction.INITIALIZED, payload: false }, id);
+  }
+});
 
 const registerWorker = async (id: string, port: MessagePort) => {
-  if (!lock) {
-    lock = true;
-    occ = await initOpenCascade();
-    (self as any).occ = occ;
-    ports[id] = port;
-    for (const id of Object.keys(ports)) {
-      sendToMain({ action: MainAction.INITIALIZED, payload: false }, id);
-    }
-  } else {
-    ports[id] = port;
-    if (occ) {
-      sendToMain({ action: MainAction.INITIALIZED, payload: false }, id);
-    }
+  ports[id] = port;
+  if (occ) {
+    sendToMain({ action: MainAction.INITIALIZED, payload: false }, id);
   }
 };
 
