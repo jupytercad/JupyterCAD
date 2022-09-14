@@ -25,7 +25,7 @@ interface IStates {
   filePath?: string;
   jcadObject?: IJCadModel;
   selectedObjectData?: IDict;
-  selectedObject?: string;
+  selectedObject?: number;
   schema?: IDict;
 }
 
@@ -65,9 +65,10 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       }
     });
     this.props.cpModel.stateChanged.connect((changed, value) => {
-      const selected = value.newValue as string;
+      const selected = '' + value.newValue;
+
       if (selected && selected.includes('#')) {
-        const id = selected.split('#')[0];
+        const id = parseInt(selected.split('#')[0]);
         const objectData = this.state.jcadObject;
         if (objectData) {
           let schema;
@@ -119,7 +120,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   };
 
   syncObjectProperties(
-    objectId: string | undefined,
+    objectId: number | undefined,
     properties: { [key: string]: any }
   ) {
     if (!this.state.jcadObject || !objectId) {
@@ -133,7 +134,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
         ...(currentYMap.get('parameters') as IDict),
         ...properties
       };
-      currentYMap?.set('parameters', newParams);
+      currentYMap.set('parameters', newParams);
     }
   }
 

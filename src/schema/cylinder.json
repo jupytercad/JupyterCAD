@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "title": "ICylinder",
+  "description": "Part::Cylinder",
+  "required": ["Radius", "Angle", "Height", "Placement"],
+  "additionalProperties": false,
+  "properties": {
+    "Radius": {
+      "type": "number",
+      "description": "Radius of the cylinder"
+    },
+    "Height": {
+      "type": "number",
+      "description": "Height of the cylinder"
+    },
+    "Angle": {
+      "type": "number",
+      "description": "Angle of the cylinder"
+    },
+    "Placement": {
+      "$ref": "./placement.json"
+    }
+  }
+}

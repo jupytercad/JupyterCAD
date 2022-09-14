@@ -1,37 +1,53 @@
 {
   "objects": [
     {
-      "id": "123456",
-      "visible": true,
-      "shape": "Box",
+      "shape": "Part::Box",
+      "id": 123456.0,
       "parameters": {
-        "x": 7,
-        "y": 15,
-        "z": 19,
-        "center": [
-          0,
-          0,
-          0
-        ]
-      }
+        "Placement": {
+          "Axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "Angle": 0.0,
+          "Position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "Length": 7.0,
+        "Width": 15.0,
+        "Height": 19.0
+      },
+      "visible": true
     },
-        {
-      "id": "12523456",
-      "visible": true,
-      "shape": "Box",
+    {
+      "shape": "Part::Box",
+      "id": 12523456.0,
       "parameters": {
-        "x": 5,
-        "y": 25,
-        "z": 9,
-        "center": [
-          0,
-          0,
-          0
-        ]
-      }
+        "Height": 9.0,
+        "Width": 25.0,
+        "Placement": {
+          "Axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Angle": 2.0
+        },
+        "Length": 10.0
+      },
+      "visible": true
     }
   ],
   "options": {
-    "foo": 1
+    "foo": 1.0
   }
 }
