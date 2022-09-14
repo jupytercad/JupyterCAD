@@ -109,7 +109,7 @@ export type IJCadObjectDoc = Y.Map<any>;
 export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   objects: Y.Array<IJCadObjectDoc>;
   options: Y.Map<any>;
-  getObjectById(key: string): IJCadObjectDoc | undefined;
+  getObjectById(key: number): IJCadObjectDoc | undefined;
   addObject(value: IJCadObjectDoc): void;
   getOption(key: string): any;
   setOption(key: string, value: any): void;

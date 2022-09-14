@@ -2,7 +2,13 @@ const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 const occPath = [__dirname, 'lib', '*.wasm'];
-const staticPath = [__dirname, 'jupytercad', 'labextension', 'static', '[name].wasm'];
+const staticPath = [
+  __dirname,
+  'jupytercad',
+  'labextension',
+  'static',
+  '[name].wasm'
+];
 module.exports = {
   module: {
     rules: [
@@ -15,7 +21,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@fluentui': path.resolve(__dirname, './node_modules/@fluentui'),
+      '@fluentui': path.resolve(__dirname, './node_modules/@fluentui')
     },
     fallback: {
       fs: false,

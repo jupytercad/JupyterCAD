@@ -29,7 +29,7 @@
   },
   "scripts": {
     "build": "jlpm build:schema && jlpm run build:lib && jlpm run build:worker && jlpm run build:labextension:dev",
-    "build:schema": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions && node schema.js",
+    "build:schema": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions --cwd ./src/schema && cd src/schema && node ../../schema.js",
     "build:prod": "jlpm run clean && jlpm build:schema && jlpm run build:worker:prod && jlpm run build:lib && jlpm run build:labextension",
     "build:labextension": "jupyter labextension build .",
     "build:labextension:dev": "jupyter labextension build --development True .",
@@ -43,6 +43,10 @@
     "eslint": "eslint . --ext .ts,.tsx --fix",
     "eslint:check": "eslint . --ext .ts,.tsx",
     "install:extension": "jlpm run build",
+    "lint": "jlpm prettier && jlpm eslint",
+    "prettier": "jlpm prettier:base --write --list-different",
+    "prettier:base": "prettier \"**/*{.ts,.tsx,.js,.jsx,.css,.json,.md}\"",
+    "prettier:check": "jlpm prettier:base --check",
     "watch": "run-p watch:worker watch:src watch:labextension",
     "watch:src": "tsc -w",
     "watch:worker": "webpack --config worker.webpack.config.js --watch",
@@ -63,6 +67,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@apidevtools/json-schema-ref-parser": "^9.0.9",
     "@jupyterlab/builder": "^4.0.0-alpha.11",
     "@types/node": "^16.11.10",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
