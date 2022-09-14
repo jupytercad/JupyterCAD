@@ -1,3 +1,4 @@
+import { IJCadObject } from './../_interface/jcad.d';
 import {
   Handle_Poly_Triangulation,
   OpenCascadeInstance,
@@ -6,7 +7,7 @@ import {
 
 import { IDict, WorkerAction } from '../types';
 import { IJCadContent } from '../_interface/jcad';
-import { PrimitiveShapesFactory } from './occapi';
+import { ShapesFactory } from './occapi';
 import { IOperatorArg } from './types';
 
 let occ: OpenCascadeInstance;
@@ -30,13 +31,15 @@ interface IFace {
  * Convert OpenCascade shapes into `THREE` compatible data types.
  * This function is adapted from https://github.com/zalo/CascadeStudio/blob/master/js/CADWorker/CascadeStudioShapeToMesh.js
  *
- * @param {Array<TopoDS_Shape>} shapes
+ * @param {Array<TopoDS_Shape>} shapeData
  * @returns {{
  *   faceList: any[];
  *   edgeList: any[];
  * }}
  */
-function shapeToThree(shapes: Array<TopoDS_Shape>): {
+function shapeToThree(
+  shapeData: Array<{ occShape: TopoDS_Shape; jcObject: IJCadObject }>
+): {
   faceList: any[];
   edgeList: any[];
 } {
@@ -45,7 +48,11 @@ function shapeToThree(shapes: Array<TopoDS_Shape>): {
   const faceList: Array<IFace> = [];
   const edgeList = [];
   const triangulations: Array<Handle_Poly_Triangulation> = [];
-  shapes.forEach(shape => {
+  shapeData.forEach(data => {
+    const { occShape: shape, jcObject } = data;
+    if (!jcObject.visible) {
+      return;
+    }
     new oc.BRepMesh_IncrementalMesh_2(
       shape,
       maxDeviation,
@@ -187,17 +194,19 @@ function shapeToThree(shapes: Array<TopoDS_Shape>): {
   return { faceList, edgeList };
 }
 
-function buildModel(model: IJCadContent): TopoDS_Shape[] {
-  const occShapes: TopoDS_Shape[] = [];
+function buildModel(
+  model: IJCadContent
+): { occShape: TopoDS_Shape; jcObject: IJCadObject }[] {
+  const occShapes: { occShape: TopoDS_Shape; jcObject: IJCadObject }[] = [];
   const { objects } = model;
 
   objects.forEach(object => {
     const { shape, parameters } = object;
-    if (shape) {
-      const occShape = PrimitiveShapesFactory[shape](
-        parameters as IOperatorArg
-      );
-      occShapes.push(occShape);
+    if (shape && ShapesFactory[shape]) {
+      const occShape = ShapesFactory[shape](parameters as IOperatorArg, model);
+      if (occShape) {
+        occShapes.push({ occShape, jcObject: object });
+      }
     }
   });
   return occShapes;

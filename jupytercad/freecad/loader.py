@@ -81,7 +81,9 @@ class FCStd:
                 prop_type = fc_obj.getTypeIdOfProperty(prop)
                 prop_handler = self._prop_handlers.get(prop_type, None)
                 if prop_handler is not None:
-                    fc_value = prop_handler.jcad_to_fc(prop_value)
+                    fc_value = prop_handler.jcad_to_fc(
+                        prop_value, objects, fc_file
+                    )
                     setattr(fc_obj, prop, fc_value)
 
         fc_file.save()
@@ -104,8 +106,9 @@ class FCStd:
             prop_value = getattr(obj, prop)
             prop_handler = self._prop_handlers.get(prop_type, None)
             if prop_handler is not None:
-                value = prop_handler.fc_to_jcad(prop_value)
+                value = prop_handler.fc_to_jcad(prop_value, None, obj)
             else:
                 value = None
+            print('#######',  obj.Name, prop, prop_type,value, self._prop_handlers )
             obj_data['parameters'][prop] = value
         return obj_data

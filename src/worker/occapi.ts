@@ -1,21 +1,26 @@
 import { getOcc } from './actions';
 import { TopoDS_Shape } from 'opencascade.js';
-import { IAllOperatorFunc } from './types';
+import { IAllOperatorFunc, IOperatorArg } from './types';
 import { hashCode, toRad } from './utils';
-import { PrimitiveShapes } from '../_interface/jcad';
+import { IJCadContent, Parts } from '../_interface/jcad';
 import { IBox } from '../_interface/box';
 import { ICylinder } from '../_interface/cylinder';
+import { ICut } from '../_interface/cut';
+
 const SHAPE_CACHE = new Map<string, TopoDS_Shape>();
-
-export function operatorCache<T>(name: string, ops: (args: T) => TopoDS_Shape) {
-  return (args: T): TopoDS_Shape => {
+export function operatorCache<T>(
+  name: string,
+  ops: (args: T, content: IJCadContent) => TopoDS_Shape | undefined
+) {
+  return (args: T, content: IJCadContent): TopoDS_Shape | undefined => {
     const hash = `${name}-${hashCode(JSON.stringify(args))}`;
-
     if (SHAPE_CACHE.has(hash)) {
       return SHAPE_CACHE.get(hash)!;
     } else {
-      const shape = ops(args);
-      SHAPE_CACHE.set(hash, shape);
+      const shape = ops(args, content);
+      if (shape) {
+        SHAPE_CACHE.set(hash, shape);
+      }
       return shape;
     }
   };
@@ -50,7 +55,7 @@ function setShapePlacement(
   return shape;
 }
 
-function _Box(arg: IBox): TopoDS_Shape {
+function _Box(arg: IBox, _: IJCadContent): TopoDS_Shape | undefined {
   const { Length, Width, Height, Placement } = arg;
   const oc = getOcc();
   const box = new oc.BRepPrimAPI_MakeBox_2(Length, Width, Height);
@@ -58,7 +63,7 @@ function _Box(arg: IBox): TopoDS_Shape {
   return setShapePlacement(shape, Placement);
 }
 
-function _Cylinder(arg: ICylinder): TopoDS_Shape {
+function _Cylinder(arg: ICylinder, _: IJCadContent): TopoDS_Shape | undefined {
   const { Radius, Height, Angle, Placement } = arg;
   const oc = getOcc();
   const cylinder = new oc.BRepPrimAPI_MakeCylinder_2(
@@ -70,9 +75,44 @@ function _Cylinder(arg: ICylinder): TopoDS_Shape {
   return setShapePlacement(shape, Placement);
 }
 
+function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
+  const { Placement, Base, Tool, Refine } = arg;
+  console.log('arg', arg, content, Refine);
+  const oc = getOcc();
+  const baseObject = content.objects.filter(obj => obj.name === Base);
+  const toolObject = content.objects.filter(obj => obj.name === Tool);
+  if (baseObject.length === 0 || toolObject.length === 0) {
+    return;
+  }
+  const baseShape = baseObject[0].shape;
+  const toolShape = toolObject[0].shape;
+  if (
+    baseShape &&
+    ShapesFactory[baseShape] &&
+    toolShape &&
+    ShapesFactory[toolShape]
+  ) {
+    const base = ShapesFactory[baseShape](
+      baseObject[0].parameters as IOperatorArg,
+      content
+    );
+    const tool = ShapesFactory[toolShape](
+      toolObject[0].parameters as IOperatorArg,
+      content
+    );
+    if (base && tool) {
+      const operator = new oc.BRepAlgoAPI_Cut_3(base, tool);
+      if (operator.IsDone()) {
+        return setShapePlacement(operator.Shape(), Placement);
+      }
+    }
+  }
+}
+
 const Box = operatorCache<IBox>('Box', _Box);
 const Cylinder = operatorCache<ICylinder>('Cylinder', _Cylinder);
+const Cut = operatorCache<ICut>('Cut', _Cut);
 
-export const PrimitiveShapesFactory: {
-  [key in PrimitiveShapes]: IAllOperatorFunc;
-} = { 'Part::Box': Box, 'Part::Cylinder': Cylinder };
+export const ShapesFactory: {
+  [key in Parts]: IAllOperatorFunc;
+} = { 'Part::Box': Box, 'Part::Cylinder': Cylinder, 'Part::Cut': Cut };

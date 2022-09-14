@@ -12,9 +12,9 @@
     }
   },
   "definitions": {
-    "primitiveShapes": {
+    "parts": {
       "type": "string",
-      "enum": ["Part::Box", "Part::Cylinder"]
+      "enum": ["Part::Box", "Part::Cylinder", "Part::Cut"]
     },
     "jcadObject": {
       "title": "IJCadObject",
@@ -32,7 +32,7 @@
           "type": "boolean"
         },
         "shape": {
-          "$ref": "#/definitions/primitiveShapes"
+          "$ref": "#/definitions/parts"
         },
         "parameters": {
           "type": "object"
