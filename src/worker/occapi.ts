@@ -76,8 +76,7 @@ function _Cylinder(arg: ICylinder, _: IJCadContent): TopoDS_Shape | undefined {
 }
 
 function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
-  const { Placement, Base, Tool, Refine } = arg;
-  console.log('arg', arg, content, Refine);
+  const { Placement, Base, Tool } = arg;
   const oc = getOcc();
   const baseObject = content.objects.filter(obj => obj.name === Base);
   const toolObject = content.objects.filter(obj => obj.name === Tool);

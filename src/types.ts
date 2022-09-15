@@ -1,3 +1,4 @@
+import { IJCadObject } from './_interface/jcad.d';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
@@ -61,11 +62,28 @@ export enum MainAction {
   INITIALIZED = 'INITIALIZED'
 }
 
+export interface IFace {
+  vertex_coord: Array<any>;
+  uv_coord: Array<any>;
+  normal_coord: Array<any>;
+  tri_indexes: Array<any>;
+  number_of_triangles: number;
+}
+
+export interface IEdge {
+  vertices: any[];
+  faces: number[];
+  pos: number[];
+  quat: number[];
+}
 export interface IDisplayShape {
   action: MainAction.DISPLAY_SHAPE;
   payload: {
-    edgeList: any;
-    faceList: any;
+    [key: string]: {
+      edgeList: IEdge[];
+      faceList: IFace[];
+      jcObject: IJCadObject;
+    };
   };
 }
 export interface IWorkerInitialized {

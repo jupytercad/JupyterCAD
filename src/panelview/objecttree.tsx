@@ -90,7 +90,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         }
         return {
           id: id,
-          label: `Object (#${id})`,
+          label: obj.name ?? `Object (#${id})`,
           parentId: null,
           items
         };

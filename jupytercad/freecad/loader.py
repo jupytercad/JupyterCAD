@@ -109,6 +109,5 @@ class FCStd:
                 value = prop_handler.fc_to_jcad(prop_value, None, obj)
             else:
                 value = None
-            print('#######',  obj.Name, prop, prop_type,value, self._prop_handlers )
             obj_data['parameters'][prop] = value
         return obj_data

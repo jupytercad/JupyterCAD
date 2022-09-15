@@ -1,67 +1,72 @@
-import { IJCadObject } from './../_interface/jcad.d';
 import {
   Handle_Poly_Triangulation,
   OpenCascadeInstance,
   TopoDS_Shape
 } from 'opencascade.js';
 
-import { IDict, WorkerAction } from '../types';
-import { IJCadContent } from '../_interface/jcad';
-import { ShapesFactory } from './occapi';
-import { IOperatorArg } from './types';
-import { OccParser } from './occparser';
+import { IJCadObject } from '../_interface/jcad.d';
+import { IEdge, IFace } from '../types';
 
-let occ: OpenCascadeInstance;
+interface IShapeList {
+  occShape: TopoDS_Shape;
+  jcObject: IJCadObject;
+}
 
-export function getOcc(): OpenCascadeInstance {
-  if (!occ) {
-    occ = (self as any).occ as OpenCascadeInstance;
+export class OccParser {
+  private _shapeList: IShapeList[];
+  private _occ: OpenCascadeInstance = (self as any).occ;
+  private _faces: Map<TopoDS_Shape, any[]> = new Map();
+  private _showEdge = false;
+  constructor(shapeList: IShapeList[]) {
+    this._shapeList = shapeList;
   }
-  return occ;
-}
 
-interface IFace {
-  vertex_coord: Array<any>;
-  uv_coord: Array<any>;
-  normal_coord: Array<any>;
-  tri_indexes: Array<any>;
-  number_of_triangles: number;
-}
+  execute(): {
+    [key: string]: {
+      jcObject: IJCadObject;
+      faceList: Array<IFace>;
+      edgeList: Array<IEdge>;
+    };
+  } {
+    const maxDeviation = 0.5;
+    const theejsData: {
+      [key: string]: {
+        jcObject: IJCadObject;
+        faceList: Array<IFace>;
+        edgeList: Array<IEdge>;
+      };
+    } = {};
+    this._shapeList.forEach(data => {
+      const { occShape, jcObject } = data;
+      if (!jcObject.visible) {
+        return;
+      }
+      new this._occ.BRepMesh_IncrementalMesh_2(
+        occShape,
+        maxDeviation,
+        false,
+        maxDeviation * 5,
+        true
+      );
+      const faceList = this._build_face_mesh(occShape);
+      // TODO Enable edge rendering.
+      let edgeList: IEdge[] = [];
+      if (this._showEdge) {
+        edgeList = this._build_edge_mesh(occShape);
+      }
+      theejsData[jcObject.name ?? jcObject.id] = {
+        jcObject,
+        faceList,
+        edgeList
+      };
+    });
+    return theejsData;
+  }
 
-/**
- * Convert OpenCascade shapes into `THREE` compatible data types.
- * This function is adapted from https://github.com/zalo/CascadeStudio/blob/master/js/CADWorker/CascadeStudioShapeToMesh.js
- *
- * @param {Array<TopoDS_Shape>} shapeData
- * @returns {{
- *   faceList: any[];
- *   edgeList: any[];
- * }}
- */
-export function shapeToThree(
-  shapeData: Array<{ occShape: TopoDS_Shape; jcObject: IJCadObject }>
-): {
-  faceList: any[];
-  edgeList: any[];
-} {
-  const oc = getOcc();
-  const maxDeviation = 0.5;
-  const faceList: Array<IFace> = [];
-  const edgeList = [];
-  const triangulations: Array<Handle_Poly_Triangulation> = [];
-  shapeData.forEach(data => {
-    const { occShape: shape, jcObject } = data;
-    if (!jcObject.visible) {
-      return;
-    }
-    new oc.BRepMesh_IncrementalMesh_2(
-      shape,
-      maxDeviation,
-      false,
-      maxDeviation * 5,
-      true
-    );
-
+  private _build_face_mesh(shape: TopoDS_Shape): Array<IFace> {
+    const faceList: Array<IFace> = [];
+    const triangulations: Array<Handle_Poly_Triangulation> = [];
+    const oc = this._occ;
     const expl = new oc.TopExp_Explorer_2(
       shape,
       oc.TopAbs_ShapeEnum.TopAbs_FACE as any,
@@ -78,7 +83,7 @@ export function shapeToThree(
       const myT = oc.BRep_Tool.Triangulation(face, aLocation);
       if (myT.IsNull()) {
         console.error('Encountered Null Face!');
-        return;
+        continue;
       }
       const thisFace: IFace = {
         vertex_coord: [],
@@ -188,46 +193,65 @@ export function shapeToThree(
       thisFace.number_of_triangles = validFaceTriCount;
       faceList.push(thisFace);
       triangulations.push(myT);
+      this._faces.set(face, thisFace.vertex_coord);
       expl.Next();
     }
-  });
+    return faceList;
+  }
+  private _build_edge_mesh(shape: TopoDS_Shape): IEdge[] {
+    const oc = this._occ;
+    const edgeList: IEdge[] = [];
+    const edgeMap = new oc.TopTools_IndexedDataMapOfShapeListOfShape_1();
+    oc.TopExp.MapShapesAndAncestors(
+      shape,
+      oc.TopAbs_ShapeEnum.TopAbs_EDGE as any,
+      oc.TopAbs_ShapeEnum.TopAbs_FACE as any,
+      edgeMap
+    );
 
-  return { faceList, edgeList };
-}
+    for (let idx = 1; idx < edgeMap.Size() + 1; idx++) {
+      const faceList = edgeMap.FindFromIndex(idx);
+      if (faceList.Size() !== 0) {
+        const face = oc.TopoDS.Face_1(faceList.First_1());
+        const edge = oc.TopoDS.Edge_1(edgeMap.FindKey(idx));
+        let vertexBuffer: any[] | undefined = undefined;
+        for (const [f, value] of this._faces) {
+          if (face.IsSame(f)) {
+            vertexBuffer = value;
+            break;
+          }
+        }
 
-function buildModel(
-  model: IJCadContent
-): { occShape: TopoDS_Shape; jcObject: IJCadObject }[] {
-  const occShapes: { occShape: TopoDS_Shape; jcObject: IJCadObject }[] = [];
-  const { objects } = model;
+        if (vertexBuffer) {
+          const loc = new oc.TopLoc_Location_1();
+          const trf = loc.Transformation();
 
-  objects.forEach(object => {
-    const { shape, parameters } = object;
-    if (shape && ShapesFactory[shape]) {
-      const occShape = ShapesFactory[shape](parameters as IOperatorArg, model);
-      if (occShape) {
-        occShapes.push({ occShape, jcObject: object });
+          const tri = oc.BRep_Tool.Triangulation(face, loc);
+          const polygon = oc.BRep_Tool.PolygonOnTriangulation_1(edge, tri, loc);
+          const edgeNodes = polygon.get().Nodes();
+          const faces: number[] = [];
+          for (let jdx = 1; jdx < edgeNodes.Length() + 1; jdx++) {
+            faces.push(edgeNodes.Value(jdx) - 1);
+          }
+          const thisEdge: IEdge = {
+            vertices: vertexBuffer,
+            faces,
+            pos: [
+              trf.TranslationPart().X(),
+              trf.TranslationPart().Y(),
+              trf.TranslationPart().Z()
+            ],
+            quat: [
+              trf.GetRotation_2().X(),
+              trf.GetRotation_2().Y(),
+              trf.GetRotation_2().Z(),
+              trf.GetRotation_2().W()
+            ]
+          };
+          edgeList.push(thisEdge);
+        }
       }
     }
-  });
-  return occShapes;
+    return edgeList;
+  }
 }
-
-function loadFile(payload: {
-  fileName: string;
-  content: IJCadContent;
-}): IDict | null {
-  const { content } = payload;
-  const shapeList = buildModel(content);
-  const parser = new OccParser(shapeList);
-  // const result = shapeToThree(shapeList);
-  const result = parser.execute();
-  return result;
-}
-
-const WorkerHandler: {
-  [key in WorkerAction]: (payload: any) => any;
-} = {} as any;
-WorkerHandler[WorkerAction.LOAD_FILE] = loadFile;
-
-export default WorkerHandler;
