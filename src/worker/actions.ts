@@ -220,7 +220,6 @@ function loadFile(payload: {
   const { content } = payload;
   const shapeList = buildModel(content);
   const parser = new OccParser(shapeList);
-  // const result = shapeToThree(shapeList);
   const result = parser.execute();
   return result;
 }

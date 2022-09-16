@@ -3,10 +3,10 @@ import * as React from 'react';
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import Tree, { Leaf } from '@naisutech/react-tree';
+import Tree, { Leaf, Node as TreeNode } from '@naisutech/react-tree';
 
 import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
-import { IJCadModel } from '../_interface/jcad';
+import { IJCadModel, IJCadObject } from '../_interface/jcad';
 
 export class ObjectTree extends PanelWithToolbar {
   constructor(params: ObjectTree.IOptions) {
@@ -103,18 +103,90 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     return [];
   };
 
+  getObjectFromId(id: number | string | null): IJCadObject | undefined {
+    if (id && this.state.jcadObject) {
+      const obj = this.state.jcadObject.filter(o => o.id === parseInt(id + ''));
+      if (obj.length > 0) {
+        return obj[0];
+      }
+    }
+  }
+
   render(): React.ReactNode {
     const data = this.stateToTree();
-
     return (
       <div className="jpcad-treeview-wrapper">
         <Tree
           nodes={data}
           theme="light"
           onSelect={id => {
+            console.log('selected', id);
+
             if (id && id.length > 0) {
               this.props.cpModel.set('activatedObject', id[0]);
             }
+          }}
+          LeafRenderer={(options: {
+            data: TreeNode;
+            selected: boolean;
+            level: number;
+          }) => {
+            const paddingLeft = 25 * (options.level + 1);
+            const jcadObj = this.getObjectFromId(options.data.parentId);
+            let visible = false;
+            if (jcadObj) {
+              visible = jcadObj.visible;
+            }
+            return (
+              <div
+                className={`jpcad-control-panel-tree ${
+                  options.selected ? 'selected' : ''
+                }`}
+              >
+                <div
+                  style={{
+                    paddingLeft: `${paddingLeft}px`,
+                    minHeight: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    minWidth: 0
+                  }}
+                >
+                  <span
+                    style={{
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      overflowX: 'hidden'
+                    }}
+                  >
+                    {options.data.label}
+                  </span>
+                  <div>
+                    <button
+                      onClick={() => {
+                        const objectId = options.data.parentId as number;
+                        const currentYMap =
+                          this.props.cpModel.jcadModel?.sharedModel.getObjectById(
+                            objectId
+                          );
+                        if (currentYMap) {
+                          const newParams = {
+                            ...(currentYMap.get('parameters') as IDict),
+                            Visibility: !visible
+                          };
+                          console.log('parameters', newParams);
+                          // currentYMap.set('parameters', newParams);
+                          currentYMap.set('visible', !visible);
+                        }
+                      }}
+                    >
+                      {visible ? 'Hide' : 'Show'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
           }}
         />
       </div>

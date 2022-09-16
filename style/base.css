@@ -170,3 +170,20 @@ div.field.field-array > label + span {
 button.ms-Button.ms-Button--icon.is-disabled {
   display: none;
 }
+
+.jpcad-control-panel-tree {
+  padding: 8px 15px 8px 4px;
+  min-height: 20px;
+  min-width: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+.jpcad-control-panel-tree.selected {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.jpcad-control-panel-tree:hover {
+  background-color: #ccc;
+  color: #333;
+}

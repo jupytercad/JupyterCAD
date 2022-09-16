@@ -152,7 +152,7 @@ export interface IControlPanelState {
   activatedObject: string;
 }
 
-export type IStateValue = string | number;
+export type IStateValue = string | number | any[];
 export type ISateChangedSignal = ISignal<
   ObservableMap<IStateValue>,
   IObservableMap.IChangedArgs<IStateValue>

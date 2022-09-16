@@ -14,7 +14,7 @@ import {
 
 export class ControlPanelModel implements IControlPanelModel {
   constructor(options: ControlPanelModel.IOptions) {
-    const state = { activatedObject: '' };
+    const state = { activatedObject: '', visibleObjects: [] };
     this._state = new ObservableMap({ values: state });
     this._stateChanged = this._state.changed;
     this._tracker = options.tracker;

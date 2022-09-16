@@ -287,6 +287,8 @@ export class MainView extends React.Component<IProps, IStates> {
           return;
         }
         const render = () => {
+          console.log('reload file', this._model.getContent());
+          
           this.postMessage({
             action: WorkerAction.LOAD_FILE,
             payload: {
@@ -306,11 +308,13 @@ export class MainView extends React.Component<IProps, IStates> {
     if (old) {
       this._scene.remove(old);
     }
-
     const mainObject = new THREE.Group();
     mainObject.name = 'shape';
     Object.entries(payload).forEach(([objName, data]) => {
-      const { faceList, edgeList } = data;
+      const { faceList, edgeList, jcObject } = data;
+      if (!jcObject.visible) {
+        return;
+      }
       const vertices: Array<any> = [];
       const normals: Array<any> = [];
       const triangles: Array<any> = [];

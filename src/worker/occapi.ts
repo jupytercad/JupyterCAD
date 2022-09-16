@@ -110,8 +110,8 @@ function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
 
 const Box = operatorCache<IBox>('Box', _Box);
 const Cylinder = operatorCache<ICylinder>('Cylinder', _Cylinder);
-const Cut = operatorCache<ICut>('Cut', _Cut);
+// const Cut = operatorCache<ICut>('Cut', _Cut);
 
 export const ShapesFactory: {
   [key in Parts]: IAllOperatorFunc;
-} = { 'Part::Box': Box, 'Part::Cylinder': Cylinder, 'Part::Cut': Cut };
+} = { 'Part::Box': Box, 'Part::Cylinder': Cylinder, 'Part::Cut': _Cut };

@@ -28,7 +28,7 @@ export class OccParser {
       edgeList: Array<IEdge>;
     };
   } {
-    const maxDeviation = 0.5;
+    const maxDeviation = 0.25;
     const theejsData: {
       [key: string]: {
         jcObject: IJCadObject;
@@ -38,9 +38,7 @@ export class OccParser {
     } = {};
     this._shapeList.forEach(data => {
       const { occShape, jcObject } = data;
-      if (!jcObject.visible) {
-        return;
-      }
+
       new this._occ.BRepMesh_IncrementalMesh_2(
         occShape,
         maxDeviation,
