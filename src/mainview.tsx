@@ -287,8 +287,6 @@ export class MainView extends React.Component<IProps, IStates> {
           return;
         }
         const render = () => {
-          console.log('reload file', this._model.getContent());
-          
           this.postMessage({
             action: WorkerAction.LOAD_FILE,
             payload: {

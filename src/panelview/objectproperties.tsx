@@ -126,8 +126,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     if (!this.state.jcadObject || !objectId) {
       return;
     }
-   
-    
+
     const currentYMap =
       this.props.cpModel.jcadModel?.sharedModel.getObjectById(objectId);
     if (currentYMap) {
@@ -135,7 +134,6 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
         ...(currentYMap.get('parameters') as IDict),
         ...properties
       };
-      console.log('parameters', newParams);
       currentYMap.set('parameters', newParams);
     }
   }

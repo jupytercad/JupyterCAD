@@ -41,6 +41,7 @@ class FCStd:
         return self._options
 
     def load(self, base64_content: str) -> None:
+        print('###### load')
         if not fc:
             return
         self._sources = base64_content
@@ -57,7 +58,6 @@ class FCStd:
 
         if not fc or len(self._sources) == 0:
             return
-
         with tempfile.NamedTemporaryFile(delete=False, suffix='.FCStd') as tmp:
             file_content = base64.b64decode(self._sources)
             tmp.write(file_content)

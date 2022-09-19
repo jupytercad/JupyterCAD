@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { ReactWidget } from '@jupyterlab/apputils';
-import { PanelWithToolbar } from '@jupyterlab/ui-components';
+import { PanelWithToolbar, Button } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
 import Tree, { Leaf, Node as TreeNode } from '@naisutech/react-tree';
 
@@ -120,8 +120,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
           nodes={data}
           theme="light"
           onSelect={id => {
-            console.log('selected', id);
-
             if (id && id.length > 0) {
               this.props.cpModel.set('activatedObject', id[0]);
             }
@@ -163,7 +161,8 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                     {options.data.label}
                   </span>
                   <div>
-                    <button
+                    <Button
+                      className={'jp-ToolbarButtonComponent'}
                       onClick={() => {
                         const objectId = options.data.parentId as number;
                         const currentYMap =
@@ -171,18 +170,20 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                             objectId
                           );
                         if (currentYMap) {
-                          const newParams = {
-                            ...(currentYMap.get('parameters') as IDict),
-                            Visibility: !visible
-                          };
-                          console.log('parameters', newParams);
+                          // const newParams = {
+                          //   ...(currentYMap.get('parameters') as IDict),
+                          //   Visibility: !visible
+                          // };
                           // currentYMap.set('parameters', newParams);
                           currentYMap.set('visible', !visible);
                         }
                       }}
+                      minimal
                     >
-                      {visible ? 'Hide' : 'Show'}
-                    </button>
+                      <span className="jp-ToolbarButtonComponent-label">
+                        {visible ? 'Hide' : 'Show'}
+                      </span>
+                    </Button>
                   </div>
                 </div>
               </div>
