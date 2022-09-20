@@ -140,15 +140,13 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
 
   render(): React.ReactNode {
     return (
-      <div>
-        <ObjectPropertiesForm
-          schema={this.state.schema}
-          sourceData={this.state.selectedObjectData}
-          syncData={(properties: { [key: string]: any }) => {
-            this.syncObjectProperties(this.state.selectedObject, properties);
-          }}
-        />
-      </div>
+      <ObjectPropertiesForm
+        schema={this.state.schema}
+        sourceData={this.state.selectedObjectData}
+        syncData={(properties: { [key: string]: any }) => {
+          this.syncObjectProperties(this.state.selectedObject, properties);
+        }}
+      />
     );
   }
 }

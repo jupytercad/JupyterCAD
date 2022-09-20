@@ -232,7 +232,6 @@ export class JupyterCadDoc
   }
 
   private _objectsObserver = (event: Y.YArrayEvent<IJCadObjectDoc>): void => {
-
     event.changes.added.forEach(item => {
       const type = (item.content as Y.ContentType).type as Y.Map<any>;
       type.observe(this.emitChange);

@@ -1,14 +1,23 @@
+import { IJupyterCadTracker } from './token';
 import { ABCWidgetFactory, DocumentRegistry } from '@jupyterlab/docregistry';
 
 import { JupyterCadModel } from './model';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
+import { ToolbarWidget } from './toolbar/widget';
+import { ToolbarModel } from './toolbar/model';
+// import { WidgetTracker } from '@jupyterlab/apputils';
+
+interface IOptios extends DocumentRegistry.IWidgetFactoryOptions {
+  tracker: IJupyterCadTracker;
+}
 
 export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   JupyterCadWidget,
   JupyterCadModel
 > {
-  constructor(options: DocumentRegistry.IWidgetFactoryOptions) {
-    super(options);
+  constructor(options: IOptios) {
+    const { ...rest } = options;
+    super(rest);
   }
 
   /**
@@ -20,9 +29,12 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   protected createNewWidget(
     context: DocumentRegistry.IContext<JupyterCadModel>
   ): JupyterCadWidget {
+    const toolbarModel = new ToolbarModel({ context });
+    const toolbar = new ToolbarWidget({ model: toolbarModel });
     return new JupyterCadWidget({
       context,
-      content: new JupyterCadPanel(context)
+      content: new JupyterCadPanel(context),
+      toolbar
     });
   }
 }

@@ -123,8 +123,15 @@
 }
 
 .jpcad-property-outer {
-  padding-left: 10px;
-  padding-right: 10px;
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.jpcad-property-panel {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  overflow: hidden;
 }
 
 .jpcad-hidden-field {
@@ -186,4 +193,8 @@ button.ms-Button.ms-Button--icon.is-disabled {
 .jpcad-control-panel-tree:hover {
   background-color: #ccc;
   color: #333;
+}
+
+.jpcad-property-FormDialog .jp-Dialog-footer button {
+  display: none;
 }
