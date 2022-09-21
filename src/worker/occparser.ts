@@ -52,7 +52,7 @@ export class OccParser {
       if (this._showEdge) {
         edgeList = this._build_edge_mesh(occShape);
       }
-      theejsData[jcObject.name ?? jcObject.id] = {
+      theejsData[jcObject.name] = {
         jcObject,
         faceList,
         edgeList

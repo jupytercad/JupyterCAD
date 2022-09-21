@@ -72,25 +72,25 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   stateToTree = () => {
     if (this.state.jcadObject) {
       return this.state.jcadObject.map(obj => {
-        const id = obj.id;
+        const name = obj.name;
         const items: Leaf[] = [];
         if (obj.shape) {
           items.push({
-            id: `${id}#shape#${obj.shape}#${this.state.filePath}`,
+            id: `${name}#shape#${obj.shape}#${this.state.filePath}`,
             label: 'Shape',
-            parentId: id
+            parentId: name
           });
         }
         if (obj.operators) {
           items.push({
-            id: `${id}#operator#${this.state.filePath}`,
+            id: `${name}#operator#${this.state.filePath}`,
             label: 'Operators',
-            parentId: id
+            parentId: name
           });
         }
         return {
-          id: id,
-          label: obj.name ?? `Object (#${id})`,
+          id: name,
+          label: obj.name ?? `Object (#${name})`,
           parentId: null,
           items
         };
@@ -103,9 +103,9 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     return [];
   };
 
-  getObjectFromId(id: number | string | null): IJCadObject | undefined {
-    if (id && this.state.jcadObject) {
-      const obj = this.state.jcadObject.filter(o => o.id === parseInt(id + ''));
+  getObjectFromName(name: string | null): IJCadObject | undefined {
+    if (name && this.state.jcadObject) {
+      const obj = this.state.jcadObject.filter(o => o.name === name);
       if (obj.length > 0) {
         return obj[0];
       }
@@ -130,7 +130,9 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
             level: number;
           }) => {
             const paddingLeft = 25 * (options.level + 1);
-            const jcadObj = this.getObjectFromId(options.data.parentId);
+            const jcadObj = this.getObjectFromName(
+              options.data.parentId as string
+            );
             let visible = false;
             if (jcadObj) {
               visible = jcadObj.visible;
@@ -160,21 +162,16 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                   >
                     {options.data.label}
                   </span>
-                  <div>
+                  <div style={{ display: 'flex' }}>
                     <Button
                       className={'jp-ToolbarButtonComponent'}
                       onClick={() => {
-                        const objectId = options.data.parentId as number;
+                        const objectId = options.data.parentId as string;
                         const currentYMap =
-                          this.props.cpModel.jcadModel?.sharedModel.getObjectById(
+                          this.props.cpModel.jcadModel?.sharedModel.getObjectByName(
                             objectId
                           );
                         if (currentYMap) {
-                          // const newParams = {
-                          //   ...(currentYMap.get('parameters') as IDict),
-                          //   Visibility: !visible
-                          // };
-                          // currentYMap.set('parameters', newParams);
                           currentYMap.set('visible', !visible);
                         }
                       }}
@@ -182,6 +179,21 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                     >
                       <span className="jp-ToolbarButtonComponent-label">
                         {visible ? 'Hide' : 'Show'}
+                      </span>
+                    </Button>
+                    <Button
+                      className={'jp-ToolbarButtonComponent'}
+                      onClick={() => {
+                        const objectId = options.data.parentId as string;
+                        this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
+                          objectId
+                        );
+                        this.props.cpModel.set('activatedObject', '');
+                      }}
+                      minimal
+                    >
+                      <span className="jp-ToolbarButtonComponent-label">
+                        Delete
                       </span>
                     </Button>
                   </div>
@@ -199,7 +211,6 @@ export namespace ObjectTree {
    * Instantiation options for `ObjectTree`.
    */
   export interface IOptions extends Panel.IOptions {
-    id?: string;
     controlPanelModel: IControlPanelModel;
   }
 }

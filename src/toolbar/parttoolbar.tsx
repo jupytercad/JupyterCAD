@@ -8,13 +8,9 @@ interface IProps {
   toolbarModel: ToolbarModel;
 }
 
-interface IState {
-  id: string;
-}
-export class PartToolbarReact extends React.Component<IProps, IState> {
+export class PartToolbarReact extends React.Component<IProps> {
   constructor(props: IProps) {
     super(props);
-    this.state = { id: '' };
   }
 
   private _defaultData = {
@@ -61,7 +57,6 @@ export class PartToolbarReact extends React.Component<IProps, IState> {
                     shape: value.shape,
                     parameters,
                     visible: true,
-                    id: Math.floor(Math.random() * 10000),
                     name: Name
                   };
                   const model = this.props.toolbarModel.sharedModel;

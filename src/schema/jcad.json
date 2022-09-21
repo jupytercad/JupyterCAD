@@ -20,11 +20,8 @@
       "title": "IJCadObject",
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "visible"],
+      "required": ["name", "visible"],
       "properties": {
-        "id": {
-          "type": "number"
-        },
         "name": {
           "type": "string"
         },

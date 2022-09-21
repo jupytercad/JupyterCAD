@@ -103,7 +103,6 @@ class FCStd:
     def _fc_to_jcad_obj(self, obj) -> Dict:
         obj_data = {
             'shape': obj.TypeId,
-            'id': obj.ID,
             'visible': obj.Visibility,
             'parameters': {},
             'name': obj.Name,
