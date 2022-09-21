@@ -11,36 +11,45 @@ interface IProps {
 interface IState {
   id: string;
 }
-export class PartToolbarReact extends React.Component<IProps, IState> {
+export class OperatorToolbarReact extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = { id: '' };
+    this._updateSchema(props.toolbarModel.formSchema);
   }
 
-  private _defaultData = {
-    BOX: {
-      title: 'Box parameters',
-      shape: 'Part::Box',
-      schema: this.props.toolbarModel.formSchema['Part::Box'],
-      default: {
-        Length: 1,
-        Width: 1,
-        Height: 1,
-        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+  private _updateSchema(oldSchema: IDict): void {
+    this._schema = JSON.parse(JSON.stringify(oldSchema));
+    const allObjects = this.props.toolbarModel.allObject.map(o => o.name);
+    Object.keys(this._schema).forEach(key => {
+      const schema = this._schema[key];
+      for (const prop in schema['properties']) {
+        const fcType = schema['properties'][prop]['fcType'];
+        if (fcType) {
+          const propDef = schema['properties'][prop];
+          switch (fcType) {
+            case 'App::PropertyLink':
+              propDef['enum'] = allObjects;
+              break;
+            default:
+          }
+        }
       }
-    },
-    CYLINDER: {
-      title: 'Cylinder parameters',
-      shape: 'Part::Cylinder',
-      schema: this.props.toolbarModel.formSchema['Part::Cylinder'],
-      default: {
-        Radius: 1,
-        Height: 1,
-        Angle: 360,
-        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+    });
+    this._defaultData = {
+      CUT: {
+        title: 'Cut parameters',
+        shape: 'Part::Cut',
+        schema: this._schema['Part::Cut'],
+        default: {
+          Base: allObjects[0] ?? '',
+          Tool: allObjects[0] ?? '',
+          Refine: false,
+          Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+        }
       }
-    }
-  };
+    };
+  }
 
   render(): React.ReactNode {
     return (
@@ -81,4 +90,7 @@ export class PartToolbarReact extends React.Component<IProps, IState> {
       </div>
     );
   }
+
+  private _schema: IDict;
+  private _defaultData: IDict;
 }

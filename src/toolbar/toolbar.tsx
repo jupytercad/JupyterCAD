@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ToolbarModel } from './model';
+import { OperatorToolbarReact } from './operatortoolbar';
 import { PartToolbarReact } from './parttoolbar';
 
 interface IProps {
@@ -7,12 +8,12 @@ interface IProps {
 }
 
 interface IState {
-  selected: 'Part' | 'Design';
+  selected: 'PART' | 'OPERATOR';
 }
 export class ToolbarReact extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-    this.state = { selected: 'Part' };
+    this.state = { selected: 'PART' };
   }
   async componentDidMount(): Promise<void> {
     await this.props.toolbarModel.ready();
@@ -28,7 +29,14 @@ export class ToolbarReact extends React.Component<IProps, IState> {
         }}
       >
         <div className="jp-HTMLSelect jp-DefaultStyle jp-Notebook-toolbarCellTypeDropdown">
-          <select>
+          <select
+            onChange={e =>
+              this.setState(old => ({
+                ...old,
+                selected: e.target.value as any
+              }))
+            }
+          >
             {this._toolbarOption.map(value => (
               <option value={value}>{value}</option>
             ))}
@@ -38,7 +46,7 @@ export class ToolbarReact extends React.Component<IProps, IState> {
               style={{
                 height: 'auto',
                 position: 'absolute',
-                left: '55px',
+                left: '90px',
                 top: '5px',
                 width: '16px'
               }}
@@ -58,10 +66,16 @@ export class ToolbarReact extends React.Component<IProps, IState> {
             </svg>
           </span>
         </div>
-        <PartToolbarReact toolbarModel={this.props.toolbarModel} />
+        {this.state.selected === 'PART' && (
+          <PartToolbarReact toolbarModel={this.props.toolbarModel} />
+        )}
+        {this.state.selected === 'OPERATOR' && (
+          <OperatorToolbarReact toolbarModel={this.props.toolbarModel} />
+        )}
+        {/* <OperatorToolbarReact toolbarModel={this.props.toolbarModel} /> */}
       </div>
     );
   }
 
-  private _toolbarOption = ['Part', 'Design'];
+  private _toolbarOption = ['PART', 'OPERATOR'];
 }

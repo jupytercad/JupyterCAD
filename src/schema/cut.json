@@ -7,11 +7,13 @@
   "properties": {
     "Base": {
       "type": "string",
-      "description": "The base of the cut operator"
+      "description": "The base of the cut operator",
+      "fcType": "App::PropertyLink"
     },
     "Tool": {
       "type": "string",
-      "description": "The tool of the cut operator"
+      "description": "The tool of the cut operator",
+      "fcType": "App::PropertyLink"
     },
     "Refine": {
       "type": "boolean",
