@@ -76,14 +76,14 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         const items: Leaf[] = [];
         if (obj.shape) {
           items.push({
-            id: `${id}#shape#${obj.shape}`,
+            id: `${id}#shape#${obj.shape}#${this.state.filePath}`,
             label: 'Shape',
             parentId: id
           });
         }
         if (obj.operators) {
           items.push({
-            id: `${id}#operator`,
+            id: `${id}#operator#${this.state.filePath}`,
             label: 'Operators',
             parentId: id
           });
