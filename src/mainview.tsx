@@ -316,15 +316,13 @@ export class MainView extends React.Component<IProps, IStates> {
       const vertices: Array<any> = [];
       const normals: Array<any> = [];
       const triangles: Array<any> = [];
-      const uvs: Array<any> = [];
-      const colors: Array<any> = [];
+
       let vInd = 0;
-      let globalFaceIndex = 0;
+
       faceList.forEach(face => {
         // Copy Vertices into three.js Vector3 List
         vertices.push(...face.vertex_coord);
         normals.push(...face.normal_coord);
-        uvs.push(...face.uv_coord);
 
         // Sort Triangles into a three.js Face List
         for (let i = 0; i < face.tri_indexes.length; i += 3) {
@@ -335,12 +333,6 @@ export class MainView extends React.Component<IProps, IStates> {
           );
         }
 
-        // Use Vertex Color to label this face's indices for raycast picking
-        for (let i = 0; i < face.vertex_coord.length; i += 3) {
-          colors.push(0, globalFaceIndex, 0);
-        }
-
-        globalFaceIndex++;
         vInd += face.vertex_coord.length / 3;
       });
 
@@ -364,12 +356,6 @@ export class MainView extends React.Component<IProps, IStates> {
         'normal',
         new THREE.Float32BufferAttribute(normals, 3)
       );
-      geometry.setAttribute(
-        'color',
-        new THREE.Float32BufferAttribute(colors, 3)
-      );
-      geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
-      geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(uvs, 2));
 
       const model = new THREE.Mesh(geometry, material);
       model.castShadow = true;
@@ -380,24 +366,16 @@ export class MainView extends React.Component<IProps, IStates> {
         color: 'black'
       });
       edgeList.forEach(edge => {
+        console.log('edege', edge);
+
+        const edgeVertices = new THREE.Float32BufferAttribute(
+          edge.vertex_coord,
+          3
+        );
         const edgeGeometry = new THREE.BufferGeometry();
-        const edgeVertices = new Float32Array(edge.vertices.length);
-        for (let index = 0; index < edge.vertices.length; index++) {
-          edgeVertices[index] = edge.vertices[index];
-        }
-        edgeGeometry.setAttribute(
-          'position',
-          new THREE.BufferAttribute(edgeVertices, 3, false)
-        );
-        edgeGeometry.setIndex(edge.faces);
-        const mesh = new THREE.Line(geometry, edgeMaterial);
-        mesh.quaternion.set(
-          edge.quat[0],
-          edge.quat[1],
-          edge.quat[2],
-          edge.quat[3]
-        );
-        mesh.position.set(edge.pos[0], edge.pos[1], edge.pos[2]);
+        edgeGeometry.setAttribute('position', edgeVertices);
+        const mesh = new THREE.Line(edgeGeometry, edgeMaterial);
+
         model.add(mesh);
       });
 

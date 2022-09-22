@@ -42,6 +42,20 @@ export class OperatorToolbarReact extends React.Component<IProps> {
           Tool: allObjects[0] ?? '',
           Refine: false,
           Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+        },
+        syncData: (props: IDict) => {
+          const { Name, ...parameters } = props;
+          const objectModel = {
+            shape: 'Part::Cut',
+            parameters,
+            visible: true,
+            name: Name
+          };
+          const model = this.props.toolbarModel.sharedModel;
+          if (model) {
+            const object = new Y.Map<any>(Object.entries(objectModel));
+            model.addObject(object);
+          }
         }
       }
     };
@@ -60,20 +74,7 @@ export class OperatorToolbarReact extends React.Component<IProps> {
                 title: value.title,
                 sourceData: value.default,
                 schema: value.schema,
-                syncData: (props: IDict) => {
-                  const { Name, ...parameters } = props;
-                  const objectModel = {
-                    shape: value.shape,
-                    parameters,
-                    visible: true,
-                    name: Name
-                  };
-                  const model = this.props.toolbarModel.sharedModel;
-                  if (model) {
-                    const object = new Y.Map<any>(Object.entries(objectModel));
-                    model.addObject(object);
-                  }
-                },
+                syncData: value.syncData,
                 cancelButton: true
               });
               await dialog.launch();
