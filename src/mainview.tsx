@@ -306,72 +306,85 @@ export class MainView extends React.Component<IProps, IStates> {
     if (old) {
       this._scene.remove(old);
     }
-    const { faceList } = payload;
-
     const mainObject = new THREE.Group();
     mainObject.name = 'shape';
+    Object.entries(payload).forEach(([objName, data]) => {
+      const { faceList, edgeList, jcObject } = data;
+      if (!jcObject.visible) {
+        return;
+      }
+      const vertices: Array<any> = [];
+      const normals: Array<any> = [];
+      const triangles: Array<any> = [];
 
-    const vertices: Array<any> = [];
-    const normals: Array<any> = [];
-    const triangles: Array<any> = [];
-    const uvs: Array<any> = [];
-    const colors: Array<any> = [];
-    let vInd = 0;
-    let globalFaceIndex = 0;
-    faceList.forEach(face => {
-      // Copy Vertices into three.js Vector3 List
-      vertices.push(...face.vertex_coord);
-      normals.push(...face.normal_coord);
-      uvs.push(...face.uv_coord);
+      let vInd = 0;
 
-      // Sort Triangles into a three.js Face List
-      for (let i = 0; i < face.tri_indexes.length; i += 3) {
-        triangles.push(
-          face.tri_indexes[i + 0] + vInd,
-          face.tri_indexes[i + 1] + vInd,
-          face.tri_indexes[i + 2] + vInd
+      faceList.forEach(face => {
+        // Copy Vertices into three.js Vector3 List
+        vertices.push(...face.vertexCoord);
+        normals.push(...face.normalCoord);
+
+        // Sort Triangles into a three.js Face List
+        for (let i = 0; i < face.triIndexes.length; i += 3) {
+          triangles.push(
+            face.triIndexes[i + 0] + vInd,
+            face.triIndexes[i + 1] + vInd,
+            face.triIndexes[i + 2] + vInd
+          );
+        }
+
+        vInd += face.vertexCoord.length / 3;
+      });
+
+      // Compile the connected vertices and faces into a model
+      // And add to the scene
+      const material = new THREE.MeshPhongMaterial({
+        color: '#434442',
+        side: THREE.DoubleSide,
+        wireframe: false,
+        flatShading: false,
+        shininess: 40
+      });
+
+      const geometry = new THREE.BufferGeometry();
+      geometry.setIndex(triangles);
+      geometry.setAttribute(
+        'position',
+        new THREE.Float32BufferAttribute(vertices, 3)
+      );
+      geometry.setAttribute(
+        'normal',
+        new THREE.Float32BufferAttribute(normals, 3)
+      );
+
+      const model = new THREE.Mesh(geometry, material);
+      model.castShadow = true;
+      model.name = objName;
+
+      const edgeMaterial = new THREE.LineBasicMaterial({
+        linewidth: 5,
+        color: 'black'
+      });
+      edgeList.forEach(edge => {
+        const edgeVertices = new THREE.Float32BufferAttribute(
+          edge.vertexCoord,
+          3
         );
-      }
+        const edgeGeometry = new THREE.BufferGeometry();
+        edgeGeometry.setAttribute('position', edgeVertices);
+        const mesh = new THREE.Line(edgeGeometry, edgeMaterial);
 
-      // Use Vertex Color to label this face's indices for raycast picking
-      for (let i = 0; i < face.vertex_coord.length; i += 3) {
-        colors.push(face.face_index, globalFaceIndex, 0);
-      }
+        model.add(mesh);
+      });
 
-      globalFaceIndex++;
-      vInd += face.vertex_coord.length / 3;
+      mainObject.add(model);
     });
+    const boundingGroup = new THREE.Box3();
+    boundingGroup.setFromObject(mainObject);
 
-    // Compile the connected vertices and faces into a model
-    // And add to the scene
-    const material = new THREE.MeshPhongMaterial({
-      color: '#434442',
-      side: THREE.DoubleSide,
-      wireframe: false,
-      flatShading: false,
-      shininess: 40
-    });
-
-    const geometry = new THREE.BufferGeometry();
-    geometry.setIndex(triangles);
-    geometry.setAttribute(
-      'position',
-      new THREE.Float32BufferAttribute(vertices, 3)
-    );
-    geometry.setAttribute(
-      'normal',
-      new THREE.Float32BufferAttribute(normals, 3)
-    );
-    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
-    geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(uvs, 2));
-    geometry.computeBoundingSphere();
-    geometry.computeBoundingBox();
-    const bbox = geometry.boundingBox;
     const boxSizeVec = new THREE.Vector3();
-    if (bbox) {
-      bbox.getSize(boxSizeVec);
-    }
+    boundingGroup.getSize(boxSizeVec);
+
     const oldRefLength = this._refLength || 1;
     this._refLength =
       Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
@@ -391,11 +404,6 @@ export class MainView extends React.Component<IProps, IStates> {
         );
       }
     }
-
-    const model = new THREE.Mesh(geometry, material);
-    model.castShadow = true;
-    model.name = 'Model Faces';
-    mainObject.add(model);
     this._scene.add(mainObject);
     this.setState(old => ({ ...old, loading: false }));
   };

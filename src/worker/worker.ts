@@ -49,7 +49,7 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
       sendToMain(
         {
           action: MainAction.DISPLAY_SHAPE,
-          payload: { faceList: result.faceList, edgeList: result.edgeList }
+          payload: result
         },
         id
       );

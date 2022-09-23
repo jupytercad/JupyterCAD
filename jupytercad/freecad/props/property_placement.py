@@ -14,7 +14,7 @@ class App_PropertyPlacement(BaseProp):
         return 'App::PropertyPlacement'
 
     @staticmethod
-    def fc_to_jcad(prop_value: Any) -> Any:
+    def fc_to_jcad(prop_value: Any, jcad_file=None, fc_file=None) -> Any:
         return {
             'Position': [
                 prop_value.Base.x,
@@ -30,7 +30,7 @@ class App_PropertyPlacement(BaseProp):
         }
 
     @staticmethod
-    def jcad_to_fc(prop_value: Any) -> Any:
+    def jcad_to_fc(prop_value: Any, jcad_file=None, fc_file=None) -> Any:
         if not fc:
             return
 

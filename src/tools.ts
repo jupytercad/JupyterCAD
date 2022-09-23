@@ -32,12 +32,12 @@ export function yMapToJcadObject(ymap: Y.Map<any>): IJCadObject {
   return values;
 }
 
-export function itemFromId<T extends { id: number }>(
-  id: number,
+export function itemFromName<T extends { name: string }>(
+  name: string,
   arr: T[]
 ): T | undefined {
   for (const it of arr) {
-    if (it.id === id) {
+    if (it.name === name) {
       return it;
     }
   }
