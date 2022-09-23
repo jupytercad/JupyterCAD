@@ -11,12 +11,12 @@ interface IProps {
   sourceData: IDict | undefined;
   syncData: (properties: IDict) => void;
   schema?: IDict;
+  cancel?: () => void;
 }
 
 export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
-
     this.state = {
       internalData: { ...this.props.sourceData },
       schema: props.schema
@@ -102,21 +102,52 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
         ...old,
         internalData
       }),
-      () => this.props.syncData(e.formData)
+      () => {
+        this.props.syncData(e.formData);
+        this.props.cancel && this.props.cancel();
+      }
     );
   };
 
   render(): React.ReactNode {
     if (this.props.schema) {
       const schema = { ...this.props.schema, additionalProperties: true };
+      const submitRef = React.createRef<HTMLButtonElement>();
       return (
-        <div className="jpcad-property-outer">
-          <Form
-            schema={schema}
-            onSubmit={this.onFormSubmit}
-            formData={this.state.internalData}
-            uiSchema={this.generateUiSchema(this.props.schema)}
-          />
+        <div className="jpcad-property-panel">
+          <div className="jpcad-property-outer">
+            <Form
+              schema={schema}
+              onSubmit={this.onFormSubmit}
+              formData={this.state.internalData}
+              uiSchema={this.generateUiSchema(this.props.schema)}
+            >
+              <button
+                ref={submitRef}
+                type="submit"
+                style={{ display: 'none' }}
+              />
+            </Form>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+            {this.props.cancel ? (
+              <button
+                style={{ width: '90px', height: '30px' }}
+                className="btn btn-secondary"
+                onClick={this.props.cancel}
+              >
+                Cancel
+              </button>
+            ) : null}
+
+            <button
+              style={{ width: '90px', height: '30px' }}
+              className="btn btn-info"
+              onClick={() => submitRef.current?.click()}
+            >
+              Submit
+            </button>
+          </div>
         </div>
       );
     } else {

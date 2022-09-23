@@ -1,5 +1,6 @@
+import { IJupyterCadWidget } from './../types';
+import { IJupyterCadDocTracker } from './../token';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
-import { IJupyterCadDocTracker } from '../token';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
@@ -12,14 +13,15 @@ const FACTORY = 'Jupytercad Jcad Factory';
 
 const activate = (
   app: JupyterFrontEnd,
-  tracker: WidgetTracker,
+  tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager
 ): void => {
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-jcadmodel',
     fileTypes: ['jcad'],
-    defaultFor: ['jcad']
+    defaultFor: ['jcad'],
+    tracker
   });
 
   // Registering the widget factory

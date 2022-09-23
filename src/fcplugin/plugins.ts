@@ -7,12 +7,13 @@ import {
 
 import { JupyterCadWidgetFactory } from '../factory';
 import { JupyterCadFCModelFactory } from './modelfactory';
+import { IJupyterCadWidget } from '../types';
 
 const FACTORY = 'Jupytercad Freecad Factory';
 
 const activate = (
   app: JupyterFrontEnd,
-  tracker: WidgetTracker,
+  tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager
 ): void => {
   // Creating the widget factory to register it so the document manager knows about
@@ -21,7 +22,8 @@ const activate = (
     name: FACTORY,
     modelName: 'jupytercad-fcmodel',
     fileTypes: ['FCStd'],
-    defaultFor: ['FCStd']
+    defaultFor: ['FCStd'],
+    tracker
   });
 
   // Registering the widget factory

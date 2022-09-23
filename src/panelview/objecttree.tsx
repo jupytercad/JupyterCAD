@@ -1,12 +1,12 @@
 import * as React from 'react';
 
 import { ReactWidget } from '@jupyterlab/apputils';
-import { PanelWithToolbar } from '@jupyterlab/ui-components';
+import { PanelWithToolbar, Button } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import Tree, { Leaf } from '@naisutech/react-tree';
+import Tree, { Leaf, Node as TreeNode } from '@naisutech/react-tree';
 
 import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
-import { IJCadModel } from '../_interface/jcad';
+import { IJCadModel, IJCadObject } from '../_interface/jcad';
 
 export class ObjectTree extends PanelWithToolbar {
   constructor(params: ObjectTree.IOptions) {
@@ -72,25 +72,25 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   stateToTree = () => {
     if (this.state.jcadObject) {
       return this.state.jcadObject.map(obj => {
-        const id = obj.id;
+        const name = obj.name;
         const items: Leaf[] = [];
         if (obj.shape) {
           items.push({
-            id: `${id}#shape#${obj.shape}`,
+            id: `${name}#shape#${obj.shape}#${this.state.filePath}`,
             label: 'Shape',
-            parentId: id
+            parentId: name
           });
         }
         if (obj.operators) {
           items.push({
-            id: `${id}#operator`,
+            id: `${name}#operator#${this.state.filePath}`,
             label: 'Operators',
-            parentId: id
+            parentId: name
           });
         }
         return {
-          id: id,
-          label: `Object (#${id})`,
+          id: name,
+          label: obj.name ?? `Object (#${name})`,
           parentId: null,
           items
         };
@@ -103,9 +103,17 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     return [];
   };
 
+  getObjectFromName(name: string | null): IJCadObject | undefined {
+    if (name && this.state.jcadObject) {
+      const obj = this.state.jcadObject.filter(o => o.name === name);
+      if (obj.length > 0) {
+        return obj[0];
+      }
+    }
+  }
+
   render(): React.ReactNode {
     const data = this.stateToTree();
-
     return (
       <div className="jpcad-treeview-wrapper">
         <Tree
@@ -115,6 +123,83 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
             if (id && id.length > 0) {
               this.props.cpModel.set('activatedObject', id[0]);
             }
+          }}
+          LeafRenderer={(options: {
+            data: TreeNode;
+            selected: boolean;
+            level: number;
+          }) => {
+            const paddingLeft = 25 * (options.level + 1);
+            const jcadObj = this.getObjectFromName(
+              options.data.parentId as string
+            );
+            let visible = false;
+            if (jcadObj) {
+              visible = jcadObj.visible;
+            }
+            return (
+              <div
+                className={`jpcad-control-panel-tree ${
+                  options.selected ? 'selected' : ''
+                }`}
+              >
+                <div
+                  style={{
+                    paddingLeft: `${paddingLeft}px`,
+                    minHeight: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    minWidth: 0
+                  }}
+                >
+                  <span
+                    style={{
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      overflowX: 'hidden'
+                    }}
+                  >
+                    {options.data.label}
+                  </span>
+                  <div style={{ display: 'flex' }}>
+                    <Button
+                      className={'jp-ToolbarButtonComponent'}
+                      onClick={() => {
+                        const objectId = options.data.parentId as string;
+                        const currentYMap =
+                          this.props.cpModel.jcadModel?.sharedModel.getObjectByName(
+                            objectId
+                          );
+                        if (currentYMap) {
+                          currentYMap.set('visible', !visible);
+                        }
+                      }}
+                      minimal
+                    >
+                      <span className="jp-ToolbarButtonComponent-label">
+                        {visible ? 'Hide' : 'Show'}
+                      </span>
+                    </Button>
+                    <Button
+                      className={'jp-ToolbarButtonComponent'}
+                      onClick={() => {
+                        const objectId = options.data.parentId as string;
+                        this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
+                          objectId
+                        );
+                        this.props.cpModel.set('activatedObject', '');
+                      }}
+                      minimal
+                    >
+                      <span className="jp-ToolbarButtonComponent-label">
+                        Delete
+                      </span>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            );
           }}
         />
       </div>
@@ -126,7 +211,6 @@ export namespace ObjectTree {
    * Instantiation options for `ObjectTree`.
    */
   export interface IOptions extends Panel.IOptions {
-    id?: string;
     controlPanelModel: IControlPanelModel;
   }
 }

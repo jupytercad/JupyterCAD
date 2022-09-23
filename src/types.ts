@@ -1,3 +1,4 @@
+import { IJCadObject } from './_interface/jcad.d';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
@@ -61,11 +62,25 @@ export enum MainAction {
   INITIALIZED = 'INITIALIZED'
 }
 
+export interface IFace {
+  vertexCoord: Array<number>;
+  normalCoord: Array<number>;
+  triIndexes: Array<number>;
+  numberOfTriangles: number;
+}
+
+export interface IEdge {
+  vertexCoord: number[];
+  numberOfCoords: number;
+}
 export interface IDisplayShape {
   action: MainAction.DISPLAY_SHAPE;
   payload: {
-    edgeList: any;
-    faceList: any;
+    [key: string]: {
+      edgeList: IEdge[];
+      faceList: IFace[];
+      jcObject: IJCadObject;
+    };
   };
 }
 export interface IWorkerInitialized {
@@ -109,7 +124,8 @@ export type IJCadObjectDoc = Y.Map<any>;
 export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   objects: Y.Array<IJCadObjectDoc>;
   options: Y.Map<any>;
-  getObjectById(key: number): IJCadObjectDoc | undefined;
+  getObjectByName(name: string): IJCadObjectDoc | undefined;
+  removeObjectByName(name: string): void;
   addObject(value: IJCadObjectDoc): void;
   getOption(key: string): any;
   setOption(key: string, value: any): void;
@@ -134,7 +150,7 @@ export interface IControlPanelState {
   activatedObject: string;
 }
 
-export type IStateValue = string | number;
+export type IStateValue = string | number | any[];
 export type ISateChangedSignal = ISignal<
   ObservableMap<IStateValue>,
   IObservableMap.IChangedArgs<IStateValue>

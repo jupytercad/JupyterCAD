@@ -206,28 +206,40 @@ export class JupyterCadDoc
     return this._options;
   }
 
-  public getObjectById(key: number): IJCadObjectDoc | undefined {
+  getObjectByName(name: string): IJCadObjectDoc | undefined {
     for (const iterator of this._objects) {
-      if (iterator.get('id') === key) {
+      if (iterator.get('name') === name) {
         return iterator;
       }
     }
     return undefined;
   }
 
-  public addObject(value: IJCadObjectDoc): void {
+  removeObjectByName(name: string): void {
+    let index = -1;
+    this._objects.forEach((obj, idx) => {
+      if (index > -1 || obj.get('name') === name) {
+        index = idx;
+      }
+    });
+    if (index > -1) {
+      this._objects.delete(index);
+    }
+  }
+
+  addObject(value: IJCadObjectDoc): void {
     this._objects.push([value]);
   }
 
-  public getOption(key: string): any {
+  getOption(key: string): any {
     return this._options.get(key);
   }
 
-  public setOption(key: string, value: any): void {
+  setOption(key: string, value: any): void {
     this._options.set(key, value);
   }
 
-  public static create(): IJupyterCadDoc {
+  static create(): IJupyterCadDoc {
     return new JupyterCadDoc();
   }
 
