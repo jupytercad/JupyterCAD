@@ -321,19 +321,19 @@ export class MainView extends React.Component<IProps, IStates> {
 
       faceList.forEach(face => {
         // Copy Vertices into three.js Vector3 List
-        vertices.push(...face.vertex_coord);
-        normals.push(...face.normal_coord);
+        vertices.push(...face.vertexCoord);
+        normals.push(...face.normalCoord);
 
         // Sort Triangles into a three.js Face List
-        for (let i = 0; i < face.tri_indexes.length; i += 3) {
+        for (let i = 0; i < face.triIndexes.length; i += 3) {
           triangles.push(
-            face.tri_indexes[i + 0] + vInd,
-            face.tri_indexes[i + 1] + vInd,
-            face.tri_indexes[i + 2] + vInd
+            face.triIndexes[i + 0] + vInd,
+            face.triIndexes[i + 1] + vInd,
+            face.triIndexes[i + 2] + vInd
           );
         }
 
-        vInd += face.vertex_coord.length / 3;
+        vInd += face.vertexCoord.length / 3;
       });
 
       // Compile the connected vertices and faces into a model
@@ -362,14 +362,12 @@ export class MainView extends React.Component<IProps, IStates> {
       model.name = objName;
 
       const edgeMaterial = new THREE.LineBasicMaterial({
-        linewidth: 10,
+        linewidth: 5,
         color: 'black'
       });
       edgeList.forEach(edge => {
-        console.log('edege', edge);
-
         const edgeVertices = new THREE.Float32BufferAttribute(
-          edge.vertex_coord,
+          edge.vertexCoord,
           3
         );
         const edgeGeometry = new THREE.BufferGeometry();

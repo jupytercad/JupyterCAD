@@ -63,19 +63,15 @@ export enum MainAction {
 }
 
 export interface IFace {
-  vertex_coord: Array<number>;
-  normal_coord: Array<number>;
-  tri_indexes: Array<number>;
-  number_of_triangles: number;
+  vertexCoord: Array<number>;
+  normalCoord: Array<number>;
+  triIndexes: Array<number>;
+  numberOfTriangles: number;
 }
 
 export interface IEdge {
-  vertex_coord: number[];
-  number_of_coords: number;
-  // vertices: any[];
-  // faces: number[];
-  // pos: number[];
-  // quat: number[];
+  vertexCoord: number[];
+  numberOfCoords: number;
 }
 export interface IDisplayShape {
   action: MainAction.DISPLAY_SHAPE;

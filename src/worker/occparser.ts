@@ -15,7 +15,6 @@ interface IShapeList {
 export class OccParser {
   private _shapeList: IShapeList[];
   private _occ: OpenCascadeInstance = (self as any).occ;
-  private _faces: Map<TopoDS_Shape, any[]> = new Map();
   private _showEdge = true;
   constructor(shapeList: IShapeList[]) {
     this._shapeList = shapeList;
@@ -28,7 +27,7 @@ export class OccParser {
       edgeList: Array<IEdge>;
     };
   } {
-    const maxDeviation = 0.25;
+    const maxDeviation = 0.1;
     const theejsData: {
       [key: string]: {
         jcObject: IJCadObject;
@@ -84,20 +83,20 @@ export class OccParser {
         continue;
       }
       const thisFace: IFace = {
-        vertex_coord: [],
-        normal_coord: [],
-        tri_indexes: [],
-        number_of_triangles: 0
+        vertexCoord: [],
+        normalCoord: [],
+        triIndexes: [],
+        numberOfTriangles: 0
       };
       const pc = new oc.Poly_Connect_2(myT);
       const nodes = myT.get().Nodes();
 
-      thisFace.vertex_coord = new Array(nodes.Length() * 3);
+      thisFace.vertexCoord = new Array(nodes.Length() * 3);
       for (let i = 0; i < nodes.Length(); i++) {
         const p = nodes.Value(i + 1).Transformed(aLocation.Transformation());
-        thisFace.vertex_coord[i * 3 + 0] = p.X();
-        thisFace.vertex_coord[i * 3 + 1] = p.Y();
-        thisFace.vertex_coord[i * 3 + 2] = p.Z();
+        thisFace.vertexCoord[i * 3 + 0] = p.X();
+        thisFace.vertexCoord[i * 3 + 1] = p.Y();
+        thisFace.vertexCoord[i * 3 + 2] = p.Z();
       }
 
       const orient = face.Orientation_1();
@@ -109,17 +108,17 @@ export class OccParser {
       );
       // let SST = new oc.StdPrs_ToolTriangulatedShape();
       oc.StdPrs_ToolTriangulatedShape.Normal(face, pc, myNormal);
-      thisFace.normal_coord = new Array(myNormal.Length() * 3);
+      thisFace.normalCoord = new Array(myNormal.Length() * 3);
       for (let i = 0; i < myNormal.Length(); i++) {
         const d = myNormal.Value(i + 1).Transformed(aLocation.Transformation());
-        thisFace.normal_coord[i * 3 + 0] = d.X();
-        thisFace.normal_coord[i * 3 + 1] = d.Y();
-        thisFace.normal_coord[i * 3 + 2] = d.Z();
+        thisFace.normalCoord[i * 3 + 0] = d.X();
+        thisFace.normalCoord[i * 3 + 1] = d.Y();
+        thisFace.normalCoord[i * 3 + 2] = d.Z();
       }
 
       // Write triangle buffer
       const triangles = myT.get().Triangles();
-      thisFace.tri_indexes = new Array(triangles.Length() * 3);
+      thisFace.triIndexes = new Array(triangles.Length() * 3);
       let validFaceTriCount = 0;
       for (let nt = 1; nt <= myT.get().NbTriangles(); nt++) {
         const t = triangles.Value(nt);
@@ -132,15 +131,14 @@ export class OccParser {
           n2 = tmp;
         }
 
-        thisFace.tri_indexes[validFaceTriCount * 3 + 0] = n1 - 1;
-        thisFace.tri_indexes[validFaceTriCount * 3 + 1] = n2 - 1;
-        thisFace.tri_indexes[validFaceTriCount * 3 + 2] = n3 - 1;
+        thisFace.triIndexes[validFaceTriCount * 3 + 0] = n1 - 1;
+        thisFace.triIndexes[validFaceTriCount * 3 + 1] = n2 - 1;
+        thisFace.triIndexes[validFaceTriCount * 3 + 2] = n3 - 1;
         validFaceTriCount++;
       }
-      thisFace.number_of_triangles = validFaceTriCount;
+      thisFace.numberOfTriangles = validFaceTriCount;
       faceList.push(thisFace);
       triangulations.push(myT);
-      this._faces.set(face, thisFace.vertex_coord);
       expl.Next();
     }
     return faceList;
@@ -148,8 +146,12 @@ export class OccParser {
   private _build_edge_mesh(shape: TopoDS_Shape): IEdge[] {
     const oc = this._occ;
     const edgeList: IEdge[] = [];
-    const M = new oc.TopTools_IndexedMapOfShape_1();
-    oc.TopExp.MapShapes_1(shape, oc.TopAbs_ShapeEnum.TopAbs_EDGE as any, M);
+    const mapOfShape = new oc.TopTools_IndexedMapOfShape_1();
+    oc.TopExp.MapShapes_1(
+      shape,
+      oc.TopAbs_ShapeEnum.TopAbs_EDGE as any,
+      mapOfShape
+    );
 
     const edgeMap = new oc.TopTools_IndexedDataMapOfShapeListOfShape_1();
     oc.TopExp.MapShapesAndAncestors(
@@ -164,42 +166,34 @@ export class OccParser {
       if (faceList.Extent() === 0) {
         continue;
       }
-      const anEdge = oc.TopoDS.Edge_1(M.FindKey(iEdge));
+      const anEdge = oc.TopoDS.Edge_1(mapOfShape.FindKey(iEdge));
       let myTransf = new oc.gp_Trsf_1();
       const aLoc = new oc.TopLoc_Location_1();
       const aPoly = oc.BRep_Tool.Polygon3D(anEdge, aLoc);
 
-      const theEdge: { vertex_coord: number[]; number_of_coords: number } = {
-        vertex_coord: [],
-        number_of_coords: 0
+      const theEdge: IEdge = {
+        vertexCoord: [],
+        numberOfCoords: 0
       };
       let nbNodesInFace: number;
-      console.log('start');
-
       if (!aPoly.IsNull()) {
-        console.log('in here');
-
         if (!aLoc.IsIdentity()) {
           myTransf = aLoc.Transformation();
         }
 
         nbNodesInFace = aPoly.get().NbNodes();
-        console.log('nbNodesInFace', nbNodesInFace);
 
-        theEdge.number_of_coords = nbNodesInFace;
-        theEdge.vertex_coord = new Array(nbNodesInFace * 3);
-        const Nodes = aPoly.get().Nodes();
+        theEdge.numberOfCoords = nbNodesInFace;
+        theEdge.vertexCoord = new Array(nbNodesInFace * 3);
+        const nodeListOfEdge = aPoly.get().Nodes();
         for (let ii = 0; ii < nbNodesInFace; ii++) {
-          const V = Nodes.Value(ii + 1);
-          console.log('V', V);
-
+          const V = nodeListOfEdge.Value(ii + 1);
           V.Transform(myTransf);
-          theEdge.vertex_coord[ii * 3 + 0] = V.X();
-          theEdge.vertex_coord[ii * 3 + 1] = V.Y();
-          theEdge.vertex_coord[ii * 3 + 2] = V.Z();
+          theEdge.vertexCoord[ii * 3 + 0] = V.X();
+          theEdge.vertexCoord[ii * 3 + 1] = V.Y();
+          theEdge.vertexCoord[ii * 3 + 2] = V.Z();
         }
       } else {
-        console.log('edge triangulation failed');
         const aFace = oc.TopoDS.Face_1(edgeMap.FindFromIndex(iEdge).First_1());
         const aPolyTria = oc.BRep_Tool.Triangulation(aFace, aLoc);
         if (!aLoc.IsIdentity()) {
@@ -214,26 +208,20 @@ export class OccParser {
           continue;
         }
         nbNodesInFace = aPoly.get().NbNodes();
-        theEdge.number_of_coords = nbNodesInFace;
-        theEdge.vertex_coord = new Array(nbNodesInFace * 3);
+        theEdge.numberOfCoords = nbNodesInFace;
+        theEdge.vertexCoord = new Array(nbNodesInFace * 3);
 
         const indices = aPoly.get().Nodes();
-        const Nodes = aPolyTria.get().Nodes();
-        console.log(
-          'nbNodesInFace',
-          nbNodesInFace,
-          indices.Lower(),
-          indices.Upper()
-        );
-        for (let jj = indices.Lower(); jj <= indices.Upper(); jj++) {
-          const V = Nodes.Value(indices.Value(jj));
-          V.Transform(myTransf);
-          const locIndex = jj - Nodes.Lower();
-          console.log('##', jj, locIndex);
+        const nodeListOfFace = aPolyTria.get().Nodes();
 
-          theEdge.vertex_coord[locIndex * 3 + 0] = V.X();
-          theEdge.vertex_coord[locIndex * 3 + 1] = V.Y();
-          theEdge.vertex_coord[locIndex * 3 + 2] = V.Z();
+        for (let jj = indices.Lower(); jj <= indices.Upper(); jj++) {
+          const v = nodeListOfFace.Value(indices.Value(jj));
+          v.Transform(myTransf);
+          const locIndex = jj - nodeListOfFace.Lower();
+
+          theEdge.vertexCoord[locIndex * 3 + 0] = v.X();
+          theEdge.vertexCoord[locIndex * 3 + 1] = v.Y();
+          theEdge.vertexCoord[locIndex * 3 + 2] = v.Z();
         }
       }
       edgeList.push(theEdge);

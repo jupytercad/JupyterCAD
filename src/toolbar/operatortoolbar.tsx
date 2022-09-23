@@ -53,8 +53,15 @@ export class OperatorToolbarReact extends React.Component<IProps> {
           };
           const model = this.props.toolbarModel.sharedModel;
           if (model) {
+            console.log(parameters);
+            const base = model.getObjectByName(parameters['Base']);
+            const tool = model.getObjectByName(parameters['Tool']);
             const object = new Y.Map<any>(Object.entries(objectModel));
-            model.addObject(object);
+            model.transact(() => {
+              base && base.set('visible', false);
+              tool && tool.set('visible', false);
+              model.addObject(object);
+            });
           }
         }
       }
