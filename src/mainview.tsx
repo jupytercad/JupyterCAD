@@ -306,6 +306,15 @@ export class MainView extends React.Component<IProps, IStates> {
     if (old) {
       this._scene.remove(old);
     }
+
+    const material = new THREE.MeshPhongMaterial({
+      color: '#434442',
+      side: THREE.DoubleSide,
+      wireframe: false,
+      flatShading: false,
+      shininess: 40
+    });
+
     const mainObject = new THREE.Group();
     mainObject.name = 'shape';
     Object.entries(payload).forEach(([objName, data]) => {
@@ -338,14 +347,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
       // Compile the connected vertices and faces into a model
       // And add to the scene
-      const material = new THREE.MeshPhongMaterial({
-        color: '#434442',
-        side: THREE.DoubleSide,
-        wireframe: false,
-        flatShading: false,
-        shininess: 40
-      });
-
       const geometry = new THREE.BufferGeometry();
       geometry.setIndex(triangles);
       geometry.setAttribute(
