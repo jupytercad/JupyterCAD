@@ -23,6 +23,10 @@ const LIGHT_BG_COLOR = 'radial-gradient(#efeded, #8f9091)';
 const DARK_GRID_COLOR = 0x4f6882;
 const LIGHT_GRID_COLOR = 0x888888;
 
+const DEFAULT_MESH_COLOR = new THREE.Color('#434442');
+const HOVERED_MESH_COLOR = new THREE.Color('#F9A672');
+const SELECTED_MESH_COLOR = new THREE.Color('#F37626');
+
 interface IProps {
   context: DocumentRegistry.IContext<JupyterCadModel>;
 }
@@ -55,6 +59,8 @@ export class MainView extends React.Component<IProps, IStates> {
       lightTheme,
       loading: true
     };
+
+    this._pointer = new THREE.Vector2();
 
     this._context = props.context;
     this._cameraClients = {};
@@ -173,6 +179,10 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       this._gridHelper.geometry.rotateX(Math.PI / 2);
 
+      // Create the scene for the color picking
+      this._pickingScene = new THREE.Scene();
+      this._pickingTexture = new THREE.WebGLRenderTarget(1, 1);
+
       this._scene.add(this._gridHelper);
       this.addSceneAxe(new THREE.Vector3(1, 0, 0), 0x00ff00);
       this.addSceneAxe(new THREE.Vector3(0, 1, 0), 0xff0000);
@@ -207,6 +217,15 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.setClearColor(0x000000, 0);
       this._renderer.setSize(500, 500, false);
       this.divRef.current.appendChild(this._renderer.domElement); // mount using React ref
+
+      this._renderer.domElement.addEventListener(
+        'pointermove',
+        this._onPointerMove.bind(this)
+      );
+      this._renderer.domElement.addEventListener(
+        'mouseup',
+        this._onClick.bind(this)
+      );
 
       const controls = new OrbitControls(
         this._camera,
@@ -248,10 +267,79 @@ export class MainView extends React.Component<IProps, IStates> {
       });
     }
   };
+
+  _pick(): THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial> | null {
+    // Perform the color picking
+    const rect = this._renderer.domElement.getBoundingClientRect();
+
+    // Process color picking
+    this._camera.setViewOffset(
+      rect.width,
+      rect.height,
+      this._pointer.x,
+      this._pointer.y,
+      1,
+      1
+    );
+    this._renderer.setRenderTarget(this._pickingTexture);
+    this._renderer.render(this._pickingScene, this._camera);
+    this._camera.clearViewOffset();
+
+    const pixelBuffer = new Uint8Array(4);
+    this._renderer.readRenderTargetPixels(
+      this._pickingTexture,
+      0,
+      0,
+      1,
+      1,
+      pixelBuffer
+    );
+
+    const id = (pixelBuffer[0] << 16) | (pixelBuffer[1] << 8) | pixelBuffer[2];
+
+    if (
+      id !== 0 &&
+      this._meshGroup !== null &&
+      this._meshGroup.children[id - 1]
+    ) {
+      return this._meshGroup.children[id - 1] as THREE.Mesh<
+        THREE.BufferGeometry,
+        THREE.MeshBasicMaterial
+      >;
+    }
+
+    return null;
+  }
+
   startAnimationLoop = (): void => {
     this._requestID = window.requestAnimationFrame(this.startAnimationLoop);
+
     this._controls.update();
+
+    this._hoveredMesh = this._pick();
+
+    // Set color for hovered and selected meshes
+    if (this._meshGroup !== null) {
+      (
+        this._meshGroup.children as THREE.Mesh<
+          THREE.BufferGeometry,
+          THREE.MeshBasicMaterial
+        >[]
+      ).forEach(mesh => {
+        if (mesh === this._selectedMesh) {
+          mesh.material.color = SELECTED_MESH_COLOR;
+        } else if (mesh === this._hoveredMesh) {
+          mesh.material.color = HOVERED_MESH_COLOR;
+        } else {
+          mesh.material.color = DEFAULT_MESH_COLOR;
+        }
+      });
+    }
+
+    this._renderer.setRenderTarget(null);
+
     this._renderer.clearDepth();
+
     this._renderer.render(this._scene, this._camera);
   };
 
@@ -299,13 +387,26 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   };
 
+  private _onPointerMove(e: MouseEvent) {
+    const rect = this._renderer.domElement.getBoundingClientRect();
+
+    this._pointer.x = e.clientX - rect.left;
+    this._pointer.y = e.clientY - rect.top;
+  }
+
+  private _onClick(e: MouseEvent) {
+    this._selectedMesh = this._pick();
+  }
+
   private shapeToMesh = (payload: IDisplayShape['payload']) => {
-    const old = this._scene.getObjectByName('shape');
-    if (old) {
-      this._scene.remove(old);
+    if (this._meshGroup !== null) {
+      this._scene.remove(this._meshGroup);
     }
-    const mainObject = new THREE.Group();
-    mainObject.name = 'shape';
+
+    const pickingColor = new THREE.Color();
+    let i = 1;
+
+    this._meshGroup = new THREE.Group();
     Object.entries(payload).forEach(([objName, data]) => {
       const { faceList, edgeList, jcObject } = data;
       if (!jcObject.visible) {
@@ -341,8 +442,10 @@ export class MainView extends React.Component<IProps, IStates> {
 
       // Compile the connected vertices and faces into a model
       // And add to the scene
+      // We need one material per-mesh because we will set the uniform color independently later
+      // it's too bad Three.js does not easily allow setting uniforms independently per-mesh
       const material = new THREE.MeshPhongMaterial({
-        color: '#434442',
+        color: DEFAULT_MESH_COLOR,
         side: THREE.DoubleSide,
         wireframe: false,
         flatShading: false,
@@ -364,6 +467,12 @@ export class MainView extends React.Component<IProps, IStates> {
       model.castShadow = true;
       model.name = objName;
 
+      // Add the mesh to the color picking scene
+      const pickingMaterial = new THREE.MeshBasicMaterial({
+        color: pickingColor.setHex(i)
+      });
+      this._pickingScene.add(new THREE.Mesh(geometry, pickingMaterial));
+
       const edgeMaterial = new THREE.LineBasicMaterial({
         linewidth: 5,
         color: 'black'
@@ -378,10 +487,12 @@ export class MainView extends React.Component<IProps, IStates> {
 
       model.add(mesh);
 
-      mainObject.add(model);
+      this._meshGroup!.add(model);
+
+      i++;
     });
     const boundingGroup = new THREE.Box3();
-    boundingGroup.setFromObject(mainObject);
+    boundingGroup.setFromObject(this._meshGroup);
 
     const boxSizeVec = new THREE.Vector3();
     boundingGroup.getSize(boxSizeVec);
@@ -405,7 +516,7 @@ export class MainView extends React.Component<IProps, IStates> {
         );
       }
     }
-    this._scene.add(mainObject);
+    this._scene.add(this._meshGroup);
     this.setState(old => ({ ...old, loading: false }));
   };
 
@@ -516,8 +627,22 @@ export class MainView extends React.Component<IProps, IStates> {
   private _worker?: Worker = undefined;
   private _messageChannel?: MessageChannel;
 
+  private _pointer: THREE.Vector2;
+  private _hoveredMesh: THREE.Mesh<
+    THREE.BufferGeometry,
+    THREE.MeshBasicMaterial
+  > | null = null;
+  private _selectedMesh: THREE.Mesh<
+    THREE.BufferGeometry,
+    THREE.MeshBasicMaterial
+  > | null = null;
+
+  private _meshGroup: THREE.Group | null = null; // The list of ThreeJS meshes
+
   private _scene: THREE.Scene; // Threejs scene
   private _camera: THREE.PerspectiveCamera; // Threejs camera
+  private _pickingScene: THREE.Scene; // Threejs scene for the mouse picking
+  private _pickingTexture: THREE.WebGLRenderTarget;
   private _renderer: THREE.WebGLRenderer; // Threejs render
   private _requestID: any = null; // ID of window.requestAnimationFrame
   private _geometry: THREE.BufferGeometry; // Threejs BufferGeometry
