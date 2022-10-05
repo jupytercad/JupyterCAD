@@ -223,7 +223,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this._onPointerMove.bind(this)
       );
       this._renderer.domElement.addEventListener(
-        'click',
+        'mouseup',
         this._onClick.bind(this)
       );
 
@@ -395,11 +395,6 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   private _onClick(e: MouseEvent) {
-    const rect = this._renderer.domElement.getBoundingClientRect();
-
-    this._pointer.x = e.clientX - rect.left;
-    this._pointer.y = e.clientY - rect.top;
-
     this._selectedMesh = this._pick();
   }
 
