@@ -24,6 +24,7 @@ interface IStates {
   jcadOption?: IDict;
   filePath?: string;
   jcadObject?: IJCadModel;
+  lightTheme: boolean;
 }
 
 interface IProps {
@@ -31,12 +32,18 @@ interface IProps {
   // jcadModel?: JupyterCadModel;
   cpModel: IControlPanelModel;
 }
+
 class ObjectTreeReact extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
+
+    const lightTheme =
+      document.body.getAttribute('data-jp-theme-light') === 'true';
+
     this.state = {
       filePath: this.props.cpModel.filePath,
-      jcadObject: this.props.cpModel.jcadModel?.getAllObject()
+      jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
+      lightTheme
     };
     this.props.cpModel.jcadModel?.sharedModelChanged.connect(
       this.sharedJcadModelChanged
@@ -47,6 +54,9 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         changed.context.model.sharedModelChanged.connect(
           this.sharedJcadModelChanged
         );
+        changed.context.model.themeChanged.connect((_, arg) => {
+          this.handleThemeChange();
+        });
         this.setState(old => ({
           ...old,
           filePath: changed.context.localPath,
@@ -61,6 +71,12 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       }
     });
   }
+
+  handleThemeChange = (): void => {
+    const lightTheme =
+      document.body.getAttribute('data-jp-theme-light') === 'true';
+    this.setState(old => ({ ...old, lightTheme }));
+  };
 
   sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
     this.setState(old => ({
@@ -118,7 +134,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       <div className="jpcad-treeview-wrapper">
         <Tree
           nodes={data}
-          theme="light"
+          theme={this.state.lightTheme ? 'light' : 'dark'}
           onSelect={id => {
             if (id && id.length > 0) {
               this.props.cpModel.set('activatedObject', id[0]);

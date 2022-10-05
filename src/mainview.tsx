@@ -18,18 +18,10 @@ import {
   WorkerAction
 } from './types';
 
-type THEME_TYPE = 'JupyterLab Dark' | 'JupyterLab Light';
-const DARK_THEME: THEME_TYPE = 'JupyterLab Dark';
-const LIGHT_THEME: THEME_TYPE = 'JupyterLab Light';
-
-const BG_COLOR = {
-  [DARK_THEME]: 'linear-gradient(rgb(0, 0, 42), rgb(82, 87, 110))',
-  [LIGHT_THEME]: 'radial-gradient(#efeded, #8f9091)'
-};
-const GRID_COLOR = {
-  [DARK_THEME]: 0x4f6882,
-  [LIGHT_THEME]: 0x888888
-};
+const DARK_BG_COLOR = 'linear-gradient(rgb(0, 0, 42), rgb(82, 87, 110))';
+const LIGHT_BG_COLOR = 'radial-gradient(#efeded, #8f9091)';
+const DARK_GRID_COLOR = 0x4f6882;
+const LIGHT_GRID_COLOR = 0x888888;
 
 interface IProps {
   context: DocumentRegistry.IContext<JupyterCadModel>;
@@ -38,7 +30,7 @@ interface IProps {
 interface IStates {
   id: string;
   loading: boolean;
-  theme: THEME_TYPE;
+  lightTheme: boolean;
 }
 
 export class MainView extends React.Component<IProps, IStates> {
@@ -54,11 +46,13 @@ export class MainView extends React.Component<IProps, IStates> {
     // this.computedScene = {};
     // this.progressData = { time_step: -1, data: {} };
     this._resizeTimeout = null;
-    const theme = ((window as any).jupyterlabTheme ||
-      LIGHT_THEME) as THEME_TYPE;
+
+    const lightTheme =
+      document.body.getAttribute('data-jp-theme-light') === 'true';
+
     this.state = {
       id: uuid(),
-      theme,
+      lightTheme,
       loading: true
     };
 
@@ -77,11 +71,12 @@ export class MainView extends React.Component<IProps, IStates> {
         this._messageChannel.port2
       );
       this._model.themeChanged.connect((_, arg) => {
-        this.handleThemeChange(arg.newValue as THEME_TYPE);
+        this.handleThemeChange();
       });
       this._model.cameraChanged.connect(this._onCameraChanged);
     });
   }
+
   componentDidMount(): void {
     window.addEventListener('resize', this.handleWindowResize);
     this.generateScene();
@@ -103,9 +98,12 @@ export class MainView extends React.Component<IProps, IStates> {
     });
   }
 
-  handleThemeChange = (newTheme: THEME_TYPE): void => {
-    this.setState(old => ({ ...old, theme: newTheme }));
+  handleThemeChange = (): void => {
+    const lightTheme =
+      document.body.getAttribute('data-jp-theme-light') === 'true';
+    this.setState(old => ({ ...old, lightTheme }));
   };
+
   handleWindowResize = () => {
     clearTimeout(this._resizeTimeout);
     this._resizeTimeout = setTimeout(() => {
@@ -168,8 +166,8 @@ export class MainView extends React.Component<IProps, IStates> {
       this._gridHelper = new THREE.GridHelper(
         size,
         divisions,
-        GRID_COLOR[this.state.theme],
-        GRID_COLOR[this.state.theme]
+        this.state.lightTheme ? LIGHT_GRID_COLOR : DARK_GRID_COLOR,
+        this.state.lightTheme ? LIGHT_GRID_COLOR : DARK_GRID_COLOR
         // 0x888888,
         // 0x888888
       );
@@ -503,7 +501,7 @@ export class MainView extends React.Component<IProps, IStates> {
           style={{
             width: '100%',
             height: 'calc(100%)',
-            background: BG_COLOR[this.state.theme] //"radial-gradient(#efeded, #8f9091)"
+            background: this.state.lightTheme ? LIGHT_BG_COLOR : DARK_BG_COLOR
           }}
         />
       </div>
