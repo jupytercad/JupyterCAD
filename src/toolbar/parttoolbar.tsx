@@ -35,6 +35,30 @@ export class PartToolbarReact extends React.Component<IProps> {
         Angle: 360,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       }
+    },
+    SPHERE: {
+      title: 'Sphere parameters',
+      shape: 'Part::Sphere',
+      schema: this.props.toolbarModel.formSchema['Part::Sphere'],
+      default: {
+        Radius: 5,
+        Angle1: -90,
+        Angle2: 90,
+        Angle3: 360,
+        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+      }
+    },
+    CONE: {
+      title: 'Cone parameters',
+      shape: 'Part::Cone',
+      schema: this.props.toolbarModel.formSchema['Part::Cone'],
+      default: {
+        Radius1: 5,
+        Radius2: 4,
+        Height: 10,
+        Angle: 360,
+        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+      }
     }
   };
 

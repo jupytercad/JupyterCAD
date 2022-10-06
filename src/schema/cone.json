@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "description": "Part::Cone",
+  "title": "ICone",
+  "required": ["Radius1", "Radius2", "Height", "Angle", "Placement"],
+  "additionalProperties": false,
+  "properties": {
+    "Radius1": {
+      "type": "number",
+      "description": "The bottom radius of the cone"
+    },
+    "Radius2": {
+      "type": "number",
+      "description": "The top radius of the cone"
+    },
+    "Height": {
+      "type": "number",
+      "description": "The height of the cone"
+    },
+    "Angle": {
+      "type": "number",
+      "description": "The angle of the cone"
+    },
+    "Placement": {
+      "$ref": "./placement.json"
+    }
+  }
+}

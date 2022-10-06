@@ -5,6 +5,8 @@ import { hashCode, toRad } from './utils';
 import { IJCadContent, Parts } from '../_interface/jcad';
 import { IBox } from '../_interface/box';
 import { ICylinder } from '../_interface/cylinder';
+import { ISphere } from '../_interface/sphere';
+import { ICone } from '../_interface/cone';
 import { ICut } from '../_interface/cut';
 
 const SHAPE_CACHE = new Map<string, TopoDS_Shape>();
@@ -75,6 +77,32 @@ function _Cylinder(arg: ICylinder, _: IJCadContent): TopoDS_Shape | undefined {
   return setShapePlacement(shape, Placement);
 }
 
+function _Sphere(arg: ISphere, _: IJCadContent): TopoDS_Shape | undefined {
+  const { Radius, Angle1, Angle2, Angle3, Placement } = arg;
+  const oc = getOcc();
+  const sphere = new oc.BRepPrimAPI_MakeSphere_4(
+    Radius,
+    toRad(Angle1),
+    toRad(Angle2),
+    toRad(Angle3)
+  );
+  const shape = sphere.Shape();
+  return setShapePlacement(shape, Placement);
+}
+
+function _Cone(arg: ICone, _: IJCadContent): TopoDS_Shape | undefined {
+  const { Radius1, Radius2, Height, Angle, Placement } = arg;
+  const oc = getOcc();
+  const cone = new oc.BRepPrimAPI_MakeCone_2(
+    Radius1,
+    Radius2,
+    Height,
+    toRad(Angle)
+  );
+  const shape = cone.Shape();
+  return setShapePlacement(shape, Placement);
+}
+
 function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
   const { Placement, Base, Tool } = arg;
   const oc = getOcc();
@@ -110,8 +138,16 @@ function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
 
 const Box = operatorCache<IBox>('Box', _Box);
 const Cylinder = operatorCache<ICylinder>('Cylinder', _Cylinder);
+const Sphere = operatorCache<ISphere>('Sphere', _Sphere);
+const Cone = operatorCache<ICone>('Cone', _Cone);
 // const Cut = operatorCache<ICut>('Cut', _Cut);
 
 export const ShapesFactory: {
   [key in Parts]: IAllOperatorFunc;
-} = { 'Part::Box': Box, 'Part::Cylinder': Cylinder, 'Part::Cut': _Cut };
+} = {
+  'Part::Box': Box,
+  'Part::Cylinder': Cylinder,
+  'Part::Sphere': Sphere,
+  'Part::Cone': Cone,
+  'Part::Cut': _Cut
+};
