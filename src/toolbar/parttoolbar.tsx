@@ -59,6 +59,19 @@ export class PartToolbarReact extends React.Component<IProps> {
         Angle: 360,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       }
+    },
+    TORUS: {
+      title: 'Torus parameters',
+      shape: 'Part::Torus',
+      schema: this.props.toolbarModel.formSchema['Part::Torus'],
+      default: {
+        Radius1: 10,
+        Radius2: 2,
+        Angle1: -180,
+        Angle2: 180,
+        Angle3: 360,
+        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+      }
     }
   };
 
