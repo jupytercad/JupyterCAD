@@ -7,6 +7,7 @@ import { IBox } from '../_interface/box';
 import { ICylinder } from '../_interface/cylinder';
 import { ISphere } from '../_interface/sphere';
 import { ICone } from '../_interface/cone';
+import { ITorus } from '../_interface/torus';
 import { ICut } from '../_interface/cut';
 
 const SHAPE_CACHE = new Map<string, TopoDS_Shape>();
@@ -103,6 +104,20 @@ function _Cone(arg: ICone, _: IJCadContent): TopoDS_Shape | undefined {
   return setShapePlacement(shape, Placement);
 }
 
+function _Torus(arg: ITorus, _: IJCadContent): TopoDS_Shape | undefined {
+  const { Radius1, Radius2, Angle1, Angle2, Angle3, Placement } = arg;
+  const oc = getOcc();
+  const torus = new oc.BRepPrimAPI_MakeTorus_4(
+    Radius1,
+    Radius2,
+    toRad(Angle1),
+    toRad(Angle2),
+    toRad(Angle3)
+  );
+  const shape = torus.Shape();
+  return setShapePlacement(shape, Placement);
+}
+
 function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
   const { Placement, Base, Tool } = arg;
   const oc = getOcc();
@@ -140,6 +155,7 @@ const Box = operatorCache<IBox>('Box', _Box);
 const Cylinder = operatorCache<ICylinder>('Cylinder', _Cylinder);
 const Sphere = operatorCache<ISphere>('Sphere', _Sphere);
 const Cone = operatorCache<ICone>('Cone', _Cone);
+const Torus = operatorCache<ITorus>('Torus', _Torus);
 // const Cut = operatorCache<ICut>('Cut', _Cut);
 
 export const ShapesFactory: {
@@ -149,5 +165,6 @@ export const ShapesFactory: {
   'Part::Cylinder': Cylinder,
   'Part::Sphere': Sphere,
   'Part::Cone': Cone,
+  'Part::Torus': Torus,
   'Part::Cut': _Cut
 };
