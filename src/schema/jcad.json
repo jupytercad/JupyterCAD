@@ -14,7 +14,13 @@
   "definitions": {
     "parts": {
       "type": "string",
-      "enum": ["Part::Box", "Part::Cylinder", "Part::Cut"]
+      "enum": [
+        "Part::Box",
+        "Part::Cylinder",
+        "Part::Sphere",
+        "Part::Cone",
+        "Part::Cut"
+      ]
     },
     "jcadObject": {
       "title": "IJCadObject",
