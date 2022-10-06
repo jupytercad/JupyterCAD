@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "description": "Part::Sphere",
+  "title": "ISphere",
+  "required": ["Radius", "Angle1", "Angle2", "Angle3", "Placement"],
+  "additionalProperties": false,
+  "properties": {
+    "Radius": {
+      "type": "number",
+      "description": "The radius of the sphere"
+    },
+    "Angle1": {
+      "type": "number",
+      "description": "The angle of the sphere"
+    },
+    "Angle2": {
+      "type": "number",
+      "description": "The angle of the sphere"
+    },
+    "Angle3": {
+      "type": "number",
+      "description": "The angle of the sphere"
+    },
+    "Placement": {
+      "$ref": "./placement.json"
+    }
+  }
+}
