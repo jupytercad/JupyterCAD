@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "description": "Part::Torus",
+  "title": "ITorus",
+  "required": ["Radius1", "Radius2", "Angle1", "Angle2", "Angle3", "Placement"],
+  "additionalProperties": false,
+  "properties": {
+    "Radius1": {
+      "type": "number",
+      "description": "The radius of the torus"
+    },
+    "Radius2": {
+      "type": "number",
+      "description": "The radius of the torus"
+    },
+    "Angle1": {
+      "type": "number",
+      "description": "The angle of the torus"
+    },
+    "Angle2": {
+      "type": "number",
+      "description": "The angle of the torus"
+    },
+    "Angle3": {
+      "type": "number",
+      "description": "The angle of the torus"
+    },
+    "Placement": {
+      "$ref": "./placement.json"
+    }
+  }
+}

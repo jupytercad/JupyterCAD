@@ -19,6 +19,7 @@
         "Part::Cylinder",
         "Part::Sphere",
         "Part::Cone",
+        "Part::Torus",
         "Part::Cut"
       ]
     },
