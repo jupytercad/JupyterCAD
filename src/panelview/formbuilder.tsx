@@ -16,7 +16,9 @@ interface IProps {
   cancel?: () => void;
 }
 
-export const LuminoSchemaForm = (props: React.PropsWithChildren<any>): JSX.Element => {
+export const LuminoSchemaForm = (
+  props: React.PropsWithChildren<any>
+): JSX.Element => {
   const ref = React.useRef<HTMLDivElement>(null);
   const { children } = props;
   React.useEffect(() => {
