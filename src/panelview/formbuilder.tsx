@@ -16,6 +16,8 @@ interface IProps {
   cancel?: () => void;
 }
 
+// Reusing the datalayer/jupyter-react component:
+// https://github.com/datalayer/jupyter-react/blob/main/packages/react/src/jupyter/lumino/Lumino.tsx
 export const LuminoSchemaForm = (
   props: React.PropsWithChildren<any>
 ): JSX.Element => {
