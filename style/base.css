@@ -192,6 +192,7 @@ button.ms-Button.ms-Button--icon.is-disabled {
 }
 
 /* TODO Upstream this to jupyterlab jrfs */
-.jp-SchemaForm .control-label, .jp-SchemaForm legend {
+.jp-SchemaForm .control-label,
+.jp-SchemaForm legend {
   position: inherit;
 }

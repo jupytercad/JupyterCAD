@@ -23,7 +23,7 @@ export const LuminoSchemaForm = (props: React.PropsWithChildren<any>) => {
     const widget = children as SchemaForm;
     try {
       Widget.attach(widget, ref.current!);
-    } catch(e) {
+    } catch (e) {
       console.warn('Exception while attaching Lumino widget.', e);
     }
     return () => {
@@ -31,14 +31,13 @@ export const LuminoSchemaForm = (props: React.PropsWithChildren<any>) => {
         if (widget.isAttached || widget.node.isConnected) {
           Widget.detach(widget);
         }
-      } catch(e) {
+      } catch (e) {
         console.warn('Exception while detaching Lumino widget.', e);
       }
-    }
+    };
   }, [children]);
-  return <div ref={ref}/>;
-}
-
+  return <div ref={ref} />;
+};
 
 export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
@@ -143,39 +142,28 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
 
       const submitRef = React.createRef<HTMLButtonElement>();
 
-      const formSchema = new SchemaForm(
-        schema || {},
-        {
-          liveValidate: true,
-          formData: this.state.internalData,
-          onSubmit: this.onFormSubmit,
-          uiSchema: this.generateUiSchema(this.props.schema),
-          children: (
-            <button
-              ref={submitRef}
-              type="submit"
-              style={{ display: 'none' }}
-            />
-          )
-        },
-      );
+      const formSchema = new SchemaForm(schema || {}, {
+        liveValidate: true,
+        formData: this.state.internalData,
+        onSubmit: this.onFormSubmit,
+        uiSchema: this.generateUiSchema(this.props.schema),
+        children: (
+          <button ref={submitRef} type="submit" style={{ display: 'none' }} />
+        )
+      });
 
       return (
         <div className="jpcad-property-panel">
           <div className="jpcad-property-outer">
-            <LuminoSchemaForm>
-              {formSchema}
-            </LuminoSchemaForm>
+            <LuminoSchemaForm>{formSchema}</LuminoSchemaForm>
           </div>
-          <div className='jpcad-property-buttons'>
+          <div className="jpcad-property-buttons">
             {this.props.cancel ? (
               <button
                 className="jp-Dialog-button jp-mod-reject jp-mod-styled"
                 onClick={this.props.cancel}
               >
-                <div className="jp-Dialog-buttonLabel">
-                  Cancel
-                </div>
+                <div className="jp-Dialog-buttonLabel">Cancel</div>
               </button>
             ) : null}
 
@@ -183,9 +171,7 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
               className="jp-Dialog-button jp-mod-accept jp-mod-styled"
               onClick={() => submitRef.current?.click()}
             >
-              <div className="jp-Dialog-buttonLabel">
-                Submit
-              </div>
+              <div className="jp-Dialog-buttonLabel">Submit</div>
             </button>
           </div>
         </div>
