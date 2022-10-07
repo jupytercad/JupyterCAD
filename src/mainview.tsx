@@ -414,7 +414,6 @@ export class MainView extends React.Component<IProps, IStates> {
       }
       const vertices: Array<any> = [];
       const normals: Array<any> = [];
-      const edges: Array<any> = [];
       const triangles: Array<any> = [];
 
       let vInd = 0;
@@ -434,10 +433,6 @@ export class MainView extends React.Component<IProps, IStates> {
         }
 
         vInd += face.vertexCoord.length / 3;
-      });
-
-      edgeList.forEach(edge => {
-        edges.push(...edge.vertexCoord);
       });
 
       // Compile the connected vertices and faces into a model
@@ -477,15 +472,17 @@ export class MainView extends React.Component<IProps, IStates> {
         linewidth: 5,
         color: 'black'
       });
+      edgeList.forEach(edge => {
+        const edgeVertices = new THREE.Float32BufferAttribute(
+          edge.vertexCoord,
+          3
+        );
+        const edgeGeometry = new THREE.BufferGeometry();
+        edgeGeometry.setAttribute('position', edgeVertices);
+        const mesh = new THREE.Line(edgeGeometry, edgeMaterial);
 
-      const edgesGeometry = new THREE.BufferGeometry();
-      edgesGeometry.setAttribute(
-        'position',
-        new THREE.Float32BufferAttribute(edges, 3)
-      );
-      const mesh = new THREE.LineSegments(edgesGeometry, edgeMaterial);
-
-      model.add(mesh);
+        model.add(mesh);
+      });
 
       this._meshGroup!.add(model);
 
