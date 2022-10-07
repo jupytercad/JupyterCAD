@@ -170,7 +170,6 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
           <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
             {this.props.cancel ? (
               <button
-                style={{ width: '90px', height: '30px' }}
                 className="btn btn-secondary"
                 onClick={this.props.cancel}
               >
@@ -179,7 +178,6 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
             ) : null}
 
             <button
-              style={{ width: '90px', height: '30px' }}
               className="btn btn-info"
               onClick={() => submitRef.current?.click()}
             >
