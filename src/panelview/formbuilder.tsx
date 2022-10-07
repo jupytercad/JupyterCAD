@@ -167,21 +167,25 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
               {formSchema}
             </LuminoSchemaForm>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+          <div className='jpcad-property-buttons'>
             {this.props.cancel ? (
               <button
-                className="btn btn-secondary"
+                className="jp-Dialog-button jp-mod-reject jp-mod-styled"
                 onClick={this.props.cancel}
               >
-                Cancel
+                <div className="jp-Dialog-buttonLabel">
+                  Cancel
+                </div>
               </button>
             ) : null}
 
             <button
-              className="btn btn-info"
+              className="jp-Dialog-button jp-mod-accept jp-mod-styled"
               onClick={() => submitRef.current?.click()}
             >
-              Submit
+              <div className="jp-Dialog-buttonLabel">
+                Submit
+              </div>
             </button>
           </div>
         </div>
