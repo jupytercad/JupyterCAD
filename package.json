@@ -53,6 +53,7 @@
     "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
+    "@deathbeds/jupyterlab-rjsf": "^1.1.0",
     "@fluentui/react": "^8.75.1",
     "@jupyterlab/application": "^4.0.0-alpha.11",
     "@jupyterlab/apputils": "^4.0.0-alpha.11",
