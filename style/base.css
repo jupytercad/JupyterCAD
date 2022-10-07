@@ -144,17 +144,8 @@
 .jpcad-hidden-field {
   display: none;
 }
-.ms-Label {
-  font-size: 14px !important;
-  margin: 0px !important;
-  padding: 5px 0px !important;
-}
 
 div.field.field-array > label + span {
-  display: none;
-}
-
-button.ms-Button.ms-Button--icon.is-disabled {
   display: none;
 }
 
