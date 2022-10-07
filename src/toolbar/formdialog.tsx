@@ -18,7 +18,7 @@ export class FormDialog extends Dialog<IDict> {
       cancelCallback = () => this.resolve(0);
     }
     const body = (
-      <div style={{ maxWidth: '600px', overflow: 'hidden' }}>
+      <div style={{ overflow: 'hidden' }}>
         <ObjectPropertiesForm
           sourceData={options.sourceData}
           schema={options.schema}

@@ -1,7 +1,9 @@
 import * as React from 'react';
-import Form from '@rjsf/fluent-ui';
-import { IDict } from '../types';
 import { ISubmitEvent } from '@rjsf/core';
+import { Widget } from '@lumino/widgets';
+import { SchemaForm } from '@deathbeds/jupyterlab-rjsf';
+
+import { IDict } from '../types';
 
 interface IStates {
   internalData?: IDict;
@@ -13,6 +15,33 @@ interface IProps {
   schema?: IDict;
   cancel?: () => void;
 }
+
+// Reusing the datalayer/jupyter-react component:
+// https://github.com/datalayer/jupyter-react/blob/main/packages/react/src/jupyter/lumino/Lumino.tsx
+export const LuminoSchemaForm = (
+  props: React.PropsWithChildren<any>
+): JSX.Element => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const { children } = props;
+  React.useEffect(() => {
+    const widget = children as SchemaForm;
+    try {
+      Widget.attach(widget, ref.current!);
+    } catch (e) {
+      console.warn('Exception while attaching Lumino widget.', e);
+    }
+    return () => {
+      try {
+        if (widget.isAttached || widget.node.isConnected) {
+          Widget.detach(widget);
+        }
+      } catch (e) {
+        console.warn('Exception while detaching Lumino widget.', e);
+      }
+    };
+  }, [children]);
+  return <div ref={ref} />;
+};
 
 export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
@@ -73,7 +102,9 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
       if (v['type'] === 'array') {
         uiSchema[k] = {
           'ui:options': {
-            orderable: false
+            orderable: false,
+            removable: false,
+            addable: false
           }
         };
       } else if (v['type'] === 'object') {
@@ -112,40 +143,39 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   render(): React.ReactNode {
     if (this.props.schema) {
       const schema = { ...this.props.schema, additionalProperties: true };
+
       const submitRef = React.createRef<HTMLButtonElement>();
+
+      const formSchema = new SchemaForm(schema ?? {}, {
+        liveValidate: true,
+        formData: this.state.internalData,
+        onSubmit: this.onFormSubmit,
+        uiSchema: this.generateUiSchema(this.props.schema),
+        children: (
+          <button ref={submitRef} type="submit" style={{ display: 'none' }} />
+        )
+      });
+
       return (
         <div className="jpcad-property-panel">
           <div className="jpcad-property-outer">
-            <Form
-              schema={schema}
-              onSubmit={this.onFormSubmit}
-              formData={this.state.internalData}
-              uiSchema={this.generateUiSchema(this.props.schema)}
-            >
-              <button
-                ref={submitRef}
-                type="submit"
-                style={{ display: 'none' }}
-              />
-            </Form>
+            <LuminoSchemaForm>{formSchema}</LuminoSchemaForm>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+          <div className="jpcad-property-buttons">
             {this.props.cancel ? (
               <button
-                style={{ width: '90px', height: '30px' }}
-                className="btn btn-secondary"
+                className="jp-Dialog-button jp-mod-reject jp-mod-styled"
                 onClick={this.props.cancel}
               >
-                Cancel
+                <div className="jp-Dialog-buttonLabel">Cancel</div>
               </button>
             ) : null}
 
             <button
-              style={{ width: '90px', height: '30px' }}
-              className="btn btn-info"
+              className="jp-Dialog-button jp-mod-accept jp-mod-styled"
               onClick={() => submitRef.current?.click()}
             >
-              Submit
+              <div className="jp-Dialog-buttonLabel">Submit</div>
             </button>
           </div>
         </div>

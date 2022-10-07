@@ -1,4 +1,4 @@
-@import url('~@fluentui/react/dist/css/fabric.min.css');
+@import url('~@deathbeds/jupyterlab-rjsf/style/index.css');
 
 .jpcad-Spinner {
   position: absolute;
@@ -123,8 +123,15 @@
 }
 
 .jpcad-property-outer {
+  padding: 10px;
   flex-grow: 1;
   overflow: auto;
+}
+
+.jpcad-property-buttons {
+  display: flex;
+  justify-content: end;
+  padding: 10px;
 }
 
 .jpcad-property-panel {
@@ -137,44 +144,8 @@
 .jpcad-hidden-field {
   display: none;
 }
-.ms-Label {
-  font-size: 14px !important;
-  margin: 0px !important;
-  padding: 5px 0px !important;
-}
 
 div.field.field-array > label + span {
-  display: none;
-}
-
-.btn.btn-info {
-  outline: transparent;
-  position: relative;
-  font-family: 'Segoe UI', 'Segoe UI Web (West European)', 'Segoe UI',
-    -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  font-size: 14px;
-  font-weight: 400;
-  box-sizing: border-box;
-  border: 1px solid rgb(0, 120, 212);
-  display: inline-block;
-  text-decoration: none;
-  text-align: center;
-  cursor: pointer;
-  padding: 0px 16px;
-  border-radius: 2px;
-  min-width: 80px;
-  height: 32px;
-  background-color: rgb(0, 120, 212);
-  color: rgb(255, 255, 255);
-  user-select: none;
-}
-
-.ms-Grid-col.field {
-  margin-bottom: 5px !important;
-}
-
-button.ms-Button.ms-Button--icon.is-disabled {
   display: none;
 }
 
@@ -197,4 +168,18 @@ button.ms-Button.ms-Button--icon.is-disabled {
 
 .jpcad-property-FormDialog .jp-Dialog-footer button {
   display: none;
+}
+
+.jpcad-property-FormDialog .jp-Dialog-content {
+  width: 60%;
+}
+
+.jpcad-property-FormDialog form {
+  padding: 10px;
+}
+
+/* TODO Upstream this to jupyterlab jrfs */
+.jp-SchemaForm .control-label,
+.jp-SchemaForm legend {
+  position: inherit;
 }
