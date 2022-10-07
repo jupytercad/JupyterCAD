@@ -154,9 +154,6 @@ div.field.field-array > label + span {
   display: none;
 }
 
-.ms-Grid-col.field {
-  margin-bottom: 5px !important;
-}
 
 button.ms-Button.ms-Button--icon.is-disabled {
   display: none;
