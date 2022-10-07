@@ -142,7 +142,7 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
 
       const submitRef = React.createRef<HTMLButtonElement>();
 
-      const formSchema = new SchemaForm(schema || {}, {
+      const formSchema = new SchemaForm(schema ?? {}, {
         liveValidate: true,
         formData: this.state.internalData,
         onSubmit: this.onFormSubmit,
