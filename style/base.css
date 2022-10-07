@@ -198,3 +198,11 @@ button.ms-Button.ms-Button--icon.is-disabled {
 .jpcad-property-FormDialog .jp-Dialog-footer button {
   display: none;
 }
+
+.jpcad-property-FormDialog .jp-Dialog-content {
+  width: 60%;
+}
+
+.jpcad-property-FormDialog form {
+  padding: 10px;
+}
