@@ -53,7 +53,6 @@ export class OperatorToolbarReact extends React.Component<IProps> {
           };
           const model = this.props.toolbarModel.sharedModel;
           if (model) {
-            console.log(parameters);
             const base = model.getObjectByName(parameters['Base']);
             const tool = model.getObjectByName(parameters['Tool']);
             const object = new Y.Map<any>(Object.entries(objectModel));
