@@ -33,6 +33,7 @@ interface IProps {
   cpModel: IControlPanelModel;
 }
 
+
 class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
@@ -64,39 +65,6 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
         });
       }
     });
-    this.props.cpModel.stateChanged.connect((changed, value) => {
-      const selected = '' + value.newValue;
-      if (selected.length === 0) {
-        this.setState(old => ({
-          ...old,
-          schema: undefined,
-          selectedObjectData: undefined
-        }));
-        return;
-      }
-      if (selected.includes('#')) {
-        const name = selected.split('#')[0];
-        const objectData = this.props.cpModel.jcadModel?.getAllObject();
-        if (objectData) {
-          let schema;
-          const selectedObj = itemFromName(name, objectData);
-          if (!selectedObj) {
-            return;
-          }
-
-          if (selectedObj.shape) {
-            schema = formSchema[selectedObj.shape];
-          }
-          const selectedObjectData = selectedObj['parameters'];
-          this.setState(old => ({
-            ...old,
-            selectedObjectData,
-            selectedObject: name,
-            schema
-          }));
-        }
-      }
-    });
   }
 
   sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
@@ -122,6 +90,51 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
           ...old,
           jcadObject: this.props.cpModel.jcadModel?.getAllObject()
         };
+      }
+    });
+
+    const awareness = this.props.cpModel.jcadModel?.sharedModel.awareness;
+    awareness?.on('change', () => {
+      const localState = awareness.getLocalState();
+      if (localState === null) {
+        return;
+      }
+
+      const name: string | null = localState['selected'];
+
+      if (name === this.state['selectedObject'] || (name === null && this.state['selectedObject'] === undefined)) {
+        return;
+      }
+
+      if (name === null) {
+        this.setState(old => ({
+          ...old,
+          schema: undefined,
+          selectedObject: undefined,
+          selectedObjectData: undefined
+        }));
+        return;
+      }
+
+      const objectData = this.props.cpModel.jcadModel?.getAllObject();
+      if (objectData) {
+        let schema;
+        const selectedObj = itemFromName(name, objectData);
+        if (!selectedObj) {
+          return;
+        }
+
+        if (selectedObj.shape) {
+          schema = formSchema[selectedObj.shape];
+        }
+        const selectedObjectData = selectedObj['parameters'];
+
+        this.setState(old => ({
+          ...old,
+          selectedObjectData,
+          selectedObject: name,
+          schema
+        }));
       }
     });
   };

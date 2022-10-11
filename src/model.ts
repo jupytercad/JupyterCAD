@@ -145,6 +145,10 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.sharedModel.awareness.setLocalStateField('mouse', pos);
   }
 
+  syncSelectedObject(name: string | null): void {
+    this.sharedModel.awareness.setLocalStateField('selected', name);
+  }
+
   getClientId(): number {
     return this.sharedModel.awareness.clientID;
   }

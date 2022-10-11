@@ -141,8 +141,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
             }
           }}
           RenderNode={(options) => {
-            // const paddingLeft = 25 * (options.level + 1);
-            const paddingLeft = 25 * (1);
             const jcadObj = this.getObjectFromName(
               options.node.parentId as string
             );
@@ -158,7 +156,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
               >
                 <div
                   style={{
-                    paddingLeft: `${paddingLeft}px`,
                     minHeight: '20px',
                     display: 'flex',
                     alignItems: 'center',
