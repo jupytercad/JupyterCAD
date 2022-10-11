@@ -396,6 +396,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _onClick(e: MouseEvent) {
     this._selectedMesh = this._pick();
+
+    this._model.syncSelectedObject(this._selectedMesh !== null ? this._selectedMesh.name : null);
   }
 
   private shapeToMesh = (payload: IDisplayShape['payload']) => {

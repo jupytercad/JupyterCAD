@@ -144,6 +144,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;
   syncCamera(pos: Position | undefined): void;
+  syncSelectedObject(name: string | null): void;
   getClientId(): number;
 }
 export interface IControlPanelState {

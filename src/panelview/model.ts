@@ -20,33 +20,43 @@ export class ControlPanelModel implements IControlPanelModel {
     this._tracker = options.tracker;
     this._documentChanged = this._tracker.currentChanged;
   }
+
   get state(): ObservableMap<IStateValue> {
     return this._state;
   }
+
   get stateChanged(): ISateChangedSignal {
     return this._stateChanged;
   }
+
   get documentChanged(): ISignal<IJupyterCadTracker, IJupyterCadWidget | null> {
     return this._documentChanged;
   }
+
   get filePath(): string | undefined {
     return this._tracker.currentWidget?.context.localPath;
   }
+
   get jcadModel(): IJupyterCadModel | undefined {
     return this._tracker.currentWidget?.context.model;
   }
+
   get sharedModel(): IJupyterCadDoc | undefined {
     return this._tracker.currentWidget?.context.model.sharedModel;
   }
+
   set(key: keyof IControlPanelState, value: IStateValue): void {
     this._state.set(key, value);
   }
+
   get(key: keyof IControlPanelState): IStateValue | undefined {
     return this._state.get(key);
   }
+
   has(key: keyof IControlPanelState): boolean {
     return this._state.has(key);
   }
+
   disconnect(f: any): void {
     this._tracker.forEach(w =>
       w.context.model.sharedModelChanged.disconnect(f)
