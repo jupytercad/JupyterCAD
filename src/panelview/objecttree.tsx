@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar, Button } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import Tree, { Leaf, Node as TreeNode } from '@naisutech/react-tree';
+import { ReactTree, TreeNodeList } from '@naisutech/react-tree';
 
 import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
 import { IJCadModel, IJCadObject } from '../_interface/jcad';
@@ -89,7 +89,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     if (this.state.jcadObject) {
       return this.state.jcadObject.map(obj => {
         const name = obj.name;
-        const items: Leaf[] = [];
+        const items: TreeNodeList = [];
         if (obj.shape) {
           items.push({
             id: `${name}#shape#${obj.shape}#${this.state.filePath}`,
@@ -132,22 +132,19 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     const data = this.stateToTree();
     return (
       <div className="jpcad-treeview-wrapper">
-        <Tree
+        <ReactTree
           nodes={data}
           theme={this.state.lightTheme ? 'light' : 'dark'}
-          onSelect={id => {
+          onToggleSelectedNodes={id => {
             if (id && id.length > 0) {
               this.props.cpModel.set('activatedObject', id[0]);
             }
           }}
-          LeafRenderer={(options: {
-            data: TreeNode;
-            selected: boolean;
-            level: number;
-          }) => {
-            const paddingLeft = 25 * (options.level + 1);
+          RenderNode={(options) => {
+            // const paddingLeft = 25 * (options.level + 1);
+            const paddingLeft = 25 * (1);
             const jcadObj = this.getObjectFromName(
-              options.data.parentId as string
+              options.node.parentId as string
             );
             let visible = false;
             if (jcadObj) {
@@ -176,13 +173,13 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                       overflowX: 'hidden'
                     }}
                   >
-                    {options.data.label}
+                    {options.node.label}
                   </span>
                   <div style={{ display: 'flex' }}>
                     <Button
                       className={'jp-ToolbarButtonComponent'}
                       onClick={() => {
-                        const objectId = options.data.parentId as string;
+                        const objectId = options.node.parentId as string;
                         const currentYMap =
                           this.props.cpModel.jcadModel?.sharedModel.getObjectByName(
                             objectId
@@ -200,7 +197,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                     <Button
                       className={'jp-ToolbarButtonComponent'}
                       onClick={() => {
-                        const objectId = options.data.parentId as string;
+                        const objectId = options.node.parentId as string;
                         this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
                           objectId
                         );
