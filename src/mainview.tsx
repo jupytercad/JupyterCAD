@@ -591,6 +591,23 @@ export class MainView extends React.Component<IProps, IStates> {
   };
 
   render(): JSX.Element {
+    const awareness = this._model?.sharedModel.awareness;
+    awareness?.on('change', () => {
+      const localState = awareness.getLocalState();
+
+      if (localState && localState['selected'] !== null) {
+        this._meshGroup?.children.forEach((obj) => {
+          if (obj.name === localState['selected']) {
+            this._selectedMesh = obj as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
+          }
+        });
+
+        return;
+      }
+
+      this._selectedMesh = null;
+    });
+
     return (
       <div
         style={{
