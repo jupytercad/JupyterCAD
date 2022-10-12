@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar, Button } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import { ReactTree, TreeNodeList } from '@naisutech/react-tree';
+import { ReactTree, TreeNodeList, ThemeSettings } from '@naisutech/react-tree';
 
 import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
 import { IJCadModel, IJCadObject } from '../_interface/jcad';
@@ -144,12 +144,50 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   render(): React.ReactNode {
     const data = this.stateToTree();
 
+    const themes: ThemeSettings = {
+      "labTheme": {
+        "text": {
+          // @ts-ignore this property does not know CSS variables
+          "fontSize": "var(--jp-ui-font-size1)",
+          "fontFamily": "var(--jp-ui-font-family)",
+          "color": "var(--jp-ui-font-color1)",
+          "selectedColor": "var(--jp-ui-font-color3)",
+          "hoverColor": "var(--jp-ui-font-color4)"
+        },
+        "nodes": {
+          // "height": "3.5rem",
+          "folder": {
+            "bgColor": "var(--jp-layout-color3)",
+            "selectedBgColor": "var(--jp-brand-color1)",
+            "hoverBgColor": "var(--jp-layout-color4)"
+          },
+          "leaf": {
+            "bgColor": "var(--jp-layout-color3)",
+            "selectedBgColor": "var(--jp-brand-color1)",
+            "hoverBgColor": "var(--jp-layout-color4)"
+          },
+          "separator": {
+            // "border": "3px solid",
+            // "borderColor": "transparent"
+          },
+          "icons": {
+            // @ts-ignore this property does not know CSS variables
+            "size": "var(--jp-ui-font-size1)",
+            "folderColor": "var(--jp-brand-color1)",
+            "leafColor": "var(--jp-brand-color1)"
+          }
+        }
+      }
+    };
+
     return (
       <div className="jpcad-treeview-wrapper">
         <ReactTree
           selectedNodes={this.state.selectedNode === null ? [] : [this.state.selectedNode]}
+          messages={{noData: 'No data' }}
           nodes={data}
-          theme={this.state.lightTheme ? 'light' : 'dark'}
+          theme={'labTheme'}
+          themes={themes}
           onToggleSelectedNodes={id => {
             if (id && id.length > 0) {
               let name = (id[0] as string);
@@ -170,65 +208,41 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
               visible = jcadObj.visible;
             }
             return (
-              <div
-                className={`jpcad-control-panel-tree ${
-                  options.selected ? 'selected' : ''
-                }`}
-              >
-                <div
-                  style={{
-                    minHeight: '20px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    minWidth: 0
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span>{options.node.label}</span>
+                <Button
+                  className={'jp-ToolbarButtonComponent'}
+                  onClick={() => {
+                    const objectId = options.node.parentId as string;
+                    const currentYMap =
+                      this.props.cpModel.jcadModel?.sharedModel.getObjectByName(
+                        objectId
+                      );
+                    if (currentYMap) {
+                      currentYMap.set('visible', !visible);
+                    }
                   }}
+                  minimal
                 >
-                  <span
-                    style={{
-                      whiteSpace: 'nowrap',
-                      textOverflow: 'ellipsis',
-                      overflowX: 'hidden'
-                    }}
-                  >
-                    {options.node.label}
+                  <span className="jp-ToolbarButtonComponent-label">
+                    {visible ? 'Hide' : 'Show'}
                   </span>
-                  <div style={{ display: 'flex' }}>
-                    <Button
-                      className={'jp-ToolbarButtonComponent'}
-                      onClick={() => {
-                        const objectId = options.node.parentId as string;
-                        const currentYMap =
-                          this.props.cpModel.jcadModel?.sharedModel.getObjectByName(
-                            objectId
-                          );
-                        if (currentYMap) {
-                          currentYMap.set('visible', !visible);
-                        }
-                      }}
-                      minimal
-                    >
-                      <span className="jp-ToolbarButtonComponent-label">
-                        {visible ? 'Hide' : 'Show'}
-                      </span>
-                    </Button>
-                    <Button
-                      className={'jp-ToolbarButtonComponent'}
-                      onClick={() => {
-                        const objectId = options.node.parentId as string;
-                        this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
-                          objectId
-                        );
-                        this.props.cpModel.jcadModel?.syncSelectedObject(null);
-                      }}
-                      minimal
-                    >
-                      <span className="jp-ToolbarButtonComponent-label">
-                        Delete
-                      </span>
-                    </Button>
-                  </div>
-                </div>
+                </Button>
+                <Button
+                  className={'jp-ToolbarButtonComponent'}
+                  onClick={() => {
+                    const objectId = options.node.parentId as string;
+                    this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
+                      objectId
+                    );
+                    this.props.cpModel.jcadModel?.syncSelectedObject(null);
+                  }}
+                  minimal
+                >
+                  <span className="jp-ToolbarButtonComponent-label">
+                    Delete
+                  </span>
+                </Button>
               </div>
             );
           }}
