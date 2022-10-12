@@ -25,6 +25,7 @@ interface IStates {
   filePath?: string;
   jcadObject?: IJCadModel;
   lightTheme: boolean;
+  selectedNode: string | null;
 }
 
 interface IProps {
@@ -43,11 +44,14 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     this.state = {
       filePath: this.props.cpModel.filePath,
       jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
-      lightTheme
+      lightTheme,
+      selectedNode: null
     };
+
     this.props.cpModel.jcadModel?.sharedModelChanged.connect(
       this.sharedJcadModelChanged
     );
+
     this.props.cpModel.documentChanged.connect((_, changed) => {
       if (changed) {
         this.props.cpModel.disconnect(this.sharedJcadModelChanged);
@@ -83,6 +87,18 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       ...old,
       jcadObject: this.props.cpModel.jcadModel?.getAllObject()
     }));
+
+    const awareness = this.props.cpModel.jcadModel?.sharedModel.awareness;
+    awareness?.on('change', () => {
+      const localState = awareness.getLocalState();
+
+      if (localState) {
+        this.setState(old => ({
+          ...old,
+          selectedNode: localState['selected']
+        }));
+      }
+    });
   };
 
   stateToTree = () => {
@@ -112,9 +128,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         };
       });
     }
-    // const nodes = (this.state.mainViewState?.objects ?? []).map(jcadObject => {
-
-    // });
 
     return [];
   };
@@ -130,14 +143,22 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
 
   render(): React.ReactNode {
     const data = this.stateToTree();
+
     return (
       <div className="jpcad-treeview-wrapper">
         <ReactTree
+          selectedNodes={this.state.selectedNode === null ? [] : [this.state.selectedNode]}
           nodes={data}
           theme={this.state.lightTheme ? 'light' : 'dark'}
           onToggleSelectedNodes={id => {
             if (id && id.length > 0) {
-              this.props.cpModel.set('activatedObject', id[0]);
+              let name = (id[0] as string);
+              if (name.includes('#')) {
+                name = name.split('#')[0];
+              }
+              this.props.cpModel.jcadModel?.syncSelectedObject(name);
+            } else {
+              this.props.cpModel.jcadModel?.syncSelectedObject(null);
             }
           }}
           RenderNode={(options) => {
@@ -198,7 +219,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                         this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
                           objectId
                         );
-                        this.props.cpModel.set('activatedObject', '');
+                        this.props.cpModel.jcadModel?.syncSelectedObject(null);
                       }}
                       minimal
                     >
