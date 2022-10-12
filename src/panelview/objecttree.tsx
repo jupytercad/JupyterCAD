@@ -151,20 +151,20 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
           "fontSize": "var(--jp-ui-font-size1)",
           "fontFamily": "var(--jp-ui-font-family)",
           "color": "var(--jp-ui-font-color1)",
-          "selectedColor": "var(--jp-ui-font-color3)",
-          "hoverColor": "var(--jp-ui-font-color4)"
+          "selectedColor": "var(--jp-ui-inverse-font-color1)",
+          "hoverColor": "var(--jp-ui-font-color2)"
         },
         "nodes": {
           // "height": "3.5rem",
           "folder": {
-            "bgColor": "var(--jp-layout-color3)",
-            "selectedBgColor": "var(--jp-brand-color1)",
-            "hoverBgColor": "var(--jp-layout-color4)"
+            "bgColor": "var(--jp-layout-color1)",
+            "selectedBgColor": "var(--jp-layout-color2)",
+            "hoverBgColor": "var(--jp-layout-color2)"
           },
           "leaf": {
-            "bgColor": "var(--jp-layout-color3)",
-            "selectedBgColor": "var(--jp-brand-color1)",
-            "hoverBgColor": "var(--jp-layout-color4)"
+            "bgColor": "var(--jp-layout-color1)",
+            "selectedBgColor": "var(--jp-layout-color2)",
+            "hoverBgColor": "var(--jp-layout-color2)"
           },
           "separator": {
             // "border": "3px solid",
@@ -173,8 +173,8 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
           "icons": {
             // @ts-ignore this property does not know CSS variables
             "size": "var(--jp-ui-font-size1)",
-            "folderColor": "var(--jp-brand-color1)",
-            "leafColor": "var(--jp-brand-color1)"
+            "folderColor": "var(--jp-brand-color2)",
+            "leafColor": "var(--jp-brand-color2)"
           }
         }
       }
