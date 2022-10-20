@@ -883,6 +883,13 @@
   dependencies:
     "@lumino/coreutils" "^1.12.0"
 
+"@jupyterlab/nbformat@^4.0.0-alpha.15":
+  version "4.0.0-alpha.15"
+  resolved "https://registry.yarnpkg.com/@jupyterlab/nbformat/-/nbformat-4.0.0-alpha.15.tgz#ccec8e0c036c0a1bada1b9b36474f40c1b44c173"
+  integrity sha512-C+Y8dKwgYulUbPbtU5SYzuA6ffzDhNb6H4fj0Ndml7IdaqMx3lHqqZNKIGwskcZioXO6rer975eyEraeE8U7VA==
+  dependencies:
+    "@lumino/coreutils" "^2.0.0-alpha.6"
+
 "@jupyterlab/observables@^4.4.8":
   version "4.4.8"
   resolved "https://registry.yarnpkg.com/@jupyterlab/observables/-/observables-4.4.8.tgz#a73833e4f33b3d7e9c2a59306e8f526e13c043d9"
@@ -1035,6 +1042,19 @@
     "@lumino/signaling" "^1.10.0"
     y-protocols "^1.0.5"
     yjs "^13.5.17"
+
+"@jupyterlab/shared-models@^4.0.0-alpha.11":
+  version "4.0.0-alpha.15"
+  resolved "https://registry.yarnpkg.com/@jupyterlab/shared-models/-/shared-models-4.0.0-alpha.15.tgz#29f3e2a8b0d30011107239120410c4d41ddd8b45"
+  integrity sha512-1ArVBlGUPpW7jm4vvzG10OASi1DJuT111g3wEt4TCXHxpwW9sjQr6cmd4SAPUTh3UaQxf/uschej3L6CK7n0Tw==
+  dependencies:
+    "@jupyterlab/nbformat" "^4.0.0-alpha.15"
+    "@lumino/coreutils" "^2.0.0-alpha.6"
+    "@lumino/disposable" "^2.0.0-alpha.6"
+    "@lumino/signaling" "^2.0.0-alpha.6"
+    lib0 "^0.2.42"
+    y-protocols "^1.0.5"
+    yjs "^13.5.40"
 
 "@jupyterlab/shared-models@^4.0.0-alpha.12":
   version "4.0.0-alpha.12"
@@ -1284,6 +1304,11 @@
   resolved "https://registry.yarnpkg.com/@lumino/algorithm/-/algorithm-1.9.2.tgz#b95e6419aed58ff6b863a51bfb4add0f795141d3"
   integrity sha512-Z06lp/yuhz8CtIir3PNTGnuk7909eXt4ukJsCzChsGuot2l5Fbs96RJ/FOHgwCedaX74CtxPjXHXoszFbUA+4A==
 
+"@lumino/algorithm@^2.0.0-alpha.6":
+  version "2.0.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/@lumino/algorithm/-/algorithm-2.0.0-alpha.6.tgz#8fe693a929e4a755135ee96f0faa2b65252b2727"
+  integrity sha512-pEU2ESKVp6APuR+H32oJFIpQUDKozhyruwznoKh7P3RnaqnjaMMdCSMWzfKIojgINfDqqWNY3awurPtbToht1g==
+
 "@lumino/application@^1.29.0":
   version "1.29.3"
   resolved "https://registry.yarnpkg.com/@lumino/application/-/application-1.29.3.tgz#9194c9f95555aee5a6b9ac66074bd68fe0adc896"
@@ -1325,6 +1350,11 @@
   resolved "https://registry.yarnpkg.com/@lumino/coreutils/-/coreutils-1.12.1.tgz#79860c9937483ddf6cda87f6c2b9da8eb1a5d768"
   integrity sha512-JLu3nTHzJk9N8ohZ85u75YxemMrmDzJdNgZztfP7F7T7mxND3YVNCkJG35a6aJ7edu1sIgCjBxOvV+hv27iYvQ==
 
+"@lumino/coreutils@^2.0.0-alpha.6":
+  version "2.0.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/@lumino/coreutils/-/coreutils-2.0.0-alpha.6.tgz#77279303fc72932e3131a085dcaa34e808a09739"
+  integrity sha512-W0qqJZoPRHscHL5k/DHSOea7LugPVx7DmART925bdrD8PU1Rw4K0mUzKb/Zsin4m1O5IMBoPuGEdEG5Jhq3KyA==
+
 "@lumino/disposable@^1.10.0", "@lumino/disposable@^1.10.1", "@lumino/disposable@^1.10.2":
   version "1.10.2"
   resolved "https://registry.yarnpkg.com/@lumino/disposable/-/disposable-1.10.2.tgz#8a7e74320f51a48419d92672fe8abcf8cec04818"
@@ -1332,6 +1362,13 @@
   dependencies:
     "@lumino/algorithm" "^1.9.2"
     "@lumino/signaling" "^1.10.2"
+
+"@lumino/disposable@^2.0.0-alpha.6":
+  version "2.0.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/@lumino/disposable/-/disposable-2.0.0-alpha.6.tgz#ccb899b7b4ad6db359c351fe2b2ba989977b06a7"
+  integrity sha512-jh3QbkmIVHJfavXh068J/T/xC+mM9CxItUUApkbYlPBrpc38AzT0Cj1hdnyURsIo1nbOObydgw2H1SD5UssoEw==
+  dependencies:
+    "@lumino/signaling" "^2.0.0-alpha.6"
 
 "@lumino/domutils@^1.8.0", "@lumino/domutils@^1.8.1", "@lumino/domutils@^1.8.2":
   version "1.8.2"
@@ -1404,6 +1441,13 @@
   integrity sha512-LvnLRb2ngOZbRtFHRcKkMdPSXm0bzfVv/5mbx/hpT1DWHihMtBpGQ+bIfFvnARmFJoI11Wt+DMX77MWPw6tpig==
   dependencies:
     "@lumino/algorithm" "^1.9.2"
+
+"@lumino/signaling@^2.0.0-alpha.6":
+  version "2.0.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/@lumino/signaling/-/signaling-2.0.0-alpha.6.tgz#bc017718ff7f9ca2675a51594908e03c17936fef"
+  integrity sha512-LEtaxMXmy1yJuej68/6vCOx1FyrH9lA18z11ejvxLKkKuqWh9srFil0yHhljK+Qvd5ZUpg6vyMI+oBYiL2GPtQ==
+  dependencies:
+    "@lumino/algorithm" "^2.0.0-alpha.6"
 
 "@lumino/virtualdom@^1.14.0", "@lumino/virtualdom@^1.14.1", "@lumino/virtualdom@^1.14.2":
   version "1.14.2"
@@ -7110,6 +7154,13 @@ yjs@^13.5.17, yjs@^13.5.34:
   version "13.5.41"
   resolved "https://registry.yarnpkg.com/yjs/-/yjs-13.5.41.tgz#105041cd56bdef154704441c381d80723e072bbe"
   integrity sha512-4eSTrrs8OeI0heXKKioRY4ag7V5Bk85Z4MeniUyown3o3y0G7G4JpAZWrZWfTp7pzw2b53GkAQWKqHsHi9j9JA==
+  dependencies:
+    lib0 "^0.2.49"
+
+yjs@^13.5.40:
+  version "13.5.42"
+  resolved "https://registry.yarnpkg.com/yjs/-/yjs-13.5.42.tgz#949f7d091ded6e2621a5798982a9631b79e1b62c"
+  integrity sha512-3aYBPeUSBUCs/vCOYolbyzhsQ6IDm1DeJgfhHVbW+6kq8YhWjkk2SUhYtBxd3lZPNsqmJGzYH9shKINhSVbEzw==
   dependencies:
     lib0 "^0.2.49"
 
