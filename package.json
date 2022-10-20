@@ -57,6 +57,7 @@
     "@jupyterlab/application": "^4.0.0-alpha.11",
     "@jupyterlab/apputils": "^4.0.0-alpha.11",
     "@jupyterlab/observables": "^5.0.0-alpha.11",
+    "@jupyterlab/shared-models": "^4.0.0-alpha.11",
     "@jupyterlab/ui-components": "^4.0.0-alpha.19",
     "@naisutech/react-tree": "^3.0.1",
     "@rjsf/core": "^4.2.0",
