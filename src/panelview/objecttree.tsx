@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar, Button } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import { ReactTree, TreeNodeList } from '@naisutech/react-tree';
+import { ReactTree, TreeNodeList, ThemeSettings } from '@naisutech/react-tree';
 
 import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
 import { IJCadModel, IJCadObject } from '../_interface/jcad';
@@ -130,19 +130,56 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
 
   render(): React.ReactNode {
     const data = this.stateToTree();
+    const themes: ThemeSettings = {
+      labTheme: {
+        text: {
+          // @ts-ignore this property does not know CSS variables
+          fontSize: 'var(--jp-ui-font-size1)',
+          fontFamily: 'var(--jp-ui-font-family)',
+          color: 'var(--jp-ui-font-color1)',
+          selectedColor: 'var(--jp-ui-inverse-font-color1)',
+          hoverColor: 'var(--jp-ui-font-color2)'
+        },
+        nodes: {
+          // "height": "3.5rem",
+          folder: {
+            bgColor: 'var(--jp-layout-color1)',
+            selectedBgColor: 'var(--jp-layout-color2)',
+            hoverBgColor: 'var(--jp-layout-color2)'
+          },
+          leaf: {
+            bgColor: 'var(--jp-layout-color1)',
+            selectedBgColor: 'var(--jp-layout-color2)',
+            hoverBgColor: 'var(--jp-layout-color2)'
+          },
+          separator: {
+            // "border": "3px solid",
+            // "borderColor": "transparent"
+          },
+          icons: {
+            // @ts-ignore this property does not know CSS variables
+            size: 'var(--jp-ui-font-size1)',
+            folderColor: 'var(--jp-brand-color2)',
+            leafColor: 'var(--jp-brand-color2)'
+          }
+        }
+      }
+    };
     return (
       <div className="jpcad-treeview-wrapper">
         <ReactTree
           nodes={data}
-          theme={this.state.lightTheme ? 'light' : 'dark'}
+          messages={{ noData: 'No data' }}
+          theme={'labTheme'}
+          themes={themes}
           onToggleSelectedNodes={id => {
             if (id && id.length > 0) {
               this.props.cpModel.set('activatedObject', id[0]);
             }
           }}
-          RenderNode={(options) => {
+          RenderNode={options => {
             // const paddingLeft = 25 * (options.level + 1);
-            const paddingLeft = 25 * (1);
+            const paddingLeft = 25 * 1;
             const jcadObj = this.getObjectFromName(
               options.node.parentId as string
             );
