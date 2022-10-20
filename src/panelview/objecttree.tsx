@@ -24,6 +24,35 @@ const visibilityOffIcon = new LabIcon({
   svgstr: visibilityOffSvg
 });
 
+const TREE_THEMES: ThemeSettings = {
+  labTheme: {
+    text: {
+      fontSize: '14px',
+      fontFamily: 'var(--jp-ui-font-family)',
+      color: 'var(--jp-ui-font-color1)',
+      selectedColor: 'var(--jp-ui-inverse-font-color1)',
+      hoverColor: 'var(--jp-ui-font-color2)'
+    },
+    nodes: {
+      folder: {
+        bgColor: 'var(--jp-layout-color1)',
+        selectedBgColor: 'var(--jp-layout-color2)',
+        hoverBgColor: 'var(--jp-layout-color2)'
+      },
+      leaf: {
+        bgColor: 'var(--jp-layout-color1)',
+        selectedBgColor: 'var(--jp-layout-color2)',
+        hoverBgColor: 'var(--jp-layout-color2)'
+      },
+      icons: {
+        size: '9px',
+        folderColor: 'var(--jp-inverse-layout-color3)',
+        leafColor: 'var(--jp-inverse-layout-color3)'
+      }
+    }
+  }
+};
+
 export class ObjectTree extends PanelWithToolbar {
   constructor(params: ObjectTree.IOptions) {
     super(params);
@@ -44,8 +73,6 @@ interface IStates {
 }
 
 interface IProps {
-  // filePath?: string;
-  // jcadModel?: JupyterCadModel;
   cpModel: IControlPanelModel;
 }
 
@@ -128,9 +155,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         };
       });
     }
-    // const nodes = (this.state.mainViewState?.objects ?? []).map(jcadObject => {
-
-    // });
 
     return [];
   };
@@ -146,46 +170,14 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
 
   render(): React.ReactNode {
     const data = this.stateToTree();
-    const themes: ThemeSettings = {
-      labTheme: {
-        text: {
-          fontSize: '14px' as any,
-          fontFamily: 'var(--jp-ui-font-family)',
-          color: 'var(--jp-ui-font-color1)',
-          selectedColor: 'var(--jp-ui-inverse-font-color1)',
-          hoverColor: 'var(--jp-ui-font-color2)'
-        },
-        nodes: {
-          // "height": "3.5rem",
-          folder: {
-            bgColor: 'var(--jp-layout-color1)',
-            selectedBgColor: 'var(--jp-layout-color2)',
-            hoverBgColor: 'var(--jp-layout-color2)'
-          },
-          leaf: {
-            bgColor: 'var(--jp-layout-color1)',
-            selectedBgColor: 'var(--jp-layout-color2)',
-            hoverBgColor: 'var(--jp-layout-color2)'
-          },
-          separator: {
-            // "border": "3px solid",
-            // "borderColor": "transparent"
-          },
-          icons: {
-            size: '9px',
-            folderColor: 'var(--jp-inverse-layout-color3)',
-            leafColor: 'var(--jp-inverse-layout-color3)'
-          }
-        }
-      }
-    };
+
     return (
       <div className="jpcad-treeview-wrapper">
         <ReactTree
           nodes={data}
           messages={{ noData: 'No data' }}
           theme={'labTheme'}
-          themes={themes}
+          themes={TREE_THEMES}
           onToggleSelectedNodes={id => {
             if (id && id.length > 0) {
               this.props.cpModel.set('activatedObject', id[0]);
