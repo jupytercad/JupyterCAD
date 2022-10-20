@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar, Button } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import { ReactTree, TreeNodeList, ThemeSettings } from '@naisutech/react-tree';
+import { ReactTree, TreeNodeList, useReactTreeApi, ThemeSettings } from '@naisutech/react-tree';
 
 import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
 import { IJCadModel, IJCadObject } from '../_interface/jcad';
@@ -35,8 +35,14 @@ interface IProps {
 }
 
 class ObjectTreeReact extends React.Component<IProps, IStates> {
+  ref: any;
+
   constructor(props: IProps) {
     super(props);
+
+    console.log('useReactTreeApi');
+    this.ref = useReactTreeApi();
+    console.log('useReactTreeApi done');
 
     const lightTheme =
       document.body.getAttribute('data-jp-theme-light') === 'true';
@@ -74,6 +80,10 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         });
       }
     });
+  }
+
+  componentDidMount(): void {
+    console.log(this.ref);
   }
 
   handleThemeChange = (): void => {
@@ -183,6 +193,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     return (
       <div className="jpcad-treeview-wrapper">
         <ReactTree
+          ref={this.ref}
           selectedNodes={this.state.selectedNode === null ? [] : [this.state.selectedNode]}
           messages={{noData: 'No data' }}
           nodes={data}

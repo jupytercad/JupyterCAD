@@ -16,6 +16,13 @@ import { JupyterCadWidget } from './widget';
 
 const NAME_SPACE = 'jupytercad';
 
+/**
+ * The command IDs used by the top plugin.
+ */
+namespace CommandIDs {
+  export const jcadDelete = 'jupytercad:delete';
+}
+
 const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
   id: 'jupytercad:plugin',
   autoStart: true,
@@ -30,6 +37,38 @@ const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
 
     console.log('JupyterLab extension jupytercad is activated!');
     return tracker;
+  }
+};
+
+const commandsPlugin: JupyterFrontEndPlugin<void> = {
+  id: 'jupytercad:commands',
+  autoStart: true,
+  requires: [IJupyterCadDocTracker],
+  activate: (app: JupyterFrontEnd, tracker: IJupyterCadTracker): void => {
+    const { commands, contextMenu } = app;
+
+    commands.addCommand(CommandIDs.jcadDelete, {
+      label: `Delete`,
+      execute: () => {
+        const model = tracker.currentWidget?.context.model;
+        const state = model?.sharedModel.awareness.getLocalState();
+
+        if (!model || !state) {
+          return;
+        }
+
+        const name = state['selectedObject'];
+
+        model.sharedModel.removeObjectByName(name);
+        model.syncSelectedObject(null);
+      }
+    });
+
+    contextMenu.addItem({
+      command: CommandIDs.jcadDelete,
+      selector: '.jpcad-treeview-wrapper',
+      rank: 0
+    });
   }
 };
 
@@ -54,4 +93,4 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
   }
 };
 
-export default [plugin, controlPanel, fcplugin, jcadPlugin];
+export default [plugin, commandsPlugin, controlPanel, fcplugin, jcadPlugin];
