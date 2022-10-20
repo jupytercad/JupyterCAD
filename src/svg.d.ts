@@ -1,4 +1,4 @@
 declare module '*.svg' {
-    const value: string; // @ts-ignore
-    export default value;
-  }
+  const value: string; // @ts-ignore
+  export default value;
+}

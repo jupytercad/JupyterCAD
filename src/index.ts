@@ -9,7 +9,8 @@ import fcplugin from './fcplugin/plugins';
 import jcadPlugin from './jcadplugin/plugins';
 import { JupyterCadModel } from './model';
 import { ControlPanelModel } from './panelview/model';
-import { PanelWidget } from './panelview/widget';
+import { LeftPanelWidget } from './panelview/leftpanel';
+import { RightPanelWidget } from './panelview/rightpanel';
 import { IJupyterCadDocTracker, IJupyterCadTracker } from './token';
 import { jcLightIcon } from './tools';
 import { JupyterCadWidget } from './widget';
@@ -43,14 +44,23 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     tracker: IJupyterCadTracker
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
-    const controlPanel = new PanelWidget({ model: controlModel });
-    controlPanel.id = 'jupytercad::controlPanel';
-    controlPanel.title.caption = 'JupyterCad Control Panel';
-    controlPanel.title.icon = jcLightIcon;
+
+    const leftControlPanel = new LeftPanelWidget({ model: controlModel });
+    leftControlPanel.id = 'jupytercad::leftControlPanel';
+    leftControlPanel.title.caption = 'JupyterCad Control Panel';
+    leftControlPanel.title.icon = jcLightIcon;
+
+    const rightControlPanel = new RightPanelWidget({ model: controlModel });
+    rightControlPanel.id = 'jupytercad::rightControlPanel';
+    rightControlPanel.title.caption = 'JupyterCad Control Panel';
+    rightControlPanel.title.icon = jcLightIcon;
+
     if (restorer) {
-      restorer.add(controlPanel, NAME_SPACE);
+      restorer.add(leftControlPanel, NAME_SPACE);
+      restorer.add(rightControlPanel, NAME_SPACE);
     }
-    app.shell.add(controlPanel, 'left', { rank: 2000 });
+    app.shell.add(leftControlPanel, 'left', { rank: 2000 });
+    app.shell.add(rightControlPanel, 'right', { rank: 2000 });
   }
 };
 
