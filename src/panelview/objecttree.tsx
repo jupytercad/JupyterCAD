@@ -1,12 +1,28 @@
 import * as React from 'react';
 
 import { ReactWidget } from '@jupyterlab/apputils';
-import { PanelWithToolbar, Button } from '@jupyterlab/ui-components';
+import {
+  LabIcon,
+  PanelWithToolbar,
+  ToolbarButtonComponent,
+  closeIcon
+} from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import { ReactTree, TreeNodeList, ThemeSettings } from '@naisutech/react-tree';
+import { ReactTree, ThemeSettings, TreeNodeList } from '@naisutech/react-tree';
 
-import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
+import visibilitySvg from '../../style/icon/visibility.svg';
+import visibilityOffSvg from '../../style/icon/visibilityOff.svg';
 import { IJCadModel, IJCadObject } from '../_interface/jcad';
+import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
+
+const visibilityIcon = new LabIcon({
+  name: 'jupytercad:visibilityIcon',
+  svgstr: visibilitySvg
+});
+const visibilityOffIcon = new LabIcon({
+  name: 'jupytercad:visibilityOffIcon',
+  svgstr: visibilityOffSvg
+});
 
 export class ObjectTree extends PanelWithToolbar {
   constructor(params: ObjectTree.IOptions) {
@@ -133,8 +149,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     const themes: ThemeSettings = {
       labTheme: {
         text: {
-          // @ts-ignore this property does not know CSS variables
-          fontSize: 'var(--jp-ui-font-size1)',
+          fontSize: '14px' as any,
           fontFamily: 'var(--jp-ui-font-family)',
           color: 'var(--jp-ui-font-color1)',
           selectedColor: 'var(--jp-ui-inverse-font-color1)',
@@ -157,10 +172,9 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
             // "borderColor": "transparent"
           },
           icons: {
-            // @ts-ignore this property does not know CSS variables
-            size: 'var(--jp-ui-font-size1)',
-            folderColor: 'var(--jp-brand-color2)',
-            leafColor: 'var(--jp-brand-color2)'
+            size: '9px',
+            folderColor: 'var(--jp-inverse-layout-color3)',
+            leafColor: 'var(--jp-inverse-layout-color3)'
           }
         }
       }
@@ -179,7 +193,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
           }}
           RenderNode={options => {
             // const paddingLeft = 25 * (options.level + 1);
-            const paddingLeft = 25 * 1;
             const jcadObj = this.getObjectFromName(
               options.node.parentId as string
             );
@@ -195,7 +208,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
               >
                 <div
                   style={{
-                    paddingLeft: `${paddingLeft}px`,
+                    paddingLeft: '5px',
                     minHeight: '20px',
                     display: 'flex',
                     alignItems: 'center',
@@ -212,41 +225,39 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                   >
                     {options.node.label}
                   </span>
-                  <div style={{ display: 'flex' }}>
-                    <Button
-                      className={'jp-ToolbarButtonComponent'}
-                      onClick={() => {
-                        const objectId = options.node.parentId as string;
-                        const currentYMap =
-                          this.props.cpModel.jcadModel?.sharedModel.getObjectByName(
+                  {options.type === 'leaf' ? (
+                    <div style={{ display: 'flex' }}>
+                      <ToolbarButtonComponent
+                        className={'jp-ToolbarButtonComponent'}
+                        onClick={() => {
+                          const objectId = options.node.parentId as string;
+                          const currentYMap =
+                            this.props.cpModel.jcadModel?.sharedModel.getObjectByName(
+                              objectId
+                            );
+                          if (currentYMap) {
+                            currentYMap.set('visible', !visible);
+                          }
+                        }}
+                        icon={visible ? visibilityIcon : visibilityOffIcon}
+                      />
+                      {/* <span className="jp-ToolbarButtonComponent-label">
+                        {visible ? 'Hide' : 'Show'}
+                      </span> */}
+                      {/* </ToolbarButtonComponent> */}
+                      <ToolbarButtonComponent
+                        className={'jp-ToolbarButtonComponent'}
+                        onClick={() => {
+                          const objectId = options.node.parentId as string;
+                          this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
                             objectId
                           );
-                        if (currentYMap) {
-                          currentYMap.set('visible', !visible);
-                        }
-                      }}
-                      minimal
-                    >
-                      <span className="jp-ToolbarButtonComponent-label">
-                        {visible ? 'Hide' : 'Show'}
-                      </span>
-                    </Button>
-                    <Button
-                      className={'jp-ToolbarButtonComponent'}
-                      onClick={() => {
-                        const objectId = options.node.parentId as string;
-                        this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
-                          objectId
-                        );
-                        this.props.cpModel.set('activatedObject', '');
-                      }}
-                      minimal
-                    >
-                      <span className="jp-ToolbarButtonComponent-label">
-                        Delete
-                      </span>
-                    </Button>
-                  </div>
+                          this.props.cpModel.set('activatedObject', '');
+                        }}
+                        icon={closeIcon}
+                      />
+                    </div>
+                  ) : null}
                 </div>
               </div>
             );
