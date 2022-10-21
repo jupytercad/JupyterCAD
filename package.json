@@ -67,6 +67,9 @@
     "three": "^0.135.0",
     "uuid": "^8.3.2"
   },
+  "resolutions": {
+    "@jupyterlab/apputils": "^4.0.0-alpha.11"
+  },
   "devDependencies": {
     "@apidevtools/json-schema-ref-parser": "^9.0.9",
     "@jupyterlab/builder": "^4.0.0-alpha.11",
