@@ -20,10 +20,10 @@ def _(*args, **kwargs):
 
         fails hard if something goes wrong
     """
-    print("\n\t", " ".join(args), "\n")
+    print("\n\t", " ".join(args), "\n", flush=True)
     return_code = subprocess.call(args, **kwargs)
     if return_code != 0:
-        print("\nERROR", return_code, " ".join(args))
+        print("\nERROR", return_code, " ".join(args), flush=True)
         sys.exit(return_code)
 
 # remove incompatible binder baseline packages
