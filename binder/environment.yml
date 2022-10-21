@@ -8,7 +8,7 @@ name: jupytercad-demo
 
 channels:
   - conda-forge
-  - conda-forge/labels/jupyterlab_alpha
+  - conda-forge/label/jupyterlab_alpha
 
 dependencies:
   # runtime dependencies
