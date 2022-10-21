@@ -26,6 +26,9 @@ def _(*args, **kwargs):
         print("\nERROR", return_code, " ".join(args))
         sys.exit(return_code)
 
+# remove incompatible binder baseline packages
+_("mamba", "uninstall", "jupyter-resource-usage")
+
 # verify the environment is self-consistent before even starting
 _(sys.executable, "-m", "pip", "check")
 
