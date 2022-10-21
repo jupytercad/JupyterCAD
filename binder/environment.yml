@@ -16,7 +16,9 @@ dependencies:
   - jupyterlab >=4.0.0a25,<5.0.0a0
   # labextension build dependencies
   - nodejs >=14,<15
+  - yarn
   - pip
   - wheel
+  - freecad
   # additional packages for demos
   # - ipywidgets
