@@ -47,6 +47,8 @@ const activate = (
       widget.context.model.themeChanged.emit(changes)
     );
     tracker.add(widget);
+    app.shell.activateById('jupytercad::leftControlPanel');
+    app.shell.activateById('jupytercad::rightControlPanel');
   });
 };
 

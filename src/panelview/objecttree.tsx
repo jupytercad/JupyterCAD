@@ -1,12 +1,57 @@
 import * as React from 'react';
 
 import { ReactWidget } from '@jupyterlab/apputils';
-import { PanelWithToolbar, Button } from '@jupyterlab/ui-components';
+import {
+  LabIcon,
+  PanelWithToolbar,
+  ToolbarButtonComponent,
+  closeIcon
+} from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import Tree, { Leaf, Node as TreeNode } from '@naisutech/react-tree';
+import { ReactTree, ThemeSettings, TreeNodeList } from '@naisutech/react-tree';
 
-import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
+import visibilitySvg from '../../style/icon/visibility.svg';
+import visibilityOffSvg from '../../style/icon/visibilityOff.svg';
 import { IJCadModel, IJCadObject } from '../_interface/jcad';
+import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
+
+const visibilityIcon = new LabIcon({
+  name: 'jupytercad:visibilityIcon',
+  svgstr: visibilitySvg
+});
+const visibilityOffIcon = new LabIcon({
+  name: 'jupytercad:visibilityOffIcon',
+  svgstr: visibilityOffSvg
+});
+
+const TREE_THEMES: ThemeSettings = {
+  labTheme: {
+    text: {
+      fontSize: '14px',
+      fontFamily: 'var(--jp-ui-font-family)',
+      color: 'var(--jp-ui-font-color1)',
+      selectedColor: 'var(--jp-ui-inverse-font-color1)',
+      hoverColor: 'var(--jp-ui-font-color2)'
+    },
+    nodes: {
+      folder: {
+        bgColor: 'var(--jp-layout-color1)',
+        selectedBgColor: 'var(--jp-layout-color2)',
+        hoverBgColor: 'var(--jp-layout-color2)'
+      },
+      leaf: {
+        bgColor: 'var(--jp-layout-color1)',
+        selectedBgColor: 'var(--jp-layout-color2)',
+        hoverBgColor: 'var(--jp-layout-color2)'
+      },
+      icons: {
+        size: '9px',
+        folderColor: 'var(--jp-inverse-layout-color3)',
+        leafColor: 'var(--jp-inverse-layout-color3)'
+      }
+    }
+  }
+};
 
 export class ObjectTree extends PanelWithToolbar {
   constructor(params: ObjectTree.IOptions) {
@@ -28,8 +73,6 @@ interface IStates {
 }
 
 interface IProps {
-  // filePath?: string;
-  // jcadModel?: JupyterCadModel;
   cpModel: IControlPanelModel;
 }
 
@@ -89,7 +132,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     if (this.state.jcadObject) {
       return this.state.jcadObject.map(obj => {
         const name = obj.name;
-        const items: Leaf[] = [];
+        const items: TreeNodeList = [];
         if (obj.shape) {
           items.push({
             id: `${name}#shape#${obj.shape}#${this.state.filePath}`,
@@ -112,9 +155,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         };
       });
     }
-    // const nodes = (this.state.mainViewState?.objects ?? []).map(jcadObject => {
-
-    // });
 
     return [];
   };
@@ -130,24 +170,23 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
 
   render(): React.ReactNode {
     const data = this.stateToTree();
+
     return (
       <div className="jpcad-treeview-wrapper">
-        <Tree
+        <ReactTree
           nodes={data}
-          theme={this.state.lightTheme ? 'light' : 'dark'}
-          onSelect={id => {
+          messages={{ noData: 'No data' }}
+          theme={'labTheme'}
+          themes={TREE_THEMES}
+          onToggleSelectedNodes={id => {
             if (id && id.length > 0) {
               this.props.cpModel.set('activatedObject', id[0]);
             }
           }}
-          LeafRenderer={(options: {
-            data: TreeNode;
-            selected: boolean;
-            level: number;
-          }) => {
-            const paddingLeft = 25 * (options.level + 1);
+          RenderNode={options => {
+            // const paddingLeft = 25 * (options.level + 1);
             const jcadObj = this.getObjectFromName(
-              options.data.parentId as string
+              options.node.parentId as string
             );
             let visible = false;
             if (jcadObj) {
@@ -161,7 +200,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
               >
                 <div
                   style={{
-                    paddingLeft: `${paddingLeft}px`,
+                    paddingLeft: '5px',
                     minHeight: '20px',
                     display: 'flex',
                     alignItems: 'center',
@@ -176,43 +215,41 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                       overflowX: 'hidden'
                     }}
                   >
-                    {options.data.label}
+                    {options.node.label}
                   </span>
-                  <div style={{ display: 'flex' }}>
-                    <Button
-                      className={'jp-ToolbarButtonComponent'}
-                      onClick={() => {
-                        const objectId = options.data.parentId as string;
-                        const currentYMap =
-                          this.props.cpModel.jcadModel?.sharedModel.getObjectByName(
+                  {options.type === 'leaf' ? (
+                    <div style={{ display: 'flex' }}>
+                      <ToolbarButtonComponent
+                        className={'jp-ToolbarButtonComponent'}
+                        onClick={() => {
+                          const objectId = options.node.parentId as string;
+                          const currentYMap =
+                            this.props.cpModel.jcadModel?.sharedModel.getObjectByName(
+                              objectId
+                            );
+                          if (currentYMap) {
+                            currentYMap.set('visible', !visible);
+                          }
+                        }}
+                        icon={visible ? visibilityIcon : visibilityOffIcon}
+                      />
+                      {/* <span className="jp-ToolbarButtonComponent-label">
+                        {visible ? 'Hide' : 'Show'}
+                      </span> */}
+                      {/* </ToolbarButtonComponent> */}
+                      <ToolbarButtonComponent
+                        className={'jp-ToolbarButtonComponent'}
+                        onClick={() => {
+                          const objectId = options.node.parentId as string;
+                          this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
                             objectId
                           );
-                        if (currentYMap) {
-                          currentYMap.set('visible', !visible);
-                        }
-                      }}
-                      minimal
-                    >
-                      <span className="jp-ToolbarButtonComponent-label">
-                        {visible ? 'Hide' : 'Show'}
-                      </span>
-                    </Button>
-                    <Button
-                      className={'jp-ToolbarButtonComponent'}
-                      onClick={() => {
-                        const objectId = options.data.parentId as string;
-                        this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
-                          objectId
-                        );
-                        this.props.cpModel.set('activatedObject', '');
-                      }}
-                      minimal
-                    >
-                      <span className="jp-ToolbarButtonComponent-label">
-                        Delete
-                      </span>
-                    </Button>
-                  </div>
+                          this.props.cpModel.set('activatedObject', '');
+                        }}
+                        icon={closeIcon}
+                      />
+                    </div>
+                  ) : null}
                 </div>
               </div>
             );
