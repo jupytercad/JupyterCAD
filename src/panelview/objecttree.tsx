@@ -13,7 +13,13 @@ import { ReactTree, ThemeSettings, TreeNodeList } from '@naisutech/react-tree';
 import visibilitySvg from '../../style/icon/visibility.svg';
 import visibilityOffSvg from '../../style/icon/visibilityOff.svg';
 import { IJCadModel, IJCadObject } from '../_interface/jcad';
-import { IControlPanelModel, IDict, IJupyterCadDocChange } from '../types';
+import {
+  IControlPanelModel,
+  IDict,
+  IJupyterCadDocChange,
+  IJupyterCadModel
+} from '../types';
+import { v4 as uuid } from 'uuid';
 
 const visibilityIcon = new LabIcon({
   name: 'jupytercad:visibilityIcon',
@@ -70,6 +76,10 @@ interface IStates {
   filePath?: string;
   jcadObject?: IJCadModel;
   lightTheme: boolean;
+  selectedNode: string | null;
+  clientId: number | null;
+  id: string;
+  openNodes: (string | number)[];
 }
 
 interface IProps {
@@ -86,7 +96,11 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     this.state = {
       filePath: this.props.cpModel.filePath,
       jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
-      lightTheme
+      lightTheme,
+      selectedNode: null,
+      clientId: null,
+      id: uuid(),
+      openNodes: []
     };
     this.props.cpModel.jcadModel?.sharedModelChanged.connect(
       this.sharedJcadModelChanged
@@ -100,10 +114,14 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         changed.context.model.themeChanged.connect((_, arg) => {
           this.handleThemeChange();
         });
+        changed.context.model.clientStateChanged.connect(
+          this._onClientSharedStateChanged
+        );
         this.setState(old => ({
           ...old,
           filePath: changed.context.localPath,
-          jcadObject: this.props.cpModel.jcadModel?.getAllObject()
+          jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
+          clientId: changed.context.model.getClientId()
         }));
       } else {
         this.setState({
@@ -168,21 +186,73 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     }
   }
 
+  private _onClientSharedStateChanged = (
+    sender: IJupyterCadModel,
+    clients: Map<number, any>
+  ): void => {
+    const targetId: number | null = null;
+    const clientId = this.state.clientId;
+    if (targetId) {
+      //TODO Sync with remote user in the follow-mode
+    } else {
+      // Update from other components of current client
+      const localState = clientId ? clients.get(clientId) : null;
+      if (localState) {
+        if (
+          localState['selected'] &&
+          localState['selected']['emitter'] &&
+          localState['selected']['emitter'] !== this.state.id
+        ) {
+          const selectedNode = localState['selected'].value;
+          this.setState(old => ({
+            ...old,
+            selectedNode,
+            openNodes: [...old.openNodes, selectedNode]
+          }));
+        }
+      }
+    }
+  };
+
   render(): React.ReactNode {
     const data = this.stateToTree();
-
+    let selectedNode: (number | string)[] = [];
+    if (this.state.selectedNode) {
+      const parentNode = data.filter(
+        node => node.id === this.state.selectedNode
+      );
+      if (parentNode.length > 0 && parentNode[0].items.length > 0) {
+        selectedNode = [parentNode[0].items[0].id];
+      }
+    }
     return (
       <div className="jpcad-treeview-wrapper">
         <ReactTree
           nodes={data}
+          selectedNodes={selectedNode}
+          openNodes={this.state.openNodes}
           messages={{ noData: 'No data' }}
           theme={'labTheme'}
           themes={TREE_THEMES}
           onToggleSelectedNodes={id => {
             if (id && id.length > 0) {
               this.props.cpModel.set('activatedObject', id[0]);
+              let name = id[0] as string;
+              if (name.includes('#')) {
+                name = name.split('#')[0];
+
+                this.props.cpModel.jcadModel?.syncSelectedObject(
+                  name,
+                  this.state.id
+                );
+              }
+            } else {
+              this.props.cpModel.jcadModel?.syncSelectedObject(null);
             }
           }}
+          onToggleOpenNodes={nodes =>
+            this.setState(old => ({ ...old, openNodes: nodes }))
+          }
           RenderNode={options => {
             // const paddingLeft = 25 * (options.level + 1);
             const jcadObj = this.getObjectFromName(
@@ -233,10 +303,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                         }}
                         icon={visible ? visibilityIcon : visibilityOffIcon}
                       />
-                      {/* <span className="jp-ToolbarButtonComponent-label">
-                        {visible ? 'Hide' : 'Show'}
-                      </span> */}
-                      {/* </ToolbarButtonComponent> */}
                       <ToolbarButtonComponent
                         className={'jp-ToolbarButtonComponent'}
                         onClick={() => {
@@ -245,6 +311,9 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                             objectId
                           );
                           this.props.cpModel.set('activatedObject', '');
+                          this.props.cpModel.jcadModel?.syncSelectedObject(
+                            null
+                          );
                         }}
                         icon={closeIcon}
                       />
