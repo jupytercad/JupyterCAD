@@ -21,7 +21,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   constructor(languagePreference?: string, modelDB?: IModelDB) {
     this.modelDB = modelDB || new ModelDB();
     this.sharedModel.changed.connect(this._onSharedModelChanged);
-    this.sharedModel.awareness.on('change', this._onCameraChanged);
+    this.sharedModel.awareness.on('change', this._onClientStateChanged);
   }
 
   get isDisposed(): boolean {
@@ -141,25 +141,31 @@ export class JupyterCadModel implements IJupyterCadModel {
     return all;
   }
 
-  syncCamera(pos: Position | undefined): void {
-    this.sharedModel.awareness.setLocalStateField('mouse', pos);
+  syncCamera(pos: Position | undefined, emitter?: any): void {
+    this.sharedModel.awareness.setLocalStateField('mouse', {
+      value: pos,
+      emitter: emitter
+    });
   }
 
-  syncSelectedObject(name: string | null): void {
-    this.sharedModel.awareness.setLocalStateField('selected', name);
+  syncSelectedObject(name: string | null, emitter?: any): void {
+    this.sharedModel.awareness.setLocalStateField('selected', {
+      value: name,
+      emitter: emitter
+    });
   }
 
   getClientId(): number {
     return this.sharedModel.awareness.clientID;
   }
 
-  get cameraChanged(): ISignal<this, Map<number, any>> {
-    return this._cameraChanged;
+  get clientStateChanged(): ISignal<this, Map<number, any>> {
+    return this._clientStateChanged;
   }
 
-  private _onCameraChanged = () => {
+  private _onClientStateChanged = () => {
     const clients = this.sharedModel.awareness.getStates();
-    this._cameraChanged.emit(clients);
+    this._clientStateChanged.emit(clients);
   };
 
   private _onSharedModelChanged = (
@@ -180,7 +186,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _contentChanged = new Signal<this, void>(this);
   private _stateChanged = new Signal<this, IChangedArgs<any>>(this);
   private _themeChanged = new Signal<this, IChangedArgs<any>>(this);
-  private _cameraChanged = new Signal<this, Map<number, any>>(this);
+  private _clientStateChanged = new Signal<this, Map<number, any>>(this);
   private _sharedModelChanged = new Signal<this, IJupyterCadDocChange>(this);
   static worker: Worker;
 }

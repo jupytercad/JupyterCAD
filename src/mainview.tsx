@@ -79,7 +79,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._model.themeChanged.connect((_, arg) => {
         this.handleThemeChange();
       });
-      this._model.cameraChanged.connect(this._onCameraChanged);
+      this._model.clientStateChanged.connect(this._onClientSharedStateChanged);
     });
   }
 
@@ -251,20 +251,23 @@ export class MainView extends React.Component<IProps, IStates> {
       canvas.addEventListener('mouseleave', event => {
         this._model.syncCamera(undefined);
       });
-      ['wheel', 'mousemove'].forEach(evtName => {
-        canvas.addEventListener(
-          evtName as any,
-          (event: MouseEvent | WheelEvent) => {
-            this._model.syncCamera({
-              offsetX: event.offsetX,
-              offsetY: event.offsetY,
-              x: this._camera.position.x,
-              y: this._camera.position.y,
-              z: this._camera.position.z
-            });
-          }
-        );
-      });
+      // ['wheel', 'mousemove'].forEach(evtName => {
+      //   canvas.addEventListener(
+      //     evtName as any,
+      //     (event: MouseEvent | WheelEvent) => {
+      //       this._model.syncCamera(
+      //         {
+      //           offsetX: event.offsetX,
+      //           offsetY: event.offsetY,
+      //           x: this._camera.position.x,
+      //           y: this._camera.position.y,
+      //           z: this._camera.position.z
+      //         },
+      //         this.state.id
+      //       );
+      //     }
+      //   );
+      // });
     }
   };
 
@@ -397,7 +400,10 @@ export class MainView extends React.Component<IProps, IStates> {
   private _onClick(e: MouseEvent) {
     this._selectedMesh = this._pick();
 
-    this._model.syncSelectedObject(this._selectedMesh !== null ? this._selectedMesh.name : null);
+    this._model.syncSelectedObject(
+      this._selectedMesh !== null ? this._selectedMesh.name : null,
+      this.state.id
+    );
   }
 
   private shapeToMesh = (payload: IDisplayShape['payload']) => {
@@ -533,61 +539,63 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   };
 
-  private _onCameraChanged = (
+  private _onClientSharedStateChanged = (
     sender: JupyterCadModel,
     clients: Map<number, any>
   ): void => {
-    clients.forEach((client, key) => {
-      if (this._context.model.getClientId() !== key) {
-        const id = key.toString();
-        const mouse = client.mouse as Position;
-        if (mouse && this._cameraClients[id]) {
-          if (mouse.offsetX > 0) {
-            this._cameraClients[id]!.style.left = mouse.offsetX + 'px';
-          }
-          if (mouse.offsetY > 0) {
-            this._cameraClients[id]!.style.top = mouse.offsetY + 'px';
-          }
-          if (!this._mouseDown) {
-            this._camera.position.set(mouse.x, mouse.y, mouse.z);
-          }
-        } else if (mouse && !this._cameraClients[id]) {
-          const el = document.createElement('div');
-          el.className = 'jpcad-camera-client';
-          el.style.left = mouse.offsetX + 'px';
-          el.style.top = mouse.offsetY + 'px';
-          el.style.backgroundColor = client.user.color;
-          el.innerText = client.user.name;
-          this._cameraClients[id] = el;
-          this._cameraRef.current?.appendChild(el);
-        } else if (!mouse && this._cameraClients[id]) {
-          this._cameraRef.current?.removeChild(this._cameraClients[id]!);
-          this._cameraClients[id] = undefined;
+    const clientId = this._context.model.getClientId();
+    // TODO Handle state changes from another user in follow mode.
+    const targetId: number | null = null;
+    if (targetId) {
+      const remoteState = clients.get(targetId);
+      const mouse = remoteState.mouse.value as Position;
+      if (mouse && this._cameraClients[targetId]) {
+        if (mouse.offsetX > 0) {
+          this._cameraClients[targetId]!.style.left = mouse.offsetX + 'px';
         }
-
-        // if (client.mouse) {
-        //   const cameraPos = client.mouse as Position;
-        //   if (el) {
-        //     el.style.left = cameraPos.offsetX + 'px';
-        //     el.style.top = cameraPos.offsetY + 'px';
-        //   } else {
-        //     const newEl = document.createElement('div');
-        //     newEl.className = 'jpcad-camera-client';
-        //     newEl.style.left = cameraPos.offsetX + 'px';
-        //     newEl.style.top = cameraPos.offsetY + 'px';
-        //     newEl.style.backgroundColor = client.user.color;
-        //     newEl.innerText = client.user.name;
-        //     this._cameraClients[id] = el;
-        //     this._cameraRef.current?.appendChild(newEl);
-        //   }
-        // } else {
-        //   if (el) {
-        //     this._cameraRef.current?.removeChild(el);
-        //     this._cameraClients[id] = undefined;
-        //   }
-        // }
+        if (mouse.offsetY > 0) {
+          this._cameraClients[targetId]!.style.top = mouse.offsetY + 'px';
+        }
+        if (!this._mouseDown) {
+          this._camera.position.set(mouse.x, mouse.y, mouse.z);
+        }
+      } else if (mouse && !this._cameraClients[targetId]) {
+        const el = document.createElement('div');
+        el.className = 'jpcad-camera-client';
+        el.style.left = mouse.offsetX + 'px';
+        el.style.top = mouse.offsetY + 'px';
+        el.style.backgroundColor = remoteState.user.color;
+        el.innerText = remoteState.user.name;
+        this._cameraClients[targetId] = el;
+        this._cameraRef.current?.appendChild(el);
+      } else if (!mouse && this._cameraClients[targetId]) {
+        this._cameraRef.current?.removeChild(this._cameraClients[targetId]!);
+        this._cameraClients[targetId] = undefined;
       }
-    });
+    } else {
+      // We handle here the local state updated by other components
+
+      const localState = clients.get(clientId);
+
+      if (localState) {
+        if (
+          localState['selected'] &&
+          localState['selected']['emitter'] &&
+          localState['selected']['emitter'] !== this.state.id
+        ) {
+          this._meshGroup?.children.forEach(obj => {
+            if (obj.name === localState['selected']['value']) {
+              this._selectedMesh = obj as THREE.Mesh<
+                THREE.BufferGeometry,
+                THREE.MeshBasicMaterial
+              >;
+            }
+          });
+        } else {
+          this._selectedMesh = null;
+        }
+      }
+    }
   };
 
   render(): JSX.Element {

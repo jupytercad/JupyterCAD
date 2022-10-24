@@ -138,13 +138,13 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     IJupyterCadModel,
     IChangedArgs<string, string | null, string>
   >;
-  cameraChanged: ISignal<IJupyterCadModel, Map<number, any>>;
+  clientStateChanged: ISignal<IJupyterCadModel, Map<number, any>>;
   sharedModel: IJupyterCadDoc;
   getWorker(): Worker;
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;
-  syncCamera(pos: Position | undefined): void;
-  syncSelectedObject(name: string | null): void;
+  syncCamera(pos: Position | undefined, emitter?: any): void;
+  syncSelectedObject(name: string | null, emitter?: any): void;
   getClientId(): number;
 }
 export interface IControlPanelState {
