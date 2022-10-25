@@ -7,12 +7,15 @@ import { itemFromName } from '../tools';
 import {
   IControlPanelModel,
   IDict,
+  IJupyterCadClientState,
   IJupyterCadDocChange,
   IJupyterCadModel
 } from '../types';
 import { IJCadModel } from '../_interface/jcad';
 import { ObjectPropertiesForm } from './formbuilder';
 import formSchema from '../_interface/forms.json';
+import { v4 as uuid } from 'uuid';
+
 export class ObjectProperties extends PanelWithToolbar {
   constructor(params: ObjectProperties.IOptions) {
     super(params);
@@ -32,7 +35,9 @@ interface IStates {
   selectedObjectData?: IDict;
   selectedObject?: string;
   schema?: IDict;
-  clientId: number | null;
+  clientId: number | null; // ID of the yjs client
+  id: string; // ID of the component, it is used to identify which component
+  //is the source of awareness updates.
 }
 
 interface IProps {
@@ -45,15 +50,19 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     this.state = {
       filePath: this.props.cpModel.filePath,
       jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
-      clientId: null
+      clientId: null,
+      id: uuid()
     };
     this.props.cpModel.jcadModel?.sharedModelChanged.connect(
-      this.sharedJcadModelChanged
+      this._sharedJcadModelChanged
     );
     this.props.cpModel.documentChanged.connect((_, changed) => {
       if (changed) {
+        this.props.cpModel.disconnect(this._sharedJcadModelChanged);
+        this.props.cpModel.disconnect(this._onClientSharedStateChanged);
+
         changed.context.model.sharedModelChanged.connect(
-          this.sharedJcadModelChanged
+          this._sharedJcadModelChanged
         );
         changed.context.model.clientStateChanged.connect(
           this._onClientSharedStateChanged
@@ -77,7 +86,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     });
   }
 
-  sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
+  _sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
     this.setState(old => {
       if (old.selectedObject) {
         const jcadObject = this.props.cpModel.jcadModel?.getAllObject();
@@ -125,7 +134,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
 
   private _onClientSharedStateChanged = (
     sender: IJupyterCadModel,
-    clients: Map<number, any>
+    clients: Map<number, IJupyterCadClientState>
   ): void => {
     const targetId: number | null = null;
     const clientId = this.state.clientId;
@@ -136,36 +145,41 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       const localState = clientId ? clients.get(clientId) : null;
 
       if (localState) {
-        if (localState['selected']) {
-          const selected = '' + localState['selected'].value;
-          if (selected.length === 0) {
-            this.setState(old => ({
-              ...old,
-              schema: undefined,
-              selectedObjectData: undefined
-            }));
-            return;
-          }
-
-          const name = selected;
-          const objectData = this.props.cpModel.jcadModel?.getAllObject();
-          if (objectData) {
-            let schema;
-            const selectedObj = itemFromName(name, objectData);
-            if (!selectedObj) {
+        if (
+          localState.selected?.emitter &&
+          localState.selected.emitter !== this.state.id &&
+          localState.selected?.value
+        ) {
+          const selected = '' + localState.selected.value;
+          if (selected !== this.state.selectedObject) {
+            if (selected.length === 0) {
+              this.setState(old => ({
+                ...old,
+                schema: undefined,
+                selectedObjectData: undefined
+              }));
               return;
             }
 
-            if (selectedObj.shape) {
-              schema = formSchema[selectedObj.shape];
+            const objectData = this.props.cpModel.jcadModel?.getAllObject();
+            if (objectData) {
+              let schema;
+              const selectedObj = itemFromName(selected, objectData);
+              if (!selectedObj) {
+                return;
+              }
+
+              if (selectedObj.shape) {
+                schema = formSchema[selectedObj.shape];
+              }
+              const selectedObjectData = selectedObj['parameters'];
+              this.setState(old => ({
+                ...old,
+                selectedObjectData,
+                selectedObject: selected,
+                schema
+              }));
             }
-            const selectedObjectData = selectedObj['parameters'];
-            this.setState(old => ({
-              ...old,
-              selectedObjectData,
-              selectedObject: name,
-              schema
-            }));
           }
         }
       }
