@@ -10,6 +10,7 @@ import { IJCadContent, IJCadModel } from './_interface/jcad';
 import jcadSchema from './schema/jcad.json';
 import {
   IJCadObjectDoc,
+  IJupyterCadClientState,
   IJupyterCadDoc,
   IJupyterCadDocChange,
   IJupyterCadModel,
@@ -141,14 +142,14 @@ export class JupyterCadModel implements IJupyterCadModel {
     return all;
   }
 
-  syncCamera(pos: Position | undefined, emitter?: any): void {
+  syncCamera(pos: Position | undefined, emitter?: string): void {
     this.sharedModel.awareness.setLocalStateField('mouse', {
       value: pos,
       emitter: emitter
     });
   }
 
-  syncSelectedObject(name: string | null, emitter?: any): void {
+  syncSelectedObject(name: string | null, emitter?: string): void {
     this.sharedModel.awareness.setLocalStateField('selected', {
       value: name,
       emitter: emitter
@@ -159,12 +160,16 @@ export class JupyterCadModel implements IJupyterCadModel {
     return this.sharedModel.awareness.clientID;
   }
 
-  get clientStateChanged(): ISignal<this, Map<number, any>> {
+  get clientStateChanged(): ISignal<this, Map<number, IJupyterCadClientState>> {
     return this._clientStateChanged;
   }
 
-  private _onClientStateChanged = () => {
-    const clients = this.sharedModel.awareness.getStates();
+  private _onClientStateChanged = changed => {
+    const clients = this.sharedModel.awareness.getStates() as Map<
+      number,
+      IJupyterCadClientState
+    >;
+
     this._clientStateChanged.emit(clients);
   };
 
@@ -186,7 +191,10 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _contentChanged = new Signal<this, void>(this);
   private _stateChanged = new Signal<this, IChangedArgs<any>>(this);
   private _themeChanged = new Signal<this, IChangedArgs<any>>(this);
-  private _clientStateChanged = new Signal<this, Map<number, any>>(this);
+  private _clientStateChanged = new Signal<
+    this,
+    Map<number, IJupyterCadClientState>
+  >(this);
   private _sharedModelChanged = new Signal<this, IJupyterCadDocChange>(this);
   static worker: Worker;
 }

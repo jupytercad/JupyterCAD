@@ -11,10 +11,10 @@ import { JupyterCadModel } from './model';
 import {
   IDict,
   IDisplayShape,
+  IJupyterCadClientState,
   IMainMessage,
   IWorkerMessage,
   MainAction,
-  Position,
   WorkerAction
 } from './types';
 
@@ -32,7 +32,8 @@ interface IProps {
 }
 
 interface IStates {
-  id: string;
+  id: string; // ID of the component, it is used to identify which component
+  //is the source of awareness updates.
   loading: boolean;
   lightTheme: boolean;
 }
@@ -45,10 +46,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._geometry.setDrawRange(0, 3 * 10000);
     this._refLength = 0;
     this._sceneAxe = [];
-    // this.shapeGroup = new THREE.Group();
-    // this.sceneScaled = false;
-    // this.computedScene = {};
-    // this.progressData = { time_step: -1, data: {} };
+
     this._resizeTimeout = null;
 
     const lightTheme =
@@ -76,15 +74,13 @@ export class MainView extends React.Component<IProps, IStates> {
         { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
         this._messageChannel.port2
       );
-      this._model.themeChanged.connect((_, arg) => {
-        this.handleThemeChange();
-      });
+      this._model.themeChanged.connect(this._handleThemeChange);
       this._model.clientStateChanged.connect(this._onClientSharedStateChanged);
     });
   }
 
   componentDidMount(): void {
-    window.addEventListener('resize', this.handleWindowResize);
+    window.addEventListener('resize', this._handleWindowResize);
     this.generateScene();
   }
 
@@ -94,7 +90,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
   componentWillUnmount(): void {
     window.cancelAnimationFrame(this._requestID);
-    window.removeEventListener('resize', this.handleWindowResize);
+    window.removeEventListener('resize', this._handleWindowResize);
     this._controls.dispose();
     this.postMessage({
       action: WorkerAction.CLOSE_FILE,
@@ -102,20 +98,9 @@ export class MainView extends React.Component<IProps, IStates> {
         fileName: this._context.path
       }
     });
+    this._model.themeChanged.disconnect(this._handleThemeChange);
+    this._model.clientStateChanged.disconnect(this._onClientSharedStateChanged);
   }
-
-  handleThemeChange = (): void => {
-    const lightTheme =
-      document.body.getAttribute('data-jp-theme-light') === 'true';
-    this.setState(old => ({ ...old, lightTheme }));
-  };
-
-  handleWindowResize = () => {
-    clearTimeout(this._resizeTimeout);
-    this._resizeTimeout = setTimeout(() => {
-      this.forceUpdate();
-    }, 500);
-  };
 
   addSceneAxe = (dir: THREE.Vector3, color: number): void => {
     const origin = new THREE.Vector3(0, 0, 0);
@@ -251,23 +236,23 @@ export class MainView extends React.Component<IProps, IStates> {
       canvas.addEventListener('mouseleave', event => {
         this._model.syncCamera(undefined);
       });
-      // ['wheel', 'mousemove'].forEach(evtName => {
-      //   canvas.addEventListener(
-      //     evtName as any,
-      //     (event: MouseEvent | WheelEvent) => {
-      //       this._model.syncCamera(
-      //         {
-      //           offsetX: event.offsetX,
-      //           offsetY: event.offsetY,
-      //           x: this._camera.position.x,
-      //           y: this._camera.position.y,
-      //           z: this._camera.position.z
-      //         },
-      //         this.state.id
-      //       );
-      //     }
-      //   );
-      // });
+      ['wheel', 'mousemove'].forEach(evtName => {
+        canvas.addEventListener(
+          evtName as any,
+          (event: MouseEvent | WheelEvent) => {
+            this._model.syncCamera(
+              {
+                offsetX: event.offsetX,
+                offsetY: event.offsetY,
+                x: this._camera.position.x,
+                y: this._camera.position.y,
+                z: this._camera.position.z
+              },
+              this.state.id
+            );
+          }
+        );
+      });
     }
   };
 
@@ -398,12 +383,17 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   private _onClick(e: MouseEvent) {
-    this._selectedMesh = this._pick();
-
-    this._model.syncSelectedObject(
-      this._selectedMesh !== null ? this._selectedMesh.name : null,
-      this.state.id
-    );
+    const selectedMesh = this._pick();
+    if (selectedMesh) {
+      if (selectedMesh === this._selectedMesh) {
+        this._selectedMesh = null;
+      } else {
+        this._selectedMesh = selectedMesh;
+      }
+      if (this._selectedMesh) {
+        this._model.syncSelectedObject(this._selectedMesh.name, this.state.id);
+      }
+    }
   }
 
   private shapeToMesh = (payload: IDisplayShape['payload']) => {
@@ -541,14 +531,14 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _onClientSharedStateChanged = (
     sender: JupyterCadModel,
-    clients: Map<number, any>
+    clients: Map<number, IJupyterCadClientState>
   ): void => {
     const clientId = this._context.model.getClientId();
     // TODO Handle state changes from another user in follow mode.
     const targetId: number | null = null;
     if (targetId) {
-      const remoteState = clients.get(targetId);
-      const mouse = remoteState.mouse.value as Position;
+      const remoteState = clients.get(targetId)!;
+      const mouse = remoteState?.mouse.value;
       if (mouse && this._cameraClients[targetId]) {
         if (mouse.offsetX > 0) {
           this._cameraClients[targetId]!.style.left = mouse.offsetX + 'px';
@@ -573,29 +563,42 @@ export class MainView extends React.Component<IProps, IStates> {
         this._cameraClients[targetId] = undefined;
       }
     } else {
-      // We handle here the local state updated by other components
+      // Sync local state updated by other components
 
       const localState = clients.get(clientId);
-
       if (localState) {
         if (
-          localState['selected'] &&
-          localState['selected']['emitter'] &&
-          localState['selected']['emitter'] !== this.state.id
+          localState.selected?.emitter &&
+          localState.selected?.emitter !== this.state.id
         ) {
-          this._meshGroup?.children.forEach(obj => {
-            if (obj.name === localState['selected']['value']) {
-              this._selectedMesh = obj as THREE.Mesh<
-                THREE.BufferGeometry,
-                THREE.MeshBasicMaterial
-              >;
-            }
-          });
+          if (this._selectedMesh?.name !== localState.selected.value) {
+            this._meshGroup?.children.forEach(obj => {
+              if (obj.name === localState.selected.value) {
+                this._selectedMesh = obj as THREE.Mesh<
+                  THREE.BufferGeometry,
+                  THREE.MeshBasicMaterial
+                >;
+              }
+            });
+          }
         } else {
           this._selectedMesh = null;
         }
       }
     }
+  };
+
+  private _handleThemeChange = (): void => {
+    const lightTheme =
+      document.body.getAttribute('data-jp-theme-light') === 'true';
+    this.setState(old => ({ ...old, lightTheme }));
+  };
+
+  private _handleWindowResize = (): void => {
+    clearTimeout(this._resizeTimeout);
+    this._resizeTimeout = setTimeout(() => {
+      this.forceUpdate();
+    }, 500);
   };
 
   render(): JSX.Element {

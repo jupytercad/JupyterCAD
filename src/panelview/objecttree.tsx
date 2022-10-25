@@ -16,6 +16,7 @@ import { IJCadModel, IJCadObject } from '../_interface/jcad';
 import {
   IControlPanelModel,
   IDict,
+  IJupyterCadClientState,
   IJupyterCadDocChange,
   IJupyterCadModel
 } from '../types';
@@ -77,8 +78,9 @@ interface IStates {
   jcadObject?: IJCadModel;
   lightTheme: boolean;
   selectedNode: string | null;
-  clientId: number | null;
-  id: string;
+  clientId: number | null; // ID of the yjs client
+  id: string; // ID of the component, it is used to identify which component
+  //is the source of awareness updates.
   openNodes: (string | number)[];
 }
 
@@ -103,17 +105,18 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       openNodes: []
     };
     this.props.cpModel.jcadModel?.sharedModelChanged.connect(
-      this.sharedJcadModelChanged
+      this._sharedJcadModelChanged
     );
     this.props.cpModel.documentChanged.connect((_, changed) => {
       if (changed) {
-        this.props.cpModel.disconnect(this.sharedJcadModelChanged);
+        this.props.cpModel.disconnect(this._sharedJcadModelChanged);
+        this.props.cpModel.disconnect(this._handleThemeChange);
+        this.props.cpModel.disconnect(this._onClientSharedStateChanged);
+
         changed.context.model.sharedModelChanged.connect(
-          this.sharedJcadModelChanged
+          this._sharedJcadModelChanged
         );
-        changed.context.model.themeChanged.connect((_, arg) => {
-          this.handleThemeChange();
-        });
+        changed.context.model.themeChanged.connect(this._handleThemeChange);
         changed.context.model.clientStateChanged.connect(
           this._onClientSharedStateChanged
         );
@@ -132,19 +135,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       }
     });
   }
-
-  handleThemeChange = (): void => {
-    const lightTheme =
-      document.body.getAttribute('data-jp-theme-light') === 'true';
-    this.setState(old => ({ ...old, lightTheme }));
-  };
-
-  sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
-    this.setState(old => ({
-      ...old,
-      jcadObject: this.props.cpModel.jcadModel?.getAllObject()
-    }));
-  };
 
   stateToTree = () => {
     if (this.state.jcadObject) {
@@ -186,9 +176,25 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     }
   }
 
+  private _handleThemeChange = (): void => {
+    const lightTheme =
+      document.body.getAttribute('data-jp-theme-light') === 'true';
+    this.setState(old => ({ ...old, lightTheme }));
+  };
+
+  private _sharedJcadModelChanged = (
+    _,
+    changed: IJupyterCadDocChange
+  ): void => {
+    this.setState(old => ({
+      ...old,
+      jcadObject: this.props.cpModel.jcadModel?.getAllObject()
+    }));
+  };
+
   private _onClientSharedStateChanged = (
     sender: IJupyterCadModel,
-    clients: Map<number, any>
+    clients: Map<number, IJupyterCadClientState>
   ): void => {
     const targetId: number | null = null;
     const clientId = this.state.clientId;
@@ -199,11 +205,10 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       const localState = clientId ? clients.get(clientId) : null;
       if (localState) {
         if (
-          localState['selected'] &&
-          localState['selected']['emitter'] &&
-          localState['selected']['emitter'] !== this.state.id
+          localState.selected?.emitter &&
+          localState.selected.emitter !== this.state.id
         ) {
-          const selectedNode = localState['selected'].value;
+          const selectedNode = localState.selected.value!;
           this.setState(old => ({
             ...old,
             selectedNode,
@@ -236,7 +241,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
           themes={TREE_THEMES}
           onToggleSelectedNodes={id => {
             if (id && id.length > 0) {
-              this.props.cpModel.set('activatedObject', id[0]);
               let name = id[0] as string;
               if (name.includes('#')) {
                 name = name.split('#')[0];
@@ -310,7 +314,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                           this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
                             objectId
                           );
-                          this.props.cpModel.set('activatedObject', '');
                           this.props.cpModel.jcadModel?.syncSelectedObject(
                             null
                           );

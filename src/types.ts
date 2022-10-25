@@ -1,7 +1,6 @@
 import { IJCadObject } from './_interface/jcad.d';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
-import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { MapChange, YDocument } from '@jupyterlab/shared-models';
 import { ReactWidget } from '@jupyterlab/ui-components';
 import { ISignal, Signal } from '@lumino/signaling';
@@ -103,13 +102,6 @@ export interface IJcadObjectDocChange {
   objectChange?: MapChange;
 }
 
-// export interface IJcadObjectDoc extends Y.Map<any> {
-//   getObject(): IJcadObject;
-//   getProperty(key: keyof IJcadObject): ValueOf<IJcadObject> | undefined;
-//   setProperty(key: keyof IJcadObject, value: ValueOf<IJcadObject>): void;
-//   changed: ISignal<IJcadObjectDoc, IJcadObjectDocChange>;
-// }
-
 export interface IJupyterCadDocChange {
   contextChange?: MapChange;
   contentChange?: MapChange;
@@ -131,6 +123,11 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   setOption(key: string, value: any): void;
 }
 
+export interface IJupyterCadClientState {
+  mouse: { value?: Position | null; emitter?: string | null };
+  selected: { value?: string | null; emitter?: string | null };
+  user: any;
+}
 export interface IJupyterCadModel extends DocumentRegistry.IModel {
   isDisposed: boolean;
   sharedModelChanged: ISignal<IJupyterCadModel, IJupyterCadDocChange>;
@@ -138,32 +135,21 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     IJupyterCadModel,
     IChangedArgs<string, string | null, string>
   >;
-  clientStateChanged: ISignal<IJupyterCadModel, Map<number, any>>;
+  clientStateChanged: ISignal<
+    IJupyterCadModel,
+    Map<number, IJupyterCadClientState>
+  >;
   sharedModel: IJupyterCadDoc;
   getWorker(): Worker;
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;
-  syncCamera(pos: Position | undefined, emitter?: any): void;
-  syncSelectedObject(name: string | null, emitter?: any): void;
+  syncCamera(pos: Position | undefined, emitter?: string): void;
+  syncSelectedObject(name: string | null, emitter?: string): void;
   getClientId(): number;
 }
-export interface IControlPanelState {
-  activatedObject: string;
-}
-
-export type IStateValue = string | number | any[];
-export type ISateChangedSignal = ISignal<
-  ObservableMap<IStateValue>,
-  IObservableMap.IChangedArgs<IStateValue>
->;
 
 export type IJupyterCadWidget = IDocumentWidget<ReactWidget, IJupyterCadModel>;
 export interface IControlPanelModel {
-  state: ObservableMap<IStateValue>;
-  stateChanged: ISateChangedSignal;
-  set(key: keyof IControlPanelState, value: IStateValue): void;
-  get(key: keyof IControlPanelState): IStateValue | undefined;
-  has(key: keyof IControlPanelState): boolean;
   disconnect(f: any): void;
   documentChanged: ISignal<IJupyterCadTracker, IJupyterCadWidget | null>;
   filePath: string | undefined;
