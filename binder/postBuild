@@ -11,7 +11,7 @@
 import subprocess
 import sys
 from pathlib import Path
-import shutil 
+import shutil
 
 ROOT = Path.cwd()
 
@@ -19,21 +19,21 @@ ROOT = Path.cwd()
 # Hack to make binder work with jupyter-server 2
 lab_script = shutil.which("jupyter-lab")
 notebook_script = shutil.which("jupyter-notebook")
-print('lab_script', lab_script)
-print('notebook_script', notebook_script)
 shutil.copy(lab_script, notebook_script)
-shutil.copy(ROOT / 'binder'/'jupyter_config.json', ROOT)
+shutil.copy(ROOT / "binder" / "jupyter_config.json", ROOT)
+
 
 def _(*args, **kwargs):
-    """ Run a command, echoing the args
+    """Run a command, echoing the args
 
-        fails hard if something goes wrong
+    fails hard if something goes wrong
     """
     print("\n\t", " ".join(args), "\n", flush=True)
     return_code = subprocess.call(args, **kwargs)
     if return_code != 0:
         print("\nERROR", return_code, " ".join(args), flush=True)
         sys.exit(return_code)
+
 
 # remove incompatible binder baseline packages
 _("mamba", "uninstall", "jupyter-resource-usage")
@@ -57,4 +57,3 @@ _("jupyter", "labextension", "list")
 
 print("JupyterLab with jupytercad is ready to run with:\n")
 print("\tjupyter lab\n")
-
