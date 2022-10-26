@@ -15,13 +15,7 @@ import shutil
 
 ROOT = Path.cwd()
 
-
-# Hack to make binder work with jupyter-server 2
-lab_script = shutil.which("jupyter-lab")
-notebook_script = shutil.which("jupyter-notebook")
-shutil.copy(lab_script, notebook_script)
 shutil.copy(ROOT / "binder" / "jupyter_config.json", ROOT)
-
 
 def _(*args, **kwargs):
     """Run a command, echoing the args
