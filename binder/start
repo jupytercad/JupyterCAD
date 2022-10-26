@@ -6,7 +6,6 @@ import os
 # Replace the second argument to `lab` since Binder is still starting the
 # classic notebook server
 argv = sys.argv[1:] + ["--config", "binder/jupyter_notebook_config.py"]
-argv[1] = 'lab'
 print(argv)
 
 with open("startup_args.txt", "w") as fid:

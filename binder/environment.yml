@@ -14,6 +14,7 @@ dependencies:
   # runtime dependencies
   - python >=3.8,<3.9.0a0
   - jupyterlab >=4.0.0a30,<5.0.0a0
+  - jupyter-server-proxy
   # extra pins for solveability
   - notebook-shim >=0.2.0
   - jupyterlab_server >=2.16.1
