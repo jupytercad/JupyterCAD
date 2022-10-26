@@ -11,20 +11,26 @@
 import subprocess
 import sys
 from pathlib import Path
-
+import shutil
 
 ROOT = Path.cwd()
 
-def _(*args, **kwargs):
-    """ Run a command, echoing the args
+shutil.copy(ROOT / "binder" / "jupyter_config.json", ROOT)
 
-        fails hard if something goes wrong
+def _(*args, **kwargs):
+    """Run a command, echoing the args
+
+    fails hard if something goes wrong
     """
-    print("\n\t", " ".join(args), "\n")
+    print("\n\t", " ".join(args), "\n", flush=True)
     return_code = subprocess.call(args, **kwargs)
     if return_code != 0:
-        print("\nERROR", return_code, " ".join(args))
+        print("\nERROR", return_code, " ".join(args), flush=True)
         sys.exit(return_code)
+
+
+# remove incompatible binder baseline packages
+_("mamba", "uninstall", "jupyter-resource-usage")
 
 # verify the environment is self-consistent before even starting
 _(sys.executable, "-m", "pip", "check")
