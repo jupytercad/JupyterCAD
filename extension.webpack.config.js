@@ -16,13 +16,11 @@ module.exports = {
         test: /\.wasm$/,
         type: 'javascript/auto',
         loader: 'file-loader'
-      }
+      },
+      { test: /\.js$/, enforce: 'pre', use: ['source-map-loader'] }
     ]
   },
   resolve: {
-    alias: {
-      '@fluentui': path.resolve(__dirname, './node_modules/@fluentui')
-    },
     fallback: {
       fs: false,
       child_process: false,

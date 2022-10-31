@@ -203,7 +203,6 @@ function buildModel(
 
   objects.forEach(object => {
     const { shape, parameters } = object;
-    parameters!['Shape'] = null;
     console.log('@@@@', shape, parameters);
     if (shape && ShapesFactory[shape]) {
       const occShape = ShapesFactory[shape](parameters as IOperatorArg, model);

@@ -3,7 +3,7 @@ from io import StringIO
 from .base_prop import BaseProp
 
 
-class App_PropertyAngle(BaseProp):
+class Part_PropertyPartShape(BaseProp):
     @staticmethod
     def name() -> str:
         return 'Part::PropertyPartShape'
