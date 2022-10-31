@@ -60,6 +60,8 @@ function setShapePlacement(
 
 function _Box(arg: IBox, _: IJCadContent): TopoDS_Shape | undefined {
   const { Length, Width, Height, Placement } = arg;
+  console.log('arg', arg);
+  
   const oc = getOcc();
   const box = new oc.BRepPrimAPI_MakeBox_2(Length, Width, Height);
   const shape = box.Shape();

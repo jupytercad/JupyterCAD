@@ -55,6 +55,7 @@ class FCStd:
         os.remove(tmp.name)
 
     def save(self, objects: List, options: Dict) -> None:
+        print('trying save')
         try:
 
             if not fc or len(self._sources) == 0:
@@ -89,7 +90,8 @@ class FCStd:
                         fc_value = prop_handler.jcad_to_fc(
                             prop_value, objects, fc_file
                         )
-                        setattr(fc_obj, prop, fc_value)
+                        if fc_value:
+                            setattr(fc_obj, prop, fc_value)
 
             fc_file.save()
             fc_file.recompute()
@@ -111,7 +113,7 @@ class FCStd:
             prop_type = obj.getTypeIdOfProperty(prop)
             prop_value = getattr(obj, prop)
             prop_handler = self._prop_handlers.get(prop_type, None)
-            if prop_handler is not None:
+            if prop_handler is not None and prop_value is not None:
                 value = prop_handler.fc_to_jcad(prop_value, None, obj)
             else:
                 value = None
