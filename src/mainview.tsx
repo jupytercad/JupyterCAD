@@ -25,7 +25,8 @@ const LIGHT_GRID_COLOR = 0x888888;
 
 const DEFAULT_MESH_COLOR = new THREE.Color('#434442');
 const HOVERED_MESH_COLOR = new THREE.Color('#F9A672');
-const SELECTED_MESH_COLOR = new THREE.Color('#F37626');
+const SELECTED_MESH_COLOR = new THREE.Color('#AB5118');
+const HOVERED_AND_SELECTED_MESH_COLOR = new THREE.Color('#F37626');
 
 interface IProps {
   context: DocumentRegistry.IContext<JupyterCadModel>;
@@ -314,14 +315,17 @@ export class MainView extends React.Component<IProps, IStates> {
           THREE.MeshBasicMaterial
         >[]
       ).forEach(mesh => {
-        if (mesh === this._selectedMesh) {
-          mesh.material.color = SELECTED_MESH_COLOR;
-        } else if (mesh === this._hoveredMesh) {
-          mesh.material.color = HOVERED_MESH_COLOR;
-        } else {
-          mesh.material.color = DEFAULT_MESH_COLOR;
-        }
+        mesh.material.color = DEFAULT_MESH_COLOR;
       });
+    }
+    if (this._selectedMesh) {
+      this._selectedMesh.material.color = SELECTED_MESH_COLOR;
+    }
+    if (this._hoveredMesh) {
+      this._hoveredMesh.material.color = HOVERED_MESH_COLOR;
+    }
+    if (this._selectedMesh && this._selectedMesh === this._hoveredMesh) {
+      this._selectedMesh!.material.color = HOVERED_AND_SELECTED_MESH_COLOR;
     }
 
     this._renderer.setRenderTarget(null);
