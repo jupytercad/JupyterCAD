@@ -571,13 +571,15 @@ export class MainView extends React.Component<IProps, IStates> {
           localState.selected?.emitter !== this.state.id
         ) {
           if (this._selectedMesh?.name !== localState.selected.value) {
-            const selectedMesh = this._meshGroup?.children.filter(obj => obj.name === localState.selected.value);
+            const selectedMesh = this._meshGroup?.children.filter(
+              obj => obj.name === localState.selected.value
+            );
 
             if (selectedMesh?.length) {
               this._selectedMesh = selectedMesh[0] as THREE.Mesh<
-                  THREE.BufferGeometry,
-                  THREE.MeshBasicMaterial
-                >;
+                THREE.BufferGeometry,
+                THREE.MeshBasicMaterial
+              >;
             } else {
               this._selectedMesh = null;
             }
