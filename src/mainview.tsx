@@ -536,11 +536,6 @@ export class MainView extends React.Component<IProps, IStates> {
     const clientId = this._context.model.getClientId();
     // TODO Handle state changes from another user in follow mode.
     const targetId: number | null = null;
-    // clients.forEach((val, key) => {
-    //   if (key !== clientId) {
-    //     targetId = key;
-    //   }
-    // });
     if (targetId) {
       const remoteState = clients.get(targetId)!;
       const mouse = remoteState?.mouse.value;
