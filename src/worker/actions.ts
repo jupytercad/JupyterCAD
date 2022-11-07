@@ -7,7 +7,7 @@ import {
 
 import { IDict, WorkerAction } from '../types';
 import { IJCadContent } from '../_interface/jcad';
-import { ShapesFactory } from './occapi';
+import { BrepFile, ShapesFactory } from './occapi';
 import { IOperatorArg } from './types';
 import { OccParser } from './occparser';
 
@@ -30,7 +30,6 @@ interface IFace {
 
 /**
  * Convert OpenCascade shapes into `THREE` compatible data types.
- * This function is adapted from https://github.com/zalo/CascadeStudio/blob/master/js/CADWorker/CascadeStudioShapeToMesh.js
  *
  * @param {Array<TopoDS_Shape>} shapeData
  * @returns {{
@@ -203,8 +202,18 @@ function buildModel(
 
   objects.forEach(object => {
     const { shape, parameters } = object;
-    if (shape && ShapesFactory[shape]) {
+    if (!shape || !parameters) {
+      return;
+    }
+
+    if (ShapesFactory[shape]) {
       const occShape = ShapesFactory[shape](parameters as IOperatorArg, model);
+      if (occShape) {
+        occShapes.push({ occShape, jcObject: object });
+      }
+    } else if (parameters['Shape']) {
+      // Creating occ shape from brep file.
+      const occShape = BrepFile({ content: parameters['Shape'] }, model);
       if (occShape) {
         occShapes.push({ occShape, jcObject: object });
       }

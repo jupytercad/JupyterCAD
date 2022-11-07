@@ -49,7 +49,7 @@
     "prettier:check": "jlpm prettier:base --check",
     "watch": "run-p watch:worker watch:src watch:labextension",
     "watch:src": "tsc -w",
-    "watch:worker": "webpack --config worker.webpack.config.js --watch",
+    "watch:worker": "webpack --config worker.webpack.config.js --watch --mode=development",
     "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
