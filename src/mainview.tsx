@@ -564,7 +564,6 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     } else {
       // Sync local state updated by other components
-
       const localState = clients.get(clientId);
       if (localState) {
         if (
@@ -572,14 +571,16 @@ export class MainView extends React.Component<IProps, IStates> {
           localState.selected?.emitter !== this.state.id
         ) {
           if (this._selectedMesh?.name !== localState.selected.value) {
-            this._meshGroup?.children.forEach(obj => {
-              if (obj.name === localState.selected.value) {
-                this._selectedMesh = obj as THREE.Mesh<
+            const selectedMesh = this._meshGroup?.children.filter(obj => obj.name === localState.selected.value);
+
+            if (selectedMesh?.length) {
+              this._selectedMesh = selectedMesh[0] as THREE.Mesh<
                   THREE.BufferGeometry,
                   THREE.MeshBasicMaterial
                 >;
-              }
-            });
+            } else {
+              this._selectedMesh = null;
+            }
           }
         } else {
           this._selectedMesh = null;
