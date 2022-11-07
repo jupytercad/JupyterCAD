@@ -55,7 +55,6 @@ class FCStd:
         os.remove(tmp.name)
 
     def save(self, objects: List, options: Dict) -> None:
-        print('trying save')
         try:
 
             if not fc or len(self._sources) == 0:

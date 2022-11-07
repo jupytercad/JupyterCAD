@@ -9,6 +9,7 @@ import { ISphere } from '../_interface/sphere';
 import { ICone } from '../_interface/cone';
 import { ITorus } from '../_interface/torus';
 import { ICut } from '../_interface/cut';
+import { v4 as uuid } from 'uuid';
 
 const SHAPE_CACHE = new Map<string, TopoDS_Shape>();
 export function operatorCache<T>(
@@ -60,8 +61,6 @@ function setShapePlacement(
 
 function _Box(arg: IBox, _: IJCadContent): TopoDS_Shape | undefined {
   const { Length, Width, Height, Placement } = arg;
-  console.log('arg', arg);
-  
   const oc = getOcc();
   const box = new oc.BRepPrimAPI_MakeBox_2(Length, Width, Height);
   const shape = box.Shape();
@@ -153,13 +152,28 @@ function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
   }
 }
 
+export function _loadBrep(arg: { content: string }): TopoDS_Shape | undefined {
+  const oc = getOcc();
+  const fakeFileName = `${uuid()}.brep`;
+  oc.FS.createDataFile('/', fakeFileName, arg.content, true, true, true);
+  const shape = new oc.TopoDS_Shape();
+  const builder = new oc.BRep_Builder();
+  const progress = new oc.Message_ProgressRange_1();
+  oc.BRepTools.Read_2(shape, fakeFileName, builder, progress);
+  oc.FS.unlink('/' + fakeFileName);
+  return shape;
+}
+
 const Box = operatorCache<IBox>('Box', _Box);
 const Cylinder = operatorCache<ICylinder>('Cylinder', _Cylinder);
 const Sphere = operatorCache<ISphere>('Sphere', _Sphere);
 const Cone = operatorCache<ICone>('Cone', _Cone);
 const Torus = operatorCache<ITorus>('Torus', _Torus);
-// const Cut = operatorCache<ICut>('Cut', _Cut);
 
+export const BrepFile = operatorCache<{ content: string }>(
+  'BrepFile',
+  _loadBrep
+);
 export const ShapesFactory: {
   [key in Parts]: IAllOperatorFunc;
 } = {
