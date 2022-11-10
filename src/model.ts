@@ -14,7 +14,8 @@ import {
   IJupyterCadDoc,
   IJupyterCadDocChange,
   IJupyterCadModel,
-  Position
+  PointerPosition,
+  Camera
 } from './types';
 import { yMapToJcadObject } from './tools';
 
@@ -142,14 +143,21 @@ export class JupyterCadModel implements IJupyterCadModel {
     return all;
   }
 
-  syncCamera(pos: Position | undefined, emitter?: string): void {
-    this.sharedModel.awareness.setLocalStateField('mouse', {
-      value: pos,
+  syncPointer(position?: PointerPosition, emitter?: string): void {
+    this.sharedModel.awareness.setLocalStateField('pointer', {
+      value: position ? [position.x, position.y, position.z] : undefined,
       emitter: emitter
     });
   }
 
-  syncSelectedObject(name: string | null, emitter?: string): void {
+  syncCamera(camera?: Camera, emitter?: string): void {
+    this.sharedModel.awareness.setLocalStateField('camera', {
+      value: camera,
+      emitter: emitter
+    });
+  }
+
+  syncSelectedObject(name?: string, emitter?: string): void {
     this.sharedModel.awareness.setLocalStateField('selected', {
       value: name,
       emitter: emitter
