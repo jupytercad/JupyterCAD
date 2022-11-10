@@ -251,7 +251,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                 );
               }
             } else {
-              this.props.cpModel.jcadModel?.syncSelectedObject(null);
+              this.props.cpModel.jcadModel?.syncSelectedObject(undefined);
             }
           }}
           onToggleOpenNodes={nodes =>
@@ -315,7 +315,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                             objectId
                           );
                           this.props.cpModel.jcadModel?.syncSelectedObject(
-                            null
+                            undefined
                           );
                         }}
                         icon={closeIcon}
