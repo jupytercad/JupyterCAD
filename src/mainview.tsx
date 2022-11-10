@@ -1,12 +1,22 @@
 import { DocumentRegistry } from '@jupyterlab/docregistry';
+
 import * as React from 'react';
+
+import * as Color from 'd3-color';
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
-import { v4 as uuid } from 'uuid';
 
+import {
+  computeBoundsTree,
+  disposeBoundsTree,
+  acceleratedRaycast
+} from 'three-mesh-bvh';
+
+import { v4 as uuid } from 'uuid';
 import { JupyterCadModel } from './model';
 import {
   IDict,
@@ -18,15 +28,18 @@ import {
   WorkerAction
 } from './types';
 
+// Apply the BVH extension
+THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
+THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
+THREE.Mesh.prototype.raycast = acceleratedRaycast;
+
 const DARK_BG_COLOR = 'linear-gradient(rgb(0, 0, 42), rgb(82, 87, 110))';
 const LIGHT_BG_COLOR = 'radial-gradient(#efeded, #8f9091)';
 const DARK_GRID_COLOR = 0x4f6882;
 const LIGHT_GRID_COLOR = 0x888888;
 
 const DEFAULT_MESH_COLOR = new THREE.Color('#434442');
-const HOVERED_MESH_COLOR = new THREE.Color('#F9A672');
 const SELECTED_MESH_COLOR = new THREE.Color('#AB5118');
-const HOVERED_AND_SELECTED_MESH_COLOR = new THREE.Color('#F37626');
 
 interface IProps {
   context: DocumentRegistry.IContext<JupyterCadModel>;
@@ -37,6 +50,14 @@ interface IStates {
   //is the source of awareness updates.
   loading: boolean;
   lightTheme: boolean;
+}
+
+/**
+ * The result of mesh picking, contains the picked mesh and the 3D position of the pointer.
+ */
+interface IPickedResult {
+  mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
+  position: THREE.Vector3;
 }
 
 export class MainView extends React.Component<IProps, IStates> {
@@ -62,7 +83,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._pointer = new THREE.Vector2();
 
     this._context = props.context;
-    this._cameraClients = {};
+    this._collaboratorPointers = {};
     this._context.ready.then(() => {
       this._model = this._context.model as JupyterCadModel;
 
@@ -165,10 +186,6 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       this._gridHelper.geometry.rotateX(Math.PI / 2);
 
-      // Create the scene for the color picking
-      this._pickingScene = new THREE.Scene();
-      this._pickingTexture = new THREE.WebGLRenderTarget(1, 1);
-
       this._scene.add(this._gridHelper);
       this.addSceneAxe(new THREE.Vector3(1, 0, 0), 0x00ff00);
       this.addSceneAxe(new THREE.Vector3(0, 1, 0), 0xff0000);
@@ -227,74 +244,40 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       this._controls = controls;
 
-      const canvas = this._renderer.domElement;
-      canvas.addEventListener('mousedown', event => {
-        this._mouseDown = true;
-      });
-      canvas.addEventListener('mouseup', event => {
-        this._mouseDown = false;
-      });
-      canvas.addEventListener('mouseleave', event => {
-        this._model.syncCamera(undefined);
-      });
-      ['wheel', 'mousemove'].forEach(evtName => {
-        canvas.addEventListener(
-          evtName as any,
-          (event: MouseEvent | WheelEvent) => {
-            this._model.syncCamera(
-              {
-                offsetX: event.offsetX,
-                offsetY: event.offsetY,
-                x: this._camera.position.x,
-                y: this._camera.position.y,
-                z: this._camera.position.z
-              },
-              this.state.id
-            );
-          }
+      this._pointerGeometry = new THREE.SphereGeometry(1, 32, 32);
+
+      this._camera.addEventListener('change', () => {
+        this._model.syncCamera(
+          {
+            position: this._camera.position.toArray([]),
+            rotation: this._camera.rotation.toArray([]),
+            up: this._camera.up.toArray([])
+          },
+          this.state.id
         );
       });
     }
   };
 
-  _pick(): THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial> | null {
-    // Perform the color picking
-    const rect = this._renderer.domElement.getBoundingClientRect();
+  _pick(): IPickedResult | null {
+    if (this._meshGroup === null || !this._meshGroup.children) {
+      return null;
+    }
 
-    // Process color picking
-    this._camera.setViewOffset(
-      rect.width,
-      rect.height,
-      this._pointer.x,
-      this._pointer.y,
-      1,
-      1
-    );
-    this._renderer.setRenderTarget(this._pickingTexture);
-    this._renderer.render(this._pickingScene, this._camera);
-    this._camera.clearViewOffset();
+    this._raycaster.setFromCamera(this._pointer, this._camera);
 
-    const pixelBuffer = new Uint8Array(4);
-    this._renderer.readRenderTargetPixels(
-      this._pickingTexture,
-      0,
-      0,
-      1,
-      1,
-      pixelBuffer
+    const intersects = this._raycaster.intersectObjects(
+      this._meshGroup.children
     );
 
-    const id = (pixelBuffer[0] << 16) | (pixelBuffer[1] << 8) | pixelBuffer[2];
-
-    if (
-      id !== 0 &&
-      this._meshGroup !== null &&
-      this._meshGroup.children[id - 1]
-    ) {
-      return this._meshGroup.children[id - 1] as THREE.Mesh<
-        THREE.BufferGeometry,
-        THREE.MeshBasicMaterial
-      >;
+    if (intersects.length > 0) {
+      return {
+        mesh: intersects[0].object as THREE.Mesh<
+          THREE.BufferGeometry,
+          THREE.MeshBasicMaterial
+        >,
+        position: intersects[0].point
+      };
     }
 
     return null;
@@ -305,9 +288,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._controls.update();
 
-    this._hoveredMesh = this._pick();
-
-    // Set color for hovered and selected meshes
+    // Set color for selected meshes
     if (this._meshGroup !== null) {
       (
         this._meshGroup.children as THREE.Mesh<
@@ -320,12 +301,6 @@ export class MainView extends React.Component<IProps, IStates> {
     }
     if (this._selectedMesh) {
       this._selectedMesh.material.color = SELECTED_MESH_COLOR;
-    }
-    if (this._hoveredMesh) {
-      this._hoveredMesh.material.color = HOVERED_MESH_COLOR;
-    }
-    if (this._selectedMesh && this._selectedMesh === this._hoveredMesh) {
-      this._selectedMesh!.material.color = HOVERED_AND_SELECTED_MESH_COLOR;
     }
 
     this._renderer.setRenderTarget(null);
@@ -382,20 +357,39 @@ export class MainView extends React.Component<IProps, IStates> {
   private _onPointerMove(e: MouseEvent) {
     const rect = this._renderer.domElement.getBoundingClientRect();
 
-    this._pointer.x = e.clientX - rect.left;
-    this._pointer.y = e.clientY - rect.top;
+    this._pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    this._pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+    const picked = this._pick();
+
+    if (picked) {
+      this._model.syncPointer(picked.position);
+    } else {
+      this._model.syncPointer(undefined);
+    }
   }
 
   private _onClick(e: MouseEvent) {
-    const selectedMesh = this._pick();
-    if (selectedMesh) {
-      if (selectedMesh === this._selectedMesh) {
+    const selection = this._pick();
+
+    if (selection) {
+      if (selection.mesh === this._selectedMesh) {
         this._selectedMesh = null;
       } else {
-        this._selectedMesh = selectedMesh;
+        if (selection.mesh.name.startsWith('edge')) {
+          this._selectedMesh = selection.mesh.parent as THREE.Mesh<
+            THREE.BufferGeometry,
+            THREE.MeshBasicMaterial
+          >;
+        } else {
+          this._selectedMesh = selection.mesh;
+        }
       }
+
       if (this._selectedMesh) {
         this._model.syncSelectedObject(this._selectedMesh.name, this.state.id);
+      } else {
+        this._model.syncSelectedObject(undefined, this.state.id);
       }
     }
   }
@@ -404,9 +398,6 @@ export class MainView extends React.Component<IProps, IStates> {
     if (this._meshGroup !== null) {
       this._scene.remove(this._meshGroup);
     }
-
-    const pickingColor = new THREE.Color();
-    let i = 1;
 
     this._meshGroup = new THREE.Group();
     Object.entries(payload).forEach(([objName, data]) => {
@@ -459,16 +450,11 @@ export class MainView extends React.Component<IProps, IStates> {
         'normal',
         new THREE.Float32BufferAttribute(normals, 3)
       );
+      geometry.computeBoundsTree();
 
       const model = new THREE.Mesh(geometry, material);
       model.castShadow = true;
       model.name = objName;
-
-      // Add the mesh to the color picking scene
-      const pickingMaterial = new THREE.MeshBasicMaterial({
-        color: pickingColor.setHex(i)
-      });
-      this._pickingScene.add(new THREE.Mesh(geometry, pickingMaterial));
 
       const edgeMaterial = new THREE.LineBasicMaterial({
         linewidth: 5,
@@ -482,13 +468,12 @@ export class MainView extends React.Component<IProps, IStates> {
         const edgeGeometry = new THREE.BufferGeometry();
         edgeGeometry.setAttribute('position', edgeVertices);
         const mesh = new THREE.Line(edgeGeometry, edgeMaterial);
+        mesh.name = 'edge';
 
         model.add(mesh);
       });
 
       this._meshGroup!.add(model);
-
-      i++;
     });
     const boundingGroup = new THREE.Box3();
     boundingGroup.setFromObject(this._meshGroup);
@@ -537,62 +522,45 @@ export class MainView extends React.Component<IProps, IStates> {
     sender: JupyterCadModel,
     clients: Map<number, IJupyterCadClientState>
   ): void => {
-    const clientId = this._context.model.getClientId();
-    // TODO Handle state changes from another user in follow mode.
-    const targetId: number | null = null;
-    if (targetId) {
-      const remoteState = clients.get(targetId)!;
-      const mouse = remoteState?.mouse.value;
-      if (mouse && this._cameraClients[targetId]) {
-        if (mouse.offsetX > 0) {
-          this._cameraClients[targetId]!.style.left = mouse.offsetX + 'px';
-        }
-        if (mouse.offsetY > 0) {
-          this._cameraClients[targetId]!.style.top = mouse.offsetY + 'px';
-        }
-        if (!this._mouseDown) {
-          this._camera.position.set(mouse.x, mouse.y, mouse.z);
-        }
-      } else if (mouse && !this._cameraClients[targetId]) {
-        const el = document.createElement('div');
-        el.className = 'jpcad-camera-client';
-        el.style.left = mouse.offsetX + 'px';
-        el.style.top = mouse.offsetY + 'px';
-        el.style.backgroundColor = remoteState.user.color;
-        el.innerText = remoteState.user.name;
-        this._cameraClients[targetId] = el;
-        this._cameraRef.current?.appendChild(el);
-      } else if (!mouse && this._cameraClients[targetId]) {
-        this._cameraRef.current?.removeChild(this._cameraClients[targetId]!);
-        this._cameraClients[targetId] = undefined;
-      }
-    } else {
-      // Sync local state updated by other components
-      const localState = clients.get(clientId);
-      if (localState) {
-        if (
-          localState.selected?.emitter &&
-          localState.selected?.emitter !== this.state.id
-        ) {
-          if (this._selectedMesh?.name !== localState.selected.value) {
-            const selectedMesh = this._meshGroup?.children.filter(
-              obj => obj.name === localState.selected.value
-            );
+    clients.forEach((clientState, clientId) => {
+      const pointer = clientState.pointer?.value;
 
-            if (selectedMesh?.length) {
-              this._selectedMesh = selectedMesh[0] as THREE.Mesh<
-                THREE.BufferGeometry,
-                THREE.MeshBasicMaterial
-              >;
-            } else {
-              this._selectedMesh = null;
-            }
-          }
+      if (!this._collaboratorPointers[clientId]) {
+        // Getting user color
+        let clientColor: Color.RGBColor | null = null;
+
+        if (clientState.user.color.startsWith('var')) {
+          clientColor = Color.color(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              clientState.user.color.slice(4, -1)
+            )
+          ) as Color.RGBColor;
         } else {
-          this._selectedMesh = null;
+          clientColor = Color.color(clientState.user.color) as Color.RGBColor;
         }
+
+        const material = new THREE.MeshBasicMaterial({
+          color: clientColor
+            ? new THREE.Color(clientColor.r, clientColor.g, clientColor.b)
+            : 'black'
+        });
+        const mesh = new THREE.Mesh(this._pointerGeometry, material);
+
+        this._collaboratorPointers[clientId] = mesh;
+        this._scene.add(mesh);
       }
-    }
+
+      const collaboratorPointer = this._collaboratorPointers[clientId];
+
+      if (pointer) {
+        collaboratorPointer.visible = true;
+        collaboratorPointer.position.copy(
+          new THREE.Vector3(pointer[0], pointer[1], pointer[2])
+        );
+      } else {
+        collaboratorPointer.visible = false;
+      }
+    });
   };
 
   private _handleThemeChange = (): void => {
@@ -645,10 +613,6 @@ export class MainView extends React.Component<IProps, IStates> {
   private _messageChannel?: MessageChannel;
 
   private _pointer: THREE.Vector2;
-  private _hoveredMesh: THREE.Mesh<
-    THREE.BufferGeometry,
-    THREE.MeshBasicMaterial
-  > | null = null;
   private _selectedMesh: THREE.Mesh<
     THREE.BufferGeometry,
     THREE.MeshBasicMaterial
@@ -658,8 +622,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _scene: THREE.Scene; // Threejs scene
   private _camera: THREE.PerspectiveCamera; // Threejs camera
-  private _pickingScene: THREE.Scene; // Threejs scene for the mouse picking
-  private _pickingTexture: THREE.WebGLRenderTarget;
+  private _raycaster = new THREE.Raycaster();
   private _renderer: THREE.WebGLRenderer; // Threejs render
   private _requestID: any = null; // ID of window.requestAnimationFrame
   private _geometry: THREE.BufferGeometry; // Threejs BufferGeometry
@@ -668,6 +631,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _sceneAxe: (THREE.ArrowHelper | Line2)[]; // Array of  X, Y and Z axe
   private _controls: any; // Threejs control
   private _resizeTimeout: any;
-  private _mouseDown = false;
-  private _cameraClients: IDict<HTMLElement | undefined>;
+  // private _mouseDown = false;
+  private _collaboratorPointers: IDict<THREE.Mesh>;
+  private _pointerGeometry: THREE.SphereGeometry;
 }

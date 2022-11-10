@@ -3,6 +3,7 @@ import { IChangedArgs } from '@jupyterlab/coreutils';
 import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
 import { MapChange, YDocument } from '@jupyterlab/shared-models';
 import { ReactWidget } from '@jupyterlab/ui-components';
+import { ICurrentUser } from '@jupyterlab/collaboration';
 import { ISignal, Signal } from '@lumino/signaling';
 import * as Y from 'yjs';
 
@@ -89,12 +90,22 @@ export interface IWorkerInitialized {
 
 export type IMainMessage = IDisplayShape | IWorkerInitialized;
 
-export type Position = {
-  offsetX: number;
-  offsetY: number;
+/**
+ * Position of the user pointer in the 3D environment
+ */
+export type PointerPosition = {
   x: number;
   y: number;
   z: number;
+};
+
+/**
+ * Position and orientation of the user Camera
+ */
+export type Camera = {
+  position: number[];
+  rotation: number[];
+  up: number[];
 };
 
 export interface IJcadObjectDocChange {
@@ -112,7 +123,9 @@ export interface IJupyterCadDocChange {
   }>;
   optionChange?: MapChange;
 }
+
 export type IJCadObjectDoc = Y.Map<any>;
+
 export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   objects: Y.Array<IJCadObjectDoc>;
   options: Y.Map<any>;
@@ -124,10 +137,12 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
 }
 
 export interface IJupyterCadClientState {
-  mouse: { value?: Position | null; emitter?: string | null };
-  selected: { value?: string | null; emitter?: string | null };
-  user: any;
+  pointer: { value?: PointerPosition; emitter?: string | null };
+  camera: { value?: Camera; emitter?: string | null };
+  selected: { value?: string; emitter?: string | null };
+  user: ICurrentUser;
 }
+
 export interface IJupyterCadModel extends DocumentRegistry.IModel {
   isDisposed: boolean;
   sharedModelChanged: ISignal<IJupyterCadModel, IJupyterCadDocChange>;
@@ -143,12 +158,14 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   getWorker(): Worker;
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;
-  syncCamera(pos: Position | undefined, emitter?: string): void;
-  syncSelectedObject(name: string | null, emitter?: string): void;
+  syncPointer(position: PointerPosition | undefined, emitter?: string): void;
+  syncCamera(camera: Camera | undefined, emitter?: string): void;
+  syncSelectedObject(name: string | undefined, emitter?: string): void;
   getClientId(): number;
 }
 
 export type IJupyterCadWidget = IDocumentWidget<ReactWidget, IJupyterCadModel>;
+
 export interface IControlPanelModel {
   disconnect(f: any): void;
   documentChanged: ISignal<IJupyterCadTracker, IJupyterCadWidget | null>;
