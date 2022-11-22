@@ -92,13 +92,16 @@ export class MainView extends React.Component<IProps, IStates> {
       this._messageChannel.port1.onmessage = msgEvent => {
         this.messageHandler(msgEvent.data);
       };
-      this.postMessage(
+      this._postMessage(
         { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
         this._messageChannel.port2
       );
       this._model.themeChanged.connect(this._handleThemeChange);
       this._model.clientStateChanged.connect(this._onClientSharedStateChanged);
     });
+    if (this._raycaster.params.Line) {
+      this._raycaster.params.Line.threshold = 0.1;
+    }
   }
 
   componentDidMount(): void {
@@ -114,7 +117,7 @@ export class MainView extends React.Component<IProps, IStates> {
     window.cancelAnimationFrame(this._requestID);
     window.removeEventListener('resize', this._handleWindowResize);
     this._controls.dispose();
-    this.postMessage({
+    this._postMessage({
       action: WorkerAction.CLOSE_FILE,
       payload: {
         fileName: this._context.path
@@ -244,8 +247,6 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       this._controls = controls;
 
-      this._pointerGeometry = new THREE.SphereGeometry(1, 32, 32);
-
       this._camera.addEventListener('change', () => {
         this._model.syncCamera(
           {
@@ -332,7 +333,7 @@ export class MainView extends React.Component<IProps, IStates> {
   messageHandler = (msg: IMainMessage): void => {
     switch (msg.action) {
       case MainAction.DISPLAY_SHAPE: {
-        this.shapeToMesh(msg.payload);
+        this._shapeToMesh(msg.payload);
         break;
       }
       case MainAction.INITIALIZED: {
@@ -340,7 +341,7 @@ export class MainView extends React.Component<IProps, IStates> {
           return;
         }
         const render = () => {
-          this.postMessage({
+          this._postMessage({
             action: WorkerAction.LOAD_FILE,
             payload: {
               fileName: this._context.path,
@@ -394,7 +395,7 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   }
 
-  private shapeToMesh = (payload: IDisplayShape['payload']) => {
+  private _shapeToMesh = (payload: IDisplayShape['payload']) => {
     if (this._meshGroup !== null) {
       this._scene.remove(this._meshGroup);
     }
@@ -410,7 +411,9 @@ export class MainView extends React.Component<IProps, IStates> {
       const triangles: Array<any> = [];
 
       let vInd = 0;
-
+      if (faceList.length === 0) {
+        return;
+      }
       faceList.forEach(face => {
         // Copy Vertices into three.js Vector3 List
         vertices.push(...face.vertexCoord);
@@ -484,7 +487,6 @@ export class MainView extends React.Component<IProps, IStates> {
     const oldRefLength = this._refLength || 1;
     this._refLength =
       Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
-
     this._camera.lookAt(this._scene.position);
     if (oldRefLength !== this._refLength) {
       this._camera.position.set(
@@ -504,7 +506,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this.setState(old => ({ ...old, loading: false }));
   };
 
-  private postMessage = (
+  private _postMessage = (
     msg: Omit<IWorkerMessage, 'id'>,
     port?: MessagePort
   ) => {
@@ -544,6 +546,13 @@ export class MainView extends React.Component<IProps, IStates> {
             ? new THREE.Color(clientColor.r, clientColor.g, clientColor.b)
             : 'black'
         });
+
+        const pointerDiameter = (this._refLength ?? 10) / 10;
+        this._pointerGeometry = new THREE.SphereGeometry(
+          pointerDiameter,
+          32,
+          32
+        );
         const mesh = new THREE.Mesh(this._pointerGeometry, material);
 
         this._collaboratorPointers[clientId] = mesh;
