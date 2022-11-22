@@ -248,7 +248,7 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       this._controls = controls;
 
-      this._camera.addEventListener('change', () => {
+      this._controls.addEventListener('change', () => {
         this._model.syncCamera(
           {
             position: this._camera.position.toArray([]),
@@ -564,10 +564,20 @@ export class MainView extends React.Component<IProps, IStates> {
   ): void => {
     const remoteUser = this._model.localState?.remoteUser;
     if (remoteUser) {
+      const remoteState = clients.get(remoteUser)!;
+      // Sync camera
+      const remoteCamera = remoteState.camera;
+      if (remoteCamera?.value) {
+        const { position, rotation, up } = remoteCamera.value;
+        this._camera.position.set(position[0], position[1], position[2]);
+        this._camera.rotation.set(rotation[0], rotation[1], rotation[2]);
+        this._camera.up.set(up[0], up[1], up[2]);
+      }
+
+      // Sync pointer
       if (this._localPointer) {
         this._localPointer.visible = false;
       }
-      const remoteState = clients.get(remoteUser)!;
       const pointer = remoteState.pointer?.value;
       if (!this._collaboratorPointers[remoteUser]) {
         // Getting user color
