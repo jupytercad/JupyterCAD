@@ -1,6 +1,6 @@
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { IModelDB, ModelDB } from '@jupyterlab/observables';
-import { YDocument } from '@jupyterlab/shared-models';
+import { YDocument } from '@jupyter-notebook/ydoc';
 import { PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import Ajv from 'ajv';
@@ -24,6 +24,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.modelDB = modelDB || new ModelDB();
     this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
+    
   }
 
   get isDisposed(): boolean {

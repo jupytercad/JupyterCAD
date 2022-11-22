@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ToolbarModel } from './model';
 import { OperatorToolbarReact } from './operatortoolbar';
 import { PartToolbarReact } from './parttoolbar';
+import { UserToolbarReact } from './usertoolbar';
 
 interface IProps {
   toolbarModel: ToolbarModel;
@@ -21,13 +22,7 @@ export class ToolbarReact extends React.Component<IProps, IState> {
 
   render(): React.ReactNode {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center'
-        }}
-      >
+      <div className="jpcad-toolbar-react-widget">
         <div className="jp-HTMLSelect jp-DefaultStyle jp-Notebook-toolbarCellTypeDropdown">
           <select
             onChange={e =>
@@ -72,7 +67,7 @@ export class ToolbarReact extends React.Component<IProps, IState> {
         {this.state.selected === 'OPERATOR' && (
           <OperatorToolbarReact toolbarModel={this.props.toolbarModel} />
         )}
-        {/* <OperatorToolbarReact toolbarModel={this.props.toolbarModel} /> */}
+        <UserToolbarReact toolbarModel={this.props.toolbarModel} />
       </div>
     );
   }

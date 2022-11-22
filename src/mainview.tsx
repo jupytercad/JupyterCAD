@@ -524,6 +524,7 @@ export class MainView extends React.Component<IProps, IStates> {
     sender: JupyterCadModel,
     clients: Map<number, IJupyterCadClientState>
   ): void => {
+ 
     clients.forEach((clientState, clientId) => {
       const pointer = clientState.pointer?.value;
 

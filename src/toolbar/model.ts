@@ -4,6 +4,7 @@ import { DocumentRegistry } from '@jupyterlab/docregistry';
 import formSchema from '../_interface/forms.json';
 import { IJupyterCadDoc } from '../types';
 import { JupyterCadModel } from './../model';
+import { User } from '@jupyterlab/services';
 
 export class ToolbarModel {
   constructor(options: ToolbarModel.IOptions) {
@@ -20,6 +21,19 @@ export class ToolbarModel {
 
   get allObject(): IJCadModel {
     return this._context.model.getAllObject();
+  }
+
+  get users(): Map<number, User.IIdentity>{
+    const state = this._sharedModel?.awareness.getStates()
+    console.log('state', state);
+    
+    const users = new Map<number, User.IIdentity>()
+    if(state){
+      state.forEach((val, key)=>{
+        users.set(key, val.user)
+      })
+    }
+    return users
   }
 
   async ready(): Promise<void> {

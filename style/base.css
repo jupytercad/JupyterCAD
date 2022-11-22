@@ -175,3 +175,19 @@ div.field.field-array > label + span {
 .jp-SchemaForm legend {
   position: inherit;
 }
+
+.jpcad-toolbar-widget .jp-Toolbar-item{
+ flex-grow: 1; 
+}
+
+.jpcad-toolbar-usertoolbar{
+  flex-grow: 1; 
+  display: flex;
+  flex-direction: row-reverse;
+}
+.jpcad-toolbar-react-widget{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-grow: 1;
+}

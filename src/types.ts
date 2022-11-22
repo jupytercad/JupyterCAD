@@ -1,9 +1,9 @@
 import { IJCadObject } from './_interface/jcad.d';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
-import { MapChange, YDocument } from '@jupyterlab/shared-models';
+import { MapChange, YDocument, StateChange } from '@jupyter-notebook/ydoc';
 import { ReactWidget } from '@jupyterlab/ui-components';
-import { ICurrentUser } from '@jupyterlab/collaboration';
+import { User } from '@jupyterlab/services';
 import { ISignal, Signal } from '@lumino/signaling';
 import * as Y from 'yjs';
 
@@ -122,6 +122,7 @@ export interface IJupyterCadDocChange {
     newValue: any;
   }>;
   optionChange?: MapChange;
+  stateChange?: StateChange<any>[]
 }
 
 export type IJCadObjectDoc = Y.Map<any>;
@@ -140,7 +141,7 @@ export interface IJupyterCadClientState {
   pointer: { value?: PointerPosition; emitter?: string | null };
   camera: { value?: Camera; emitter?: string | null };
   selected: { value?: string; emitter?: string | null };
-  user: ICurrentUser;
+  user: User.IIdentity
 }
 
 export interface IJupyterCadModel extends DocumentRegistry.IModel {
