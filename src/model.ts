@@ -24,7 +24,6 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.modelDB = modelDB || new ModelDB();
     this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
-    
   }
 
   get isDisposed(): boolean {
@@ -167,6 +166,10 @@ export class JupyterCadModel implements IJupyterCadModel {
 
   getClientId(): number {
     return this.sharedModel.awareness.clientID;
+  }
+
+  get localState(): IJupyterCadClientState | null {
+    return this.sharedModel.awareness.getLocalState() as IJupyterCadClientState | null;
   }
 
   get clientStateChanged(): ISignal<this, Map<number, IJupyterCadClientState>> {

@@ -18,6 +18,7 @@ import {
 
 import { v4 as uuid } from 'uuid';
 import { JupyterCadModel } from './model';
+import { User } from '@jupyterlab/services';
 import {
   IDict,
   IDisplayShape,
@@ -362,7 +363,6 @@ export class MainView extends React.Component<IProps, IStates> {
     this._pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
     const picked = this._pick();
-
     if (picked) {
       this._model.syncPointer(picked.position);
     } else {
@@ -487,6 +487,7 @@ export class MainView extends React.Component<IProps, IStates> {
     const oldRefLength = this._refLength || 1;
     this._refLength =
       Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
+    this._updatePointers();
     this._camera.lookAt(this._scene.position);
     if (oldRefLength !== this._refLength) {
       this._camera.position.set(
@@ -520,47 +521,64 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   };
 
+  private _updatePointers(): void {
+    const newGeometry = new THREE.SphereGeometry(this._refLength / 10, 32, 32);
+    if (this._localPointer) {
+      this._localPointer.geometry = newGeometry;
+    }
+    for (const clientId in this._collaboratorPointers) {
+      this._collaboratorPointers[clientId].geometry = newGeometry;
+    }
+  }
+
+  private _createPointer(user: User.IIdentity): THREE.Mesh {
+    let clientColor: Color.RGBColor | null = null;
+
+    if (user.color.startsWith('var')) {
+      clientColor = Color.color(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          user.color.slice(4, -1)
+        )
+      ) as Color.RGBColor;
+    } else {
+      clientColor = Color.color(user.color) as Color.RGBColor;
+    }
+
+    const material = new THREE.MeshBasicMaterial({
+      color: clientColor
+        ? new THREE.Color(clientColor.r, clientColor.g, clientColor.b)
+        : 'black'
+    });
+    const pointerGeometry = new THREE.SphereGeometry(
+      this._refLength / 10,
+      32,
+      32
+    );
+    const mesh = new THREE.Mesh(pointerGeometry, material);
+    return mesh;
+  }
+
   private _onClientSharedStateChanged = (
     sender: JupyterCadModel,
     clients: Map<number, IJupyterCadClientState>
   ): void => {
- 
-    clients.forEach((clientState, clientId) => {
-      const pointer = clientState.pointer?.value;
-
-      if (!this._collaboratorPointers[clientId]) {
+    const remoteUser = this._model.localState?.remoteUser;
+    if (remoteUser) {
+      if (this._localPointer) {
+        this._localPointer.visible = false;
+      }
+      const remoteState = clients.get(remoteUser)!;
+      const pointer = remoteState.pointer?.value;
+      if (!this._collaboratorPointers[remoteUser]) {
         // Getting user color
-        let clientColor: Color.RGBColor | null = null;
 
-        if (clientState.user.color.startsWith('var')) {
-          clientColor = Color.color(
-            getComputedStyle(document.documentElement).getPropertyValue(
-              clientState.user.color.slice(4, -1)
-            )
-          ) as Color.RGBColor;
-        } else {
-          clientColor = Color.color(clientState.user.color) as Color.RGBColor;
-        }
-
-        const material = new THREE.MeshBasicMaterial({
-          color: clientColor
-            ? new THREE.Color(clientColor.r, clientColor.g, clientColor.b)
-            : 'black'
-        });
-
-        const pointerDiameter = (this._refLength ?? 10) / 10;
-        this._pointerGeometry = new THREE.SphereGeometry(
-          pointerDiameter,
-          32,
-          32
+        this._collaboratorPointers[remoteUser] = this._createPointer(
+          remoteState.user
         );
-        const mesh = new THREE.Mesh(this._pointerGeometry, material);
-
-        this._collaboratorPointers[clientId] = mesh;
-        this._scene.add(mesh);
+        this._scene.add(this._collaboratorPointers[remoteUser]);
       }
 
-      const collaboratorPointer = this._collaboratorPointers[clientId];
+      const collaboratorPointer = this._collaboratorPointers[remoteUser];
 
       if (pointer) {
         collaboratorPointer.visible = true;
@@ -570,7 +588,25 @@ export class MainView extends React.Component<IProps, IStates> {
       } else {
         collaboratorPointer.visible = false;
       }
-    });
+    } else {
+      Object.values(this._collaboratorPointers).forEach(
+        p => (p.visible = false)
+      );
+      const localState = this._model.localState!;
+      const pointer = localState.pointer?.value;
+      if (!this._localPointer) {
+        this._localPointer = this._createPointer(localState.user);
+        this._scene.add(this._localPointer);
+      }
+      if (pointer) {
+        this._localPointer.visible = true;
+        this._localPointer.position.copy(
+          new THREE.Vector3(pointer[0], pointer[1], pointer[2])
+        );
+      } else {
+        this._localPointer.visible = false;
+      }
+    }
   };
 
   private _handleThemeChange = (): void => {
@@ -643,5 +679,5 @@ export class MainView extends React.Component<IProps, IStates> {
   private _resizeTimeout: any;
   // private _mouseDown = false;
   private _collaboratorPointers: IDict<THREE.Mesh>;
-  private _pointerGeometry: THREE.SphereGeometry;
+  private _localPointer?: THREE.Mesh;
 }

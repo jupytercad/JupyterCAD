@@ -1,37 +1,86 @@
 import * as React from 'react';
-import {User} from '@jupyterlab/services'
-import { ToolbarModel } from './model';
-// import { Button } from '@jupyterlab/ui-components';
-// import { IDict } from '../types';
-// import { FormDialog } from './formdialog';
-// import * as Y from 'yjs';
+import { ToolbarModel, IUserData } from './model';
+
 interface IProps {
   toolbarModel: ToolbarModel;
 }
 
 interface IState {
-  userList: Map<number, User.IIdentity>
+  usersList: IUserData[];
+  selectedUser?: IUserData;
 }
 
 export class UserToolbarReact extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-    this._model = props.toolbarModel
-    this.state = {userList: new Map()}
-    this._model.ready().then(()=>{
-      console.log(this._model.users);
-      this.setState(old =>({..old, userList: this._model.users}))
-    })
+    this._model = props.toolbarModel;
+    this.state = { usersList: [] };
+    this._model.ready().then(() => {
+      this.setState(old => ({ ...old, usersList: this._model.users }));
+      this._model.userChanged.connect((_, usersList) => {
+        this.setState(old => ({ ...old, usersList: usersList }));
+      });
+    });
+  }
+
+  selectUser = (user: IUserData): void => {
+    let selected: IUserData | undefined = undefined;
+    if (user.userId !== this.state.selectedUser?.userId) {
+      selected = user;
+    }
+    this.setState(
+      old => ({ ...old, selectedUser: selected }),
+      () => {
+        this._model.setUserToFollow(selected?.userId);
+      }
+    );
+  };
+
+  private createUserIcon(options: IUserData): JSX.Element {
+    let el: JSX.Element;
+    const { userId, userData } = options;
+    const selected = `${
+      userId === this.state.selectedUser?.userId ? 'selected' : ''
+    }`;
+    if (userData.avatar_url) {
+      el = (
+        <div
+          key={userId}
+          title={userData.display_name}
+          className={`lm-MenuBar-itemIcon jp-MenuBar-imageIcon ${selected}`}
+          onClick={() => this.selectUser(options)}
+        >
+          <img src={userData.avatar_url} alt="" />
+        </div>
+      );
+    } else {
+      el = (
+        <div
+          key={userId}
+          title={userData.display_name}
+          className={`lm-MenuBar-itemIcon jp-MenuBar-anonymousIcon ${selected}`}
+          style={{ backgroundColor: userData.color }}
+          onClick={() => this.selectUser(options)}
+        >
+          <span>{userData.initials}</span>
+        </div>
+      );
+    }
+
+    return el;
   }
 
   render(): React.ReactNode {
-    
     return (
-      <div className='jpcad-toolbar-usertoolbar'>
-        
+      <div className="jpcad-toolbar-usertoolbar">
+        {this.state.usersList.map(item => {
+          if (item.userId !== this._model.currentUserId) {
+            return this.createUserIcon(item);
+          }
+        })}
       </div>
     );
   }
 
-  private _model: ToolbarModel
+  private _model: ToolbarModel;
 }

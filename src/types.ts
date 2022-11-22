@@ -122,7 +122,7 @@ export interface IJupyterCadDocChange {
     newValue: any;
   }>;
   optionChange?: MapChange;
-  stateChange?: StateChange<any>[]
+  stateChange?: StateChange<any>[];
 }
 
 export type IJCadObjectDoc = Y.Map<any>;
@@ -141,7 +141,8 @@ export interface IJupyterCadClientState {
   pointer: { value?: PointerPosition; emitter?: string | null };
   camera: { value?: Camera; emitter?: string | null };
   selected: { value?: string; emitter?: string | null };
-  user: User.IIdentity
+  user: User.IIdentity;
+  remoteUser?: number;
 }
 
 export interface IJupyterCadModel extends DocumentRegistry.IModel {
