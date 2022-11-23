@@ -136,51 +136,52 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     sender: IJupyterCadModel,
     clients: Map<number, IJupyterCadClientState>
   ): void => {
-    const targetId: number | null = null;
+    const remoteUser = this.props.cpModel.jcadModel?.localState?.remoteUser;
     const clientId = this.state.clientId;
-    if (targetId) {
-      //TODO Sync with remote user in the follow-mode
+    let newState: IJupyterCadClientState | undefined;
+    if (remoteUser) {
+      newState = clients.get(remoteUser);
     } else {
-      // Update from other components of current client
       const localState = clientId ? clients.get(clientId) : null;
+      if (
+        localState &&
+        localState.selected?.emitter &&
+        localState.selected.emitter !== this.state.id &&
+        localState.selected?.value
+      ) {
+        newState = localState;
+      }
+    }
+    if (newState) {
+      const selected = '' + newState.selected.value;
+      if (selected !== this.state.selectedObject) {
+        if (selected.length === 0) {
+          this.setState(old => ({
+            ...old,
+            schema: undefined,
+            selectedObjectData: undefined
+          }));
+          return;
+        }
 
-      if (localState) {
-        if (
-          localState.selected?.emitter &&
-          localState.selected.emitter !== this.state.id &&
-          localState.selected?.value
-        ) {
-          const selected = '' + localState.selected.value;
-          if (selected !== this.state.selectedObject) {
-            if (selected.length === 0) {
-              this.setState(old => ({
-                ...old,
-                schema: undefined,
-                selectedObjectData: undefined
-              }));
-              return;
-            }
-
-            const objectData = this.props.cpModel.jcadModel?.getAllObject();
-            if (objectData) {
-              let schema;
-              const selectedObj = itemFromName(selected, objectData);
-              if (!selectedObj) {
-                return;
-              }
-
-              if (selectedObj.shape) {
-                schema = formSchema[selectedObj.shape];
-              }
-              const selectedObjectData = selectedObj['parameters'];
-              this.setState(old => ({
-                ...old,
-                selectedObjectData,
-                selectedObject: selected,
-                schema
-              }));
-            }
+        const objectData = this.props.cpModel.jcadModel?.getAllObject();
+        if (objectData) {
+          let schema;
+          const selectedObj = itemFromName(selected, objectData);
+          if (!selectedObj) {
+            return;
           }
+
+          if (selectedObj.shape) {
+            schema = formSchema[selectedObj.shape];
+          }
+          const selectedObjectData = selectedObj['parameters'];
+          this.setState(old => ({
+            ...old,
+            selectedObjectData,
+            selectedObject: selected,
+            schema
+          }));
         }
       }
     }

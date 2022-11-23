@@ -157,6 +157,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     Map<number, IJupyterCadClientState>
   >;
   sharedModel: IJupyterCadDoc;
+  localState: IJupyterCadClientState | null;
   getWorker(): Worker;
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;

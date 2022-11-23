@@ -197,9 +197,16 @@ div.field.field-array > label + span {
   position: unset !important;
   margin-right: 2px;
   height: 22px;
+  box-sizing: border-box;
 }
 
 .jpcad-toolbar-usertoolbar .jp-MenuBar-anonymousIcon.selected,
-.jpcad-toolbar-usertoolbar .jp-MenuBar-imageIcon.selected{
-  border: solid 1px red;
+.jpcad-toolbar-usertoolbar .jp-MenuBar-imageIcon.selected {
+  border: solid 1.5px red;
+}
+
+.jcad-Mainview {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }

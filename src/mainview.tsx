@@ -51,6 +51,7 @@ interface IStates {
   //is the source of awareness updates.
   loading: boolean;
   lightTheme: boolean;
+  remoteUser?: User.IIdentity;
 }
 
 /**
@@ -565,6 +566,21 @@ export class MainView extends React.Component<IProps, IStates> {
     const remoteUser = this._model.localState?.remoteUser;
     if (remoteUser) {
       const remoteState = clients.get(remoteUser)!;
+      if (remoteState.user?.username !== this.state.remoteUser?.username) {
+        this.setState(old => ({ ...old, remoteUser: remoteState.user }));
+      }
+      // Sync selected
+      if (remoteState.selected.value) {
+        const selected = this._meshGroup?.getObjectByName(
+          remoteState.selected.value
+        );
+        if (selected) {
+          this._selectedMesh = selected as THREE.Mesh<
+            THREE.BufferGeometry,
+            THREE.MeshBasicMaterial
+          >;
+        }
+      }
       // Sync camera
       const remoteCamera = remoteState.camera;
       if (remoteCamera?.value) {
@@ -599,6 +615,8 @@ export class MainView extends React.Component<IProps, IStates> {
         collaboratorPointer.visible = false;
       }
     } else {
+      this.setState(old => ({ ...old, remoteUser: undefined }));
+
       Object.values(this._collaboratorPointers).forEach(
         p => (p.visible = false)
       );
@@ -635,9 +653,11 @@ export class MainView extends React.Component<IProps, IStates> {
   render(): JSX.Element {
     return (
       <div
+        className="jcad-Mainview"
         style={{
-          width: '100%',
-          height: 'calc(100%)'
+          border: this.state.remoteUser
+            ? `solid 3px ${this.state.remoteUser.color}`
+            : 'unset'
         }}
       >
         <div
@@ -647,7 +667,19 @@ export class MainView extends React.Component<IProps, IStates> {
           {' '}
           <div className={'jpcad-SpinnerContent'}></div>{' '}
         </div>
-        <div ref={this._cameraRef}></div>
+        {this.state.remoteUser?.display_name ? (
+          <div
+            style={{
+              position: 'absolute',
+              top: 1,
+              right: 3,
+              background: this.state.remoteUser.color
+            }}
+          >
+            {`Following ${this.state.remoteUser.display_name}`}
+          </div>
+        ) : null}
+
         <div
           ref={this.divRef}
           style={{
@@ -661,7 +693,6 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   private divRef = React.createRef<HTMLDivElement>(); // Reference of render div
-  private _cameraRef = React.createRef<HTMLDivElement>();
 
   private _context: DocumentRegistry.IContext<JupyterCadModel>;
   private _model: JupyterCadModel;
