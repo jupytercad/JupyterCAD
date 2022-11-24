@@ -141,6 +141,7 @@ export interface IJupyterCadClientState {
   pointer: { value?: PointerPosition; emitter?: string | null };
   camera: { value?: Camera; emitter?: string | null };
   selected: { value?: string; emitter?: string | null };
+  selectedPropField?: {id: string | null, value: any, filePath?: string};
   user: User.IIdentity;
   remoteUser?: number;
 }
@@ -164,6 +165,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   syncPointer(position: PointerPosition | undefined, emitter?: string): void;
   syncCamera(camera: Camera | undefined, emitter?: string): void;
   syncSelectedObject(name: string | undefined, emitter?: string): void;
+  syncSelectedPropField(data: {id: string | null, value: any, filePath?: string});
   getClientId(): number;
 }
 

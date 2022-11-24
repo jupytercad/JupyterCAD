@@ -565,7 +565,10 @@ export class MainView extends React.Component<IProps, IStates> {
   ): void => {
     const remoteUser = this._model.localState?.remoteUser;
     if (remoteUser) {
-      const remoteState = clients.get(remoteUser)!;
+      const remoteState = clients.get(remoteUser);
+      if(!remoteState){
+        return
+      }
       if (remoteState.user?.username !== this.state.remoteUser?.username) {
         this.setState(old => ({ ...old, remoteUser: remoteState.user }));
       }

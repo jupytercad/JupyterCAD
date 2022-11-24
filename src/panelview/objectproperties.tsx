@@ -86,7 +86,42 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     });
   }
 
-  _sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
+  syncObjectProperties(
+    objectName: string | undefined,
+    properties: { [key: string]: any }
+  ) {
+    if (!this.state.jcadObject || !objectName) {
+      return;
+    }
+
+    const currentYMap =
+      this.props.cpModel.jcadModel?.sharedModel.getObjectByName(objectName);
+    if (currentYMap) {
+      const newParams = {
+        ...(currentYMap.get('parameters') as IDict),
+        ...properties
+      };
+      currentYMap.set('parameters', newParams);
+    }
+  }
+
+  syncSelectedField = (id: string | null, value: any) => {
+    let property: string | null = null;
+    if (id) {
+      const prefix = id.split('_')[0];
+      property = id.substring(prefix.length);
+    }
+    this.props.cpModel.jcadModel?.syncSelectedPropField({
+      filePath: this.state.filePath,
+      id: property,
+      value
+    });
+  };
+
+  private _sharedJcadModelChanged = (
+    _,
+    changed: IJupyterCadDocChange
+  ): void => {
     this.setState(old => {
       if (old.selectedObject) {
         const jcadObject = this.props.cpModel.jcadModel?.getAllObject();
@@ -113,25 +148,35 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     });
   };
 
-  syncObjectProperties(
-    objectName: string | undefined,
-    properties: { [key: string]: any }
-  ) {
-    if (!this.state.jcadObject || !objectName) {
-      return;
-    }
-
-    const currentYMap =
-      this.props.cpModel.jcadModel?.sharedModel.getObjectByName(objectName);
-    if (currentYMap) {
-      const newParams = {
-        ...(currentYMap.get('parameters') as IDict),
-        ...properties
-      };
-      currentYMap.set('parameters', newParams);
+  private _focusInputField(fieldId?: string | null, color?: string): void {
+    const propsToRemove = ['border-color', 'box-shadow'];
+    if (!fieldId) {
+      if (this._lastSelectedPropFieldId) {
+        ObjectProperties.removeStyleFromProperty(
+          this.state.filePath,
+          this._lastSelectedPropFieldId,
+          propsToRemove
+        );
+      }
+    } else {
+      if (fieldId !== this._lastSelectedPropFieldId) {
+        ObjectProperties.removeStyleFromProperty(
+          this.state.filePath,
+          this._lastSelectedPropFieldId,
+          propsToRemove
+        );
+        const el = ObjectProperties.getElementFromProperty(
+          this.state.filePath,
+          fieldId
+        );
+        if (el) {
+          el.style.borderColor = color ?? 'red';
+          el.style.boxShadow = `inset 0 0 4px ${color ?? 'red'}`;
+        }
+        this._lastSelectedPropFieldId = fieldId;
+      }
     }
   }
-
   private _onClientSharedStateChanged = (
     sender: IJupyterCadModel,
     clients: Map<number, IJupyterCadClientState>
@@ -141,8 +186,20 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     let newState: IJupyterCadClientState | undefined;
     if (remoteUser) {
       newState = clients.get(remoteUser);
+
+      const id = newState?.selectedPropField?.id;
+      this._focusInputField(id, newState?.user?.color);
     } else {
       const localState = clientId ? clients.get(clientId) : null;
+      if (this._lastSelectedPropFieldId) {
+        ObjectProperties.removeStyleFromProperty(
+          this.state.filePath,
+          this._lastSelectedPropFieldId,
+          ['border-color', 'box-shadow']
+        );
+
+        this._lastSelectedPropFieldId = undefined;
+      }
       if (
         localState &&
         localState.selected?.emitter &&
@@ -190,16 +247,20 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   render(): React.ReactNode {
     return this.state.schema && this.state.selectedObjectData ? (
       <ObjectPropertiesForm
+        filePath={this.state.filePath}
         schema={this.state.schema}
         sourceData={this.state.selectedObjectData}
         syncData={(properties: { [key: string]: any }) => {
           this.syncObjectProperties(this.state.selectedObject, properties);
         }}
+        syncSelectedField={this.syncSelectedField}
       />
     ) : (
       <div></div>
     );
   }
+
+  private _lastSelectedPropFieldId?: string;
 }
 
 export namespace ObjectProperties {
@@ -208,5 +269,33 @@ export namespace ObjectProperties {
    */
   export interface IOptions extends Panel.IOptions {
     controlPanelModel: IControlPanelModel;
+  }
+
+  export function getElementFromProperty(
+    filePath?: string | null,
+    prop?: string | null
+  ): HTMLElement | undefined | null {
+    if (!filePath || !prop) {
+      return;
+    }
+    const parent = document.querySelector(`[data-path="${filePath}"]`);
+    if (parent) {
+      const el = parent.querySelector(`[id$=${prop}]`);
+      return el as HTMLElement;
+    }
+  }
+
+  export function removeStyleFromProperty(
+    filePath: string | null | undefined,
+    prop: string | null | undefined,
+    properties: string[]
+  ): void {
+    if (!filePath || !prop || properties.length === 0) {
+      return;
+    }
+    const el = getElementFromProperty(filePath, prop);
+    if (el) {
+      properties.forEach(prop => el.style.removeProperty(prop));
+    }
   }
 }

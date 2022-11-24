@@ -164,6 +164,10 @@ export class JupyterCadModel implements IJupyterCadModel {
     });
   }
 
+  syncSelectedPropField(data: {id: string | null, value: any, filePath: string}): void {
+    this.sharedModel.awareness.setLocalStateField('selectedPropField', data)
+  }
+
   getClientId(): number {
     return this.sharedModel.awareness.clientID;
   }
