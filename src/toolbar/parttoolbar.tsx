@@ -1,9 +1,11 @@
-import * as React from 'react';
-import { ToolbarModel } from './model';
 import { Button } from '@jupyterlab/ui-components';
+import * as React from 'react';
+import * as Y from 'yjs';
+
 import { IDict } from '../types';
 import { FormDialog } from './formdialog';
-import * as Y from 'yjs';
+import { ToolbarModel } from './model';
+
 interface IProps {
   toolbarModel: ToolbarModel;
 }
@@ -84,6 +86,7 @@ export class PartToolbarReact extends React.Component<IProps> {
             className={'jp-ToolbarButtonComponent'}
             style={{ color: 'var(--jp-ui-font-color1)' }}
             onClick={async () => {
+              await this.props.toolbarModel.syncFormData(value);
               const dialog = new FormDialog({
                 title: value.title,
                 sourceData: value.default,
@@ -102,7 +105,7 @@ export class PartToolbarReact extends React.Component<IProps> {
                     model.addObject(object);
                   }
                 },
-                cancelButton: true
+                cancelButton: () => {this.props.toolbarModel.syncFormData(undefined)}
               });
               await dialog.launch();
             }}

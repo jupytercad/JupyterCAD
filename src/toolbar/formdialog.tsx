@@ -7,7 +7,7 @@ export interface IFormDialogOptions {
   schema: IDict;
   sourceData: IDict;
   syncData: (props: IDict) => void;
-  cancelButton: boolean;
+  cancelButton: (()=> void )| boolean;
   title: string;
 }
 
@@ -15,7 +15,12 @@ export class FormDialog extends Dialog<IDict> {
   constructor(options: IFormDialogOptions) {
     let cancelCallback: (() => void) | undefined = undefined;
     if (options.cancelButton) {
-      cancelCallback = () => this.resolve(0);
+      cancelCallback = () =>{
+        if(options.cancelButton !== true && options.cancelButton !== false){
+          options.cancelButton()
+        }
+        this.resolve(0)
+        };
     }
     const body = (
       <div style={{ overflow: 'hidden' }}>

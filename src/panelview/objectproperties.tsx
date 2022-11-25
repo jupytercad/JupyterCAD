@@ -148,7 +148,11 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     });
   };
 
-  private _focusInputField(fieldId?: string | null, color?: string): void {
+  private _focusInputField(
+    fieldId?: string | null,
+    value?: any,
+    color?: string
+  ): void {
     const propsToRemove = ['border-color', 'box-shadow'];
     if (!fieldId) {
       if (this._lastSelectedPropFieldId) {
@@ -157,6 +161,17 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
           this._lastSelectedPropFieldId,
           propsToRemove
         );
+        if(value){
+          const el = ObjectProperties.getElementFromProperty(
+            this.state.filePath,
+            this._lastSelectedPropFieldId
+          );
+          if (el?.tagName?.toLowerCase() === 'input') {
+            (el as HTMLInputElement).value = value;
+          }
+
+        }
+        this._lastSelectedPropFieldId = undefined
       }
     } else {
       if (fieldId !== this._lastSelectedPropFieldId) {
@@ -188,7 +203,8 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       newState = clients.get(remoteUser);
 
       const id = newState?.selectedPropField?.id;
-      this._focusInputField(id, newState?.user?.color);
+      const value = newState?.selectedPropField?.value;
+      this._focusInputField(id, value, newState?.user?.color);
     } else {
       const localState = clientId ? clients.get(clientId) : null;
       if (this._lastSelectedPropFieldId) {

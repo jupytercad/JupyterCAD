@@ -1,6 +1,6 @@
 import { Signal, ISignal } from '@lumino/signaling';
 import { IJCadModel } from './../_interface/jcad.d';
-import { IDict } from './../types';
+import { IDict, IJupyterCadModel } from './../types';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import formSchema from '../_interface/forms.json';
 import { IJupyterCadDoc } from '../types';
@@ -48,6 +48,10 @@ export class ToolbarModel {
     return this._userChanged;
   }
 
+  get jcadModel(): IJupyterCadModel | undefined {
+    return this._context.model
+  }
+
   async ready(): Promise<void> {
     await this._context.ready;
     this._sharedModel = this._context.model.sharedModel;
@@ -61,6 +65,13 @@ export class ToolbarModel {
   setUserToFollow(userId?: number): void {
     if (this._sharedModel) {
       this._sharedModel.awareness.setLocalStateField('remoteUser', userId);
+    }
+  }
+
+  syncFormData(form: any): void {
+ 
+    if (this._sharedModel) {
+      this._sharedModel.awareness.setLocalStateField('toolbarForm', form);
     }
   }
 

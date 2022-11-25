@@ -144,6 +144,7 @@ export interface IJupyterCadClientState {
   selectedPropField?: {id: string | null, value: any, filePath?: string};
   user: User.IIdentity;
   remoteUser?: number;
+  toolbarForm?: IDict
 }
 
 export interface IJupyterCadModel extends DocumentRegistry.IModel {
