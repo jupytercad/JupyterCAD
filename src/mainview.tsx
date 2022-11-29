@@ -524,7 +524,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _updatePointers(): void {
     const newGeometry = new THREE.SphereGeometry(this._refLength / 10, 32, 32);
-    
+
     if (this._localPointer) {
       this._localPointer.geometry = newGeometry;
     }
@@ -545,11 +545,11 @@ export class MainView extends React.Component<IProps, IStates> {
     } else {
       clientColor = Color.color(user.color) as Color.RGBColor;
     }
-    
+
     const material = new THREE.MeshBasicMaterial({
       color: clientColor
-      ? new THREE.Color(clientColor.r, clientColor.g, clientColor.b)
-      : 'black'
+        ? new THREE.Color(clientColor.r, clientColor.g, clientColor.b)
+        : 'black'
     });
     const pointerGeometry = new THREE.SphereGeometry(
       this._refLength / 10,
@@ -567,8 +567,8 @@ export class MainView extends React.Component<IProps, IStates> {
     const remoteUser = this._model.localState?.remoteUser;
     if (remoteUser) {
       const remoteState = clients.get(remoteUser);
-      if(!remoteState){
-        return
+      if (!remoteState) {
+        return;
       }
       if (remoteState.user?.username !== this.state.remoteUser?.username) {
         this.setState(old => ({ ...old, remoteUser: remoteState.user }));
@@ -585,8 +585,8 @@ export class MainView extends React.Component<IProps, IStates> {
           >;
         }
       } else {
-        this._selectedMesh = null
-      } 
+        this._selectedMesh = null;
+      }
       // Sync camera
       const remoteCamera = remoteState.camera;
       if (remoteCamera?.value) {
@@ -627,8 +627,8 @@ export class MainView extends React.Component<IProps, IStates> {
         p => (p.visible = false)
       );
       const localState = this._model.localState;
-      if(!localState){
-        return
+      if (!localState) {
+        return;
       }
       const pointer = localState.pointer?.value;
       if (!this._localPointer) {

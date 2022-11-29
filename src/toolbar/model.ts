@@ -15,6 +15,10 @@ export interface IUserData {
 export class ToolbarModel {
   constructor(options: ToolbarModel.IOptions) {
     this._context = options.context;
+    this._context.ready.then(() => {
+      this._filePath = this._context.path;
+    });
+
     this._prepareSchema();
   }
   get sharedModel(): IJupyterCadDoc | undefined {
@@ -49,7 +53,11 @@ export class ToolbarModel {
   }
 
   get jcadModel(): IJupyterCadModel | undefined {
-    return this._context.model
+    return this._context.model;
+  }
+
+  get filePath(): string | undefined {
+    return this._filePath;
   }
 
   async ready(): Promise<void> {
@@ -69,11 +77,22 @@ export class ToolbarModel {
   }
 
   syncFormData(form: any): void {
- 
     if (this._sharedModel) {
       this._sharedModel.awareness.setLocalStateField('toolbarForm', form);
     }
   }
+
+  syncSelectedPropField = (
+    id: string | null,
+    value: any,
+    parentType: 'panel' | 'dialog'
+  ): void => {
+    this.jcadModel?.syncSelectedPropField({
+      parentType,
+      id,
+      value
+    });
+  };
 
   private _prepareSchema(): void {
     Object.keys(this._formSchema).forEach(key => {
@@ -94,6 +113,7 @@ export class ToolbarModel {
   private _formSchema = JSON.parse(JSON.stringify(formSchema));
   private _userChanged = new Signal<this, IUserData[]>(this);
   private _usersMap?: Map<number, any>;
+  private _filePath?: string;
 }
 
 export namespace ToolbarModel {

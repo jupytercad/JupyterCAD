@@ -77,6 +77,18 @@ export class PartToolbarReact extends React.Component<IProps> {
     }
   };
 
+  syncSelectedField = (
+    id: string | null,
+    value: any,
+    parentType: 'panel' | 'dialog'
+  ): void => {
+    let property: string | null = null;
+    if (id) {
+      const prefix = id.split('_')[0];
+      property = id.substring(prefix.length);
+    }
+    this.props.toolbarModel?.syncSelectedPropField(property, value, parentType);
+  };
   render(): React.ReactNode {
     return (
       <div style={{ paddingLeft: '10px', display: 'flex' }}>
@@ -88,6 +100,7 @@ export class PartToolbarReact extends React.Component<IProps> {
             onClick={async () => {
               await this.props.toolbarModel.syncFormData(value);
               const dialog = new FormDialog({
+                toolbarModel: this.props.toolbarModel,
                 title: value.title,
                 sourceData: value.default,
                 schema: value.schema,
@@ -105,7 +118,10 @@ export class PartToolbarReact extends React.Component<IProps> {
                     model.addObject(object);
                   }
                 },
-                cancelButton: () => {this.props.toolbarModel.syncFormData(undefined)}
+                cancelButton: () => {
+                  this.props.toolbarModel.syncFormData(undefined);
+                },
+                syncSelectedPropField: this.syncSelectedField
               });
               await dialog.launch();
             }}

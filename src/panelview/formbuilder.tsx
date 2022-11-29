@@ -10,10 +10,15 @@ interface IStates {
   schema?: IDict;
 }
 interface IProps {
+  parentType: 'dialog' | 'panel';
   sourceData: IDict | undefined;
-  filePath?: string,
+  filePath?: string;
   syncData: (properties: IDict) => void;
-  syncSelectedField?: (id: string | null, value: any) => void;
+  syncSelectedField?: (
+    id: string | null,
+    value: any,
+    parentType: 'panel' | 'dialog'
+  ) => void;
   schema?: IDict;
   cancel?: () => void;
 }
@@ -151,10 +156,14 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
         liveValidate: true,
         formData: this.state.internalData,
         onSubmit: this.onFormSubmit,
-        onFocus: this.props.syncSelectedField,
+        onFocus: (id, value) => {
+          this.props.syncSelectedField
+            ? this.props.syncSelectedField(id, value, this.props.parentType)
+            : null;
+        },
         onBlur: (id, value) => {
           this.props.syncSelectedField
-            ? this.props.syncSelectedField(null, value)
+            ? this.props.syncSelectedField(null, value, this.props.parentType)
             : null;
         },
         uiSchema: this.generateUiSchema(this.props.schema),
@@ -163,7 +172,10 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
         )
       });
       return (
-        <div className="jpcad-property-panel" data-path={this.props.filePath ?? ''}>
+        <div
+          className="jpcad-property-panel"
+          data-path={this.props.filePath ?? ''}
+        >
           <div className="jpcad-property-outer">
             <LuminoSchemaForm>{formSchema}</LuminoSchemaForm>
           </div>

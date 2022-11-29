@@ -2,7 +2,11 @@ import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
 import * as React from 'react';
-import { itemFromName } from '../tools';
+import {
+  focusInputField,
+  itemFromName,
+  removeStyleFromProperty
+} from '../tools';
 
 import {
   IControlPanelModel,
@@ -105,14 +109,18 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     }
   }
 
-  syncSelectedField = (id: string | null, value: any) => {
+  syncSelectedField = (
+    id: string | null,
+    value: any,
+    parentType: 'panel' | 'dialog'
+  ) => {
     let property: string | null = null;
     if (id) {
       const prefix = id.split('_')[0];
       property = id.substring(prefix.length);
     }
     this.props.cpModel.jcadModel?.syncSelectedPropField({
-      filePath: this.state.filePath,
+      parentType,
       id: property,
       value
     });
@@ -148,50 +156,6 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     });
   };
 
-  private _focusInputField(
-    fieldId?: string | null,
-    value?: any,
-    color?: string
-  ): void {
-    const propsToRemove = ['border-color', 'box-shadow'];
-    if (!fieldId) {
-      if (this._lastSelectedPropFieldId) {
-        ObjectProperties.removeStyleFromProperty(
-          this.state.filePath,
-          this._lastSelectedPropFieldId,
-          propsToRemove
-        );
-        if(value){
-          const el = ObjectProperties.getElementFromProperty(
-            this.state.filePath,
-            this._lastSelectedPropFieldId
-          );
-          if (el?.tagName?.toLowerCase() === 'input') {
-            (el as HTMLInputElement).value = value;
-          }
-
-        }
-        this._lastSelectedPropFieldId = undefined
-      }
-    } else {
-      if (fieldId !== this._lastSelectedPropFieldId) {
-        ObjectProperties.removeStyleFromProperty(
-          this.state.filePath,
-          this._lastSelectedPropFieldId,
-          propsToRemove
-        );
-        const el = ObjectProperties.getElementFromProperty(
-          this.state.filePath,
-          fieldId
-        );
-        if (el) {
-          el.style.borderColor = color ?? 'red';
-          el.style.boxShadow = `inset 0 0 4px ${color ?? 'red'}`;
-        }
-        this._lastSelectedPropFieldId = fieldId;
-      }
-    }
-  }
   private _onClientSharedStateChanged = (
     sender: IJupyterCadModel,
     clients: Map<number, IJupyterCadClientState>
@@ -204,12 +168,21 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
 
       const id = newState?.selectedPropField?.id;
       const value = newState?.selectedPropField?.value;
-      this._focusInputField(id, value, newState?.user?.color);
+      const parentType = newState?.selectedPropField?.parentType;
+      if (parentType === 'panel') {
+        this._lastSelectedPropFieldId = focusInputField(
+          `${this.state.filePath}::panel`,
+          id,
+          value,
+          newState?.user?.color,
+          this._lastSelectedPropFieldId
+        );
+      }
     } else {
       const localState = clientId ? clients.get(clientId) : null;
       if (this._lastSelectedPropFieldId) {
-        ObjectProperties.removeStyleFromProperty(
-          this.state.filePath,
+        removeStyleFromProperty(
+          `${this.state.filePath}::panel`,
           this._lastSelectedPropFieldId,
           ['border-color', 'box-shadow']
         );
@@ -263,7 +236,8 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   render(): React.ReactNode {
     return this.state.schema && this.state.selectedObjectData ? (
       <ObjectPropertiesForm
-        filePath={this.state.filePath}
+        parentType="panel"
+        filePath={`${this.state.filePath}::panel`}
         schema={this.state.schema}
         sourceData={this.state.selectedObjectData}
         syncData={(properties: { [key: string]: any }) => {
@@ -285,33 +259,5 @@ export namespace ObjectProperties {
    */
   export interface IOptions extends Panel.IOptions {
     controlPanelModel: IControlPanelModel;
-  }
-
-  export function getElementFromProperty(
-    filePath?: string | null,
-    prop?: string | null
-  ): HTMLElement | undefined | null {
-    if (!filePath || !prop) {
-      return;
-    }
-    const parent = document.querySelector(`[data-path="${filePath}"]`);
-    if (parent) {
-      const el = parent.querySelector(`[id$=${prop}]`);
-      return el as HTMLElement;
-    }
-  }
-
-  export function removeStyleFromProperty(
-    filePath: string | null | undefined,
-    prop: string | null | undefined,
-    properties: string[]
-  ): void {
-    if (!filePath || !prop || properties.length === 0) {
-      return;
-    }
-    const el = getElementFromProperty(filePath, prop);
-    if (el) {
-      properties.forEach(prop => el.style.removeProperty(prop));
-    }
   }
 }

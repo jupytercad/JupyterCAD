@@ -19,7 +19,7 @@ export class ToolbarReact extends React.Component<IProps, IState> {
     this.state = { selected: 'PART' };
     this.props.toolbarModel.jcadModel?.clientStateChanged.connect(
       this._onClientSharedStateChanged
-    )
+    );
   }
   async componentDidMount(): Promise<void> {
     await this.props.toolbarModel.ready();
@@ -29,36 +29,38 @@ export class ToolbarReact extends React.Component<IProps, IState> {
     sender: IJupyterCadModel,
     clients: Map<number, IJupyterCadClientState>
   ): Promise<void> => {
-    const remoteUser = this.props.toolbarModel.jcadModel?.localState?.remoteUser;
+    const remoteUser =
+      this.props.toolbarModel.jcadModel?.localState?.remoteUser;
     let newState: IJupyterCadClientState | undefined;
     if (remoteUser) {
       newState = clients.get(remoteUser);
 
-      if(newState){
-        if(newState.toolbarForm){
-          if( newState.toolbarForm.title !== this._lastForm?.title){
- 
+      if (newState) {
+        if (newState.toolbarForm) {
+          if (newState.toolbarForm.title !== this._lastForm?.title) {
             const dialog = new FormDialog({
+              toolbarModel: this.props.toolbarModel,
               title: newState.toolbarForm.title,
               sourceData: newState.toolbarForm.default,
               schema: newState.toolbarForm.schema,
               syncData: (props: IDict) => {
+                /** no-op */
               },
               cancelButton: true
             });
-            this._lastForm = {title: newState.toolbarForm.title, dialog}
-            await dialog.launch();  
+            this._lastForm = { title: newState.toolbarForm.title, dialog };
+            await dialog.launch();
           }
         } else {
-          if(this._lastForm){
-            this._lastForm.dialog.close()
-            this._lastForm = undefined
+          if (this._lastForm) {
+            this._lastForm.dialog.close();
+            this._lastForm = undefined;
           }
         }
       }
     }
   };
-  
+
   render(): React.ReactNode {
     return (
       <div className="jpcad-toolbar-react-widget">
@@ -110,7 +112,7 @@ export class ToolbarReact extends React.Component<IProps, IState> {
       </div>
     );
   }
-  
-  private _lastForm?: {dialog: FormDialog, title: string}
+
+  private _lastForm?: { dialog: FormDialog; title: string };
   private _toolbarOption = ['PART', 'OPERATOR'];
 }
