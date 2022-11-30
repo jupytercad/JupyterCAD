@@ -17,7 +17,7 @@ module.exports = {
         type: 'javascript/auto',
         loader: 'file-loader'
       },
-      { test: /\.js$/, enforce: 'pre', use: ['source-map-loader'] }
+      { test: /\.js$/, loader: 'source-map-loader' }
     ]
   },
   resolve: {

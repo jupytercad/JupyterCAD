@@ -77,6 +77,7 @@ export class OperatorToolbarReact extends React.Component<IProps> {
             style={{ color: 'var(--jp-ui-font-color1)' }}
             onClick={async () => {
               const dialog = new FormDialog({
+                toolbarModel: this.props.toolbarModel,
                 title: value.title,
                 sourceData: value.default,
                 schema: value.schema,
