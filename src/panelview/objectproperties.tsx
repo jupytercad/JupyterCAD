@@ -2,7 +2,11 @@ import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
 import * as React from 'react';
-import { itemFromName } from '../tools';
+import {
+  focusInputField,
+  itemFromName,
+  removeStyleFromProperty
+} from '../tools';
 
 import {
   IControlPanelModel,
@@ -86,7 +90,46 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     });
   }
 
-  _sharedJcadModelChanged = (_, changed: IJupyterCadDocChange): void => {
+  syncObjectProperties(
+    objectName: string | undefined,
+    properties: { [key: string]: any }
+  ) {
+    if (!this.state.jcadObject || !objectName) {
+      return;
+    }
+
+    const currentYMap =
+      this.props.cpModel.jcadModel?.sharedModel.getObjectByName(objectName);
+    if (currentYMap) {
+      const newParams = {
+        ...(currentYMap.get('parameters') as IDict),
+        ...properties
+      };
+      currentYMap.set('parameters', newParams);
+    }
+  }
+
+  syncSelectedField = (
+    id: string | null,
+    value: any,
+    parentType: 'panel' | 'dialog'
+  ) => {
+    let property: string | null = null;
+    if (id) {
+      const prefix = id.split('_')[0];
+      property = id.substring(prefix.length);
+    }
+    this.props.cpModel.jcadModel?.syncSelectedPropField({
+      parentType,
+      id: property,
+      value
+    });
+  };
+
+  private _sharedJcadModelChanged = (
+    _,
+    changed: IJupyterCadDocChange
+  ): void => {
     this.setState(old => {
       if (old.selectedObject) {
         const jcadObject = this.props.cpModel.jcadModel?.getAllObject();
@@ -113,74 +156,78 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     });
   };
 
-  syncObjectProperties(
-    objectName: string | undefined,
-    properties: { [key: string]: any }
-  ) {
-    if (!this.state.jcadObject || !objectName) {
-      return;
-    }
-
-    const currentYMap =
-      this.props.cpModel.jcadModel?.sharedModel.getObjectByName(objectName);
-    if (currentYMap) {
-      const newParams = {
-        ...(currentYMap.get('parameters') as IDict),
-        ...properties
-      };
-      currentYMap.set('parameters', newParams);
-    }
-  }
-
   private _onClientSharedStateChanged = (
     sender: IJupyterCadModel,
     clients: Map<number, IJupyterCadClientState>
   ): void => {
-    const targetId: number | null = null;
+    const remoteUser = this.props.cpModel.jcadModel?.localState?.remoteUser;
     const clientId = this.state.clientId;
-    if (targetId) {
-      //TODO Sync with remote user in the follow-mode
+    let newState: IJupyterCadClientState | undefined;
+    if (remoteUser) {
+      newState = clients.get(remoteUser);
+
+      const id = newState?.selectedPropField?.id;
+      const value = newState?.selectedPropField?.value;
+      const parentType = newState?.selectedPropField?.parentType;
+      if (parentType === 'panel') {
+        this._lastSelectedPropFieldId = focusInputField(
+          `${this.state.filePath}::panel`,
+          id,
+          value,
+          newState?.user?.color,
+          this._lastSelectedPropFieldId
+        );
+      }
     } else {
-      // Update from other components of current client
       const localState = clientId ? clients.get(clientId) : null;
+      if (this._lastSelectedPropFieldId) {
+        removeStyleFromProperty(
+          `${this.state.filePath}::panel`,
+          this._lastSelectedPropFieldId,
+          ['border-color', 'box-shadow']
+        );
 
-      if (localState) {
-        if (
-          localState.selected?.emitter &&
-          localState.selected.emitter !== this.state.id &&
-          localState.selected?.value
-        ) {
-          const selected = '' + localState.selected.value;
-          if (selected !== this.state.selectedObject) {
-            if (selected.length === 0) {
-              this.setState(old => ({
-                ...old,
-                schema: undefined,
-                selectedObjectData: undefined
-              }));
-              return;
-            }
+        this._lastSelectedPropFieldId = undefined;
+      }
+      if (
+        localState &&
+        localState.selected?.emitter &&
+        localState.selected.emitter !== this.state.id &&
+        localState.selected?.value
+      ) {
+        newState = localState;
+      }
+    }
+    if (newState) {
+      const selected = '' + newState.selected.value;
+      if (selected !== this.state.selectedObject) {
+        if (selected.length === 0) {
+          this.setState(old => ({
+            ...old,
+            schema: undefined,
+            selectedObjectData: undefined
+          }));
+          return;
+        }
 
-            const objectData = this.props.cpModel.jcadModel?.getAllObject();
-            if (objectData) {
-              let schema;
-              const selectedObj = itemFromName(selected, objectData);
-              if (!selectedObj) {
-                return;
-              }
-
-              if (selectedObj.shape) {
-                schema = formSchema[selectedObj.shape];
-              }
-              const selectedObjectData = selectedObj['parameters'];
-              this.setState(old => ({
-                ...old,
-                selectedObjectData,
-                selectedObject: selected,
-                schema
-              }));
-            }
+        const objectData = this.props.cpModel.jcadModel?.getAllObject();
+        if (objectData) {
+          let schema;
+          const selectedObj = itemFromName(selected, objectData);
+          if (!selectedObj) {
+            return;
           }
+
+          if (selectedObj.shape) {
+            schema = formSchema[selectedObj.shape];
+          }
+          const selectedObjectData = selectedObj['parameters'];
+          this.setState(old => ({
+            ...old,
+            selectedObjectData,
+            selectedObject: selected,
+            schema
+          }));
         }
       }
     }
@@ -189,16 +236,21 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   render(): React.ReactNode {
     return this.state.schema && this.state.selectedObjectData ? (
       <ObjectPropertiesForm
+        parentType="panel"
+        filePath={`${this.state.filePath}::panel`}
         schema={this.state.schema}
         sourceData={this.state.selectedObjectData}
         syncData={(properties: { [key: string]: any }) => {
           this.syncObjectProperties(this.state.selectedObject, properties);
         }}
+        syncSelectedField={this.syncSelectedField}
       />
     ) : (
       <div></div>
     );
   }
+
+  private _lastSelectedPropFieldId?: string;
 }
 
 export namespace ObjectProperties {

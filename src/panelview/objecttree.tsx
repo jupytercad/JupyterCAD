@@ -199,7 +199,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     const targetId: number | null = null;
     const clientId = this.state.clientId;
     if (targetId) {
-      //TODO Sync with remote user in the follow-mode
+      //TODO Fix selection logic.
     } else {
       // Update from other components of current client
       const localState = clientId ? clients.get(clientId) : null;

@@ -1,6 +1,6 @@
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { IModelDB, ModelDB } from '@jupyterlab/observables';
-import { YDocument } from '@jupyterlab/shared-models';
+import { YDocument } from '@jupyter-notebook/ydoc';
 import { PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import Ajv from 'ajv';
@@ -164,8 +164,20 @@ export class JupyterCadModel implements IJupyterCadModel {
     });
   }
 
+  syncSelectedPropField(data: {
+    id: string | null;
+    value: any;
+    parentType: 'panel' | 'dialog';
+  }): void {
+    this.sharedModel.awareness.setLocalStateField('selectedPropField', data);
+  }
+
   getClientId(): number {
     return this.sharedModel.awareness.clientID;
+  }
+
+  get localState(): IJupyterCadClientState | null {
+    return this.sharedModel.awareness.getLocalState() as IJupyterCadClientState | null;
   }
 
   get clientStateChanged(): ISignal<this, Map<number, IJupyterCadClientState>> {

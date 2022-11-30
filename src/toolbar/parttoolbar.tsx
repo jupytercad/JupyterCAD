@@ -1,9 +1,11 @@
-import * as React from 'react';
-import { ToolbarModel } from './model';
 import { Button } from '@jupyterlab/ui-components';
+import * as React from 'react';
+import * as Y from 'yjs';
+
 import { IDict } from '../types';
 import { FormDialog } from './formdialog';
-import * as Y from 'yjs';
+import { ToolbarModel } from './model';
+
 interface IProps {
   toolbarModel: ToolbarModel;
 }
@@ -75,6 +77,18 @@ export class PartToolbarReact extends React.Component<IProps> {
     }
   };
 
+  syncSelectedField = (
+    id: string | null,
+    value: any,
+    parentType: 'panel' | 'dialog'
+  ): void => {
+    let property: string | null = null;
+    if (id) {
+      const prefix = id.split('_')[0];
+      property = id.substring(prefix.length);
+    }
+    this.props.toolbarModel?.syncSelectedPropField(property, value, parentType);
+  };
   render(): React.ReactNode {
     return (
       <div style={{ paddingLeft: '10px', display: 'flex' }}>
@@ -84,7 +98,9 @@ export class PartToolbarReact extends React.Component<IProps> {
             className={'jp-ToolbarButtonComponent'}
             style={{ color: 'var(--jp-ui-font-color1)' }}
             onClick={async () => {
+              await this.props.toolbarModel.syncFormData(value);
               const dialog = new FormDialog({
+                toolbarModel: this.props.toolbarModel,
                 title: value.title,
                 sourceData: value.default,
                 schema: value.schema,
@@ -102,7 +118,10 @@ export class PartToolbarReact extends React.Component<IProps> {
                     model.addObject(object);
                   }
                 },
-                cancelButton: true
+                cancelButton: () => {
+                  this.props.toolbarModel.syncFormData(undefined);
+                },
+                syncSelectedPropField: this.syncSelectedField
               });
               await dialog.launch();
             }}
