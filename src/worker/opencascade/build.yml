@@ -1,0 +1,69 @@
+mainBuild:
+  name: jupytercad.opencascade.js
+  bindings:
+    - symbol: Standard_Transient
+    - symbol: Poly_Array1OfTriangle
+    - symbol: Poly_Triangle
+    - symbol: Poly_Triangulation
+    - symbol: Handle_Poly_Polygon3D
+    - symbol: Poly_PolygonOnTriangulation
+    - symbol: Handle_Poly_PolygonOnTriangulation
+    - symbol: Handle_Poly_Triangulation
+    - symbol: TopoDS_Shape
+    - symbol: BRepMesh_IncrementalMesh
+    - symbol: TopExp_Explorer
+    - symbol: TopAbs_ShapeEnum
+    - symbol: TopAbs_Orientation
+    - symbol: TopoDS
+    - symbol: TopoDS_Face
+    - symbol: TopoDS_Edge
+    - symbol: TopLoc_Location
+    - symbol: BRep_Tool
+    - symbol: BRepTools
+    - symbol: Poly_Connect
+    - symbol: TColStd_Array1OfInteger
+    - symbol: TColgp_Array1OfPnt
+    - symbol: TColgp_Array1OfDir
+    - symbol: StdPrs_ToolTriangulatedShape
+    - symbol: gp_Trsf
+    - symbol: gp_Ax1
+    - symbol: gp_Pnt
+    - symbol: gp_Dir
+    - symbol: gp_Vec
+    - symbol: BRepMesh_DiscretRoot
+    - symbol: BRepBuilderAPI_MakeShape
+    - symbol: BRepPrimAPI_MakeOneAxis
+    - symbol: BRepPrimAPI_MakeBox
+    - symbol: BRepPrimAPI_MakeCylinder
+    - symbol: BRepPrimAPI_MakeSphere
+    - symbol: BRepPrimAPI_MakeCone
+    - symbol: BRepPrimAPI_MakeTorus
+    - symbol: BRepBuilderAPI_Command
+    - symbol: BRepAlgoAPI_Algo
+    - symbol: BRepAlgoAPI_BuilderAlgo
+    - symbol: BRepAlgoAPI_BooleanOperation
+    - symbol: BRepAlgoAPI_Cut
+    - symbol: BRep_Builder
+    - symbol: Message_ProgressRange
+    - symbol: BRepMesh_IncrementalMesh
+    - symbol: TopExp
+    - symbol: TopExp_Explorer
+    - symbol: NCollection_BaseMap
+    - symbol: NCollection_BaseList
+    - symbol: TopTools_ListOfShape
+    - symbol: TopTools_IndexedMapOfShape
+    - symbol: TopTools_IndexedDataMapOfShapeListOfShape
+  emccFlags:
+    - -flto
+    - -fexceptions
+    - -sDISABLE_EXCEPTION_CATCHING=1
+    - -O3
+    - -sEXPORT_ES6=1
+    - -sUSE_ES6_IMPORT_META=0
+    - -sEXPORTED_RUNTIME_METHODS=[]
+    - -sINITIAL_MEMORY=15MB
+    - -sMAXIMUM_MEMORY=4GB
+    - -sALLOW_MEMORY_GROWTH=1
+    - -sLLD_REPORT_UNDEFINED
+    - --no-entry
+    - -sENVIRONMENT='web'

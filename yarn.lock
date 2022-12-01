@@ -5102,11 +5102,6 @@ onetime@^5.1.0:
   dependencies:
     mimic-fn "^2.1.0"
 
-opencascade.js@2.0.0-beta.371bbb0:
-  version "2.0.0-beta.371bbb0"
-  resolved "https://registry.yarnpkg.com/opencascade.js/-/opencascade.js-2.0.0-beta.371bbb0.tgz#b057c4afba8256904c783186766127bc8d91f0a3"
-  integrity sha512-ZzdP5AhGf/0ijiN8+aU9fTRrTxnP7LRYW2JBltewrETRBKL+paZTOicUMIRW6+H08iY68osdYpv/O9mh2sVlPQ==
-
 optionator@^0.9.1:
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/optionator/-/optionator-0.9.1.tgz#4f236a6373dae0566a6d43e1326674f50c291499"
