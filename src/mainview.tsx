@@ -548,7 +548,11 @@ export class MainView extends React.Component<IProps, IStates> {
 
     const material = new THREE.MeshBasicMaterial({
       color: clientColor
-        ? new THREE.Color(clientColor.r, clientColor.g, clientColor.b)
+        ? new THREE.Color(
+            clientColor.r / 255,
+            clientColor.g / 255,
+            clientColor.b / 255
+          )
         : 'black'
     });
     const pointerGeometry = new THREE.SphereGeometry(
@@ -556,8 +560,7 @@ export class MainView extends React.Component<IProps, IStates> {
       32,
       32
     );
-    const mesh = new THREE.Mesh(pointerGeometry, material);
-    return mesh;
+    return new THREE.Mesh(pointerGeometry, material);
   }
 
   private _onClientSharedStateChanged = (
