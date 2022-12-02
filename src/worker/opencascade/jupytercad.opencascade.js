@@ -6022,6 +6022,7 @@ var Module = (function () {
       return (dynCall_iiiiiijj = Module['dynCall_iiiiiijj'] =
         Module['asm']['pa']).apply(null, arguments);
     });
+    Module['FS'] = FS;
     var calledRun;
     dependenciesFulfilled = function runCaller() {
       if (!calledRun) run();

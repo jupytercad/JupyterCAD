@@ -1822,6 +1822,18 @@ export declare class TopoDS {
   delete(): void;
 }
 
+export declare class TopoDS_Builder {
+  constructor();
+  MakeWire(W: TopoDS_Wire): void;
+  MakeShell(S: TopoDS_Shell): void;
+  MakeSolid(S: TopoDS_Solid): void;
+  MakeCompSolid(C: TopoDS_CompSolid): void;
+  MakeCompound(C: TopoDS_Compound): void;
+  Add(S: TopoDS_Shape, C: TopoDS_Shape): void;
+  Remove(S: TopoDS_Shape, C: TopoDS_Shape): void;
+  delete(): void;
+}
+
 export declare class TopoDS_Edge extends TopoDS_Shape {
   constructor();
   delete(): void;
@@ -2636,6 +2648,7 @@ export type OpenCascadeInstance = { FS: typeof FS } & {
   TopTools_ListOfShape_2: typeof TopTools_ListOfShape_2;
   TopTools_ListOfShape_3: typeof TopTools_ListOfShape_3;
   TopoDS: typeof TopoDS;
+  TopoDS_Builder: typeof TopoDS_Builder;
   TopoDS_Edge: typeof TopoDS_Edge;
   TopoDS_Face: typeof TopoDS_Face;
   TopoDS_Shape: typeof TopoDS_Shape;

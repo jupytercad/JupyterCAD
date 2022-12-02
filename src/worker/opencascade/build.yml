@@ -15,6 +15,7 @@ mainBuild:
     - symbol: TopAbs_ShapeEnum
     - symbol: TopAbs_Orientation
     - symbol: TopoDS
+    - symbol: TopoDS_Builder
     - symbol: TopoDS_Face
     - symbol: TopoDS_Edge
     - symbol: TopLoc_Location
@@ -60,7 +61,7 @@ mainBuild:
     - -O3
     - -sEXPORT_ES6=1
     - -sUSE_ES6_IMPORT_META=0
-    - -sEXPORTED_RUNTIME_METHODS=[]
+    - -sEXPORTED_RUNTIME_METHODS=['FS']
     - -sINITIAL_MEMORY=15MB
     - -sMAXIMUM_MEMORY=4GB
     - -sALLOW_MEMORY_GROWTH=1
