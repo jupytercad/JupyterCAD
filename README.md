@@ -62,6 +62,32 @@ By default, the `jlpm run build` command generates the source maps for this exte
 jupyter lab build --minimize=False
 ```
 
+### Custom Open Cascade WASM build
+
+JupyterCAD uses a custom build of Open Cascade WASM. For performance and data usage concern, we only build the symbols we need.
+
+In the case where you need to add new symbols, you will need to add those symbols into the `src/worker/opencascade/build.yml` file, then rebuild Open Cascade.
+
+In order to rebuild it yourself, you will first need to pull the proper docker image (you only need to run this once and for all):
+
+```bash
+yarn run prepare:opencascade
+```
+
+Then you can rebuild Open Cascade, this may take some time without showing any progress:
+
+```bash
+yarn run build:opencascade && yarn run build
+```
+
+Then you can commit the output into the jupytercad repo.
+
+#### See also
+
+Custom build doc: https://ocjs.org/docs/app-dev-workflow/custom-builds
+Custom build example: https://github.com/donalffons/opencascade.js/blob/master/website/ocjs-editor-theme/src/customBuild/customBuild.yml
+Where to find symbols: https://dev.opencascade.org/doc/refman/html/annotated.html
+
 ### Development uninstall
 
 ```bash

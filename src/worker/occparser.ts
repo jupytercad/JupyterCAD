@@ -2,7 +2,7 @@ import {
   Handle_Poly_Triangulation,
   OpenCascadeInstance,
   TopoDS_Shape
-} from 'opencascade.js';
+} from './opencascade/jupytercad.opencascade';
 
 import { IJCadObject } from '../_interface/jcad.d';
 import { IEdge, IFace } from '../types';

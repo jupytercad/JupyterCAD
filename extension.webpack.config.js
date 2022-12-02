@@ -1,7 +1,7 @@
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
-const occPath = [__dirname, 'lib', '*.wasm'];
+const occPath = [__dirname, 'src', 'worker', 'opencascade', '*.wasm'];
 const staticPath = [
   __dirname,
   'jupytercad',
