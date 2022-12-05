@@ -68,7 +68,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._geometry = new THREE.BufferGeometry();
     this._geometry.setDrawRange(0, 3 * 10000);
-    this._refLength = 0;
     this._sceneAxe = [];
 
     this._resizeTimeout = null;
@@ -482,28 +481,35 @@ export class MainView extends React.Component<IProps, IStates> {
     const boundingGroup = new THREE.Box3();
     boundingGroup.setFromObject(this._meshGroup);
 
-    const boxSizeVec = new THREE.Vector3();
-    boundingGroup.getSize(boxSizeVec);
+    // Update the reflength
+    if (this._refLength === null && this._meshGroup.children.length) {
+      const boxSizeVec = new THREE.Vector3();
+      boundingGroup.getSize(boxSizeVec);
 
-    const oldRefLength = this._refLength || 1;
-    this._refLength =
-      Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
-    this._updatePointers();
-    this._camera.lookAt(this._scene.position);
-    if (oldRefLength !== this._refLength) {
+      this._refLength =
+        Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
+      this._updatePointers(this._refLength);
+      this._camera.lookAt(this._scene.position);
+
       this._camera.position.set(
         10 * this._refLength,
         10 * this._refLength,
         10 * this._refLength
       );
       this._camera.far = 200 * this._refLength;
-      this._gridHelper.scale.multiplyScalar(this._refLength / oldRefLength);
+      this._gridHelper.scale.multiplyScalar(this._refLength);
       for (let index = 0; index < this._sceneAxe.length; index++) {
         this._sceneAxe[index].scale.multiplyScalar(
-          this._refLength / oldRefLength
+          this._refLength
         );
       }
     }
+
+    // Reset reflength if there are no objects
+    if (!this._meshGroup.children.length) {
+      this._refLength = null;
+    }
+
     this._scene.add(this._meshGroup);
     this.setState(old => ({ ...old, loading: false }));
   };
@@ -522,9 +528,9 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   };
 
-  private _updatePointers(): void {
+  private _updatePointers(refLength): void {
     this._pointerGeometry = new THREE.SphereGeometry(
-      this._refLength / 10,
+      refLength / 10,
       32,
       32
     );
@@ -703,7 +709,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _renderer: THREE.WebGLRenderer; // Threejs render
   private _requestID: any = null; // ID of window.requestAnimationFrame
   private _geometry: THREE.BufferGeometry; // Threejs BufferGeometry
-  private _refLength: number; // Length of bounding box of current object
+  private _refLength: number | null = null; // Length of bounding box of current object
   private _gridHelper: THREE.GridHelper; // Threejs grid
   private _sceneAxe: (THREE.ArrowHelper | Line2)[]; // Array of  X, Y and Z axe
   private _controls: any; // Threejs control
