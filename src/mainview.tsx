@@ -523,7 +523,11 @@ export class MainView extends React.Component<IProps, IStates> {
   };
 
   private _updatePointers(): void {
-    this._pointerGeometry = new THREE.SphereGeometry(this._refLength / 10, 32, 32);
+    this._pointerGeometry = new THREE.SphereGeometry(
+      this._refLength / 10,
+      32,
+      32
+    );
 
     for (const clientId in this._collaboratorPointers) {
       this._collaboratorPointers[clientId].geometry = this._pointerGeometry;
@@ -611,7 +615,11 @@ export class MainView extends React.Component<IProps, IStates> {
       if (pointerPosition) {
         collaboratorPointer.visible = true;
         collaboratorPointer.position.copy(
-          new THREE.Vector3(pointerPosition[0], pointerPosition[1], pointerPosition[2])
+          new THREE.Vector3(
+            pointerPosition[0],
+            pointerPosition[1],
+            pointerPosition[2]
+          )
         );
       } else {
         collaboratorPointer.visible = false;
