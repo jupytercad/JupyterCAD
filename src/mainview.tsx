@@ -523,13 +523,14 @@ export class MainView extends React.Component<IProps, IStates> {
   };
 
   private _updatePointers(): void {
-    const newGeometry = new THREE.SphereGeometry(this._refLength / 10, 32, 32);
+    this._pointerGeometry = new THREE.SphereGeometry(
+      this._refLength / 10,
+      32,
+      32
+    );
 
-    if (this._localPointer) {
-      this._localPointer.geometry = newGeometry;
-    }
     for (const clientId in this._collaboratorPointers) {
-      this._collaboratorPointers[clientId].geometry = newGeometry;
+      this._collaboratorPointers[clientId].geometry = this._pointerGeometry;
     }
   }
 
@@ -555,12 +556,8 @@ export class MainView extends React.Component<IProps, IStates> {
           )
         : 'black'
     });
-    const pointerGeometry = new THREE.SphereGeometry(
-      this._refLength / 10,
-      32,
-      32
-    );
-    return new THREE.Mesh(pointerGeometry, material);
+
+    return new THREE.Mesh(this._pointerGeometry, material);
   }
 
   private _onClientSharedStateChanged = (
@@ -568,6 +565,8 @@ export class MainView extends React.Component<IProps, IStates> {
     clients: Map<number, IJupyterCadClientState>
   ): void => {
     const remoteUser = this._model.localState?.remoteUser;
+
+    // If we are in following mode, we update our camera and selection
     if (remoteUser) {
       const remoteState = clients.get(remoteUser);
       if (!remoteState) {
@@ -598,55 +597,34 @@ export class MainView extends React.Component<IProps, IStates> {
         this._camera.rotation.set(rotation[0], rotation[1], rotation[2]);
         this._camera.up.set(up[0], up[1], up[2]);
       }
+    }
 
-      // Sync pointer
-      if (this._localPointer) {
-        this._localPointer.visible = false;
-      }
-      const pointer = remoteState.pointer?.value;
-      if (!this._collaboratorPointers[remoteUser]) {
-        // Getting user color
+    // Displaying collaborators pointers
+    clients.forEach((clientState, clientId) => {
+      const pointerPosition = clientState.pointer?.value;
 
-        this._collaboratorPointers[remoteUser] = this._createPointer(
-          remoteState.user
-        );
-        this._scene.add(this._collaboratorPointers[remoteUser]);
+      if (!this._collaboratorPointers[clientId]) {
+        const pointer = this._createPointer(clientState.user);
+
+        this._collaboratorPointers[clientId] = pointer;
+        this._scene.add(pointer);
       }
 
-      const collaboratorPointer = this._collaboratorPointers[remoteUser];
+      const collaboratorPointer = this._collaboratorPointers[clientId];
 
-      if (pointer) {
+      if (pointerPosition) {
         collaboratorPointer.visible = true;
         collaboratorPointer.position.copy(
-          new THREE.Vector3(pointer[0], pointer[1], pointer[2])
+          new THREE.Vector3(
+            pointerPosition[0],
+            pointerPosition[1],
+            pointerPosition[2]
+          )
         );
       } else {
         collaboratorPointer.visible = false;
       }
-    } else {
-      this.setState(old => ({ ...old, remoteUser: undefined }));
-
-      Object.values(this._collaboratorPointers).forEach(
-        p => (p.visible = false)
-      );
-      const localState = this._model.localState;
-      if (!localState) {
-        return;
-      }
-      const pointer = localState.pointer?.value;
-      if (!this._localPointer) {
-        this._localPointer = this._createPointer(localState.user);
-        this._scene.add(this._localPointer);
-      }
-      if (pointer) {
-        this._localPointer.visible = true;
-        this._localPointer.position.copy(
-          new THREE.Vector3(pointer[0], pointer[1], pointer[2])
-        );
-      } else {
-        this._localPointer.visible = false;
-      }
-    }
+    });
   };
 
   private _handleThemeChange = (): void => {
@@ -732,5 +710,5 @@ export class MainView extends React.Component<IProps, IStates> {
   private _resizeTimeout: any;
   // private _mouseDown = false;
   private _collaboratorPointers: IDict<THREE.Mesh>;
-  private _localPointer?: THREE.Mesh;
+  private _pointerGeometry: THREE.SphereGeometry;
 }
