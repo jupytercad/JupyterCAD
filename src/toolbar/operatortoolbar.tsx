@@ -63,6 +63,32 @@ export class OperatorToolbarReact extends React.Component<IProps> {
             });
           }
         }
+      },
+      FUSE: {
+        title: 'Fuse parameters',
+        shape: 'Part::MultiFuse',
+        schema: this._schema['Part::MultiFuse'],
+        default: {
+          Shapes: ['', ''],
+          Refine: false,
+          Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+        },
+        syncData: (props: IDict) => {
+          const { Name, ...parameters } = props;
+          const objectModel = {
+            shape: 'Part::MultiFuse',
+            parameters,
+            visible: true,
+            name: Name
+          };
+          const model = this.props.toolbarModel.sharedModel;
+          if (model) {
+            const object = new Y.Map<any>(Object.entries(objectModel));
+            model.transact(() => {
+              model.addObject(object);
+            });
+          }
+        }
       }
     };
   }

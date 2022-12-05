@@ -20,7 +20,8 @@
         "Part::Sphere",
         "Part::Cone",
         "Part::Torus",
-        "Part::Cut"
+        "Part::Cut",
+        "Part::MultiFuse"
       ]
     },
     "jcadObject": {
