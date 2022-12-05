@@ -16,21 +16,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Install Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
           architecture: 'x64'
+
       - name: Install node
         uses: actions/setup-node@v2
         with:
           node-version: '14.x'
-      
-      
+
       - name: Get pip cache dir
         id: pip-cache
         run: |
           echo "::set-output name=dir::$(pip cache dir)"
+
       - name: Cache pip
         uses: actions/cache@v1
         with:
@@ -38,6 +40,16 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('package.json') }}
           restore-keys: |
             ${{ runner.os }}-pip-
+
+      - name: Setup OpenCascade build cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            src/worker/opencascade/jupytercad.opencascade.js
+            src/worker/opencascade/jupytercad.opencascade.wasm
+            src/worker/opencascade/jupytercad.opencascade.d.ts
+          key: ${{ hashFiles('src/worker/opencascade/build.yml') }}
+
       - name: Cache checked links
         uses: actions/cache@v2
         with:
@@ -45,17 +57,20 @@ jobs:
           key: ${{ runner.os }}-linkcheck-${{ hashFiles('**/.md') }}-md-links
           restore-keys: |
             ${{ runner.os }}-linkcheck-
+
       - name: Upgrade packaging dependencies
         run: |
           pip install --upgrade pip setuptools wheel jupyter-packaging~=0.10 --user
+
       - name: Install Dependencies
         run: |
-          pip install .
+          pip install . -vvv
+
       - name: Check Release
         uses: jupyter-server/jupyter_releaser/.github/actions/check-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Upload Distributions
         uses: actions/upload-artifact@v2
         with:

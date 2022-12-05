@@ -114,3 +114,5 @@ dmypy.json
 
 src/_interface/
 *.db
+
+src/worker/opencascade/jupytercad*
