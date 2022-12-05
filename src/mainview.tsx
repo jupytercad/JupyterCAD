@@ -499,9 +499,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._camera.far = 200 * this._refLength;
       this._gridHelper.scale.multiplyScalar(this._refLength);
       for (let index = 0; index < this._sceneAxe.length; index++) {
-        this._sceneAxe[index].scale.multiplyScalar(
-          this._refLength
-        );
+        this._sceneAxe[index].scale.multiplyScalar(this._refLength);
       }
     }
 
@@ -529,11 +527,7 @@ export class MainView extends React.Component<IProps, IStates> {
   };
 
   private _updatePointers(refLength): void {
-    this._pointerGeometry = new THREE.SphereGeometry(
-      refLength / 10,
-      32,
-      32
-    );
+    this._pointerGeometry = new THREE.SphereGeometry(refLength / 10, 32, 32);
 
     for (const clientId in this._collaboratorPointers) {
       this._collaboratorPointers[clientId].geometry = this._pointerGeometry;
