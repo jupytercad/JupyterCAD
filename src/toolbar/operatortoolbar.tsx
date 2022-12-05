@@ -29,6 +29,7 @@ export class OperatorToolbarReact extends React.Component<IProps> {
               break;
             case 'App::PropertyLinkList':
               propDef['items']['enum'] = allObjects;
+              break;
             default:
           }
         }

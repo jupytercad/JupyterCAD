@@ -171,7 +171,6 @@ function _Fuse(arg: IFuse, content: IJCadContent): TopoDS_Shape | undefined {
       occShapes.push(base);
     }
   });
-  console.log(occShapes);
   const operator = new oc.BRepAlgoAPI_Fuse_3(occShapes[0], occShapes[1]);
   if (operator.IsDone()) {
     return setShapePlacement(operator.Shape(), Placement);
