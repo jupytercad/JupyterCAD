@@ -10,6 +10,7 @@ import { ICone } from '../_interface/cone';
 import { ITorus } from '../_interface/torus';
 import { ICut } from '../_interface/cut';
 import { IFuse } from '../_interface/fuse';
+import { IIntersection } from '../_interface/intersection';
 import { v4 as uuid } from 'uuid';
 
 const SHAPE_CACHE = new Map<string, TopoDS_Shape>();
@@ -178,6 +179,34 @@ function _Fuse(arg: IFuse, content: IJCadContent): TopoDS_Shape | undefined {
   return;
 }
 
+function _Intersection(
+  arg: IIntersection,
+  content: IJCadContent
+): TopoDS_Shape | undefined {
+  const oc = getOcc();
+  const { Shapes, Placement } = arg;
+  const occShapes: any = [];
+  Shapes.forEach(Base => {
+    const baseObject = content.objects.filter(obj => obj.name === Base);
+    if (baseObject.length === 0) {
+      return;
+    }
+    const baseShape = baseObject[0].shape;
+    if (baseShape && ShapesFactory[baseShape]) {
+      const base = ShapesFactory[baseShape](
+        baseObject[0].parameters as IOperatorArg,
+        content
+      );
+      occShapes.push(base);
+    }
+  });
+  const operator = new oc.BRepAlgoAPI_Common_3(occShapes[0], occShapes[1]);
+  if (operator.IsDone()) {
+    return setShapePlacement(operator.Shape(), Placement);
+  }
+  return;
+}
+
 export function _loadBrep(arg: { content: string }): TopoDS_Shape | undefined {
   const oc = getOcc();
   const fakeFileName = `${uuid()}.brep`;
@@ -209,5 +238,6 @@ export const ShapesFactory: {
   'Part::Cone': Cone,
   'Part::Torus': Torus,
   'Part::Cut': _Cut,
-  'Part::MultiFuse': _Fuse
+  'Part::MultiFuse': _Fuse,
+  'Part::Intersection': _Intersection
 };

@@ -7,6 +7,7 @@ import { ICone } from '../_interface/cone';
 import { ITorus } from '../_interface/torus';
 import { ICut } from '../_interface/cut';
 import { IFuse } from '../_interface/fuse';
+import { IIntersection } from '../_interface/intersection';
 
 type IOperatorFunc<T> = (
   args: T,
@@ -20,7 +21,8 @@ export type IAllOperatorFunc =
   | IOperatorFunc<ICone>
   | IOperatorFunc<ITorus>
   | IOperatorFunc<ICut>
-  | IOperatorFunc<IFuse>;
+  | IOperatorFunc<IFuse>
+  | IOperatorFunc<IIntersection>;
 export type IOperatorArg = IBox &
   ICylinder &
   ISphere &
