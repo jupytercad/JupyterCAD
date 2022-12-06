@@ -5906,27 +5906,27 @@ var Module = (function () {
       return u8array;
     }
     var asmLibraryArg = {
-      V: OSD_MemInfo_getModuleHeapLength,
+      X: OSD_MemInfo_getModuleHeapLength,
       i: ___assert_fail,
       a: ___cxa_allocate_exception,
-      U: ___cxa_thread_atexit,
+      Y: ___cxa_thread_atexit,
       b: ___cxa_throw,
-      G: ___sys_access,
-      M: ___sys_chmod,
+      N: ___sys_access,
+      J: ___sys_chmod,
       n: ___sys_fcntl64,
-      L: ___sys_fstat64,
-      J: ___sys_ioctl,
-      O: ___sys_mmap2,
-      N: ___sys_munmap,
-      P: ___sys_open,
+      I: ___sys_fstat64,
+      G: ___sys_ioctl,
+      R: ___sys_mmap2,
+      S: ___sys_munmap,
+      H: ___sys_open,
       K: ___sys_stat64,
       z: __embind_register_bigint,
-      S: __embind_register_bool,
+      U: __embind_register_bool,
       d: __embind_register_class,
-      e: __embind_register_class_class_function,
-      f: __embind_register_class_constructor,
+      f: __embind_register_class_class_function,
+      e: __embind_register_class_constructor,
       c: __embind_register_class_function,
-      R: __embind_register_emval,
+      T: __embind_register_emval,
       u: __embind_register_enum,
       t: __embind_register_enum_value,
       r: __embind_register_float,
@@ -5934,48 +5934,48 @@ var Module = (function () {
       g: __embind_register_memory_view,
       s: __embind_register_std_string,
       p: __embind_register_std_wstring,
-      T: __embind_register_void,
+      V: __embind_register_void,
       j: __emval_as,
-      _: __emval_call_method,
-      w: __emval_decref,
-      aa: __emval_get_global,
-      Z: __emval_get_method_caller,
-      v: __emval_get_property,
-      Y: __emval_incref,
-      $: __emval_new_cstring,
-      ba: __emval_run_destructors,
+      aa: __emval_call_method,
+      M: __emval_decref,
+      v: __emval_get_global,
+      $: __emval_get_method_caller,
+      x: __emval_get_property,
+      _: __emval_incref,
+      ba: __emval_new_cstring,
+      w: __emval_run_destructors,
       l: __emval_set_property,
       k: __emval_take_value,
-      x: __emval_typeof,
+      C: __emval_typeof,
       q: _abort,
-      W: _clock_gettime,
-      Q: _emscripten_get_heap_max,
+      Z: _clock_gettime,
+      L: _emscripten_get_heap_max,
       A: _emscripten_memcpy_big,
       m: _emscripten_resize_heap,
-      D: _environ_get,
-      E: _environ_sizes_get,
+      E: _environ_get,
+      F: _environ_sizes_get,
       o: _fd_close,
-      F: _fd_fdstat_get,
-      I: _fd_read,
+      O: _fd_fdstat_get,
+      Q: _fd_read,
       y: _fd_seek,
-      H: _fd_write,
-      C: _setTempRet0,
+      P: _fd_write,
+      D: _setTempRet0,
       B: _strftime_l,
-      X: _times
+      W: _times
     };
     var asm = createWasm();
     var ___wasm_call_ctors = (Module['___wasm_call_ctors'] = function () {
       return (___wasm_call_ctors = Module['___wasm_call_ctors'] =
         Module['asm']['da']).apply(null, arguments);
     });
-    var _free = (Module['_free'] = function () {
-      return (_free = Module['_free'] = Module['asm']['fa']).apply(
+    var _malloc = (Module['_malloc'] = function () {
+      return (_malloc = Module['_malloc'] = Module['asm']['fa']).apply(
         null,
         arguments
       );
     });
-    var _malloc = (Module['_malloc'] = function () {
-      return (_malloc = Module['_malloc'] = Module['asm']['ga']).apply(
+    var _free = (Module['_free'] = function () {
+      return (_free = Module['_free'] = Module['asm']['ga']).apply(
         null,
         arguments
       );
@@ -6006,20 +6006,20 @@ var Module = (function () {
       return (dynCall_jiji = Module['dynCall_jiji'] =
         Module['asm']['la']).apply(null, arguments);
     });
-    var dynCall_viijii = (Module['dynCall_viijii'] = function () {
-      return (dynCall_viijii = Module['dynCall_viijii'] =
-        Module['asm']['ma']).apply(null, arguments);
-    });
     var dynCall_iiiiij = (Module['dynCall_iiiiij'] = function () {
       return (dynCall_iiiiij = Module['dynCall_iiiiij'] =
-        Module['asm']['na']).apply(null, arguments);
+        Module['asm']['ma']).apply(null, arguments);
     });
     var dynCall_iiiiijj = (Module['dynCall_iiiiijj'] = function () {
       return (dynCall_iiiiijj = Module['dynCall_iiiiijj'] =
-        Module['asm']['oa']).apply(null, arguments);
+        Module['asm']['na']).apply(null, arguments);
     });
     var dynCall_iiiiiijj = (Module['dynCall_iiiiiijj'] = function () {
       return (dynCall_iiiiiijj = Module['dynCall_iiiiiijj'] =
+        Module['asm']['oa']).apply(null, arguments);
+    });
+    var dynCall_viijii = (Module['dynCall_viijii'] = function () {
+      return (dynCall_viijii = Module['dynCall_viijii'] =
         Module['asm']['pa']).apply(null, arguments);
     });
     Module['FS'] = FS;

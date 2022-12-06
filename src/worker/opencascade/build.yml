@@ -44,6 +44,7 @@ mainBuild:
     - symbol: BRepAlgoAPI_BuilderAlgo
     - symbol: BRepAlgoAPI_BooleanOperation
     - symbol: BRepAlgoAPI_Cut
+    - symbol: BRepAlgoAPI_Fuse
     - symbol: BRep_Builder
     - symbol: Message_ProgressRange
     - symbol: BRepMesh_IncrementalMesh
