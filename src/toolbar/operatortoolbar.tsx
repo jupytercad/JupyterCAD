@@ -92,6 +92,32 @@ export class OperatorToolbarReact extends React.Component<IProps> {
             });
           }
         }
+      },
+      INTERSECTION: {
+        title: 'Intersection parameters',
+        shape: 'Part::Intersection',
+        schema: this._schema['Part::Intersection'],
+        default: {
+          Shapes: ['', ''],
+          Refine: false,
+          Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+        },
+        syncData: (props: IDict) => {
+          const { Name, ...parameters } = props;
+          const objectModel = {
+            shape: 'Part::Intersection',
+            parameters,
+            visible: true,
+            name: Name
+          };
+          const model = this.props.toolbarModel.sharedModel;
+          if (model) {
+            const object = new Y.Map<any>(Object.entries(objectModel));
+            model.transact(() => {
+              model.addObject(object);
+            });
+          }
+        }
       }
     };
   }

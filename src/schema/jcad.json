@@ -21,7 +21,8 @@
         "Part::Cone",
         "Part::Torus",
         "Part::Cut",
-        "Part::MultiFuse"
+        "Part::MultiFuse",
+        "Part::Intersection"
       ]
     },
     "jcadObject": {
