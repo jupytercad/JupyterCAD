@@ -22,7 +22,7 @@
         "Part::Torus",
         "Part::Cut",
         "Part::MultiFuse",
-        "Part::Intersection"
+        "Part::MultiCommon"
       ]
     },
     "jcadObject": {

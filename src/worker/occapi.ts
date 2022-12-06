@@ -239,5 +239,5 @@ export const ShapesFactory: {
   'Part::Torus': Torus,
   'Part::Cut': _Cut,
   'Part::MultiFuse': _Fuse,
-  'Part::Intersection': _Intersection
+  'Part::MultiCommon': _Intersection
 };

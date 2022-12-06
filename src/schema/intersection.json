@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "description": "Part::Intersection",
+  "description": "Part::MultiCommon",
   "title": "IIntersection",
   "required": ["Shapes", "Refine", "Placement"],
   "additionalProperties": false,

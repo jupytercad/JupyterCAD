@@ -95,8 +95,8 @@ export class OperatorToolbarReact extends React.Component<IProps> {
       },
       INTERSECTION: {
         title: 'Intersection parameters',
-        shape: 'Part::Intersection',
-        schema: this._schema['Part::Intersection'],
+        shape: 'Part::MultiCommon',
+        schema: this._schema['Part::MultiCommon'],
         default: {
           Shapes: ['', ''],
           Refine: false,
@@ -105,7 +105,7 @@ export class OperatorToolbarReact extends React.Component<IProps> {
         syncData: (props: IDict) => {
           const { Name, ...parameters } = props;
           const objectModel = {
-            shape: 'Part::Intersection',
+            shape: 'Part::MultiCommon',
             parameters,
             visible: true,
             name: Name
