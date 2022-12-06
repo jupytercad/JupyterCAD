@@ -71,13 +71,15 @@ In the case where you need to add new symbols, you will need to add those symbol
 In order to rebuild it yourself, you need to install Docker, then you need to run the following (this may take some time):
 
 ```bash
-yarn run build:opencascade && yarn run build
+yarn run build
 ```
 
 #### See also
 
 Custom build doc: https://ocjs.org/docs/app-dev-workflow/custom-builds
+
 Custom build example: https://github.com/donalffons/opencascade.js/blob/master/website/ocjs-editor-theme/src/customBuild/customBuild.yml
+
 Where to find symbols: https://dev.opencascade.org/doc/refman/html/annotated.html
 
 ### Development uninstall

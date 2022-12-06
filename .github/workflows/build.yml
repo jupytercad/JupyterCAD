@@ -53,6 +53,7 @@ jobs:
           src/worker/opencascade/jupytercad.opencascade.js
           src/worker/opencascade/jupytercad.opencascade.wasm
           src/worker/opencascade/jupytercad.opencascade.d.ts
+          src/worker/opencascade/jupytercad.opencascade.version
         key: ${{ hashFiles('src/worker/opencascade/build.yml') }}
 
     - name: Install dependencies
