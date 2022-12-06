@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "description": "Part::MultiFuse",
+  "title": "IFuse",
+  "required": ["Shapes", "Refine", "Placement"],
+  "additionalProperties": false,
+  "properties": {
+    "Shapes": {
+      "type": "array",
+      "description": "The shapes of the individual elements",
+      "fcType": "App::PropertyLinkList",
+      "items": {
+        "type": "string"
+      }
+    },
+    "Refine": {
+      "type": "boolean",
+      "description": "Refine shape"
+    },
+    "Placement": {
+      "$ref": "./placement.json"
+    }
+  }
+}
