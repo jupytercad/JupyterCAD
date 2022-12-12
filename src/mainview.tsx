@@ -51,7 +51,7 @@ interface IStates {
   //is the source of awareness updates.
   loading: boolean;
   lightTheme: boolean;
-  remoteUser?: User.IIdentity;
+  remoteUser?: User.IIdentity | null;
 }
 
 /**
@@ -597,6 +597,8 @@ export class MainView extends React.Component<IProps, IStates> {
         this._camera.rotation.set(rotation[0], rotation[1], rotation[2]);
         this._camera.up.set(up[0], up[1], up[2]);
       }
+    } else {
+      this.setState(old => ({ ...old, remoteUser: null }));
     }
 
     // Displaying collaborators pointers
