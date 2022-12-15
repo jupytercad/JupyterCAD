@@ -219,15 +219,13 @@ div.field.field-array > label + span {
 
 .jcad-Annotation {
   position: absolute;
-  /* top: 0;
-  left: 0; */
   z-index: 1;
   margin-left: 1px;
   margin-top: 1px;
   padding: 1em;
   width: 250px;
   color: #fff;
-  background: rgba(0, 0, 0, 0.8);
+  background: var(--jp-layout-color1);
   border-radius: 0.5em;
   font-size: 12px;
   line-height: 1.2;
@@ -303,12 +301,22 @@ div.field.field-array > label + span {
   display: flex;
   align-items: center;
   vertical-align: middle;
+  color: var(--jp-ui-font-color1);
 }
 
 .jcad-Annotation-Message textarea {
-  border-radius: 5px;
+  border-radius: var(--jp-border-radius);
+  background: var(--jp-layout-color2);
+  color: var(--jp-ui-font-color2);
   flex-grow: 1;
   resize: none;
+}
+
+.jcad-Annotation-Message-Content {
+  background: var(--jp-layout-color2);
+  color: var(--jp-ui-font-color2);
+  border-radius: var(--jp-border-radius);
+  flex-grow: 1;
 }
 
 .jcad-Annotation-Submit > svg {
@@ -321,9 +329,9 @@ div.field.field-array > label + span {
 }
 
 .jcad-Annotation-Submit:hover {
-  background-color: grey;
+  background-color: var(--jp-brand-color2);
 }
 .jcad-Annotation-Submit {
-  background-color: #3a3937;
+  background-color: var(--jp-brand-color1);
   border-radius: 100%;
 }
