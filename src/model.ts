@@ -320,12 +320,28 @@ export class JupyterCadDoc
       }
     });
     if (index > -1) {
-      this._objects.delete(index);
+      this.transact(() => {
+        console.debug("[JupyterCadDoc.removeObjectByName] name", name);
+        this._objects.delete(index);
+      });
     }
   }
 
   addObject(value: IJCadObjectDoc): void {
-    this._objects.push([value]);
+    this.transact(() => {
+      console.debug("[JupyterCadDoc.addObject] value", value);
+      this._objects.push([value]);
+    });
+  }
+
+  updateObjectByName(name: string, key: string, value: any): void {
+    const object = this.getObjectByName(name);
+    if (!object) return;
+
+    this.transact(() => {
+      console.debug("[JupyterCadDoc.updateObjectByName] name", name);
+      object.set(key, value);
+    });
   }
 
   getOption(key: string): any {
@@ -341,6 +357,7 @@ export class JupyterCadDoc
   }
 
   private _objectsObserver = (event: Y.YArrayEvent<IJCadObjectDoc>): void => {
+    console.debug("[JupyterCadDoc._objectsObserver]");
     event.changes.added.forEach(item => {
       const type = (item.content as Y.ContentType).type as Y.Map<any>;
       type.observe(this.emitChange);

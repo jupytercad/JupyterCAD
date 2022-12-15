@@ -105,7 +105,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
         ...(currentYMap.get('parameters') as IDict),
         ...properties
       };
-      currentYMap.set('parameters', newParams);
+      this.props.cpModel.jcadModel?.sharedModel.updateObjectByName(objectName, 'parameters', newParams);
     }
   }
 
