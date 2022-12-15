@@ -241,7 +241,7 @@ export class JupyterCadDoc
 
     this._options = this.ydoc.getMap<any>('options');
     this._objects = this.ydoc.getArray<IJCadObjectDoc>('objects');
-    
+
     this.undoManager.addToScope(this._objects);
 
     this._objects.observe(this._objectsObserver);
