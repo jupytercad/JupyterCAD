@@ -45,12 +45,12 @@ export const Annotation = (props: IProps): JSX.Element => {
           }}
         />
         <div style={{ paddingBottom: 10, maxHeight: 400, overflow: 'auto' }}>
-          {contents.map((content, index) => {
+          {contents.map(content => {
             return (
               <Message
                 user={content.user}
                 message={content.value}
-                index={index}
+                self={model.user?.username === content.user?.username}
               />
             );
           })}
