@@ -130,11 +130,18 @@ export type IJCadObjectDoc = Y.Map<any>;
 export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   objects: Y.Array<IJCadObjectDoc>;
   options: Y.Map<any>;
+  metadata: Y.Map<string>;
+
   getObjectByName(name: string): IJCadObjectDoc | undefined;
   removeObjectByName(name: string): void;
   addObject(value: IJCadObjectDoc): void;
   getOption(key: string): any;
   setOption(key: string, value: any): void;
+
+  setMetadata(key: string, value: string): void;
+  removeMetadata(key: string): void;
+
+  metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
 }
 
 export interface IJupyterCadClientState {
@@ -176,6 +183,9 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     parentType: 'panel' | 'dialog';
   });
   getClientId(): number;
+
+  addMetadata(key: string, value: string): void;
+  removeMetadata(key: string): void;
 }
 
 export type IJupyterCadWidget = IDocumentWidget<ReactWidget, IJupyterCadModel>;

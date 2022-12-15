@@ -1,6 +1,6 @@
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { IModelDB, ModelDB } from '@jupyterlab/observables';
-import { YDocument } from '@jupyter-notebook/ydoc';
+import { MapChange, YDocument } from '@jupyter-notebook/ydoc';
 import { PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import Ajv from 'ajv';
@@ -24,6 +24,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.modelDB = modelDB || new ModelDB();
     this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
+    this.sharedModel;
   }
 
   get isDisposed(): boolean {
@@ -49,14 +50,6 @@ export class JupyterCadModel implements IJupyterCadModel {
     return this._themeChanged;
   }
 
-  dispose(): void {
-    if (this._isDisposed) {
-      return;
-    }
-    this._isDisposed = true;
-    Signal.clearData(this);
-  }
-
   get dirty(): boolean {
     return this._dirty;
   }
@@ -69,6 +62,26 @@ export class JupyterCadModel implements IJupyterCadModel {
   }
   set readOnly(value: boolean) {
     this._readOnly = value;
+  }
+
+  get localState(): IJupyterCadClientState | null {
+    return this.sharedModel.awareness.getLocalState() as IJupyterCadClientState | null;
+  }
+
+  get clientStateChanged(): ISignal<this, Map<number, IJupyterCadClientState>> {
+    return this._clientStateChanged;
+  }
+
+  get sharedMetadataChanged(): ISignal<IJupyterCadDoc, MapChange> {
+    return this.sharedModel.metadataChanged;
+  }
+
+  dispose(): void {
+    if (this._isDisposed) {
+      return;
+    }
+    this._isDisposed = true;
+    Signal.clearData(this);
   }
 
   toString(): string {
@@ -176,12 +189,12 @@ export class JupyterCadModel implements IJupyterCadModel {
     return this.sharedModel.awareness.clientID;
   }
 
-  get localState(): IJupyterCadClientState | null {
-    return this.sharedModel.awareness.getLocalState() as IJupyterCadClientState | null;
+  addMetadata(key: string, value: string): void {
+    this.sharedModel.setMetadata(key, value);
   }
 
-  get clientStateChanged(): ISignal<this, Map<number, IJupyterCadClientState>> {
-    return this._clientStateChanged;
+  removeMetadata(key: string): void {
+    this.sharedModel.removeMetadata(key);
   }
 
   private _onClientStateChanged = changed => {
@@ -226,10 +239,13 @@ export class JupyterCadDoc
   constructor() {
     super();
 
-    this._objects = this.ydoc.getArray<IJCadObjectDoc>('objects');
     this._options = this.ydoc.getMap<any>('options');
 
+    this._objects = this.ydoc.getArray<IJCadObjectDoc>('objects');
     this._objects.observe(this._objectsObserver);
+
+    this._metadata = this.ydoc.getMap<string>('metadata');
+    this._metadata.observe(this._metaObserver);
   }
 
   dispose(): void {
@@ -242,6 +258,23 @@ export class JupyterCadDoc
   }
   get options(): Y.Map<any> {
     return this._options;
+  }
+  get metadata(): Y.Map<string> {
+    return this._metadata;
+  }
+
+  get metadataChanged(): ISignal<IJupyterCadDoc, MapChange> {
+    return this._metadataChanged;
+  }
+
+  setMetadata(key: string, value: string): void {
+    this._metadata.set(key, value);
+  }
+
+  removeMetadata(key: string): void {
+    if (this._metadata.has(key)) {
+      this._metadata.delete(key);
+    }
   }
 
   getObjectByName(name: string): IJCadObjectDoc | undefined {
@@ -294,10 +327,16 @@ export class JupyterCadDoc
     this._changed.emit({ objectChange });
   };
 
+  private _metaObserver = (event: Y.YMapEvent<string>): void => {
+    this._metadataChanged.emit(event.keys);
+  };
+
   private emitChange = () => {
     this._changed.emit({});
   };
 
   private _objects: Y.Array<IJCadObjectDoc>;
   private _options: Y.Map<any>;
+  private _metadata: Y.Map<string>;
+  private _metadataChanged = new Signal<IJupyterCadDoc, MapChange>(this);
 }

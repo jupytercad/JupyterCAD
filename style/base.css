@@ -210,3 +210,120 @@ div.field.field-array > label + span {
   height: 100%;
   box-sizing: border-box;
 }
+
+.jcad-Annotation-Wrapper {
+  position: absolute;
+  opacity: 1;
+  transition: opacity 0.1s linear 0.15s;
+}
+
+.jcad-Annotation {
+  position: absolute;
+  /* top: 0;
+  left: 0; */
+  z-index: 1;
+  margin-left: 1px;
+  margin-top: 1px;
+  padding: 1em;
+  width: 250px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 0.5em;
+  font-size: 12px;
+  line-height: 1.2;
+  transition: opacity 0.5s;
+}
+
+.jcad-Annotation-Handler {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid #ffffffc2;
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 30px;
+  text-align: center;
+  background: rgb(0 0 0 / 63%);
+}
+
+.jcad-Annotation-CloseHandler {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #ffffffc2;
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 30px;
+  text-align: center;
+  background: -webkit-linear-gradient(
+      -45deg,
+      transparent 0%,
+      transparent 46%,
+      #ffffffc2 46%,
+      #ffffffc2 56%,
+      transparent 56%,
+      transparent 100%
+    ),
+    -webkit-linear-gradient(45deg, transparent 0%, transparent 46%, #ffffffc2
+          46%, #ffffffc2 56%, transparent 56%, transparent 100%);
+  background-color: rgb(0 0 0 / 63%);
+  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+}
+.jcad-Annotation-CloseHandler:hover {
+  border: 1px solid #5ac8fa;
+  background: -webkit-linear-gradient(
+      -45deg,
+      transparent 0%,
+      transparent 46%,
+      #5ac8fa 46%,
+      #5ac8fa 56%,
+      transparent 56%,
+      transparent 100%
+    ),
+    -webkit-linear-gradient(45deg, transparent 0%, transparent 46%, #5ac8fa 46%, #5ac8fa
+          56%, transparent 56%, transparent 100%);
+}
+
+.jcad-Annotation-Message {
+  display: flex;
+  margin-top: 10px;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.jcad-Annotation-Message .jcad-Annotation-User-Icon {
+  border-radius: 100%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.jcad-Annotation-Message textarea {
+  border-radius: 5px;
+  flex-grow: 1;
+  resize: none;
+}
+
+.jcad-Annotation-Submit > svg {
+  width: 30px;
+  height: 30px;
+}
+
+.jcad-Annotation-Submit g {
+  fill: #f6f7f8 !important;
+}
+
+.jcad-Annotation-Submit:hover {
+  background-color: grey;
+}
+.jcad-Annotation-Submit {
+  background-color: #3a3937;
+  border-radius: 100%;
+}

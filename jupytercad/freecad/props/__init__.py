@@ -5,3 +5,4 @@ from .property_bool import *
 from .property_link import *
 from .property_link_list import *
 from .property_partshape import *
+from .property_map import *

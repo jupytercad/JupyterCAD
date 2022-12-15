@@ -22,6 +22,7 @@ class FCStd:
         self._sources = ''
         self._objects = []
         self._options = {}
+        self._metadata = {}
         self._id = None
         self._visible = True
         self._prop_handlers: Dict[str, BaseProp] = {}
@@ -38,6 +39,10 @@ class FCStd:
         return self._objects
 
     @property
+    def metadata(self):
+        return self._metadata
+
+    @property
     def options(self):
         return self._options
 
@@ -52,9 +57,10 @@ class FCStd:
         fc_file = fc.app.openDocument(tmp.name)
         for obj in fc_file.Objects:
             self._objects.append(self._fc_to_jcad_obj(obj))
+        self._metadata = fc_file.Meta
         os.remove(tmp.name)
 
-    def save(self, objects: List, options: Dict) -> None:
+    def save(self, objects: List, options: Dict, metadata: Dict) -> None:
         try:
 
             if not fc or len(self._sources) == 0:
@@ -66,6 +72,8 @@ class FCStd:
                 file_content = base64.b64decode(self._sources)
                 tmp.write(file_content)
             fc_file = fc.app.openDocument(tmp.name)
+            fc_file.Meta = metadata
+
             new_objs = dict([(o['name'], o) for o in objects])
             current_objs = dict([(o.Name, o) for o in fc_file.Objects])
             to_remove = [x for x in current_objs if x not in new_objs]
