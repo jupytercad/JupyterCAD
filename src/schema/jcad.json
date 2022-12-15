@@ -9,6 +9,13 @@
     },
     "options": {
       "type": "object"
+    },
+    "metadata": {
+      "type": "object",
+      "patternProperties": {
+        "^.*$": { "type": "string" }
+      },
+      "additionalProperties": false
     }
   },
   "definitions": {

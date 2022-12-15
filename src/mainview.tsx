@@ -23,11 +23,18 @@ import {
   IDict,
   IDisplayShape,
   IJupyterCadClientState,
+  IJupyterCadDoc,
   IMainMessage,
   IWorkerMessage,
   MainAction,
   WorkerAction
 } from './types';
+
+import { ContextMenu } from '@lumino/widgets';
+import { CommandRegistry } from '@lumino/commands';
+import { MapChange } from '@jupyter-notebook/ydoc';
+import { Annotation } from './annotation/view';
+import { AnnotationModel } from './annotation/model';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -52,6 +59,8 @@ interface IStates {
   loading: boolean;
   lightTheme: boolean;
   remoteUser?: User.IIdentity | null;
+  annotations: IDict;
+  firstLoad: boolean;
 }
 
 /**
@@ -78,7 +87,9 @@ export class MainView extends React.Component<IProps, IStates> {
     this.state = {
       id: uuid(),
       lightTheme,
-      loading: true
+      loading: true,
+      annotations: {},
+      firstLoad: true
     };
 
     this._pointer = new THREE.Vector2();
@@ -87,7 +98,6 @@ export class MainView extends React.Component<IProps, IStates> {
     this._collaboratorPointers = {};
     this._context.ready.then(() => {
       this._model = this._context.model as JupyterCadModel;
-
       this._worker = this._model.getWorker();
       this._messageChannel = new MessageChannel();
       this._messageChannel.port1.onmessage = msgEvent => {
@@ -97,8 +107,13 @@ export class MainView extends React.Component<IProps, IStates> {
         { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
         this._messageChannel.port2
       );
+      this._annotationModel = new AnnotationModel({
+        sharedModel: this._model.sharedModel,
+        getCoordinate: this._projectVector
+      });
       this._model.themeChanged.connect(this._handleThemeChange);
       this._model.clientStateChanged.connect(this._onClientSharedStateChanged);
+      this._model.sharedMetadataChanged.connect(this._onSharedMetadataChanged);
     });
     if (this._raycaster.params.Line) {
       this._raycaster.params.Line.threshold = 0.1;
@@ -108,6 +123,7 @@ export class MainView extends React.Component<IProps, IStates> {
   componentDidMount(): void {
     window.addEventListener('resize', this._handleWindowResize);
     this.generateScene();
+    this.addContextMenu();
   }
 
   componentDidUpdate(oldProps: IProps, oldState: IStates): void {
@@ -127,6 +143,35 @@ export class MainView extends React.Component<IProps, IStates> {
     this._model.themeChanged.disconnect(this._handleThemeChange);
     this._model.clientStateChanged.disconnect(this._onClientSharedStateChanged);
   }
+
+  addContextMenu = (): void => {
+    const commands = new CommandRegistry();
+    commands.addCommand('add-annotation', {
+      execute: () => {
+        const currentId = this._model.getClientId();
+        const localPointer = this._collaboratorPointers[currentId];
+        const position = localPointer?.position;
+        if (position) {
+          this._model.addMetadata(
+            `annotation_${uuid()}`,
+            JSON.stringify({
+              position: [position.x, position.y, position.z],
+              label: 'New annotation',
+              contents: []
+            })
+          );
+        }
+      },
+      label: 'Add annotation',
+      isEnabled: () => true
+    });
+    this._contextMenu = new ContextMenu({ commands });
+    this._contextMenu.addItem({
+      command: 'add-annotation',
+      selector: 'canvas',
+      rank: 1
+    });
+  };
 
   addSceneAxe = (dir: THREE.Vector3, color: number): void => {
     const origin = new THREE.Vector3(0, 0, 0);
@@ -204,10 +249,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
       const light2 = new THREE.SpotLight(0xffffff, 1);
       light2.castShadow = true;
-      // light2.shadow.camera.top = 200;
-      // light2.shadow.camera.bottom = -200;
-      // light2.shadow.camera.left = -200;
-      // light2.shadow.camera.right = 200;
       light2.shadow.radius = 32;
       light2.shadow.mapSize.width = 128;
       light2.shadow.mapSize.height = 128;
@@ -229,18 +270,27 @@ export class MainView extends React.Component<IProps, IStates> {
         'pointermove',
         this._onPointerMove.bind(this)
       );
-      this._renderer.domElement.addEventListener(
-        'mouseup',
-        this._onClick.bind(this)
-      );
+      this._renderer.domElement.addEventListener('mouseup', e => {
+        this._updateAnnotation({ updateDisplay: 1, updatePosition: true });
+        this._onClick.bind(this)(e);
+      });
+      this._renderer.domElement.addEventListener('mousedown', e => {
+        this._updateAnnotation({ updateDisplay: 0 });
+      });
+
+      this._renderer.domElement.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        this._contextMenu.open(e);
+      });
 
       const controls = new OrbitControls(
         this._camera,
         this._renderer.domElement
       );
-      controls.rotateSpeed = 1.0;
-      controls.zoomSpeed = 1.2;
-      controls.panSpeed = 0.8;
+      // controls.rotateSpeed = 1.0;
+      // controls.zoomSpeed = 1.2;
+      // controls.panSpeed = 0.8;
       controls.target.set(
         this._scene.position.x,
         this._scene.position.y,
@@ -249,6 +299,8 @@ export class MainView extends React.Component<IProps, IStates> {
       this._controls = controls;
 
       this._controls.addEventListener('change', () => {
+        this._updateAnnotation({ updatePosition: true });
+
         // Not syncing camera state if following someone else
         if (this._model.localState?.remoteUser) {
           return;
@@ -361,6 +413,38 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   };
 
+  private _projectVector = (
+    vector: [number, number, number]
+  ): [number, number] => {
+    const copy = new THREE.Vector3(vector[0], vector[1], vector[2]);
+    const canvas = this._renderer.domElement;
+    copy.project(this._camera);
+    const newCoor: [number, number] = [0, 0];
+    newCoor[0] = (0.5 + copy.x / 2) * canvas.width;
+    newCoor[1] = (0.5 - copy.y / 2) * canvas.height;
+    return newCoor;
+  };
+  private _updateAnnotation = (options: {
+    updatePosition?: boolean;
+    updateDisplay?: number;
+  }) => {
+    Object.keys(this.state.annotations).forEach(key => {
+      const el = document.getElementById(key);
+      if (el) {
+        if (
+          options.updatePosition &&
+          (el.style.opacity !== '0' || options.updateDisplay !== undefined)
+        ) {
+          const newPos = this._annotationModel.getCoordinate(key) ?? [0, 0];
+          el.style.top = `${newPos[1]}px`;
+          el.style.left = `${newPos[0]}px`;
+        }
+        if (options.updateDisplay !== undefined) {
+          el.style.opacity = options.updateDisplay.toString();
+        }
+      }
+    });
+  };
   private _onPointerMove(e: MouseEvent) {
     const rect = this._renderer.domElement.getBoundingClientRect();
 
@@ -564,6 +648,33 @@ export class MainView extends React.Component<IProps, IStates> {
 
     return new THREE.Mesh(this._pointerGeometry, material);
   }
+  private _onSharedMetadataChanged = (
+    _: IJupyterCadDoc,
+    changes: MapChange
+  ) => {
+    const metaData = this._model.sharedModel.metadata;
+    const newState = { ...this.state.annotations };
+    changes.forEach((val, key) => {
+      if (!key.startsWith('annotation')) {
+        return;
+      }
+      const data = metaData.get(key);
+      let open = true;
+      if (this.state.firstLoad) {
+        open = false;
+      }
+
+      if (data && (val.action === 'add' || val.action === 'update')) {
+        const jsonData = JSON.parse(data);
+        jsonData['open'] = open;
+        newState[key] = jsonData;
+      } else if (val.action === 'delete') {
+        delete newState[key];
+      }
+    });
+
+    this.setState(old => ({ ...old, annotations: newState, firstLoad: false }));
+  };
 
   private _onClientSharedStateChanged = (
     sender: JupyterCadModel,
@@ -661,6 +772,7 @@ export class MainView extends React.Component<IProps, IStates> {
     clearTimeout(this._resizeTimeout);
     this._resizeTimeout = setTimeout(() => {
       this.forceUpdate();
+      this._updateAnnotation({ updatePosition: true });
     }, 500);
   };
 
@@ -693,6 +805,26 @@ export class MainView extends React.Component<IProps, IStates> {
             {`Following ${this.state.remoteUser.display_name}`}
           </div>
         ) : null}
+        {Object.entries(this.state.annotations).map(([key, value]) => {
+          const initialPosition = this._projectVector(value.position);
+          return (
+            <div
+              key={key}
+              id={key}
+              style={{
+                left: initialPosition[0],
+                top: initialPosition[1]
+              }}
+              className={'jcad-Annotation-Wrapper'}
+            >
+              <Annotation
+                itemId={key}
+                model={this._annotationModel}
+                open={value.open}
+              />
+            </div>
+          );
+        })}
 
         <div
           ref={this.divRef}
@@ -730,8 +862,10 @@ export class MainView extends React.Component<IProps, IStates> {
   private _refLength: number | null = null; // Length of bounding box of current object
   private _gridHelper: THREE.GridHelper; // Threejs grid
   private _sceneAxe: (THREE.ArrowHelper | Line2)[]; // Array of  X, Y and Z axe
-  private _controls: any; // Threejs control
+  private _controls: OrbitControls; // Threejs control
   private _resizeTimeout: any;
   private _collaboratorPointers: IDict<THREE.Mesh>;
   private _pointerGeometry: THREE.SphereGeometry;
+  private _contextMenu: ContextMenu;
+  private _annotationModel: AnnotationModel;
 }
