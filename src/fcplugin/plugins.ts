@@ -106,7 +106,7 @@ function addCommands(
 
   commands.addCommand(CommandIDs.redo, {
     label: trans.__('Redo'),
-    isEnabled,
+    isEnabled: () => isEnabled() && tracker.currentWidget!.context.model.sharedModel.canRedo(),
     execute: args => {
       const current = tracker.currentWidget;
 
@@ -118,7 +118,7 @@ function addCommands(
 
   commands.addCommand(CommandIDs.undo, {
     label: trans.__('Undo'),
-    isEnabled,
+    isEnabled: () => isEnabled() && tracker.currentWidget!.context.model.sharedModel.canUndo(),
     execute: args => {
       const current = tracker.currentWidget;
 
