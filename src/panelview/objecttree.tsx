@@ -297,7 +297,11 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                         className={'jp-ToolbarButtonComponent'}
                         onClick={() => {
                           const objectId = options.node.parentId as string;
-                          this.props.cpModel.jcadModel?.sharedModel.updateObjectByName(objectId, 'visible', !visible);
+                          this.props.cpModel.jcadModel?.sharedModel.updateObjectByName(
+                            objectId,
+                            'visible',
+                            !visible
+                          );
                         }}
                         icon={visible ? visibilityIcon : visibilityOffIcon}
                       />

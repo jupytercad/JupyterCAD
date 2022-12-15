@@ -18,7 +18,6 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   JupyterCadWidget,
   JupyterCadModel
 > {
-
   private _commands: CommandRegistry;
 
   constructor(options: IOptios) {
@@ -38,7 +37,10 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
     context: DocumentRegistry.IContext<JupyterCadModel>
   ): JupyterCadWidget {
     const toolbarModel = new ToolbarModel({ context });
-    const toolbar = new ToolbarWidget({ model: toolbarModel, commands: this._commands });
+    const toolbar = new ToolbarWidget({
+      model: toolbarModel,
+      commands: this._commands
+    });
     return new JupyterCadWidget({
       context,
       content: new JupyterCadPanel(context),

@@ -40,7 +40,7 @@ const activate = (
     fileFormat: 'text',
     contentType: 'jcad'
   });
-  
+
   widgetFactory.widgetCreated.connect((sender, widget) => {
     widget.context.pathChanged.connect(() => {
       tracker.save(widget);

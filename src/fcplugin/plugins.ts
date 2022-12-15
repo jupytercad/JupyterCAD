@@ -12,8 +12,6 @@ import { IJupyterCadWidget } from '../types';
 
 const FACTORY = 'Jupytercad Freecad Factory';
 
-
-
 const activate = (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,

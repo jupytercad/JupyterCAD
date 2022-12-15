@@ -1,7 +1,7 @@
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import { JSONExt } from '@lumino/coreutils'
+import { JSONExt } from '@lumino/coreutils';
 import * as React from 'react';
 import {
   focusInputField,
@@ -106,7 +106,11 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
         ...JSONExt.deepCopy(currentYMap.get('parameters')),
         ...properties
       };
-      this.props.cpModel.jcadModel?.sharedModel.updateObjectByName(objectName, 'parameters', newParams);
+      this.props.cpModel.jcadModel?.sharedModel.updateObjectByName(
+        objectName,
+        'parameters',
+        newParams
+      );
     }
   }
 

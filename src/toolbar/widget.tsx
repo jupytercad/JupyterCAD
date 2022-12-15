@@ -1,5 +1,10 @@
 import { CommandToolbarButton } from '@jupyterlab/apputils';
-import { Toolbar, ReactWidget, undoIcon, redoIcon } from '@jupyterlab/ui-components';
+import {
+  Toolbar,
+  ReactWidget,
+  undoIcon,
+  redoIcon
+} from '@jupyterlab/ui-components';
 
 import { CommandRegistry } from '@lumino/commands';
 
@@ -8,7 +13,6 @@ import * as React from 'react';
 import { ToolbarReact } from './toolbar';
 import { ToolbarModel } from './model';
 
-
 export class ToolbarWidget extends Toolbar {
   constructor(options: ToolbarWidget.IOptions) {
     const { model, ...rest } = options;
@@ -16,7 +20,8 @@ export class ToolbarWidget extends Toolbar {
     this.addClass('jpcad-toolbar-widget');
     this._model = model;
 
-    this.addItem('undo',
+    this.addItem(
+      'undo',
       new CommandToolbarButton({
         id: ToolbarWidget.CommandIDs.undo,
         label: '',
@@ -24,7 +29,8 @@ export class ToolbarWidget extends Toolbar {
         commands: options.commands
       })
     );
-    this.addItem('redo',
+    this.addItem(
+      'redo',
       new CommandToolbarButton({
         id: ToolbarWidget.CommandIDs.redo,
         label: '',

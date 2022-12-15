@@ -25,7 +25,11 @@ const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
   autoStart: true,
   requires: [IMainMenu, ITranslator],
   provides: IJupyterCadDocTracker,
-  activate: (app: JupyterFrontEnd, mainMenu: IMainMenu, translator: ITranslator): IJupyterCadTracker => {
+  activate: (
+    app: JupyterFrontEnd,
+    mainMenu: IMainMenu,
+    translator: ITranslator
+  ): IJupyterCadTracker => {
     const tracker = new WidgetTracker<JupyterCadWidget>({
       namespace: NAME_SPACE
     });
@@ -47,7 +51,7 @@ const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
 
     addCommands(app, tracker, translator);
     populateMenus(mainMenu, isEnabled);
-    
+
     return tracker;
   }
 };
@@ -83,7 +87,6 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
 };
 
 export default [plugin, controlPanel, fcplugin, jcadPlugin];
-
 
 /**
  * Add the FreeCAD commands to the application's command registry.
@@ -122,10 +125,7 @@ function addCommands(
 /**
  * Populates the application menus for the notebook.
  */
-function populateMenus(
-  mainMenu: IMainMenu,
-  isEnabled: () => boolean
-): void {
+function populateMenus(mainMenu: IMainMenu, isEnabled: () => boolean): void {
   // Add undo/redo hooks to the edit menu.
   mainMenu.editMenu.undoers.redo.add({
     id: ToolbarWidget.CommandIDs.redo,

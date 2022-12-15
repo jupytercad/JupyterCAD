@@ -331,7 +331,9 @@ export class JupyterCadDoc
 
   updateObjectByName(name: string, key: string, value: any): void {
     const object = this.getObjectByName(name);
-    if (!object) return;
+    if (!object) {
+      return;
+    }
 
     this.transact(() => {
       object.set(key, value);

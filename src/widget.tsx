@@ -13,7 +13,9 @@ export class JupyterCadWidget
   extends DocumentWidget<JupyterCadPanel, JupyterCadModel>
   implements IJupyterCadWidget
 {
-  constructor(options: DocumentWidget.IOptions<JupyterCadPanel, JupyterCadModel>) {
+  constructor(
+    options: DocumentWidget.IOptions<JupyterCadPanel, JupyterCadModel>
+  ) {
     super(options);
   }
 
