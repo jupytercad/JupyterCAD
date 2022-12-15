@@ -240,8 +240,10 @@ export class JupyterCadDoc
     super();
 
     this._options = this.ydoc.getMap<any>('options');
-
     this._objects = this.ydoc.getArray<IJCadObjectDoc>('objects');
+    
+    this.undoManager.addToScope(this._objects);
+
     this._objects.observe(this._objectsObserver);
 
     this._metadata = this.ydoc.getMap<string>('metadata');
@@ -275,6 +277,30 @@ export class JupyterCadDoc
     if (this._metadata.has(key)) {
       this._metadata.delete(key);
     }
+  }
+
+  /**
+   * Undo an operation.
+   */
+  undo(): void {
+    console.debug("[JupyterCadDoc.undo]");
+    this.undoManager.undo();
+  }
+
+  /**
+   * Redo an operation.
+   */
+  redo(): void {
+    console.debug("[JupyterCadDoc.redo]");
+    this.undoManager.redo();
+  }
+
+  /**
+   * Clear the change stack.
+   */
+  clearUndoHistory(): void {
+    console.debug("[JupyterCadDoc.clearUndoHistory]");
+    this.undoManager.clear();
   }
 
   getObjectByName(name: string): IJCadObjectDoc | undefined {
