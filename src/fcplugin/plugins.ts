@@ -26,7 +26,8 @@ const activate = (
     modelName: 'jupytercad-fcmodel',
     fileTypes: ['FCStd'],
     defaultFor: ['FCStd'],
-    tracker
+    tracker,
+    commands: app.commands
   });
 
   // Registering the widget factory

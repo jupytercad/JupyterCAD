@@ -21,7 +21,8 @@ const activate = (
     modelName: 'jupytercad-jcadmodel',
     fileTypes: ['jcad'],
     defaultFor: ['jcad'],
-    tracker
+    tracker,
+    commands: app.commands
   });
 
   // Registering the widget factory

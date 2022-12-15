@@ -283,7 +283,6 @@ export class JupyterCadDoc
    * Undo an operation.
    */
   undo(): void {
-    console.debug("[JupyterCadDoc.undo]");
     this.undoManager.undo();
   }
 
@@ -291,7 +290,6 @@ export class JupyterCadDoc
    * Redo an operation.
    */
   redo(): void {
-    console.debug("[JupyterCadDoc.redo]");
     this.undoManager.redo();
   }
 
@@ -299,7 +297,6 @@ export class JupyterCadDoc
    * Clear the change stack.
    */
   clearUndoHistory(): void {
-    console.debug("[JupyterCadDoc.clearUndoHistory]");
     this.undoManager.clear();
   }
 
@@ -321,7 +318,6 @@ export class JupyterCadDoc
     });
     if (index > -1) {
       this.transact(() => {
-        console.debug("[JupyterCadDoc.removeObjectByName] name", name);
         this._objects.delete(index);
       });
     }
@@ -329,7 +325,6 @@ export class JupyterCadDoc
 
   addObject(value: IJCadObjectDoc): void {
     this.transact(() => {
-      console.debug("[JupyterCadDoc.addObject] value", value);
       this._objects.push([value]);
     });
   }
@@ -339,7 +334,6 @@ export class JupyterCadDoc
     if (!object) return;
 
     this.transact(() => {
-      console.debug("[JupyterCadDoc.updateObjectByName] name", name);
       object.set(key, value);
     });
   }
@@ -357,7 +351,6 @@ export class JupyterCadDoc
   }
 
   private _objectsObserver = (event: Y.YArrayEvent<IJCadObjectDoc>): void => {
-    console.debug("[JupyterCadDoc._objectsObserver]");
     event.changes.added.forEach(item => {
       const type = (item.content as Y.ContentType).type as Y.Map<any>;
       type.observe(this.emitChange);

@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { ReactWidget } from '@jupyterlab/apputils';
 import { DocumentRegistry, DocumentWidget } from '@jupyterlab/docregistry';
+
 import { Signal } from '@lumino/signaling';
 
 import { MainView } from './mainview';
@@ -12,9 +13,7 @@ export class JupyterCadWidget
   extends DocumentWidget<JupyterCadPanel, JupyterCadModel>
   implements IJupyterCadWidget
 {
-  constructor(
-    options: DocumentWidget.IOptions<JupyterCadPanel, JupyterCadModel>
-  ) {
+  constructor(options: DocumentWidget.IOptions<JupyterCadPanel, JupyterCadModel>) {
     super(options);
   }
 

@@ -16,16 +16,9 @@ import { RightPanelWidget } from './panelview/rightpanel';
 import { IJupyterCadDocTracker, IJupyterCadTracker } from './token';
 import { jcLightIcon } from './tools';
 import { JupyterCadWidget } from './widget';
+import { ToolbarWidget } from './toolbar/widget';
 
 const NAME_SPACE = 'jupytercad';
-
-/**
- * The command IDs used by the FreeCAD plugin.
- */
-namespace CommandIDs {
-  export const redo = 'jupytercad:redo';
-  export const undo = 'jupytercad:undo';
-}
 
 const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
   id: 'jupytercad:plugin',
@@ -52,7 +45,7 @@ const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
       );
     };
 
-    addCommands(app, tracker, translator, isEnabled);
+    addCommands(app, tracker, translator);
     populateMenus(mainMenu, isEnabled);
     
     return tracker;
@@ -98,15 +91,13 @@ export default [plugin, controlPanel, fcplugin, jcadPlugin];
 function addCommands(
   app: JupyterFrontEnd,
   tracker: WidgetTracker<JupyterCadWidget>,
-  translator: ITranslator,
-  isEnabled: () => boolean
+  translator: ITranslator
 ): void {
   const trans = translator.load('jupyterlab');
   const { commands } = app;
 
-  commands.addCommand(CommandIDs.redo, {
+  commands.addCommand(ToolbarWidget.CommandIDs.redo, {
     label: trans.__('Redo'),
-    isEnabled: () => isEnabled() && tracker.currentWidget!.context.model.sharedModel.canRedo(),
     execute: args => {
       const current = tracker.currentWidget;
 
@@ -116,9 +107,8 @@ function addCommands(
     }
   });
 
-  commands.addCommand(CommandIDs.undo, {
+  commands.addCommand(ToolbarWidget.CommandIDs.undo, {
     label: trans.__('Undo'),
-    isEnabled: () => isEnabled() && tracker.currentWidget!.context.model.sharedModel.canUndo(),
     execute: args => {
       const current = tracker.currentWidget;
 
@@ -138,11 +128,11 @@ function populateMenus(
 ): void {
   // Add undo/redo hooks to the edit menu.
   mainMenu.editMenu.undoers.redo.add({
-    id: CommandIDs.redo,
+    id: ToolbarWidget.CommandIDs.redo,
     isEnabled
   });
   mainMenu.editMenu.undoers.undo.add({
-    id: CommandIDs.undo,
+    id: ToolbarWidget.CommandIDs.undo,
     isEnabled
   });
 }
