@@ -28,13 +28,7 @@ export const Message = (props: IProps): JSX.Element => {
       >
         <span style={{ width: 24, textAlign: 'center' }}>{initials}</span>
       </div>
-      <div
-        style={{
-          background: '#3b3a3a',
-          borderRadius: 20,
-          flexGrow: 1
-        }}
-      >
+      <div className="jcad-Annotation-Message-Content">
         <p style={{ padding: 7, margin: 0 }}>{message}</p>
       </div>
     </div>
