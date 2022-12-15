@@ -249,6 +249,11 @@ export class MainView extends React.Component<IProps, IStates> {
       this._controls = controls;
 
       this._controls.addEventListener('change', () => {
+        // Not syncing camera state if following someone else
+        if (this._model.localState?.remoteUser) {
+          return;
+        }
+
         this._model.syncCamera(
           {
             position: this._camera.position.toArray([]),
@@ -572,9 +577,11 @@ export class MainView extends React.Component<IProps, IStates> {
       if (!remoteState) {
         return;
       }
+
       if (remoteState.user?.username !== this.state.remoteUser?.username) {
         this.setState(old => ({ ...old, remoteUser: remoteState.user }));
       }
+
       // Sync selected
       if (remoteState.selected.value) {
         const selected = this._meshGroup?.getObjectByName(
@@ -589,6 +596,7 @@ export class MainView extends React.Component<IProps, IStates> {
       } else {
         this._selectedMesh = null;
       }
+
       // Sync camera
       const remoteCamera = remoteState.camera;
       if (remoteCamera?.value) {
@@ -598,7 +606,21 @@ export class MainView extends React.Component<IProps, IStates> {
         this._camera.up.set(up[0], up[1], up[2]);
       }
     } else {
-      this.setState(old => ({ ...old, remoteUser: null }));
+      // If we are unfollowing a remote user, we reset our camera to its old position
+      if (this.state.remoteUser !== null) {
+        this.setState(old => ({ ...old, remoteUser: null }));
+        const camera = this._model.localState?.camera?.value;
+
+        if (camera) {
+          const position = camera.position;
+          const rotation = camera.rotation;
+          const up = camera.up;
+
+          this._camera.position.set(position[0], position[1], position[2]);
+          this._camera.rotation.set(rotation[0], rotation[1], rotation[2]);
+          this._camera.up.set(up[0], up[1], up[2]);
+        }
+      }
     }
 
     // Displaying collaborators pointers
@@ -710,7 +732,6 @@ export class MainView extends React.Component<IProps, IStates> {
   private _sceneAxe: (THREE.ArrowHelper | Line2)[]; // Array of  X, Y and Z axe
   private _controls: any; // Threejs control
   private _resizeTimeout: any;
-  // private _mouseDown = false;
   private _collaboratorPointers: IDict<THREE.Mesh>;
   private _pointerGeometry: THREE.SphereGeometry;
 }
