@@ -13,6 +13,7 @@ export interface IAnnotation {
   position: [number, number, number];
   contents: IAnnotationContent[];
 }
+
 export class AnnotationModel {
   constructor(options: AnnotationModel.IOptions) {
     this._getCoordinate = options.getCoordinate;
@@ -25,9 +26,14 @@ export class AnnotationModel {
     return this._updateSignal;
   }
 
+  get user(): User.IIdentity | undefined {
+    return this._user;
+  }
+
   update(): void {
     this._updateSignal.emit(null);
   }
+
   getAnnotation(id: string): IAnnotation | undefined {
     const rawData = this._sharedModel.metadata.get(id);
     if (rawData) {

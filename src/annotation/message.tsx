@@ -2,13 +2,24 @@ import { User } from '@jupyterlab/services';
 import * as React from 'react';
 
 interface IProps {
+  /*
+   * The message content.
+   **/
   message: string;
-  index: number;
+
+  /*
+   * Whether the message was originated from the current user.
+   **/
+  self: boolean;
+
+  /*
+   * The user who originated the message.
+   **/
   user?: User.IIdentity;
 }
 
 export const Message = (props: IProps): JSX.Element => {
-  const { index, message, user } = props;
+  const { self, message, user } = props;
   const color = user?.color ?? 'black';
   const author = user?.display_name ?? '';
   const initials = user?.initials ?? '';
@@ -16,7 +27,7 @@ export const Message = (props: IProps): JSX.Element => {
     <div
       className="jcad-Annotation-Message"
       style={{
-        flexFlow: index % 2 === 0 ? 'row' : 'row-reverse'
+        flexFlow: self ? 'row' : 'row-reverse'
       }}
     >
       <div

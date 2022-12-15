@@ -50,7 +50,7 @@ export const Annotation = (props: IProps): JSX.Element => {
               <Message
                 user={content.user}
                 message={content.value}
-                index={index}
+                self={model.user?.username === content.user?.username}
               />
             );
           })}
