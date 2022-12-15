@@ -45,7 +45,7 @@ export const Annotation = (props: IProps): JSX.Element => {
           }}
         />
         <div style={{ paddingBottom: 10, maxHeight: 400, overflow: 'auto' }}>
-          {contents.map((content) => {
+          {contents.map(content => {
             return (
               <Message
                 user={content.user}
