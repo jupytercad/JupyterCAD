@@ -2,7 +2,7 @@ import { Button } from '@jupyterlab/ui-components';
 import * as React from 'react';
 
 import { IDict } from '../types';
-import { IJCadObject } from '../_interface/jcad';
+import { IJCadObject, Parts } from '../_interface/jcad';
 import { FormDialog } from './formdialog';
 import { ToolbarModel } from './model';
 
@@ -107,7 +107,7 @@ export class PartToolbarReact extends React.Component<IProps> {
                 syncData: (props: IDict) => {
                   const { Name, ...parameters } = props;
                   const objectModel: IJCadObject = {
-                    shape: value.shape as any,
+                    shape: value.shape as Parts,
                     parameters,
                     visible: true,
                     name: Name
