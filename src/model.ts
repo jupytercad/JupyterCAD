@@ -256,27 +256,6 @@ export class JupyterCadDoc
     return this._metadataChanged;
   }
 
-  /**
-   * Undo an operation.
-   */
-  undo(): void {
-    this.undoManager.undo();
-  }
-
-  /**
-   * Redo an operation.
-   */
-  redo(): void {
-    this.undoManager.redo();
-  }
-
-  /**
-   * Clear the change stack.
-   */
-  clearUndoHistory(): void {
-    this.undoManager.clear();
-  }
-
   getObjectByName(name: string): IJCadObject | undefined {
     const obj = this._getObjectAsYMapByName(name);
     if (obj) {
