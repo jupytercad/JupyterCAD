@@ -1,11 +1,12 @@
-import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
-import { IJupyterCadDocTracker } from './../token';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 
+import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
+
 import { JupyterCadWidgetFactory } from '../factory';
+import { IJupyterCadDocTracker } from './../token';
 import { JupyterCadFCModelFactory } from './modelfactory';
 import { IJupyterCadWidget } from '../types';
 
@@ -23,7 +24,8 @@ const activate = (
     modelName: 'jupytercad-fcmodel',
     fileTypes: ['FCStd'],
     defaultFor: ['FCStd'],
-    tracker
+    tracker,
+    commands: app.commands
   });
 
   // Registering the widget factory
@@ -41,6 +43,7 @@ const activate = (
     fileFormat: 'base64',
     contentType: 'FCStd'
   });
+
   widgetFactory.widgetCreated.connect((sender, widget) => {
     // Notify the instance tracker if restore data needs to update.
     widget.context.pathChanged.connect(() => {

@@ -1,6 +1,8 @@
 import { IJupyterCadTracker } from './token';
 import { ABCWidgetFactory, DocumentRegistry } from '@jupyterlab/docregistry';
 
+import { CommandRegistry } from '@lumino/commands';
+
 import { JupyterCadModel } from './model';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import { ToolbarWidget } from './toolbar/widget';
@@ -9,15 +11,20 @@ import { ToolbarModel } from './toolbar/model';
 
 interface IOptios extends DocumentRegistry.IWidgetFactoryOptions {
   tracker: IJupyterCadTracker;
+  commands: CommandRegistry;
 }
 
 export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   JupyterCadWidget,
   JupyterCadModel
 > {
+  private _commands: CommandRegistry;
+
   constructor(options: IOptios) {
     const { ...rest } = options;
     super(rest);
+
+    this._commands = options.commands;
   }
 
   /**
@@ -30,7 +37,10 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
     context: DocumentRegistry.IContext<JupyterCadModel>
   ): JupyterCadWidget {
     const toolbarModel = new ToolbarModel({ context });
-    const toolbar = new ToolbarWidget({ model: toolbarModel });
+    const toolbar = new ToolbarWidget({
+      model: toolbarModel,
+      commands: this._commands
+    });
     return new JupyterCadWidget({
       context,
       content: new JupyterCadPanel(context),

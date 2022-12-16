@@ -240,8 +240,10 @@ export class JupyterCadDoc
     super();
 
     this._options = this.ydoc.getMap<any>('options');
-
     this._objects = this.ydoc.getArray<IJCadObjectDoc>('objects');
+
+    this.undoManager.addToScope(this._objects);
+
     this._objects.observe(this._objectsObserver);
 
     this._metadata = this.ydoc.getMap<string>('metadata');
@@ -277,6 +279,27 @@ export class JupyterCadDoc
     }
   }
 
+  /**
+   * Undo an operation.
+   */
+  undo(): void {
+    this.undoManager.undo();
+  }
+
+  /**
+   * Redo an operation.
+   */
+  redo(): void {
+    this.undoManager.redo();
+  }
+
+  /**
+   * Clear the change stack.
+   */
+  clearUndoHistory(): void {
+    this.undoManager.clear();
+  }
+
   getObjectByName(name: string): IJCadObjectDoc | undefined {
     for (const iterator of this._objects) {
       if (iterator.get('name') === name) {
@@ -294,12 +317,27 @@ export class JupyterCadDoc
       }
     });
     if (index > -1) {
-      this._objects.delete(index);
+      this.transact(() => {
+        this._objects.delete(index);
+      });
     }
   }
 
   addObject(value: IJCadObjectDoc): void {
-    this._objects.push([value]);
+    this.transact(() => {
+      this._objects.push([value]);
+    });
+  }
+
+  updateObjectByName(name: string, key: string, value: any): void {
+    const object = this.getObjectByName(name);
+    if (!object) {
+      return;
+    }
+
+    this.transact(() => {
+      object.set(key, value);
+    });
   }
 
   getOption(key: string): any {

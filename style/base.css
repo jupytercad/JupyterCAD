@@ -176,10 +176,6 @@ div.field.field-array > label + span {
   position: inherit;
 }
 
-.jpcad-toolbar-widget .jp-Toolbar-item {
-  flex-grow: 1;
-}
-
 .jpcad-toolbar-usertoolbar {
   flex-grow: 1;
   display: flex;

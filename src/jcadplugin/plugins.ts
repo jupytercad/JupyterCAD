@@ -21,7 +21,8 @@ const activate = (
     modelName: 'jupytercad-jcadmodel',
     fileTypes: ['jcad'],
     defaultFor: ['jcad'],
-    tracker
+    tracker,
+    commands: app.commands
   });
 
   // Registering the widget factory
@@ -39,6 +40,7 @@ const activate = (
     fileFormat: 'text',
     contentType: 'jcad'
   });
+
   widgetFactory.widgetCreated.connect((sender, widget) => {
     widget.context.pathChanged.connect(() => {
       tracker.save(widget);
