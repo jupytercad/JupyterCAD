@@ -3,7 +3,12 @@ import { IModelDB, ModelDB } from '@jupyterlab/observables';
 
 import { MapChange, YDocument } from '@jupyter/ydoc';
 
-import { PartialJSONObject, JSONExt } from '@lumino/coreutils';
+import {
+  PartialJSONObject,
+  JSONExt,
+  JSONValue,
+  JSONObject
+} from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 
 import Ajv from 'ajv';
@@ -101,13 +106,7 @@ export class JupyterCadModel implements IJupyterCadModel {
 
     this.sharedModel.transact(() => {
       this.sharedModel.addObjects(jsonData.objects);
-
-      const options = jsonData.options;
-      if (options) {
-        for (const [opt, val] of Object.entries(options)) {
-          this.sharedModel.setOption(opt, val);
-        }
-      }
+      this.sharedModel.setOptions(jsonData.options ?? {});
     });
   }
 
@@ -133,17 +132,9 @@ export class JupyterCadModel implements IJupyterCadModel {
   }
 
   getContent(): IJCadContent {
-    const options = {};
-    const sharedOption = this.sharedModel.options;
-    if (sharedOption) {
-      sharedOption.forEach((obj, id) => {
-        options[id] = obj;
-      });
-    }
-
     return {
       objects: this.sharedModel.objects,
-      options
+      options: this.sharedModel.options
     };
   }
 
@@ -250,10 +241,12 @@ export class JupyterCadDoc
   }
 
   get objects(): Array<IJCadObject> {
-    return this._objects.map(obj => JSONExt.deepCopy(obj.toJSON()) as IJCadObject);
+    return this._objects.map(
+      obj => JSONExt.deepCopy(obj.toJSON()) as IJCadObject
+    );
   }
-  get options(): Y.Map<any> {
-    return this._options;
+  get options(): JSONObject {
+    return JSONExt.deepCopy(this._options.toJSON());
   }
   get metadata(): Y.Map<string> {
     return this._metadata;
@@ -336,12 +329,18 @@ export class JupyterCadDoc
     this.transact(() => obj.set(key, value));
   }
 
-  getOption(key: string): any {
+  getOption(key: string): JSONValue {
     return this._options.get(key);
   }
 
-  setOption(key: string, value: any): void {
+  setOption(key: string, value: JSONValue): void {
     this._options.set(key, value);
+  }
+
+  setOptions(options: JSONObject): void {
+    for (const [key, value] of Object.entries(options)) {
+      this._options.set(key, value);
+    }
   }
 
   static create(): IJupyterCadDoc {
