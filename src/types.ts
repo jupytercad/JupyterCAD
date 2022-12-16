@@ -8,8 +8,6 @@ import { MapChange, YDocument, StateChange } from '@jupyter/ydoc';
 import { ISignal, Signal } from '@lumino/signaling';
 import { JSONObject } from '@lumino/coreutils';
 
-import * as Y from 'yjs';
-
 import { IJupyterCadTracker } from './token';
 import { IJCadContent, IJCadObject, IJCadModel } from './_interface/jcad';
 
@@ -131,7 +129,7 @@ export interface IJupyterCadDocChange {
 export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   objects: Array<IJCadObject>;
   options: JSONObject;
-  metadata: Y.Map<string>;
+  metadata: JSONObject;
 
   getObjectByName(name: string): IJCadObject | undefined;
   removeObjectByName(name: string): void;
@@ -143,6 +141,7 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   setOption(key: string, value: any): void;
   setOptions(options: JSONObject): void;
 
+  getMetadata(key: string): string | undefined;
   setMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;
 

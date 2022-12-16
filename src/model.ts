@@ -248,22 +248,12 @@ export class JupyterCadDoc
   get options(): JSONObject {
     return JSONExt.deepCopy(this._options.toJSON());
   }
-  get metadata(): Y.Map<string> {
-    return this._metadata;
+  get metadata(): JSONObject {
+    return JSONExt.deepCopy(this._metadata.toJSON());
   }
 
   get metadataChanged(): ISignal<IJupyterCadDoc, MapChange> {
     return this._metadataChanged;
-  }
-
-  setMetadata(key: string, value: string): void {
-    this._metadata.set(key, value);
-  }
-
-  removeMetadata(key: string): void {
-    if (this._metadata.has(key)) {
-      this._metadata.delete(key);
-    }
   }
 
   /**
@@ -340,6 +330,20 @@ export class JupyterCadDoc
   setOptions(options: JSONObject): void {
     for (const [key, value] of Object.entries(options)) {
       this._options.set(key, value);
+    }
+  }
+
+  getMetadata(key: string): string | undefined {
+    return this._metadata.get(key);
+  }
+
+  setMetadata(key: string, value: string): void {
+    this._metadata.set(key, value);
+  }
+
+  removeMetadata(key: string): void {
+    if (this._metadata.has(key)) {
+      this._metadata.delete(key);
     }
   }
 
