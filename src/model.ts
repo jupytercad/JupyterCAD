@@ -299,7 +299,7 @@ export class JupyterCadDoc
   }
 
   getOption(key: string): JSONValue {
-    return this._options.get(key);
+    return JSONExt.deepCopy(this._options.get(key));
   }
 
   setOption(key: string, value: JSONValue): void {
