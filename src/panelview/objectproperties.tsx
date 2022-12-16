@@ -1,8 +1,11 @@
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
+
 import { Panel } from '@lumino/widgets';
-import { JSONExt } from '@lumino/coreutils';
+
+import { v4 as uuid } from 'uuid';
 import * as React from 'react';
+
 import {
   focusInputField,
   itemFromName,
@@ -19,7 +22,6 @@ import {
 import { IJCadModel } from '../_interface/jcad';
 import { ObjectPropertiesForm } from './formbuilder';
 import formSchema from '../_interface/forms.json';
-import { v4 as uuid } from 'uuid';
 
 export class ObjectProperties extends PanelWithToolbar {
   constructor(params: ObjectProperties.IOptions) {
@@ -99,18 +101,13 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       return;
     }
 
-    const currentYMap =
-      this.props.cpModel.jcadModel?.sharedModel.getObjectByName(objectName);
-    if (currentYMap) {
-      const newParams = {
-        ...JSONExt.deepCopy(currentYMap.get('parameters')),
+    const model = this.props.cpModel.jcadModel?.sharedModel;
+    const obj = model?.getObjectByName(objectName);
+    if (model && obj) {
+      model.updateObjectByName(objectName, 'parameters', {
+        ...obj['parameters'],
         ...properties
-      };
-      this.props.cpModel.jcadModel?.sharedModel.updateObjectByName(
-        objectName,
-        'parameters',
-        newParams
-      );
+      });
     }
   }
 

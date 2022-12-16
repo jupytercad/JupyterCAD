@@ -1,8 +1,8 @@
 import { Button } from '@jupyterlab/ui-components';
 import * as React from 'react';
-import * as Y from 'yjs';
 
 import { IDict } from '../types';
+import { IJCadObject } from '../_interface/jcad';
 import { FormDialog } from './formdialog';
 import { ToolbarModel } from './model';
 
@@ -106,16 +106,15 @@ export class PartToolbarReact extends React.Component<IProps> {
                 schema: value.schema,
                 syncData: (props: IDict) => {
                   const { Name, ...parameters } = props;
-                  const objectModel = {
-                    shape: value.shape,
+                  const objectModel: IJCadObject = {
+                    shape: value.shape as any,
                     parameters,
                     visible: true,
                     name: Name
                   };
                   const model = this.props.toolbarModel.sharedModel;
                   if (model) {
-                    const object = new Y.Map<any>(Object.entries(objectModel));
-                    model.addObject(object);
+                    model.addObject(objectModel);
                   }
                 },
                 cancelButton: () => {

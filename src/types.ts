@@ -4,7 +4,9 @@ import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
 import { MapChange, YDocument, StateChange } from '@jupyter/ydoc';
 import { ReactWidget } from '@jupyterlab/ui-components';
 import { User } from '@jupyterlab/services';
+
 import { ISignal, Signal } from '@lumino/signaling';
+
 import * as Y from 'yjs';
 
 import { IJupyterCadTracker } from './token';
@@ -125,16 +127,15 @@ export interface IJupyterCadDocChange {
   stateChange?: StateChange<any>[];
 }
 
-export type IJCadObjectDoc = Y.Map<any>;
-
 export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
-  objects: Y.Array<IJCadObjectDoc>;
+  objects: Array<IJCadObject>;
   options: Y.Map<any>;
   metadata: Y.Map<string>;
 
-  getObjectByName(name: string): IJCadObjectDoc | undefined;
+  getObjectByName(name: string): IJCadObject | undefined;
   removeObjectByName(name: string): void;
-  addObject(value: IJCadObjectDoc): void;
+  addObject(value: IJCadObject): void;
+  addObjects(value: Array<IJCadObject>): void;
   updateObjectByName(name: string, key: string, value: any): void;
   getOption(key: string): any;
   setOption(key: string, value: any): void;
