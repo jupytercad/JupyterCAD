@@ -1,6 +1,6 @@
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { IModelDB, ModelDB } from '@jupyterlab/observables';
-import { MapChange, YDocument } from '@jupyter-notebook/ydoc';
+import { MapChange, YDocument } from '@jupyter/ydoc';
 import { PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import Ajv from 'ajv';
@@ -241,18 +241,17 @@ export class JupyterCadDoc
 
     this._options = this.ydoc.getMap<any>('options');
     this._objects = this.ydoc.getArray<IJCadObjectDoc>('objects');
+    this._metadata = this.ydoc.getMap<string>('metadata');
 
     this.undoManager.addToScope(this._objects);
 
-    this._objects.observe(this._objectsObserver);
-
-    this._metadata = this.ydoc.getMap<string>('metadata');
+    this._objects.observeDeep(this._objectsObserver);
     this._metadata.observe(this._metaObserver);
   }
 
   dispose(): void {
-    // this._objects.unobserve(this._objectsObserver);
-    // this._options.unobserve(this._optionsObserver);
+    this._objects.unobserveDeep(this._objectsObserver);
+    this._metadata.unobserve(this._metaObserver);
   }
 
   get objects(): Y.Array<IJCadObjectDoc> {
@@ -352,25 +351,12 @@ export class JupyterCadDoc
     return new JupyterCadDoc();
   }
 
-  private _objectsObserver = (event: Y.YArrayEvent<IJCadObjectDoc>): void => {
-    event.changes.added.forEach(item => {
-      const type = (item.content as Y.ContentType).type as Y.Map<any>;
-      type.observe(this.emitChange);
-    });
-    event.changes.deleted.forEach(item => {
-      const type = (item.content as Y.ContentType).type as Y.Map<any>;
-      type.unobserve(this.emitChange);
-    });
-    const objectChange = [];
-    this._changed.emit({ objectChange });
+  private _objectsObserver = (event: Y.YEvent<any>[]): void => {
+    this._changed.emit({ objectChange: [] });
   };
 
   private _metaObserver = (event: Y.YMapEvent<string>): void => {
     this._metadataChanged.emit(event.keys);
-  };
-
-  private emitChange = () => {
-    this._changed.emit({});
   };
 
   private _objects: Y.Array<IJCadObjectDoc>;

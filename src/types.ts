@@ -1,7 +1,7 @@
 import { IJCadObject } from './_interface/jcad.d';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
-import { MapChange, YDocument, StateChange } from '@jupyter-notebook/ydoc';
+import { MapChange, YDocument, StateChange } from '@jupyter/ydoc';
 import { ReactWidget } from '@jupyterlab/ui-components';
 import { User } from '@jupyterlab/services';
 import { ISignal, Signal } from '@lumino/signaling';

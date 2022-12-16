@@ -32,7 +32,7 @@ import {
 
 import { ContextMenu } from '@lumino/widgets';
 import { CommandRegistry } from '@lumino/commands';
-import { MapChange } from '@jupyter-notebook/ydoc';
+import { MapChange } from '@jupyter/ydoc';
 import { Annotation } from './annotation/view';
 import { AnnotationModel } from './annotation/model';
 
