@@ -16,7 +16,6 @@ export interface IAnnotation {
 
 export class AnnotationModel {
   constructor(options: AnnotationModel.IOptions) {
-    this._getCoordinate = options.getCoordinate;
     this._sharedModel = options.sharedModel;
     const state = this._sharedModel.awareness.getLocalState();
     this._user = state?.user;
@@ -49,13 +48,6 @@ export class AnnotationModel {
     this._sharedModel.removeMetadata(key);
   }
 
-  getCoordinate(id: string): [number, number] | undefined {
-    const annotation = this.getAnnotation(id);
-    if (annotation?.position) {
-      return this._getCoordinate(annotation.position);
-    }
-  }
-
   addContent(id: string, value: string): void {
     const newContent: IAnnotationContent = {
       value,
@@ -73,7 +65,6 @@ export class AnnotationModel {
   }
 
   private _sharedModel: IJupyterCadDoc;
-  private _getCoordinate: (input: [number, number, number]) => [number, number];
   private _updateSignal = new Signal<this, null>(this);
   private _user?: User.IIdentity;
 }
@@ -81,6 +72,5 @@ export class AnnotationModel {
 namespace AnnotationModel {
   export interface IOptions {
     sharedModel: IJupyterCadDoc;
-    getCoordinate: (input: [number, number, number]) => [number, number];
   }
 }

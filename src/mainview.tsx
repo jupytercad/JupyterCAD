@@ -108,8 +108,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this._messageChannel.port2
       );
       this._annotationModel = new AnnotationModel({
-        sharedModel: this._model.sharedModel,
-        getCoordinate: this._projectVector
+        sharedModel: this._model.sharedModel
       });
       this._model.themeChanged.connect(this._handleThemeChange);
       this._model.clientStateChanged.connect(this._onClientSharedStateChanged);
@@ -435,7 +434,13 @@ export class MainView extends React.Component<IProps, IStates> {
           options.updatePosition &&
           (el.style.opacity !== '0' || options.updateDisplay !== undefined)
         ) {
-          const newPos = this._annotationModel.getCoordinate(key) ?? [0, 0];
+          const annotation = this._annotationModel.getAnnotation(key);
+          let newPos: [number, number] | undefined;
+          if (annotation?.position) {
+            newPos = this._projectVector(annotation.position);
+          } else {
+            newPos = [0, 0];
+          }
           el.style.top = `${newPos[1]}px`;
           el.style.left = `${newPos[0]}px`;
         }
