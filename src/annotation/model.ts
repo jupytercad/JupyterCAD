@@ -1,24 +1,14 @@
+import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { User } from '@jupyterlab/services';
+
 import { ISignal, Signal } from '@lumino/signaling';
 
-import { IDict, IJupyterCadDoc } from '../types';
+import { IDict, IAnnotationModel, IAnnotation, IAnnotationContent, IJupyterCadModel } from '../types';
 
-export interface IAnnotationContent {
-  user?: User.IIdentity;
-  value: string;
-}
 
-export interface IAnnotation {
-  label: string;
-  position: [number, number, number];
-  contents: IAnnotationContent[];
-}
-
-export class AnnotationModel {
+export class AnnotationModel implements IAnnotationModel {
   constructor(options: AnnotationModel.IOptions) {
-    this._sharedModel = options.sharedModel;
-    const state = this._sharedModel.awareness.getLocalState();
-    this._user = state?.user;
+    this.context = options.context;
   }
 
   get updateSignal(): ISignal<this, null> {
@@ -29,23 +19,50 @@ export class AnnotationModel {
     return this._user;
   }
 
+  set context(context: DocumentRegistry.IContext<IJupyterCadModel> | undefined) {
+    this._context = context;
+
+    const state = this._context?.model.sharedModel.awareness.getLocalState();
+    this._user = state?.user;
+
+    this._contextChanged.emit(void 0);
+  }
+
+  get context(): DocumentRegistry.IContext<IJupyterCadModel> | undefined {
+    return this._context;
+  }
+
+  get contextChanged(): ISignal<this, void> {
+    return this._contextChanged;
+  }
+
   update(): void {
     this._updateSignal.emit(null);
   }
 
   getAnnotation(id: string): IAnnotation | undefined {
-    const rawData = this._sharedModel.getMetadata(id);
+    const rawData = this._context?.model.sharedModel.getMetadata(id);
     if (rawData) {
       return JSON.parse(rawData) as IAnnotation;
     }
   }
 
+  getAnnotationIds(): string[] {
+    const annotationIds: string[] = [];
+    for (const id in this._context?.model.sharedModel.metadata) {
+      if (id.startsWith('annotation')) {
+        annotationIds.push(id);
+      }
+    }
+    return annotationIds;
+  }
+
   addAnnotation(key: string, value: IDict): void {
-    this._sharedModel.setMetadata(key, JSON.stringify(value));
+    this._context?.model.sharedModel.setMetadata(key, JSON.stringify(value));
   }
 
   removeAnnotation(key): void {
-    this._sharedModel.removeMetadata(key);
+    this._context?.model.removeMetadata(key);
   }
 
   addContent(id: string, value: string): void {
@@ -60,17 +77,18 @@ export class AnnotationModel {
         contents: [...currentAnnotation.contents, newContent]
       };
 
-      this._sharedModel.setMetadata(id, JSON.stringify(newAnnotation));
+      this._context?.model.sharedModel.setMetadata(id, JSON.stringify(newAnnotation));
     }
   }
 
-  private _sharedModel: IJupyterCadDoc;
+  private _context: DocumentRegistry.IContext<IJupyterCadModel> | undefined;
+  private _contextChanged = new Signal<this, void>(this);
   private _updateSignal = new Signal<this, null>(this);
   private _user?: User.IIdentity;
 }
 
 namespace AnnotationModel {
   export interface IOptions {
-    sharedModel: IJupyterCadDoc;
+    context: DocumentRegistry.IContext<IJupyterCadModel> | undefined;
   }
 }

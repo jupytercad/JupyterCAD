@@ -33,8 +33,7 @@ import {
 import { ContextMenu } from '@lumino/widgets';
 import { CommandRegistry } from '@lumino/commands';
 import { MapChange } from '@jupyter/ydoc';
-import { Annotation } from './annotation/view';
-import { AnnotationModel } from './annotation/model';
+import { FloatingAnnotation } from './annotation/view';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -107,9 +106,6 @@ export class MainView extends React.Component<IProps, IStates> {
         { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
         this._messageChannel.port2
       );
-      this._annotationModel = new AnnotationModel({
-        sharedModel: this._model.sharedModel
-      });
       this._model.themeChanged.connect(this._handleThemeChange);
       this._model.clientStateChanged.connect(this._onClientSharedStateChanged);
       this._model.sharedMetadataChanged.connect(this._onSharedMetadataChanged);
@@ -423,6 +419,7 @@ export class MainView extends React.Component<IProps, IStates> {
     newCoor[1] = (0.5 - copy.y / 2) * canvas.height;
     return newCoor;
   };
+
   private _updateAnnotation = (options: {
     updatePosition?: boolean;
     updateDisplay?: number;
@@ -434,7 +431,7 @@ export class MainView extends React.Component<IProps, IStates> {
           options.updatePosition &&
           (el.style.opacity !== '0' || options.updateDisplay !== undefined)
         ) {
-          const annotation = this._annotationModel.getAnnotation(key);
+          const annotation = this._model.annotationModel.getAnnotation(key);
           let newPos: [number, number] | undefined;
           if (annotation?.position) {
             newPos = this._projectVector(annotation.position);
@@ -450,6 +447,7 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     });
   };
+
   private _onPointerMove(e: MouseEvent) {
     const rect = this._renderer.domElement.getBoundingClientRect();
 
@@ -821,9 +819,9 @@ export class MainView extends React.Component<IProps, IStates> {
               }}
               className={'jcad-Annotation-Wrapper'}
             >
-              <Annotation
+              <FloatingAnnotation
                 itemId={key}
-                model={this._annotationModel}
+                model={this._model.annotationModel}
                 open={value.open}
               />
             </div>
@@ -871,5 +869,4 @@ export class MainView extends React.Component<IProps, IStates> {
   private _collaboratorPointers: IDict<THREE.Mesh>;
   private _pointerGeometry: THREE.SphereGeometry;
   private _contextMenu: ContextMenu;
-  private _annotationModel: AnnotationModel;
 }

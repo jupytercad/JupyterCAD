@@ -174,6 +174,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     IJupyterCadModel,
     Map<number, IJupyterCadClientState>
   >;
+  sharedMetadataChanged: ISignal<IJupyterCadDoc, MapChange>;
   sharedModel: IJupyterCadDoc;
   localState: IJupyterCadClientState | null;
   getWorker(): Worker;
@@ -201,4 +202,35 @@ export interface IControlPanelModel {
   filePath: string | undefined;
   jcadModel: IJupyterCadModel | undefined;
   sharedModel: IJupyterCadDoc | undefined;
+}
+
+export interface IAnnotationContent {
+  user?: User.IIdentity;
+  value: string;
+}
+
+export interface IAnnotation {
+  label: string;
+  position: [number, number, number];
+  contents: IAnnotationContent[];
+}
+
+export interface IAnnotationModel {
+  updateSignal: ISignal<this, null>;
+  user: User.IIdentity | undefined;
+
+  context: DocumentRegistry.IContext<IJupyterCadModel> | undefined;
+  contextChanged: ISignal<this, void>;
+
+  update(): void;
+
+  getAnnotation(id: string): IAnnotation | undefined;
+
+  getAnnotationIds(): string[];
+
+  addAnnotation(key: string, value: IDict): void;
+
+  removeAnnotation(key): void;
+
+  addContent(id: string, value: string): void;
 }

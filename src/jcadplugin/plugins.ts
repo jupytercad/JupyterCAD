@@ -1,5 +1,5 @@
-import { IJupyterCadWidget } from './../types';
-import { IJupyterCadDocTracker } from './../token';
+import { IAnnotationModel, IJupyterCadWidget } from './../types';
+import { IAnnotation, IJupyterCadDocTracker } from './../token';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 import {
   JupyterFrontEnd,
@@ -14,7 +14,8 @@ const FACTORY = 'Jupytercad Jcad Factory';
 const activate = (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
-  themeManager: IThemeManager
+  themeManager: IThemeManager,
+  annotationModel: IAnnotationModel
 ): void => {
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
@@ -29,7 +30,7 @@ const activate = (
   app.docRegistry.addWidgetFactory(widgetFactory);
 
   // Creating and registering the model factory for our custom DocumentModel
-  const modelFactory = new JupyterCadJcadModelFactory();
+  const modelFactory = new JupyterCadJcadModelFactory({ annotationModel });
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype
   app.docRegistry.addFileType({
@@ -56,7 +57,7 @@ const activate = (
 
 const jcadPlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:jcadplugin',
-  requires: [IJupyterCadDocTracker, IThemeManager],
+  requires: [IJupyterCadDocTracker, IThemeManager, IAnnotation],
   autoStart: true,
   activate
 };

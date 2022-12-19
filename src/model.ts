@@ -24,12 +24,15 @@ import {
   PointerPosition,
   Camera
 } from './types';
+import { IAnnotationModel } from './types';
+
 
 export class JupyterCadModel implements IJupyterCadModel {
-  constructor(languagePreference?: string, modelDB?: IModelDB) {
+  constructor(annotationModel: IAnnotationModel, languagePreference?: string, modelDB?: IModelDB) {
     this.modelDB = modelDB || new ModelDB();
     this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
+    this.annotationModel = annotationModel;
   }
 
   get isDisposed(): boolean {
@@ -202,6 +205,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   readonly defaultKernelLanguage: string = '';
   readonly modelDB: IModelDB;
   readonly sharedModel = JupyterCadDoc.create();
+  readonly annotationModel: IAnnotationModel;
 
   private _dirty = false;
   private _readOnly = false;

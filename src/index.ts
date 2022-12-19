@@ -13,10 +13,12 @@ import { JupyterCadModel } from './model';
 import { ControlPanelModel } from './panelview/model';
 import { LeftPanelWidget } from './panelview/leftpanel';
 import { RightPanelWidget } from './panelview/rightpanel';
-import { IJupyterCadDocTracker, IJupyterCadTracker } from './token';
+import { IJupyterCadDocTracker, IJupyterCadTracker, IAnnotation } from './token';
 import { jcLightIcon } from './tools';
+import { IAnnotationModel } from './types';
 import { JupyterCadWidget } from './widget';
 import { ToolbarWidget } from './toolbar/widget';
+import { AnnotationModel } from './annotation/model';
 
 const NAME_SPACE = 'jupytercad';
 
@@ -56,18 +58,38 @@ const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
   }
 };
 
+const annotationPlugin: JupyterFrontEndPlugin<IAnnotationModel> = {
+  id: 'jupytercad:annotation',
+  autoStart: true,
+  requires: [IJupyterCadDocTracker],
+  provides: IAnnotation,
+  activate: (
+    app: JupyterFrontEnd,
+    tracker: IJupyterCadTracker
+  ) => {
+    const annotationModel = new AnnotationModel({ context: tracker.currentWidget?.context })
+
+    tracker.currentChanged.connect((_, changed) => {
+      annotationModel.context = changed?.context || undefined;
+    });
+
+    return annotationModel;
+  }
+}
+
 const controlPanel: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:controlpanel',
   autoStart: true,
-  requires: [ILayoutRestorer, IJupyterCadDocTracker],
+  requires: [ILayoutRestorer, IJupyterCadDocTracker, IAnnotation],
   activate: (
     app: JupyterFrontEnd,
     restorer: ILayoutRestorer,
-    tracker: IJupyterCadTracker
+    tracker: IJupyterCadTracker,
+    annotationModel: IAnnotationModel
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
 
-    const leftControlPanel = new LeftPanelWidget({ model: controlModel });
+    const leftControlPanel = new LeftPanelWidget({ model: controlModel, annotationModel, tracker });
     leftControlPanel.id = 'jupytercad::leftControlPanel';
     leftControlPanel.title.caption = 'JupyterCad Control Panel';
     leftControlPanel.title.icon = jcLightIcon;
@@ -86,7 +108,7 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
   }
 };
 
-export default [plugin, controlPanel, fcplugin, jcadPlugin];
+export default [plugin, controlPanel, fcplugin, jcadPlugin, annotationPlugin];
 
 /**
  * Add the FreeCAD commands to the application's command registry.
