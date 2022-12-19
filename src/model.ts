@@ -284,8 +284,9 @@ export class JupyterCadDoc
 
   addObjects(value: Array<IJCadObject>): void {
     this.transact(() => {
-      const objs = value.map(obj => new Y.Map(Object.create(obj)));
-      this._objects.push(objs);
+      value.map(obj => {
+        this._objects.push([new Y.Map(Object.entries(obj))]);
+      });
     });
   }
 
