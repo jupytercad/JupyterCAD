@@ -91,8 +91,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Base Setup
-      uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+    - name: Setup mamba
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        mamba-version: "*"
+        channels: conda-forge
+
+    - name: Create the conda environment
+      shell: bash -l {0}
+      run: mamba install -q python=3.9 pip freecad
 
     - name: Download extension package
       uses: actions/download-artifact@v3
@@ -100,12 +107,14 @@ jobs:
         name: myextension-sdist
 
     - name: Install the extension
+      shell: bash -l {0}
       run: |
-        set -eux
-        pip install myextension.tar.gz
-        pip install "jupyterlab>=4.0.0a25"
+        whereis python
+        python -m pip install myextension.tar.gz
+        python -m pip install "jupyterlab>=4.0.0a25"
 
     - name: Install dependencies
+      shell: bash -l {0}
       working-directory: ui-tests
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
@@ -119,10 +128,12 @@ jobs:
         key: ${{ runner.os }}-${{ hashFiles('ui-tests/yarn.lock') }}
 
     - name: Install browser
+      shell: bash -l {0}
       run: jlpm playwright install chromium
       working-directory: ui-tests
 
     - name: Execute integration tests
+      shell: bash -l {0}
       working-directory: ui-tests
       run: |
         jlpm playwright test
