@@ -116,3 +116,7 @@ src/_interface/
 *.db
 
 src/worker/opencascade/jupytercad*
+
+# Integration tests
+ui-tests/test-results/
+ui-tests/playwright-report/
