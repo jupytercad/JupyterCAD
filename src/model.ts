@@ -265,13 +265,15 @@ export class JupyterCadDoc
   }
 
   removeObjectByName(name: string): void {
-    let index = -1;
-    this._objects.forEach((obj, idx) => {
-      if (index > -1 || obj.get('name') === name) {
-        index = idx;
+    let index = 0;
+    for (const obj of this._objects) {
+      if (obj.get('name') == name) {
+        break;
       }
-    });
-    if (index > -1) {
+      index++;
+    }
+    
+    if (this._objects.length > index) {
       this.transact(() => {
         this._objects.delete(index);
       });
