@@ -12,14 +12,6 @@ test.describe('UI Test', () => {
     'test.jcad'
   ];
 
-  test.beforeAll(async ({ request }) => {
-    const content = galata.newContentsHelper(request);
-    await content.uploadDirectory(
-      path.resolve(__dirname, '../../examples'),
-      '/'
-    );
-  });
-
   test.describe('Extension activation test', () => {
     test('should emit an activation console message', async ({
       page,
@@ -42,6 +34,15 @@ test.describe('UI Test', () => {
   });
 
   test.describe('File rendering test', () => {
+    test.beforeAll(async ({ request }) => {
+      const content = galata.newContentsHelper(request);
+      await content.deleteDirectory('/examples');
+      await content.uploadDirectory(
+        path.resolve(__dirname, '../../examples'),
+        '/examples'
+      );
+    });
+
     let errors = 0;
     test.beforeEach(async ({ page }) => {
       page.setViewportSize({ width: 1920, height: 1080 });
@@ -75,13 +76,20 @@ test.describe('UI Test', () => {
 
   test.describe('File operator test', () => {
     let errors = 0;
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page, request }) => {
       page.setViewportSize({ width: 1920, height: 1080 });
       page.on('console', message => {
         if (message.type() === 'error') {
           errors += 1;
         }
       });
+
+      const content = galata.newContentsHelper(request);
+      await content.deleteDirectory('/examples');
+      await content.uploadDirectory(
+        path.resolve(__dirname, '../../examples'),
+        '/examples'
+      );
     });
 
     test.afterEach(async ({ page }) => {
