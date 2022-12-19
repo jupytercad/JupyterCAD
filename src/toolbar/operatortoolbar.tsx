@@ -1,9 +1,11 @@
-import * as React from 'react';
-import { ToolbarModel } from './model';
 import { Button } from '@jupyterlab/ui-components';
+
+import * as React from 'react';
+
+import { ToolbarModel } from './model';
 import { IDict } from '../types';
 import { FormDialog } from './formdialog';
-import * as Y from 'yjs';
+import { IJCadObject } from '../_interface/jcad';
 interface IProps {
   toolbarModel: ToolbarModel;
 }
@@ -48,7 +50,7 @@ export class OperatorToolbarReact extends React.Component<IProps> {
         },
         syncData: (props: IDict) => {
           const { Name, ...parameters } = props;
-          const objectModel = {
+          const objectModel: IJCadObject = {
             shape: 'Part::Cut',
             parameters,
             visible: true,
@@ -56,13 +58,10 @@ export class OperatorToolbarReact extends React.Component<IProps> {
           };
           const model = this.props.toolbarModel.sharedModel;
           if (model) {
-            const base = model.getObjectByName(parameters['Base']);
-            const tool = model.getObjectByName(parameters['Tool']);
-            const object = new Y.Map<any>(Object.entries(objectModel));
             model.transact(() => {
-              base && base.set('visible', false);
-              tool && tool.set('visible', false);
-              model.addObject(object);
+              model.updateObjectByName(parameters['Base'], 'visible', false);
+              model.updateObjectByName(parameters['Tool'], 'visible', false);
+              model.addObject(objectModel);
             });
           }
         }
@@ -78,7 +77,7 @@ export class OperatorToolbarReact extends React.Component<IProps> {
         },
         syncData: (props: IDict) => {
           const { Name, ...parameters } = props;
-          const objectModel = {
+          const objectModel: IJCadObject = {
             shape: 'Part::MultiFuse',
             parameters,
             visible: true,
@@ -86,9 +85,8 @@ export class OperatorToolbarReact extends React.Component<IProps> {
           };
           const model = this.props.toolbarModel.sharedModel;
           if (model) {
-            const object = new Y.Map<any>(Object.entries(objectModel));
             model.transact(() => {
-              model.addObject(object);
+              model.addObject(objectModel);
             });
           }
         }
@@ -104,7 +102,7 @@ export class OperatorToolbarReact extends React.Component<IProps> {
         },
         syncData: (props: IDict) => {
           const { Name, ...parameters } = props;
-          const objectModel = {
+          const objectModel: IJCadObject = {
             shape: 'Part::MultiCommon',
             parameters,
             visible: true,
@@ -112,9 +110,8 @@ export class OperatorToolbarReact extends React.Component<IProps> {
           };
           const model = this.props.toolbarModel.sharedModel;
           if (model) {
-            const object = new Y.Map<any>(Object.entries(objectModel));
             model.transact(() => {
-              model.addObject(object);
+              model.addObject(objectModel);
             });
           }
         }

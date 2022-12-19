@@ -34,7 +34,7 @@ export class AnnotationModel {
   }
 
   getAnnotation(id: string): IAnnotation | undefined {
-    const rawData = this._sharedModel.metadata.get(id);
+    const rawData = this._sharedModel.getMetadata(id);
     if (rawData) {
       return JSON.parse(rawData) as IAnnotation;
     }

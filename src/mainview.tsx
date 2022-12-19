@@ -657,13 +657,12 @@ export class MainView extends React.Component<IProps, IStates> {
     _: IJupyterCadDoc,
     changes: MapChange
   ) => {
-    const metaData = this._model.sharedModel.metadata;
     const newState = { ...this.state.annotations };
     changes.forEach((val, key) => {
       if (!key.startsWith('annotation')) {
         return;
       }
-      const data = metaData.get(key);
+      const data = this._model.sharedModel.getMetadata(key);
       let open = true;
       if (this.state.firstLoad) {
         open = false;

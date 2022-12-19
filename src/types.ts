@@ -1,14 +1,15 @@
-import { IJCadObject } from './_interface/jcad.d';
-import { IChangedArgs } from '@jupyterlab/coreutils';
 import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
-import { MapChange, YDocument, StateChange } from '@jupyter/ydoc';
+import { IChangedArgs } from '@jupyterlab/coreutils';
 import { ReactWidget } from '@jupyterlab/ui-components';
 import { User } from '@jupyterlab/services';
+
+import { MapChange, YDocument, StateChange } from '@jupyter/ydoc';
+
 import { ISignal, Signal } from '@lumino/signaling';
-import * as Y from 'yjs';
+import { JSONObject } from '@lumino/coreutils';
 
 import { IJupyterCadTracker } from './token';
-import { IJCadContent, IJCadModel } from './_interface/jcad';
+import { IJCadContent, IJCadObject, IJCadModel } from './_interface/jcad';
 
 export interface IDict<T = any> {
   [key: string]: T;
@@ -125,20 +126,22 @@ export interface IJupyterCadDocChange {
   stateChange?: StateChange<any>[];
 }
 
-export type IJCadObjectDoc = Y.Map<any>;
-
 export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
-  objects: Y.Array<IJCadObjectDoc>;
-  options: Y.Map<any>;
-  metadata: Y.Map<string>;
+  objects: Array<IJCadObject>;
+  options: JSONObject;
+  metadata: JSONObject;
 
-  getObjectByName(name: string): IJCadObjectDoc | undefined;
+  getObjectByName(name: string): IJCadObject | undefined;
   removeObjectByName(name: string): void;
-  addObject(value: IJCadObjectDoc): void;
+  addObject(value: IJCadObject): void;
+  addObjects(value: Array<IJCadObject>): void;
   updateObjectByName(name: string, key: string, value: any): void;
+
   getOption(key: string): any;
   setOption(key: string, value: any): void;
+  setOptions(options: JSONObject): void;
 
+  getMetadata(key: string): string | undefined;
   setMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;
 
