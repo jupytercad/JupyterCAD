@@ -631,7 +631,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _createPointer(user: User.IIdentity): THREE.Mesh {
     let clientColor: Color.RGBColor | null = null;
 
-    if (user.color.startsWith('var')) {
+    if (user.color?.startsWith('var')) {
       clientColor = Color.color(
         getComputedStyle(document.documentElement).getPropertyValue(
           user.color.slice(4, -1)

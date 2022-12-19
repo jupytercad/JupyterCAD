@@ -4,13 +4,7 @@ import path from 'path';
 test.use({ autoGoto: false });
 
 test.describe('UI Test', () => {
-  const fileList = [
-    'box2.FCStd',
-    'box4.FCStd',
-    'common.FCStd',
-    'cut.FCStd',
-    'test.jcad'
-  ];
+  const fileList = ['example1.FCStd', 'common.FCStd', 'cut.FCStd', 'test.jcad'];
 
   test.describe('Extension activation test', () => {
     test('should emit an activation console message', async ({
@@ -56,6 +50,7 @@ test.describe('UI Test', () => {
     test.afterEach(async ({ page }) => {
       errors = 0;
     });
+
     for (const file of fileList) {
       test(`Should be able to render ${file} without error`, async ({
         page
@@ -65,10 +60,14 @@ test.describe('UI Test', () => {
         await page.notebook.openByPath(fullPath);
         await page.notebook.activate(fullPath);
         await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
+
+        await page.waitForTimeout(1000);
         const main = await page.$('#jp-main-split-panel');
         expect(errors).toBe(0);
         if (main) {
-          expect(await main.screenshot()).toMatchSnapshot();
+          expect(await main.screenshot()).toMatchSnapshot({
+            name: `Render-${file}.png`
+          });
         }
       });
     }
@@ -99,7 +98,7 @@ test.describe('UI Test', () => {
     test(`Should be able to add object to scene`, async ({ page }) => {
       await page.goto();
 
-      const fileName = 'box3.FCStd';
+      const fileName = 'example2.FCStd';
       const fullPath = `examples/${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
@@ -117,17 +116,20 @@ test.describe('UI Test', () => {
       });
       accept.click();
 
+      await page.waitForTimeout(1000);
       expect(errors).toBe(0);
       const main = await page.$('#jp-main-split-panel');
       if (main) {
-        expect(await main.screenshot()).toMatchSnapshot();
+        expect(await main.screenshot()).toMatchSnapshot({
+          name: `Operator-Add-${fileName}.png`
+        });
       }
     });
 
-    test(`Should be able to remove objec`, async ({ page }) => {
+    test(`Should be able to remove object`, async ({ page }) => {
       await page.goto();
 
-      const fileName = 'box4.FCStd';
+      const fileName = 'example3.FCStd';
       const fullPath = `examples/${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
@@ -141,17 +143,21 @@ test.describe('UI Test', () => {
         .getByRole('button')
         .nth(1)
         .click();
+
+      await page.waitForTimeout(1000);
       expect(errors).toBe(0);
       const main = await page.$('#jp-main-split-panel');
       if (main) {
-        expect(await main.screenshot()).toMatchSnapshot();
+        expect(await main.screenshot()).toMatchSnapshot({
+          name: `Operator-Remove-${fileName}.png`
+        });
       }
     });
 
     test(`Should be able to edit object`, async ({ page }) => {
       await page.goto();
 
-      const fileName = 'box5.FCStd';
+      const fileName = 'example4.FCStd';
       const fullPath = `examples/${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
@@ -166,10 +172,13 @@ test.describe('UI Test', () => {
       await page.getByLabel('Height*').fill('32');
       await page.getByRole('button', { name: 'Submit' }).click();
 
+      await page.waitForTimeout(1000);
       expect(errors).toBe(0);
       const main = await page.$('#jp-main-split-panel');
       if (main) {
-        expect(await main.screenshot()).toMatchSnapshot();
+        expect(await main.screenshot()).toMatchSnapshot({
+          name: `Operator-Edit-${fileName}.png`
+        });
       }
     });
   });
