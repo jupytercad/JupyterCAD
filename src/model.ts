@@ -256,6 +256,14 @@ export class JupyterCadDoc
     return this._metadataChanged;
   }
 
+  objectExists(name: string): boolean {
+    const obj = this._getObjectAsYMapByName(name);
+    if (obj) {
+      return true;
+    }
+    return false;
+  }
+
   getObjectByName(name: string): IJCadObject | undefined {
     const obj = this._getObjectAsYMapByName(name);
     if (obj) {
@@ -267,12 +275,12 @@ export class JupyterCadDoc
   removeObjectByName(name: string): void {
     let index = 0;
     for (const obj of this._objects) {
-      if (obj.get('name') == name) {
+      if (obj.get('name') === name) {
         break;
       }
       index++;
     }
-    
+
     if (this._objects.length > index) {
       this.transact(() => {
         this._objects.delete(index);
@@ -287,7 +295,11 @@ export class JupyterCadDoc
   addObjects(value: Array<IJCadObject>): void {
     this.transact(() => {
       value.map(obj => {
-        this._objects.push([new Y.Map(Object.entries(obj))]);
+        if (!this.objectExists(obj.name)) {
+          this._objects.push([new Y.Map(Object.entries(obj))]);
+        } else {
+          console.error('There is already an object with the name:', obj.name);
+        }
       });
     });
   }

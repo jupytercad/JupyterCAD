@@ -1,3 +1,4 @@
+import { showErrorMessage } from '@jupyterlab/apputils';
 import { Button } from '@jupyterlab/ui-components';
 import * as React from 'react';
 
@@ -114,7 +115,14 @@ export class PartToolbarReact extends React.Component<IProps> {
                   };
                   const model = this.props.toolbarModel.sharedModel;
                   if (model) {
-                    model.addObject(objectModel);
+                    if (!model.objectExists(objectModel.name)) {
+                      model.addObject(objectModel);
+                    } else {
+                      showErrorMessage(
+                        'The object already exists',
+                        'There is an existing object with the same name.'
+                      );
+                    }
                   }
                 },
                 cancelButton: () => {

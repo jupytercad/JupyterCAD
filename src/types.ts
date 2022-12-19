@@ -131,6 +131,7 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   options: JSONObject;
   metadata: JSONObject;
 
+  objectExists(name: string): boolean;
   getObjectByName(name: string): IJCadObject | undefined;
   removeObjectByName(name: string): void;
   addObject(value: IJCadObject): void;
