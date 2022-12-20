@@ -81,7 +81,7 @@ interface IStates {
   clientId: number | null; // ID of the yjs client
   id: string; // ID of the component, it is used to identify which component
   //is the source of awareness updates.
-  openNodes: (string | number)[];
+  openNodes: (number | string)[];
 }
 
 interface IProps {
@@ -107,24 +107,24 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     this.props.cpModel.jcadModel?.sharedModelChanged.connect(
       this._sharedJcadModelChanged
     );
-    this.props.cpModel.documentChanged.connect((_, changed) => {
-      if (changed) {
+    this.props.cpModel.documentChanged.connect((_, document) => {
+      if (document) {
         this.props.cpModel.disconnect(this._sharedJcadModelChanged);
         this.props.cpModel.disconnect(this._handleThemeChange);
         this.props.cpModel.disconnect(this._onClientSharedStateChanged);
 
-        changed.context.model.sharedModelChanged.connect(
+        document.context.model.sharedModelChanged.connect(
           this._sharedJcadModelChanged
         );
-        changed.context.model.themeChanged.connect(this._handleThemeChange);
-        changed.context.model.clientStateChanged.connect(
+        document.context.model.themeChanged.connect(this._handleThemeChange);
+        document.context.model.clientStateChanged.connect(
           this._onClientSharedStateChanged
         );
         this.setState(old => ({
           ...old,
-          filePath: changed.context.localPath,
+          filePath: document.context.localPath,
           jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
-          clientId: changed.context.model.getClientId()
+          clientId: document.context.model.getClientId()
         }));
       } else {
         this.setState({
@@ -183,13 +183,15 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   };
 
   private _sharedJcadModelChanged = (
-    _,
-    changed: IJupyterCadDocChange
+    sender: IJupyterCadModel,
+    change: IJupyterCadDocChange
   ): void => {
-    this.setState(old => ({
-      ...old,
-      jcadObject: this.props.cpModel.jcadModel?.getAllObject()
-    }));
+    if (change.objectChange) {
+      this.setState(old => ({
+        ...old,
+        jcadObject: this.props.cpModel.jcadModel?.getAllObject()
+      }));
+    }
   };
 
   private _onClientSharedStateChanged = (
@@ -204,38 +206,32 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       // Update from other components of current client
       const localState = clientId ? clients.get(clientId) : null;
       if (localState) {
-        if (
-          localState.selected?.emitter &&
-          localState.selected.emitter !== this.state.id
-        ) {
-          const selectedNode = localState.selected.value!;
-          this.setState(old => ({
-            ...old,
-            selectedNode,
-            openNodes: [...old.openNodes, selectedNode]
-          }));
+        // This is also triggered when an object is selected and the pointer changes
+        // re-rendering the tree multiple times
+        if (localState.selected?.emitter && localState.selected?.value) {
+          const selectedNode = localState.selected.value;
+          this.setState(old => ({ ...old, selectedNode }));
         }
       }
     }
   };
 
   render(): React.ReactNode {
+    const { selectedNode } = this.state;
     const data = this.stateToTree();
-    let selectedNode: (number | string)[] = [];
-    if (this.state.selectedNode) {
-      const parentNode = data.filter(
-        node => node.id === this.state.selectedNode
-      );
+    let selectedNodes: (number | string)[] = [];
+    if (selectedNode) {
+      const parentNode = data.filter(node => node.id === selectedNode);
       if (parentNode.length > 0 && parentNode[0].items.length > 0) {
-        selectedNode = [parentNode[0].items[0].id];
+        selectedNodes = [parentNode[0].items[0].id];
       }
     }
+
     return (
       <div className="jpcad-treeview-wrapper">
         <ReactTree
           nodes={data}
-          selectedNodes={selectedNode}
-          openNodes={this.state.openNodes}
+          selectedNodes={selectedNodes}
           messages={{ noData: 'No data' }}
           theme={'labTheme'}
           themes={TREE_THEMES}
@@ -254,9 +250,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
               this.props.cpModel.jcadModel?.syncSelectedObject(undefined);
             }
           }}
-          onToggleOpenNodes={nodes =>
-            this.setState(old => ({ ...old, openNodes: nodes }))
-          }
           RenderNode={options => {
             // const paddingLeft = 25 * (options.level + 1);
             const jcadObj = this.getObjectFromName(

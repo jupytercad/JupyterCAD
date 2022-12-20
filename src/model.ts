@@ -30,7 +30,6 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.modelDB = modelDB || new ModelDB();
     this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
-    this.sharedModel;
   }
 
   get isDisposed(): boolean {
