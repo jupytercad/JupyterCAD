@@ -206,18 +206,27 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       // Update from other components of current client
       const localState = clientId ? clients.get(clientId) : null;
       if (localState) {
-        // This is also triggered when an object is selected and the pointer changes
-        // re-rendering the tree multiple times
-        if (localState.selected?.emitter && localState.selected?.value) {
-          const selectedNode = localState.selected.value;
-          this.setState(old => ({ ...old, selectedNode }));
+        if (
+          localState.selected?.emitter &&
+          localState.selected.emitter !== this.state.id
+        ) {
+          const selectedNode = localState.selected.value!;
+
+          const openNodes = [...this.state.openNodes];
+          const index = openNodes.indexOf(selectedNode);
+
+          if (index === -1) {
+            openNodes.push(selectedNode);
+          }
+
+          this.setState(old => ({ ...old, selectedNode, openNodes }));
         }
       }
     }
   };
 
   render(): React.ReactNode {
-    const { selectedNode } = this.state;
+    const { selectedNode, openNodes } = this.state;
     const data = this.stateToTree();
     let selectedNodes: (number | string)[] = [];
     if (selectedNode) {
@@ -231,6 +240,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       <div className="jpcad-treeview-wrapper">
         <ReactTree
           nodes={data}
+          openNodes={openNodes}
           selectedNodes={selectedNodes}
           messages={{ noData: 'No data' }}
           theme={'labTheme'}
@@ -238,14 +248,25 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
           onToggleSelectedNodes={id => {
             if (id && id.length > 0) {
               let name = id[0] as string;
+
               if (name.includes('#')) {
                 name = name.split('#')[0];
-
                 this.props.cpModel.jcadModel?.syncSelectedObject(
                   name,
                   this.state.id
                 );
+                return;
               }
+
+              const openNodes = [...this.state.openNodes];
+              const index = openNodes.indexOf(name);
+
+              if (index !== -1) {
+                openNodes.splice(index, 1);
+              } else {
+                openNodes.push(name);
+              }
+              this.setState(old => ({ ...old, openNodes }));
             } else {
               this.props.cpModel.jcadModel?.syncSelectedObject(undefined);
             }
