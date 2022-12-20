@@ -4,7 +4,17 @@ import path from 'path';
 test.use({ autoGoto: false });
 
 test.describe('UI Test', () => {
-  const fileList = ['example1.FCStd', 'common.FCStd', 'cut.FCStd', 'test.jcad'];
+  const fileList = [
+    'example1.FCStd',
+    'example2.FCStd',
+    'example3.FCStd',
+    'example4.FCStd',
+    'example5.FCStd',
+    'example6.FCStd',
+    'common.FCStd',
+    'cut.FCStd',
+    'test.jcad'
+  ];
 
   test.describe('Extension activation test', () => {
     test('should emit an activation console message', async ({
@@ -61,6 +71,14 @@ test.describe('UI Test', () => {
         await page.notebook.activate(fullPath);
         await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
 
+        await page
+          .getByRole('tablist', { name: 'main sidebar' })
+          .getByRole('tab', { name: 'JupyterCad Control Panel' })
+          .click();
+        await page
+          .getByRole('tablist', { name: 'alternate sidebar' })
+          .getByRole('tab', { name: 'JupyterCad Control Panel' })
+          .click();
         await page.waitForTimeout(1000);
         const main = await page.$('#jp-main-split-panel');
         expect(errors).toBe(0);
@@ -116,6 +134,15 @@ test.describe('UI Test', () => {
       });
       accept.click();
 
+      await page
+        .getByRole('tablist', { name: 'main sidebar' })
+        .getByRole('tab', { name: 'JupyterCad Control Panel' })
+        .click();
+      await page
+        .getByRole('tablist', { name: 'alternate sidebar' })
+        .getByRole('tab', { name: 'JupyterCad Control Panel' })
+        .click();
+
       await page.waitForTimeout(1000);
       expect(errors).toBe(0);
       const main = await page.$('#jp-main-split-panel');
@@ -142,6 +169,15 @@ test.describe('UI Test', () => {
         .locator('[data-test-id="react-tree-root"]')
         .getByRole('button')
         .nth(1)
+        .click();
+
+      await page
+        .getByRole('tablist', { name: 'main sidebar' })
+        .getByRole('tab', { name: 'JupyterCad Control Panel' })
+        .click();
+      await page
+        .getByRole('tablist', { name: 'alternate sidebar' })
+        .getByRole('tab', { name: 'JupyterCad Control Panel' })
         .click();
 
       await page.waitForTimeout(1000);
@@ -171,6 +207,15 @@ test.describe('UI Test', () => {
       await page.getByLabel('Height*').click();
       await page.getByLabel('Height*').fill('32');
       await page.getByRole('button', { name: 'Submit' }).click();
+
+      await page
+        .getByRole('tablist', { name: 'main sidebar' })
+        .getByRole('tab', { name: 'JupyterCad Control Panel' })
+        .click();
+      await page
+        .getByRole('tablist', { name: 'alternate sidebar' })
+        .getByRole('tab', { name: 'JupyterCad Control Panel' })
+        .click();
 
       await page.waitForTimeout(1000);
       expect(errors).toBe(0);
