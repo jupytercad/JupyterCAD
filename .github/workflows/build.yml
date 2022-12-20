@@ -70,15 +70,82 @@ jobs:
         python -m jupyterlab.browser_check
 
         pip install build
-        python -m build --sdist
-        cp dist/*.tar.gz myextension.tar.gz
+        python -m build --wheel
+        cp dist/*.whl .
         pip uninstall -y "jupytercad" jupyterlab
         rm -rf myextension
 
     - uses: actions/upload-artifact@v2
       with:
-        name: myextension-sdist
-        path: myextension.tar.gz
+        name: myextension-whl
+        path: "*.whl"
+
+  test_integration:
+    name: Integration tests
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/pw-browsers
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup mamba
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        mamba-version: "*"
+        channels: conda-forge
+
+    - name: Create the conda environment
+      shell: bash -l {0}
+      run: mamba install -q python=3.9 pip freecad
+
+    - name: Download extension package
+      uses: actions/download-artifact@v3
+      with:
+        name: myextension-whl
+
+    - name: Install the extension
+      shell: bash -l {0}
+      run: |
+        whereis python
+        python -m pip install --find-links=. jupytercad
+        python -m pip install "jupyterlab>=4.0.0a25"
+
+    - name: Install dependencies
+      shell: bash -l {0}
+      working-directory: ui-tests
+      env:
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+      run: jlpm install
+
+    - name: Set up browser cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ${{ github.workspace }}/pw-browsers
+        key: ${{ runner.os }}-${{ hashFiles('ui-tests/yarn.lock') }}
+
+    - name: Install browser
+      shell: bash -l {0}
+      run: jlpm playwright install chromium
+      working-directory: ui-tests
+
+    - name: Execute integration tests
+      shell: bash -l {0}
+      working-directory: ui-tests
+      run: |
+        jlpm playwright test
+
+    - name: Upload Playwright Test report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: jupytercad-playwright-tests
+        path: |
+          ui-tests/test-results
+          ui-tests/playwright-report
 
   test_isolated:
     needs: build
@@ -96,7 +163,7 @@ jobs:
 
     - uses: actions/download-artifact@v2
       with:
-        name: myextension-sdist
+        name: myextension-whl
 
     - name: Install and Test
       run: |
@@ -104,6 +171,6 @@ jobs:
         # Remove NodeJS, twice to take care of system and locally installed node versions.
         sudo rm -rf $(which node)
         sudo rm -rf $(which node)
-        pip install myextension.tar.gz
+        pip install --find-links=. jupytercad
         pip install "jupyterlab>=4.0.0a25"
         jupyter labextension list 2>&1 | grep -ie "jupytercad.*OK"

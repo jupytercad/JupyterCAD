@@ -1,53 +1,54 @@
 {
   "objects": [
     {
+      "name": "box",
       "shape": "Part::Box",
-      "id": 123456.0,
       "parameters": {
+        "Height": 19.0,
         "Placement": {
           "Axis": [
             1.0,
             0.0,
             0.0
           ],
-          "Angle": 0.0,
           "Position": [
             0.0,
             0.0,
             0.0
-          ]
+          ],
+          "Angle": 0.0
         },
-        "Length": 7.0,
         "Width": 15.0,
-        "Height": 19.0
+        "Length": 7.0
       },
       "visible": true
     },
     {
-      "shape": "Part::Box",
-      "id": 12523456.0,
+      "visible": true,
       "parameters": {
-        "Height": 9.0,
-        "Width": 25.0,
+        "Length": 10.0,
         "Placement": {
-          "Axis": [
-            1.0,
+          "Position": [
+            0.0,
             0.0,
             0.0
           ],
-          "Position": [
-            0.0,
+          "Axis": [
+            1.0,
             0.0,
             0.0
           ],
           "Angle": 2.0
         },
-        "Length": 10.0
+        "Height": 9.0,
+        "Width": 25.0
       },
-      "visible": true
+      "shape": "Part::Box",
+      "name": "box2"
     }
   ],
   "options": {
     "foo": 1.0
-  }
+  },
+  "metadata": {}
 }
