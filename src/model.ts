@@ -257,11 +257,7 @@ export class JupyterCadDoc
   }
 
   objectExists(name: string): boolean {
-    const obj = this._getObjectAsYMapByName(name);
-    if (obj) {
-      return true;
-    }
-    return false;
+    return Boolean(this._getObjectAsYMapByName(name));
   }
 
   getObjectByName(name: string): IJCadObject | undefined {
