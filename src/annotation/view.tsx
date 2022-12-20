@@ -14,7 +14,6 @@ interface IFloatingAnnotationProps extends IAnnotationProps {
   open: boolean;
 }
 
-
 export const Annotation = (props: IAnnotationProps): JSX.Element => {
   const { itemId, model } = props;
   const annotation = model.getAnnotation(itemId);
@@ -35,9 +34,7 @@ export const Annotation = (props: IAnnotationProps): JSX.Element => {
   };
 
   return (
-    <div
-      className="jcad-Annotation"
-    >
+    <div className="jcad-Annotation">
       {props.children}
       <div style={{ paddingBottom: 10, maxHeight: 400, overflow: 'auto' }}>
         {contents.map(content => {
@@ -70,8 +67,9 @@ export const Annotation = (props: IAnnotationProps): JSX.Element => {
   );
 };
 
-
-export const FloatingAnnotation = (props: IFloatingAnnotationProps): JSX.Element => {
+export const FloatingAnnotation = (
+  props: IFloatingAnnotationProps
+): JSX.Element => {
   const { itemId, model } = props;
 
   const [open, setOpen] = React.useState(props.open);
@@ -83,13 +81,10 @@ export const FloatingAnnotation = (props: IFloatingAnnotationProps): JSX.Element
         onClick={() => setOpen(!open)}
       ></div>
       <div
-        className='jcad-FloatingAnnotation'
+        className="jcad-FloatingAnnotation"
         style={{ visibility: open ? 'visible' : 'hidden' }}
       >
-        <Annotation
-          model={model}
-          itemId={itemId}
-        >
+        <Annotation model={model} itemId={itemId}>
           <div
             className="jcad-Annotation-CloseHandler"
             onClick={() => {
@@ -100,4 +95,4 @@ export const FloatingAnnotation = (props: IFloatingAnnotationProps): JSX.Element
       </div>
     </div>
   );
-}
+};

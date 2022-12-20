@@ -76,14 +76,17 @@ export class JupyterCadFCModelFactory
    * @returns The model
    */
   createNew(languagePreference?: string, modelDB?: IModelDB): JupyterCadModel {
-    const model = new JupyterCadModel(this._annotationModel, languagePreference, modelDB);
+    const model = new JupyterCadModel(
+      this._annotationModel,
+      languagePreference,
+      modelDB
+    );
     return model;
   }
 
   private _annotationModel: IAnnotationModel;
   private _disposed = false;
 }
-
 
 export namespace JupyterCadFCModelFactory {
   export interface IOptions {

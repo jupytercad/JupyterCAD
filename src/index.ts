@@ -13,7 +13,11 @@ import { JupyterCadModel } from './model';
 import { ControlPanelModel } from './panelview/model';
 import { LeftPanelWidget } from './panelview/leftpanel';
 import { RightPanelWidget } from './panelview/rightpanel';
-import { IJupyterCadDocTracker, IJupyterCadTracker, IAnnotation } from './token';
+import {
+  IJupyterCadDocTracker,
+  IJupyterCadTracker,
+  IAnnotation
+} from './token';
 import { jcLightIcon } from './tools';
 import { IAnnotationModel } from './types';
 import { JupyterCadWidget } from './widget';
@@ -63,11 +67,10 @@ const annotationPlugin: JupyterFrontEndPlugin<IAnnotationModel> = {
   autoStart: true,
   requires: [IJupyterCadDocTracker],
   provides: IAnnotation,
-  activate: (
-    app: JupyterFrontEnd,
-    tracker: IJupyterCadTracker
-  ) => {
-    const annotationModel = new AnnotationModel({ context: tracker.currentWidget?.context })
+  activate: (app: JupyterFrontEnd, tracker: IJupyterCadTracker) => {
+    const annotationModel = new AnnotationModel({
+      context: tracker.currentWidget?.context
+    });
 
     tracker.currentChanged.connect((_, changed) => {
       annotationModel.context = changed?.context || undefined;
@@ -75,7 +78,7 @@ const annotationPlugin: JupyterFrontEndPlugin<IAnnotationModel> = {
 
     return annotationModel;
   }
-}
+};
 
 const controlPanel: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:controlpanel',
@@ -89,7 +92,11 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
 
-    const leftControlPanel = new LeftPanelWidget({ model: controlModel, annotationModel, tracker });
+    const leftControlPanel = new LeftPanelWidget({
+      model: controlModel,
+      annotationModel,
+      tracker
+    });
     leftControlPanel.id = 'jupytercad::leftControlPanel';
     leftControlPanel.title.caption = 'JupyterCad Control Panel';
     leftControlPanel.title.icon = jcLightIcon;

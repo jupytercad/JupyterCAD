@@ -4,28 +4,30 @@ import { IAnnotationModel } from '../types';
 import { Annotation } from '../annotation/view';
 import { PanelWithToolbar, ReactWidget } from '@jupyterlab/ui-components';
 
-
 interface IProps {
   model: IAnnotationModel;
 }
 
 export class ReactAnnotations extends React.Component<IProps> {
-
   constructor(props: IProps) {
     super(props);
 
     const updateCallback = () => {
       this.forceUpdate();
-    }
+    };
 
     this._model = props.model;
 
     this._model.contextChanged.connect(async () => {
       await this._model?.context?.ready;
 
-      this._model?.context?.model?.sharedMetadataChanged.disconnect(updateCallback);
+      this._model?.context?.model?.sharedMetadataChanged.disconnect(
+        updateCallback
+      );
       this._model = props.model;
-      this._model?.context?.model?.sharedMetadataChanged.connect(updateCallback);
+      this._model?.context?.model?.sharedMetadataChanged.connect(
+        updateCallback
+      );
       this.forceUpdate();
     });
   }
@@ -38,26 +40,21 @@ export class ReactAnnotations extends React.Component<IProps> {
     }
 
     const annotations = annotationIds.map((id: string) => {
-      return <div>
-        <Annotation model={this._model!} itemId={id}/>
-        <hr className='jpcad-Annotations-Separator'></hr>
-      </div>
+      return (
+        <div>
+          <Annotation model={this._model!} itemId={id} />
+          <hr className="jpcad-Annotations-Separator"></hr>
+        </div>
+      );
     });
 
-    return (
-      <div>
-        {annotations}
-      </div>
-    );
+    return <div>{annotations}</div>;
   }
 
   private _model: IAnnotationModel;
-
 }
 
-
 export class Annotations extends PanelWithToolbar {
-
   constructor(options: Annotation.IOptions) {
     super({});
 
@@ -66,15 +63,14 @@ export class Annotations extends PanelWithToolbar {
 
     this._model = options.model;
 
-    this._widget = ReactWidget.create(<ReactAnnotations model={this._model}/>);
+    this._widget = ReactWidget.create(<ReactAnnotations model={this._model} />);
 
     this.addWidget(this._widget);
   }
 
   private _widget: ReactWidget;
   private _model: IAnnotationModel;
-
-};
+}
 
 export namespace Annotation {
   export interface IOptions {

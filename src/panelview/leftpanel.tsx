@@ -25,7 +25,8 @@ export class LeftPanelWidget extends SidePanel {
     options.tracker.currentChanged.connect((_, changed) => {
       if (changed) {
         header.title.label = changed.context.localPath;
-        this._annotationModel.context = options.tracker.currentWidget?.context || undefined;
+        this._annotationModel.context =
+          options.tracker.currentWidget?.context || undefined;
       } else {
         header.title.label = '-';
         this._annotationModel.context = undefined;

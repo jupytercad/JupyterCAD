@@ -3,8 +3,13 @@ import { User } from '@jupyterlab/services';
 
 import { ISignal, Signal } from '@lumino/signaling';
 
-import { IDict, IAnnotationModel, IAnnotation, IAnnotationContent, IJupyterCadModel } from '../types';
-
+import {
+  IDict,
+  IAnnotationModel,
+  IAnnotation,
+  IAnnotationContent,
+  IJupyterCadModel
+} from '../types';
 
 export class AnnotationModel implements IAnnotationModel {
   constructor(options: AnnotationModel.IOptions) {
@@ -19,7 +24,9 @@ export class AnnotationModel implements IAnnotationModel {
     return this._user;
   }
 
-  set context(context: DocumentRegistry.IContext<IJupyterCadModel> | undefined) {
+  set context(
+    context: DocumentRegistry.IContext<IJupyterCadModel> | undefined
+  ) {
     this._context = context;
 
     const state = this._context?.model.sharedModel.awareness.getLocalState();
@@ -77,7 +84,10 @@ export class AnnotationModel implements IAnnotationModel {
         contents: [...currentAnnotation.contents, newContent]
       };
 
-      this._context?.model.sharedModel.setMetadata(id, JSON.stringify(newAnnotation));
+      this._context?.model.sharedModel.setMetadata(
+        id,
+        JSON.stringify(newAnnotation)
+      );
     }
   }
 

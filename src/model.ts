@@ -26,9 +26,12 @@ import {
 } from './types';
 import { IAnnotationModel } from './types';
 
-
 export class JupyterCadModel implements IJupyterCadModel {
-  constructor(annotationModel: IAnnotationModel, languagePreference?: string, modelDB?: IModelDB) {
+  constructor(
+    annotationModel: IAnnotationModel,
+    languagePreference?: string,
+    modelDB?: IModelDB
+  ) {
     this.modelDB = modelDB || new ModelDB();
     this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
