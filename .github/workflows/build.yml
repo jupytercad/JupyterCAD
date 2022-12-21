@@ -16,7 +16,7 @@ jobs:
     - name: Install node
       uses: actions/setup-node@v1
       with:
-       node-version: '16.x'
+       node-version: '14.x'
 
     - name: Install Python
       uses: actions/setup-python@v2
@@ -67,7 +67,9 @@ jobs:
         python -m pip install . -vvv
 
         jupyter labextension list 2>&1 | grep -ie "jupytercad.*OK"
-        python -m jupyterlab.browser_check
+        
+        # TODO Enable browser check when upstream is fixed
+        # python -m jupyterlab.browser_check
 
         pip install build
         python -m build --wheel
