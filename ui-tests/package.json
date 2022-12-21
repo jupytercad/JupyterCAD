@@ -6,7 +6,8 @@
     "scripts": {
       "start": "jupyter lab --config jupyter_server_test_config.py",
       "test": "jlpm playwright test",
-      "test:update": "jlpm playwright test --update-snapshots"
+      "test:update": "jlpm playwright test --update-snapshots",
+      "test:debug": "PWDEBUG=1 jlpm playwright test"
     },
     "devDependencies": {
       "@jupyterlab/galata": "^5.0.0-alpha.14"
