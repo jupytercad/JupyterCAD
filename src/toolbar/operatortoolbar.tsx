@@ -6,6 +6,7 @@ import { ToolbarModel } from './model';
 import { IDict } from '../types';
 import { FormDialog } from './formdialog';
 import { IJCadObject } from '../_interface/jcad';
+import { showErrorMessage } from '@jupyterlab/apputils';
 interface IProps {
   toolbarModel: ToolbarModel;
 }
@@ -61,7 +62,14 @@ export class OperatorToolbarReact extends React.Component<IProps> {
             model.transact(() => {
               model.updateObjectByName(parameters['Base'], 'visible', false);
               model.updateObjectByName(parameters['Tool'], 'visible', false);
-              model.addObject(objectModel);
+              if (!model.objectExists(objectModel.name)) {
+                model.addObject(objectModel);
+              } else {
+                showErrorMessage(
+                  'The object already exists',
+                  'There is an existing object with the same name.'
+                );
+              }
             });
           }
         }
@@ -86,7 +94,14 @@ export class OperatorToolbarReact extends React.Component<IProps> {
           const model = this.props.toolbarModel.sharedModel;
           if (model) {
             model.transact(() => {
-              model.addObject(objectModel);
+              if (!model.objectExists(objectModel.name)) {
+                model.addObject(objectModel);
+              } else {
+                showErrorMessage(
+                  'The object already exists',
+                  'There is an existing object with the same name.'
+                );
+              }
             });
           }
         }
@@ -111,7 +126,14 @@ export class OperatorToolbarReact extends React.Component<IProps> {
           const model = this.props.toolbarModel.sharedModel;
           if (model) {
             model.transact(() => {
-              model.addObject(objectModel);
+              if (!model.objectExists(objectModel.name)) {
+                model.addObject(objectModel);
+              } else {
+                showErrorMessage(
+                  'The object already exists',
+                  'There is an existing object with the same name.'
+                );
+              }
             });
           }
         }
