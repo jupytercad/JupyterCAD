@@ -214,18 +214,31 @@ div.field.field-array > label + span {
 }
 
 .jcad-Annotation {
-  position: absolute;
   z-index: 1;
   margin-left: 1px;
   margin-top: 1px;
   padding: 1em;
-  width: 250px;
   color: #fff;
   background: var(--jp-layout-color1);
   border-radius: 0.5em;
   font-size: 12px;
   line-height: 1.2;
   transition: opacity 0.5s;
+}
+
+.jcad-FloatingAnnotation {
+  position: absolute;
+  width: 250px;
+}
+
+.jpcad-Annotations {
+  overflow: auto;
+}
+
+.jpcad-Annotations-Separator {
+  border-color: var(--jp-layout-color4);
+  border-style: solid;
+  border-width: 1px;
 }
 
 .jcad-Annotation-Handler {

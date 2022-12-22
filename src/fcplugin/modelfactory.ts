@@ -2,6 +2,7 @@ import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { IModelDB } from '@jupyterlab/observables';
 import { Contents } from '@jupyterlab/services';
 
+import { IAnnotationModel } from '../types';
 import { JupyterCadModel } from '../model';
 
 /**
@@ -10,6 +11,10 @@ import { JupyterCadModel } from '../model';
 export class JupyterCadFCModelFactory
   implements DocumentRegistry.IModelFactory<JupyterCadModel>
 {
+  constructor(options: JupyterCadFCModelFactory.IOptions) {
+    this._annotationModel = options.annotationModel;
+  }
+
   /**
    * The name of the model.
    *
@@ -71,9 +76,20 @@ export class JupyterCadFCModelFactory
    * @returns The model
    */
   createNew(languagePreference?: string, modelDB?: IModelDB): JupyterCadModel {
-    const model = new JupyterCadModel(languagePreference, modelDB);
+    const model = new JupyterCadModel(
+      this._annotationModel,
+      languagePreference,
+      modelDB
+    );
     return model;
   }
 
+  private _annotationModel: IAnnotationModel;
   private _disposed = false;
+}
+
+export namespace JupyterCadFCModelFactory {
+  export interface IOptions {
+    annotationModel: IAnnotationModel;
+  }
 }

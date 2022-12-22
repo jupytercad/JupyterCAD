@@ -6,16 +6,17 @@ import {
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
 import { JupyterCadWidgetFactory } from '../factory';
-import { IJupyterCadDocTracker } from './../token';
+import { IAnnotation, IJupyterCadDocTracker } from './../token';
 import { JupyterCadFCModelFactory } from './modelfactory';
-import { IJupyterCadWidget } from '../types';
+import { IAnnotationModel, IJupyterCadWidget } from '../types';
 
 const FACTORY = 'Jupytercad Freecad Factory';
 
 const activate = (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
-  themeManager: IThemeManager
+  themeManager: IThemeManager,
+  annotationModel: IAnnotationModel
 ): void => {
   // Creating the widget factory to register it so the document manager knows about
   // our new DocumentWidget
@@ -32,7 +33,7 @@ const activate = (
   app.docRegistry.addWidgetFactory(widgetFactory);
 
   // Creating and registering the model factory for our custom DocumentModel
-  const modelFactory = new JupyterCadFCModelFactory();
+  const modelFactory = new JupyterCadFCModelFactory({ annotationModel });
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype
   app.docRegistry.addFileType({
@@ -61,7 +62,7 @@ const activate = (
 
 const fcplugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:fcplugin',
-  requires: [IJupyterCadDocTracker, IThemeManager],
+  requires: [IJupyterCadDocTracker, IThemeManager, IAnnotation],
   autoStart: true,
   activate
 };
