@@ -11,15 +11,20 @@ const VERSION_FILE_PATH = path.join(OPEN_CASCADE_DIR, VERSION_FILE_NAME);
 const BUILD_FILE_NAME = 'build.yml';
 const BUILD_FILE_PATH = path.join(OPEN_CASCADE_DIR, BUILD_FILE_NAME);
 
+function computeHash(filePath) {
+  const hashSum = crypto.createHash('sha256');
+  hashSum.update(readFileSync(filePath));
+  const buildHash = hashSum.digest('hex');
+  return buildHash;
+}
+
 /**
  * Check if we should re-build occ by using the hash of
  * the build configuration file.
  *
  */
 function checkNeedsRebuild() {
-  const hashSum = crypto.createHash('sha256');
-  hashSum.update(readFileSync(BUILD_FILE_PATH));
-  const buildHash = hashSum.digest('hex');
+  const buildHash = computeHash(BUILD_FILE_PATH);
   let needsRebuild = true;
   if (existsSync(VERSION_FILE_PATH)) {
     const currentHash = readFileSync(VERSION_FILE_PATH, {
@@ -32,7 +37,7 @@ function checkNeedsRebuild() {
     }
   }
 
-  return { needsRebuild, buildHash };
+  return needsRebuild;
 }
 
 /**
@@ -78,11 +83,9 @@ if (require.main === module) {
   if (args.length > 1 && args[0] === '--add') {
     [_, ...newSymbol] = [...args];
   }
-  const { needsRebuild, buildHash } = checkNeedsRebuild();
-  const rebuildCheck = newSymbol.length > 0 || needsRebuild;
-  if (rebuildCheck) {
+  if (newSymbol.length > 0 || checkNeedsRebuild()) {
     updateBuildConfig(newSymbol);
     build();
-    writeFileSync(VERSION_FILE_PATH, buildHash);
+    writeFileSync(VERSION_FILE_PATH, computeHash(BUILD_FILE_PATH));
   }
 }
