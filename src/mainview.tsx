@@ -589,10 +589,9 @@ export class MainView extends React.Component<IProps, IStates> {
         10 * this._refLength
       );
       this._camera.far = 200 * this._refLength;
-      this._gridHelper.scale.multiplyScalar(this._refLength);
-      for (let index = 0; index < this._sceneAxe.length; index++) {
+      /* for (let index = 0; index < this._sceneAxe.length; index++) {
         this._sceneAxe[index].scale.multiplyScalar(this._refLength);
-      }
+      } */
     }
 
     // Reset reflength if there are no objects
