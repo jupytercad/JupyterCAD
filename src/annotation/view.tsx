@@ -1,4 +1,8 @@
-import { caretRightIcon } from '@jupyterlab/ui-components';
+import {
+  caretRightIcon,
+  closeIcon,
+  deleteIcon
+} from '@jupyterlab/ui-components';
 import * as React from 'react';
 
 import { Message } from './message';
@@ -85,12 +89,22 @@ export const FloatingAnnotation = (
         style={{ visibility: open ? 'visible' : 'hidden' }}
       >
         <Annotation model={model} itemId={itemId}>
-          <div
-            className="jcad-Annotation-CloseHandler"
-            onClick={() => {
-              model.removeAnnotation(itemId);
-            }}
-          />
+          <div className="jcad-Annotation-Topbar">
+            <div
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              <closeIcon.react className="jcad-Annotation-TopBarIcon" />
+            </div>
+            <div
+              onClick={() => {
+                model.removeAnnotation(itemId);
+              }}
+            >
+              <deleteIcon.react className="jcad-Annotation-TopBarIcon" />
+            </div>
+          </div>
         </Annotation>
       </div>
     </div>

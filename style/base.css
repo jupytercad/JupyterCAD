@@ -249,50 +249,18 @@ div.field.field-array > label + span {
   height: 8px;
   border: 1px solid #ffffffc2;
   border-radius: 50%;
-  font-size: 16px;
-  line-height: 30px;
-  text-align: center;
   background: rgb(0 0 0 / 63%);
+  cursor: pointer;
+  transition-property: width, height, left, top;
+  transition-duration: 0.2s;
+  z-index: 1000;
 }
 
-.jcad-Annotation-CloseHandler {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 10px;
-  height: 10px;
-  border: 1px solid #ffffffc2;
-  border-radius: 50%;
-  font-size: 16px;
-  line-height: 30px;
-  text-align: center;
-  background: -webkit-linear-gradient(
-      -45deg,
-      transparent 0%,
-      transparent 46%,
-      #ffffffc2 46%,
-      #ffffffc2 56%,
-      transparent 56%,
-      transparent 100%
-    ),
-    -webkit-linear-gradient(45deg, transparent 0%, transparent 46%, #ffffffc2
-          46%, #ffffffc2 56%, transparent 56%, transparent 100%);
-  background-color: rgb(0 0 0 / 63%);
-  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5);
-}
-.jcad-Annotation-CloseHandler:hover {
-  border: 1px solid #5ac8fa;
-  background: -webkit-linear-gradient(
-      -45deg,
-      transparent 0%,
-      transparent 46%,
-      #5ac8fa 46%,
-      #5ac8fa 56%,
-      transparent 56%,
-      transparent 100%
-    ),
-    -webkit-linear-gradient(45deg, transparent 0%, transparent 46%, #5ac8fa 46%, #5ac8fa
-          56%, transparent 56%, transparent 100%);
+.jcad-Annotation-Handler:hover {
+  top: -9px;
+  left: -9px;
+  width: 16px;
+  height: 16px;
 }
 
 .jcad-Annotation-Message {
@@ -328,6 +296,23 @@ div.field.field-array > label + span {
   flex-grow: 1;
 }
 
+.jcad-Annotation-Topbar {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.jcad-Annotation-TopBarIcon {
+  margin: 3px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.jcad-Annotation-TopBarIcon > svg {
+  width: 20px;
+  height: 20px;
+}
+
 .jcad-Annotation-Submit > svg {
   width: 30px;
   height: 30px;
@@ -338,9 +323,13 @@ div.field.field-array > label + span {
 }
 
 .jcad-Annotation-Submit:hover {
-  background-color: var(--jp-brand-color2);
+  opacity: 70%;
+  cursor: pointer;
 }
+
 .jcad-Annotation-Submit {
   background-color: var(--jp-brand-color1);
   border-radius: 100%;
+  width: 30px;
+  height: 30px;
 }
