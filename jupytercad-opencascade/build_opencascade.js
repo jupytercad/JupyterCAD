@@ -1,15 +1,20 @@
 const { execSync } = require('child_process');
 const crypto = require('crypto');
-const { existsSync, readFileSync, writeFileSync } = require('fs');
+const {
+  existsSync,
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  copyFileSync
+} = require('fs');
 const yaml = require('js-yaml');
 const path = require('path');
 
 const IMAGE_NAME = 'donalffons/opencascade.js:2.0.0-beta.371bbb0';
-const OPEN_CASCADE_DIR = path.join('src', 'worker', 'opencascade');
+const OPEN_CASCADE_DIR = 'lib';
 const VERSION_FILE_NAME = 'jupytercad.opencascade.version';
 const VERSION_FILE_PATH = path.join(OPEN_CASCADE_DIR, VERSION_FILE_NAME);
 const BUILD_FILE_NAME = 'build.yml';
-const BUILD_FILE_PATH = path.join(OPEN_CASCADE_DIR, BUILD_FILE_NAME);
 
 function computeHash(filePath) {
   const hashSum = crypto.createHash('sha256');
@@ -24,7 +29,7 @@ function computeHash(filePath) {
  *
  */
 function checkNeedsRebuild() {
-  const buildHash = computeHash(BUILD_FILE_PATH);
+  const buildHash = computeHash(BUILD_FILE_NAME);
   let needsRebuild = true;
   if (existsSync(VERSION_FILE_PATH)) {
     const currentHash = readFileSync(VERSION_FILE_PATH, {
@@ -47,6 +52,8 @@ function checkNeedsRebuild() {
 function build() {
   execSync(`docker pull ${IMAGE_NAME}`);
 
+  copyFileSync(BUILD_FILE_NAME, path.join(OPEN_CASCADE_DIR, BUILD_FILE_NAME));
+
   execSync(
     `docker run --rm -v "$(pwd):/src" -u "$(id -u):$(id -g)" ${IMAGE_NAME} ${BUILD_FILE_NAME}`,
     { cwd: OPEN_CASCADE_DIR }
@@ -59,7 +66,7 @@ function build() {
  *
  */
 function updateBuildConfig(newSymbol) {
-  const buildConfig = yaml.load(readFileSync(BUILD_FILE_PATH, 'utf8'));
+  const buildConfig = yaml.load(readFileSync(BUILD_FILE_NAME, 'utf8'));
   const bindings = [
     ...buildConfig.mainBuild.bindings,
     ...newSymbol.map(i => ({
@@ -74,18 +81,23 @@ function updateBuildConfig(newSymbol) {
     item1.symbol.localeCompare(item2.symbol)
   );
   buildConfig.mainBuild.bindings = sorted;
-  writeFileSync(BUILD_FILE_PATH, yaml.dump(buildConfig, { quotingType: '"' }));
+  writeFileSync(BUILD_FILE_NAME, yaml.dump(buildConfig, { quotingType: '"' }));
 }
 
 if (require.main === module) {
+  if (!existsSync(OPEN_CASCADE_DIR)) {
+    mkdirSync(OPEN_CASCADE_DIR);
+  }
+
   let newSymbol = [];
   const args = process.argv.slice(2);
   if (args.length > 1 && args[0] === '--add') {
     [_, ...newSymbol] = [...args];
   }
+
   if (newSymbol.length > 0 || checkNeedsRebuild()) {
     updateBuildConfig(newSymbol);
     build();
-    writeFileSync(VERSION_FILE_PATH, computeHash(BUILD_FILE_PATH));
+    writeFileSync(VERSION_FILE_PATH, computeHash(BUILD_FILE_NAME));
   }
 }

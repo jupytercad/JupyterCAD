@@ -1,5 +1,5 @@
 import { getOcc } from './actions';
-import { TopoDS_Shape } from './opencascade/jupytercad.opencascade';
+import { TopoDS_Shape } from 'jupytercad-opencascade';
 import { IAllOperatorFunc, IOperatorArg } from './types';
 import { hashCode, toRad } from './utils';
 import { IJCadContent, Parts } from '../_interface/jcad';

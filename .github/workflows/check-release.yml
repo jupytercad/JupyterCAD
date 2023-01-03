@@ -38,16 +38,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Setup OpenCascade build cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            src/worker/opencascade/jupytercad.opencascade.js
-            src/worker/opencascade/jupytercad.opencascade.wasm
-            src/worker/opencascade/jupytercad.opencascade.d.ts
-            src/worker/opencascade/jupytercad.opencascade.version
-          key: ${{ hashFiles('src/worker/opencascade/build.yml') }}
-
       - name: Cache checked links
         uses: actions/cache@v2
         with:
