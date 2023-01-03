@@ -91,7 +91,7 @@ export const FloatingAnnotation = (
     }
 
     setOpen(false);
-  }
+  };
 
   return (
     <div>
