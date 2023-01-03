@@ -11,10 +11,7 @@
     "url": "https://github.com/QuantStack/jupytercad/issues"
   },
   "license": "BSD-3-Clause",
-  "author": {
-    "name": "Trung Le",
-    "email": "leductrungxf@gmail.com"
-  },
+  "author": "QuantStack",
   "files": [
     "lib/jupytercad.opencascade.js",
     "lib/jupytercad.opencascade.d.ts",
