@@ -66,17 +66,38 @@ jupyter lab build --minimize=False
 
 JupyterCAD uses a custom build of Open Cascade WASM. For performance and data usage concern, we only build the symbols we need.
 
+This custom build is done in the `jupytercad-opencascade` directory:
+
+```bash
+cd jupytercad-opencascade
+```
+
 In order to rebuild it yourself, you need to install Docker, then you need to run the following (this may take some time):
 
 ```bash
-yarn run build:opencascade
+yarn run build
 ```
 
 In the case where you need to add new symbols, you can rebuild Open Cascade with the following command.
 
 ```bash
-yarn run build:opencascade --add symbol_to_add another_symbol ...
+yarn run build --add symbol_to_add another_symbol ...
 ```
+
+In order to build jupytercad with your local jupytercad-opencascade build, you can use `yarn link`:
+
+```bash
+# Link jupytercad-opencascade (this can be done only once)
+cd jupytercad-opencascade
+yarn link
+
+cd ..
+yarn link jupytercad-opencascade
+
+# Rebuild jupytercad with our local jupytercad-opencascade
+yarn run build
+```
+
 #### See also
 
 Custom build doc: https://ocjs.org/docs/app-dev-workflow/custom-builds

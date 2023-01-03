@@ -115,7 +115,7 @@ dmypy.json
 src/_interface/
 *.db
 
-src/worker/opencascade/jupytercad*
+jupytercad-opencascade/lib
 
 # Integration tests
 ui-tests/test-results/
