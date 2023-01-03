@@ -49,7 +49,7 @@ function build() {
 
   execSync(
     `docker run --rm -v "$(pwd):/src" -u "$(id -u):$(id -g)" ${IMAGE_NAME} ${BUILD_FILE_NAME}`,
-    { cwd: OPEN_CASCADE_DIR }
+    { cwd: '.' }
   );
 }
 
