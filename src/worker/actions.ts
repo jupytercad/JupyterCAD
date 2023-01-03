@@ -3,7 +3,7 @@ import {
   Handle_Poly_Triangulation,
   OpenCascadeInstance,
   TopoDS_Shape
-} from './opencascade/jupytercad.opencascade';
+} from 'jupytercad-opencascade';
 
 import { IDict, WorkerAction } from '../types';
 import { IJCadContent } from '../_interface/jcad';
