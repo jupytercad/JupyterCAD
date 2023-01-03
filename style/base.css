@@ -333,3 +333,8 @@ div.field.field-array > label + span {
   width: 30px;
   height: 30px;
 }
+
+/* Hack to remove the malformed form button */
+.object-property-expand {
+  display: none;
+}
