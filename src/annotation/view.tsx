@@ -1,8 +1,11 @@
-import { caretRightIcon } from '@jupyterlab/ui-components';
+import { caretRightIcon, closeIcon } from '@jupyterlab/ui-components';
+import { Dialog, showDialog } from '@jupyterlab/apputils';
+
 import * as React from 'react';
 
-import { Message } from './message';
+import { minimizeIcon } from '../tools';
 import { IAnnotationModel } from '../types';
+import { Message } from './message';
 
 interface IAnnotationProps {
   itemId: string;
@@ -85,12 +88,33 @@ export const FloatingAnnotation = (
         style={{ visibility: open ? 'visible' : 'hidden' }}
       >
         <Annotation model={model} itemId={itemId}>
-          <div
-            className="jcad-Annotation-CloseHandler"
-            onClick={() => {
-              model.removeAnnotation(itemId);
-            }}
-          />
+          <div className="jcad-Annotation-Topbar">
+            <div
+              onClick={async () => {
+                const result = await showDialog({
+                  title: 'Delete Annotation',
+                  body: 'Are you sure you want to delete this annotation?',
+                  buttons: [
+                    Dialog.cancelButton(),
+                    Dialog.okButton({ label: 'Delete' })
+                  ]
+                });
+
+                if (result.button.accept) {
+                  model.removeAnnotation(itemId);
+                }
+              }}
+            >
+              <closeIcon.react className="jcad-Annotation-TopBarIcon" />
+            </div>
+            <div
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              <minimizeIcon.react className="jcad-Annotation-TopBarIcon" />
+            </div>
+          </div>
         </Annotation>
       </div>
     </div>
