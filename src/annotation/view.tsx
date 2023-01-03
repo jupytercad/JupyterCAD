@@ -77,11 +77,27 @@ export const FloatingAnnotation = (
 
   const [open, setOpen] = React.useState(props.open);
 
+  // Function that either
+  // - opens the annotation if `open`
+  // - removes the annotation if `!open` and the annotation is empty
+  // - closes the annotation if `!open` and the annotation is not empty
+  const setOpenOrDelete = (open: boolean) => {
+    if (open) {
+      return setOpen(true);
+    }
+
+    if (!model.getAnnotation(itemId)?.contents.length) {
+      return model.removeAnnotation(itemId);
+    }
+
+    setOpen(false);
+  };
+
   return (
     <div>
       <div
         className="jcad-Annotation-Handler"
-        onClick={() => setOpen(!open)}
+        onClick={() => setOpenOrDelete(!open)}
       ></div>
       <div
         className="jcad-FloatingAnnotation"
@@ -91,6 +107,12 @@ export const FloatingAnnotation = (
           <div className="jcad-Annotation-Topbar">
             <div
               onClick={async () => {
+                // If the annotation has no content
+                // we remove it right away without prompting
+                if (!model.getAnnotation(itemId)?.contents.length) {
+                  return model.removeAnnotation(itemId);
+                }
+
                 const result = await showDialog({
                   title: 'Delete Annotation',
                   body: 'Are you sure you want to delete this annotation?',
@@ -109,7 +131,7 @@ export const FloatingAnnotation = (
             </div>
             <div
               onClick={() => {
-                setOpen(false);
+                setOpenOrDelete(false);
               }}
             >
               <minimizeIcon.react className="jcad-Annotation-TopBarIcon" />
