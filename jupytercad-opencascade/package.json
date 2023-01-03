@@ -1,39 +1,39 @@
 {
-    "name": "jupytercad-opencascade",
-    "version": "0.1.0",
-    "description": "The custom OpenCascade build for JupyterCAD.",
-    "keywords": [
-      "jupyter",
-      "jupyterlab"
-    ],
-    "homepage": "https://github.com/QuantStack/jupytercad",
-    "bugs": {
-      "url": "https://github.com/QuantStack/jupytercad/issues"
-    },
-    "license": "BSD-3-Clause",
-    "author": {
-      "name": "Trung Le",
-      "email": "leductrungxf@gmail.com"
-    },
-    "files": [
-      "lib/*"
-    ],
-    "main": "lib/jupytercad.opencascade.js",
-    "types": "lib/jupytercad.opencascade.d.ts",
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/QuantStack/jupytercad.git"
-    },
-    "scripts": {
-      "build": "node build_opencascade.js",
-      "clean": "rimraf src/jupytercad.opencascade*"
-    },
-    "dependencies": {
-    },
-    "devDependencies": {
-      "rimraf": "^3.0.2"
-    },
-    "publishConfig": {
-      "access": "public"
-    }
+  "name": "jupytercad-opencascade",
+  "version": "0.1.0",
+  "description": "The custom OpenCascade build for JupyterCAD.",
+  "keywords": [
+    "jupyter",
+    "jupyterlab"
+  ],
+  "homepage": "https://github.com/QuantStack/jupytercad",
+  "bugs": {
+    "url": "https://github.com/QuantStack/jupytercad/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "Trung Le",
+    "email": "leductrungxf@gmail.com"
+  },
+  "files": [
+    "lib/*"
+  ],
+  "main": "lib/jupytercad.opencascade.js",
+  "types": "lib/jupytercad.opencascade.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/QuantStack/jupytercad.git"
+  },
+  "scripts": {
+    "build": "node build_opencascade.js",
+    "clean": "rimraf src/jupytercad.opencascade*"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "js-yaml": "^4.1.0",
+    "rimraf": "^3.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
+}
