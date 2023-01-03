@@ -115,8 +115,6 @@ dmypy.json
 src/_interface/
 *.db
 
-jupytercad-opencascade/lib
-
 # Integration tests
 ui-tests/test-results/
 ui-tests/playwright-report/

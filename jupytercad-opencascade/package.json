@@ -16,7 +16,9 @@
     "email": "leductrungxf@gmail.com"
   },
   "files": [
-    "lib/*"
+    "lib/jupytercad.opencascade.js",
+    "lib/jupytercad.opencascade.d.ts",
+    "lib/jupytercad.opencascade.wasm"
   ],
   "main": "lib/jupytercad.opencascade.js",
   "types": "lib/jupytercad.opencascade.d.ts",
