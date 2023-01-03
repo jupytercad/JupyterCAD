@@ -1,4 +1,6 @@
 import { caretRightIcon, closeIcon } from '@jupyterlab/ui-components';
+import { Dialog, showDialog } from '@jupyterlab/apputils';
+
 import * as React from 'react';
 
 import { minimizeIcon } from '../tools';
@@ -88,8 +90,19 @@ export const FloatingAnnotation = (
         <Annotation model={model} itemId={itemId}>
           <div className="jcad-Annotation-Topbar">
             <div
-              onClick={() => {
-                model.removeAnnotation(itemId);
+              onClick={async () => {
+                const result = await showDialog({
+                  title: 'Delete Annotation',
+                  body: 'Are you sure you want to delete this annotation?',
+                  buttons: [
+                    Dialog.cancelButton(),
+                    Dialog.okButton({ label: 'Delete' })
+                  ]
+                });
+
+                if (result.button.accept) {
+                  model.removeAnnotation(itemId);
+                }
               }}
             >
               <closeIcon.react className="jcad-Annotation-TopBarIcon" />
