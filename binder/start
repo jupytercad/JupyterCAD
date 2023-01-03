@@ -4,4 +4,4 @@ set -e
 
 echo $@
 
-exec jupyter-lab "${@:4}"
+exec /usr/local/bin/_entrypoint.sh jupyter-lab --collaborative "${@:4}"
