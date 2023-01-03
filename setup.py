@@ -50,7 +50,7 @@ setup_args = dict(
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),
-    install_requires=["jupyter_server>=2.0.0rc3"],
+    install_requires=["jupyter_server>=2.0.6"],
     zip_safe=False,
     include_package_data=True,
     python_requires=">=3.6",
