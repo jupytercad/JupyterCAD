@@ -1,12 +1,9 @@
-import {
-  caretRightIcon,
-  closeIcon,
-  deleteIcon
-} from '@jupyterlab/ui-components';
+import { caretRightIcon, closeIcon } from '@jupyterlab/ui-components';
 import * as React from 'react';
 
-import { Message } from './message';
+import { minimizeIcon } from '../tools';
 import { IAnnotationModel } from '../types';
+import { Message } from './message';
 
 interface IAnnotationProps {
   itemId: string;
@@ -92,17 +89,17 @@ export const FloatingAnnotation = (
           <div className="jcad-Annotation-Topbar">
             <div
               onClick={() => {
-                setOpen(false);
+                model.removeAnnotation(itemId);
               }}
             >
               <closeIcon.react className="jcad-Annotation-TopBarIcon" />
             </div>
             <div
               onClick={() => {
-                model.removeAnnotation(itemId);
+                setOpen(false);
               }}
             >
-              <deleteIcon.react className="jcad-Annotation-TopBarIcon" />
+              <minimizeIcon.react className="jcad-Annotation-TopBarIcon" />
             </div>
           </div>
         </Annotation>
