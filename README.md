@@ -84,7 +84,7 @@ In the case where you need to add new symbols, you can rebuild Open Cascade with
 yarn run build --add symbol_to_add another_symbol ...
 ```
 
-In order to build jupytercad with your local jupytercad-opencascade build, you can use `yarn link`:
+In order to build jupytercad with your local `jupytercad-opencascade` build, you can use `yarn link`:
 
 ```bash
 # Link jupytercad-opencascade (this can be done only once)
