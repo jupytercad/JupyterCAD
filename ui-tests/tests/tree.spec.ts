@@ -33,7 +33,7 @@ test.describe('Tree UI test', () => {
     await page.notebook.openByPath(fullPath);
     await page.notebook.activate(fullPath);
     await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
-    
+
     // Close the property panel
     await page
       .getByRole('tablist', { name: 'alternate sidebar' })

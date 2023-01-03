@@ -1,6 +1,12 @@
 const { execSync } = require('child_process');
 const crypto = require('crypto');
-const { existsSync, readFileSync, writeFileSync, mkdirSync, copyFileSync } = require('fs');
+const {
+  existsSync,
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  copyFileSync
+} = require('fs');
 const yaml = require('js-yaml');
 const path = require('path');
 
