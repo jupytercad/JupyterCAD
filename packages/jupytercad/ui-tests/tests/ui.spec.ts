@@ -42,7 +42,7 @@ test.describe('UI Test', () => {
       const content = galata.newContentsHelper(request);
       await content.deleteDirectory('/examples');
       await content.uploadDirectory(
-        path.resolve(__dirname, '../../examples'),
+        path.resolve(__dirname, '../../../../examples'),
         '/examples'
       );
     });
@@ -104,7 +104,7 @@ test.describe('UI Test', () => {
       const content = galata.newContentsHelper(request);
       await content.deleteDirectory('/examples');
       await content.uploadDirectory(
-        path.resolve(__dirname, '../../examples'),
+        path.resolve(__dirname, '../../../../examples'),
         '/examples'
       );
     });

@@ -1,10 +1,13 @@
 *.bundle.*
+*.egg-info/
+
+.ipynb_checkpoints
+
 lib/
 node_modules/
-*.egg-info/
-.ipynb_checkpoints
 *.tsbuildinfo
 jupytercad/labextension
+packages/jupytercad/src/_interface/
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
@@ -112,7 +115,6 @@ dmypy.json
 .DS_Store
 .vscode
 
-src/_interface/
 *.db
 
 # Integration tests

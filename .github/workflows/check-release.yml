@@ -1,8 +1,10 @@
 name: Check Release
+
 on:
   push:
-    branches:
-      - main
+    branches: main
+  pull_request:
+    branches: '*'
 
 permissions:
   contents: write
@@ -10,57 +12,68 @@ permissions:
 jobs:
   check_release:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        group: [check_release, link_check]
+        python-version: ["3.9"]
+        node-version: ["14.x"]
+    
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Install Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-          architecture: 'x64'
+      - name: Base Setup
+        uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+      
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: Install node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14.x'
-
-      - name: Get pip cache dir
-        id: pip-cache
-        run: |
-          echo "::set-output name=dir::$(pip cache dir)"
-
-      - name: Cache pip
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Cache checked links
+      - name: Setup yarn cache
         uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
-          path: ~/.cache/pytest-link-check
-          key: ${{ runner.os }}-linkcheck-${{ hashFiles('**/.md') }}-md-links
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-linkcheck-
+            yarn-
 
       - name: Upgrade packaging dependencies
+        run: python -m pip install -U "jupyterlab>=4.0.0a25"
+
+      - name: Setup OpenCascade build cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            packages/jupytercad-opencascade/lib/jupytercad.opencascade.js
+            packages/jupytercad-opencascade/lib/jupytercad.opencascade.wasm
+            packages/jupytercad-opencascade/lib/jupytercad.opencascade.d.ts
+            packages/jupytercad-opencascade/lib/jupytercad.opencascade.version
+          key: ${{ hashFiles('packages/jupytercad-opencascade/build.yml') }}
+
+      - name: Build jupytercad-opencascade
         run: |
-          pip install --upgrade pip setuptools wheel jupyter-packaging~=0.10 --user
+          jlpm
+          jlpm run build
+          #jlpm link
+        working-directory: packages/jupytercad-opencascade
 
       - name: Install Dependencies
         run: |
           pip install . -vvv
 
+      - name: Check Links
+        if: ${{ matrix.group == 'link_check' }}
+        uses: jupyter-server/jupyter_releaser/.github/actions/check-links@v1
+
       - name: Check Release
-        uses: jupyter-server/jupyter_releaser/.github/actions/check-release@v1
+        if: ${{ matrix.group == 'check_release' }}
+        uses: jupyter-server/jupyter_releaser/.github/actions/check-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Upload Distributions
-        uses: actions/upload-artifact@v2
+        if: ${{ matrix.group == 'check_release' }}
+        uses: actions/upload-artifact@v3
         with:
-          name: jupytercad-releaser-dist-${{ github.run_number }}
+          name: jupyter-releaser-dist-${{ github.run_number }}
           path: .jupyter_releaser_checkout/dist

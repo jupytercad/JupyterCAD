@@ -2,20 +2,17 @@ include LICENSE
 include *.md
 include pyproject.toml
 
-include package.json
-include install.json
-include ts*.json
+# Javascript files
 include yarn.lock
-include build_opencascade.js
+include install.json
+include package.json
 
 graft jupytercad/labextension
 
-# Javascript files
-graft packages/jupytercad/src
-graft packages/jupytercad/style
-prune **/node_modules
 prune lib
 prune binder
+prune examples
+prune **/node_modules
 
 # Patterns to exclude from any directory
 global-exclude *~
