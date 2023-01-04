@@ -7,7 +7,7 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: 'packages/jupytercad/tsconfig.json',
     sourceType: 'module'
   },
   plugins: ['@typescript-eslint'],
