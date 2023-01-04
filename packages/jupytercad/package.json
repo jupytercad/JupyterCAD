@@ -1,0 +1,99 @@
+{
+  "name": "jupytercad",
+  "version": "0.1.0",
+  "description": "A JupyterLab extension for 3D modelling.",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension"
+  ],
+  "homepage": "https://github.com/QuantStack/jupytercad",
+  "bugs": {
+    "url": "https://github.com/QuantStack/jupytercad/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "quantstack",
+    "email": ""
+  },
+  "files": [
+    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+    "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "style": "style/index.css",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/QuantStack/jupytercad.git"
+  },
+  "scripts": {
+    "build": "jlpm build:schema && jlpm run build:lib && jlpm run build:worker && jlpm run build:labextension:dev",
+    "build:schema": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions --cwd ./src/schema && cd src/schema && node ../../schema.js",
+    "build:prod": "jlpm run clean && jlpm build:schema && jlpm run build:worker:prod && jlpm run build:lib && jlpm run build:labextension",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "build:lib": "tsc",
+    "build:worker": "webpack --config worker.webpack.config.js --mode=development",
+    "build:worker:prod": "webpack --config worker.webpack.config.js --mode=production",
+    "clean": "jlpm run clean:lib",
+    "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "clean:labextension": "rimraf jupytercad/labextension",
+    "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
+    "watch": "run-p watch:worker watch:src watch:labextension",
+    "watch:src": "tsc -w",
+    "watch:worker": "webpack --config worker.webpack.config.js --watch --mode=development",
+    "watch:labextension": "jupyter labextension watch ."
+  },
+  "dependencies": {
+    "@deathbeds/jupyterlab-rjsf": "^1.1.0",
+    "@jupyter/ydoc": "^0.2.0",
+    "@jupyterlab/application": "^4.0.0-alpha.16",
+    "@jupyterlab/apputils": "^4.0.0-alpha.16",
+    "@jupyterlab/collaboration": "^4.0.0-alpha.16",
+    "@jupyterlab/mainmenu": "^4.0.0-alpha.16",
+    "@jupyterlab/observables": "^5.0.0-alpha.16",
+    "@jupyterlab/translation": "^4.0.0-alpha.16",
+    "@jupyterlab/ui-components": "^4.0.0-alpha.19",
+    "@lumino/widgets": "^2.0.0-alpha.6",
+    "@naisutech/react-tree": "^3.0.1",
+    "@rjsf/core": "^4.2.0",
+    "@types/d3-color": "^3.1.0",
+    "@types/three": "^0.134.0",
+    "d3-color": "^3.1.0",
+    "jupytercad-opencascade": "^0.1.0",
+    "styled-components": "^5.3.6",
+    "three": "^0.135.0",
+    "three-mesh-bvh": "^0.5.17",
+    "uuid": "^8.3.2"
+  },
+  "resolutions": {
+    "@jupyterlab/apputils": "^4.0.0-alpha.11"
+  },
+  "devDependencies": {
+    "@apidevtools/json-schema-ref-parser": "^9.0.9",
+    "@jupyterlab/builder": "^4.0.0-alpha.11",
+    "@types/node": "^16.11.10",
+    "copy-webpack-plugin": "^10.0.0",
+    "file-loader": "^6.2.0",
+    "json-schema-to-typescript": "^10.1.5",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "source-map-loader": "^3.0.0",
+    "ts-loader": "^9.2.6",
+    "typescript": "~4.1.3"
+  },
+  "sideEffects": [
+    "style/*.css",
+    "style/index.js"
+  ],
+  "styleModule": "style/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "jupyterlab": {
+    "extension": true,
+    "outputDir": "../../jupytercad/labextension",
+    "webpackConfig": "./extension.webpack.config.js"
+  }
+}

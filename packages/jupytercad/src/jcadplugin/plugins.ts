@@ -1,5 +1,5 @@
-import { IAnnotationModel, IJupyterCadWidget } from './../types';
-import { IAnnotation, IJupyterCadDocTracker } from './../token';
+import { IAnnotationModel, IJupyterCadWidget } from '../types';
+import { IAnnotation, IJupyterCadDocTracker } from '../token';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 import {
   JupyterFrontEnd,

@@ -1,9 +1,19 @@
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
-const occPath = [__dirname, 'node_modules', 'jupytercad-opencascade', 'lib', '*.wasm'];
+const occPath = [
+  __dirname,
+  '../',
+  '../',
+  'node_modules',
+  'jupytercad-opencascade',
+  'lib',
+  '*.wasm'
+];
 const staticPath = [
   __dirname,
+  '../',
+  '../',
   'jupytercad',
   'labextension',
   'static',

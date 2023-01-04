@@ -1,0 +1,483 @@
+{
+  "Placement of the box": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "Position",
+      "Axis",
+      "Angle"
+    ],
+    "properties": {
+      "Position": {
+        "type": "array",
+        "description": "Position of the Placement",
+        "items": {
+          "type": "number"
+        }
+      },
+      "Axis": {
+        "type": "array",
+        "description": "Axis of the Placement",
+        "items": {
+          "type": "number"
+        }
+      },
+      "Angle": {
+        "type": "number",
+        "description": "Angle of the Placement"
+      }
+    }
+  },
+  "Part::Box": {
+    "type": "object",
+    "required": [
+      "Length",
+      "Width",
+      "Height",
+      "Placement"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "Length": {
+        "type": "number",
+        "description": "The length of the box"
+      },
+      "Width": {
+        "type": "number",
+        "description": "The width of the box"
+      },
+      "Height": {
+        "type": "number",
+        "description": "The height of the box"
+      },
+      "Placement": {
+        "type": "object",
+        "description": "Placement of the box",
+        "additionalProperties": false,
+        "required": [
+          "Position",
+          "Axis",
+          "Angle"
+        ],
+        "properties": {
+          "Position": {
+            "type": "array",
+            "description": "Position of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Axis": {
+            "type": "array",
+            "description": "Axis of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Angle": {
+            "type": "number",
+            "description": "Angle of the Placement"
+          }
+        }
+      }
+    }
+  },
+  "Part::Cut": {
+    "type": "object",
+    "required": [
+      "Base",
+      "Tool",
+      "Refine",
+      "Placement"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "Base": {
+        "type": "string",
+        "description": "The base of the cut operator",
+        "fcType": "App::PropertyLink"
+      },
+      "Tool": {
+        "type": "string",
+        "description": "The tool of the cut operator",
+        "fcType": "App::PropertyLink"
+      },
+      "Refine": {
+        "type": "boolean",
+        "description": "Refine shape"
+      },
+      "Placement": {
+        "type": "object",
+        "description": "Placement of the box",
+        "additionalProperties": false,
+        "required": [
+          "Position",
+          "Axis",
+          "Angle"
+        ],
+        "properties": {
+          "Position": {
+            "type": "array",
+            "description": "Position of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Axis": {
+            "type": "array",
+            "description": "Axis of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Angle": {
+            "type": "number",
+            "description": "Angle of the Placement"
+          }
+        }
+      }
+    }
+  },
+  "Part::Cylinder": {
+    "type": "object",
+    "required": [
+      "Radius",
+      "Angle",
+      "Height",
+      "Placement"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "Radius": {
+        "type": "number",
+        "description": "Radius of the cylinder"
+      },
+      "Height": {
+        "type": "number",
+        "description": "Height of the cylinder"
+      },
+      "Angle": {
+        "type": "number",
+        "description": "Angle of the cylinder"
+      },
+      "Placement": {
+        "type": "object",
+        "description": "Placement of the box",
+        "additionalProperties": false,
+        "required": [
+          "Position",
+          "Axis",
+          "Angle"
+        ],
+        "properties": {
+          "Position": {
+            "type": "array",
+            "description": "Position of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Axis": {
+            "type": "array",
+            "description": "Axis of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Angle": {
+            "type": "number",
+            "description": "Angle of the Placement"
+          }
+        }
+      }
+    }
+  },
+  "Part::Cone": {
+    "type": "object",
+    "required": [
+      "Radius1",
+      "Radius2",
+      "Height",
+      "Angle",
+      "Placement"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "Radius1": {
+        "type": "number",
+        "description": "The bottom radius of the cone"
+      },
+      "Radius2": {
+        "type": "number",
+        "description": "The top radius of the cone"
+      },
+      "Height": {
+        "type": "number",
+        "description": "The height of the cone"
+      },
+      "Angle": {
+        "type": "number",
+        "description": "The angle of the cone"
+      },
+      "Placement": {
+        "type": "object",
+        "description": "Placement of the box",
+        "additionalProperties": false,
+        "required": [
+          "Position",
+          "Axis",
+          "Angle"
+        ],
+        "properties": {
+          "Position": {
+            "type": "array",
+            "description": "Position of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Axis": {
+            "type": "array",
+            "description": "Axis of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Angle": {
+            "type": "number",
+            "description": "Angle of the Placement"
+          }
+        }
+      }
+    }
+  },
+  "Part::MultiFuse": {
+    "type": "object",
+    "required": [
+      "Shapes",
+      "Refine",
+      "Placement"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "Shapes": {
+        "type": "array",
+        "description": "The shapes of the individual elements",
+        "fcType": "App::PropertyLinkList",
+        "items": {
+          "type": "string"
+        }
+      },
+      "Refine": {
+        "type": "boolean",
+        "description": "Refine shape"
+      },
+      "Placement": {
+        "type": "object",
+        "description": "Placement of the box",
+        "additionalProperties": false,
+        "required": [
+          "Position",
+          "Axis",
+          "Angle"
+        ],
+        "properties": {
+          "Position": {
+            "type": "array",
+            "description": "Position of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Axis": {
+            "type": "array",
+            "description": "Axis of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Angle": {
+            "type": "number",
+            "description": "Angle of the Placement"
+          }
+        }
+      }
+    }
+  },
+  "Part::MultiCommon": {
+    "type": "object",
+    "required": [
+      "Shapes",
+      "Refine",
+      "Placement"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "Shapes": {
+        "type": "array",
+        "description": "The objects to intersect",
+        "fcType": "App::PropertyLinkList",
+        "items": {
+          "type": "string"
+        }
+      },
+      "Refine": {
+        "type": "boolean",
+        "description": "Refine shape"
+      },
+      "Placement": {
+        "type": "object",
+        "description": "Placement of the box",
+        "additionalProperties": false,
+        "required": [
+          "Position",
+          "Axis",
+          "Angle"
+        ],
+        "properties": {
+          "Position": {
+            "type": "array",
+            "description": "Position of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Axis": {
+            "type": "array",
+            "description": "Axis of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Angle": {
+            "type": "number",
+            "description": "Angle of the Placement"
+          }
+        }
+      }
+    }
+  },
+  "Part::Sphere": {
+    "type": "object",
+    "required": [
+      "Radius",
+      "Angle1",
+      "Angle2",
+      "Angle3",
+      "Placement"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "Radius": {
+        "type": "number",
+        "description": "The radius of the sphere"
+      },
+      "Angle1": {
+        "type": "number",
+        "description": "The angle of the sphere"
+      },
+      "Angle2": {
+        "type": "number",
+        "description": "The angle of the sphere"
+      },
+      "Angle3": {
+        "type": "number",
+        "description": "The angle of the sphere"
+      },
+      "Placement": {
+        "type": "object",
+        "description": "Placement of the box",
+        "additionalProperties": false,
+        "required": [
+          "Position",
+          "Axis",
+          "Angle"
+        ],
+        "properties": {
+          "Position": {
+            "type": "array",
+            "description": "Position of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Axis": {
+            "type": "array",
+            "description": "Axis of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Angle": {
+            "type": "number",
+            "description": "Angle of the Placement"
+          }
+        }
+      }
+    }
+  },
+  "Part::Torus": {
+    "type": "object",
+    "required": [
+      "Radius1",
+      "Radius2",
+      "Angle1",
+      "Angle2",
+      "Angle3",
+      "Placement"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "Radius1": {
+        "type": "number",
+        "description": "The radius of the torus"
+      },
+      "Radius2": {
+        "type": "number",
+        "description": "The radius of the torus"
+      },
+      "Angle1": {
+        "type": "number",
+        "description": "The angle of the torus"
+      },
+      "Angle2": {
+        "type": "number",
+        "description": "The angle of the torus"
+      },
+      "Angle3": {
+        "type": "number",
+        "description": "The angle of the torus"
+      },
+      "Placement": {
+        "type": "object",
+        "description": "Placement of the box",
+        "additionalProperties": false,
+        "required": [
+          "Position",
+          "Axis",
+          "Angle"
+        ],
+        "properties": {
+          "Position": {
+            "type": "array",
+            "description": "Position of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Axis": {
+            "type": "array",
+            "description": "Axis of the Placement",
+            "items": {
+              "type": "number"
+            }
+          },
+          "Angle": {
+            "type": "number",
+            "description": "Angle of the Placement"
+          }
+        }
+      }
+    }
+  }
+}

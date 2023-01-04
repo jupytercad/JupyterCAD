@@ -11,8 +11,8 @@ include build_opencascade.js
 graft jupytercad/labextension
 
 # Javascript files
-graft src
-graft style
+graft packages/jupytercad/src
+graft packages/jupytercad/style
 prune **/node_modules
 prune lib
 prune binder

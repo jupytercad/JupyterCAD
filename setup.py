@@ -30,7 +30,7 @@ data_files_spec = [
 long_description = (HERE / "README.md").read_text()
 
 # Get the package info from package.json
-pkg_json = json.loads((HERE / "package.json").read_bytes())
+pkg_json = json.loads((HERE / "packages/jupytercad/package.json").read_bytes())
 version = (
     pkg_json["version"]
     .replace("-alpha.", "a")
@@ -79,7 +79,7 @@ try:
         get_data_files
     )
     post_develop = npm_builder(
-        build_cmd="install:extension", source_dir="src", build_dir=lab_path
+        build_cmd="build", source_dir="src", build_dir=lab_path
     )
     setup_args["cmdclass"] = wrap_installers(post_develop=post_develop, ensured_targets=ensured_targets)
     setup_args["data_files"] = get_data_files(data_files_spec)

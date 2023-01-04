@@ -4,7 +4,7 @@ import {
   TopoDS_Shape
 } from 'jupytercad-opencascade';
 
-import { IJCadObject } from '../_interface/jcad.d';
+import { IJCadObject } from '../_interface/jcad';
 import { IEdge, IFace } from '../types';
 
 interface IShapeList {

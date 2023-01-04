@@ -1,4 +1,4 @@
-import { IJCadObject } from './../_interface/jcad.d';
+import { IJCadObject } from '../_interface/jcad';
 import {
   Handle_Poly_Triangulation,
   OpenCascadeInstance,

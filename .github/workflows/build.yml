@@ -50,10 +50,10 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          jupytercad-opencascade/lib/jupytercad.opencascade.js
-          jupytercad-opencascade/lib/jupytercad.opencascade.wasm
-          jupytercad-opencascade/lib/jupytercad.opencascade.d.ts
-          jupytercad-opencascade/lib/jupytercad.opencascade.version
+          packages/jupytercad-opencascade/lib/jupytercad.opencascade.js
+          packages/jupytercad-opencascade/lib/jupytercad.opencascade.wasm
+          packages/jupytercad-opencascade/lib/jupytercad.opencascade.d.ts
+          packages/jupytercad-opencascade/lib/jupytercad.opencascade.version
         key: ${{ hashFiles('jupytercad-opencascade/build.yml') }}
 
     - name: Install dependencies
@@ -64,11 +64,12 @@ jobs:
         jlpm
         jlpm run build
         jlpm link
-      working-directory: jupytercad-opencascade
+      working-directory: packages/jupytercad-opencascade
 
     - name: Build the extension
       run: |
-        jlpm link jupytercad-opencascade
+        # With lerna we do not need to link
+        #jlpm link jupytercad-opencascade
 
         set -eux
         jlpm
@@ -126,7 +127,7 @@ jobs:
 
     - name: Install dependencies
       shell: bash -l {0}
-      working-directory: ui-tests
+      working-directory: packages/jupytercad/ui-tests
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
       run: jlpm install
@@ -141,11 +142,11 @@ jobs:
     - name: Install browser
       shell: bash -l {0}
       run: jlpm playwright install chromium
-      working-directory: ui-tests
+      working-directory: packages/jupytercad/ui-tests
 
     - name: Execute integration tests
       shell: bash -l {0}
-      working-directory: ui-tests
+      working-directory: packages/jupytercad/ui-tests
       run: |
         jlpm playwright test
 
@@ -155,8 +156,8 @@ jobs:
       with:
         name: jupytercad-playwright-tests
         path: |
-          ui-tests/test-results
-          ui-tests/playwright-report
+          packages/jupytercad/ui-tests/test-results
+          packages/jupytercad/ui-tests/playwright-report
 
   test_isolated:
     needs: build

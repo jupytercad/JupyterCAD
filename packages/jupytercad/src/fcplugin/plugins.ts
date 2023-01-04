@@ -6,7 +6,7 @@ import {
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
 import { JupyterCadWidgetFactory } from '../factory';
-import { IAnnotation, IJupyterCadDocTracker } from './../token';
+import { IAnnotation, IJupyterCadDocTracker } from '../token';
 import { JupyterCadFCModelFactory } from './modelfactory';
 import { IAnnotationModel, IJupyterCadWidget } from '../types';
 
