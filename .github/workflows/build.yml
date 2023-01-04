@@ -54,7 +54,7 @@ jobs:
           packages/jupytercad-opencascade/lib/jupytercad.opencascade.wasm
           packages/jupytercad-opencascade/lib/jupytercad.opencascade.d.ts
           packages/jupytercad-opencascade/lib/jupytercad.opencascade.version
-        key: ${{ hashFiles('jupytercad-opencascade/build.yml') }}
+        key: ${{ hashFiles('packages/jupytercad-opencascade/build.yml') }}
 
     - name: Install dependencies
       run: python -m pip install -U "jupyterlab>=4.0.0a25"
