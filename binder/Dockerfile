@@ -1,4 +1,4 @@
-FROM quantstack/jupytercad-env:0.1.0
+FROM trungleduc/jupytercad-env:0.1.2
 
 ARG MAMBA_DOCKERFILE_ACTIVATE=1
 ARG NB_USER=jovyan
