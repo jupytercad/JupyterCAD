@@ -54,7 +54,7 @@ build_cmd = "build"
 
 [tool.hatch.build]
 ignore-vcs = true
-include = ["packages/jupytercad"]
+only-include = ["/jupytercad", "/packages/jupytercad"]
 
 [tool.hatch.build.targets.wheel.shared-data]
 "install.json" = "share/jupyter/labextensions/jupytercad/install.json"

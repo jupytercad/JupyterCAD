@@ -6,7 +6,9 @@ include pyproject.toml
 include yarn.lock
 include install.json
 include package.json
+include packages/jupytercad/package.json
 
+graft packages/jupytercad
 graft jupytercad/labextension
 
 prune lib
