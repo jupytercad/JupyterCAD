@@ -2,11 +2,10 @@ include LICENSE
 include *.md
 include pyproject.toml
 
-include package.json
-include install.json
 include ts*.json
 include yarn.lock
-include build_opencascade.js
+include install.json
+include package.json
 
 graft jupytercad/labextension
 
