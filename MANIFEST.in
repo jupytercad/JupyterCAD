@@ -4,6 +4,7 @@ include pyproject.toml
 
 # Javascript files
 include yarn.lock
+include lerna.json
 include install.json
 include package.json
 include packages/jupytercad/package.json

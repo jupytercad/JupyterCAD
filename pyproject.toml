@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "hatchling.build"
-requires = ["hatchling>=1.9.0", "hatch-nodejs-version", "jupyter_packaging~=0.10,<2", "jupyterlab>=4.0.0a25"]
+requires = ["hatchling>=1.9.0", "hatch-nodejs-version", "jupyterlab>=4.0.0a25"]
 
 [project]
 name = "jupytercad"
@@ -36,6 +36,7 @@ jcad = "jupytercad.jcad_ydoc:YJCad"
 FCStd = "jupytercad.fcstd_ydoc:YFCStd"
 
 [tool.hatch.metadata.hooks.nodejs]
+path = "packages/jupytercad/package.json"
 fields = ["description", "authors", "urls", "keywords"]
 
 [tool.hatch.build.hooks.jupyter-builder]
@@ -46,15 +47,19 @@ skip-if-exists = ["jupytercad/labextension/static/style.js"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 npm = ["jlpm"]
-build_cmd = "build:prod"
-
-[tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
-npm = ["jlpm"]
+#source_dir = ""
+#build_dir = "jupytercad/labextension"
 build_cmd = "build"
+editable_build_cmd = "build"
+
+
+#[tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
+#npm = ["jlpm"]
+#build_cmd = "build"
 
 [tool.hatch.build]
 ignore-vcs = true
-only-include = ["/jupytercad", "/packages/jupytercad"]
+only-include = ["/jupytercad", "/packages", "README.md", "package.json", "yarn.lock", "lerna.json", "install.json"]
 
 [tool.hatch.build.targets.wheel.shared-data]
 "install.json" = "share/jupyter/labextensions/jupytercad/install.json"
