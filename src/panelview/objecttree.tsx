@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { JSONObject } from '@lumino/coreutils';
 
 import { ReactWidget } from '@jupyterlab/apputils';
 import {
@@ -17,6 +18,7 @@ import {
   IControlPanelModel,
   IDict,
   IJupyterCadClientState,
+  IJupyterCadDoc,
   IJupyterCadDocChange,
   IJupyterCadModel
 } from '../types';
@@ -76,6 +78,7 @@ interface IStates {
   jcadOption?: IDict;
   filePath?: string;
   jcadObject?: IJCadModel;
+  options?: JSONObject;
   lightTheme: boolean;
   selectedNode: string | null;
   clientId: number | null; // ID of the yjs client
@@ -120,10 +123,15 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         document.context.model.clientStateChanged.connect(
           this._onClientSharedStateChanged
         );
+        document.context.model.sharedOptionsChanged.connect(
+          this._onClientSharedOptionsChanged
+        );
+
         this.setState(old => ({
           ...old,
           filePath: document.context.localPath,
           jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
+          options: this.props.cpModel.sharedModel?.options,
           clientId: document.context.model.getClientId()
         }));
       } else {
@@ -189,7 +197,8 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     if (change.objectChange) {
       this.setState(old => ({
         ...old,
-        jcadObject: this.props.cpModel.jcadModel?.getAllObject()
+        jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
+        options: this.props.cpModel.sharedModel?.options
       }));
     }
   };
@@ -225,8 +234,15 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     }
   };
 
+  private _onClientSharedOptionsChanged = (
+    sender: IJupyterCadDoc,
+    clients: any
+  ): void => {
+    this.setState(old => ({ ...old, options: sender.options }));
+  };
+
   render(): React.ReactNode {
-    const { selectedNode, openNodes } = this.state;
+    const { selectedNode, openNodes, options } = this.state;
     const data = this.stateToTree();
     let selectedNodes: (number | string)[] = [];
     if (selectedNode) {
@@ -271,19 +287,24 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
               this.props.cpModel.jcadModel?.syncSelectedObject(undefined);
             }
           }}
-          RenderNode={options => {
-            // const paddingLeft = 25 * (options.level + 1);
+          RenderNode={opts => {
+            // const paddingLeft = 25 * (opts.level + 1);
             const jcadObj = this.getObjectFromName(
-              options.node.parentId as string
+              opts.node.parentId as string
             );
-            let visible = false;
-            if (jcadObj) {
-              visible = jcadObj.visible;
+            let visible = true;
+            if (
+              jcadObj &&
+              options &&
+              options['guidata'] &&
+              options['guidata'][jcadObj.name]
+            ) {
+              visible = options['guidata'][jcadObj?.name]!['visibility'];
             }
             return (
               <div
                 className={`jpcad-control-panel-tree ${
-                  options.selected ? 'selected' : ''
+                  opts.selected ? 'selected' : ''
                 }`}
               >
                 <div
@@ -303,18 +324,28 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                       overflowX: 'hidden'
                     }}
                   >
-                    {options.node.label}
+                    {opts.node.label}
                   </span>
-                  {options.type === 'leaf' ? (
+                  {opts.type === 'leaf' ? (
                     <div style={{ display: 'flex' }}>
                       <ToolbarButtonComponent
                         className={'jp-ToolbarButtonComponent'}
                         onClick={() => {
-                          const objectId = options.node.parentId as string;
-                          this.props.cpModel.jcadModel?.sharedModel.updateObjectByName(
-                            objectId,
-                            'visible',
-                            !visible
+                          const objectId = opts.node.parentId as string;
+                          const guidata =
+                            this.props.cpModel.sharedModel?.getOption(
+                              'guidata'
+                            ) || { objectId: {} };
+                          if (guidata) {
+                            if (guidata[objectId]) {
+                              guidata[objectId]['visibility'] = !visible;
+                            } else {
+                              guidata[objectId] = { visibility: !visible };
+                            }
+                          }
+                          this.props.cpModel.sharedModel?.setOption(
+                            'guidata',
+                            guidata
                           );
                         }}
                         icon={visible ? visibilityIcon : visibilityOffIcon}
@@ -322,7 +353,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                       <ToolbarButtonComponent
                         className={'jp-ToolbarButtonComponent'}
                         onClick={() => {
-                          const objectId = options.node.parentId as string;
+                          const objectId = opts.node.parentId as string;
                           this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
                             objectId
                           );
@@ -343,6 +374,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     );
   }
 }
+
 export namespace ObjectTree {
   /**
    * Instantiation options for `ObjectTree`.

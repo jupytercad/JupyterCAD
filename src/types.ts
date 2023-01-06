@@ -6,7 +6,7 @@ import { User } from '@jupyterlab/services';
 import { MapChange, YDocument, StateChange } from '@jupyter/ydoc';
 
 import { ISignal, Signal } from '@lumino/signaling';
-import { JSONObject } from '@lumino/coreutils';
+import { JSONObject, JSONValue } from '@lumino/coreutils';
 
 import { IJupyterCadTracker } from './token';
 import { IJCadContent, IJCadObject, IJCadModel } from './_interface/jcad';
@@ -139,8 +139,6 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   options: JSONObject;
   metadata: JSONObject;
 
-  metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
-
   objectExists(name: string): boolean;
   getObjectByName(name: string): IJCadObject | undefined;
   removeObjectByName(name: string): void;
@@ -148,13 +146,16 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   addObjects(value: Array<IJCadObject>): void;
   updateObjectByName(name: string, key: string, value: any): void;
 
-  getOption(key: string): any;
-  setOption(key: string, value: any): void;
+  getOption(key: string): JSONValue;
+  setOption(key: string, value: JSONValue): void;
   setOptions(options: JSONObject): void;
 
   getMetadata(key: string): string | undefined;
   setMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;
+
+  metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
+  optionsChanged: ISignal<IJupyterCadDoc, MapChange>;
 }
 
 export interface IJupyterCadClientState {
@@ -186,6 +187,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     Map<number, IJupyterCadClientState>
   >;
   sharedMetadataChanged: ISignal<IJupyterCadDoc, MapChange>;
+  sharedOptionsChanged: ISignal<IJupyterCadDoc, MapChange>;
 
   getWorker(): Worker;
   getContent(): IJCadContent;

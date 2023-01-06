@@ -2,11 +2,7 @@ import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { User } from '@jupyterlab/services';
 
-import { MapChange } from '@jupyter/ydoc';
-
-import { CommandRegistry } from '@lumino/commands';
 import { JSONValue } from '@lumino/coreutils';
-import { ContextMenu } from '@lumino/widgets';
 
 import * as React from 'react';
 import * as Color from 'd3-color';
@@ -27,13 +23,16 @@ import {
   IDisplayShape,
   IJupyterCadClientState,
   IJupyterCadDoc,
-  IJupyterCadDocChange,
   IMainMessage,
   IWorkerMessage,
   MainAction,
   WorkerAction
 } from './types';
 
+import { ContextMenu } from '@lumino/widgets';
+import { JSONObject } from '@lumino/coreutils';
+import { CommandRegistry } from '@lumino/commands';
+import { MapChange } from '@jupyter/ydoc';
 import { FloatingAnnotation } from './annotation/view';
 
 // Apply the BVH extension
@@ -107,7 +106,10 @@ export class MainView extends React.Component<IProps, IStates> {
         this._messageChannel.port2
       );
       this._model.themeChanged.connect(this._handleThemeChange, this);
-      this._model.sharedModelChanged.connect(this._onSharedModelChanged, this);
+      this._model.sharedOptionsChanged.connect(
+        this._onSharedOptionsChanged,
+        this
+      );
       this._model.clientStateChanged.connect(
         this._onClientSharedStateChanged,
         this
@@ -144,7 +146,10 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     });
     this._model.themeChanged.disconnect(this._handleThemeChange, this);
-    this._model.sharedModelChanged.disconnect(this._onSharedModelChanged, this);
+    this._model.sharedOptionsChanged.disconnect(
+      this._onSharedOptionsChanged,
+      this
+    );
     this._model.clientStateChanged.disconnect(
       this._onClientSharedStateChanged,
       this
@@ -192,20 +197,15 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._scene = new THREE.Scene();
 
-      const lights: Array<any> = [];
-      lights[0] = new THREE.AmbientLight(0x404040); // soft white light
-      lights[1] = new THREE.PointLight(0xffffff, 1, 0);
+      this._scene.add(new THREE.AmbientLight(0xffffff, 0.8)); // soft white light
 
-      this._scene.add(lights[0]);
-      this._camera.add(lights[1]);
+      const light = new THREE.SpotLight(0xffffff, 0.2);
+      light.castShadow = true;
+      light.shadow.radius = 32;
+      light.shadow.mapSize.width = 128;
+      light.shadow.mapSize.height = 128;
 
-      const light2 = new THREE.SpotLight(0xffffff, 1);
-      light2.castShadow = true;
-      light2.shadow.radius = 32;
-      light2.shadow.mapSize.width = 128;
-      light2.shadow.mapSize.height = 128;
-
-      this._camera.add(light2);
+      this._camera.add(light);
 
       this._scene.add(this._camera);
 
@@ -282,13 +282,20 @@ export class MainView extends React.Component<IProps, IStates> {
     );
 
     if (intersects.length > 0) {
-      return {
-        mesh: intersects[0].object as THREE.Mesh<
-          THREE.BufferGeometry,
-          THREE.MeshBasicMaterial
-        >,
-        position: intersects[0].point
-      };
+      // Find the first intersection with a visible object
+      for (const intersect of intersects) {
+        if (!intersect.object.visible) {
+          continue;
+        }
+
+        return {
+          mesh: intersect.object as THREE.Mesh<
+            THREE.BufferGeometry,
+            THREE.MeshBasicMaterial
+          >,
+          position: intersect.point
+        };
+      }
     }
 
     return null;
@@ -298,21 +305,6 @@ export class MainView extends React.Component<IProps, IStates> {
     this._requestID = window.requestAnimationFrame(this.startAnimationLoop);
 
     this._controls.update();
-
-    // Set color for selected meshes
-    if (this._meshGroup !== null) {
-      (
-        this._meshGroup.children as THREE.Mesh<
-          THREE.BufferGeometry,
-          THREE.MeshBasicMaterial
-        >[]
-      ).forEach(mesh => {
-        mesh.material.color = DEFAULT_MESH_COLOR;
-      });
-    }
-    if (this._selectedMesh) {
-      this._selectedMesh.material.color = SELECTED_MESH_COLOR;
-    }
 
     this._renderer.setRenderTarget(null);
 
@@ -350,13 +342,17 @@ export class MainView extends React.Component<IProps, IStates> {
         if (!this._model) {
           return;
         }
-        this._postMessage({
-          action: WorkerAction.LOAD_FILE,
-          payload: {
-            fileName: this._context.path,
-            content: this._model.getContent()
-          }
-        });
+        const render = () => {
+          this._postMessage({
+            action: WorkerAction.LOAD_FILE,
+            payload: {
+              fileName: this._context.path,
+              content: this._model.getContent()
+            }
+          });
+        };
+        this._model.sharedModelChanged.connect(render);
+        render();
       }
     }
   };
@@ -418,10 +414,29 @@ export class MainView extends React.Component<IProps, IStates> {
   private _onClick(e: MouseEvent) {
     const selection = this._pick();
 
+    const guidata = this._model.sharedModel.getOption('guidata');
+
     if (selection) {
+      // Deselect old selection
+      if (this._selectedMesh) {
+        let originalColor = DEFAULT_MESH_COLOR;
+        if (
+          guidata &&
+          guidata[this._selectedMesh.name] &&
+          guidata[this._selectedMesh.name]['color']
+        ) {
+          const rgba = guidata[this._selectedMesh.name]['color'] as number[];
+          originalColor = new THREE.Color(rgba[0], rgba[1], rgba[2]);
+        }
+
+        this._selectedMesh.material.color = originalColor;
+      }
+
+      // Set new selection
       if (selection.mesh === this._selectedMesh) {
         this._selectedMesh = null;
       } else {
+        // TODO Support selecting edges?
         if (selection.mesh.name.startsWith('edge')) {
           this._selectedMesh = selection.mesh.parent as THREE.Mesh<
             THREE.BufferGeometry,
@@ -433,6 +448,7 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       if (this._selectedMesh) {
+        this._selectedMesh.material.color = SELECTED_MESH_COLOR;
         this._model.syncSelectedObject(this._selectedMesh.name, this.state.id);
       } else {
         this._model.syncSelectedObject(undefined, this.state.id);
@@ -445,12 +461,12 @@ export class MainView extends React.Component<IProps, IStates> {
       this._scene.remove(this._meshGroup);
     }
 
+    const guidata = this._model.sharedModel.getOption('guidata');
+
     this._meshGroup = new THREE.Group();
     Object.entries(payload).forEach(([objName, data]) => {
-      const { faceList, edgeList, jcObject } = data;
-      if (!jcObject.visible) {
-        return;
-      }
+      const { faceList, edgeList } = data;
+
       const vertices: Array<any> = [];
       const normals: Array<any> = [];
       const triangles: Array<any> = [];
@@ -476,12 +492,26 @@ export class MainView extends React.Component<IProps, IStates> {
         vInd += face.vertexCoord.length / 3;
       });
 
+      const objdata = guidata ? guidata[objName] : null;
+
+      let color = DEFAULT_MESH_COLOR;
+      let visible = true;
+      if (objdata) {
+        if (Object.prototype.hasOwnProperty.call(objdata, 'color')) {
+          const rgba = objdata['color'] as number[];
+          color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
+        }
+        if (Object.prototype.hasOwnProperty.call(objdata, 'visibility')) {
+          visible = objdata['visibility'];
+        }
+      }
+
       // Compile the connected vertices and faces into a model
       // And add to the scene
       // We need one material per-mesh because we will set the uniform color independently later
       // it's too bad Three.js does not easily allow setting uniforms independently per-mesh
       const material = new THREE.MeshPhongMaterial({
-        color: DEFAULT_MESH_COLOR,
+        color,
         side: THREE.DoubleSide,
         wireframe: false,
         flatShading: false,
@@ -500,9 +530,15 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       geometry.computeBoundsTree();
 
-      const model = new THREE.Mesh(geometry, material);
-      model.castShadow = true;
-      model.name = objName;
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.castShadow = true;
+      mesh.name = objName;
+      mesh.visible = visible;
+
+      if (this._selectedMesh?.name === objName) {
+        this._selectedMesh = mesh;
+        mesh.material.color = SELECTED_MESH_COLOR;
+      }
 
       const edgeMaterial = new THREE.LineBasicMaterial({
         linewidth: 5,
@@ -515,14 +551,15 @@ export class MainView extends React.Component<IProps, IStates> {
         );
         const edgeGeometry = new THREE.BufferGeometry();
         edgeGeometry.setAttribute('position', edgeVertices);
-        const mesh = new THREE.Line(edgeGeometry, edgeMaterial);
-        mesh.name = 'edge';
+        const edgesMesh = new THREE.Line(edgeGeometry, edgeMaterial);
+        edgesMesh.name = 'edge';
 
-        model.add(mesh);
+        mesh.add(edgesMesh);
       });
 
-      this._meshGroup!.add(model);
+      this._meshGroup!.add(mesh);
     });
+
     const boundingGroup = new THREE.Box3();
     boundingGroup.setFromObject(this._meshGroup);
 
@@ -600,6 +637,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     return new THREE.Mesh(this._pointerGeometry, material);
   }
+
   private _onSharedMetadataChanged = (
     _: IJupyterCadDoc,
     changes: MapChange
@@ -645,6 +683,23 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       // Sync selected
+      const guidata = this._model.sharedModel.getOption('guidata');
+
+      // Deselect old selection
+      if (this._selectedMesh) {
+        let originalColor = DEFAULT_MESH_COLOR;
+        if (
+          guidata &&
+          guidata[this._selectedMesh.name] &&
+          guidata[this._selectedMesh.name]['color']
+        ) {
+          const rgba = guidata[this._selectedMesh.name]['color'] as number[];
+          originalColor = new THREE.Color(rgba[0], rgba[1], rgba[2]);
+        }
+
+        this._selectedMesh.material.color = originalColor;
+      }
+
       if (remoteState.selected.value) {
         const selected = this._meshGroup?.getObjectByName(
           remoteState.selected.value
@@ -654,6 +709,7 @@ export class MainView extends React.Component<IProps, IStates> {
             THREE.BufferGeometry,
             THREE.MeshBasicMaterial
           >;
+          this._selectedMesh.material.color = SELECTED_MESH_COLOR;
         }
       } else {
         this._selectedMesh = null;
@@ -713,31 +769,23 @@ export class MainView extends React.Component<IProps, IStates> {
     });
   };
 
-  private _onSharedModelChanged(
-    sender: JupyterCadModel,
-    change: IJupyterCadDocChange
+  private _onSharedOptionsChanged(
+    sender: IJupyterCadDoc,
+    change: MapChange
   ): void {
-    if (change.objectChange) {
-      let visible = false;
+    const guidata = sender.getOption('guidata') as JSONObject | undefined;
 
-      change.objectChange.forEach(change => {
-        if (change.key === 'visible') {
-          visible = true;
-          const obj = this._meshGroup?.getObjectByName(change.name);
+    if (guidata) {
+      for (const objName in guidata) {
+        if (
+          Object.prototype.hasOwnProperty.call(guidata[objName], 'visibility')
+        ) {
+          const obj = this._meshGroup?.getObjectByName(objName);
+
           if (obj) {
-            obj.visible = change.newValue?.visible ?? false;
+            obj.visible = guidata[objName]!['visibility'];
           }
         }
-      });
-
-      if (!visible) {
-        this._postMessage({
-          action: WorkerAction.LOAD_FILE,
-          payload: {
-            fileName: this._context.path,
-            content: this._model.getContent()
-          }
-        });
       }
     }
   }

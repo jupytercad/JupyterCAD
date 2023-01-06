@@ -83,6 +83,10 @@ export class JupyterCadModel implements IJupyterCadModel {
     return this.sharedModel.metadataChanged;
   }
 
+  get sharedOptionsChanged(): ISignal<IJupyterCadDoc, MapChange> {
+    return this.sharedModel.optionsChanged;
+  }
+
   dispose(): void {
     if (this._isDisposed) {
       return;
@@ -226,7 +230,8 @@ export class JupyterCadDoc
 {
   constructor() {
     super();
-    this._options = this.ydoc.getMap<any>('options');
+
+    this._options = this.ydoc.getMap<Y.Map<any>>('options');
     this._objects = this.ydoc.getArray<Y.Map<any>>('objects');
     this._metadata = this.ydoc.getMap<string>('metadata');
 
@@ -234,11 +239,13 @@ export class JupyterCadDoc
 
     this._objects.observeDeep(this._objectsObserver);
     this._metadata.observe(this._metaObserver);
+    this._options.observe(this._optionsObserver);
   }
 
   dispose(): void {
     this._objects.unobserveDeep(this._objectsObserver);
     this._metadata.unobserve(this._metaObserver);
+    this._options.unobserve(this._optionsObserver);
   }
 
   get objects(): Array<IJCadObject> {
@@ -246,11 +253,17 @@ export class JupyterCadDoc
       obj => JSONExt.deepCopy(obj.toJSON()) as IJCadObject
     );
   }
+
   get options(): JSONObject {
     return JSONExt.deepCopy(this._options.toJSON());
   }
+
   get metadata(): JSONObject {
     return JSONExt.deepCopy(this._metadata.toJSON());
+  }
+
+  get optionsChanged(): ISignal<IJupyterCadDoc, MapChange> {
+    return this._optionsChanged;
   }
 
   get metadataChanged(): ISignal<IJupyterCadDoc, MapChange> {
@@ -378,8 +391,13 @@ export class JupyterCadDoc
     this._metadataChanged.emit(event.keys);
   };
 
+  private _optionsObserver = (event: Y.YMapEvent<Y.Map<string>>): void => {
+    this._optionsChanged.emit(event.keys);
+  };
+
   private _objects: Y.Array<Y.Map<any>>;
   private _options: Y.Map<any>;
   private _metadata: Y.Map<string>;
   private _metadataChanged = new Signal<IJupyterCadDoc, MapChange>(this);
+  private _optionsChanged = new Signal<IJupyterCadDoc, MapChange>(this);
 }
