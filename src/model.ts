@@ -356,8 +356,27 @@ export class JupyterCadDoc
     return undefined;
   }
 
-  private _objectsObserver = (event: Y.YEvent<any>[]): void => {
-    this._changed.emit({ objectChange: [] });
+  private _objectsObserver = (events: Y.YEvent<any>[]): void => {
+    const changes: Array<{
+      name: string;
+      key: string;
+      newValue: IJCadObject;
+    }> = [];
+
+    events.forEach(event => {
+      const name = event.target.get("name");
+      if (name) {
+        event.keys.forEach((change, key) => {
+          changes.push({
+            name,
+            key,
+            newValue: JSONExt.deepCopy(event.target.toJSON())
+          });
+        });
+      }
+    });
+
+    this._changed.emit({ objectChange: changes });
   };
 
   private _metaObserver = (event: Y.YMapEvent<string>): void => {

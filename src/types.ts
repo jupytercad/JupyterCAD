@@ -119,8 +119,8 @@ export interface IJupyterCadDocChange {
   contentChange?: MapChange;
   objectChange?: Array<{
     name: string;
-    oldValue: any;
-    newValue: any;
+    key: string;
+    newValue: IJCadObject | undefined;
   }>;
   optionChange?: MapChange;
   stateChange?: StateChange<any>[];

@@ -29,6 +29,7 @@
   },
   "scripts": {
     "build": "jlpm build:schema && jlpm run build:lib && jlpm run build:worker && jlpm run build:labextension:dev",
+    "build:all": "jlpm run build:opencascade && jlpm run build",
     "build:schema": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions --cwd ./src/schema && cd src/schema && node ../../schema.js",
     "build:prod": "jlpm run clean && jlpm build:schema && jlpm run build:worker:prod && jlpm run build:lib && jlpm run build:labextension",
     "build:labextension": "jupyter labextension build .",

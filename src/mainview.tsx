@@ -24,6 +24,7 @@ import {
   IDisplayShape,
   IJupyterCadClientState,
   IJupyterCadDoc,
+  IJupyterCadDocChange,
   IMainMessage,
   IWorkerMessage,
   MainAction,
@@ -106,9 +107,10 @@ export class MainView extends React.Component<IProps, IStates> {
         { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
         this._messageChannel.port2
       );
-      this._model.themeChanged.connect(this._handleThemeChange);
-      this._model.clientStateChanged.connect(this._onClientSharedStateChanged);
-      this._model.sharedMetadataChanged.connect(this._onSharedMetadataChanged);
+      this._model.themeChanged.connect(this._handleThemeChange, this);
+      this._model.sharedModelChanged.connect(this._onSharedModelChanged, this);
+      this._model.clientStateChanged.connect(this._onClientSharedStateChanged, this);
+      this._model.sharedMetadataChanged.connect(this._onSharedMetadataChanged, this);
     });
     if (this._raycaster.params.Line) {
       this._raycaster.params.Line.threshold = 0.1;
@@ -135,8 +137,10 @@ export class MainView extends React.Component<IProps, IStates> {
         fileName: this._context.path
       }
     });
-    this._model.themeChanged.disconnect(this._handleThemeChange);
-    this._model.clientStateChanged.disconnect(this._onClientSharedStateChanged);
+    this._model.themeChanged.disconnect(this._handleThemeChange, this);
+    this._model.sharedModelChanged.disconnect(this._onSharedModelChanged, this);
+    this._model.clientStateChanged.disconnect(this._onClientSharedStateChanged, this);
+    this._model.sharedMetadataChanged.disconnect(this._onSharedMetadataChanged, this);
   }
 
   addContextMenu = (): void => {
@@ -393,17 +397,13 @@ export class MainView extends React.Component<IProps, IStates> {
         if (!this._model) {
           return;
         }
-        const render = () => {
-          this._postMessage({
-            action: WorkerAction.LOAD_FILE,
-            payload: {
-              fileName: this._context.path,
-              content: this._model.getContent()
-            }
-          });
-        };
-        this._model.sharedModelChanged.connect(render);
-        render();
+        this._postMessage({
+          action: WorkerAction.LOAD_FILE,
+          payload: {
+            fileName: this._context.path,
+            content: this._model.getContent()
+          }
+        });
       }
     }
   };
@@ -589,9 +589,6 @@ export class MainView extends React.Component<IProps, IStates> {
         10 * this._refLength
       );
       this._camera.far = 200 * this._refLength;
-      /* for (let index = 0; index < this._sceneAxe.length; index++) {
-        this._sceneAxe[index].scale.multiplyScalar(this._refLength);
-      } */
     }
 
     // Reset reflength if there are no objects
@@ -762,6 +759,35 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     });
   };
+
+  private _onSharedModelChanged(
+    sender: JupyterCadModel,
+    change: IJupyterCadDocChange
+  ): void {
+    if (change.objectChange) {
+      let visible = false;
+      
+      change.objectChange.forEach(change => {
+        if (change.key === "visible") {
+          visible = true;
+          const obj = this._meshGroup?.getObjectByName(change.name);
+          if (obj) {
+            obj.visible = change.newValue?.visible ?? false;
+          }
+        }
+      });
+
+      if (!visible) {
+        this._postMessage({
+          action: WorkerAction.LOAD_FILE,
+          payload: {
+            fileName: this._context.path,
+            content: this._model.getContent()
+          }
+        });
+      }
+    }
+  }
 
   private _handleThemeChange = (): void => {
     const lightTheme =
