@@ -6,13 +6,13 @@ export declare class Message_ProgressRange {
   delete(): void;
 }
 
-  export declare class Message_ProgressRange_1 extends Message_ProgressRange {
-    constructor();
-  }
+export declare class Message_ProgressRange_1 extends Message_ProgressRange {
+  constructor();
+}
 
-  export declare class Message_ProgressRange_2 extends Message_ProgressRange {
-    constructor(theOther: Message_ProgressRange);
-  }
+export declare class Message_ProgressRange_2 extends Message_ProgressRange {
+  constructor(theOther: Message_ProgressRange);
+}
 
 export declare class Standard_Transient {
   Delete(): void;
@@ -30,20 +30,20 @@ export declare class Standard_Transient {
   delete(): void;
 }
 
-  export declare class Standard_Transient_1 extends Standard_Transient {
-    constructor();
-  }
+export declare class Standard_Transient_1 extends Standard_Transient {
+  constructor();
+}
 
-  export declare class Standard_Transient_2 extends Standard_Transient {
-    constructor(a: MMgt_TShared);
-  }
+export declare class Standard_Transient_2 extends Standard_Transient {
+  constructor(a: MMgt_TShared);
+}
 
 export declare type TopAbs_Orientation = {
   TopAbs_FORWARD: {};
   TopAbs_REVERSED: {};
   TopAbs_INTERNAL: {};
   TopAbs_EXTERNAL: {};
-}
+};
 
 export declare type TopAbs_ShapeEnum = {
   TopAbs_COMPOUND: {};
@@ -55,7 +55,7 @@ export declare type TopAbs_ShapeEnum = {
   TopAbs_EDGE: {};
   TopAbs_VERTEX: {};
   TopAbs_SHAPE: {};
-}
+};
 
 export declare class BRepBuilderAPI_Command {
   IsDone(): Standard_Boolean;
@@ -73,7 +73,11 @@ export declare class BRepBuilderAPI_MakeShape extends BRepBuilderAPI_Command {
 }
 
 export declare class TopExp_Explorer {
-  Init(S: TopoDS_Shape, ToFind: TopAbs_ShapeEnum, ToAvoid: TopAbs_ShapeEnum): void;
+  Init(
+    S: TopoDS_Shape,
+    ToFind: TopAbs_ShapeEnum,
+    ToAvoid: TopAbs_ShapeEnum
+  ): void;
   More(): Standard_Boolean;
   Next(): void;
   Value(): TopoDS_Shape;
@@ -85,26 +89,58 @@ export declare class TopExp_Explorer {
   delete(): void;
 }
 
-  export declare class TopExp_Explorer_1 extends TopExp_Explorer {
-    constructor();
-  }
+export declare class TopExp_Explorer_1 extends TopExp_Explorer {
+  constructor();
+}
 
-  export declare class TopExp_Explorer_2 extends TopExp_Explorer {
-    constructor(S: TopoDS_Shape, ToFind: TopAbs_ShapeEnum, ToAvoid: TopAbs_ShapeEnum);
-  }
+export declare class TopExp_Explorer_2 extends TopExp_Explorer {
+  constructor(
+    S: TopoDS_Shape,
+    ToFind: TopAbs_ShapeEnum,
+    ToAvoid: TopAbs_ShapeEnum
+  );
+}
 
 export declare class TopExp {
   constructor();
-  static MapShapes_1(S: TopoDS_Shape, T: TopAbs_ShapeEnum, M: TopTools_IndexedMapOfShape): void;
+  static MapShapes_1(
+    S: TopoDS_Shape,
+    T: TopAbs_ShapeEnum,
+    M: TopTools_IndexedMapOfShape
+  ): void;
   static MapShapes_2(S: TopoDS_Shape, M: TopTools_IndexedMapOfShape): void;
   static MapShapes_3(S: TopoDS_Shape, M: TopTools_MapOfShape): void;
-  static MapShapesAndAncestors(S: TopoDS_Shape, TS: TopAbs_ShapeEnum, TA: TopAbs_ShapeEnum, M: TopTools_IndexedDataMapOfShapeListOfShape): void;
-  static MapShapesAndUniqueAncestors(S: TopoDS_Shape, TS: TopAbs_ShapeEnum, TA: TopAbs_ShapeEnum, M: TopTools_IndexedDataMapOfShapeListOfShape, useOrientation: Standard_Boolean): void;
+  static MapShapesAndAncestors(
+    S: TopoDS_Shape,
+    TS: TopAbs_ShapeEnum,
+    TA: TopAbs_ShapeEnum,
+    M: TopTools_IndexedDataMapOfShapeListOfShape
+  ): void;
+  static MapShapesAndUniqueAncestors(
+    S: TopoDS_Shape,
+    TS: TopAbs_ShapeEnum,
+    TA: TopAbs_ShapeEnum,
+    M: TopTools_IndexedDataMapOfShapeListOfShape,
+    useOrientation: Standard_Boolean
+  ): void;
   static FirstVertex(E: TopoDS_Edge, CumOri: Standard_Boolean): TopoDS_Vertex;
   static LastVertex(E: TopoDS_Edge, CumOri: Standard_Boolean): TopoDS_Vertex;
-  static Vertices_1(E: TopoDS_Edge, Vfirst: TopoDS_Vertex, Vlast: TopoDS_Vertex, CumOri: Standard_Boolean): void;
-  static Vertices_2(W: TopoDS_Wire, Vfirst: TopoDS_Vertex, Vlast: TopoDS_Vertex): void;
-  static CommonVertex(E1: TopoDS_Edge, E2: TopoDS_Edge, V: TopoDS_Vertex): Standard_Boolean;
+  static Vertices_1(
+    E: TopoDS_Edge,
+    Vfirst: TopoDS_Vertex,
+    Vlast: TopoDS_Vertex,
+    CumOri: Standard_Boolean
+  ): void;
+  static Vertices_2(
+    W: TopoDS_Wire,
+    Vfirst: TopoDS_Vertex,
+    Vlast: TopoDS_Vertex
+  ): void;
+  static CommonVertex(
+    E1: TopoDS_Edge,
+    E2: TopoDS_Edge,
+    V: TopoDS_Vertex
+  ): Standard_Boolean;
   delete(): void;
 }
 
@@ -128,17 +164,17 @@ export declare class TopLoc_Location {
   delete(): void;
 }
 
-  export declare class TopLoc_Location_1 extends TopLoc_Location {
-    constructor();
-  }
+export declare class TopLoc_Location_1 extends TopLoc_Location {
+  constructor();
+}
 
-  export declare class TopLoc_Location_2 extends TopLoc_Location {
-    constructor(T: gp_Trsf);
-  }
+export declare class TopLoc_Location_2 extends TopLoc_Location {
+  constructor(T: gp_Trsf);
+}
 
-  export declare class TopLoc_Location_3 extends TopLoc_Location {
-    constructor(D: Handle_TopLoc_Datum3D);
-  }
+export declare class TopLoc_Location_3 extends TopLoc_Location {
+  constructor(D: Handle_TopLoc_Datum3D);
+}
 
 export declare class TopoDS_Builder {
   constructor();
@@ -153,7 +189,7 @@ export declare class TopoDS_Builder {
 }
 
 export declare class TopoDS_Shape {
-  constructor()
+  constructor();
   IsNull(): Standard_Boolean;
   Nullify(): void;
   Location_1(): TopLoc_Location;
@@ -202,12 +238,12 @@ export declare class TopoDS_Shape {
 }
 
 export declare class TopoDS_Edge extends TopoDS_Shape {
-  constructor()
+  constructor();
   delete(): void;
 }
 
 export declare class TopoDS_Face extends TopoDS_Shape {
-  constructor()
+  constructor();
   delete(): void;
 }
 
@@ -233,28 +269,50 @@ export declare class TopoDS {
 }
 
 export declare class Poly_Triangle {
-  Set_1(theN1: Graphic3d_ZLayerId, theN2: Graphic3d_ZLayerId, theN3: Graphic3d_ZLayerId): void;
+  Set_1(
+    theN1: Graphic3d_ZLayerId,
+    theN2: Graphic3d_ZLayerId,
+    theN3: Graphic3d_ZLayerId
+  ): void;
   Set_2(theIndex: Graphic3d_ZLayerId, theNode: Graphic3d_ZLayerId): void;
-  Get(theN1: Graphic3d_ZLayerId, theN2: Graphic3d_ZLayerId, theN3: Graphic3d_ZLayerId): void;
+  Get(
+    theN1: Graphic3d_ZLayerId,
+    theN2: Graphic3d_ZLayerId,
+    theN3: Graphic3d_ZLayerId
+  ): void;
   Value(theIndex: Graphic3d_ZLayerId): Graphic3d_ZLayerId;
   ChangeValue(theIndex: Graphic3d_ZLayerId): Graphic3d_ZLayerId;
   delete(): void;
 }
 
-  export declare class Poly_Triangle_1 extends Poly_Triangle {
-    constructor();
-  }
+export declare class Poly_Triangle_1 extends Poly_Triangle {
+  constructor();
+}
 
-  export declare class Poly_Triangle_2 extends Poly_Triangle {
-    constructor(theN1: Graphic3d_ZLayerId, theN2: Graphic3d_ZLayerId, theN3: Graphic3d_ZLayerId);
-  }
+export declare class Poly_Triangle_2 extends Poly_Triangle {
+  constructor(
+    theN1: Graphic3d_ZLayerId,
+    theN2: Graphic3d_ZLayerId,
+    theN3: Graphic3d_ZLayerId
+  );
+}
 
 export declare class Poly_Connect {
   Load(theTriangulation: Handle_Poly_Triangulation): void;
   Triangulation(): Handle_Poly_Triangulation;
   Triangle(N: Graphic3d_ZLayerId): Graphic3d_ZLayerId;
-  Triangles(T: Graphic3d_ZLayerId, t1: Graphic3d_ZLayerId, t2: Graphic3d_ZLayerId, t3: Graphic3d_ZLayerId): void;
-  Nodes(T: Graphic3d_ZLayerId, n1: Graphic3d_ZLayerId, n2: Graphic3d_ZLayerId, n3: Graphic3d_ZLayerId): void;
+  Triangles(
+    T: Graphic3d_ZLayerId,
+    t1: Graphic3d_ZLayerId,
+    t2: Graphic3d_ZLayerId,
+    t3: Graphic3d_ZLayerId
+  ): void;
+  Nodes(
+    T: Graphic3d_ZLayerId,
+    n1: Graphic3d_ZLayerId,
+    n2: Graphic3d_ZLayerId,
+    n3: Graphic3d_ZLayerId
+  ): void;
   Initialize(N: Graphic3d_ZLayerId): void;
   More(): Standard_Boolean;
   Next(): void;
@@ -262,13 +320,13 @@ export declare class Poly_Connect {
   delete(): void;
 }
 
-  export declare class Poly_Connect_1 extends Poly_Connect {
-    constructor();
-  }
+export declare class Poly_Connect_1 extends Poly_Connect {
+  constructor();
+}
 
-  export declare class Poly_Connect_2 extends Poly_Connect {
-    constructor(theTriangulation: Handle_Poly_Triangulation);
-  }
+export declare class Poly_Connect_2 extends Poly_Connect {
+  constructor(theTriangulation: Handle_Poly_Triangulation);
+}
 
 export declare class Handle_Poly_PolygonOnTriangulation {
   Nullify(): void;
@@ -278,21 +336,21 @@ export declare class Handle_Poly_PolygonOnTriangulation {
   delete(): void;
 }
 
-  export declare class Handle_Poly_PolygonOnTriangulation_1 extends Handle_Poly_PolygonOnTriangulation {
-    constructor();
-  }
+export declare class Handle_Poly_PolygonOnTriangulation_1 extends Handle_Poly_PolygonOnTriangulation {
+  constructor();
+}
 
-  export declare class Handle_Poly_PolygonOnTriangulation_2 extends Handle_Poly_PolygonOnTriangulation {
-    constructor(thePtr: Poly_PolygonOnTriangulation);
-  }
+export declare class Handle_Poly_PolygonOnTriangulation_2 extends Handle_Poly_PolygonOnTriangulation {
+  constructor(thePtr: Poly_PolygonOnTriangulation);
+}
 
-  export declare class Handle_Poly_PolygonOnTriangulation_3 extends Handle_Poly_PolygonOnTriangulation {
-    constructor(theHandle: Handle_Poly_PolygonOnTriangulation);
-  }
+export declare class Handle_Poly_PolygonOnTriangulation_3 extends Handle_Poly_PolygonOnTriangulation {
+  constructor(theHandle: Handle_Poly_PolygonOnTriangulation);
+}
 
-  export declare class Handle_Poly_PolygonOnTriangulation_4 extends Handle_Poly_PolygonOnTriangulation {
-    constructor(theHandle: Handle_Poly_PolygonOnTriangulation);
-  }
+export declare class Handle_Poly_PolygonOnTriangulation_4 extends Handle_Poly_PolygonOnTriangulation {
+  constructor(theHandle: Handle_Poly_PolygonOnTriangulation);
+}
 
 export declare class Poly_PolygonOnTriangulation extends Standard_Transient {
   Copy(): Handle_Poly_PolygonOnTriangulation;
@@ -312,17 +370,17 @@ export declare class Poly_PolygonOnTriangulation extends Standard_Transient {
   delete(): void;
 }
 
-  export declare class Poly_PolygonOnTriangulation_1 extends Poly_PolygonOnTriangulation {
-    constructor(theNbNodes: Graphic3d_ZLayerId, theHasParams: Standard_Boolean);
-  }
+export declare class Poly_PolygonOnTriangulation_1 extends Poly_PolygonOnTriangulation {
+  constructor(theNbNodes: Graphic3d_ZLayerId, theHasParams: Standard_Boolean);
+}
 
-  export declare class Poly_PolygonOnTriangulation_2 extends Poly_PolygonOnTriangulation {
-    constructor(Nodes: TColStd_Array1OfInteger);
-  }
+export declare class Poly_PolygonOnTriangulation_2 extends Poly_PolygonOnTriangulation {
+  constructor(Nodes: TColStd_Array1OfInteger);
+}
 
-  export declare class Poly_PolygonOnTriangulation_3 extends Poly_PolygonOnTriangulation {
-    constructor(Nodes: TColStd_Array1OfInteger, Parameters: TColStd_Array1OfReal);
-  }
+export declare class Poly_PolygonOnTriangulation_3 extends Poly_PolygonOnTriangulation {
+  constructor(Nodes: TColStd_Array1OfInteger, Parameters: TColStd_Array1OfReal);
+}
 
 export declare class Handle_Poly_Triangulation {
   Nullify(): void;
@@ -332,21 +390,21 @@ export declare class Handle_Poly_Triangulation {
   delete(): void;
 }
 
-  export declare class Handle_Poly_Triangulation_1 extends Handle_Poly_Triangulation {
-    constructor();
-  }
+export declare class Handle_Poly_Triangulation_1 extends Handle_Poly_Triangulation {
+  constructor();
+}
 
-  export declare class Handle_Poly_Triangulation_2 extends Handle_Poly_Triangulation {
-    constructor(thePtr: Poly_Triangulation);
-  }
+export declare class Handle_Poly_Triangulation_2 extends Handle_Poly_Triangulation {
+  constructor(thePtr: Poly_Triangulation);
+}
 
-  export declare class Handle_Poly_Triangulation_3 extends Handle_Poly_Triangulation {
-    constructor(theHandle: Handle_Poly_Triangulation);
-  }
+export declare class Handle_Poly_Triangulation_3 extends Handle_Poly_Triangulation {
+  constructor(theHandle: Handle_Poly_Triangulation);
+}
 
-  export declare class Handle_Poly_Triangulation_4 extends Handle_Poly_Triangulation {
-    constructor(theHandle: Handle_Poly_Triangulation);
-  }
+export declare class Handle_Poly_Triangulation_4 extends Handle_Poly_Triangulation {
+  constructor(theHandle: Handle_Poly_Triangulation);
+}
 
 export declare class Poly_Triangulation extends Standard_Transient {
   static get_type_name(): Standard_Character;
@@ -381,21 +439,29 @@ export declare class Poly_Triangulation extends Standard_Transient {
   delete(): void;
 }
 
-  export declare class Poly_Triangulation_1 extends Poly_Triangulation {
-    constructor(nbNodes: Graphic3d_ZLayerId, nbTriangles: Graphic3d_ZLayerId, UVNodes: Standard_Boolean);
-  }
+export declare class Poly_Triangulation_1 extends Poly_Triangulation {
+  constructor(
+    nbNodes: Graphic3d_ZLayerId,
+    nbTriangles: Graphic3d_ZLayerId,
+    UVNodes: Standard_Boolean
+  );
+}
 
-  export declare class Poly_Triangulation_2 extends Poly_Triangulation {
-    constructor(Nodes: TColgp_Array1OfPnt, Triangles: Poly_Array1OfTriangle);
-  }
+export declare class Poly_Triangulation_2 extends Poly_Triangulation {
+  constructor(Nodes: TColgp_Array1OfPnt, Triangles: Poly_Array1OfTriangle);
+}
 
-  export declare class Poly_Triangulation_3 extends Poly_Triangulation {
-    constructor(Nodes: TColgp_Array1OfPnt, UVNodes: TColgp_Array1OfPnt2d, Triangles: Poly_Array1OfTriangle);
-  }
+export declare class Poly_Triangulation_3 extends Poly_Triangulation {
+  constructor(
+    Nodes: TColgp_Array1OfPnt,
+    UVNodes: TColgp_Array1OfPnt2d,
+    Triangles: Poly_Array1OfTriangle
+  );
+}
 
-  export declare class Poly_Triangulation_4 extends Poly_Triangulation {
-    constructor(theTriangulation: Handle_Poly_Triangulation);
-  }
+export declare class Poly_Triangulation_4 extends Poly_Triangulation {
+  constructor(theTriangulation: Handle_Poly_Triangulation);
+}
 
 export declare class Poly_Array1OfTriangle {
   begin(): any;
@@ -419,29 +485,37 @@ export declare class Poly_Array1OfTriangle {
   Value(theIndex: Standard_Integer): Poly_Triangle;
   ChangeValue(theIndex: Standard_Integer): Poly_Triangle;
   SetValue(theIndex: Standard_Integer, theItem: Poly_Triangle): void;
-  Resize(theLower: Standard_Integer, theUpper: Standard_Integer, theToCopyData: Standard_Boolean): void;
+  Resize(
+    theLower: Standard_Integer,
+    theUpper: Standard_Integer,
+    theToCopyData: Standard_Boolean
+  ): void;
   delete(): void;
 }
 
-  export declare class Poly_Array1OfTriangle_1 extends Poly_Array1OfTriangle {
-    constructor();
-  }
+export declare class Poly_Array1OfTriangle_1 extends Poly_Array1OfTriangle {
+  constructor();
+}
 
-  export declare class Poly_Array1OfTriangle_2 extends Poly_Array1OfTriangle {
-    constructor(theLower: Standard_Integer, theUpper: Standard_Integer);
-  }
+export declare class Poly_Array1OfTriangle_2 extends Poly_Array1OfTriangle {
+  constructor(theLower: Standard_Integer, theUpper: Standard_Integer);
+}
 
-  export declare class Poly_Array1OfTriangle_3 extends Poly_Array1OfTriangle {
-    constructor(theOther: Poly_Array1OfTriangle);
-  }
+export declare class Poly_Array1OfTriangle_3 extends Poly_Array1OfTriangle {
+  constructor(theOther: Poly_Array1OfTriangle);
+}
 
-  export declare class Poly_Array1OfTriangle_4 extends Poly_Array1OfTriangle {
-    constructor(theOther: Poly_Array1OfTriangle);
-  }
+export declare class Poly_Array1OfTriangle_4 extends Poly_Array1OfTriangle {
+  constructor(theOther: Poly_Array1OfTriangle);
+}
 
-  export declare class Poly_Array1OfTriangle_5 extends Poly_Array1OfTriangle {
-    constructor(theBegin: Poly_Triangle, theLower: Standard_Integer, theUpper: Standard_Integer);
-  }
+export declare class Poly_Array1OfTriangle_5 extends Poly_Array1OfTriangle {
+  constructor(
+    theBegin: Poly_Triangle,
+    theLower: Standard_Integer,
+    theUpper: Standard_Integer
+  );
+}
 
 export declare class Handle_Poly_Polygon3D {
   Nullify(): void;
@@ -451,27 +525,47 @@ export declare class Handle_Poly_Polygon3D {
   delete(): void;
 }
 
-  export declare class Handle_Poly_Polygon3D_1 extends Handle_Poly_Polygon3D {
-    constructor();
-  }
+export declare class Handle_Poly_Polygon3D_1 extends Handle_Poly_Polygon3D {
+  constructor();
+}
 
-  export declare class Handle_Poly_Polygon3D_2 extends Handle_Poly_Polygon3D {
-    constructor(thePtr: Poly_Polygon3D);
-  }
+export declare class Handle_Poly_Polygon3D_2 extends Handle_Poly_Polygon3D {
+  constructor(thePtr: Poly_Polygon3D);
+}
 
-  export declare class Handle_Poly_Polygon3D_3 extends Handle_Poly_Polygon3D {
-    constructor(theHandle: Handle_Poly_Polygon3D);
-  }
+export declare class Handle_Poly_Polygon3D_3 extends Handle_Poly_Polygon3D {
+  constructor(theHandle: Handle_Poly_Polygon3D);
+}
 
-  export declare class Handle_Poly_Polygon3D_4 extends Handle_Poly_Polygon3D {
-    constructor(theHandle: Handle_Poly_Polygon3D);
-  }
+export declare class Handle_Poly_Polygon3D_4 extends Handle_Poly_Polygon3D {
+  constructor(theHandle: Handle_Poly_Polygon3D);
+}
 
 export declare class BRepTools {
   constructor();
-  static UVBounds_1(F: TopoDS_Face, UMin: Quantity_AbsorbedDose, UMax: Quantity_AbsorbedDose, VMin: Quantity_AbsorbedDose, VMax: Quantity_AbsorbedDose): void;
-  static UVBounds_2(F: TopoDS_Face, W: TopoDS_Wire, UMin: Quantity_AbsorbedDose, UMax: Quantity_AbsorbedDose, VMin: Quantity_AbsorbedDose, VMax: Quantity_AbsorbedDose): void;
-  static UVBounds_3(F: TopoDS_Face, E: TopoDS_Edge, UMin: Quantity_AbsorbedDose, UMax: Quantity_AbsorbedDose, VMin: Quantity_AbsorbedDose, VMax: Quantity_AbsorbedDose): void;
+  static UVBounds_1(
+    F: TopoDS_Face,
+    UMin: Quantity_AbsorbedDose,
+    UMax: Quantity_AbsorbedDose,
+    VMin: Quantity_AbsorbedDose,
+    VMax: Quantity_AbsorbedDose
+  ): void;
+  static UVBounds_2(
+    F: TopoDS_Face,
+    W: TopoDS_Wire,
+    UMin: Quantity_AbsorbedDose,
+    UMax: Quantity_AbsorbedDose,
+    VMin: Quantity_AbsorbedDose,
+    VMax: Quantity_AbsorbedDose
+  ): void;
+  static UVBounds_3(
+    F: TopoDS_Face,
+    E: TopoDS_Edge,
+    UMin: Quantity_AbsorbedDose,
+    UMax: Quantity_AbsorbedDose,
+    VMin: Quantity_AbsorbedDose,
+    VMax: Quantity_AbsorbedDose
+  ): void;
   static AddUVBounds_1(F: TopoDS_Face, B: Bnd_Box2d): void;
   static AddUVBounds_2(F: TopoDS_Face, W: TopoDS_Wire, B: Bnd_Box2d): void;
   static AddUVBounds_3(F: TopoDS_Face, E: TopoDS_Edge, B: Bnd_Box2d): void;
@@ -488,20 +582,56 @@ export declare class BRepTools {
   static Clean(S: TopoDS_Shape): void;
   static CleanGeometry(theShape: TopoDS_Shape): void;
   static RemoveUnusedPCurves(S: TopoDS_Shape): void;
-  static Triangulation(theShape: TopoDS_Shape, theLinDefl: Quantity_AbsorbedDose, theToCheckFreeEdges: Standard_Boolean): Standard_Boolean;
+  static Triangulation(
+    theShape: TopoDS_Shape,
+    theLinDefl: Quantity_AbsorbedDose,
+    theToCheckFreeEdges: Standard_Boolean
+  ): Standard_Boolean;
   static Compare_1(V1: TopoDS_Vertex, V2: TopoDS_Vertex): Standard_Boolean;
   static Compare_2(E1: TopoDS_Edge, E2: TopoDS_Edge): Standard_Boolean;
   static OuterWire(F: TopoDS_Face): TopoDS_Wire;
   static Map3DEdges(S: TopoDS_Shape, M: TopTools_IndexedMapOfShape): void;
   static IsReallyClosed(E: TopoDS_Edge, F: TopoDS_Face): Standard_Boolean;
-  static DetectClosedness(theFace: TopoDS_Face, theUclosed: Standard_Boolean, theVclosed: Standard_Boolean): void;
+  static DetectClosedness(
+    theFace: TopoDS_Face,
+    theUclosed: Standard_Boolean,
+    theVclosed: Standard_Boolean
+  ): void;
   static Dump(Sh: TopoDS_Shape, S: Standard_OStream): void;
-  static Write_1(Sh: TopoDS_Shape, S: Standard_OStream, theProgress: Message_ProgressRange): void;
-  static Read_1(Sh: TopoDS_Shape, S: Standard_IStream, B: BRep_Builder, theProgress: Message_ProgressRange): void;
-  static Write_2(Sh: TopoDS_Shape, File: Standard_CString, theProgress: Message_ProgressRange): Standard_Boolean;
-  static Read_2(Sh: TopoDS_Shape, File: Standard_CString, B: BRep_Builder, theProgress: Message_ProgressRange): Standard_Boolean;
-  static EvalAndUpdateTol(theE: TopoDS_Edge, theC3d: Handle_Geom_Curve, theC2d: Handle_Geom2d_Curve, theS: Handle_Geom_Surface, theF: Quantity_AbsorbedDose, theL: Quantity_AbsorbedDose): Quantity_AbsorbedDose;
-  static OriEdgeInFace(theEdge: TopoDS_Edge, theFace: TopoDS_Face): TopAbs_Orientation;
+  static Write_1(
+    Sh: TopoDS_Shape,
+    S: Standard_OStream,
+    theProgress: Message_ProgressRange
+  ): void;
+  static Read_1(
+    Sh: TopoDS_Shape,
+    S: Standard_IStream,
+    B: BRep_Builder,
+    theProgress: Message_ProgressRange
+  ): void;
+  static Write_2(
+    Sh: TopoDS_Shape,
+    File: Standard_CString,
+    theProgress: Message_ProgressRange
+  ): Standard_Boolean;
+  static Read_2(
+    Sh: TopoDS_Shape,
+    File: Standard_CString,
+    B: BRep_Builder,
+    theProgress: Message_ProgressRange
+  ): Standard_Boolean;
+  static EvalAndUpdateTol(
+    theE: TopoDS_Edge,
+    theC3d: Handle_Geom_Curve,
+    theC2d: Handle_Geom2d_Curve,
+    theS: Handle_Geom_Surface,
+    theF: Quantity_AbsorbedDose,
+    theL: Quantity_AbsorbedDose
+  ): Quantity_AbsorbedDose;
+  static OriEdgeInFace(
+    theEdge: TopoDS_Edge,
+    theFace: TopoDS_Face
+  ): TopAbs_Orientation;
   static RemoveInternals(theS: TopoDS_Shape, theForce: Standard_Boolean): void;
   delete(): void;
 }
@@ -509,56 +639,235 @@ export declare class BRepTools {
 export declare class BRep_Builder extends TopoDS_Builder {
   constructor();
   MakeFace_1(F: TopoDS_Face): void;
-  MakeFace_2(F: TopoDS_Face, S: Handle_Geom_Surface, Tol: Quantity_AbsorbedDose): void;
-  MakeFace_3(F: TopoDS_Face, S: Handle_Geom_Surface, L: TopLoc_Location, Tol: Quantity_AbsorbedDose): void;
+  MakeFace_2(
+    F: TopoDS_Face,
+    S: Handle_Geom_Surface,
+    Tol: Quantity_AbsorbedDose
+  ): void;
+  MakeFace_3(
+    F: TopoDS_Face,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    Tol: Quantity_AbsorbedDose
+  ): void;
   MakeFace_4(F: TopoDS_Face, T: Handle_Poly_Triangulation): void;
-  UpdateFace_1(F: TopoDS_Face, S: Handle_Geom_Surface, L: TopLoc_Location, Tol: Quantity_AbsorbedDose): void;
+  UpdateFace_1(
+    F: TopoDS_Face,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    Tol: Quantity_AbsorbedDose
+  ): void;
   UpdateFace_2(F: TopoDS_Face, T: Handle_Poly_Triangulation): void;
   UpdateFace_3(F: TopoDS_Face, Tol: Quantity_AbsorbedDose): void;
   NaturalRestriction(F: TopoDS_Face, N: Standard_Boolean): void;
   MakeEdge_1(E: TopoDS_Edge): void;
-  MakeEdge_2(E: TopoDS_Edge, C: Handle_Geom_Curve, Tol: Quantity_AbsorbedDose): void;
-  MakeEdge_3(E: TopoDS_Edge, C: Handle_Geom_Curve, L: TopLoc_Location, Tol: Quantity_AbsorbedDose): void;
+  MakeEdge_2(
+    E: TopoDS_Edge,
+    C: Handle_Geom_Curve,
+    Tol: Quantity_AbsorbedDose
+  ): void;
+  MakeEdge_3(
+    E: TopoDS_Edge,
+    C: Handle_Geom_Curve,
+    L: TopLoc_Location,
+    Tol: Quantity_AbsorbedDose
+  ): void;
   MakeEdge_4(E: TopoDS_Edge, P: Handle_Poly_Polygon3D): void;
-  MakeEdge_5(E: TopoDS_Edge, N: Handle_Poly_PolygonOnTriangulation, T: Handle_Poly_Triangulation): void;
-  MakeEdge_6(E: TopoDS_Edge, N: Handle_Poly_PolygonOnTriangulation, T: Handle_Poly_Triangulation, L: TopLoc_Location): void;
-  UpdateEdge_1(E: TopoDS_Edge, C: Handle_Geom_Curve, Tol: Quantity_AbsorbedDose): void;
-  UpdateEdge_2(E: TopoDS_Edge, C: Handle_Geom_Curve, L: TopLoc_Location, Tol: Quantity_AbsorbedDose): void;
-  UpdateEdge_3(E: TopoDS_Edge, C: Handle_Geom2d_Curve, F: TopoDS_Face, Tol: Quantity_AbsorbedDose): void;
-  UpdateEdge_4(E: TopoDS_Edge, C1: Handle_Geom2d_Curve, C2: Handle_Geom2d_Curve, F: TopoDS_Face, Tol: Quantity_AbsorbedDose): void;
-  UpdateEdge_5(E: TopoDS_Edge, C: Handle_Geom2d_Curve, S: Handle_Geom_Surface, L: TopLoc_Location, Tol: Quantity_AbsorbedDose): void;
-  UpdateEdge_6(E: TopoDS_Edge, C: Handle_Geom2d_Curve, S: Handle_Geom_Surface, L: TopLoc_Location, Tol: Quantity_AbsorbedDose, Pf: gp_Pnt2d, Pl: gp_Pnt2d): void;
-  UpdateEdge_7(E: TopoDS_Edge, C1: Handle_Geom2d_Curve, C2: Handle_Geom2d_Curve, S: Handle_Geom_Surface, L: TopLoc_Location, Tol: Quantity_AbsorbedDose): void;
-  UpdateEdge_8(E: TopoDS_Edge, C1: Handle_Geom2d_Curve, C2: Handle_Geom2d_Curve, S: Handle_Geom_Surface, L: TopLoc_Location, Tol: Quantity_AbsorbedDose, Pf: gp_Pnt2d, Pl: gp_Pnt2d): void;
+  MakeEdge_5(
+    E: TopoDS_Edge,
+    N: Handle_Poly_PolygonOnTriangulation,
+    T: Handle_Poly_Triangulation
+  ): void;
+  MakeEdge_6(
+    E: TopoDS_Edge,
+    N: Handle_Poly_PolygonOnTriangulation,
+    T: Handle_Poly_Triangulation,
+    L: TopLoc_Location
+  ): void;
+  UpdateEdge_1(
+    E: TopoDS_Edge,
+    C: Handle_Geom_Curve,
+    Tol: Quantity_AbsorbedDose
+  ): void;
+  UpdateEdge_2(
+    E: TopoDS_Edge,
+    C: Handle_Geom_Curve,
+    L: TopLoc_Location,
+    Tol: Quantity_AbsorbedDose
+  ): void;
+  UpdateEdge_3(
+    E: TopoDS_Edge,
+    C: Handle_Geom2d_Curve,
+    F: TopoDS_Face,
+    Tol: Quantity_AbsorbedDose
+  ): void;
+  UpdateEdge_4(
+    E: TopoDS_Edge,
+    C1: Handle_Geom2d_Curve,
+    C2: Handle_Geom2d_Curve,
+    F: TopoDS_Face,
+    Tol: Quantity_AbsorbedDose
+  ): void;
+  UpdateEdge_5(
+    E: TopoDS_Edge,
+    C: Handle_Geom2d_Curve,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    Tol: Quantity_AbsorbedDose
+  ): void;
+  UpdateEdge_6(
+    E: TopoDS_Edge,
+    C: Handle_Geom2d_Curve,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    Tol: Quantity_AbsorbedDose,
+    Pf: gp_Pnt2d,
+    Pl: gp_Pnt2d
+  ): void;
+  UpdateEdge_7(
+    E: TopoDS_Edge,
+    C1: Handle_Geom2d_Curve,
+    C2: Handle_Geom2d_Curve,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    Tol: Quantity_AbsorbedDose
+  ): void;
+  UpdateEdge_8(
+    E: TopoDS_Edge,
+    C1: Handle_Geom2d_Curve,
+    C2: Handle_Geom2d_Curve,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    Tol: Quantity_AbsorbedDose,
+    Pf: gp_Pnt2d,
+    Pl: gp_Pnt2d
+  ): void;
   UpdateEdge_9(E: TopoDS_Edge, P: Handle_Poly_Polygon3D): void;
-  UpdateEdge_10(E: TopoDS_Edge, P: Handle_Poly_Polygon3D, L: TopLoc_Location): void;
-  UpdateEdge_11(E: TopoDS_Edge, N: Handle_Poly_PolygonOnTriangulation, T: Handle_Poly_Triangulation): void;
-  UpdateEdge_12(E: TopoDS_Edge, N: Handle_Poly_PolygonOnTriangulation, T: Handle_Poly_Triangulation, L: TopLoc_Location): void;
-  UpdateEdge_13(E: TopoDS_Edge, N1: Handle_Poly_PolygonOnTriangulation, N2: Handle_Poly_PolygonOnTriangulation, T: Handle_Poly_Triangulation): void;
-  UpdateEdge_14(E: TopoDS_Edge, N1: Handle_Poly_PolygonOnTriangulation, N2: Handle_Poly_PolygonOnTriangulation, T: Handle_Poly_Triangulation, L: TopLoc_Location): void;
+  UpdateEdge_10(
+    E: TopoDS_Edge,
+    P: Handle_Poly_Polygon3D,
+    L: TopLoc_Location
+  ): void;
+  UpdateEdge_11(
+    E: TopoDS_Edge,
+    N: Handle_Poly_PolygonOnTriangulation,
+    T: Handle_Poly_Triangulation
+  ): void;
+  UpdateEdge_12(
+    E: TopoDS_Edge,
+    N: Handle_Poly_PolygonOnTriangulation,
+    T: Handle_Poly_Triangulation,
+    L: TopLoc_Location
+  ): void;
+  UpdateEdge_13(
+    E: TopoDS_Edge,
+    N1: Handle_Poly_PolygonOnTriangulation,
+    N2: Handle_Poly_PolygonOnTriangulation,
+    T: Handle_Poly_Triangulation
+  ): void;
+  UpdateEdge_14(
+    E: TopoDS_Edge,
+    N1: Handle_Poly_PolygonOnTriangulation,
+    N2: Handle_Poly_PolygonOnTriangulation,
+    T: Handle_Poly_Triangulation,
+    L: TopLoc_Location
+  ): void;
   UpdateEdge_15(E: TopoDS_Edge, P: Handle_Poly_Polygon2D, S: TopoDS_Face): void;
-  UpdateEdge_16(E: TopoDS_Edge, P: Handle_Poly_Polygon2D, S: Handle_Geom_Surface, T: TopLoc_Location): void;
-  UpdateEdge_17(E: TopoDS_Edge, P1: Handle_Poly_Polygon2D, P2: Handle_Poly_Polygon2D, S: TopoDS_Face): void;
-  UpdateEdge_18(E: TopoDS_Edge, P1: Handle_Poly_Polygon2D, P2: Handle_Poly_Polygon2D, S: Handle_Geom_Surface, L: TopLoc_Location): void;
+  UpdateEdge_16(
+    E: TopoDS_Edge,
+    P: Handle_Poly_Polygon2D,
+    S: Handle_Geom_Surface,
+    T: TopLoc_Location
+  ): void;
+  UpdateEdge_17(
+    E: TopoDS_Edge,
+    P1: Handle_Poly_Polygon2D,
+    P2: Handle_Poly_Polygon2D,
+    S: TopoDS_Face
+  ): void;
+  UpdateEdge_18(
+    E: TopoDS_Edge,
+    P1: Handle_Poly_Polygon2D,
+    P2: Handle_Poly_Polygon2D,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location
+  ): void;
   UpdateEdge_19(E: TopoDS_Edge, Tol: Quantity_AbsorbedDose): void;
-  Continuity_1(E: TopoDS_Edge, F1: TopoDS_Face, F2: TopoDS_Face, C: GeomAbs_Shape): void;
-  Continuity_2(E: TopoDS_Edge, S1: Handle_Geom_Surface, S2: Handle_Geom_Surface, L1: TopLoc_Location, L2: TopLoc_Location, C: GeomAbs_Shape): void;
+  Continuity_1(
+    E: TopoDS_Edge,
+    F1: TopoDS_Face,
+    F2: TopoDS_Face,
+    C: GeomAbs_Shape
+  ): void;
+  Continuity_2(
+    E: TopoDS_Edge,
+    S1: Handle_Geom_Surface,
+    S2: Handle_Geom_Surface,
+    L1: TopLoc_Location,
+    L2: TopLoc_Location,
+    C: GeomAbs_Shape
+  ): void;
   SameParameter(E: TopoDS_Edge, S: Standard_Boolean): void;
   SameRange(E: TopoDS_Edge, S: Standard_Boolean): void;
   Degenerated(E: TopoDS_Edge, D: Standard_Boolean): void;
-  Range_1(E: TopoDS_Edge, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose, Only3d: Standard_Boolean): void;
-  Range_2(E: TopoDS_Edge, S: Handle_Geom_Surface, L: TopLoc_Location, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose): void;
-  Range_3(E: TopoDS_Edge, F: TopoDS_Face, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose): void;
+  Range_1(
+    E: TopoDS_Edge,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose,
+    Only3d: Standard_Boolean
+  ): void;
+  Range_2(
+    E: TopoDS_Edge,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose
+  ): void;
+  Range_3(
+    E: TopoDS_Edge,
+    F: TopoDS_Face,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose
+  ): void;
   Transfert_1(Ein: TopoDS_Edge, Eout: TopoDS_Edge): void;
   MakeVertex_1(V: TopoDS_Vertex): void;
   MakeVertex_2(V: TopoDS_Vertex, P: gp_Pnt, Tol: Quantity_AbsorbedDose): void;
   UpdateVertex_1(V: TopoDS_Vertex, P: gp_Pnt, Tol: Quantity_AbsorbedDose): void;
-  UpdateVertex_2(V: TopoDS_Vertex, P: Quantity_AbsorbedDose, E: TopoDS_Edge, Tol: Quantity_AbsorbedDose): void;
-  UpdateVertex_3(V: TopoDS_Vertex, P: Quantity_AbsorbedDose, E: TopoDS_Edge, F: TopoDS_Face, Tol: Quantity_AbsorbedDose): void;
-  UpdateVertex_4(V: TopoDS_Vertex, P: Quantity_AbsorbedDose, E: TopoDS_Edge, S: Handle_Geom_Surface, L: TopLoc_Location, Tol: Quantity_AbsorbedDose): void;
-  UpdateVertex_5(Ve: TopoDS_Vertex, U: Quantity_AbsorbedDose, V: Quantity_AbsorbedDose, F: TopoDS_Face, Tol: Quantity_AbsorbedDose): void;
+  UpdateVertex_2(
+    V: TopoDS_Vertex,
+    P: Quantity_AbsorbedDose,
+    E: TopoDS_Edge,
+    Tol: Quantity_AbsorbedDose
+  ): void;
+  UpdateVertex_3(
+    V: TopoDS_Vertex,
+    P: Quantity_AbsorbedDose,
+    E: TopoDS_Edge,
+    F: TopoDS_Face,
+    Tol: Quantity_AbsorbedDose
+  ): void;
+  UpdateVertex_4(
+    V: TopoDS_Vertex,
+    P: Quantity_AbsorbedDose,
+    E: TopoDS_Edge,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    Tol: Quantity_AbsorbedDose
+  ): void;
+  UpdateVertex_5(
+    Ve: TopoDS_Vertex,
+    U: Quantity_AbsorbedDose,
+    V: Quantity_AbsorbedDose,
+    F: TopoDS_Face,
+    Tol: Quantity_AbsorbedDose
+  ): void;
   UpdateVertex_6(V: TopoDS_Vertex, Tol: Quantity_AbsorbedDose): void;
-  Transfert_2(Ein: TopoDS_Edge, Eout: TopoDS_Edge, Vin: TopoDS_Vertex, Vout: TopoDS_Vertex): void;
+  Transfert_2(
+    Ein: TopoDS_Edge,
+    Eout: TopoDS_Edge,
+    Vin: TopoDS_Vertex,
+    Vout: TopoDS_Vertex
+  ): void;
   delete(): void;
 }
 
@@ -567,54 +876,214 @@ export declare class BRep_Tool {
   static IsClosed_1(S: TopoDS_Shape): Standard_Boolean;
   static Surface_1(F: TopoDS_Face, L: TopLoc_Location): Handle_Geom_Surface;
   static Surface_2(F: TopoDS_Face): Handle_Geom_Surface;
-  static Triangulation(F: TopoDS_Face, L: TopLoc_Location): Handle_Poly_Triangulation;
+  static Triangulation(
+    F: TopoDS_Face,
+    L: TopLoc_Location
+  ): Handle_Poly_Triangulation;
   static Tolerance_1(F: TopoDS_Face): Quantity_AbsorbedDose;
   static NaturalRestriction(F: TopoDS_Face): Standard_Boolean;
   static IsGeometric_1(F: TopoDS_Face): Standard_Boolean;
   static IsGeometric_2(E: TopoDS_Edge): Standard_Boolean;
-  static Curve_1(E: TopoDS_Edge, L: TopLoc_Location, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose): Handle_Geom_Curve;
-  static Curve_2(E: TopoDS_Edge, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose): Handle_Geom_Curve;
+  static Curve_1(
+    E: TopoDS_Edge,
+    L: TopLoc_Location,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose
+  ): Handle_Geom_Curve;
+  static Curve_2(
+    E: TopoDS_Edge,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose
+  ): Handle_Geom_Curve;
   static Polygon3D(E: TopoDS_Edge, L: TopLoc_Location): Handle_Poly_Polygon3D;
-  static CurveOnSurface_1(E: TopoDS_Edge, F: TopoDS_Face, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose, theIsStored: Standard_Boolean): Handle_Geom2d_Curve;
-  static CurveOnSurface_2(E: TopoDS_Edge, S: Handle_Geom_Surface, L: TopLoc_Location, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose, theIsStored: Standard_Boolean): Handle_Geom2d_Curve;
-  static CurveOnPlane(E: TopoDS_Edge, S: Handle_Geom_Surface, L: TopLoc_Location, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose): Handle_Geom2d_Curve;
-  static CurveOnSurface_3(E: TopoDS_Edge, C: Handle_Geom2d_Curve, S: Handle_Geom_Surface, L: TopLoc_Location, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose): void;
-  static CurveOnSurface_4(E: TopoDS_Edge, C: Handle_Geom2d_Curve, S: Handle_Geom_Surface, L: TopLoc_Location, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose, Index: Graphic3d_ZLayerId): void;
-  static PolygonOnSurface_1(E: TopoDS_Edge, F: TopoDS_Face): Handle_Poly_Polygon2D;
-  static PolygonOnSurface_2(E: TopoDS_Edge, S: Handle_Geom_Surface, L: TopLoc_Location): Handle_Poly_Polygon2D;
-  static PolygonOnSurface_3(E: TopoDS_Edge, C: Handle_Poly_Polygon2D, S: Handle_Geom_Surface, L: TopLoc_Location): void;
-  static PolygonOnSurface_4(E: TopoDS_Edge, C: Handle_Poly_Polygon2D, S: Handle_Geom_Surface, L: TopLoc_Location, Index: Graphic3d_ZLayerId): void;
-  static PolygonOnTriangulation_1(E: TopoDS_Edge, T: Handle_Poly_Triangulation, L: TopLoc_Location): Handle_Poly_PolygonOnTriangulation;
-  static PolygonOnTriangulation_2(E: TopoDS_Edge, P: Handle_Poly_PolygonOnTriangulation, T: Handle_Poly_Triangulation, L: TopLoc_Location): void;
-  static PolygonOnTriangulation_3(E: TopoDS_Edge, P: Handle_Poly_PolygonOnTriangulation, T: Handle_Poly_Triangulation, L: TopLoc_Location, Index: Graphic3d_ZLayerId): void;
+  static CurveOnSurface_1(
+    E: TopoDS_Edge,
+    F: TopoDS_Face,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose,
+    theIsStored: Standard_Boolean
+  ): Handle_Geom2d_Curve;
+  static CurveOnSurface_2(
+    E: TopoDS_Edge,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose,
+    theIsStored: Standard_Boolean
+  ): Handle_Geom2d_Curve;
+  static CurveOnPlane(
+    E: TopoDS_Edge,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose
+  ): Handle_Geom2d_Curve;
+  static CurveOnSurface_3(
+    E: TopoDS_Edge,
+    C: Handle_Geom2d_Curve,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose
+  ): void;
+  static CurveOnSurface_4(
+    E: TopoDS_Edge,
+    C: Handle_Geom2d_Curve,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose,
+    Index: Graphic3d_ZLayerId
+  ): void;
+  static PolygonOnSurface_1(
+    E: TopoDS_Edge,
+    F: TopoDS_Face
+  ): Handle_Poly_Polygon2D;
+  static PolygonOnSurface_2(
+    E: TopoDS_Edge,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location
+  ): Handle_Poly_Polygon2D;
+  static PolygonOnSurface_3(
+    E: TopoDS_Edge,
+    C: Handle_Poly_Polygon2D,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location
+  ): void;
+  static PolygonOnSurface_4(
+    E: TopoDS_Edge,
+    C: Handle_Poly_Polygon2D,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    Index: Graphic3d_ZLayerId
+  ): void;
+  static PolygonOnTriangulation_1(
+    E: TopoDS_Edge,
+    T: Handle_Poly_Triangulation,
+    L: TopLoc_Location
+  ): Handle_Poly_PolygonOnTriangulation;
+  static PolygonOnTriangulation_2(
+    E: TopoDS_Edge,
+    P: Handle_Poly_PolygonOnTriangulation,
+    T: Handle_Poly_Triangulation,
+    L: TopLoc_Location
+  ): void;
+  static PolygonOnTriangulation_3(
+    E: TopoDS_Edge,
+    P: Handle_Poly_PolygonOnTriangulation,
+    T: Handle_Poly_Triangulation,
+    L: TopLoc_Location,
+    Index: Graphic3d_ZLayerId
+  ): void;
   static IsClosed_2(E: TopoDS_Edge, F: TopoDS_Face): Standard_Boolean;
-  static IsClosed_3(E: TopoDS_Edge, S: Handle_Geom_Surface, L: TopLoc_Location): Standard_Boolean;
-  static IsClosed_4(E: TopoDS_Edge, T: Handle_Poly_Triangulation, L: TopLoc_Location): Standard_Boolean;
+  static IsClosed_3(
+    E: TopoDS_Edge,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location
+  ): Standard_Boolean;
+  static IsClosed_4(
+    E: TopoDS_Edge,
+    T: Handle_Poly_Triangulation,
+    L: TopLoc_Location
+  ): Standard_Boolean;
   static Tolerance_2(E: TopoDS_Edge): Quantity_AbsorbedDose;
   static SameParameter(E: TopoDS_Edge): Standard_Boolean;
   static SameRange(E: TopoDS_Edge): Standard_Boolean;
   static Degenerated(E: TopoDS_Edge): Standard_Boolean;
-  static Range_1(E: TopoDS_Edge, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose): void;
-  static Range_2(E: TopoDS_Edge, S: Handle_Geom_Surface, L: TopLoc_Location, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose): void;
-  static Range_3(E: TopoDS_Edge, F: TopoDS_Face, First: Quantity_AbsorbedDose, Last: Quantity_AbsorbedDose): void;
-  static UVPoints_1(E: TopoDS_Edge, S: Handle_Geom_Surface, L: TopLoc_Location, PFirst: gp_Pnt2d, PLast: gp_Pnt2d): void;
-  static UVPoints_2(E: TopoDS_Edge, F: TopoDS_Face, PFirst: gp_Pnt2d, PLast: gp_Pnt2d): void;
-  static SetUVPoints_1(E: TopoDS_Edge, S: Handle_Geom_Surface, L: TopLoc_Location, PFirst: gp_Pnt2d, PLast: gp_Pnt2d): void;
-  static SetUVPoints_2(E: TopoDS_Edge, F: TopoDS_Face, PFirst: gp_Pnt2d, PLast: gp_Pnt2d): void;
-  static HasContinuity_1(E: TopoDS_Edge, F1: TopoDS_Face, F2: TopoDS_Face): Standard_Boolean;
-  static Continuity_1(E: TopoDS_Edge, F1: TopoDS_Face, F2: TopoDS_Face): GeomAbs_Shape;
-  static HasContinuity_2(E: TopoDS_Edge, S1: Handle_Geom_Surface, S2: Handle_Geom_Surface, L1: TopLoc_Location, L2: TopLoc_Location): Standard_Boolean;
-  static Continuity_2(E: TopoDS_Edge, S1: Handle_Geom_Surface, S2: Handle_Geom_Surface, L1: TopLoc_Location, L2: TopLoc_Location): GeomAbs_Shape;
+  static Range_1(
+    E: TopoDS_Edge,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose
+  ): void;
+  static Range_2(
+    E: TopoDS_Edge,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose
+  ): void;
+  static Range_3(
+    E: TopoDS_Edge,
+    F: TopoDS_Face,
+    First: Quantity_AbsorbedDose,
+    Last: Quantity_AbsorbedDose
+  ): void;
+  static UVPoints_1(
+    E: TopoDS_Edge,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    PFirst: gp_Pnt2d,
+    PLast: gp_Pnt2d
+  ): void;
+  static UVPoints_2(
+    E: TopoDS_Edge,
+    F: TopoDS_Face,
+    PFirst: gp_Pnt2d,
+    PLast: gp_Pnt2d
+  ): void;
+  static SetUVPoints_1(
+    E: TopoDS_Edge,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location,
+    PFirst: gp_Pnt2d,
+    PLast: gp_Pnt2d
+  ): void;
+  static SetUVPoints_2(
+    E: TopoDS_Edge,
+    F: TopoDS_Face,
+    PFirst: gp_Pnt2d,
+    PLast: gp_Pnt2d
+  ): void;
+  static HasContinuity_1(
+    E: TopoDS_Edge,
+    F1: TopoDS_Face,
+    F2: TopoDS_Face
+  ): Standard_Boolean;
+  static Continuity_1(
+    E: TopoDS_Edge,
+    F1: TopoDS_Face,
+    F2: TopoDS_Face
+  ): GeomAbs_Shape;
+  static HasContinuity_2(
+    E: TopoDS_Edge,
+    S1: Handle_Geom_Surface,
+    S2: Handle_Geom_Surface,
+    L1: TopLoc_Location,
+    L2: TopLoc_Location
+  ): Standard_Boolean;
+  static Continuity_2(
+    E: TopoDS_Edge,
+    S1: Handle_Geom_Surface,
+    S2: Handle_Geom_Surface,
+    L1: TopLoc_Location,
+    L2: TopLoc_Location
+  ): GeomAbs_Shape;
   static HasContinuity_3(E: TopoDS_Edge): Standard_Boolean;
   static MaxContinuity(theEdge: TopoDS_Edge): GeomAbs_Shape;
   static Pnt(V: TopoDS_Vertex): gp_Pnt;
   static Tolerance_3(V: TopoDS_Vertex): Quantity_AbsorbedDose;
-  static Parameter_1(theV: TopoDS_Vertex, theE: TopoDS_Edge, theParam: Quantity_AbsorbedDose): Standard_Boolean;
+  static Parameter_1(
+    theV: TopoDS_Vertex,
+    theE: TopoDS_Edge,
+    theParam: Quantity_AbsorbedDose
+  ): Standard_Boolean;
   static Parameter_2(V: TopoDS_Vertex, E: TopoDS_Edge): Quantity_AbsorbedDose;
-  static Parameter_3(V: TopoDS_Vertex, E: TopoDS_Edge, F: TopoDS_Face): Quantity_AbsorbedDose;
-  static Parameter_4(V: TopoDS_Vertex, E: TopoDS_Edge, S: Handle_Geom_Surface, L: TopLoc_Location): Quantity_AbsorbedDose;
+  static Parameter_3(
+    V: TopoDS_Vertex,
+    E: TopoDS_Edge,
+    F: TopoDS_Face
+  ): Quantity_AbsorbedDose;
+  static Parameter_4(
+    V: TopoDS_Vertex,
+    E: TopoDS_Edge,
+    S: Handle_Geom_Surface,
+    L: TopLoc_Location
+  ): Quantity_AbsorbedDose;
   static Parameters(V: TopoDS_Vertex, F: TopoDS_Face): gp_Pnt2d;
-  static MaxTolerance(theShape: TopoDS_Shape, theSubShape: TopAbs_ShapeEnum): Quantity_AbsorbedDose;
+  static MaxTolerance(
+    theShape: TopoDS_Shape,
+    theSubShape: TopAbs_ShapeEnum
+  ): Quantity_AbsorbedDose;
   delete(): void;
 }
 
@@ -635,16 +1104,35 @@ export declare class gp_Trsf {
   SetTranslationPart(V: gp_Vec): void;
   SetScaleFactor(S: Quantity_AbsorbedDose): void;
   SetForm(P: gp_TrsfForm): void;
-  SetValues(a11: Quantity_AbsorbedDose, a12: Quantity_AbsorbedDose, a13: Quantity_AbsorbedDose, a14: Quantity_AbsorbedDose, a21: Quantity_AbsorbedDose, a22: Quantity_AbsorbedDose, a23: Quantity_AbsorbedDose, a24: Quantity_AbsorbedDose, a31: Quantity_AbsorbedDose, a32: Quantity_AbsorbedDose, a33: Quantity_AbsorbedDose, a34: Quantity_AbsorbedDose): void;
+  SetValues(
+    a11: Quantity_AbsorbedDose,
+    a12: Quantity_AbsorbedDose,
+    a13: Quantity_AbsorbedDose,
+    a14: Quantity_AbsorbedDose,
+    a21: Quantity_AbsorbedDose,
+    a22: Quantity_AbsorbedDose,
+    a23: Quantity_AbsorbedDose,
+    a24: Quantity_AbsorbedDose,
+    a31: Quantity_AbsorbedDose,
+    a32: Quantity_AbsorbedDose,
+    a33: Quantity_AbsorbedDose,
+    a34: Quantity_AbsorbedDose
+  ): void;
   IsNegative(): Standard_Boolean;
   Form(): gp_TrsfForm;
   ScaleFactor(): Quantity_AbsorbedDose;
   TranslationPart(): gp_XYZ;
-  GetRotation_1(theAxis: gp_XYZ, theAngle: Quantity_AbsorbedDose): Standard_Boolean;
+  GetRotation_1(
+    theAxis: gp_XYZ,
+    theAngle: Quantity_AbsorbedDose
+  ): Standard_Boolean;
   GetRotation_2(): gp_Quaternion;
   VectorialPart(): gp_Mat;
   HVectorialPart(): gp_Mat;
-  Value(Row: Graphic3d_ZLayerId, Col: Graphic3d_ZLayerId): Quantity_AbsorbedDose;
+  Value(
+    Row: Graphic3d_ZLayerId,
+    Col: Graphic3d_ZLayerId
+  ): Quantity_AbsorbedDose;
   Invert(): void;
   Inverted(): gp_Trsf;
   Multiplied(T: gp_Trsf): gp_Trsf;
@@ -652,38 +1140,65 @@ export declare class gp_Trsf {
   PreMultiply(T: gp_Trsf): void;
   Power(N: Graphic3d_ZLayerId): void;
   Powered(N: Graphic3d_ZLayerId): gp_Trsf;
-  Transforms_1(X: Quantity_AbsorbedDose, Y: Quantity_AbsorbedDose, Z: Quantity_AbsorbedDose): void;
+  Transforms_1(
+    X: Quantity_AbsorbedDose,
+    Y: Quantity_AbsorbedDose,
+    Z: Quantity_AbsorbedDose
+  ): void;
   Transforms_2(Coord: gp_XYZ): void;
   DumpJson(theOStream: Standard_OStream, theDepth: Graphic3d_ZLayerId): void;
-  InitFromJson(theSStream: Standard_SStream, theStreamPos: Graphic3d_ZLayerId): Standard_Boolean;
+  InitFromJson(
+    theSStream: Standard_SStream,
+    theStreamPos: Graphic3d_ZLayerId
+  ): Standard_Boolean;
   delete(): void;
 }
 
-  export declare class gp_Trsf_1 extends gp_Trsf {
-    constructor();
-  }
+export declare class gp_Trsf_1 extends gp_Trsf {
+  constructor();
+}
 
-  export declare class gp_Trsf_2 extends gp_Trsf {
-    constructor(T: gp_Trsf2d);
-  }
+export declare class gp_Trsf_2 extends gp_Trsf {
+  constructor(T: gp_Trsf2d);
+}
 
 export declare class gp_Dir {
   SetCoord_1(Index: Graphic3d_ZLayerId, Xi: Quantity_AbsorbedDose): void;
-  SetCoord_2(Xv: Quantity_AbsorbedDose, Yv: Quantity_AbsorbedDose, Zv: Quantity_AbsorbedDose): void;
+  SetCoord_2(
+    Xv: Quantity_AbsorbedDose,
+    Yv: Quantity_AbsorbedDose,
+    Zv: Quantity_AbsorbedDose
+  ): void;
   SetX(X: Quantity_AbsorbedDose): void;
   SetY(Y: Quantity_AbsorbedDose): void;
   SetZ(Z: Quantity_AbsorbedDose): void;
   SetXYZ(Coord: gp_XYZ): void;
   Coord_1(Index: Graphic3d_ZLayerId): Quantity_AbsorbedDose;
-  Coord_2(Xv: Quantity_AbsorbedDose, Yv: Quantity_AbsorbedDose, Zv: Quantity_AbsorbedDose): void;
+  Coord_2(
+    Xv: Quantity_AbsorbedDose,
+    Yv: Quantity_AbsorbedDose,
+    Zv: Quantity_AbsorbedDose
+  ): void;
   X(): Quantity_AbsorbedDose;
   Y(): Quantity_AbsorbedDose;
   Z(): Quantity_AbsorbedDose;
   XYZ(): gp_XYZ;
-  IsEqual(Other: gp_Dir, AngularTolerance: Quantity_AbsorbedDose): Standard_Boolean;
-  IsNormal(Other: gp_Dir, AngularTolerance: Quantity_AbsorbedDose): Standard_Boolean;
-  IsOpposite(Other: gp_Dir, AngularTolerance: Quantity_AbsorbedDose): Standard_Boolean;
-  IsParallel(Other: gp_Dir, AngularTolerance: Quantity_AbsorbedDose): Standard_Boolean;
+  IsEqual(
+    Other: gp_Dir,
+    AngularTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
+  IsNormal(
+    Other: gp_Dir,
+    AngularTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
+  IsOpposite(
+    Other: gp_Dir,
+    AngularTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
+  IsParallel(
+    Other: gp_Dir,
+    AngularTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
   Angle(Other: gp_Dir): Quantity_AbsorbedDose;
   AngleWithRef(Other: gp_Dir, VRef: gp_Dir): Quantity_AbsorbedDose;
   Cross(Right: gp_Dir): void;
@@ -705,43 +1220,65 @@ export declare class gp_Dir {
   Transform(T: gp_Trsf): void;
   Transformed(T: gp_Trsf): gp_Dir;
   DumpJson(theOStream: Standard_OStream, theDepth: Graphic3d_ZLayerId): void;
-  InitFromJson(theSStream: Standard_SStream, theStreamPos: Graphic3d_ZLayerId): Standard_Boolean;
+  InitFromJson(
+    theSStream: Standard_SStream,
+    theStreamPos: Graphic3d_ZLayerId
+  ): Standard_Boolean;
   delete(): void;
 }
 
-  export declare class gp_Dir_1 extends gp_Dir {
-    constructor();
-  }
+export declare class gp_Dir_1 extends gp_Dir {
+  constructor();
+}
 
-  export declare class gp_Dir_2 extends gp_Dir {
-    constructor(V: gp_Vec);
-  }
+export declare class gp_Dir_2 extends gp_Dir {
+  constructor(V: gp_Vec);
+}
 
-  export declare class gp_Dir_3 extends gp_Dir {
-    constructor(Coord: gp_XYZ);
-  }
+export declare class gp_Dir_3 extends gp_Dir {
+  constructor(Coord: gp_XYZ);
+}
 
-  export declare class gp_Dir_4 extends gp_Dir {
-    constructor(Xv: Quantity_AbsorbedDose, Yv: Quantity_AbsorbedDose, Zv: Quantity_AbsorbedDose);
-  }
+export declare class gp_Dir_4 extends gp_Dir {
+  constructor(
+    Xv: Quantity_AbsorbedDose,
+    Yv: Quantity_AbsorbedDose,
+    Zv: Quantity_AbsorbedDose
+  );
+}
 
 export declare class gp_Pnt {
   SetCoord_1(Index: Graphic3d_ZLayerId, Xi: Quantity_AbsorbedDose): void;
-  SetCoord_2(Xp: Quantity_AbsorbedDose, Yp: Quantity_AbsorbedDose, Zp: Quantity_AbsorbedDose): void;
+  SetCoord_2(
+    Xp: Quantity_AbsorbedDose,
+    Yp: Quantity_AbsorbedDose,
+    Zp: Quantity_AbsorbedDose
+  ): void;
   SetX(X: Quantity_AbsorbedDose): void;
   SetY(Y: Quantity_AbsorbedDose): void;
   SetZ(Z: Quantity_AbsorbedDose): void;
   SetXYZ(Coord: gp_XYZ): void;
   Coord_1(Index: Graphic3d_ZLayerId): Quantity_AbsorbedDose;
-  Coord_2(Xp: Quantity_AbsorbedDose, Yp: Quantity_AbsorbedDose, Zp: Quantity_AbsorbedDose): void;
+  Coord_2(
+    Xp: Quantity_AbsorbedDose,
+    Yp: Quantity_AbsorbedDose,
+    Zp: Quantity_AbsorbedDose
+  ): void;
   X(): Quantity_AbsorbedDose;
   Y(): Quantity_AbsorbedDose;
   Z(): Quantity_AbsorbedDose;
   XYZ(): gp_XYZ;
   Coord_3(): gp_XYZ;
   ChangeCoord(): gp_XYZ;
-  BaryCenter(Alpha: Quantity_AbsorbedDose, P: gp_Pnt, Beta: Quantity_AbsorbedDose): void;
-  IsEqual(Other: gp_Pnt, LinearTolerance: Quantity_AbsorbedDose): Standard_Boolean;
+  BaryCenter(
+    Alpha: Quantity_AbsorbedDose,
+    P: gp_Pnt,
+    Beta: Quantity_AbsorbedDose
+  ): void;
+  IsEqual(
+    Other: gp_Pnt,
+    LinearTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
   Distance(Other: gp_Pnt): Quantity_AbsorbedDose;
   SquareDistance(Other: gp_Pnt): Quantity_AbsorbedDose;
   Mirror_1(P: gp_Pnt): void;
@@ -761,39 +1298,67 @@ export declare class gp_Pnt {
   Translate_2(P1: gp_Pnt, P2: gp_Pnt): void;
   Translated_2(P1: gp_Pnt, P2: gp_Pnt): gp_Pnt;
   DumpJson(theOStream: Standard_OStream, theDepth: Graphic3d_ZLayerId): void;
-  InitFromJson(theSStream: Standard_SStream, theStreamPos: Graphic3d_ZLayerId): Standard_Boolean;
+  InitFromJson(
+    theSStream: Standard_SStream,
+    theStreamPos: Graphic3d_ZLayerId
+  ): Standard_Boolean;
   delete(): void;
 }
 
-  export declare class gp_Pnt_1 extends gp_Pnt {
-    constructor();
-  }
+export declare class gp_Pnt_1 extends gp_Pnt {
+  constructor();
+}
 
-  export declare class gp_Pnt_2 extends gp_Pnt {
-    constructor(Coord: gp_XYZ);
-  }
+export declare class gp_Pnt_2 extends gp_Pnt {
+  constructor(Coord: gp_XYZ);
+}
 
-  export declare class gp_Pnt_3 extends gp_Pnt {
-    constructor(Xp: Quantity_AbsorbedDose, Yp: Quantity_AbsorbedDose, Zp: Quantity_AbsorbedDose);
-  }
+export declare class gp_Pnt_3 extends gp_Pnt {
+  constructor(
+    Xp: Quantity_AbsorbedDose,
+    Yp: Quantity_AbsorbedDose,
+    Zp: Quantity_AbsorbedDose
+  );
+}
 
 export declare class gp_Vec {
   SetCoord_1(Index: Graphic3d_ZLayerId, Xi: Quantity_AbsorbedDose): void;
-  SetCoord_2(Xv: Quantity_AbsorbedDose, Yv: Quantity_AbsorbedDose, Zv: Quantity_AbsorbedDose): void;
+  SetCoord_2(
+    Xv: Quantity_AbsorbedDose,
+    Yv: Quantity_AbsorbedDose,
+    Zv: Quantity_AbsorbedDose
+  ): void;
   SetX(X: Quantity_AbsorbedDose): void;
   SetY(Y: Quantity_AbsorbedDose): void;
   SetZ(Z: Quantity_AbsorbedDose): void;
   SetXYZ(Coord: gp_XYZ): void;
   Coord_1(Index: Graphic3d_ZLayerId): Quantity_AbsorbedDose;
-  Coord_2(Xv: Quantity_AbsorbedDose, Yv: Quantity_AbsorbedDose, Zv: Quantity_AbsorbedDose): void;
+  Coord_2(
+    Xv: Quantity_AbsorbedDose,
+    Yv: Quantity_AbsorbedDose,
+    Zv: Quantity_AbsorbedDose
+  ): void;
   X(): Quantity_AbsorbedDose;
   Y(): Quantity_AbsorbedDose;
   Z(): Quantity_AbsorbedDose;
   XYZ(): gp_XYZ;
-  IsEqual(Other: gp_Vec, LinearTolerance: Quantity_AbsorbedDose, AngularTolerance: Quantity_AbsorbedDose): Standard_Boolean;
-  IsNormal(Other: gp_Vec, AngularTolerance: Quantity_AbsorbedDose): Standard_Boolean;
-  IsOpposite(Other: gp_Vec, AngularTolerance: Quantity_AbsorbedDose): Standard_Boolean;
-  IsParallel(Other: gp_Vec, AngularTolerance: Quantity_AbsorbedDose): Standard_Boolean;
+  IsEqual(
+    Other: gp_Vec,
+    LinearTolerance: Quantity_AbsorbedDose,
+    AngularTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
+  IsNormal(
+    Other: gp_Vec,
+    AngularTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
+  IsOpposite(
+    Other: gp_Vec,
+    AngularTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
+  IsParallel(
+    Other: gp_Vec,
+    AngularTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
   Angle(Other: gp_Vec): Quantity_AbsorbedDose;
   AngleWithRef(Other: gp_Vec, VRef: gp_Vec): Quantity_AbsorbedDose;
   Magnitude(): Quantity_AbsorbedDose;
@@ -818,10 +1383,36 @@ export declare class gp_Vec {
   Normalized(): gp_Vec;
   Reverse(): void;
   Reversed(): gp_Vec;
-  SetLinearForm_1(A1: Quantity_AbsorbedDose, V1: gp_Vec, A2: Quantity_AbsorbedDose, V2: gp_Vec, A3: Quantity_AbsorbedDose, V3: gp_Vec, V4: gp_Vec): void;
-  SetLinearForm_2(A1: Quantity_AbsorbedDose, V1: gp_Vec, A2: Quantity_AbsorbedDose, V2: gp_Vec, A3: Quantity_AbsorbedDose, V3: gp_Vec): void;
-  SetLinearForm_3(A1: Quantity_AbsorbedDose, V1: gp_Vec, A2: Quantity_AbsorbedDose, V2: gp_Vec, V3: gp_Vec): void;
-  SetLinearForm_4(A1: Quantity_AbsorbedDose, V1: gp_Vec, A2: Quantity_AbsorbedDose, V2: gp_Vec): void;
+  SetLinearForm_1(
+    A1: Quantity_AbsorbedDose,
+    V1: gp_Vec,
+    A2: Quantity_AbsorbedDose,
+    V2: gp_Vec,
+    A3: Quantity_AbsorbedDose,
+    V3: gp_Vec,
+    V4: gp_Vec
+  ): void;
+  SetLinearForm_2(
+    A1: Quantity_AbsorbedDose,
+    V1: gp_Vec,
+    A2: Quantity_AbsorbedDose,
+    V2: gp_Vec,
+    A3: Quantity_AbsorbedDose,
+    V3: gp_Vec
+  ): void;
+  SetLinearForm_3(
+    A1: Quantity_AbsorbedDose,
+    V1: gp_Vec,
+    A2: Quantity_AbsorbedDose,
+    V2: gp_Vec,
+    V3: gp_Vec
+  ): void;
+  SetLinearForm_4(
+    A1: Quantity_AbsorbedDose,
+    V1: gp_Vec,
+    A2: Quantity_AbsorbedDose,
+    V2: gp_Vec
+  ): void;
   SetLinearForm_5(A1: Quantity_AbsorbedDose, V1: gp_Vec, V2: gp_Vec): void;
   SetLinearForm_6(V1: gp_Vec, V2: gp_Vec): void;
   Mirror_1(V: gp_Vec): void;
@@ -840,35 +1431,52 @@ export declare class gp_Vec {
   delete(): void;
 }
 
-  export declare class gp_Vec_1 extends gp_Vec {
-    constructor();
-  }
+export declare class gp_Vec_1 extends gp_Vec {
+  constructor();
+}
 
-  export declare class gp_Vec_2 extends gp_Vec {
-    constructor(V: gp_Dir);
-  }
+export declare class gp_Vec_2 extends gp_Vec {
+  constructor(V: gp_Dir);
+}
 
-  export declare class gp_Vec_3 extends gp_Vec {
-    constructor(Coord: gp_XYZ);
-  }
+export declare class gp_Vec_3 extends gp_Vec {
+  constructor(Coord: gp_XYZ);
+}
 
-  export declare class gp_Vec_4 extends gp_Vec {
-    constructor(Xv: Quantity_AbsorbedDose, Yv: Quantity_AbsorbedDose, Zv: Quantity_AbsorbedDose);
-  }
+export declare class gp_Vec_4 extends gp_Vec {
+  constructor(
+    Xv: Quantity_AbsorbedDose,
+    Yv: Quantity_AbsorbedDose,
+    Zv: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class gp_Vec_5 extends gp_Vec {
-    constructor(P1: gp_Pnt, P2: gp_Pnt);
-  }
+export declare class gp_Vec_5 extends gp_Vec {
+  constructor(P1: gp_Pnt, P2: gp_Pnt);
+}
 
 export declare class gp_Ax1 {
   SetDirection(V: gp_Dir): void;
   SetLocation(P: gp_Pnt): void;
   Direction(): gp_Dir;
   Location(): gp_Pnt;
-  IsCoaxial(Other: gp_Ax1, AngularTolerance: Quantity_AbsorbedDose, LinearTolerance: Quantity_AbsorbedDose): Standard_Boolean;
-  IsNormal(Other: gp_Ax1, AngularTolerance: Quantity_AbsorbedDose): Standard_Boolean;
-  IsOpposite(Other: gp_Ax1, AngularTolerance: Quantity_AbsorbedDose): Standard_Boolean;
-  IsParallel(Other: gp_Ax1, AngularTolerance: Quantity_AbsorbedDose): Standard_Boolean;
+  IsCoaxial(
+    Other: gp_Ax1,
+    AngularTolerance: Quantity_AbsorbedDose,
+    LinearTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
+  IsNormal(
+    Other: gp_Ax1,
+    AngularTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
+  IsOpposite(
+    Other: gp_Ax1,
+    AngularTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
+  IsParallel(
+    Other: gp_Ax1,
+    AngularTolerance: Quantity_AbsorbedDose
+  ): Standard_Boolean;
   Angle(Other: gp_Ax1): Quantity_AbsorbedDose;
   Reverse(): void;
   Reversed(): gp_Ax1;
@@ -889,17 +1497,20 @@ export declare class gp_Ax1 {
   Translate_2(P1: gp_Pnt, P2: gp_Pnt): void;
   Translated_2(P1: gp_Pnt, P2: gp_Pnt): gp_Ax1;
   DumpJson(theOStream: Standard_OStream, theDepth: Graphic3d_ZLayerId): void;
-  InitFromJson(theSStream: Standard_SStream, theStreamPos: Graphic3d_ZLayerId): Standard_Boolean;
+  InitFromJson(
+    theSStream: Standard_SStream,
+    theStreamPos: Graphic3d_ZLayerId
+  ): Standard_Boolean;
   delete(): void;
 }
 
-  export declare class gp_Ax1_1 extends gp_Ax1 {
-    constructor();
-  }
+export declare class gp_Ax1_1 extends gp_Ax1 {
+  constructor();
+}
 
-  export declare class gp_Ax1_2 extends gp_Ax1 {
-    constructor(P: gp_Pnt, V: gp_Dir);
-  }
+export declare class gp_Ax1_2 extends gp_Ax1 {
+  constructor(P: gp_Pnt, V: gp_Dir);
+}
 
 export declare class BRepPrimAPI_MakeSphere extends BRepPrimAPI_MakeOneAxis {
   OneAxis(): Standard_Address;
@@ -907,53 +1518,92 @@ export declare class BRepPrimAPI_MakeSphere extends BRepPrimAPI_MakeOneAxis {
   delete(): void;
 }
 
-  export declare class BRepPrimAPI_MakeSphere_1 extends BRepPrimAPI_MakeSphere {
-    constructor(R: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeSphere_1 extends BRepPrimAPI_MakeSphere {
+  constructor(R: Quantity_AbsorbedDose);
+}
 
-  export declare class BRepPrimAPI_MakeSphere_2 extends BRepPrimAPI_MakeSphere {
-    constructor(R: Quantity_AbsorbedDose, angle: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeSphere_2 extends BRepPrimAPI_MakeSphere {
+  constructor(R: Quantity_AbsorbedDose, angle: Quantity_AbsorbedDose);
+}
 
-  export declare class BRepPrimAPI_MakeSphere_3 extends BRepPrimAPI_MakeSphere {
-    constructor(R: Quantity_AbsorbedDose, angle1: Quantity_AbsorbedDose, angle2: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeSphere_3 extends BRepPrimAPI_MakeSphere {
+  constructor(
+    R: Quantity_AbsorbedDose,
+    angle1: Quantity_AbsorbedDose,
+    angle2: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeSphere_4 extends BRepPrimAPI_MakeSphere {
-    constructor(R: Quantity_AbsorbedDose, angle1: Quantity_AbsorbedDose, angle2: Quantity_AbsorbedDose, angle3: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeSphere_4 extends BRepPrimAPI_MakeSphere {
+  constructor(
+    R: Quantity_AbsorbedDose,
+    angle1: Quantity_AbsorbedDose,
+    angle2: Quantity_AbsorbedDose,
+    angle3: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeSphere_5 extends BRepPrimAPI_MakeSphere {
-    constructor(Center: gp_Pnt, R: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeSphere_5 extends BRepPrimAPI_MakeSphere {
+  constructor(Center: gp_Pnt, R: Quantity_AbsorbedDose);
+}
 
-  export declare class BRepPrimAPI_MakeSphere_6 extends BRepPrimAPI_MakeSphere {
-    constructor(Center: gp_Pnt, R: Quantity_AbsorbedDose, angle: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeSphere_6 extends BRepPrimAPI_MakeSphere {
+  constructor(
+    Center: gp_Pnt,
+    R: Quantity_AbsorbedDose,
+    angle: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeSphere_7 extends BRepPrimAPI_MakeSphere {
-    constructor(Center: gp_Pnt, R: Quantity_AbsorbedDose, angle1: Quantity_AbsorbedDose, angle2: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeSphere_7 extends BRepPrimAPI_MakeSphere {
+  constructor(
+    Center: gp_Pnt,
+    R: Quantity_AbsorbedDose,
+    angle1: Quantity_AbsorbedDose,
+    angle2: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeSphere_8 extends BRepPrimAPI_MakeSphere {
-    constructor(Center: gp_Pnt, R: Quantity_AbsorbedDose, angle1: Quantity_AbsorbedDose, angle2: Quantity_AbsorbedDose, angle3: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeSphere_8 extends BRepPrimAPI_MakeSphere {
+  constructor(
+    Center: gp_Pnt,
+    R: Quantity_AbsorbedDose,
+    angle1: Quantity_AbsorbedDose,
+    angle2: Quantity_AbsorbedDose,
+    angle3: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeSphere_9 extends BRepPrimAPI_MakeSphere {
-    constructor(Axis: gp_Ax2, R: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeSphere_9 extends BRepPrimAPI_MakeSphere {
+  constructor(Axis: gp_Ax2, R: Quantity_AbsorbedDose);
+}
 
-  export declare class BRepPrimAPI_MakeSphere_10 extends BRepPrimAPI_MakeSphere {
-    constructor(Axis: gp_Ax2, R: Quantity_AbsorbedDose, angle: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeSphere_10 extends BRepPrimAPI_MakeSphere {
+  constructor(
+    Axis: gp_Ax2,
+    R: Quantity_AbsorbedDose,
+    angle: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeSphere_11 extends BRepPrimAPI_MakeSphere {
-    constructor(Axis: gp_Ax2, R: Quantity_AbsorbedDose, angle1: Quantity_AbsorbedDose, angle2: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeSphere_11 extends BRepPrimAPI_MakeSphere {
+  constructor(
+    Axis: gp_Ax2,
+    R: Quantity_AbsorbedDose,
+    angle1: Quantity_AbsorbedDose,
+    angle2: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeSphere_12 extends BRepPrimAPI_MakeSphere {
-    constructor(Axis: gp_Ax2, R: Quantity_AbsorbedDose, angle1: Quantity_AbsorbedDose, angle2: Quantity_AbsorbedDose, angle3: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeSphere_12 extends BRepPrimAPI_MakeSphere {
+  constructor(
+    Axis: gp_Ax2,
+    R: Quantity_AbsorbedDose,
+    angle1: Quantity_AbsorbedDose,
+    angle2: Quantity_AbsorbedDose,
+    angle3: Quantity_AbsorbedDose
+  );
+}
 
 export declare class BRepPrimAPI_MakeCylinder extends BRepPrimAPI_MakeOneAxis {
   OneAxis(): Standard_Address;
@@ -961,21 +1611,30 @@ export declare class BRepPrimAPI_MakeCylinder extends BRepPrimAPI_MakeOneAxis {
   delete(): void;
 }
 
-  export declare class BRepPrimAPI_MakeCylinder_1 extends BRepPrimAPI_MakeCylinder {
-    constructor(R: Quantity_AbsorbedDose, H: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeCylinder_1 extends BRepPrimAPI_MakeCylinder {
+  constructor(R: Quantity_AbsorbedDose, H: Quantity_AbsorbedDose);
+}
 
-  export declare class BRepPrimAPI_MakeCylinder_2 extends BRepPrimAPI_MakeCylinder {
-    constructor(R: Quantity_AbsorbedDose, H: Quantity_AbsorbedDose, Angle: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeCylinder_2 extends BRepPrimAPI_MakeCylinder {
+  constructor(
+    R: Quantity_AbsorbedDose,
+    H: Quantity_AbsorbedDose,
+    Angle: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeCylinder_3 extends BRepPrimAPI_MakeCylinder {
-    constructor(Axes: gp_Ax2, R: Quantity_AbsorbedDose, H: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeCylinder_3 extends BRepPrimAPI_MakeCylinder {
+  constructor(Axes: gp_Ax2, R: Quantity_AbsorbedDose, H: Quantity_AbsorbedDose);
+}
 
-  export declare class BRepPrimAPI_MakeCylinder_4 extends BRepPrimAPI_MakeCylinder {
-    constructor(Axes: gp_Ax2, R: Quantity_AbsorbedDose, H: Quantity_AbsorbedDose, Angle: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeCylinder_4 extends BRepPrimAPI_MakeCylinder {
+  constructor(
+    Axes: gp_Ax2,
+    R: Quantity_AbsorbedDose,
+    H: Quantity_AbsorbedDose,
+    Angle: Quantity_AbsorbedDose
+  );
+}
 
 export declare class BRepPrimAPI_MakeTorus extends BRepPrimAPI_MakeOneAxis {
   OneAxis(): Standard_Address;
@@ -983,37 +1642,74 @@ export declare class BRepPrimAPI_MakeTorus extends BRepPrimAPI_MakeOneAxis {
   delete(): void;
 }
 
-  export declare class BRepPrimAPI_MakeTorus_1 extends BRepPrimAPI_MakeTorus {
-    constructor(R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeTorus_1 extends BRepPrimAPI_MakeTorus {
+  constructor(R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose);
+}
 
-  export declare class BRepPrimAPI_MakeTorus_2 extends BRepPrimAPI_MakeTorus {
-    constructor(R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose, angle: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeTorus_2 extends BRepPrimAPI_MakeTorus {
+  constructor(
+    R1: Quantity_AbsorbedDose,
+    R2: Quantity_AbsorbedDose,
+    angle: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeTorus_3 extends BRepPrimAPI_MakeTorus {
-    constructor(R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose, angle1: Quantity_AbsorbedDose, angle2: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeTorus_3 extends BRepPrimAPI_MakeTorus {
+  constructor(
+    R1: Quantity_AbsorbedDose,
+    R2: Quantity_AbsorbedDose,
+    angle1: Quantity_AbsorbedDose,
+    angle2: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeTorus_4 extends BRepPrimAPI_MakeTorus {
-    constructor(R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose, angle1: Quantity_AbsorbedDose, angle2: Quantity_AbsorbedDose, angle: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeTorus_4 extends BRepPrimAPI_MakeTorus {
+  constructor(
+    R1: Quantity_AbsorbedDose,
+    R2: Quantity_AbsorbedDose,
+    angle1: Quantity_AbsorbedDose,
+    angle2: Quantity_AbsorbedDose,
+    angle: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeTorus_5 extends BRepPrimAPI_MakeTorus {
-    constructor(Axes: gp_Ax2, R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeTorus_5 extends BRepPrimAPI_MakeTorus {
+  constructor(
+    Axes: gp_Ax2,
+    R1: Quantity_AbsorbedDose,
+    R2: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeTorus_6 extends BRepPrimAPI_MakeTorus {
-    constructor(Axes: gp_Ax2, R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose, angle: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeTorus_6 extends BRepPrimAPI_MakeTorus {
+  constructor(
+    Axes: gp_Ax2,
+    R1: Quantity_AbsorbedDose,
+    R2: Quantity_AbsorbedDose,
+    angle: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeTorus_7 extends BRepPrimAPI_MakeTorus {
-    constructor(Axes: gp_Ax2, R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose, angle1: Quantity_AbsorbedDose, angle2: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeTorus_7 extends BRepPrimAPI_MakeTorus {
+  constructor(
+    Axes: gp_Ax2,
+    R1: Quantity_AbsorbedDose,
+    R2: Quantity_AbsorbedDose,
+    angle1: Quantity_AbsorbedDose,
+    angle2: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeTorus_8 extends BRepPrimAPI_MakeTorus {
-    constructor(Axes: gp_Ax2, R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose, angle1: Quantity_AbsorbedDose, angle2: Quantity_AbsorbedDose, angle: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeTorus_8 extends BRepPrimAPI_MakeTorus {
+  constructor(
+    Axes: gp_Ax2,
+    R1: Quantity_AbsorbedDose,
+    R2: Quantity_AbsorbedDose,
+    angle1: Quantity_AbsorbedDose,
+    angle2: Quantity_AbsorbedDose,
+    angle: Quantity_AbsorbedDose
+  );
+}
 
 export declare class BRepPrimAPI_MakeOneAxis extends BRepBuilderAPI_MakeShape {
   OneAxis(): Standard_Address;
@@ -1030,27 +1726,61 @@ export declare class BRepPrimAPI_MakeCone extends BRepPrimAPI_MakeOneAxis {
   delete(): void;
 }
 
-  export declare class BRepPrimAPI_MakeCone_1 extends BRepPrimAPI_MakeCone {
-    constructor(R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose, H: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeCone_1 extends BRepPrimAPI_MakeCone {
+  constructor(
+    R1: Quantity_AbsorbedDose,
+    R2: Quantity_AbsorbedDose,
+    H: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeCone_2 extends BRepPrimAPI_MakeCone {
-    constructor(R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose, H: Quantity_AbsorbedDose, angle: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeCone_2 extends BRepPrimAPI_MakeCone {
+  constructor(
+    R1: Quantity_AbsorbedDose,
+    R2: Quantity_AbsorbedDose,
+    H: Quantity_AbsorbedDose,
+    angle: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeCone_3 extends BRepPrimAPI_MakeCone {
-    constructor(Axes: gp_Ax2, R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose, H: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeCone_3 extends BRepPrimAPI_MakeCone {
+  constructor(
+    Axes: gp_Ax2,
+    R1: Quantity_AbsorbedDose,
+    R2: Quantity_AbsorbedDose,
+    H: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeCone_4 extends BRepPrimAPI_MakeCone {
-    constructor(Axes: gp_Ax2, R1: Quantity_AbsorbedDose, R2: Quantity_AbsorbedDose, H: Quantity_AbsorbedDose, angle: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeCone_4 extends BRepPrimAPI_MakeCone {
+  constructor(
+    Axes: gp_Ax2,
+    R1: Quantity_AbsorbedDose,
+    R2: Quantity_AbsorbedDose,
+    H: Quantity_AbsorbedDose,
+    angle: Quantity_AbsorbedDose
+  );
+}
 
 export declare class BRepPrimAPI_MakeBox extends BRepBuilderAPI_MakeShape {
-  Init_1(theDX: Quantity_AbsorbedDose, theDY: Quantity_AbsorbedDose, theDZ: Quantity_AbsorbedDose): void;
-  Init_2(thePnt: gp_Pnt, theDX: Quantity_AbsorbedDose, theDY: Quantity_AbsorbedDose, theDZ: Quantity_AbsorbedDose): void;
+  Init_1(
+    theDX: Quantity_AbsorbedDose,
+    theDY: Quantity_AbsorbedDose,
+    theDZ: Quantity_AbsorbedDose
+  ): void;
+  Init_2(
+    thePnt: gp_Pnt,
+    theDX: Quantity_AbsorbedDose,
+    theDY: Quantity_AbsorbedDose,
+    theDZ: Quantity_AbsorbedDose
+  ): void;
   Init_3(thePnt1: gp_Pnt, thePnt2: gp_Pnt): void;
-  Init_4(theAxes: gp_Ax2, theDX: Quantity_AbsorbedDose, theDY: Quantity_AbsorbedDose, theDZ: Quantity_AbsorbedDose): void;
+  Init_4(
+    theAxes: gp_Ax2,
+    theDX: Quantity_AbsorbedDose,
+    theDY: Quantity_AbsorbedDose,
+    theDZ: Quantity_AbsorbedDose
+  ): void;
   Wedge(): BRepPrim_Wedge;
   Build(): void;
   Shell(): TopoDS_Shell;
@@ -1064,25 +1794,39 @@ export declare class BRepPrimAPI_MakeBox extends BRepBuilderAPI_MakeShape {
   delete(): void;
 }
 
-  export declare class BRepPrimAPI_MakeBox_1 extends BRepPrimAPI_MakeBox {
-    constructor();
-  }
+export declare class BRepPrimAPI_MakeBox_1 extends BRepPrimAPI_MakeBox {
+  constructor();
+}
 
-  export declare class BRepPrimAPI_MakeBox_2 extends BRepPrimAPI_MakeBox {
-    constructor(dx: Quantity_AbsorbedDose, dy: Quantity_AbsorbedDose, dz: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeBox_2 extends BRepPrimAPI_MakeBox {
+  constructor(
+    dx: Quantity_AbsorbedDose,
+    dy: Quantity_AbsorbedDose,
+    dz: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeBox_3 extends BRepPrimAPI_MakeBox {
-    constructor(P: gp_Pnt, dx: Quantity_AbsorbedDose, dy: Quantity_AbsorbedDose, dz: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeBox_3 extends BRepPrimAPI_MakeBox {
+  constructor(
+    P: gp_Pnt,
+    dx: Quantity_AbsorbedDose,
+    dy: Quantity_AbsorbedDose,
+    dz: Quantity_AbsorbedDose
+  );
+}
 
-  export declare class BRepPrimAPI_MakeBox_4 extends BRepPrimAPI_MakeBox {
-    constructor(P1: gp_Pnt, P2: gp_Pnt);
-  }
+export declare class BRepPrimAPI_MakeBox_4 extends BRepPrimAPI_MakeBox {
+  constructor(P1: gp_Pnt, P2: gp_Pnt);
+}
 
-  export declare class BRepPrimAPI_MakeBox_5 extends BRepPrimAPI_MakeBox {
-    constructor(Axes: gp_Ax2, dx: Quantity_AbsorbedDose, dy: Quantity_AbsorbedDose, dz: Quantity_AbsorbedDose);
-  }
+export declare class BRepPrimAPI_MakeBox_5 extends BRepPrimAPI_MakeBox {
+  constructor(
+    Axes: gp_Ax2,
+    dx: Quantity_AbsorbedDose,
+    dy: Quantity_AbsorbedDose,
+    dz: Quantity_AbsorbedDose
+  );
+}
 
 export declare class TopTools_ListOfShape extends NCollection_BaseList {
   begin(): any;
@@ -1105,17 +1849,17 @@ export declare class TopTools_ListOfShape extends NCollection_BaseList {
   delete(): void;
 }
 
-  export declare class TopTools_ListOfShape_1 extends TopTools_ListOfShape {
-    constructor();
-  }
+export declare class TopTools_ListOfShape_1 extends TopTools_ListOfShape {
+  constructor();
+}
 
-  export declare class TopTools_ListOfShape_2 extends TopTools_ListOfShape {
-    constructor(theAllocator: Handle_NCollection_BaseAllocator);
-  }
+export declare class TopTools_ListOfShape_2 extends TopTools_ListOfShape {
+  constructor(theAllocator: Handle_NCollection_BaseAllocator);
+}
 
-  export declare class TopTools_ListOfShape_3 extends TopTools_ListOfShape {
-    constructor(theOther: TopTools_ListOfShape);
-  }
+export declare class TopTools_ListOfShape_3 extends TopTools_ListOfShape {
+  constructor(theOther: TopTools_ListOfShape);
+}
 
 export declare class TopTools_IndexedMapOfShape extends NCollection_BaseMap {
   cbegin(): any;
@@ -1138,17 +1882,20 @@ export declare class TopTools_IndexedMapOfShape extends NCollection_BaseMap {
   delete(): void;
 }
 
-  export declare class TopTools_IndexedMapOfShape_1 extends TopTools_IndexedMapOfShape {
-    constructor();
-  }
+export declare class TopTools_IndexedMapOfShape_1 extends TopTools_IndexedMapOfShape {
+  constructor();
+}
 
-  export declare class TopTools_IndexedMapOfShape_2 extends TopTools_IndexedMapOfShape {
-    constructor(theNbBuckets: Standard_Integer, theAllocator: Handle_NCollection_BaseAllocator);
-  }
+export declare class TopTools_IndexedMapOfShape_2 extends TopTools_IndexedMapOfShape {
+  constructor(
+    theNbBuckets: Standard_Integer,
+    theAllocator: Handle_NCollection_BaseAllocator
+  );
+}
 
-  export declare class TopTools_IndexedMapOfShape_3 extends TopTools_IndexedMapOfShape {
-    constructor(theOther: TopTools_IndexedMapOfShape);
-  }
+export declare class TopTools_IndexedMapOfShape_3 extends TopTools_IndexedMapOfShape {
+  constructor(theOther: TopTools_IndexedMapOfShape);
+}
 
 export declare class TopTools_IndexedDataMapOfShapeListOfShape extends NCollection_BaseMap {
   begin(): any;
@@ -1156,11 +1903,17 @@ export declare class TopTools_IndexedDataMapOfShapeListOfShape extends NCollecti
   cbegin(): any;
   cend(): any;
   Exchange(theOther: TopTools_IndexedDataMapOfShapeListOfShape): void;
-  Assign(theOther: TopTools_IndexedDataMapOfShapeListOfShape): TopTools_IndexedDataMapOfShapeListOfShape;
+  Assign(
+    theOther: TopTools_IndexedDataMapOfShapeListOfShape
+  ): TopTools_IndexedDataMapOfShapeListOfShape;
   ReSize(N: Standard_Integer): void;
   Add(theKey1: TopoDS_Shape, theItem: TopTools_ListOfShape): Standard_Integer;
   Contains(theKey1: TopoDS_Shape): Standard_Boolean;
-  Substitute(theIndex: Standard_Integer, theKey1: TopoDS_Shape, theItem: TopTools_ListOfShape): void;
+  Substitute(
+    theIndex: Standard_Integer,
+    theKey1: TopoDS_Shape,
+    theItem: TopTools_ListOfShape
+  ): void;
   Swap(theIndex1: Standard_Integer, theIndex2: Standard_Integer): void;
   RemoveLast(): void;
   RemoveFromIndex(theIndex: Standard_Integer): void;
@@ -1178,37 +1931,40 @@ export declare class TopTools_IndexedDataMapOfShapeListOfShape extends NCollecti
   delete(): void;
 }
 
-  export declare class TopTools_IndexedDataMapOfShapeListOfShape_1 extends TopTools_IndexedDataMapOfShapeListOfShape {
-    constructor();
-  }
+export declare class TopTools_IndexedDataMapOfShapeListOfShape_1 extends TopTools_IndexedDataMapOfShapeListOfShape {
+  constructor();
+}
 
-  export declare class TopTools_IndexedDataMapOfShapeListOfShape_2 extends TopTools_IndexedDataMapOfShapeListOfShape {
-    constructor(theNbBuckets: Standard_Integer, theAllocator: Handle_NCollection_BaseAllocator);
-  }
+export declare class TopTools_IndexedDataMapOfShapeListOfShape_2 extends TopTools_IndexedDataMapOfShapeListOfShape {
+  constructor(
+    theNbBuckets: Standard_Integer,
+    theAllocator: Handle_NCollection_BaseAllocator
+  );
+}
 
-  export declare class TopTools_IndexedDataMapOfShapeListOfShape_3 extends TopTools_IndexedDataMapOfShapeListOfShape {
-    constructor(theOther: TopTools_IndexedDataMapOfShapeListOfShape);
-  }
+export declare class TopTools_IndexedDataMapOfShapeListOfShape_3 extends TopTools_IndexedDataMapOfShapeListOfShape {
+  constructor(theOther: TopTools_IndexedDataMapOfShapeListOfShape);
+}
 
 export declare class BRepAlgoAPI_Fuse extends BRepAlgoAPI_BooleanOperation {
   delete(): void;
 }
 
-  export declare class BRepAlgoAPI_Fuse_1 extends BRepAlgoAPI_Fuse {
-    constructor();
-  }
+export declare class BRepAlgoAPI_Fuse_1 extends BRepAlgoAPI_Fuse {
+  constructor();
+}
 
-  export declare class BRepAlgoAPI_Fuse_2 extends BRepAlgoAPI_Fuse {
-    constructor(PF: BOPAlgo_PaveFiller);
-  }
+export declare class BRepAlgoAPI_Fuse_2 extends BRepAlgoAPI_Fuse {
+  constructor(PF: BOPAlgo_PaveFiller);
+}
 
-  export declare class BRepAlgoAPI_Fuse_3 extends BRepAlgoAPI_Fuse {
-    constructor(S1: TopoDS_Shape, S2: TopoDS_Shape);
-  }
+export declare class BRepAlgoAPI_Fuse_3 extends BRepAlgoAPI_Fuse {
+  constructor(S1: TopoDS_Shape, S2: TopoDS_Shape);
+}
 
-  export declare class BRepAlgoAPI_Fuse_4 extends BRepAlgoAPI_Fuse {
-    constructor(S1: TopoDS_Shape, S2: TopoDS_Shape, aDSF: BOPAlgo_PaveFiller);
-  }
+export declare class BRepAlgoAPI_Fuse_4 extends BRepAlgoAPI_Fuse {
+  constructor(S1: TopoDS_Shape, S2: TopoDS_Shape, aDSF: BOPAlgo_PaveFiller);
+}
 
 export declare class BRepAlgoAPI_Algo extends BRepBuilderAPI_MakeShape {
   Shape(): TopoDS_Shape;
@@ -1234,41 +1990,46 @@ export declare class BRepAlgoAPI_Common extends BRepAlgoAPI_BooleanOperation {
   delete(): void;
 }
 
-  export declare class BRepAlgoAPI_Common_1 extends BRepAlgoAPI_Common {
-    constructor();
-  }
+export declare class BRepAlgoAPI_Common_1 extends BRepAlgoAPI_Common {
+  constructor();
+}
 
-  export declare class BRepAlgoAPI_Common_2 extends BRepAlgoAPI_Common {
-    constructor(PF: BOPAlgo_PaveFiller);
-  }
+export declare class BRepAlgoAPI_Common_2 extends BRepAlgoAPI_Common {
+  constructor(PF: BOPAlgo_PaveFiller);
+}
 
-  export declare class BRepAlgoAPI_Common_3 extends BRepAlgoAPI_Common {
-    constructor(S1: TopoDS_Shape, S2: TopoDS_Shape);
-  }
+export declare class BRepAlgoAPI_Common_3 extends BRepAlgoAPI_Common {
+  constructor(S1: TopoDS_Shape, S2: TopoDS_Shape);
+}
 
-  export declare class BRepAlgoAPI_Common_4 extends BRepAlgoAPI_Common {
-    constructor(S1: TopoDS_Shape, S2: TopoDS_Shape, PF: BOPAlgo_PaveFiller);
-  }
+export declare class BRepAlgoAPI_Common_4 extends BRepAlgoAPI_Common {
+  constructor(S1: TopoDS_Shape, S2: TopoDS_Shape, PF: BOPAlgo_PaveFiller);
+}
 
 export declare class BRepAlgoAPI_Cut extends BRepAlgoAPI_BooleanOperation {
   delete(): void;
 }
 
-  export declare class BRepAlgoAPI_Cut_1 extends BRepAlgoAPI_Cut {
-    constructor();
-  }
+export declare class BRepAlgoAPI_Cut_1 extends BRepAlgoAPI_Cut {
+  constructor();
+}
 
-  export declare class BRepAlgoAPI_Cut_2 extends BRepAlgoAPI_Cut {
-    constructor(PF: BOPAlgo_PaveFiller);
-  }
+export declare class BRepAlgoAPI_Cut_2 extends BRepAlgoAPI_Cut {
+  constructor(PF: BOPAlgo_PaveFiller);
+}
 
-  export declare class BRepAlgoAPI_Cut_3 extends BRepAlgoAPI_Cut {
-    constructor(S1: TopoDS_Shape, S2: TopoDS_Shape);
-  }
+export declare class BRepAlgoAPI_Cut_3 extends BRepAlgoAPI_Cut {
+  constructor(S1: TopoDS_Shape, S2: TopoDS_Shape);
+}
 
-  export declare class BRepAlgoAPI_Cut_4 extends BRepAlgoAPI_Cut {
-    constructor(S1: TopoDS_Shape, S2: TopoDS_Shape, aDSF: BOPAlgo_PaveFiller, bFWD: Standard_Boolean);
-  }
+export declare class BRepAlgoAPI_Cut_4 extends BRepAlgoAPI_Cut {
+  constructor(
+    S1: TopoDS_Shape,
+    S2: TopoDS_Shape,
+    aDSF: BOPAlgo_PaveFiller,
+    bFWD: Standard_Boolean
+  );
+}
 
 export declare class BRepAlgoAPI_BuilderAlgo extends BRepAlgoAPI_Algo {
   SetArguments(theLS: TopTools_ListOfShape): void;
@@ -1280,7 +2041,11 @@ export declare class BRepAlgoAPI_BuilderAlgo extends BRepAlgoAPI_Algo {
   SetCheckInverted(theCheck: Standard_Boolean): void;
   CheckInverted(): Standard_Boolean;
   Build(): void;
-  SimplifyResult(theUnifyEdges: Standard_Boolean, theUnifyFaces: Standard_Boolean, theAngularTol: Quantity_AbsorbedDose): void;
+  SimplifyResult(
+    theUnifyEdges: Standard_Boolean,
+    theUnifyFaces: Standard_Boolean,
+    theAngularTol: Quantity_AbsorbedDose
+  ): void;
   Modified(theS: TopoDS_Shape): TopTools_ListOfShape;
   Generated(theS: TopoDS_Shape): TopTools_ListOfShape;
   IsDeleted(aS: TopoDS_Shape): Standard_Boolean;
@@ -1296,13 +2061,13 @@ export declare class BRepAlgoAPI_BuilderAlgo extends BRepAlgoAPI_Algo {
   delete(): void;
 }
 
-  export declare class BRepAlgoAPI_BuilderAlgo_1 extends BRepAlgoAPI_BuilderAlgo {
-    constructor();
-  }
+export declare class BRepAlgoAPI_BuilderAlgo_1 extends BRepAlgoAPI_BuilderAlgo {
+  constructor();
+}
 
-  export declare class BRepAlgoAPI_BuilderAlgo_2 extends BRepAlgoAPI_BuilderAlgo {
-    constructor(thePF: BOPAlgo_PaveFiller);
-  }
+export declare class BRepAlgoAPI_BuilderAlgo_2 extends BRepAlgoAPI_BuilderAlgo {
+  constructor(thePF: BOPAlgo_PaveFiller);
+}
 
 export declare class BRepAlgoAPI_BooleanOperation extends BRepAlgoAPI_BuilderAlgo {
   Shape1(): TopoDS_Shape;
@@ -1315,13 +2080,13 @@ export declare class BRepAlgoAPI_BooleanOperation extends BRepAlgoAPI_BuilderAlg
   delete(): void;
 }
 
-  export declare class BRepAlgoAPI_BooleanOperation_1 extends BRepAlgoAPI_BooleanOperation {
-    constructor();
-  }
+export declare class BRepAlgoAPI_BooleanOperation_1 extends BRepAlgoAPI_BooleanOperation {
+  constructor();
+}
 
-  export declare class BRepAlgoAPI_BooleanOperation_2 extends BRepAlgoAPI_BooleanOperation {
-    constructor(thePF: BOPAlgo_PaveFiller);
-  }
+export declare class BRepAlgoAPI_BooleanOperation_2 extends BRepAlgoAPI_BooleanOperation {
+  constructor(thePF: BOPAlgo_PaveFiller);
+}
 
 export declare class BRepMesh_DiscretRoot extends Standard_Transient {
   SetShape(theShape: TopoDS_Shape): void;
@@ -1341,7 +2106,12 @@ export declare class BRepMesh_IncrementalMesh extends BRepMesh_DiscretRoot {
   ChangeParameters(): IMeshTools_Parameters;
   IsModified(): Standard_Boolean;
   GetStatusFlags(): Graphic3d_ZLayerId;
-  static Discret(theShape: TopoDS_Shape, theLinDeflection: Quantity_AbsorbedDose, theAngDeflection: Quantity_AbsorbedDose, theAlgo: BRepMesh_DiscretRoot): Graphic3d_ZLayerId;
+  static Discret(
+    theShape: TopoDS_Shape,
+    theLinDeflection: Quantity_AbsorbedDose,
+    theAngDeflection: Quantity_AbsorbedDose,
+    theAlgo: BRepMesh_DiscretRoot
+  ): Graphic3d_ZLayerId;
   static IsParallelDefault(): Standard_Boolean;
   static SetParallelDefault(isInParallel: Standard_Boolean): void;
   static get_type_name(): Standard_Character;
@@ -1350,17 +2120,27 @@ export declare class BRepMesh_IncrementalMesh extends BRepMesh_DiscretRoot {
   delete(): void;
 }
 
-  export declare class BRepMesh_IncrementalMesh_1 extends BRepMesh_IncrementalMesh {
-    constructor();
-  }
+export declare class BRepMesh_IncrementalMesh_1 extends BRepMesh_IncrementalMesh {
+  constructor();
+}
 
-  export declare class BRepMesh_IncrementalMesh_2 extends BRepMesh_IncrementalMesh {
-    constructor(theShape: TopoDS_Shape, theLinDeflection: Quantity_AbsorbedDose, isRelative: Standard_Boolean, theAngDeflection: Quantity_AbsorbedDose, isInParallel: Standard_Boolean);
-  }
+export declare class BRepMesh_IncrementalMesh_2 extends BRepMesh_IncrementalMesh {
+  constructor(
+    theShape: TopoDS_Shape,
+    theLinDeflection: Quantity_AbsorbedDose,
+    isRelative: Standard_Boolean,
+    theAngDeflection: Quantity_AbsorbedDose,
+    isInParallel: Standard_Boolean
+  );
+}
 
-  export declare class BRepMesh_IncrementalMesh_3 extends BRepMesh_IncrementalMesh {
-    constructor(theShape: TopoDS_Shape, theParameters: IMeshTools_Parameters, theRange: Message_ProgressRange);
-  }
+export declare class BRepMesh_IncrementalMesh_3 extends BRepMesh_IncrementalMesh {
+  constructor(
+    theShape: TopoDS_Shape,
+    theParameters: IMeshTools_Parameters,
+    theRange: Message_ProgressRange
+  );
+}
 
 export declare class NCollection_BaseList {
   Extent(): Graphic3d_ZLayerId;
@@ -1382,13 +2162,37 @@ export declare class StdPrs_ToolTriangulatedShape {
   constructor();
   static IsTriangulated(theShape: TopoDS_Shape): Standard_Boolean;
   static IsClosed(theShape: TopoDS_Shape): Standard_Boolean;
-  static ComputeNormals_1(theFace: TopoDS_Face, theTris: Handle_Poly_Triangulation): void;
-  static ComputeNormals_2(theFace: TopoDS_Face, theTris: Handle_Poly_Triangulation, thePolyConnect: Poly_Connect): void;
-  static Normal(theFace: TopoDS_Face, thePolyConnect: Poly_Connect, theNormals: TColgp_Array1OfDir): void;
-  static GetDeflection(theShape: TopoDS_Shape, theDrawer: Handle_Prs3d_Drawer): Quantity_AbsorbedDose;
-  static IsTessellated(theShape: TopoDS_Shape, theDrawer: Handle_Prs3d_Drawer): Standard_Boolean;
-  static Tessellate(theShape: TopoDS_Shape, theDrawer: Handle_Prs3d_Drawer): Standard_Boolean;
-  static ClearOnOwnDeflectionChange(theShape: TopoDS_Shape, theDrawer: Handle_Prs3d_Drawer, theToResetCoeff: Standard_Boolean): void;
+  static ComputeNormals_1(
+    theFace: TopoDS_Face,
+    theTris: Handle_Poly_Triangulation
+  ): void;
+  static ComputeNormals_2(
+    theFace: TopoDS_Face,
+    theTris: Handle_Poly_Triangulation,
+    thePolyConnect: Poly_Connect
+  ): void;
+  static Normal(
+    theFace: TopoDS_Face,
+    thePolyConnect: Poly_Connect,
+    theNormals: TColgp_Array1OfDir
+  ): void;
+  static GetDeflection(
+    theShape: TopoDS_Shape,
+    theDrawer: Handle_Prs3d_Drawer
+  ): Quantity_AbsorbedDose;
+  static IsTessellated(
+    theShape: TopoDS_Shape,
+    theDrawer: Handle_Prs3d_Drawer
+  ): Standard_Boolean;
+  static Tessellate(
+    theShape: TopoDS_Shape,
+    theDrawer: Handle_Prs3d_Drawer
+  ): Standard_Boolean;
+  static ClearOnOwnDeflectionChange(
+    theShape: TopoDS_Shape,
+    theDrawer: Handle_Prs3d_Drawer,
+    theToResetCoeff: Standard_Boolean
+  ): void;
   delete(): void;
 }
 
@@ -1414,29 +2218,37 @@ export declare class TColStd_Array1OfInteger {
   Value(theIndex: Standard_Integer): Standard_Integer;
   ChangeValue(theIndex: Standard_Integer): Standard_Integer;
   SetValue(theIndex: Standard_Integer, theItem: Standard_Integer): void;
-  Resize(theLower: Standard_Integer, theUpper: Standard_Integer, theToCopyData: Standard_Boolean): void;
+  Resize(
+    theLower: Standard_Integer,
+    theUpper: Standard_Integer,
+    theToCopyData: Standard_Boolean
+  ): void;
   delete(): void;
 }
 
-  export declare class TColStd_Array1OfInteger_1 extends TColStd_Array1OfInteger {
-    constructor();
-  }
+export declare class TColStd_Array1OfInteger_1 extends TColStd_Array1OfInteger {
+  constructor();
+}
 
-  export declare class TColStd_Array1OfInteger_2 extends TColStd_Array1OfInteger {
-    constructor(theLower: Standard_Integer, theUpper: Standard_Integer);
-  }
+export declare class TColStd_Array1OfInteger_2 extends TColStd_Array1OfInteger {
+  constructor(theLower: Standard_Integer, theUpper: Standard_Integer);
+}
 
-  export declare class TColStd_Array1OfInteger_3 extends TColStd_Array1OfInteger {
-    constructor(theOther: TColStd_Array1OfInteger);
-  }
+export declare class TColStd_Array1OfInteger_3 extends TColStd_Array1OfInteger {
+  constructor(theOther: TColStd_Array1OfInteger);
+}
 
-  export declare class TColStd_Array1OfInteger_4 extends TColStd_Array1OfInteger {
-    constructor(theOther: TColStd_Array1OfInteger);
-  }
+export declare class TColStd_Array1OfInteger_4 extends TColStd_Array1OfInteger {
+  constructor(theOther: TColStd_Array1OfInteger);
+}
 
-  export declare class TColStd_Array1OfInteger_5 extends TColStd_Array1OfInteger {
-    constructor(theBegin: Standard_Integer, theLower: Standard_Integer, theUpper: Standard_Integer);
-  }
+export declare class TColStd_Array1OfInteger_5 extends TColStd_Array1OfInteger {
+  constructor(
+    theBegin: Standard_Integer,
+    theLower: Standard_Integer,
+    theUpper: Standard_Integer
+  );
+}
 
 export declare class TColgp_Array1OfDir {
   begin(): any;
@@ -1460,29 +2272,37 @@ export declare class TColgp_Array1OfDir {
   Value(theIndex: Standard_Integer): gp_Dir;
   ChangeValue(theIndex: Standard_Integer): gp_Dir;
   SetValue(theIndex: Standard_Integer, theItem: gp_Dir): void;
-  Resize(theLower: Standard_Integer, theUpper: Standard_Integer, theToCopyData: Standard_Boolean): void;
+  Resize(
+    theLower: Standard_Integer,
+    theUpper: Standard_Integer,
+    theToCopyData: Standard_Boolean
+  ): void;
   delete(): void;
 }
 
-  export declare class TColgp_Array1OfDir_1 extends TColgp_Array1OfDir {
-    constructor();
-  }
+export declare class TColgp_Array1OfDir_1 extends TColgp_Array1OfDir {
+  constructor();
+}
 
-  export declare class TColgp_Array1OfDir_2 extends TColgp_Array1OfDir {
-    constructor(theLower: Standard_Integer, theUpper: Standard_Integer);
-  }
+export declare class TColgp_Array1OfDir_2 extends TColgp_Array1OfDir {
+  constructor(theLower: Standard_Integer, theUpper: Standard_Integer);
+}
 
-  export declare class TColgp_Array1OfDir_3 extends TColgp_Array1OfDir {
-    constructor(theOther: TColgp_Array1OfDir);
-  }
+export declare class TColgp_Array1OfDir_3 extends TColgp_Array1OfDir {
+  constructor(theOther: TColgp_Array1OfDir);
+}
 
-  export declare class TColgp_Array1OfDir_4 extends TColgp_Array1OfDir {
-    constructor(theOther: TColgp_Array1OfDir);
-  }
+export declare class TColgp_Array1OfDir_4 extends TColgp_Array1OfDir {
+  constructor(theOther: TColgp_Array1OfDir);
+}
 
-  export declare class TColgp_Array1OfDir_5 extends TColgp_Array1OfDir {
-    constructor(theBegin: gp_Dir, theLower: Standard_Integer, theUpper: Standard_Integer);
-  }
+export declare class TColgp_Array1OfDir_5 extends TColgp_Array1OfDir {
+  constructor(
+    theBegin: gp_Dir,
+    theLower: Standard_Integer,
+    theUpper: Standard_Integer
+  );
+}
 
 export declare class TColgp_Array1OfPnt {
   begin(): any;
@@ -1506,29 +2326,37 @@ export declare class TColgp_Array1OfPnt {
   Value(theIndex: Standard_Integer): gp_Pnt;
   ChangeValue(theIndex: Standard_Integer): gp_Pnt;
   SetValue(theIndex: Standard_Integer, theItem: gp_Pnt): void;
-  Resize(theLower: Standard_Integer, theUpper: Standard_Integer, theToCopyData: Standard_Boolean): void;
+  Resize(
+    theLower: Standard_Integer,
+    theUpper: Standard_Integer,
+    theToCopyData: Standard_Boolean
+  ): void;
   delete(): void;
 }
 
-  export declare class TColgp_Array1OfPnt_1 extends TColgp_Array1OfPnt {
-    constructor();
-  }
+export declare class TColgp_Array1OfPnt_1 extends TColgp_Array1OfPnt {
+  constructor();
+}
 
-  export declare class TColgp_Array1OfPnt_2 extends TColgp_Array1OfPnt {
-    constructor(theLower: Standard_Integer, theUpper: Standard_Integer);
-  }
+export declare class TColgp_Array1OfPnt_2 extends TColgp_Array1OfPnt {
+  constructor(theLower: Standard_Integer, theUpper: Standard_Integer);
+}
 
-  export declare class TColgp_Array1OfPnt_3 extends TColgp_Array1OfPnt {
-    constructor(theOther: TColgp_Array1OfPnt);
-  }
+export declare class TColgp_Array1OfPnt_3 extends TColgp_Array1OfPnt {
+  constructor(theOther: TColgp_Array1OfPnt);
+}
 
-  export declare class TColgp_Array1OfPnt_4 extends TColgp_Array1OfPnt {
-    constructor(theOther: TColgp_Array1OfPnt);
-  }
+export declare class TColgp_Array1OfPnt_4 extends TColgp_Array1OfPnt {
+  constructor(theOther: TColgp_Array1OfPnt);
+}
 
-  export declare class TColgp_Array1OfPnt_5 extends TColgp_Array1OfPnt {
-    constructor(theBegin: gp_Pnt, theLower: Standard_Integer, theUpper: Standard_Integer);
-  }
+export declare class TColgp_Array1OfPnt_5 extends TColgp_Array1OfPnt {
+  constructor(
+    theBegin: gp_Pnt,
+    theLower: Standard_Integer,
+    theUpper: Standard_Integer
+  );
+}
 
 type Standard_Boolean = boolean;
 type Standard_Byte = number;
@@ -1541,8 +2369,8 @@ type Standard_Size = number;
 
 declare namespace FS {
   interface Lookup {
-      path: string;
-      node: FSNode;
+    path: string;
+    node: FSNode;
   }
 
   interface FSStream {}
@@ -1600,39 +2428,66 @@ declare namespace FS {
   function chmod(path: string, mode: number, dontFollow?: boolean): void;
   function lchmod(path: string, mode: number): void;
   function fchmod(fd: number, mode: number): void;
-  function chown(path: string, uid: number, gid: number, dontFollow?: boolean): void;
+  function chown(
+    path: string,
+    uid: number,
+    gid: number,
+    dontFollow?: boolean
+  ): void;
   function lchown(path: string, uid: number, gid: number): void;
   function fchown(fd: number, uid: number, gid: number): void;
   function truncate(path: string, len: number): void;
   function ftruncate(fd: number, len: number): void;
   function utime(path: string, atime: number, mtime: number): void;
-  function open(path: string, flags: string, mode?: number, fd_start?: number, fd_end?: number): FSStream;
+  function open(
+    path: string,
+    flags: string,
+    mode?: number,
+    fd_start?: number,
+    fd_end?: number
+  ): FSStream;
   function close(stream: FSStream): void;
   function llseek(stream: FSStream, offset: number, whence: number): any;
-  function read(stream: FSStream, buffer: ArrayBufferView, offset: number, length: number, position?: number): number;
+  function read(
+    stream: FSStream,
+    buffer: ArrayBufferView,
+    offset: number,
+    length: number,
+    position?: number
+  ): number;
   function write(
-      stream: FSStream,
-      buffer: ArrayBufferView,
-      offset: number,
-      length: number,
-      position?: number,
-      canOwn?: boolean,
+    stream: FSStream,
+    buffer: ArrayBufferView,
+    offset: number,
+    length: number,
+    position?: number,
+    canOwn?: boolean
   ): number;
   function allocate(stream: FSStream, offset: number, length: number): void;
   function mmap(
-      stream: FSStream,
-      buffer: ArrayBufferView,
-      offset: number,
-      length: number,
-      position: number,
-      prot: number,
-      flags: number,
+    stream: FSStream,
+    buffer: ArrayBufferView,
+    offset: number,
+    length: number,
+    position: number,
+    prot: number,
+    flags: number
   ): any;
   function ioctl(stream: FSStream, cmd: any, arg: any): any;
-  function readFile(path: string, opts: { encoding: 'binary'; flags?: string }): Uint8Array;
-  function readFile(path: string, opts: { encoding: 'utf8'; flags?: string }): string;
+  function readFile(
+    path: string,
+    opts: { encoding: 'binary'; flags?: string }
+  ): Uint8Array;
+  function readFile(
+    path: string,
+    opts: { encoding: 'utf8'; flags?: string }
+  ): string;
   function readFile(path: string, opts?: { flags?: string }): Uint8Array;
-  function writeFile(path: string, data: string | ArrayBufferView, opts?: { flags?: string }): void;
+  function writeFile(
+    path: string,
+    data: string | ArrayBufferView,
+    opts?: { flags?: string }
+  ): void;
 
   //
   // module-level FS code
@@ -1640,53 +2495,52 @@ declare namespace FS {
   function cwd(): string;
   function chdir(path: string): void;
   function init(
-      input: null | (() => number | null),
-      output: null | ((c: number) => any),
-      error: null | ((c: number) => any),
+    input: null | (() => number | null),
+    output: null | ((c: number) => any),
+    error: null | ((c: number) => any)
   ): void;
 
   function createLazyFile(
-      parent: string | FSNode,
-      name: string,
-      url: string,
-      canRead: boolean,
-      canWrite: boolean,
+    parent: string | FSNode,
+    name: string,
+    url: string,
+    canRead: boolean,
+    canWrite: boolean
   ): FSNode;
   function createPreloadedFile(
-      parent: string | FSNode,
-      name: string,
-      url: string,
-      canRead: boolean,
-      canWrite: boolean,
-      onload?: () => void,
-      onerror?: () => void,
-      dontCreateFile?: boolean,
-      canOwn?: boolean,
+    parent: string | FSNode,
+    name: string,
+    url: string,
+    canRead: boolean,
+    canWrite: boolean,
+    onload?: () => void,
+    onerror?: () => void,
+    dontCreateFile?: boolean,
+    canOwn?: boolean
   ): void;
   function createDataFile(
-      parent: string | FSNode,
-      name: string,
-      data: ArrayBufferView | string,
-      canRead: boolean,
-      canWrite: boolean,
-      canOwn: boolean,
+    parent: string | FSNode,
+    name: string,
+    data: ArrayBufferView | string,
+    canRead: boolean,
+    canWrite: boolean,
+    canOwn: boolean
   ): FSNode;
   interface AnalysisResults {
-    isRoot: boolean,
-    exists: boolean,
-    error: Error,
-    name: string,
-    path: any,
-    object: any,
-    parentExists: boolean,
-    parentPath: any,
-    parentObject: any
+    isRoot: boolean;
+    exists: boolean;
+    error: Error;
+    name: string;
+    path: any;
+    object: any;
+    parentExists: boolean;
+    parentPath: any;
+    parentObject: any;
   }
   function analyzePath(path: string): AnalysisResults;
 }
 
-
-export type OpenCascadeInstance = {FS: typeof FS} & {
+export type OpenCascadeInstance = { FS: typeof FS } & {
   Message_ProgressRange: typeof Message_ProgressRange;
   Message_ProgressRange_1: typeof Message_ProgressRange_1;
   Message_ProgressRange_2: typeof Message_ProgressRange_2;

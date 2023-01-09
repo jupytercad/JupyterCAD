@@ -364,7 +364,7 @@ export class JupyterCadDoc
     }> = [];
 
     events.forEach(event => {
-      const name = event.target.get("name");
+      const name = event.target.get('name');
       if (name) {
         event.keys.forEach((change, key) => {
           changes.push({

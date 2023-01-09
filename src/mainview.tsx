@@ -109,8 +109,14 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       this._model.themeChanged.connect(this._handleThemeChange, this);
       this._model.sharedModelChanged.connect(this._onSharedModelChanged, this);
-      this._model.clientStateChanged.connect(this._onClientSharedStateChanged, this);
-      this._model.sharedMetadataChanged.connect(this._onSharedMetadataChanged, this);
+      this._model.clientStateChanged.connect(
+        this._onClientSharedStateChanged,
+        this
+      );
+      this._model.sharedMetadataChanged.connect(
+        this._onSharedMetadataChanged,
+        this
+      );
     });
     if (this._raycaster.params.Line) {
       this._raycaster.params.Line.threshold = 0.1;
@@ -139,8 +145,14 @@ export class MainView extends React.Component<IProps, IStates> {
     });
     this._model.themeChanged.disconnect(this._handleThemeChange, this);
     this._model.sharedModelChanged.disconnect(this._onSharedModelChanged, this);
-    this._model.clientStateChanged.disconnect(this._onClientSharedStateChanged, this);
-    this._model.sharedMetadataChanged.disconnect(this._onSharedMetadataChanged, this);
+    this._model.clientStateChanged.disconnect(
+      this._onClientSharedStateChanged,
+      this
+    );
+    this._model.sharedMetadataChanged.disconnect(
+      this._onSharedMetadataChanged,
+      this
+    );
   }
 
   addContextMenu = (): void => {
@@ -766,9 +778,9 @@ export class MainView extends React.Component<IProps, IStates> {
   ): void {
     if (change.objectChange) {
       let visible = false;
-      
+
       change.objectChange.forEach(change => {
-        if (change.key === "visible") {
+        if (change.key === 'visible') {
           visible = true;
           const obj = this._meshGroup?.getObjectByName(change.name);
           if (obj) {
