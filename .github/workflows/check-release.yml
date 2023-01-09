@@ -27,7 +27,7 @@ jobs:
       
       - name: Install Dependencies
         run: |
-          pip install -e .[dev]
+          pip install -e .
       
       - name: Check Links
         if: ${{ matrix.group == 'link_check' }}

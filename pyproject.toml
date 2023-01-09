@@ -1,12 +1,13 @@
 [build-system]
 build-backend = "hatchling.build"
-requires = ["hatchling>=1.9.0", "hatch-nodejs-version", "jupyterlab>=4.0.0a25"]
+requires = ["hatchling>=1.4.0", "hatch-nodejs-version", "jupyterlab>=4.0.0a32"]
 
 [project]
 name = "jupytercad"
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.7"
-dependencies = ["jupyter_server>=2.0.6"]
+dependencies = ["jupyterlab>=4.0.0a32", "jupyter_server>=2.0.6"]
 classifiers = [
     "License :: OSI Approved :: BSD License",
     "Programming Language :: Python",
@@ -23,45 +24,45 @@ classifiers = [
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 
-[project.license]
-file = "LICENSE"
-
-[project.entry-points.jupyter_ydoc]
-jcad = "jupytercad.jcad_ydoc:YJCad"
-FCStd = "jupytercad.fcstd_ydoc:YFCStd"
+[tool.hatch.version]
+source = "nodejs"
 
 [tool.hatch.metadata.hooks.nodejs]
 fields = ["description", "authors", "urls"]
 
-[tool.hatch.build]
-ignore-vcs = true
+[tool.hatch.build.targets.sdist]
+artifacts = ["jupytercad/labextension"]
+exclude = [".github", "binder"]
 
 [tool.hatch.build.targets.wheel.shared-data]
 "install.json" = "share/jupyter/labextensions/jupytercad/install.json"
 "jupytercad/labextension" = "share/jupyter/labextensions/jupytercad"
 
+[tool.hatch.build.hooks.version]
+path = "jupytercad/_version.py"
+
 [tool.hatch.build.hooks.jupyter-builder]
-dependencies = ["hatch-jupyter-builder>=0.6.2"]
+dependencies = ["hatch-jupyter-builder>=0.5"]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = ["jupytercad/labextension/static/style.js", "jupytercad/labextension/package.json"]
 skip-if-exists = ["jupytercad/labextension/static/style.js"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
-npm = ["jlpm"]
 build_cmd = "build:prod"
+npm = ["jlpm"]
 
 [tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
+build_cmd = "install:extension"
 npm = ["jlpm"]
-build_cmd = "build"
 source_dir = "src"
 build_dir = "jupytercad/labextension"
-
-[tool.hatch.version]
-source = "nodejs"
 
 [tool.jupyter-releaser.options]
 version_cmd = "hatch version"
 
 [tool.jupyter-releaser.hooks]
-before-build-npm = ["python -m pip install 'jupyterlab>=4.0.0a25'", "jlpm", "jlpm build:prod"]
+before-build-npm = ["python -m pip install jupyterlab>=4.0.0a32", "jlpm", "jlpm build:prod"]
 before-build-python = ["jlpm clean:all"]
+
+[tool.check-wheel-contents]
+ignore = ["W002"]
