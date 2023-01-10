@@ -74,7 +74,10 @@ export class JupyterCadJcadModelFactory
    * @param modelDB Model database
    * @returns The model
    */
-  createNew(languagePreference?: string | undefined, collaborationEnabled?: boolean | undefined): JupyterCadModel {
+  createNew(
+    languagePreference?: string | undefined,
+    collaborationEnabled?: boolean | undefined
+  ): JupyterCadModel {
     const model = new JupyterCadModel(
       this._annotationModel,
       languagePreference,
