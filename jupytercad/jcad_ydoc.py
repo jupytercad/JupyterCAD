@@ -22,6 +22,8 @@ class YJCad(YBaseDoc):
 
     @source.setter
     def source(self, value):
+        print("SOURCE:")
+        print(value)
         valueDict = json.loads(value)
         newObj = []
         for obj in valueDict['objects']:

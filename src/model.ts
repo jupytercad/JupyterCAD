@@ -1,5 +1,4 @@
 import { IChangedArgs } from '@jupyterlab/coreutils';
-import { IModelDB, ModelDB } from '@jupyterlab/observables';
 
 import { MapChange, YDocument } from '@jupyter/ydoc';
 
@@ -27,16 +26,13 @@ import {
 import { IAnnotationModel } from './types';
 
 export class JupyterCadModel implements IJupyterCadModel {
-  constructor(
-    annotationModel: IAnnotationModel,
-    languagePreference?: string,
-    modelDB?: IModelDB
-  ) {
-    this.modelDB = modelDB || new ModelDB();
+  constructor(annotationModel: IAnnotationModel, languagePreference?: string) {
     this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
     this.annotationModel = annotationModel;
   }
+
+  readonly collaborative = true;
 
   get isDisposed(): boolean {
     return this._isDisposed;
@@ -100,6 +96,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   }
 
   fromString(data: string): void {
+    console.debug('fromString:', data);
     const jsonData: IJCadContent = JSON.parse(data);
     const ajv = new Ajv();
     const validate = ajv.compile(jcadSchema);
@@ -206,7 +203,6 @@ export class JupyterCadModel implements IJupyterCadModel {
 
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
-  readonly modelDB: IModelDB;
   readonly sharedModel = JupyterCadDoc.create();
   readonly annotationModel: IAnnotationModel;
 
@@ -356,8 +352,27 @@ export class JupyterCadDoc
     return undefined;
   }
 
-  private _objectsObserver = (event: Y.YEvent<any>[]): void => {
-    this._changed.emit({ objectChange: [] });
+  private _objectsObserver = (events: Y.YEvent<any>[]): void => {
+    const changes: Array<{
+      name: string;
+      key: string;
+      newValue: IJCadObject;
+    }> = [];
+
+    events.forEach(event => {
+      const name = event.target.get('name');
+      if (name) {
+        event.keys.forEach((change, key) => {
+          changes.push({
+            name,
+            key,
+            newValue: JSONExt.deepCopy(event.target.toJSON())
+          });
+        });
+      }
+    });
+
+    this._changed.emit({ objectChange: changes });
   };
 
   private _metaObserver = (event: Y.YMapEvent<string>): void => {

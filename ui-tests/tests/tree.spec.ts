@@ -4,6 +4,14 @@ import path from 'path';
 test.use({ autoGoto: false });
 
 test.describe('Tree UI test', () => {
+  test.use({
+    mockSettings: {
+      '@jupyterlab/apputils-extension:notification': {
+        fetchNews: 'false'
+      }
+    }
+  });
+
   let errors = 0;
   test.beforeEach(async ({ page, request }) => {
     page.setViewportSize({ width: 1920, height: 1080 });

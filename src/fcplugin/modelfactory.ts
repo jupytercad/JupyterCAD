@@ -1,5 +1,4 @@
 import { DocumentRegistry } from '@jupyterlab/docregistry';
-import { IModelDB } from '@jupyterlab/observables';
 import { Contents } from '@jupyterlab/services';
 
 import { IAnnotationModel } from '../types';
@@ -75,11 +74,13 @@ export class JupyterCadFCModelFactory
    * @param modelDB Model database
    * @returns The model
    */
-  createNew(languagePreference?: string, modelDB?: IModelDB): JupyterCadModel {
+  createNew(
+    languagePreference?: string | undefined,
+    collaborationEnabled?: boolean | undefined
+  ): JupyterCadModel {
     const model = new JupyterCadModel(
       this._annotationModel,
-      languagePreference,
-      modelDB
+      languagePreference
     );
     return model;
   }
