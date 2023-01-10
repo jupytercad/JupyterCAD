@@ -26,10 +26,7 @@ import {
 import { IAnnotationModel } from './types';
 
 export class JupyterCadModel implements IJupyterCadModel {
-  constructor(
-    annotationModel: IAnnotationModel,
-    languagePreference?: string,
-  ) {
+  constructor(annotationModel: IAnnotationModel, languagePreference?: string) {
     this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
     this.annotationModel = annotationModel;
@@ -99,7 +96,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   }
 
   fromString(data: string): void {
-    console.debug("fromString:", data);
+    console.debug('fromString:', data);
     const jsonData: IJCadContent = JSON.parse(data);
     const ajv = new Ajv();
     const validate = ajv.compile(jcadSchema);
@@ -375,7 +372,7 @@ export class JupyterCadDoc
       }
     });
 
-    console.debug("Change:", changes);
+    console.debug('Change:', changes);
     this._changed.emit({ objectChange: changes });
   };
 
