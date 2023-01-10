@@ -1,11 +1,11 @@
-import { IAnnotationModel, IJupyterCadWidget } from './../types';
-import { IAnnotation, IJupyterCadDocTracker } from './../token';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 
+import { IAnnotationModel, IJupyterCadWidget } from './../types';
+import { IAnnotation, IJupyterCadDocTracker } from './../token';
 import { JupyterCadWidgetFactory } from '../factory';
 import { JupyterCadJcadModelFactory } from './modelfactory';
 

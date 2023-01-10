@@ -1,8 +1,9 @@
+import { PanelWithToolbar, ReactWidget } from '@jupyterlab/ui-components';
+
 import * as React from 'react';
 
 import { IAnnotationModel } from '../types';
 import { Annotation } from '../annotation/view';
-import { PanelWithToolbar, ReactWidget } from '@jupyterlab/ui-components';
 
 interface IProps {
   model: IAnnotationModel;

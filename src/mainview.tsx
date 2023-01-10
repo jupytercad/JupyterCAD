@@ -1,9 +1,13 @@
 import { DocumentRegistry } from '@jupyterlab/docregistry';
+import { User } from '@jupyterlab/services';
+
+import { MapChange } from '@jupyter/ydoc';
+
+import { CommandRegistry } from '@lumino/commands';
+import { ContextMenu } from '@lumino/widgets';
 
 import * as React from 'react';
-
 import * as Color from 'd3-color';
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
@@ -18,7 +22,6 @@ import {
 
 import { v4 as uuid } from 'uuid';
 import { JupyterCadModel } from './model';
-import { User } from '@jupyterlab/services';
 import {
   IDict,
   IDisplayShape,
@@ -31,9 +34,6 @@ import {
   WorkerAction
 } from './types';
 
-import { ContextMenu } from '@lumino/widgets';
-import { CommandRegistry } from '@lumino/commands';
-import { MapChange } from '@jupyter/ydoc';
 import { FloatingAnnotation } from './annotation/view';
 
 // Apply the BVH extension
