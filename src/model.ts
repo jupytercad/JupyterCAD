@@ -372,7 +372,6 @@ export class JupyterCadDoc
       }
     });
 
-    console.debug('Change:', changes);
     this._changed.emit({ objectChange: changes });
   };
 
