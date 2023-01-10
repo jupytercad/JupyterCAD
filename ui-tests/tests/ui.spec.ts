@@ -8,10 +8,10 @@ test.describe('UI Test', () => {
     mockSettings: {
       '@jupyterlab/apputils-extension:notification': {
         fetchNews: 'false'
-      },
+      }
     }
   });
-  
+
   const fileList = [
     'example1.FCStd',
     'example2.FCStd',

@@ -8,7 +8,7 @@ test.describe('Tree UI test', () => {
     mockSettings: {
       '@jupyterlab/apputils-extension:notification': {
         fetchNews: 'false'
-      },
+      }
     }
   });
 
