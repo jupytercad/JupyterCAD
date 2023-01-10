@@ -1,5 +1,4 @@
 import { IChangedArgs } from '@jupyterlab/coreutils';
-import { IModelDB, ModelDB } from '@jupyterlab/observables';
 
 import { MapChange, YDocument } from '@jupyter/ydoc';
 
@@ -30,13 +29,13 @@ export class JupyterCadModel implements IJupyterCadModel {
   constructor(
     annotationModel: IAnnotationModel,
     languagePreference?: string,
-    modelDB?: IModelDB
   ) {
-    this.modelDB = modelDB || new ModelDB();
     this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
     this.annotationModel = annotationModel;
   }
+
+  readonly collaborative = true;
 
   get isDisposed(): boolean {
     return this._isDisposed;
@@ -100,6 +99,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   }
 
   fromString(data: string): void {
+    console.debug("fromString:", data);
     const jsonData: IJCadContent = JSON.parse(data);
     const ajv = new Ajv();
     const validate = ajv.compile(jcadSchema);
@@ -206,7 +206,6 @@ export class JupyterCadModel implements IJupyterCadModel {
 
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
-  readonly modelDB: IModelDB;
   readonly sharedModel = JupyterCadDoc.create();
   readonly annotationModel: IAnnotationModel;
 
@@ -376,6 +375,7 @@ export class JupyterCadDoc
       }
     });
 
+    console.debug("Change:", changes);
     this._changed.emit({ objectChange: changes });
   };
 

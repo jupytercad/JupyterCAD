@@ -80,8 +80,7 @@ export class JupyterCadJcadModelFactory
   ): JupyterCadModel {
     const model = new JupyterCadModel(
       this._annotationModel,
-      languagePreference,
-      undefined
+      languagePreference
     );
     return model;
   }
