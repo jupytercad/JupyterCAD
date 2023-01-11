@@ -7,10 +7,10 @@ from jupytercad.freecad.loader import FCStd
 class YFCStd(YBaseDoc):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._ysource = self._ydoc.get_text("source")
-        self._yobjects = self._ydoc.get_array("objects")
-        self._yoptions = self._ydoc.get_map("options")
-        self._ymeta = self._ydoc.get_map("metadata")
+        self._ysource = self._ydoc.get_text('source')
+        self._yobjects = self._ydoc.get_array('objects')
+        self._yoptions = self._ydoc.get_map('options')
+        self._ymeta = self._ydoc.get_map('metadata')
         self._virtual_file = FCStd()
 
     @property
