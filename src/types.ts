@@ -118,6 +118,14 @@ export type GridHelper = {
   visible: boolean;
 };
 
+/**
+ * Axe's dimensions
+ */
+export type AxeHelper = {
+  size: number;
+  visible: boolean;
+};
+
 export interface IJcadObjectDocChange {
   contextChange?: MapChange;
   objectChange?: MapChange;

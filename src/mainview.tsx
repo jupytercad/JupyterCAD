@@ -10,9 +10,6 @@ import * as React from 'react';
 import * as Color from 'd3-color';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { Line2 } from 'three/examples/jsm/lines/Line2.js';
-import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
-import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 
 import {
   computeBoundsTree,
@@ -23,6 +20,7 @@ import {
 import { v4 as uuid } from 'uuid';
 import { JupyterCadModel } from './model';
 import {
+  AxeHelper,
   GridHelper,
   IDict,
   IDisplayShape,
@@ -80,7 +78,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._geometry = new THREE.BufferGeometry();
     this._geometry.setDrawRange(0, 3 * 10000);
-    this._sceneAxe = [];
 
     this._resizeTimeout = null;
 
@@ -189,49 +186,6 @@ export class MainView extends React.Component<IProps, IStates> {
     });
   };
 
-  addSceneAxe = (dir: THREE.Vector3, color: number): void => {
-    const origin = new THREE.Vector3(0, 0, 0);
-    const length = 20;
-    const arrowHelperX = new THREE.ArrowHelper(
-      dir,
-      origin,
-      length,
-      color,
-      0.4,
-      0.2
-    );
-    this._scene.add(arrowHelperX);
-    const positions = [
-      origin.x,
-      origin.y,
-      origin.z,
-      length * dir.x,
-      length * dir.y,
-      length * dir.z
-    ];
-
-    const lineColor = new THREE.Color(color);
-    const colors = [
-      lineColor.r,
-      lineColor.g,
-      lineColor.b,
-      lineColor.r,
-      lineColor.g,
-      lineColor.b
-    ];
-    const geo = new LineGeometry();
-    geo.setPositions(positions);
-    geo.setColors(colors);
-    const matLine = new LineMaterial({
-      linewidth: 1.5, // in pixels
-      vertexColors: true
-    });
-    matLine.resolution.set(800, 600);
-    const line = new Line2(geo, matLine);
-    this._sceneAxe.push(arrowHelperX, line);
-    this._scene.add(line);
-  };
-
   sceneSetup = (): void => {
     if (this.divRef.current !== null) {
       this._camera = new THREE.PerspectiveCamera(90, 2, 0.1, 1000);
@@ -239,9 +193,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._camera.up.set(0, 0, 1);
 
       this._scene = new THREE.Scene();
-      this.addSceneAxe(new THREE.Vector3(1, 0, 0), 0x00ff00);
-      this.addSceneAxe(new THREE.Vector3(0, 1, 0), 0xff0000);
-      this.addSceneAxe(new THREE.Vector3(0, 0, 1), 0xffff00);
 
       const lights: Array<any> = [];
       lights[0] = new THREE.AmbientLight(0x404040); // soft white light
@@ -799,7 +750,6 @@ export class MainView extends React.Component<IProps, IStates> {
   ): void {
     if (change.name === 'grid') {
       this._gridHelper?.removeFromParent();
-      this._gridHelper = null;
       const grid = change.newValue as GridHelper | undefined;
 
       if (grid && grid.visible) {
@@ -808,11 +758,19 @@ export class MainView extends React.Component<IProps, IStates> {
           grid.divisions,
           this.state.lightTheme ? LIGHT_GRID_COLOR : DARK_GRID_COLOR,
           this.state.lightTheme ? LIGHT_GRID_COLOR : DARK_GRID_COLOR
-          // 0x888888,
-          // 0x888888
         );
         this._gridHelper.geometry.rotateX(Math.PI / 2);
         this._scene.add(this._gridHelper);
+      }
+    }
+
+    if (change.name === 'axe') {
+      this._sceneAxe?.removeFromParent();
+      const axe = change.newValue as AxeHelper | undefined;
+
+      if (axe && axe.visible) {
+        this._sceneAxe = new THREE.AxesHelper(axe.size);
+        this._scene.add(this._sceneAxe);
       }
     }
   }
@@ -916,7 +874,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _geometry: THREE.BufferGeometry; // Threejs BufferGeometry
   private _refLength: number | null = null; // Length of bounding box of current object
   private _gridHelper: THREE.GridHelper | null = null; // Threejs grid
-  private _sceneAxe: (THREE.ArrowHelper | Line2)[]; // Array of  X, Y and Z axe
+  private _sceneAxe: THREE.Object3D | null; // Array of  X, Y and Z axe
   private _controls: OrbitControls; // Threejs control
   private _resizeTimeout: any;
   private _collaboratorPointers: IDict<THREE.Mesh>;
