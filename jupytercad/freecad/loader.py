@@ -30,7 +30,8 @@ def _guidata_to_options(guidata):
     for obj_name, data in guidata.items():
         obj_options = {}
 
-        # lol?
+        # We need to make a special case to "GuiCameraSettings" because freecad's
+        # OfflineRenderingUtils mixes the camera settings with 3D objects
         if obj_name == "GuiCameraSettings":
             options[obj_name] = data
             continue
@@ -53,7 +54,8 @@ def _options_to_guidata(options):
     for obj_name, data in options.items():
         obj_data = {}
 
-        # lol
+        # We need to make a special case to "GuiCameraSettings" because freecad's
+        # OfflineRenderingUtils mixes the camera settings with 3D objects
         if obj_name == "GuiCameraSettings":
             options[obj_name] = data
             continue
