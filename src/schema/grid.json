@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "description": "Grid::Helper",
+  "title": "IGrid",
+  "required": ["Size", "Divisions", "Visible"],
+  "additionalProperties": false,
+  "properties": {
+    "Size": {
+      "type": "number",
+      "description": "The size of the grid"
+    },
+    "Divisions": {
+      "type": "number",
+      "description": "The number of divisions"
+    },
+    "Visible": {
+      "type": "boolean",
+      "description": "Whether the grid is visible or not"
+    }
+  }
+}

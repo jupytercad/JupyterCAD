@@ -23,6 +23,7 @@ import {
 import { v4 as uuid } from 'uuid';
 import { JupyterCadModel } from './model';
 import {
+  GridHelper,
   IDict,
   IDisplayShape,
   IJupyterCadClientState,
@@ -35,6 +36,8 @@ import {
 } from './types';
 
 import { FloatingAnnotation } from './annotation/view';
+import { IChangedArgs } from '@jupyterlab/coreutils';
+import { JSONValue } from '@lumino/coreutils';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -113,6 +116,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this._onClientSharedStateChanged,
         this
       );
+      this._model.viewChanged.connect(this._onViewChanged, this);
       this._model.sharedMetadataChanged.connect(
         this._onSharedMetadataChanged,
         this
@@ -149,6 +153,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._onClientSharedStateChanged,
       this
     );
+    this._model.viewChanged.disconnect(this._onViewChanged, this);
     this._model.sharedMetadataChanged.disconnect(
       this._onSharedMetadataChanged,
       this
@@ -234,19 +239,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._camera.up.set(0, 0, 1);
 
       this._scene = new THREE.Scene();
-      const size = 40;
-      const divisions = 40;
-      this._gridHelper = new THREE.GridHelper(
-        size,
-        divisions,
-        this.state.lightTheme ? LIGHT_GRID_COLOR : DARK_GRID_COLOR,
-        this.state.lightTheme ? LIGHT_GRID_COLOR : DARK_GRID_COLOR
-        // 0x888888,
-        // 0x888888
-      );
-      this._gridHelper.geometry.rotateX(Math.PI / 2);
-
-      this._scene.add(this._gridHelper);
       this.addSceneAxe(new THREE.Vector3(1, 0, 0), 0x00ff00);
       this.addSceneAxe(new THREE.Vector3(0, 1, 0), 0xff0000);
       this.addSceneAxe(new THREE.Vector3(0, 0, 1), 0xffff00);
@@ -801,6 +793,30 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   }
 
+  private _onViewChanged(
+    sender: JupyterCadModel,
+    change: IChangedArgs<JSONValue>
+  ): void {
+    if (change.name === 'grid') {
+      this._gridHelper?.removeFromParent();
+      this._gridHelper = null;
+      const grid = change.newValue as GridHelper | undefined;
+
+      if (grid && grid.visible) {
+        this._gridHelper = new THREE.GridHelper(
+          grid.size,
+          grid.divisions,
+          this.state.lightTheme ? LIGHT_GRID_COLOR : DARK_GRID_COLOR,
+          this.state.lightTheme ? LIGHT_GRID_COLOR : DARK_GRID_COLOR
+          // 0x888888,
+          // 0x888888
+        );
+        this._gridHelper.geometry.rotateX(Math.PI / 2);
+        this._scene.add(this._gridHelper);
+      }
+    }
+  }
+
   private _handleThemeChange = (): void => {
     const lightTheme =
       document.body.getAttribute('data-jp-theme-light') === 'true';
@@ -899,7 +915,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _requestID: any = null; // ID of window.requestAnimationFrame
   private _geometry: THREE.BufferGeometry; // Threejs BufferGeometry
   private _refLength: number | null = null; // Length of bounding box of current object
-  private _gridHelper: THREE.GridHelper; // Threejs grid
+  private _gridHelper: THREE.GridHelper | null = null; // Threejs grid
   private _sceneAxe: (THREE.ArrowHelper | Line2)[]; // Array of  X, Y and Z axe
   private _controls: OrbitControls; // Threejs control
   private _resizeTimeout: any;

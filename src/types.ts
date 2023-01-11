@@ -6,7 +6,7 @@ import { User } from '@jupyterlab/services';
 import { MapChange, YDocument, StateChange } from '@jupyter/ydoc';
 
 import { ISignal, Signal } from '@lumino/signaling';
-import { JSONObject } from '@lumino/coreutils';
+import { JSONObject, JSONValue } from '@lumino/coreutils';
 
 import { IJupyterCadTracker } from './token';
 import { IJCadContent, IJCadObject, IJCadModel } from './_interface/jcad';
@@ -109,6 +109,15 @@ export type Camera = {
   up: number[];
 };
 
+/**
+ * Grid's dimensions
+ */
+export type GridHelper = {
+  size: number;
+  divisions: number;
+  visible: boolean;
+};
+
 export interface IJcadObjectDocChange {
   contextChange?: MapChange;
   objectChange?: MapChange;
@@ -131,6 +140,8 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   options: JSONObject;
   metadata: JSONObject;
 
+  metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
+
   objectExists(name: string): boolean;
   getObjectByName(name: string): IJCadObject | undefined;
   removeObjectByName(name: string): void;
@@ -145,8 +156,6 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   getMetadata(key: string): string | undefined;
   setMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;
-
-  metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
 }
 
 export interface IJupyterCadClientState {
@@ -165,21 +174,25 @@ export interface IJupyterCadClientState {
 
 export interface IJupyterCadModel extends DocumentRegistry.IModel {
   isDisposed: boolean;
+  sharedModel: IJupyterCadDoc;
+  localState: IJupyterCadClientState | null;
+
   sharedModelChanged: ISignal<IJupyterCadModel, IJupyterCadDocChange>;
   themeChanged: Signal<
     IJupyterCadModel,
     IChangedArgs<string, string | null, string>
   >;
+  viewChanged: ISignal<IJupyterCadModel, IChangedArgs<JSONValue>>;
   clientStateChanged: ISignal<
     IJupyterCadModel,
     Map<number, IJupyterCadClientState>
   >;
   sharedMetadataChanged: ISignal<IJupyterCadDoc, MapChange>;
-  sharedModel: IJupyterCadDoc;
-  localState: IJupyterCadClientState | null;
+
   getWorker(): Worker;
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;
+
   syncPointer(position: PointerPosition | undefined, emitter?: string): void;
   syncCamera(camera: Camera | undefined, emitter?: string): void;
   syncSelectedObject(name: string | undefined, emitter?: string): void;
@@ -188,7 +201,12 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     value: any;
     parentType: 'panel' | 'dialog';
   });
+
   getClientId(): number;
+
+  getView(key: string): JSONValue | undefined;
+  setView(key: string, value: JSONValue): void;
+  deleteView(key: string): void;
 
   addMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;
