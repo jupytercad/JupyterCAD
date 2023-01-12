@@ -48,8 +48,11 @@ export class JupyterCadPanel extends ReactWidget {
     this._view = new ObservableMap<JSONValue>();
   }
 
-  get viewChanged(): ISignal<ObservableMap<JSONValue>, IObservableMap.IChangedArgs<JSONValue>> {
-    return this._view.changed
+  get viewChanged(): ISignal<
+    ObservableMap<JSONValue>,
+    IObservableMap.IChangedArgs<JSONValue>
+  > {
+    return this._view.changed;
   }
 
   /**

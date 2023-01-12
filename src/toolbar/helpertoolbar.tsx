@@ -16,20 +16,17 @@ interface IState {
 }
 
 const FORM_SCHEMA = {
-  "type": "object",
-  "required": [
-    "Size",
-    "Visible"
-  ],
-  "additionalProperties": false,
-  "properties": {
-    "Size": {
-      "type": "number",
-      "description": "Axe's size"
+  type: 'object',
+  required: ['Size', 'Visible'],
+  additionalProperties: false,
+  properties: {
+    Size: {
+      type: 'number',
+      description: "Axe's size"
     },
-    "Visible": {
-      "type": "boolean",
-      "description": "Whether the axe is visible or not"
+    Visible: {
+      type: 'boolean',
+      description: 'Whether the axe is visible or not'
     }
   }
 };

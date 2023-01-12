@@ -27,7 +27,7 @@ export class ToolbarModel {
   get panel(): JupyterCadPanel {
     return this._panel;
   }
-  
+
   get sharedModel(): IJupyterCadDoc | undefined {
     return this._sharedModel;
   }
