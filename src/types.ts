@@ -6,7 +6,7 @@ import { User } from '@jupyterlab/services';
 import { MapChange, YDocument, StateChange } from '@jupyter/ydoc';
 
 import { ISignal, Signal } from '@lumino/signaling';
-import { JSONObject, JSONValue } from '@lumino/coreutils';
+import { JSONObject } from '@lumino/coreutils';
 
 import { IJupyterCadTracker } from './token';
 import { IJCadContent, IJCadObject, IJCadModel } from './_interface/jcad';
@@ -190,7 +190,6 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     IJupyterCadModel,
     IChangedArgs<string, string | null, string>
   >;
-  viewChanged: ISignal<IJupyterCadModel, IChangedArgs<JSONValue>>;
   clientStateChanged: ISignal<
     IJupyterCadModel,
     Map<number, IJupyterCadClientState>
@@ -211,10 +210,6 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   });
 
   getClientId(): number;
-
-  getView(key: string): JSONValue | undefined;
-  setView(key: string, value: JSONValue): void;
-  deleteView(key: string): void;
 
   addMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;

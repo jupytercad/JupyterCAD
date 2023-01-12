@@ -30,8 +30,6 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
     this.annotationModel = annotationModel;
-
-    this._view = new Map<string, JSONValue>();
   }
 
   readonly collaborative = true;
@@ -50,10 +48,6 @@ export class JupyterCadModel implements IJupyterCadModel {
 
   get sharedModelChanged(): ISignal<this, IJupyterCadDocChange> {
     return this._sharedModelChanged;
-  }
-
-  get viewChanged(): ISignal<this, IChangedArgs<JSONValue>> {
-    return this._viewChanged;
   }
 
   get themeChanged(): Signal<
@@ -182,22 +176,6 @@ export class JupyterCadModel implements IJupyterCadModel {
     return this.sharedModel.awareness.clientID;
   }
 
-  getView(key: string): JSONValue | undefined {
-    return this._view.get(key);
-  }
-
-  setView(key: string, value: JSONValue): void {
-    const oldValue = this._view.get(key) ?? null;
-    this._view.set(key, value);
-    this._viewChanged.emit({ name: key, oldValue, newValue: value });
-  }
-
-  deleteView(key: string): void {
-    const oldValue = this._view.get(key) ?? null;
-    this._view.delete(key);
-    this._viewChanged.emit({ name: key, oldValue, newValue: null });
-  }
-
   addMetadata(key: string, value: string): void {
     this.sharedModel.setMetadata(key, value);
   }
@@ -231,12 +209,9 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _readOnly = false;
   private _isDisposed = false;
 
-  private _view: Map<string, JSONValue>;
-
   private _contentChanged = new Signal<this, void>(this);
   private _stateChanged = new Signal<this, IChangedArgs<any>>(this);
   private _themeChanged = new Signal<this, IChangedArgs<any>>(this);
-  private _viewChanged = new Signal<this, IChangedArgs<JSONValue>>(this);
   private _clientStateChanged = new Signal<
     this,
     Map<number, IJupyterCadClientState>

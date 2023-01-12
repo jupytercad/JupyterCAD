@@ -6,6 +6,7 @@ import formSchema from '../_interface/forms.json';
 import { IJupyterCadDoc } from '../types';
 import { JupyterCadModel } from './../model';
 import { User } from '@jupyterlab/services';
+import { JupyterCadPanel } from '../widget';
 
 export interface IUserData {
   userId: number;
@@ -14,6 +15,7 @@ export interface IUserData {
 
 export class ToolbarModel {
   constructor(options: ToolbarModel.IOptions) {
+    this._panel = options.panel;
     this._context = options.context;
     this._context.ready.then(() => {
       this._filePath = this._context.path;
@@ -21,6 +23,11 @@ export class ToolbarModel {
 
     this._prepareSchema();
   }
+
+  get panel(): JupyterCadPanel {
+    return this._panel;
+  }
+  
   get sharedModel(): IJupyterCadDoc | undefined {
     return this._sharedModel;
   }
@@ -108,6 +115,7 @@ export class ToolbarModel {
     });
   }
 
+  private _panel: JupyterCadPanel;
   private _context: DocumentRegistry.IContext<JupyterCadModel>;
   private _sharedModel?: IJupyterCadDoc;
   private _formSchema = JSON.parse(JSON.stringify(formSchema));
@@ -118,6 +126,7 @@ export class ToolbarModel {
 
 export namespace ToolbarModel {
   export interface IOptions {
+    panel: JupyterCadPanel;
     context: DocumentRegistry.IContext<JupyterCadModel>;
   }
 }

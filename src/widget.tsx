@@ -1,13 +1,15 @@
 import * as React from 'react';
 
 import { ReactWidget } from '@jupyterlab/apputils';
+import { ObservableMap, IObservableMap } from '@jupyterlab/observables';
 import { DocumentRegistry, DocumentWidget } from '@jupyterlab/docregistry';
 
-import { Signal } from '@lumino/signaling';
+import { ISignal, Signal } from '@lumino/signaling';
 
 import { MainView } from './mainview';
 import { JupyterCadModel } from './model';
 import { IJupyterCadWidget } from './types';
+import { JSONValue } from '@lumino/coreutils';
 
 export class JupyterCadWidget
   extends DocumentWidget<JupyterCadPanel, JupyterCadModel>
@@ -42,6 +44,12 @@ export class JupyterCadPanel extends ReactWidget {
     super();
     this.addClass('jp-jupytercad-panel');
     this._context = context;
+
+    this._view = new ObservableMap<JSONValue>();
+  }
+
+  get viewChanged(): ISignal<ObservableMap<JSONValue>, IObservableMap.IChangedArgs<JSONValue>> {
+    return this._view.changed
   }
 
   /**
@@ -55,9 +63,22 @@ export class JupyterCadPanel extends ReactWidget {
     super.dispose();
   }
 
-  render(): JSX.Element {
-    return <MainView context={this._context} />;
+  getView(key: string): JSONValue | undefined {
+    return this._view.get(key);
   }
 
+  setView(key: string, value: JSONValue): void {
+    this._view.set(key, value);
+  }
+
+  deleteView(key: string): void {
+    this._view.delete(key);
+  }
+
+  render(): JSX.Element {
+    return <MainView view={this._view} context={this._context} />;
+  }
+
+  private _view: ObservableMap<JSONValue>;
   private _context: DocumentRegistry.IContext<JupyterCadModel>;
 }

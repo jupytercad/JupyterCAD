@@ -1,9 +1,11 @@
 import { DocumentRegistry } from '@jupyterlab/docregistry';
+import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { User } from '@jupyterlab/services';
 
 import { MapChange } from '@jupyter/ydoc';
 
 import { CommandRegistry } from '@lumino/commands';
+import { JSONValue } from '@lumino/coreutils';
 import { ContextMenu } from '@lumino/widgets';
 
 import * as React from 'react';
@@ -34,8 +36,6 @@ import {
 } from './types';
 
 import { FloatingAnnotation } from './annotation/view';
-import { IChangedArgs } from '@jupyterlab/coreutils';
-import { JSONValue } from '@lumino/coreutils';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -51,6 +51,7 @@ const DEFAULT_MESH_COLOR = new THREE.Color('#434442');
 const SELECTED_MESH_COLOR = new THREE.Color('#AB5118');
 
 interface IProps {
+  view: ObservableMap<JSONValue>;
   context: DocumentRegistry.IContext<JupyterCadModel>;
 }
 
@@ -80,6 +81,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._geometry.setDrawRange(0, 3 * 10000);
 
     this._resizeTimeout = null;
+    this.props.view.changed.connect(this._onViewChanged, this);
 
     const lightTheme =
       document.body.getAttribute('data-jp-theme-light') === 'true';
@@ -113,7 +115,6 @@ export class MainView extends React.Component<IProps, IStates> {
         this._onClientSharedStateChanged,
         this
       );
-      this._model.viewChanged.connect(this._onViewChanged, this);
       this._model.sharedMetadataChanged.connect(
         this._onSharedMetadataChanged,
         this
@@ -137,6 +138,7 @@ export class MainView extends React.Component<IProps, IStates> {
   componentWillUnmount(): void {
     window.cancelAnimationFrame(this._requestID);
     window.removeEventListener('resize', this._handleWindowResize);
+    this.props.view.changed.disconnect(this._onViewChanged, this);
     this._controls.dispose();
     this._postMessage({
       action: WorkerAction.CLOSE_FILE,
@@ -150,7 +152,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._onClientSharedStateChanged,
       this
     );
-    this._model.viewChanged.disconnect(this._onViewChanged, this);
     this._model.sharedMetadataChanged.disconnect(
       this._onSharedMetadataChanged,
       this
@@ -745,14 +746,14 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   private _onViewChanged(
-    sender: JupyterCadModel,
-    change: IChangedArgs<JSONValue>
+    sender: ObservableMap<JSONValue>,
+    change: IObservableMap.IChangedArgs<JSONValue>
   ): void {
-    if (change.name === 'grid') {
+    if (change.key === 'grid') {
       this._gridHelper?.removeFromParent();
       const grid = change.newValue as GridHelper | undefined;
 
-      if (grid && grid.visible) {
+      if (change.type !== 'remove' && grid && grid.visible) {
         this._gridHelper = new THREE.GridHelper(
           grid.size,
           grid.divisions,
@@ -764,11 +765,11 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     }
 
-    if (change.name === 'axe') {
+    if (change.key === 'axe') {
       this._sceneAxe?.removeFromParent();
       const axe = change.newValue as AxeHelper | undefined;
 
-      if (axe && axe.visible) {
+      if (change.type !== 'remove' && axe && axe.visible) {
         this._sceneAxe = new THREE.AxesHelper(axe.size);
         this._scene.add(this._sceneAxe);
       }

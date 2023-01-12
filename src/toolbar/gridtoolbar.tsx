@@ -2,7 +2,8 @@ import { Button } from '@jupyterlab/ui-components';
 
 import * as React from 'react';
 
-import { AxeHelper, GridHelper, IDict, IJupyterCadModel } from '../types';
+import { AxeHelper, GridHelper, IDict } from '../types';
+import { JupyterCadPanel } from '../widget';
 import { FormDialog } from './formdialog';
 import { ToolbarModel } from './model';
 
@@ -16,20 +17,20 @@ interface IState {
 }
 
 export class HelpersToolbarReact extends React.Component<IProps, IState> {
-  private _model: IJupyterCadModel;
+  private _panel: JupyterCadPanel;
 
   constructor(props: IProps) {
     super(props);
-    this._model = this.props.toolbarModel.jcadModel!;
+    this._panel = this.props.toolbarModel.panel;
     this.state = this._createSchema();
   }
 
   componentDidMount(): void {
-    this._model.viewChanged.connect(this._updateSchema, this);
+    this._panel.viewChanged.connect(this._updateSchema, this);
   }
 
   componentWillUnmount(): void {
-    this._model.viewChanged.disconnect(this._updateSchema, this);
+    this._panel.viewChanged.disconnect(this._updateSchema, this);
   }
 
   private _createSchema(): IState {
@@ -42,8 +43,8 @@ export class HelpersToolbarReact extends React.Component<IProps, IState> {
       size: 5,
       visible: false
     };
-    this._model.setView('grid', grid);
-    this._model.setView('axe', axe);
+    this._panel.setView('grid', grid);
+    this._panel.setView('axe', axe);
 
     return {
       Grid: {
@@ -63,7 +64,7 @@ export class HelpersToolbarReact extends React.Component<IProps, IState> {
             divisions: Divisions,
             visible: Visible
           };
-          this._model.setView('grid', grid);
+          this._panel.setView('grid', grid);
         }
       },
       Axe: {
@@ -81,15 +82,15 @@ export class HelpersToolbarReact extends React.Component<IProps, IState> {
             size: Size,
             visible: Visible
           };
-          this._model.setView('axe', axe);
+          this._panel.setView('axe', axe);
         }
       }
     };
   }
 
   private _updateSchema(): void {
-    const grid = this._model.getView('grid') as GridHelper | undefined;
-    const axe = this._model.getView('axe') as AxeHelper | undefined;
+    const grid = this._panel.getView('grid') as GridHelper | undefined;
+    const axe = this._panel.getView('axe') as AxeHelper | undefined;
 
     const { Grid, Axe } = this.state;
     Grid['default'] = {
