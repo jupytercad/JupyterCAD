@@ -26,7 +26,7 @@ const FORM_SCHEMA = {
     },
     Visible: {
       type: 'boolean',
-      description: 'Whether the axe is visible or not'
+      description: 'Whether the axes are visible or not'
     }
   }
 };
