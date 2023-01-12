@@ -22,7 +22,7 @@ const FORM_SCHEMA = {
   properties: {
     Size: {
       type: 'number',
-      description: "Axe's size"
+      description: "Size of the axes"
     },
     Visible: {
       type: 'boolean',
