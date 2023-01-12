@@ -5,7 +5,7 @@ import { ToolbarModel } from './model';
 import { OperatorToolbarReact } from './operatortoolbar';
 import { PartToolbarReact } from './parttoolbar';
 import { UserToolbarReact } from './usertoolbar';
-import { HelpersToolbarReact } from './gridtoolbar';
+import { HelpersToolbarReact } from './helpertoolbar';
 
 interface IProps {
   toolbarModel: ToolbarModel;

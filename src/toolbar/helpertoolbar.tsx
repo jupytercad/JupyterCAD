@@ -2,7 +2,7 @@ import { Button } from '@jupyterlab/ui-components';
 
 import * as React from 'react';
 
-import { AxeHelper, GridHelper, IDict } from '../types';
+import { AxeHelper, IDict } from '../types';
 import { JupyterCadPanel } from '../widget';
 import { FormDialog } from './formdialog';
 import { ToolbarModel } from './model';
@@ -12,9 +12,27 @@ interface IProps {
 }
 
 interface IState {
-  Grid: IDict;
   Axe: IDict;
 }
+
+const FORM_SCHEMA = {
+  "type": "object",
+  "required": [
+    "Size",
+    "Visible"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Size": {
+      "type": "number",
+      "description": "Axe's size"
+    },
+    "Visible": {
+      "type": "boolean",
+      "description": "Whether the axe is visible or not"
+    }
+  }
+};
 
 export class HelpersToolbarReact extends React.Component<IProps, IState> {
   private _panel: JupyterCadPanel;
@@ -34,45 +52,18 @@ export class HelpersToolbarReact extends React.Component<IProps, IState> {
   }
 
   private _createSchema(): IState {
-    const grid: GridHelper = {
-      size: 40,
-      divisions: 40,
-      visible: false
-    };
     const axe: AxeHelper = {
       size: 5,
       visible: false
     };
-    this._panel.setView('grid', grid);
     this._panel.setView('axe', axe);
 
     return {
-      Grid: {
-        title: 'Grid Helper',
-        shape: 'Grid::Helper',
-        schema: this.props.toolbarModel.formSchema['Grid::Helper'],
-        default: {
-          Name: 'Grid Helper',
-          Size: grid?.size ?? 40,
-          Divisions: grid?.divisions ?? 40,
-          Visible: grid?.visible ?? true
-        },
-        syncData: (props: IDict) => {
-          const { Size, Divisions, Visible } = props;
-          const grid: GridHelper = {
-            size: Size,
-            divisions: Divisions,
-            visible: Visible
-          };
-          this._panel.setView('grid', grid);
-        }
-      },
       Axe: {
         title: 'Axe Helper',
         shape: 'Axe::Helper',
-        schema: this.props.toolbarModel.formSchema['Axe::Helper'],
+        schema: FORM_SCHEMA,
         default: {
-          Name: 'Axe Helper',
           Size: axe?.size ?? 5,
           Visible: axe?.visible ?? true
         },
@@ -89,24 +80,14 @@ export class HelpersToolbarReact extends React.Component<IProps, IState> {
   }
 
   private _updateSchema(): void {
-    const grid = this._panel.getView('grid') as GridHelper | undefined;
     const axe = this._panel.getView('axe') as AxeHelper | undefined;
-
-    const { Grid, Axe } = this.state;
-    Grid['default'] = {
-      Name: 'Grid Helper',
-      Size: grid?.size ?? 40,
-      Divisions: grid?.divisions ?? 40,
-      Visible: grid?.visible ?? true
-    };
-
+    const { Axe } = this.state;
     Axe['default'] = {
-      Name: 'Axe Helper',
       Size: axe?.size ?? 5,
       Visible: axe?.visible ?? true
     };
 
-    this.setState({ Grid, Axe });
+    this.setState({ Axe });
   }
 
   render(): React.ReactNode {

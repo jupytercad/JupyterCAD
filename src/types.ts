@@ -110,15 +110,6 @@ export type Camera = {
 };
 
 /**
- * Grid's dimensions
- */
-export type GridHelper = {
-  size: number;
-  divisions: number;
-  visible: boolean;
-};
-
-/**
  * Axe's dimensions
  */
 export type AxeHelper = {

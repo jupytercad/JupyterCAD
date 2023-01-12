@@ -23,7 +23,6 @@ import { v4 as uuid } from 'uuid';
 import { JupyterCadModel } from './model';
 import {
   AxeHelper,
-  GridHelper,
   IDict,
   IDisplayShape,
   IJupyterCadClientState,
@@ -44,8 +43,6 @@ THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
 const DARK_BG_COLOR = 'linear-gradient(rgb(0, 0, 42), rgb(82, 87, 110))';
 const LIGHT_BG_COLOR = 'radial-gradient(#efeded, #8f9091)';
-const DARK_GRID_COLOR = 0x4f6882;
-const LIGHT_GRID_COLOR = 0x888888;
 
 const DEFAULT_MESH_COLOR = new THREE.Color('#434442');
 const SELECTED_MESH_COLOR = new THREE.Color('#AB5118');
@@ -749,22 +746,6 @@ export class MainView extends React.Component<IProps, IStates> {
     sender: ObservableMap<JSONValue>,
     change: IObservableMap.IChangedArgs<JSONValue>
   ): void {
-    if (change.key === 'grid') {
-      this._gridHelper?.removeFromParent();
-      const grid = change.newValue as GridHelper | undefined;
-
-      if (change.type !== 'remove' && grid && grid.visible) {
-        this._gridHelper = new THREE.GridHelper(
-          grid.size,
-          grid.divisions,
-          this.state.lightTheme ? LIGHT_GRID_COLOR : DARK_GRID_COLOR,
-          this.state.lightTheme ? LIGHT_GRID_COLOR : DARK_GRID_COLOR
-        );
-        this._gridHelper.geometry.rotateX(Math.PI / 2);
-        this._scene.add(this._gridHelper);
-      }
-    }
-
     if (change.key === 'axe') {
       this._sceneAxe?.removeFromParent();
       const axe = change.newValue as AxeHelper | undefined;
@@ -874,7 +855,6 @@ export class MainView extends React.Component<IProps, IStates> {
   private _requestID: any = null; // ID of window.requestAnimationFrame
   private _geometry: THREE.BufferGeometry; // Threejs BufferGeometry
   private _refLength: number | null = null; // Length of bounding box of current object
-  private _gridHelper: THREE.GridHelper | null = null; // Threejs grid
   private _sceneAxe: THREE.Object3D | null; // Array of  X, Y and Z axe
   private _controls: OrbitControls; // Threejs control
   private _resizeTimeout: any;
