@@ -12,7 +12,7 @@ interface IProps {
 }
 
 interface IState {
-  selected: 'PART' | 'OPERATOR' | 'HELPERS';
+  selected: 'PART' | 'OPERATOR' | 'DISPLAY';
 }
 export class ToolbarReact extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -109,7 +109,7 @@ export class ToolbarReact extends React.Component<IProps, IState> {
         {this.state.selected === 'OPERATOR' && (
           <OperatorToolbarReact toolbarModel={this.props.toolbarModel} />
         )}
-        {this.state.selected === 'HELPERS' && (
+        {this.state.selected === 'DISPLAY' && (
           <HelpersToolbarReact toolbarModel={this.props.toolbarModel} />
         )}
         <UserToolbarReact toolbarModel={this.props.toolbarModel} />
@@ -118,5 +118,5 @@ export class ToolbarReact extends React.Component<IProps, IState> {
   }
 
   private _lastForm?: { dialog: FormDialog; title: string };
-  private _toolbarOption = ['PART', 'OPERATOR', 'HELPERS'];
+  private _toolbarOption = ['PART', 'OPERATOR', 'DISPLAY'];
 }

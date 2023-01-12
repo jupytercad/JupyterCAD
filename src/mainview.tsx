@@ -746,7 +746,7 @@ export class MainView extends React.Component<IProps, IStates> {
     sender: ObservableMap<JSONValue>,
     change: IObservableMap.IChangedArgs<JSONValue>
   ): void {
-    if (change.key === 'axe') {
+    if (change.key === 'axes') {
       this._sceneAxe?.removeFromParent();
       const axe = change.newValue as AxeHelper | undefined;
 

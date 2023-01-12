@@ -8,7 +8,7 @@ import { ISignal, Signal } from '@lumino/signaling';
 
 import { MainView } from './mainview';
 import { JupyterCadModel } from './model';
-import { IJupyterCadWidget } from './types';
+import { AxeHelper, IJupyterCadWidget } from './types';
 import { JSONValue } from '@lumino/coreutils';
 
 export class JupyterCadWidget
@@ -66,16 +66,16 @@ export class JupyterCadPanel extends ReactWidget {
     super.dispose();
   }
 
-  getView(key: string): JSONValue | undefined {
-    return this._view.get(key);
+  getAxes(): AxeHelper | undefined {
+    return this._view.get('axes') as AxeHelper;
   }
 
-  setView(key: string, value: JSONValue): void {
-    this._view.set(key, value);
+  setAxes(value: AxeHelper): void {
+    this._view.set('axes', value);
   }
 
-  deleteView(key: string): void {
-    this._view.delete(key);
+  deleteAxes(): void {
+    this._view.delete('axes');
   }
 
   render(): JSX.Element {

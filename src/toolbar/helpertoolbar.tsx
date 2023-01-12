@@ -12,7 +12,7 @@ interface IProps {
 }
 
 interface IState {
-  Axe: IDict;
+  Axes: IDict;
 }
 
 const FORM_SCHEMA = {
@@ -22,7 +22,7 @@ const FORM_SCHEMA = {
   properties: {
     Size: {
       type: 'number',
-      description: "Size of the axes"
+      description: 'Size of the axes'
     },
     Visible: {
       type: 'boolean',
@@ -53,10 +53,10 @@ export class HelpersToolbarReact extends React.Component<IProps, IState> {
       size: 5,
       visible: false
     };
-    this._panel.setView('axe', axe);
+    this._panel.setAxes(axe);
 
     return {
-      Axe: {
+      Axes: {
         title: 'Axes Helper',
         shape: 'Axe::Helper',
         schema: FORM_SCHEMA,
@@ -70,21 +70,21 @@ export class HelpersToolbarReact extends React.Component<IProps, IState> {
             size: Size,
             visible: Visible
           };
-          this._panel.setView('axe', axe);
+          this._panel.setAxes(axe);
         }
       }
     };
   }
 
   private _updateSchema(): void {
-    const axe = this._panel.getView('axe') as AxeHelper | undefined;
-    const { Axe } = this.state;
-    Axe['default'] = {
+    const axe = this._panel.getAxes();
+    const { Axes } = this.state;
+    Axes['default'] = {
       Size: axe?.size ?? 5,
       Visible: axe?.visible ?? true
     };
 
-    this.setState({ Axe });
+    this.setState({ Axes });
   }
 
   render(): React.ReactNode {
