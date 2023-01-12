@@ -57,7 +57,7 @@ export class HelpersToolbarReact extends React.Component<IProps, IState> {
 
     return {
       Axe: {
-        title: 'Axe Helper',
+        title: 'Axes Helper',
         shape: 'Axe::Helper',
         schema: FORM_SCHEMA,
         default: {
