@@ -1,0 +1,69 @@
+name: Update Galata References
+
+on:
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+defaults:
+  run:
+    shell: bash -l {0}
+
+jobs:
+  update-reference-screenshots:
+    name: Update Galata References
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, 'update galata references') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git to use https
+        run: git config --global hub.protocol https
+
+      - name: Checkout the branch from the PR that triggered the job
+        run: hub pr checkout ${{ github.event.issue.number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup mamba
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          mamba-version: '*'
+          channels: conda-forge
+
+      - name: Create the conda environment
+        shell: bash -l {0}
+        run: mamba install -q python=3.9 pip freecad
+
+      - name: Download extension package
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          pr: ${{github.event.issue.number}}
+          name: myextension-whl
+
+      - name: Install the extension
+        shell: bash -l {0}
+        run: |
+          whereis python
+          python -m pip install --find-links=. jupytercad
+          python -m pip install "jupyterlab>=4.0.0a32"
+
+      - name: Install dependencies
+        shell: bash -l {0}
+        working-directory: ui-tests
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        run: jlpm install
+
+      - uses: jupyterlab/maintainer-tools/.github/actions/update-snapshots@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          server_url: http-get://localhost:8888/
+          test_folder: ui-tests
