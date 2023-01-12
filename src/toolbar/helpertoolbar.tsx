@@ -49,11 +49,15 @@ export class HelpersToolbarReact extends React.Component<IProps, IState> {
   }
 
   private _createSchema(): IState {
-    const axe: AxeHelper = {
-      size: 5,
-      visible: false
-    };
-    this._panel.setAxes(axe);
+    let axes = this._panel.getAxes();
+
+    if (!axes) {
+      axes = {
+        size: 5,
+        visible: false
+      };
+      this._panel.setAxes(axes);
+    }
 
     return {
       Axes: {
@@ -61,8 +65,8 @@ export class HelpersToolbarReact extends React.Component<IProps, IState> {
         shape: 'Axe::Helper',
         schema: FORM_SCHEMA,
         default: {
-          Size: axe?.size ?? 5,
-          Visible: axe?.visible ?? true
+          Size: axes?.size ?? 5,
+          Visible: axes?.visible ?? true
         },
         syncData: (props: IDict) => {
           const { Size, Visible } = props;
