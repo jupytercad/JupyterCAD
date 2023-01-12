@@ -15,7 +15,7 @@ defaults:
 jobs:
   update-reference-screenshots:
     name: Update Galata References
-    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, 'update galata references') }}
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, 'please update snapshots') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -32,6 +32,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Download extension package
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          pr: ${{github.event.issue.number}}
+          workflow: "build.yml"
+          workflow_conclusion: ""
+          name: myextension-whl
+
       - name: Setup mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
@@ -41,13 +49,6 @@ jobs:
       - name: Create the conda environment
         shell: bash -l {0}
         run: mamba install -q python=3.9 pip freecad
-
-      - name: Download extension package
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          pr: ${{github.event.issue.number}}
-          workflow_conclusion: ""
-          name: myextension-whl
 
       - name: Install the extension
         shell: bash -l {0}
@@ -63,8 +64,8 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: jlpm install
 
-      - uses: jupyterlab/maintainer-tools/.github/actions/update-snapshots@main
+      - uses: jupyterlab/maintainer-tools/.github/actions/update-snapshots@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          server_url: http-get://localhost:8888/
+          start_server_script: 'null'
           test_folder: ui-tests
