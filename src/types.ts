@@ -109,6 +109,14 @@ export type Camera = {
   up: number[];
 };
 
+/**
+ * Axe's dimensions
+ */
+export type AxeHelper = {
+  size: number;
+  visible: boolean;
+};
+
 export interface IJcadObjectDocChange {
   contextChange?: MapChange;
   objectChange?: MapChange;
@@ -131,6 +139,8 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   options: JSONObject;
   metadata: JSONObject;
 
+  metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
+
   objectExists(name: string): boolean;
   getObjectByName(name: string): IJCadObject | undefined;
   removeObjectByName(name: string): void;
@@ -145,8 +155,6 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   getMetadata(key: string): string | undefined;
   setMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;
-
-  metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
 }
 
 export interface IJupyterCadClientState {
@@ -165,6 +173,9 @@ export interface IJupyterCadClientState {
 
 export interface IJupyterCadModel extends DocumentRegistry.IModel {
   isDisposed: boolean;
+  sharedModel: IJupyterCadDoc;
+  localState: IJupyterCadClientState | null;
+
   sharedModelChanged: ISignal<IJupyterCadModel, IJupyterCadDocChange>;
   themeChanged: Signal<
     IJupyterCadModel,
@@ -175,11 +186,11 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     Map<number, IJupyterCadClientState>
   >;
   sharedMetadataChanged: ISignal<IJupyterCadDoc, MapChange>;
-  sharedModel: IJupyterCadDoc;
-  localState: IJupyterCadClientState | null;
+
   getWorker(): Worker;
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;
+
   syncPointer(position: PointerPosition | undefined, emitter?: string): void;
   syncCamera(camera: Camera | undefined, emitter?: string): void;
   syncSelectedObject(name: string | undefined, emitter?: string): void;
@@ -188,6 +199,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     value: any;
     parentType: 'panel' | 'dialog';
   });
+
   getClientId(): number;
 
   addMetadata(key: string, value: string): void;

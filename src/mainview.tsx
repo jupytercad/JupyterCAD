@@ -1,18 +1,17 @@
 import { DocumentRegistry } from '@jupyterlab/docregistry';
+import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { User } from '@jupyterlab/services';
 
 import { MapChange } from '@jupyter/ydoc';
 
 import { CommandRegistry } from '@lumino/commands';
+import { JSONValue } from '@lumino/coreutils';
 import { ContextMenu } from '@lumino/widgets';
 
 import * as React from 'react';
 import * as Color from 'd3-color';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { Line2 } from 'three/examples/jsm/lines/Line2.js';
-import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
-import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 
 import {
   computeBoundsTree,
@@ -23,6 +22,7 @@ import {
 import { v4 as uuid } from 'uuid';
 import { JupyterCadModel } from './model';
 import {
+  AxeHelper,
   IDict,
   IDisplayShape,
   IJupyterCadClientState,
@@ -43,13 +43,12 @@ THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
 const DARK_BG_COLOR = 'linear-gradient(rgb(0, 0, 42), rgb(82, 87, 110))';
 const LIGHT_BG_COLOR = 'radial-gradient(#efeded, #8f9091)';
-const DARK_GRID_COLOR = 0x4f6882;
-const LIGHT_GRID_COLOR = 0x888888;
 
 const DEFAULT_MESH_COLOR = new THREE.Color('#434442');
 const SELECTED_MESH_COLOR = new THREE.Color('#AB5118');
 
 interface IProps {
+  view: ObservableMap<JSONValue>;
   context: DocumentRegistry.IContext<JupyterCadModel>;
 }
 
@@ -77,9 +76,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._geometry = new THREE.BufferGeometry();
     this._geometry.setDrawRange(0, 3 * 10000);
-    this._sceneAxe = [];
 
     this._resizeTimeout = null;
+    this.props.view.changed.connect(this._onViewChanged, this);
 
     const lightTheme =
       document.body.getAttribute('data-jp-theme-light') === 'true';
@@ -136,6 +135,7 @@ export class MainView extends React.Component<IProps, IStates> {
   componentWillUnmount(): void {
     window.cancelAnimationFrame(this._requestID);
     window.removeEventListener('resize', this._handleWindowResize);
+    this.props.view.changed.disconnect(this._onViewChanged, this);
     this._controls.dispose();
     this._postMessage({
       action: WorkerAction.CLOSE_FILE,
@@ -184,49 +184,6 @@ export class MainView extends React.Component<IProps, IStates> {
     });
   };
 
-  addSceneAxe = (dir: THREE.Vector3, color: number): void => {
-    const origin = new THREE.Vector3(0, 0, 0);
-    const length = 20;
-    const arrowHelperX = new THREE.ArrowHelper(
-      dir,
-      origin,
-      length,
-      color,
-      0.4,
-      0.2
-    );
-    this._scene.add(arrowHelperX);
-    const positions = [
-      origin.x,
-      origin.y,
-      origin.z,
-      length * dir.x,
-      length * dir.y,
-      length * dir.z
-    ];
-
-    const lineColor = new THREE.Color(color);
-    const colors = [
-      lineColor.r,
-      lineColor.g,
-      lineColor.b,
-      lineColor.r,
-      lineColor.g,
-      lineColor.b
-    ];
-    const geo = new LineGeometry();
-    geo.setPositions(positions);
-    geo.setColors(colors);
-    const matLine = new LineMaterial({
-      linewidth: 1.5, // in pixels
-      vertexColors: true
-    });
-    matLine.resolution.set(800, 600);
-    const line = new Line2(geo, matLine);
-    this._sceneAxe.push(arrowHelperX, line);
-    this._scene.add(line);
-  };
-
   sceneSetup = (): void => {
     if (this.divRef.current !== null) {
       this._camera = new THREE.PerspectiveCamera(90, 2, 0.1, 1000);
@@ -234,22 +191,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._camera.up.set(0, 0, 1);
 
       this._scene = new THREE.Scene();
-      const size = 40;
-      const divisions = 40;
-      this._gridHelper = new THREE.GridHelper(
-        size,
-        divisions,
-        this.state.lightTheme ? LIGHT_GRID_COLOR : DARK_GRID_COLOR,
-        this.state.lightTheme ? LIGHT_GRID_COLOR : DARK_GRID_COLOR
-        // 0x888888,
-        // 0x888888
-      );
-      this._gridHelper.geometry.rotateX(Math.PI / 2);
-
-      this._scene.add(this._gridHelper);
-      this.addSceneAxe(new THREE.Vector3(1, 0, 0), 0x00ff00);
-      this.addSceneAxe(new THREE.Vector3(0, 1, 0), 0xff0000);
-      this.addSceneAxe(new THREE.Vector3(0, 0, 1), 0xffff00);
 
       const lights: Array<any> = [];
       lights[0] = new THREE.AmbientLight(0x404040); // soft white light
@@ -801,6 +742,21 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   }
 
+  private _onViewChanged(
+    sender: ObservableMap<JSONValue>,
+    change: IObservableMap.IChangedArgs<JSONValue>
+  ): void {
+    if (change.key === 'axes') {
+      this._sceneAxe?.removeFromParent();
+      const axe = change.newValue as AxeHelper | undefined;
+
+      if (change.type !== 'remove' && axe && axe.visible) {
+        this._sceneAxe = new THREE.AxesHelper(axe.size);
+        this._scene.add(this._sceneAxe);
+      }
+    }
+  }
+
   private _handleThemeChange = (): void => {
     const lightTheme =
       document.body.getAttribute('data-jp-theme-light') === 'true';
@@ -899,8 +855,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _requestID: any = null; // ID of window.requestAnimationFrame
   private _geometry: THREE.BufferGeometry; // Threejs BufferGeometry
   private _refLength: number | null = null; // Length of bounding box of current object
-  private _gridHelper: THREE.GridHelper; // Threejs grid
-  private _sceneAxe: (THREE.ArrowHelper | Line2)[]; // Array of  X, Y and Z axe
+  private _sceneAxe: THREE.Object3D | null; // Array of  X, Y and Z axe
   private _controls: OrbitControls; // Threejs control
   private _resizeTimeout: any;
   private _collaboratorPointers: IDict<THREE.Mesh>;

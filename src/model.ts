@@ -96,7 +96,6 @@ export class JupyterCadModel implements IJupyterCadModel {
   }
 
   fromString(data: string): void {
-    console.debug('fromString:', data);
     const jsonData: IJCadContent = JSON.parse(data);
     const ajv = new Ajv();
     const validate = ajv.compile(jcadSchema);
@@ -209,6 +208,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _dirty = false;
   private _readOnly = false;
   private _isDisposed = false;
+
   private _contentChanged = new Signal<this, void>(this);
   private _stateChanged = new Signal<this, IChangedArgs<any>>(this);
   private _themeChanged = new Signal<this, IChangedArgs<any>>(this);
@@ -226,7 +226,6 @@ export class JupyterCadDoc
 {
   constructor() {
     super();
-
     this._options = this.ydoc.getMap<any>('options');
     this._objects = this.ydoc.getArray<Y.Map<any>>('objects');
     this._metadata = this.ydoc.getMap<string>('metadata');

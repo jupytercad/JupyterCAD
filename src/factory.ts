@@ -36,15 +36,12 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   protected createNewWidget(
     context: DocumentRegistry.IContext<JupyterCadModel>
   ): JupyterCadWidget {
-    const toolbarModel = new ToolbarModel({ context });
+    const content = new JupyterCadPanel(context);
+    const toolbarModel = new ToolbarModel({ panel: content, context });
     const toolbar = new ToolbarWidget({
       model: toolbarModel,
       commands: this._commands
     });
-    return new JupyterCadWidget({
-      context,
-      content: new JupyterCadPanel(context),
-      toolbar
-    });
+    return new JupyterCadWidget({ context, content, toolbar });
   }
 }
