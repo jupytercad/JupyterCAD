@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "description": "Sketcher::SketchObject",
+  "title": "ISketchObject",
+  "required": ["AttachmentOffset", "Geometry"],
+  "additionalProperties": false,
+  "properties": {
+    "AttachmentOffset": {
+      "$ref": "./placement.json",
+      "description": "The attachment offset"
+    },
+    "Geometry": {
+      "type": "array",
+      "description": "The geometry list",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "./geomCircle.json"
+          },
+          {
+            "$ref": "./geomLineSegment.json"
+          }
+        ]
+      }
+    },
+    "Placement": {
+      "$ref": "./placement.json"
+    }
+  }
+}

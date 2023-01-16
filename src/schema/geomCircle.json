@@ -1,0 +1,55 @@
+{
+  "type": "object",
+  "description": "Part::GeomCircle",
+  "title": "IGeomCircle",
+  "required": [
+    "TypeId",
+    "CenterX",
+    "CenterY",
+    "CenterZ",
+    "NormalX",
+    "NormalY",
+    "NormalZ",
+    "AngleXU",
+    "Radius"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "TypeId": {
+      "const": "Part::GeomCircle",
+      "description": "Geometry type"
+    },
+    "CenterX": {
+      "type": "number",
+      "description": "CenterX"
+    },
+    "CenterY": {
+      "type": "number",
+      "description": "CenterY"
+    },
+    "CenterZ": {
+      "type": "number",
+      "description": "CenterZ"
+    },
+    "NormalX": {
+      "type": "number",
+      "description": "NormalX"
+    },
+    "NormalY": {
+      "type": "number",
+      "description": "NormalY"
+    },
+    "NormalZ": {
+      "type": "number",
+      "description": "NormalZ"
+    },
+    "AngleXU": {
+      "type": "number",
+      "description": "AngleXU"
+    },
+    "Radius": {
+      "type": "number",
+      "description": "Radius"
+    }
+  }
+}

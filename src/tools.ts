@@ -101,3 +101,12 @@ export function removeStyleFromProperty(
     properties.forEach(prop => el.style.removeProperty(prop));
   }
 }
+
+export function nearest(n: number, tol: number): number {
+  const round = Math.round(n);
+  if (Math.abs(round - n) < tol) {
+    return round;
+  } else {
+    return n;
+  }
+}

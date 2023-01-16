@@ -1,0 +1,37 @@
+{
+  "type": "object",
+  "description": "Part::GeomLineSegment",
+  "title": "IGeomLineSegment",
+  "required": ["TypeId", "StartX", "StartY", "StartZ", "EndX", "EndY", "EndZ"],
+  "additionalProperties": false,
+  "properties": {
+    "TypeId": {
+      "const": "Part::GeomLineSegment",
+      "description": "Geometry type"
+    },
+    "StartX": {
+      "type": "number",
+      "description": "StartX"
+    },
+    "StartY": {
+      "type": "number",
+      "description": "StartY"
+    },
+    "StartZ": {
+      "type": "number",
+      "description": "StartZ"
+    },
+    "EndX": {
+      "type": "number",
+      "description": "EndX"
+    },
+    "EndY": {
+      "type": "number",
+      "description": "EndY"
+    },
+    "EndZ": {
+      "type": "number",
+      "description": "EndZ"
+    }
+  }
+}

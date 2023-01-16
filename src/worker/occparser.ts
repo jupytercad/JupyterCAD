@@ -46,18 +46,66 @@ export class OccParser {
         true
       );
       const faceList = this._build_face_mesh(occShape);
-      // TODO Enable edge rendering.
+
       let edgeList: IEdge[] = [];
       if (this._showEdge) {
         edgeList = this._build_edge_mesh(occShape);
       }
+      const wireList = this._build_wire_mesh(occShape, maxDeviation);
+
       theejsData[jcObject.name] = {
         jcObject,
         faceList,
-        edgeList
+        edgeList: [...edgeList, ...wireList]
       };
     });
+
     return theejsData;
+  }
+
+  private _build_wire_mesh(
+    shape: TopoDS_Shape,
+    maxDeviation: number
+  ): Array<IEdge> {
+    const edgeList: Array<IEdge> = [];
+    const oc = this._occ;
+    const expl = new oc.TopExp_Explorer_2(
+      shape,
+      oc.TopAbs_ShapeEnum.TopAbs_EDGE as any,
+      oc.TopAbs_ShapeEnum.TopAbs_SHAPE as any
+    );
+    expl.Init(
+      shape,
+      oc.TopAbs_ShapeEnum.TopAbs_EDGE as any,
+      oc.TopAbs_ShapeEnum.TopAbs_SHAPE as any
+    );
+
+    while (expl.More()) {
+      const edge = oc.TopoDS.Edge_1(expl.Current());
+
+      const aLocation = new oc.TopLoc_Location_1();
+      const adaptorCurve = new oc.BRepAdaptor_Curve_2(edge);
+      const tangDef = new oc.GCPnts_TangentialDeflection_2(
+        adaptorCurve,
+        maxDeviation,
+        0.1,
+        2,
+        1.0e-9,
+        1.0e-7
+      );
+      const vertexCoord = new Array(tangDef.NbPoints() * 3);
+      for (let j = 0; j < tangDef.NbPoints(); j++) {
+        const vertex = tangDef
+          .Value(j + 1)
+          .Transformed(aLocation.Transformation());
+        vertexCoord[j * 3 + 0] = vertex.X();
+        vertexCoord[j * 3 + 1] = vertex.Y();
+        vertexCoord[j * 3 + 2] = vertex.Z();
+      }
+      edgeList.push({ vertexCoord, numberOfCoords: tangDef.NbPoints() * 3 });
+      expl.Next();
+    }
+    return edgeList;
   }
 
   private _build_face_mesh(shape: TopoDS_Shape): Array<IFace> {
@@ -69,6 +117,7 @@ export class OccParser {
       oc.TopAbs_ShapeEnum.TopAbs_FACE as any,
       oc.TopAbs_ShapeEnum.TopAbs_SHAPE as any
     );
+
     expl.Init(
       shape,
       oc.TopAbs_ShapeEnum.TopAbs_FACE as any,

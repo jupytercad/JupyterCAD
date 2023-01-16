@@ -9,12 +9,12 @@ class Part_PropertyPartShape(BaseProp):
         return 'Part::PropertyPartShape'
 
     @staticmethod
-    def fc_to_jcad(prop_value: Any, jcad_file=None, fc_file=None) -> Any:
+    def fc_to_jcad(prop_value: Any, **kwargs) -> Any:
         buffer = StringIO()
         prop_value.exportBrep(buffer)
         return buffer.getvalue()
 
     @staticmethod
-    def jcad_to_fc(prop_value: str, jcad_file=None, fc_file=None) -> Any:
+    def jcad_to_fc(prop_value: str, **kwargs) -> Any:
         """PropertyPartShape is readonly"""
         return None

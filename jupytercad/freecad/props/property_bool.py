@@ -9,9 +9,9 @@ class App_PropertyBool(BaseProp):
         return 'App::PropertyBool'
 
     @staticmethod
-    def fc_to_jcad(prop_value: Any, jcad_file=None, fc_file=None) -> Any:
+    def fc_to_jcad(prop_value: Any, **kwargs) -> Any:
         return prop_value
 
     @staticmethod
-    def jcad_to_fc(prop_value: bool, jcad_file=None, fc_file=None) -> Any:
+    def jcad_to_fc(prop_value: bool, **kwargs) -> Any:
         return prop_value

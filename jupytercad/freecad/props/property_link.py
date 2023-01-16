@@ -9,11 +9,11 @@ class App_PropertyLink(BaseProp):
         return 'App::PropertyLink'
 
     @staticmethod
-    def fc_to_jcad(prop_value: Any, jcad_file=None, fc_file=None) -> Any:
+    def fc_to_jcad(prop_value: Any, **kwargs) -> Any:
         return prop_value.Name
 
     @staticmethod
-    def jcad_to_fc(prop_value: str, jcad_file=None, fc_file=None) -> Any:
+    def jcad_to_fc(prop_value: str, fc_file=None, **kwargs) -> Any:
         if prop_value is None:
             return None
         return fc_file.getObject(prop_value)

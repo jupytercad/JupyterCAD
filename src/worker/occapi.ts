@@ -12,6 +12,9 @@ import { ICut } from '../_interface/cut';
 import { IFuse } from '../_interface/fuse';
 import { IIntersection } from '../_interface/intersection';
 import { v4 as uuid } from 'uuid';
+import { ISketchObject } from '../_interface/sketch';
+import { _GeomCircle } from './geometry/geomCircle';
+import { _GeomLine } from './geometry/geomLineSegment';
 
 const SHAPE_CACHE = new Map<string, TopoDS_Shape>();
 export function operatorCache<T>(
@@ -207,6 +210,34 @@ function _Intersection(
   return;
 }
 
+export function _SketchObject(
+  arg: ISketchObject,
+  content: IJCadContent
+): TopoDS_Shape | undefined {
+  const oc = getOcc();
+  const builder = new oc.BRep_Builder();
+  const compound = new oc.TopoDS_Compound();
+  if (arg.Geometry.length === 0) {
+    return undefined;
+  }
+  builder.MakeCompound(compound);
+  for (const geom of arg.Geometry) {
+    switch (geom.TypeId) {
+      case 'Part::GeomCircle':
+        builder.Add(compound, _GeomCircle(geom));
+        break;
+
+      case 'Part::GeomLineSegment': {
+        builder.Add(compound, _GeomLine(geom));
+        break;
+      }
+      default:
+        break;
+    }
+  }
+  return compound;
+}
+
 export function _loadBrep(arg: { content: string }): TopoDS_Shape | undefined {
   const oc = getOcc();
   const fakeFileName = `${uuid()}.brep`;
@@ -239,5 +270,6 @@ export const ShapesFactory: {
   'Part::Torus': Torus,
   'Part::Cut': _Cut,
   'Part::MultiFuse': _Fuse,
-  'Part::MultiCommon': _Intersection
+  'Part::MultiCommon': _Intersection,
+  'Sketcher::SketchObject': _SketchObject
 };

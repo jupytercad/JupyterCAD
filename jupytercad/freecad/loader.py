@@ -1,5 +1,5 @@
 import traceback
-from typing import Dict, List
+from typing import Dict, List, Type
 import tempfile
 import base64
 from pathlib import Path
@@ -83,7 +83,7 @@ class FCStd:
         self._metadata = {}
         self._id = None
         self._visible = True
-        self._prop_handlers: Dict[str, BaseProp] = {}
+        self._prop_handlers: Dict[str, Type[BaseProp]] = {}
         for Cls in Props.__dict__.values():
             if isinstance(Cls, type) and issubclass(Cls, BaseProp):
                 self._prop_handlers[Cls.name()] = Cls
@@ -155,13 +155,22 @@ class FCStd:
 
                 fc_obj = fc_file.getObject(py_obj["name"])
 
-                for prop, prop_value in py_obj["parameters"].items():
+                for prop, jcad_prop_value in py_obj['parameters'].items():
                     prop_type = fc_obj.getTypeIdOfProperty(prop)
                     prop_handler = self._prop_handlers.get(prop_type, None)
                     if prop_handler is not None:
-                        fc_value = prop_handler.jcad_to_fc(prop_value, objects, fc_file)
+                        fc_value = prop_handler.jcad_to_fc(
+                            jcad_prop_value,
+                            jcad_object=objects,
+                            fc_prop=getattr(fc_obj, prop),
+                            fc_object=fc_obj,
+                            fc_file=fc_file,
+                        )
                         if fc_value:
-                            setattr(fc_obj, prop, fc_value)
+                            try:
+                                setattr(fc_obj, prop, fc_value)
+                            except:
+                                pass
 
             OfflineRenderingUtils.save(
                 fc_file,
@@ -188,7 +197,7 @@ class FCStd:
             prop_value = getattr(obj, prop)
             prop_handler = self._prop_handlers.get(prop_type, None)
             if prop_handler is not None and prop_value is not None:
-                value = prop_handler.fc_to_jcad(prop_value, None, obj)
+                value = prop_handler.fc_to_jcad(prop_value, fc_object=obj)
             else:
                 value = None
             obj_data["parameters"][prop] = value
