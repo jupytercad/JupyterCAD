@@ -1,17 +1,16 @@
 name: base
-
 channels:
   - conda-forge
   - conda-forge/label/jupyterlab_alpha
-
 dependencies:
   # runtime dependencies
   - python >=3.9,<3.10.0a0
-  - jupyterlab >=4.0.0a32,<5.0.0a0
   - nodejs >=16,<17
-  - jupyter_packaging >=0.10,<2
-  - jupyterlab-link-share
   - yarn
-  - pip
-  - wheel
+
+  # Dependencies
+  - jupyterlab >=4.0.0a32,<5.0.0a0
   - freecad
+
+  # Binder
+  - jupyterlab-link-share=0.2

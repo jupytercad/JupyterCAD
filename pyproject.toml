@@ -24,13 +24,17 @@ classifiers = [
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 
+[project.entry-points.jupyter_ydoc]
+jcad = "jupytercad.jcad_ydoc:YJCad"
+FCStd = "jupytercad.fcstd_ydoc:YFCStd"
+
 [tool.hatch.version]
 source = "nodejs"
 
 [tool.hatch.metadata.hooks.nodejs]
 fields = ["description", "authors", "urls"]
 
-[tool.hatch.build.targets.sdist]
+[tool.hatch.build.target.sdist]
 artifacts = ["jupytercad/labextension"]
 exclude = [".github", "binder"]
 

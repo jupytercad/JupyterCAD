@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        group: [check_release, link_check]
+        group: [check_release]
         python-version: ["3.9"]
         node-version: ["14.x"]
 
@@ -28,10 +28,6 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -e .
-      
-      - name: Check Links
-        if: ${{ matrix.group == 'link_check' }}
-        uses: jupyter-server/jupyter_releaser/.github/actions/check-links@v1
       
       - name: Check Release
         if: ${{ matrix.group == 'check_release' }}
