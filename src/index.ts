@@ -23,6 +23,7 @@ import { IAnnotationModel } from './types';
 import { JupyterCadWidget } from './widget';
 import { ToolbarWidget } from './toolbar/widget';
 import { AnnotationModel } from './annotation/model';
+// import notebookRendererPlugin from './notebookrenderer';
 
 const NAME_SPACE = 'jupytercad';
 
@@ -115,8 +116,6 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
   }
 };
 
-export default [plugin, controlPanel, fcplugin, jcadPlugin, annotationPlugin];
-
 /**
  * Add the FreeCAD commands to the application's command registry.
  */
@@ -165,3 +164,12 @@ function populateMenus(mainMenu: IMainMenu, isEnabled: () => boolean): void {
     isEnabled
   });
 }
+
+export default [
+  plugin,
+  controlPanel,
+  fcplugin,
+  jcadPlugin,
+  annotationPlugin,
+  // notebookRendererPlugin
+];
