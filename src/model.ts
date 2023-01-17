@@ -1,20 +1,21 @@
 import { MapChange, YDocument } from '@jupyter/ydoc';
 import { IChangedArgs } from '@jupyterlab/coreutils';
-import {
-  JSONExt,
-  JSONObject,
-  JSONValue,
-  PartialJSONObject
-} from '@lumino/coreutils';
+import { JSONExt, JSONObject, PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import Ajv from 'ajv';
 import * as Y from 'yjs';
 
-import { IJCadContent, IJCadModel, IJCadObject } from './_interface/jcad';
+import {
+  IJCadContent,
+  IJCadModel,
+  IJCadObject,
+  IJCadOptions
+} from './_interface/jcad';
 import jcadSchema from './schema/jcad.json';
 import {
   Camera,
   IAnnotationModel,
+  IDict,
   IJcadObjectDocChange,
   IJupyterCadClientState,
   IJupyterCadDoc,
@@ -316,15 +317,19 @@ export class JupyterCadDoc
     this.transact(() => obj.set(key, value));
   }
 
-  getOption(key: string): JSONValue {
-    return JSONExt.deepCopy(this._options.get(key));
+  getOption(key: keyof IJCadOptions): IDict | undefined {
+    const content = this._options.get(key);
+    if (!content) {
+      return;
+    }
+    return JSONExt.deepCopy(content) as IDict;
   }
 
-  setOption(key: string, value: JSONValue): void {
+  setOption(key: keyof IJCadOptions, value: IDict): void {
     this._options.set(key, value);
   }
 
-  setOptions(options: JSONObject): void {
+  setOptions(options: IJCadOptions): void {
     for (const [key, value] of Object.entries(options)) {
       this._options.set(key, value);
     }

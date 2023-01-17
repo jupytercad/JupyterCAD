@@ -6,10 +6,15 @@ import { User } from '@jupyterlab/services';
 import { MapChange, YDocument, StateChange } from '@jupyter/ydoc';
 
 import { ISignal, Signal } from '@lumino/signaling';
-import { JSONObject, JSONValue } from '@lumino/coreutils';
+import { JSONObject } from '@lumino/coreutils';
 
 import { IJupyterCadTracker } from './token';
-import { IJCadContent, IJCadObject, IJCadModel } from './_interface/jcad';
+import {
+  IJCadContent,
+  IJCadObject,
+  IJCadModel,
+  IJCadOptions
+} from './_interface/jcad';
 
 export interface IDict<T = any> {
   [key: string]: T;
@@ -149,9 +154,9 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   addObjects(value: Array<IJCadObject>): void;
   updateObjectByName(name: string, key: string, value: any): void;
 
-  getOption(key: string): JSONValue;
-  setOption(key: string, value: JSONValue): void;
-  setOptions(options: JSONObject): void;
+  getOption(key: keyof IJCadOptions): IDict | undefined;
+  setOption(key: keyof IJCadOptions, value: IDict): void;
+  setOptions(options: IJCadOptions): void;
 
   getMetadata(key: string): string | undefined;
   setMetadata(key: string, value: string): void;

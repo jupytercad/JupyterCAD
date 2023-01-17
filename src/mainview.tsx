@@ -31,7 +31,6 @@ import {
 } from './types';
 
 import { ContextMenu } from '@lumino/widgets';
-import { JSONObject } from '@lumino/coreutils';
 import { CommandRegistry } from '@lumino/commands';
 import { MapChange } from '@jupyter/ydoc';
 import { FloatingAnnotation } from './annotation/view';
@@ -795,7 +794,7 @@ export class MainView extends React.Component<IProps, IStates> {
     sender: IJupyterCadDoc,
     change: MapChange
   ): void {
-    const guidata = sender.getOption('guidata') as JSONObject | undefined;
+    const guidata = sender.getOption('guidata');
 
     if (guidata) {
       for (const objName in guidata) {
