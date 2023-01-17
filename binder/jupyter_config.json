@@ -1,3 +1,5 @@
 {
-  "LabApp": { "collaborative": true }
+    "LabApp": {
+        "collaborative": true
+    }
 }
