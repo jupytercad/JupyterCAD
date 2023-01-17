@@ -1,33 +1,30 @@
-import { IChangedArgs } from '@jupyterlab/coreutils';
-
 import { MapChange, YDocument } from '@jupyter/ydoc';
-
+import { IChangedArgs } from '@jupyterlab/coreutils';
 import {
-  PartialJSONObject,
   JSONExt,
+  JSONObject,
   JSONValue,
-  JSONObject
+  PartialJSONObject
 } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
-
 import Ajv from 'ajv';
 import * as Y from 'yjs';
 
 import { IJCadContent, IJCadModel, IJCadObject } from './_interface/jcad';
 import jcadSchema from './schema/jcad.json';
 import {
+  Camera,
+  IAnnotationModel,
+  IJcadObjectDocChange,
   IJupyterCadClientState,
   IJupyterCadDoc,
   IJupyterCadDocChange,
   IJupyterCadModel,
-  PointerPosition,
-  Camera
+  PointerPosition
 } from './types';
-import { IAnnotationModel } from './types';
 
 export class JupyterCadModel implements IJupyterCadModel {
   constructor(annotationModel: IAnnotationModel, languagePreference?: string) {
-    this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
     this.annotationModel = annotationModel;
   }
@@ -44,10 +41,6 @@ export class JupyterCadModel implements IJupyterCadModel {
 
   get stateChanged(): ISignal<this, IChangedArgs<any, any, string>> {
     return this._stateChanged;
-  }
-
-  get sharedModelChanged(): ISignal<this, IJupyterCadDocChange> {
-    return this._sharedModelChanged;
   }
 
   get themeChanged(): Signal<
@@ -85,6 +78,10 @@ export class JupyterCadModel implements IJupyterCadModel {
 
   get sharedOptionsChanged(): ISignal<IJupyterCadDoc, MapChange> {
     return this.sharedModel.optionsChanged;
+  }
+
+  get sharedObjectsChanged(): ISignal<IJupyterCadDoc, IJcadObjectDocChange> {
+    return this.sharedModel.objectsChanged;
   }
 
   dispose(): void {
@@ -197,13 +194,6 @@ export class JupyterCadModel implements IJupyterCadModel {
     this._clientStateChanged.emit(clients);
   };
 
-  private _onSharedModelChanged = (
-    sender: IJupyterCadDoc,
-    changes: IJupyterCadDocChange
-  ): void => {
-    this._sharedModelChanged.emit(changes);
-  };
-
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
   readonly sharedModel = JupyterCadDoc.create();
@@ -220,7 +210,6 @@ export class JupyterCadModel implements IJupyterCadModel {
     this,
     Map<number, IJupyterCadClientState>
   >(this);
-  private _sharedModelChanged = new Signal<this, IJupyterCadDocChange>(this);
   static worker: Worker;
 }
 
@@ -260,6 +249,10 @@ export class JupyterCadDoc
 
   get metadata(): JSONObject {
     return JSONExt.deepCopy(this._metadata.toJSON());
+  }
+
+  get objectsChanged(): ISignal<IJupyterCadDoc, IJcadObjectDocChange> {
+    return this._objectsChanged;
   }
 
   get optionsChanged(): ISignal<IJupyterCadDoc, MapChange> {
@@ -385,6 +378,7 @@ export class JupyterCadDoc
     });
 
     this._changed.emit({ objectChange: changes });
+    this._objectsChanged.emit({ objectChange: changes });
   };
 
   private _metaObserver = (event: Y.YMapEvent<string>): void => {
@@ -400,4 +394,7 @@ export class JupyterCadDoc
   private _metadata: Y.Map<string>;
   private _metadataChanged = new Signal<IJupyterCadDoc, MapChange>(this);
   private _optionsChanged = new Signal<IJupyterCadDoc, MapChange>(this);
+  private _objectsChanged = new Signal<IJupyterCadDoc, IJcadObjectDocChange>(
+    this
+  );
 }

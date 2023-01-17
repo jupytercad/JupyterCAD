@@ -118,8 +118,11 @@ export type AxeHelper = {
 };
 
 export interface IJcadObjectDocChange {
-  contextChange?: MapChange;
-  objectChange?: MapChange;
+  objectChange?: Array<{
+    name: string;
+    key: string;
+    newValue: IJCadObject | undefined;
+  }>;
 }
 
 export interface IJupyterCadDocChange {
@@ -156,6 +159,7 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
 
   metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
   optionsChanged: ISignal<IJupyterCadDoc, MapChange>;
+  objectsChanged: ISignal<IJupyterCadDoc, IJcadObjectDocChange>;
 }
 
 export interface IJupyterCadClientState {
@@ -175,9 +179,9 @@ export interface IJupyterCadClientState {
 export interface IJupyterCadModel extends DocumentRegistry.IModel {
   isDisposed: boolean;
   sharedModel: IJupyterCadDoc;
+  annotationModel: IAnnotationModel;
   localState: IJupyterCadClientState | null;
 
-  sharedModelChanged: ISignal<IJupyterCadModel, IJupyterCadDocChange>;
   themeChanged: Signal<
     IJupyterCadModel,
     IChangedArgs<string, string | null, string>
@@ -188,6 +192,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   >;
   sharedMetadataChanged: ISignal<IJupyterCadDoc, MapChange>;
   sharedOptionsChanged: ISignal<IJupyterCadDoc, MapChange>;
+  sharedObjectsChanged: ISignal<IJupyterCadDoc, IJcadObjectDocChange>;
 
   getWorker(): Worker;
   getContent(): IJCadContent;

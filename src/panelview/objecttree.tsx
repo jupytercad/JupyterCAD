@@ -17,9 +17,9 @@ import { IJCadModel, IJCadObject } from '../_interface/jcad';
 import {
   IControlPanelModel,
   IDict,
+  IJcadObjectDocChange,
   IJupyterCadClientState,
   IJupyterCadDoc,
-  IJupyterCadDocChange,
   IJupyterCadModel
 } from '../types';
 import { v4 as uuid } from 'uuid';
@@ -107,7 +107,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       id: uuid(),
       openNodes: []
     };
-    this.props.cpModel.jcadModel?.sharedModelChanged.connect(
+    this.props.cpModel.jcadModel?.sharedObjectsChanged.connect(
       this._sharedJcadModelChanged
     );
     this.props.cpModel.documentChanged.connect((_, document) => {
@@ -116,7 +116,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         this.props.cpModel.disconnect(this._handleThemeChange);
         this.props.cpModel.disconnect(this._onClientSharedStateChanged);
 
-        document.context.model.sharedModelChanged.connect(
+        document.context.model.sharedObjectsChanged.connect(
           this._sharedJcadModelChanged
         );
         document.context.model.themeChanged.connect(this._handleThemeChange);
@@ -191,8 +191,8 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   };
 
   private _sharedJcadModelChanged = (
-    sender: IJupyterCadModel,
-    change: IJupyterCadDocChange
+    sender: IJupyterCadDoc,
+    change: IJcadObjectDocChange
   ): void => {
     if (change.objectChange) {
       this.setState(old => ({
@@ -217,9 +217,10 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       if (localState) {
         if (
           localState.selected?.emitter &&
-          localState.selected.emitter !== this.state.id
+          localState.selected.emitter !== this.state.id &&
+          localState.selected.value
         ) {
-          const selectedNode = localState.selected.value!;
+          const selectedNode = localState.selected.value;
 
           const openNodes = [...this.state.openNodes];
           const index = openNodes.indexOf(selectedNode);
@@ -297,7 +298,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
               jcadObj &&
               options &&
               options['guidata'] &&
-              options['guidata'][jcadObj.name]
+              options['guidata'][jcadObj?.name]
             ) {
               visible = options['guidata'][jcadObj?.name]!['visibility'];
             }

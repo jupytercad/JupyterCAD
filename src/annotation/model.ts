@@ -68,7 +68,7 @@ export class AnnotationModel implements IAnnotationModel {
     this._context?.model.sharedModel.setMetadata(key, JSON.stringify(value));
   }
 
-  removeAnnotation(key): void {
+  removeAnnotation(key: string): void {
     this._context?.model.removeMetadata(key);
   }
 

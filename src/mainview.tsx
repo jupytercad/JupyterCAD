@@ -16,13 +16,14 @@ import {
 } from 'three-mesh-bvh';
 
 import { v4 as uuid } from 'uuid';
-import { JupyterCadModel } from './model';
 import {
   AxeHelper,
   IDict,
   IDisplayShape,
+  IJcadObjectDocChange,
   IJupyterCadClientState,
   IJupyterCadDoc,
+  IJupyterCadModel,
   IMainMessage,
   IWorkerMessage,
   MainAction,
@@ -48,7 +49,7 @@ const SELECTED_MESH_COLOR = new THREE.Color('#AB5118');
 
 interface IProps {
   view: ObservableMap<JSONValue>;
-  context: DocumentRegistry.IContext<JupyterCadModel>;
+  context: DocumentRegistry.IContext<IJupyterCadModel>;
 }
 
 interface IStates {
@@ -95,7 +96,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._context = props.context;
     this._collaboratorPointers = {};
     this._context.ready.then(() => {
-      this._model = this._context.model as JupyterCadModel;
+      this._model = this._context.model;
       this._worker = this._model.getWorker();
       this._messageChannel = new MessageChannel();
       this._messageChannel.port1.onmessage = msgEvent => {
@@ -106,6 +107,11 @@ export class MainView extends React.Component<IProps, IStates> {
         this._messageChannel.port2
       );
       this._model.themeChanged.connect(this._handleThemeChange, this);
+
+      this._model.sharedObjectsChanged.connect(
+        this._onSharedObjectsChanged,
+        this
+      );
       this._model.sharedOptionsChanged.connect(
         this._onSharedOptionsChanged,
         this
@@ -148,6 +154,10 @@ export class MainView extends React.Component<IProps, IStates> {
     this._model.themeChanged.disconnect(this._handleThemeChange, this);
     this._model.sharedOptionsChanged.disconnect(
       this._onSharedOptionsChanged,
+      this
+    );
+    this._model.sharedObjectsChanged.disconnect(
+      this._onSharedObjectsChanged,
       this
     );
     this._model.clientStateChanged.disconnect(
@@ -342,17 +352,13 @@ export class MainView extends React.Component<IProps, IStates> {
         if (!this._model) {
           return;
         }
-        const render = () => {
-          this._postMessage({
-            action: WorkerAction.LOAD_FILE,
-            payload: {
-              fileName: this._context.path,
-              content: this._model.getContent()
-            }
-          });
-        };
-        this._model.sharedModelChanged.connect(render);
-        render();
+        this._postMessage({
+          action: WorkerAction.LOAD_FILE,
+          payload: {
+            fileName: this._context.path,
+            content: this._model.getContent()
+          }
+        });
       }
     }
   };
@@ -556,8 +562,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
         mesh.add(edgesMesh);
       });
-
-      this._meshGroup!.add(mesh);
+      if (this._meshGroup) {
+        this._meshGroup.add(mesh);
+      }
     });
 
     const boundingGroup = new THREE.Box3();
@@ -666,7 +673,7 @@ export class MainView extends React.Component<IProps, IStates> {
   };
 
   private _onClientSharedStateChanged = (
-    sender: JupyterCadModel,
+    sender: IJupyterCadModel,
     clients: Map<number, IJupyterCadClientState>
   ): void => {
     const remoteUser = this._model.localState?.remoteUser;
@@ -769,6 +776,21 @@ export class MainView extends React.Component<IProps, IStates> {
     });
   };
 
+  private _onSharedObjectsChanged(
+    _: IJupyterCadDoc,
+    change: IJcadObjectDocChange
+  ): void {
+    if (change.objectChange) {
+      this._postMessage({
+        action: WorkerAction.LOAD_FILE,
+        payload: {
+          fileName: this._context.path,
+          content: this._model.getContent()
+        }
+      });
+    }
+  }
+
   private _onSharedOptionsChanged(
     sender: IJupyterCadDoc,
     change: MapChange
@@ -781,9 +803,9 @@ export class MainView extends React.Component<IProps, IStates> {
           Object.prototype.hasOwnProperty.call(guidata[objName], 'visibility')
         ) {
           const obj = this._meshGroup?.getObjectByName(objName);
-
-          if (obj) {
-            obj.visible = guidata[objName]!['visibility'];
+          const objGuiData = guidata[objName];
+          if (obj && objGuiData) {
+            obj.visible = objGuiData['visibility'];
           }
         }
       }
@@ -883,8 +905,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private divRef = React.createRef<HTMLDivElement>(); // Reference of render div
 
-  private _context: DocumentRegistry.IContext<JupyterCadModel>;
-  private _model: JupyterCadModel;
+  private _context: DocumentRegistry.IContext<IJupyterCadModel>;
+  private _model: IJupyterCadModel;
   private _worker?: Worker = undefined;
   private _messageChannel?: MessageChannel;
 
