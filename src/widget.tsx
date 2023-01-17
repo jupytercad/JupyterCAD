@@ -8,7 +8,7 @@ import { ISignal, Signal } from '@lumino/signaling';
 
 import { MainView } from './mainview';
 import { JupyterCadModel } from './model';
-import { AxeHelper, IJupyterCadWidget } from './types';
+import { AxeHelper, IJupyterCadModel, IJupyterCadWidget } from './types';
 import { JSONValue } from '@lumino/coreutils';
 
 export class JupyterCadWidget
@@ -40,7 +40,7 @@ export class JupyterCadPanel extends ReactWidget {
    *
    * @param context - The documents context.
    */
-  constructor(context: DocumentRegistry.IContext<JupyterCadModel>) {
+  constructor(context: DocumentRegistry.IContext<IJupyterCadModel>) {
     super();
     this.addClass('jp-jupytercad-panel');
     this._context = context;
@@ -83,5 +83,5 @@ export class JupyterCadPanel extends ReactWidget {
   }
 
   private _view: ObservableMap<JSONValue>;
-  private _context: DocumentRegistry.IContext<JupyterCadModel>;
+  private _context: DocumentRegistry.IContext<IJupyterCadModel>;
 }

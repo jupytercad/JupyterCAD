@@ -1,33 +1,31 @@
-import { IChangedArgs } from '@jupyterlab/coreutils';
-
 import { MapChange, YDocument } from '@jupyter/ydoc';
-
-import {
-  PartialJSONObject,
-  JSONExt,
-  JSONValue,
-  JSONObject
-} from '@lumino/coreutils';
+import { IChangedArgs } from '@jupyterlab/coreutils';
+import { JSONExt, JSONObject, PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
-
 import Ajv from 'ajv';
 import * as Y from 'yjs';
 
-import { IJCadContent, IJCadModel, IJCadObject } from './_interface/jcad';
+import {
+  IJCadContent,
+  IJCadModel,
+  IJCadObject,
+  IJCadOptions
+} from './_interface/jcad';
 import jcadSchema from './schema/jcad.json';
 import {
+  Camera,
+  IAnnotationModel,
+  IDict,
+  IJcadObjectDocChange,
   IJupyterCadClientState,
   IJupyterCadDoc,
   IJupyterCadDocChange,
   IJupyterCadModel,
-  PointerPosition,
-  Camera
+  PointerPosition
 } from './types';
-import { IAnnotationModel } from './types';
 
 export class JupyterCadModel implements IJupyterCadModel {
   constructor(annotationModel: IAnnotationModel, languagePreference?: string) {
-    this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
     this.annotationModel = annotationModel;
   }
@@ -44,10 +42,6 @@ export class JupyterCadModel implements IJupyterCadModel {
 
   get stateChanged(): ISignal<this, IChangedArgs<any, any, string>> {
     return this._stateChanged;
-  }
-
-  get sharedModelChanged(): ISignal<this, IJupyterCadDocChange> {
-    return this._sharedModelChanged;
   }
 
   get themeChanged(): Signal<
@@ -81,6 +75,14 @@ export class JupyterCadModel implements IJupyterCadModel {
 
   get sharedMetadataChanged(): ISignal<IJupyterCadDoc, MapChange> {
     return this.sharedModel.metadataChanged;
+  }
+
+  get sharedOptionsChanged(): ISignal<IJupyterCadDoc, MapChange> {
+    return this.sharedModel.optionsChanged;
+  }
+
+  get sharedObjectsChanged(): ISignal<IJupyterCadDoc, IJcadObjectDocChange> {
+    return this.sharedModel.objectsChanged;
   }
 
   dispose(): void {
@@ -193,13 +195,6 @@ export class JupyterCadModel implements IJupyterCadModel {
     this._clientStateChanged.emit(clients);
   };
 
-  private _onSharedModelChanged = (
-    sender: IJupyterCadDoc,
-    changes: IJupyterCadDocChange
-  ): void => {
-    this._sharedModelChanged.emit(changes);
-  };
-
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
   readonly sharedModel = JupyterCadDoc.create();
@@ -216,7 +211,6 @@ export class JupyterCadModel implements IJupyterCadModel {
     this,
     Map<number, IJupyterCadClientState>
   >(this);
-  private _sharedModelChanged = new Signal<this, IJupyterCadDocChange>(this);
   static worker: Worker;
 }
 
@@ -226,7 +220,8 @@ export class JupyterCadDoc
 {
   constructor() {
     super();
-    this._options = this.ydoc.getMap<any>('options');
+
+    this._options = this.ydoc.getMap<Y.Map<any>>('options');
     this._objects = this.ydoc.getArray<Y.Map<any>>('objects');
     this._metadata = this.ydoc.getMap<string>('metadata');
 
@@ -234,11 +229,13 @@ export class JupyterCadDoc
 
     this._objects.observeDeep(this._objectsObserver);
     this._metadata.observe(this._metaObserver);
+    this._options.observe(this._optionsObserver);
   }
 
   dispose(): void {
     this._objects.unobserveDeep(this._objectsObserver);
     this._metadata.unobserve(this._metaObserver);
+    this._options.unobserve(this._optionsObserver);
   }
 
   get objects(): Array<IJCadObject> {
@@ -246,11 +243,21 @@ export class JupyterCadDoc
       obj => JSONExt.deepCopy(obj.toJSON()) as IJCadObject
     );
   }
+
   get options(): JSONObject {
     return JSONExt.deepCopy(this._options.toJSON());
   }
+
   get metadata(): JSONObject {
     return JSONExt.deepCopy(this._metadata.toJSON());
+  }
+
+  get objectsChanged(): ISignal<IJupyterCadDoc, IJcadObjectDocChange> {
+    return this._objectsChanged;
+  }
+
+  get optionsChanged(): ISignal<IJupyterCadDoc, MapChange> {
+    return this._optionsChanged;
   }
 
   get metadataChanged(): ISignal<IJupyterCadDoc, MapChange> {
@@ -310,15 +317,19 @@ export class JupyterCadDoc
     this.transact(() => obj.set(key, value));
   }
 
-  getOption(key: string): JSONValue {
-    return JSONExt.deepCopy(this._options.get(key));
+  getOption(key: keyof IJCadOptions): IDict | undefined {
+    const content = this._options.get(key);
+    if (!content) {
+      return;
+    }
+    return JSONExt.deepCopy(content) as IDict;
   }
 
-  setOption(key: string, value: JSONValue): void {
+  setOption(key: keyof IJCadOptions, value: IDict): void {
     this._options.set(key, value);
   }
 
-  setOptions(options: JSONObject): void {
+  setOptions(options: IJCadOptions): void {
     for (const [key, value] of Object.entries(options)) {
       this._options.set(key, value);
     }
@@ -372,14 +383,23 @@ export class JupyterCadDoc
     });
 
     this._changed.emit({ objectChange: changes });
+    this._objectsChanged.emit({ objectChange: changes });
   };
 
   private _metaObserver = (event: Y.YMapEvent<string>): void => {
     this._metadataChanged.emit(event.keys);
   };
 
+  private _optionsObserver = (event: Y.YMapEvent<Y.Map<string>>): void => {
+    this._optionsChanged.emit(event.keys);
+  };
+
   private _objects: Y.Array<Y.Map<any>>;
   private _options: Y.Map<any>;
   private _metadata: Y.Map<string>;
   private _metadataChanged = new Signal<IJupyterCadDoc, MapChange>(this);
+  private _optionsChanged = new Signal<IJupyterCadDoc, MapChange>(this);
+  private _objectsChanged = new Signal<IJupyterCadDoc, IJcadObjectDocChange>(
+    this
+  );
 }

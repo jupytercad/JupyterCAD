@@ -9,7 +9,12 @@ import { ISignal, Signal } from '@lumino/signaling';
 import { JSONObject } from '@lumino/coreutils';
 
 import { IJupyterCadTracker } from './token';
-import { IJCadContent, IJCadObject, IJCadModel } from './_interface/jcad';
+import {
+  IJCadContent,
+  IJCadObject,
+  IJCadModel,
+  IJCadOptions
+} from './_interface/jcad';
 
 export interface IDict<T = any> {
   [key: string]: T;
@@ -118,8 +123,11 @@ export type AxeHelper = {
 };
 
 export interface IJcadObjectDocChange {
-  contextChange?: MapChange;
-  objectChange?: MapChange;
+  objectChange?: Array<{
+    name: string;
+    key: string;
+    newValue: IJCadObject | undefined;
+  }>;
 }
 
 export interface IJupyterCadDocChange {
@@ -139,8 +147,6 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   options: JSONObject;
   metadata: JSONObject;
 
-  metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
-
   objectExists(name: string): boolean;
   getObjectByName(name: string): IJCadObject | undefined;
   removeObjectByName(name: string): void;
@@ -148,13 +154,17 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   addObjects(value: Array<IJCadObject>): void;
   updateObjectByName(name: string, key: string, value: any): void;
 
-  getOption(key: string): any;
-  setOption(key: string, value: any): void;
-  setOptions(options: JSONObject): void;
+  getOption(key: keyof IJCadOptions): IDict | undefined;
+  setOption(key: keyof IJCadOptions, value: IDict): void;
+  setOptions(options: IJCadOptions): void;
 
   getMetadata(key: string): string | undefined;
   setMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;
+
+  metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
+  optionsChanged: ISignal<IJupyterCadDoc, MapChange>;
+  objectsChanged: ISignal<IJupyterCadDoc, IJcadObjectDocChange>;
 }
 
 export interface IJupyterCadClientState {
@@ -174,9 +184,9 @@ export interface IJupyterCadClientState {
 export interface IJupyterCadModel extends DocumentRegistry.IModel {
   isDisposed: boolean;
   sharedModel: IJupyterCadDoc;
+  annotationModel: IAnnotationModel;
   localState: IJupyterCadClientState | null;
 
-  sharedModelChanged: ISignal<IJupyterCadModel, IJupyterCadDocChange>;
   themeChanged: Signal<
     IJupyterCadModel,
     IChangedArgs<string, string | null, string>
@@ -186,6 +196,8 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     Map<number, IJupyterCadClientState>
   >;
   sharedMetadataChanged: ISignal<IJupyterCadDoc, MapChange>;
+  sharedOptionsChanged: ISignal<IJupyterCadDoc, MapChange>;
+  sharedObjectsChanged: ISignal<IJupyterCadDoc, IJcadObjectDocChange>;
 
   getWorker(): Worker;
   getContent(): IJCadContent;

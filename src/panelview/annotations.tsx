@@ -33,17 +33,17 @@ export class ReactAnnotations extends React.Component<IProps> {
     });
   }
 
-  render() {
+  render(): JSX.Element {
     const annotationIds = this._model?.getAnnotationIds();
 
-    if (!annotationIds || this._model === null) {
+    if (!annotationIds || !this._model) {
       return <div></div>;
     }
 
     const annotations = annotationIds.map((id: string) => {
       return (
         <div>
-          <Annotation model={this._model!} itemId={id} />
+          <Annotation model={this._model} itemId={id} />
           <hr className="jpcad-Annotations-Separator"></hr>
         </div>
       );

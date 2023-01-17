@@ -15,8 +15,9 @@ import {
 import {
   IControlPanelModel,
   IDict,
+  IJcadObjectDocChange,
   IJupyterCadClientState,
-  IJupyterCadDocChange,
+  IJupyterCadDoc,
   IJupyterCadModel
 } from '../types';
 import { IJCadModel } from '../_interface/jcad';
@@ -60,7 +61,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       clientId: null,
       id: uuid()
     };
-    this.props.cpModel.jcadModel?.sharedModelChanged.connect(
+    this.props.cpModel.jcadModel?.sharedObjectsChanged.connect(
       this._sharedJcadModelChanged
     );
     this.props.cpModel.documentChanged.connect((_, changed) => {
@@ -68,7 +69,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
         this.props.cpModel.disconnect(this._sharedJcadModelChanged);
         this.props.cpModel.disconnect(this._onClientSharedStateChanged);
 
-        changed.context.model.sharedModelChanged.connect(
+        changed.context.model.sharedObjectsChanged.connect(
           this._sharedJcadModelChanged
         );
         changed.context.model.clientStateChanged.connect(
@@ -129,8 +130,8 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   };
 
   private _sharedJcadModelChanged = (
-    _,
-    changed: IJupyterCadDocChange
+    _: IJupyterCadDoc,
+    changed: IJcadObjectDocChange
   ): void => {
     this.setState(old => {
       if (old.selectedObject) {

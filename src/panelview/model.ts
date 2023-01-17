@@ -31,9 +31,11 @@ export class ControlPanelModel implements IControlPanelModel {
   }
 
   disconnect(f: any): void {
-    this._tracker.forEach(w =>
-      w.context.model.sharedModelChanged.disconnect(f)
-    );
+    this._tracker.forEach(w => {
+      w.context.model.sharedObjectsChanged.disconnect(f);
+      w.context.model.sharedOptionsChanged.disconnect(f);
+      w.context.model.sharedMetadataChanged.disconnect(f);
+    });
     this._tracker.forEach(w => w.context.model.themeChanged.disconnect(f));
     this._tracker.forEach(w =>
       w.context.model.clientStateChanged.disconnect(f)
