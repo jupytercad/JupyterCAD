@@ -1,5 +1,6 @@
+import { JupyterCadFCModelFactory } from './../fcplugin/modelfactory';
+import { IAnnotationModel } from '../types';
 import {
-  IMimeDocumentTracker,
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
@@ -8,8 +9,11 @@ import { Widget } from '@lumino/widgets';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { createRendermimePlugin } from '@jupyterlab/application';
 import { WidgetTracker } from '@jupyterlab/apputils';
-import { MimeDocument } from '@jupyterlab/docregistry';
-
+import { Context, MimeDocument } from '@jupyterlab/docregistry';
+import { ServiceManager } from '@jupyterlab/services';
+import { IAnnotation } from './../token';
+import { JupyterCadPanel, JupyterCadWidget } from '../widget';
+import { MessageLoop } from '@lumino/messaging';
 
 const MIME_TYPE = 'application/FCStd';
 
@@ -19,15 +23,28 @@ export class OutputWidget extends Widget implements IRenderMime.IRenderer {
   /**
    * Construct a new output widget.
    */
-  constructor(options: IRenderMime.IRendererOptions) {
+  constructor(
+    private manager: ServiceManager.IManager,
+    private annotationModel: IAnnotationModel,
+    options: IRenderMime.IRendererOptions
+  ) {
     super();
     this._mimeType = options.mimeType;
     this.addClass(CLASS_NAME);
   }
 
   renderModel(model: IRenderMime.IMimeModel): Promise<void> {
-    const data = model.data[this._mimeType] as string;
-    this.node.textContent = data.slice(0, 16384) + 'hello';
+    const path = model.data[this._mimeType] as string;
+    const factory = new JupyterCadFCModelFactory({
+      annotationModel: this.annotationModel
+    });
+    const context = new Context({ manager: this.manager, path, factory });
+    const content = new JupyterCadPanel(context);
+
+    const widget = new JupyterCadWidget({ context, content });
+    MessageLoop.sendMessage(widget, Widget.Msg.BeforeAttach);
+    this.node.appendChild(widget.node);
+    MessageLoop.sendMessage(widget, Widget.Msg.AfterAttach);
     return Promise.resolve();
   }
 
@@ -40,16 +57,17 @@ export class OutputWidget extends Widget implements IRenderMime.IRenderer {
 const notebookRendererPlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:notebookRenderer',
   autoStart: true,
-  requires: [IRenderMimeRegistry, IMimeDocumentTracker],
+  requires: [IRenderMimeRegistry, IAnnotation],
   activate: (
     app: JupyterFrontEnd,
-    rendermime: IRenderMimeRegistry
-    // tracker: IMimeDocumentTracker
+    rendermime: IRenderMimeRegistry,
+    annotationModel: IAnnotationModel
   ) => {
     const rendererFactory: IRenderMime.IRendererFactory = {
       safe: true,
       mimeTypes: [MIME_TYPE],
-      createRenderer: options => new OutputWidget(options)
+      createRenderer: options =>
+        new OutputWidget(app.serviceManager, annotationModel, options)
     };
     const namespace = 'jupytercad-mimedocuments';
     const tracker = new WidgetTracker<MimeDocument>({ namespace });
@@ -60,6 +78,7 @@ const notebookRendererPlugin: JupyterFrontEndPlugin<void> = {
       dataType: 'string'
     };
     const mimePlugin = createRendermimePlugin(tracker, extension);
+
     mimePlugin.activate(app, rendermime);
   }
 };

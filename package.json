@@ -85,7 +85,7 @@
         "react": "^17.0.1"
     },
     "resolutions": {
-        "@jupyterlab/apputils": "~4.0.0-alpha.11"
+        "@jupyterlab/apputils": "~4.0.0-alpha.17"
     },
     "devDependencies": {
         "@apidevtools/json-schema-ref-parser": "^9.0.9",

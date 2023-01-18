@@ -23,7 +23,7 @@ import { IAnnotationModel } from './types';
 import { JupyterCadWidget } from './widget';
 import { ToolbarWidget } from './toolbar/widget';
 import { AnnotationModel } from './annotation/model';
-// import notebookRendererPlugin from './notebookrenderer';
+import notebookRendererPlugin from './notebookrenderer';
 
 const NAME_SPACE = 'jupytercad';
 
@@ -76,7 +76,6 @@ const annotationPlugin: JupyterFrontEndPlugin<IAnnotationModel> = {
     tracker.currentChanged.connect((_, changed) => {
       annotationModel.context = changed?.context || undefined;
     });
-
     return annotationModel;
   }
 };
@@ -171,5 +170,5 @@ export default [
   fcplugin,
   jcadPlugin,
   annotationPlugin,
-  // notebookRendererPlugin
+  notebookRendererPlugin
 ];

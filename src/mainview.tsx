@@ -103,7 +103,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this.state = {
       id: uuid(),
       lightTheme,
-      loading: true,
+      loading: false,
       annotations: {},
       firstLoad: true
     };

@@ -374,3 +374,9 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
 .highlight {
   background-color: var(--jp-layout-color2) !important;
 }
+.mimerenderer-jupytercad{
+  height: 500px;
+}
+.mimerenderer-jupytercad > div{
+  height: 100%;
+}
