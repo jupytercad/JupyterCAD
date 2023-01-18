@@ -17,11 +17,11 @@ import {
 import { JSONValue } from '@lumino/coreutils';
 
 export class JupyterCadWidget
-  extends DocumentWidget<JupyterCadPanel, JupyterCadModel>
+  extends DocumentWidget<JupyterCadPanel, IJupyterCadModel>
   implements IJupyterCadWidget
 {
   constructor(
-    options: DocumentWidget.IOptions<JupyterCadPanel, JupyterCadModel>
+    options: DocumentWidget.IOptions<JupyterCadPanel, IJupyterCadModel>
   ) {
     super(options);
   }

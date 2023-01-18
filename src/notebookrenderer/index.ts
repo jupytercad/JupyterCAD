@@ -1,55 +1,22 @@
-import { JupyterCadFCModelFactory } from './../fcplugin/modelfactory';
-import { IAnnotationModel } from '../types';
 import {
+  createRendermimePlugin,
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import { IRenderMime } from '@jupyterlab/rendermime-interfaces';
-import { Widget } from '@lumino/widgets';
-import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
-import { createRendermimePlugin } from '@jupyterlab/application';
 import { WidgetTracker } from '@jupyterlab/apputils';
-import { Context, MimeDocument } from '@jupyterlab/docregistry';
-import { ServiceManager } from '@jupyterlab/services';
+import { IDocumentProviderFactory } from '@jupyterlab/docprovider';
+import { DocumentRegistry, MimeDocument } from '@jupyterlab/docregistry';
+import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
+import { IRenderMime } from '@jupyterlab/rendermime-interfaces';
+import { JupyterCadFCModelFactory } from '../fcplugin/modelfactory';
+import { JupyterCadJcadModelFactory } from '../jcadplugin/modelfactory';
+
+import { IAnnotationModel, IJupyterCadModel } from '../types';
 import { IAnnotation } from './../token';
-import { JupyterCadPanel, JupyterCadWidget } from '../widget';
-import { MessageLoop } from '@lumino/messaging';
+import { MimeRenderer } from './renderer';
 
-const MIME_TYPE = 'application/FCStd';
-
-const CLASS_NAME = 'mimerenderer-jupytercad';
-
-export class OutputWidget extends Widget implements IRenderMime.IRenderer {
-  /**
-   * Construct a new output widget.
-   */
-  constructor(
-    private manager: ServiceManager.IManager,
-    private annotationModel: IAnnotationModel,
-    options: IRenderMime.IRendererOptions
-  ) {
-    super();
-    this._mimeType = options.mimeType;
-    this.addClass(CLASS_NAME);
-  }
-
-  renderModel(model: IRenderMime.IMimeModel): Promise<void> {
-    const path = model.data[this._mimeType] as string;
-    const factory = new JupyterCadFCModelFactory({
-      annotationModel: this.annotationModel
-    });
-    const context = new Context({ manager: this.manager, path, factory });
-    const content = new JupyterCadPanel(context);
-
-    const widget = new JupyterCadWidget({ context, content });
-    MessageLoop.sendMessage(widget, Widget.Msg.BeforeAttach);
-    this.node.appendChild(widget.node);
-    MessageLoop.sendMessage(widget, Widget.Msg.AfterAttach);
-    return Promise.resolve();
-  }
-
-  private _mimeType: string;
-}
+const FC_MIME_TYPE = 'application/FCStd';
+const JCAD_MIME_TYPE = 'application/Jcad';
 
 /**
  * Extension definition.
@@ -57,29 +24,56 @@ export class OutputWidget extends Widget implements IRenderMime.IRenderer {
 const notebookRendererPlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:notebookRenderer',
   autoStart: true,
-  requires: [IRenderMimeRegistry, IAnnotation],
+  requires: [IRenderMimeRegistry, IDocumentProviderFactory, IAnnotation],
   activate: (
     app: JupyterFrontEnd,
     rendermime: IRenderMimeRegistry,
+    docProviderFactory: IDocumentProviderFactory,
     annotationModel: IAnnotationModel
   ) => {
-    const rendererFactory: IRenderMime.IRendererFactory = {
-      safe: true,
-      mimeTypes: [MIME_TYPE],
-      createRenderer: options =>
-        new OutputWidget(app.serviceManager, annotationModel, options)
-    };
     const namespace = 'jupytercad-mimedocuments';
     const tracker = new WidgetTracker<MimeDocument>({ namespace });
-    const extension: IRenderMime.IExtension = {
-      id: 'jupytercad:notebookRenderer',
-      rendererFactory,
+    const createRenderer =
+      (modelFactory: DocumentRegistry.IModelFactory<IJupyterCadModel>) =>
+      (renderOptions: IRenderMime.IRendererOptions) =>
+        new MimeRenderer({
+          manager: app.serviceManager,
+          docProviderFactory,
+          modelFactory,
+          renderOptions
+        });
+
+    const fcModelFactory = new JupyterCadFCModelFactory({ annotationModel });
+    const fcRendererFactory: IRenderMime.IRendererFactory = {
+      safe: true,
+      mimeTypes: [FC_MIME_TYPE],
+      createRenderer: createRenderer(fcModelFactory)
+    };
+    const fcExtension: IRenderMime.IExtension = {
+      id: 'jupytercad:notebookFcRenderer',
+      rendererFactory: fcRendererFactory,
       rank: 1000,
       dataType: 'string'
     };
-    const mimePlugin = createRendermimePlugin(tracker, extension);
+    const fcMimePlugin = createRendermimePlugin(tracker, fcExtension);
+    fcMimePlugin.activate(app, rendermime);
 
-    mimePlugin.activate(app, rendermime);
+    const jcadModelFactory = new JupyterCadJcadModelFactory({
+      annotationModel
+    });
+    const jcadRendererFactory: IRenderMime.IRendererFactory = {
+      safe: true,
+      mimeTypes: [JCAD_MIME_TYPE],
+      createRenderer: createRenderer(jcadModelFactory)
+    };
+    const jcadExtension: IRenderMime.IExtension = {
+      id: 'jupytercad:notebookJcadRenderer',
+      rendererFactory: jcadRendererFactory,
+      rank: 1000,
+      dataType: 'string'
+    };
+    const jcadMimePlugin = createRendermimePlugin(tracker, jcadExtension);
+    jcadMimePlugin.activate(app, rendermime);
   }
 };
 

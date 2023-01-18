@@ -4,7 +4,6 @@ import { IDict, IJupyterCadModel } from './../types';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import formSchema from '../_interface/forms.json';
 import { IJupyterCadDoc } from '../types';
-import { JupyterCadModel } from './../model';
 import { User } from '@jupyterlab/services';
 import { JupyterCadPanel } from '../widget';
 
@@ -116,7 +115,7 @@ export class ToolbarModel {
   }
 
   private _panel: JupyterCadPanel;
-  private _context: DocumentRegistry.IContext<JupyterCadModel>;
+  private _context: DocumentRegistry.IContext<IJupyterCadModel>;
   private _sharedModel?: IJupyterCadDoc;
   private _formSchema = JSON.parse(JSON.stringify(formSchema));
   private _userChanged = new Signal<this, IUserData[]>(this);
@@ -127,6 +126,6 @@ export class ToolbarModel {
 export namespace ToolbarModel {
   export interface IOptions {
     panel: JupyterCadPanel;
-    context: DocumentRegistry.IContext<JupyterCadModel>;
+    context: DocumentRegistry.IContext<IJupyterCadModel>;
   }
 }
