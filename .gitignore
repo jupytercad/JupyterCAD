@@ -6,9 +6,6 @@ node_modules/
 *.tsbuildinfo
 jupytercad/labextension
 
-# Version file is handled by hatchling
-jupytercad/_version.py
-
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
 
