@@ -1,6 +1,5 @@
 import { IDocumentProviderFactory } from '@jupyterlab/docprovider';
 import { Context, DocumentRegistry } from '@jupyterlab/docregistry';
-import { IRenderMime } from '@jupyterlab/rendermime-interfaces';
 import { ServiceManager } from '@jupyterlab/services';
 import { MessageLoop } from '@lumino/messaging';
 import { Widget } from '@lumino/widgets';
@@ -11,13 +10,12 @@ import { IJupyterCadModel } from '../types';
 import { JupyterCadPanel, JupyterCadWidget } from '../widget';
 import { CLASS_NAME, INotebookRendererOptions } from './types';
 
-export class MimeRenderer extends Widget implements IRenderMime.IRenderer {
+export class NotebookRenderer extends Widget {
   /**
    * Construct a new output widget.
    */
   constructor(options: INotebookRendererOptions) {
     super();
-    this._mimeType = options.renderOptions.mimeType;
     this._docProviderFactory = options.docProviderFactory;
     this._manager = options.manager;
     this._modelFactory = options.modelFactory;
@@ -26,10 +24,9 @@ export class MimeRenderer extends Widget implements IRenderMime.IRenderer {
 
   dispose(): void {
     this._jcadWidget.context.dispose();
-    super.dispose()
+    super.dispose();
   }
-  renderModel(model: IRenderMime.IMimeModel): Promise<void> {
-    const path = model.data[this._mimeType] as string;
+  renderModel(path: string): Promise<void> {
     const context = new Context({
       manager: this._manager,
       path,
@@ -57,7 +54,6 @@ export class MimeRenderer extends Widget implements IRenderMime.IRenderer {
       );
     }
   };
-  private _mimeType: string;
   private _jcadWidget: JupyterCadWidget;
   private _manager: ServiceManager.IManager;
   private _docProviderFactory: IDocumentProviderFactory;
