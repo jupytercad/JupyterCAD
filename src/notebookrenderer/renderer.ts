@@ -24,6 +24,10 @@ export class MimeRenderer extends Widget implements IRenderMime.IRenderer {
     this.addClass(CLASS_NAME);
   }
 
+  dispose(): void {
+    this._jcadWidget.context.dispose();
+    super.dispose()
+  }
   renderModel(model: IRenderMime.IMimeModel): Promise<void> {
     const path = model.data[this._mimeType] as string;
     const context = new Context({
