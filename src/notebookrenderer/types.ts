@@ -1,13 +1,8 @@
-import { IDocumentProviderFactory } from '@jupyterlab/docprovider';
-import { DocumentRegistry } from '@jupyterlab/docregistry';
-import { ServiceManager } from '@jupyterlab/services';
+import { IDict } from '../types';
 
-import { IJupyterCadModel } from '../types';
+export type IWidgetMessageAction = 'add_object' | 'remove_object';
 
-export const CLASS_NAME = 'mimerenderer-jupytercad';
-
-export interface INotebookRendererOptions {
-  manager: ServiceManager.IManager;
-  docProviderFactory: IDocumentProviderFactory;
-  modelFactory: DocumentRegistry.IModelFactory<IJupyterCadModel>;
+export interface IWidgetMessage {
+  action: IWidgetMessageAction;
+  payload: IDict;
 }
