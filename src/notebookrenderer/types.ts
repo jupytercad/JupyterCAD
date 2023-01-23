@@ -1,6 +1,6 @@
 import { IDict } from '../types';
 
-export type IWidgetMessageAction = 'add_object' | 'remove_object';
+export type IWidgetMessageAction = 'connect_room' | 'disconnect_room';
 
 export interface IWidgetMessage {
   action: IWidgetMessageAction;

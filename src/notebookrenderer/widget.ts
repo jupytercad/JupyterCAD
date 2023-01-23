@@ -82,7 +82,7 @@ export class JupyterCadWidgetModel extends DOMWidgetModel {
 }
 
 export class JupyterCadWidgetView extends DOMWidgetView {
-  processLuminoMessage(msg: Message) {
+  processLuminoMessage(msg: Message): void {
     switch (msg.type) {
       case 'resize': {
         if (this._view) {
@@ -108,14 +108,12 @@ export class JupyterCadWidgetView extends DOMWidgetView {
         docProviderFactory: JupyterCadWidgetModel.docProviderFactory,
         docModelFactory: modelFactory
       });
-      model.messageReceived.connect((_, msg) =>
-        notebookWidgetModel.handleMessage(msg)
-      );
+
       notebookWidgetModel.messageSent.connect((_, msg) => this.send(msg));
       this._notebookWidgetModel = notebookWidgetModel;
     }
   }
-  async render() {
+  async render(): Promise<void> {
     super.render();
     if (this._notebookWidgetModel) {
       this._view = new NotebookRenderer({ model: this._notebookWidgetModel });

@@ -1,37 +1,46 @@
-from typing import Dict, List
-
-
-from ipywidgets import DOMWidget
-from traitlets import Unicode
-
+from typing import Callable, Optional
+from .cad_widget import CadWidget
+from .utils import normalize_path
 from .objects import BaseObject
+import os
+import y_py as Y
 
-from .utils import MESSAGE_ACTION
-from ._frontend import module_name, module_version
 
+class CadDocument:
+    def __init__(self, path: str) -> None:
+        self._path = path
+        self._widget = CadWidget(normalize_path(os.getcwd(), self._path))
+        self._objects: Optional[Y.YArray] = None
 
-class CadDocument(DOMWidget):
+    @property
+    def ydoc(self):
+        return self._widget.ydoc
 
-    _model_name = Unicode('JupyterCadWidgetModel').tag(sync=True)
-    _model_module = Unicode(module_name).tag(sync=True)
-    _model_module_version = Unicode(module_version).tag(sync=True)
-    _view_name = Unicode('JupyterCadWidgetView').tag(sync=True)
-    _view_module = Unicode(module_name).tag(sync=True)
-    _view_module_version = Unicode(module_version).tag(sync=True)
+    @property
+    def objects(self) -> Optional[Y.YArray]:
+        if self._objects:
+            return self._objects
+        objects = self._widget.ydoc.get_array('objects')
+        if objects:
+            self._objects = objects
 
-    path = Unicode(None, allow_none=True).tag(sync=True)
+        return objects
 
-    def __init__(self, path: str, **kwargs) -> None:
-        super().__init__(**kwargs)
-        self.path = path
-        self.on_msg(self._handle_frontend_msg)
+    def add_object(self, new_object: BaseObject):
+        if self.objects and not self.check_exist(new_object.name):
+            new_map = Y.YMap(new_object.to_dict())
+            with self.ydoc.begin_transaction() as t:
+                self.objects.append(t, new_map)
 
-    def _handle_frontend_msg(
-        self, model: 'CadDocument', msg: Dict, buffer: List
+    def check_exist(self, name: str) -> bool:
+        if self.objects:
+            all_objects = [x['name'] for x in self.objects]
+            return name in all_objects
+        return False
+
+    def _ipython_display_(
+        self,
     ) -> None:
-        pass
+        from IPython.display import display
 
-    def add_object(self, object: BaseObject):
-        self.send(
-            {'action': MESSAGE_ACTION.ADD_OBJECT, 'payload': object.to_dict()}
-        )
+        display(self._widget)

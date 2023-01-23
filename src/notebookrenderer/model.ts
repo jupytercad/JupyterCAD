@@ -1,7 +1,7 @@
 import { IDisposable } from '@lumino/disposable';
 import { IDocumentProviderFactory } from '@jupyterlab/docprovider';
 import { Context, DocumentRegistry } from '@jupyterlab/docregistry';
-import { ServiceManager } from '@jupyterlab/services';
+import { ServerConnection, ServiceManager } from '@jupyterlab/services';
 import { IJupyterCadModel } from '../types';
 import { IWidgetMessage } from './types';
 import { ISignal, Signal } from '@lumino/signaling';
@@ -27,10 +27,13 @@ export class NotebookWidgetModel implements IDisposable {
       return;
     }
     this._context?.dispose();
+    this.sendMsg({ action: 'disconnect_room', payload: {} });
     this._isDisposed = true;
   }
 
-  async createContext(): Promise<DocumentRegistry.IContext<IJupyterCadModel>> {
+  async createContext(): Promise<
+    DocumentRegistry.IContext<IJupyterCadModel> | undefined
+  > {
     if (this._context) {
       return this._context;
     }
@@ -41,30 +44,14 @@ export class NotebookWidgetModel implements IDisposable {
       docProviderFactory: this._docProviderFactory
     });
     await this._context.initialize(false);
-    const model = this._context.model;
-    model.sharedObjectsChanged.connect(() => {
-      // this.sendMsg({action:'updateAllObjects', payload: model.getAllObject()})
+    const serverSettings = ServerConnection.makeSettings();
+    const { appUrl, baseUrl, token, wsUrl } = serverSettings;
+
+    this.sendMsg({
+      action: 'connect_room',
+      payload: { appUrl, baseUrl, token, wsUrl }
     });
     return this._context;
-  }
-
-  handleMessage(msg: IWidgetMessage): void {
-    const { action, payload } = msg;
-    switch (action) {
-      case 'add_object':
-        this._context?.model.sharedModel.addObject({
-          name: 'name',
-          visible: true,
-          shape: 'Part::Box',
-          parameters: payload
-        });
-        break;
-      case 'remove_object':
-        break;
-
-      default:
-        break;
-    }
   }
 
   protected sendMsg(msg: IWidgetMessage): void {

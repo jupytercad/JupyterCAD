@@ -27,7 +27,9 @@ export class NotebookRenderer extends Widget {
   }
   async renderModel(): Promise<void> {
     const context = await this._model.createContext();
-
+    if (!context) {
+      return;
+    }
     const content = new JupyterCadPanel(context);
     const toolbar = new ToolbarWidget({
       model: new ToolbarModel({ panel: content, context })
