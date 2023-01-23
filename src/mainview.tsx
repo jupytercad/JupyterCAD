@@ -651,6 +651,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _selectObject(name: string): void {
     const selected = this._meshGroup?.getObjectByName(name);
+
     if (selected) {
       this._selectedMesh = selected as THREE.Mesh<
         THREE.BufferGeometry,
@@ -677,6 +678,7 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     this._selectedMesh.material.color = originalColor;
+    this._selectedMesh = null;
   }
 
   private _onSharedMetadataChanged = (
@@ -724,13 +726,12 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       // Sync selected
-      // Deselect old selection
-      this._deselectObject();
-      // select new object
-      if (remoteState.selected.value) {
-        this._selectObject(remoteState.selected.value);
-      } else {
-        this._selectedMesh = null;
+      if (remoteState.selected.value !== this._selectedMesh?.name) {
+        this._deselectObject();
+
+        if (remoteState.selected.value) {
+          this._selectObject(remoteState.selected.value);
+        }
       }
 
       // Sync camera
@@ -758,15 +759,15 @@ export class MainView extends React.Component<IProps, IStates> {
         }
       }
 
-      // Sync local selection
+      // Sync local selection if needed
       const localState = this._model.localState;
-      // Deselect old selection
-      this._deselectObject();
-      if (localState?.selected?.value) {
-        // select new object
-        this._selectObject(localState.selected.value);
-      } else {
-        this._selectedMesh = null;
+
+      if (localState?.selected?.value !== this._selectedMesh?.name) {
+        this._deselectObject();
+
+        if (localState?.selected?.value) {
+          this._selectObject(localState.selected.value);
+        }
       }
     }
 
