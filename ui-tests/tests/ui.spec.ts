@@ -216,6 +216,13 @@ test.describe('UI Test', () => {
       await page.getByLabel('Height*').fill('32');
       await page.getByRole('button', { name: 'Submit' }).click();
 
+      // Deselect object for the screenshot
+      await page
+        .locator('[data-test-id="react-tree-root"]')
+        .getByText('Shape')
+        .click();
+
+      // Hide side bars for the screenshot
       await page
         .getByRole('tablist', { name: 'main sidebar' })
         .getByRole('tab', { name: 'JupyterCad Control Panel' })

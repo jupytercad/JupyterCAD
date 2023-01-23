@@ -207,32 +207,31 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     sender: IJupyterCadModel,
     clients: Map<number, IJupyterCadClientState>
   ): void => {
-    const targetId: number | null = null;
-    const clientId = this.state.clientId;
-    if (targetId) {
-      //TODO Fix selection logic.
-    } else {
-      // Update from other components of current client
-      const localState = clientId ? clients.get(clientId) : null;
-      if (localState) {
-        if (
-          localState.selected?.emitter &&
-          localState.selected.emitter !== this.state.id &&
-          localState.selected.value
-        ) {
-          const selectedNode = localState.selected.value;
-
-          const openNodes = [...this.state.openNodes];
-          const index = openNodes.indexOf(selectedNode);
-
-          if (index === -1) {
-            openNodes.push(selectedNode);
-          }
-
-          this.setState(old => ({ ...old, selectedNode, openNodes }));
-        }
-      }
+    const localState = this.props.cpModel.jcadModel?.localState;
+    if (!localState) {
+      return;
     }
+
+    let selectedNode: string | null = null;
+    if (localState.remoteUser) {
+      // We are in following mode.
+      // Sync selections from a remote user
+      const remoteState = clients.get(localState.remoteUser);
+
+      if (remoteState?.selected?.value) {
+        selectedNode = remoteState?.selected?.value;
+      }
+    } else if (localState.selected.value) {
+      selectedNode = localState.selected.value;
+    }
+
+    const openNodes = [...this.state.openNodes];
+
+    if (selectedNode && openNodes.indexOf(selectedNode) === -1) {
+      openNodes.push(selectedNode);
+    }
+
+    this.setState(old => ({ ...old, openNodes, selectedNode }));
   };
 
   private _onClientSharedOptionsChanged = (
@@ -245,6 +244,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   render(): React.ReactNode {
     const { selectedNode, openNodes, options } = this.state;
     const data = this.stateToTree();
+
     let selectedNodes: (number | string)[] = [];
     if (selectedNode) {
       const parentNode = data.filter(node => node.id === selectedNode);
