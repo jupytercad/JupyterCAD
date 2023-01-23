@@ -4,6 +4,7 @@ import { FormDialog } from './formdialog';
 import { ToolbarModel } from './model';
 import { OperatorToolbarReact } from './operatortoolbar';
 import { PartToolbarReact } from './parttoolbar';
+import { SketcherToolbarReact } from './sketchertoolbar';
 import { UserToolbarReact } from './usertoolbar';
 import { HelpersToolbarReact } from './helpertoolbar';
 
@@ -12,7 +13,7 @@ interface IProps {
 }
 
 interface IState {
-  selected: 'PART' | 'OPERATOR' | 'DISPLAY';
+  selected: 'PART' | 'OPERATOR' | 'DISPLAY' | 'SKETCHER';
 }
 export class ToolbarReact extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -112,11 +113,14 @@ export class ToolbarReact extends React.Component<IProps, IState> {
         {this.state.selected === 'DISPLAY' && (
           <HelpersToolbarReact toolbarModel={this.props.toolbarModel} />
         )}
+        {this.state.selected === 'SKETCHER' && (
+          <SketcherToolbarReact toolbarModel={this.props.toolbarModel} />
+        )}
         <UserToolbarReact toolbarModel={this.props.toolbarModel} />
       </div>
     );
   }
 
   private _lastForm?: { dialog: FormDialog; title: string };
-  private _toolbarOption = ['PART', 'OPERATOR', 'DISPLAY'];
+  private _toolbarOption = ['PART', 'OPERATOR', 'DISPLAY', 'SKETCHER'];
 }

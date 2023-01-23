@@ -477,7 +477,7 @@ export class MainView extends React.Component<IProps, IStates> {
       const triangles: Array<any> = [];
 
       let vInd = 0;
-      if (faceList.length === 0) {
+      if (faceList.length === 0 && edgeList.length === 0) {
         return;
       }
       faceList.forEach(face => {
@@ -533,7 +533,9 @@ export class MainView extends React.Component<IProps, IStates> {
         'normal',
         new THREE.Float32BufferAttribute(normals, 3)
       );
-      geometry.computeBoundsTree();
+      if (vertices.length > 0) {
+        geometry.computeBoundsTree();
+      }
 
       const mesh = new THREE.Mesh(geometry, material);
       mesh.castShadow = true;

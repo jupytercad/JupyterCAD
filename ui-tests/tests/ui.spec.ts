@@ -13,6 +13,7 @@ test.describe('UI Test', () => {
   });
 
   const fileList = [
+    'example_2D.FCStd',
     'example1.FCStd',
     'example2.FCStd',
     'example3.FCStd',

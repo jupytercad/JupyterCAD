@@ -9,9 +9,9 @@ class App_PropertyAngle(BaseProp):
         return 'App::PropertyAngle'
 
     @staticmethod
-    def fc_to_jcad(prop_value: Any, jcad_file=None, fc_file=None) -> Any:
+    def fc_to_jcad(prop_value: Any, **kwargs) -> Any:
         return prop_value.getValueAs('deg').Value
 
     @staticmethod
-    def jcad_to_fc(prop_value: float, jcad_file=None, fc_file=None) -> Any:
+    def jcad_to_fc(prop_value: float, **kwargs) -> Any:
         return prop_value

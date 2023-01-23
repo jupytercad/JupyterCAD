@@ -111,7 +111,7 @@ export class HelpersToolbarReact extends React.Component<IProps, IState> {
                 await dialog.launch();
               }}
             >
-              {key}
+              {key.toLocaleUpperCase()}
             </Button>
           );
         })}

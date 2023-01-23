@@ -31,7 +31,8 @@
         "Part::Torus",
         "Part::Cut",
         "Part::MultiFuse",
-        "Part::MultiCommon"
+        "Part::MultiCommon",
+        "Sketcher::SketchObject"
       ]
     },
     "jcadObject": {

@@ -119,3 +119,5 @@ src/_interface/
 # Integration tests
 ui-tests/test-results/
 ui-tests/playwright-report/
+
+examples/*.ipynb

@@ -1,8 +1,11 @@
 mainBuild:
   name: jupytercad.opencascade.js
   bindings:
+    - symbol: Adaptor2d_Curve2d
+    - symbol: Adaptor3d_Curve
     - symbol: BRep_Builder
     - symbol: BRep_Tool
+    - symbol: BRepAdaptor_Curve
     - symbol: BRepAlgoAPI_Algo
     - symbol: BRepAlgoAPI_BooleanOperation
     - symbol: BRepAlgoAPI_BuilderAlgo
@@ -10,7 +13,9 @@ mainBuild:
     - symbol: BRepAlgoAPI_Cut
     - symbol: BRepAlgoAPI_Fuse
     - symbol: BRepBuilderAPI_Command
+    - symbol: BRepBuilderAPI_MakeEdge
     - symbol: BRepBuilderAPI_MakeShape
+    - symbol: BRepBuilderAPI_MakeWire
     - symbol: BRepMesh_DiscretRoot
     - symbol: BRepMesh_IncrementalMesh
     - symbol: BRepPrimAPI_MakeBox
@@ -20,11 +25,27 @@ mainBuild:
     - symbol: BRepPrimAPI_MakeSphere
     - symbol: BRepPrimAPI_MakeTorus
     - symbol: BRepTools
+    - symbol: GC_MakeCircle
+    - symbol: GC_MakeSegment
+    - symbol: GC_Root
+    - symbol: GCPnts_TangentialDeflection
+    - symbol: Geom_Circle
+    - symbol: Geom_Conic
+    - symbol: Geom_Curve
+    - symbol: Geom_Geometry
+    - symbol: Geom_TrimmedCurve
     - symbol: gp_Ax1
+    - symbol: gp_Ax2
+    - symbol: gp_Circ
     - symbol: gp_Dir
+    - symbol: gp_Lin
     - symbol: gp_Pnt
     - symbol: gp_Trsf
     - symbol: gp_Vec
+    - symbol: gp_XYZ
+    - symbol: Handle_Geom_Circle
+    - symbol: Handle_Geom_Curve
+    - symbol: Handle_Geom_TrimmedCurve
     - symbol: Handle_Poly_Polygon3D
     - symbol: Handle_Poly_PolygonOnTriangulation
     - symbol: Handle_Poly_Triangulation
@@ -48,9 +69,11 @@ mainBuild:
     - symbol: TopLoc_Location
     - symbol: TopoDS
     - symbol: TopoDS_Builder
+    - symbol: TopoDS_Compound
     - symbol: TopoDS_Edge
     - symbol: TopoDS_Face
     - symbol: TopoDS_Shape
+    - symbol: TopoDS_Wire
     - symbol: TopTools_IndexedDataMapOfShapeListOfShape
     - symbol: TopTools_IndexedMapOfShape
     - symbol: TopTools_ListOfShape

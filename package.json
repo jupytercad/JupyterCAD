@@ -75,7 +75,7 @@
         "@types/d3-color": "^3.1.0",
         "@types/three": "^0.134.0",
         "d3-color": "^3.1.0",
-        "jupytercad-opencascade": "^0.1.0",
+        "jupytercad-opencascade": "^0.1.1-alpha.1",
         "styled-components": "^5.3.6",
         "three": "^0.135.0",
         "three-mesh-bvh": "^0.5.17",

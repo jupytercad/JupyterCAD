@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "include": [
     "src/worker/*.*",
+    "src/worker/geometry/*.*",
     "src/types.ts",
     "src/token.ts",
     "src/_interface/*.*"

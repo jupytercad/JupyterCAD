@@ -147,7 +147,7 @@ export class OperatorToolbarReact extends React.Component<IProps> {
         {Object.entries(this._defaultData).map(([key, value]) => (
           <Button
             key={key}
-            className={'jp-ToolbarButtonComponent'}
+            className={'jp-Button jp-mod-minimal jp-ToolbarButtonComponent'}
             style={{ color: 'var(--jp-ui-font-color1)' }}
             onClick={async () => {
               const dialog = new FormDialog({

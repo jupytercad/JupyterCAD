@@ -205,7 +205,6 @@ function buildModel(
     if (!shape || !parameters) {
       return;
     }
-
     if (ShapesFactory[shape]) {
       const occShape = ShapesFactory[shape](parameters as IOperatorArg, model);
       if (occShape) {
