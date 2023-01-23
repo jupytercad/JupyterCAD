@@ -38,7 +38,7 @@ jobs:
           pr: ${{github.event.issue.number}}
           workflow: "build.yml"
           workflow_conclusion: ""
-          name: myextension-whl
+          name: extension-artifacts
 
       - name: Setup mamba
         uses: conda-incubator/setup-miniconda@v2
@@ -54,7 +54,7 @@ jobs:
         shell: bash -l {0}
         run: |
           whereis python
-          python -m pip install --find-links=. jupytercad
+          python -m pip install jupytercad*.whl
           python -m pip install "jupyterlab>=4.0.0a32"
 
       - name: Install dependencies
