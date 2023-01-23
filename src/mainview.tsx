@@ -468,6 +468,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
     const guidata = this._model.sharedModel.getOption('guidata');
 
+    const boundingGroup = new THREE.Box3();
+
     this._meshGroup = new THREE.Group();
     Object.entries(payload).forEach(([objName, data]) => {
       const { faceList, edgeList } = data;
@@ -542,6 +544,10 @@ export class MainView extends React.Component<IProps, IStates> {
       mesh.name = objName;
       mesh.visible = visible;
 
+      if (visible) {
+        boundingGroup.expandByObject(mesh);
+      }
+
       if (this._selectedMesh?.name === objName) {
         this._selectedMesh = mesh;
         mesh.material.color = SELECTED_MESH_COLOR;
@@ -567,9 +573,6 @@ export class MainView extends React.Component<IProps, IStates> {
         this._meshGroup.add(mesh);
       }
     });
-
-    const boundingGroup = new THREE.Box3();
-    boundingGroup.setFromObject(this._meshGroup);
 
     // Update the reflength
     if (this._refLength === null && this._meshGroup.children.length) {
