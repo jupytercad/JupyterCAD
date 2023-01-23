@@ -208,30 +208,35 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     clients: Map<number, IJupyterCadClientState>
   ): void => {
     const localState = this.props.cpModel.jcadModel?.localState;
+
     if (!localState) {
       return;
     }
 
-    let selectedNode: string | null = null;
+    const { selectedNode } = this.state;
+
+    let newSelectedNode: string | null = null;
     if (localState.remoteUser) {
       // We are in following mode.
       // Sync selections from a remote user
       const remoteState = clients.get(localState.remoteUser);
 
       if (remoteState?.selected?.value) {
-        selectedNode = remoteState?.selected?.value;
+        newSelectedNode = remoteState?.selected?.value;
       }
     } else if (localState.selected.value) {
-      selectedNode = localState.selected.value;
+      newSelectedNode = localState.selected.value;
     }
 
-    const openNodes = [...this.state.openNodes];
+    if (selectedNode !== newSelectedNode) {
+      const openNodes = [...this.state.openNodes];
 
-    if (selectedNode && openNodes.indexOf(selectedNode) === -1) {
-      openNodes.push(selectedNode);
+      if (newSelectedNode && openNodes.indexOf(newSelectedNode) === -1) {
+        openNodes.push(newSelectedNode);
+      }
+
+      this.setState(old => ({ ...old, openNodes, selectedNode }));
     }
-
-    this.setState(old => ({ ...old, openNodes, selectedNode }));
   };
 
   private _onClientSharedOptionsChanged = (
