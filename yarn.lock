@@ -4346,10 +4346,10 @@ jsprim@^1.2.2:
     json-schema "0.4.0"
     verror "1.10.0"
 
-jupytercad-opencascade@^0.1.1-alpha.1:
-  version "0.1.1-alpha.1"
-  resolved "https://registry.yarnpkg.com/jupytercad-opencascade/-/jupytercad-opencascade-0.1.1-alpha.1.tgz#9835e120dfacd1240632a23f03825389e43be227"
-  integrity sha512-KLCMyLST6EXeoIVlK9Eqt3i2ssQ+3Zd6xXp0nOOEBNB9sOiL9zVaxl9J+2nDPqGKyro/p++LvaYhtBcRvtvM1A==
+jupytercad-opencascade@^0.1.1-alpha.2:
+  version "0.1.1-alpha.2"
+  resolved "https://registry.yarnpkg.com/jupytercad-opencascade/-/jupytercad-opencascade-0.1.1-alpha.2.tgz#3762fc5889ef3b13e5d29696a63146f5298ee7a1"
+  integrity sha512-Q7yGXmITeoEeLfuOEb3yeX4ZH3UcWiz0CA8/jKmfKKjz39l0TZRfTlaaQEpjnlAKKKPXJNKfpezNGKe2TfIjZQ==
 
 jwa@^1.4.1:
   version "1.4.1"
