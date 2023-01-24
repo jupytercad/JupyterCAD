@@ -69,6 +69,25 @@ interface IPickedResult {
   position: THREE.Vector3;
 }
 
+function throttle<T extends (...args: any[]) => void>(callback: T, delay: number): T {
+  let last: number;
+  let timer: number;
+  return function (...args: any[]) {
+    let now = +new Date();
+    if (last && now < last + delay) {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        last = now;
+        callback(...args);
+      }, delay);
+    } else {
+      last = now;
+      callback(...args);
+    }
+  } as T;
+}
+
+
 export class MainView extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
@@ -227,6 +246,13 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.setSize(500, 500, false);
       this.divRef.current.appendChild(this._renderer.domElement); // mount using React ref
 
+      this._syncPointer = throttle((position: THREE.Vector3 | undefined) => {
+        if (position) {
+          this._model.syncPointer(position);
+        } else {
+          this._model.syncPointer(undefined);
+        }
+      }, 100);
       this._renderer.domElement.addEventListener(
         'pointermove',
         this._onPointerMove.bind(this)
@@ -259,7 +285,7 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       this._controls = controls;
 
-      this._controls.addEventListener('change', () => {
+      this._controls.addEventListener('change', throttle(() => {
         this._updateAnnotation({ updatePosition: true });
 
         // Not syncing camera state if following someone else
@@ -275,7 +301,7 @@ export class MainView extends React.Component<IProps, IStates> {
           },
           this.state.id
         );
-      });
+      }, 100));
     }
   };
 
@@ -409,11 +435,15 @@ export class MainView extends React.Component<IProps, IStates> {
     this._pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
     const picked = this._pick();
-    if (picked) {
-      this._model.syncPointer(picked.position);
-    } else {
-      this._model.syncPointer(undefined);
+
+    // Update our 3D pointer locally so there is no visual latency in the local pointer movement
+    const localPointer = this._collaboratorPointers[this._model.getClientId()];
+    if (localPointer && picked) {
+      localPointer.position.copy(picked.position);
     }
+
+    // Throttle the syncing of the pointer position with other clients
+    this._syncPointer(picked?.position);
   }
 
   private _onClick(e: MouseEvent) {
@@ -650,6 +680,10 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   private _selectObject(name: string): void {
+    if (name === this._selectedMesh?.name) {
+      return;
+    }
+
     const selected = this._meshGroup?.getObjectByName(name);
 
     if (selected) {
@@ -934,6 +968,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _messageChannel?: MessageChannel;
 
   private _pointer: THREE.Vector2;
+  private _syncPointer: (position: THREE.Vector3 | undefined) => void;
   private _selectedMesh: THREE.Mesh<
     THREE.BufferGeometry,
     THREE.MeshBasicMaterial
