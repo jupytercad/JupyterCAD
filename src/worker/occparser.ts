@@ -129,6 +129,7 @@ export class OccParser {
       const myT = oc.BRep_Tool.Triangulation(face, aLocation);
       if (myT.IsNull()) {
         console.error('Encountered Null Face!');
+        expl.Next();
         continue;
       }
       const thisFace: IFace = {

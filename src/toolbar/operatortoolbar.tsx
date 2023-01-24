@@ -74,7 +74,42 @@ export class OperatorToolbarReact extends React.Component<IProps> {
           }
         }
       },
-      FUSE: {
+      EXTRUSION: {
+        title: 'Extrusion parameters',
+        shape: 'Part::Extrusion',
+        schema: this._schema['Part::Extrusion'],
+        default: {
+          Base: [''],
+          Dir: [0, 0, 1],
+          LengthFwd: 10,
+          LengthRev: 0,
+          Solid: false,
+          Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+        },
+        syncData: (props: IDict) => {
+          const { Name, ...parameters } = props;
+          const objectModel: IJCadObject = {
+            shape: 'Part::Extrusion',
+            parameters,
+            visible: true,
+            name: Name
+          };
+          const model = this.props.toolbarModel.sharedModel;
+          if (model) {
+            model.transact(() => {
+              if (!model.objectExists(objectModel.name)) {
+                model.addObject(objectModel);
+              } else {
+                showErrorMessage(
+                  'The object already exists',
+                  'There is an existing object with the same name.'
+                );
+              }
+            });
+          }
+        }
+      },
+      FUSION: {
         title: 'Fuse parameters',
         shape: 'Part::MultiFuse',
         schema: this._schema['Part::MultiFuse'],

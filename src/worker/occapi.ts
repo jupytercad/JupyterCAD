@@ -15,6 +15,7 @@ import { v4 as uuid } from 'uuid';
 import { ISketchObject } from '../_interface/sketch';
 import { _GeomCircle } from './geometry/geomCircle';
 import { _GeomLine } from './geometry/geomLineSegment';
+import { IExtrusion } from '../_interface/extrusion';
 
 const SHAPE_CACHE = new Map<string, TopoDS_Shape>();
 export function operatorCache<T>(
@@ -238,6 +239,70 @@ export function _SketchObject(
   return compound;
 }
 
+function _Extrude(
+  arg: IExtrusion,
+  content: IJCadContent
+): TopoDS_Shape | undefined {
+  const { Base, Dir, LengthFwd, LengthRev, Placement, Solid } = arg;
+  const oc = getOcc();
+  const baseObject = content.objects.filter(obj => obj.name === Base);
+
+  if (baseObject.length === 0) {
+    return;
+  }
+  const baseShape = baseObject[0].shape;
+
+  if (baseShape && ShapesFactory[baseShape]) {
+    const base = ShapesFactory[baseShape](
+      baseObject[0].parameters as IOperatorArg,
+      content
+    );
+    if (!base) {
+      return;
+    }
+    const dirVec = new oc.gp_Vec_4(Dir[0], Dir[1], Dir[2]);
+    const vec = dirVec.Multiplied(LengthFwd + LengthRev);
+    let baseCopy = new oc.BRepBuilderAPI_Copy_2(base, true, false).Shape();
+    if (LengthRev !== 0) {
+      const mov = new oc.gp_Trsf_1();
+      mov.SetTranslation_1(dirVec.Multiplied(-LengthRev));
+      const loc = new oc.TopLoc_Location_2(mov);
+      baseCopy.Move(loc);
+    }
+
+    if (Solid) {
+      const xp = new oc.TopExp_Explorer_2(
+        baseCopy,
+        oc.TopAbs_ShapeEnum.TopAbs_FACE as any,
+        oc.TopAbs_ShapeEnum.TopAbs_SHAPE as any
+      );
+      if (xp.More()) {
+        //source shape has faces. Just extrude as-is.
+      } else {
+        const wireEx = new oc.TopExp_Explorer_2(
+          baseCopy,
+          oc.TopAbs_ShapeEnum.TopAbs_EDGE as any,
+          oc.TopAbs_ShapeEnum.TopAbs_SHAPE as any
+        );
+        const wireMaker = new oc.BRepBuilderAPI_MakeWire_1();
+        while (wireEx.More()) {
+          const ed = oc.TopoDS.Edge_1(wireEx.Current());
+          wireMaker.Add_1(ed);
+          wireEx.Next();
+        }
+
+        const wire = wireMaker.Wire();
+        const faceMaker = new oc.BRepBuilderAPI_MakeFace_15(wire, false);
+        baseCopy = faceMaker.Face();
+      }
+    }
+    const result = new oc.BRepPrimAPI_MakePrism_1(baseCopy, vec, false, true);
+    return setShapePlacement(result.Shape(), Placement);
+  }
+
+  return;
+}
+
 export function _loadBrep(arg: { content: string }): TopoDS_Shape | undefined {
   const oc = getOcc();
   const fakeFileName = `${uuid()}.brep`;
@@ -255,6 +320,10 @@ const Cylinder = operatorCache<ICylinder>('Cylinder', _Cylinder);
 const Sphere = operatorCache<ISphere>('Sphere', _Sphere);
 const Cone = operatorCache<ICone>('Cone', _Cone);
 const Torus = operatorCache<ITorus>('Torus', _Torus);
+const SketchObject = operatorCache<ISketchObject>(
+  'SketchObject',
+  _SketchObject
+);
 
 export const BrepFile = operatorCache<{ content: string }>(
   'BrepFile',
@@ -270,6 +339,7 @@ export const ShapesFactory: {
   'Part::Torus': Torus,
   'Part::Cut': _Cut,
   'Part::MultiFuse': _Fuse,
+  'Part::Extrusion': _Extrude,
   'Part::MultiCommon': _Intersection,
-  'Sketcher::SketchObject': _SketchObject
+  'Sketcher::SketchObject': SketchObject
 };

@@ -32,6 +32,7 @@
         "Part::Cut",
         "Part::MultiFuse",
         "Part::MultiCommon",
+        "Part::Extrusion",
         "Sketcher::SketchObject"
       ]
     },
