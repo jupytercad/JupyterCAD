@@ -1,6 +1,6 @@
 {
   "name": "jupytercad-opencascade",
-  "version": "0.1.1-alpha.1",
+  "version": "0.1.1-alpha.2",
   "description": "The custom OpenCascade build for JupyterCAD.",
   "keywords": [
     "jupyter",
@@ -25,7 +25,7 @@
   },
   "scripts": {
     "build": "node build_opencascade.js",
-    "clean": "rimraf src/jupytercad.opencascade*"
+    "clean": "rimraf ./lib"
   },
   "dependencies": {},
   "devDependencies": {

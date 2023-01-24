@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "description": "Part::Extrusion",
+  "title": "IExtrusion",
+  "required": ["Base", "Dir", "LengthFwd", "LengthRev", "Solid", "Placement"],
+  "additionalProperties": false,
+  "properties": {
+    "Base": {
+      "type": "string",
+      "description": "Shape to extrude",
+      "fcType": "App::PropertyLink"
+    },
+    "Dir": {
+      "type": "array",
+      "description": "Direction of extrusion",
+      "items": {
+        "type": "number"
+      }
+    },
+    "LengthFwd": {
+      "type": "number",
+      "description": "Length of extrusion along the direction"
+    },
+    "LengthRev": {
+      "type": "number",
+      "description": "Length of extrusion against the direction"
+    },
+    "Solid": {
+      "type": "boolean",
+      "description": "If true, creating a solid"
+    },
+    "Placement": {
+      "$ref": "./placement.json"
+    }
+  }
+}

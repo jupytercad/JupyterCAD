@@ -13,16 +13,22 @@ mainBuild:
     - symbol: BRepAlgoAPI_Cut
     - symbol: BRepAlgoAPI_Fuse
     - symbol: BRepBuilderAPI_Command
+    - symbol: BRepBuilderAPI_Copy
+    - symbol: BRepBuilderAPI_FaceError
     - symbol: BRepBuilderAPI_MakeEdge
+    - symbol: BRepBuilderAPI_MakeFace
     - symbol: BRepBuilderAPI_MakeShape
     - symbol: BRepBuilderAPI_MakeWire
+    - symbol: BRepBuilderAPI_ModifyShape
     - symbol: BRepMesh_DiscretRoot
     - symbol: BRepMesh_IncrementalMesh
     - symbol: BRepPrimAPI_MakeBox
     - symbol: BRepPrimAPI_MakeCone
     - symbol: BRepPrimAPI_MakeCylinder
     - symbol: BRepPrimAPI_MakeOneAxis
+    - symbol: BRepPrimAPI_MakePrism
     - symbol: BRepPrimAPI_MakeSphere
+    - symbol: BRepPrimAPI_MakeSweep
     - symbol: BRepPrimAPI_MakeTorus
     - symbol: BRepTools
     - symbol: GC_MakeCircle
@@ -72,6 +78,7 @@ mainBuild:
     - symbol: TopoDS_Compound
     - symbol: TopoDS_Edge
     - symbol: TopoDS_Face
+    - symbol: TopoDS_Iterator
     - symbol: TopoDS_Shape
     - symbol: TopoDS_Wire
     - symbol: TopTools_IndexedDataMapOfShapeListOfShape
