@@ -2,7 +2,11 @@ import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { User } from '@jupyterlab/services';
 
+import { MapChange } from '@jupyter/ydoc';
+
 import { JSONValue } from '@lumino/coreutils';
+import { ContextMenu } from '@lumino/widgets';
+import { CommandRegistry } from '@lumino/commands';
 
 import * as React from 'react';
 import * as Color from 'd3-color';
@@ -16,6 +20,7 @@ import {
 } from 'three-mesh-bvh';
 
 import { v4 as uuid } from 'uuid';
+
 import {
   AxeHelper,
   IDict,
@@ -29,11 +34,8 @@ import {
   MainAction,
   WorkerAction
 } from './types';
-
-import { ContextMenu } from '@lumino/widgets';
-import { CommandRegistry } from '@lumino/commands';
-import { MapChange } from '@jupyter/ydoc';
 import { FloatingAnnotation } from './annotation/view';
+import { throttle } from './tools';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -68,25 +70,6 @@ interface IPickedResult {
   mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
   position: THREE.Vector3;
 }
-
-function throttle<T extends (...args: any[]) => void>(callback: T, delay: number): T {
-  let last: number;
-  let timer: number;
-  return function (...args: any[]) {
-    let now = +new Date();
-    if (last && now < last + delay) {
-      clearTimeout(timer);
-      timer = setTimeout(function () {
-        last = now;
-        callback(...args);
-      }, delay);
-    } else {
-      last = now;
-      callback(...args);
-    }
-  } as T;
-}
-
 
 export class MainView extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
@@ -285,23 +268,26 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       this._controls = controls;
 
-      this._controls.addEventListener('change', throttle(() => {
-        this._updateAnnotation({ updatePosition: true });
+      this._controls.addEventListener(
+        'change',
+        throttle(() => {
+          this._updateAnnotation({ updatePosition: true });
 
-        // Not syncing camera state if following someone else
-        if (this._model.localState?.remoteUser) {
-          return;
-        }
+          // Not syncing camera state if following someone else
+          if (this._model.localState?.remoteUser) {
+            return;
+          }
 
-        this._model.syncCamera(
-          {
-            position: this._camera.position.toArray([]),
-            rotation: this._camera.rotation.toArray([]),
-            up: this._camera.up.toArray([])
-          },
-          this.state.id
-        );
-      }, 100));
+          this._model.syncCamera(
+            {
+              position: this._camera.position.toArray([]),
+              rotation: this._camera.rotation.toArray([]),
+              up: this._camera.up.toArray([])
+            },
+            this.state.id
+          );
+        }, 100)
+      );
     }
   };
 

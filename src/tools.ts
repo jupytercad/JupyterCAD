@@ -26,6 +26,27 @@ export const debounce = (
   };
 };
 
+export function throttle<T extends (...args: any[]) => void>(
+  callback: T,
+  delay: number
+): T {
+  let last: number;
+  let timer: number;
+  return function (...args: any[]) {
+    const now = +new Date();
+    if (last && now < last + delay) {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        last = now;
+        callback(...args);
+      }, delay);
+    } else {
+      last = now;
+      callback(...args);
+    }
+  } as T;
+}
+
 export function itemFromName<T extends { name: string }>(
   name: string,
   arr: T[]
