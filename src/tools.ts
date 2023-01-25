@@ -28,7 +28,7 @@ export const debounce = (
 
 export function throttle<T extends (...args: any[]) => void>(
   callback: T,
-  delay: number
+  delay = 100
 ): T {
   let last: number;
   let timer: number;
