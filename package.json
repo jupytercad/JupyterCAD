@@ -61,6 +61,8 @@
         "@jupyterlab/collaboration": "~4.0.0-alpha.17",
         "@jupyterlab/coreutils": "~6.0.0-alpha.17",
         "@jupyterlab/docregistry": "~4.0.0-alpha.17",
+        "@jupyterlab/filebrowser": "~4.0.0-alpha.17",
+        "@jupyterlab/launcher": "~4.0.0-alpha.17",
         "@jupyterlab/mainmenu": "~4.0.0-alpha.17",
         "@jupyterlab/observables": "~5.0.0-alpha.17",
         "@jupyterlab/services": "~7.0.0-alpha.17",
