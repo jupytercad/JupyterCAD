@@ -117,7 +117,7 @@ export class HelpersToolbarReact extends React.Component<IProps, IState> {
             factor: Factor
           };
         }
-      },
+      }
     };
   }
 

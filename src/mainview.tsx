@@ -882,6 +882,7 @@ export class MainView extends React.Component<IProps, IStates> {
           const center = new THREE.Vector3();
           this._boundingGroup.getCenter(center);
 
+          this._explodedViewLinesHelperGroup?.removeFromParent();
           this._explodedViewLinesHelperGroup = new THREE.Group();
 
           for (const mesh of this._meshGroup?.children as THREE.Mesh<

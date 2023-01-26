@@ -128,7 +128,7 @@ export type AxeHelper = {
 export type ExplodedView = {
   enabled: boolean;
   factor: number;
-}
+};
 
 export interface IJcadObjectDocChange {
   objectChange?: Array<{

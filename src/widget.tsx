@@ -8,7 +8,12 @@ import { ISignal, Signal } from '@lumino/signaling';
 
 import { MainView } from './mainview';
 import { JupyterCadModel } from './model';
-import { AxeHelper, ExplodedView, IJupyterCadModel, IJupyterCadWidget } from './types';
+import {
+  AxeHelper,
+  ExplodedView,
+  IJupyterCadModel,
+  IJupyterCadWidget
+} from './types';
 import { JSONValue } from '@lumino/coreutils';
 
 export class JupyterCadWidget
