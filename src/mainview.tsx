@@ -481,10 +481,13 @@ export class MainView extends React.Component<IProps, IStates> {
     if (this._meshGroup !== null) {
       this._scene.remove(this._meshGroup);
     }
+    if (this._explodedViewLinesHelperGroup !== null) {
+      this._scene.remove(this._explodedViewLinesHelperGroup);
+    }
 
     const guidata = this._model.sharedModel.getOption('guidata');
 
-    const boundingGroup = new THREE.Box3();
+    this._boundingGroup = new THREE.Box3();
 
     this._meshGroup = new THREE.Group();
     Object.entries(payload).forEach(([objName, data]) => {
@@ -551,6 +554,7 @@ export class MainView extends React.Component<IProps, IStates> {
         'normal',
         new THREE.Float32BufferAttribute(normals, 3)
       );
+      geometry.computeBoundingBox();
       if (vertices.length > 0) {
         geometry.computeBoundsTree();
       }
@@ -561,7 +565,7 @@ export class MainView extends React.Component<IProps, IStates> {
       mesh.visible = visible;
 
       if (visible) {
-        boundingGroup.expandByObject(mesh);
+        this._boundingGroup.expandByObject(mesh);
       }
 
       if (this._selectedMesh?.name === objName) {
@@ -593,7 +597,7 @@ export class MainView extends React.Component<IProps, IStates> {
     // Update the reflength
     if (this._refLength === null && this._meshGroup.children.length) {
       const boxSizeVec = new THREE.Vector3();
-      boundingGroup.getSize(boxSizeVec);
+      this._boundingGroup.getSize(boxSizeVec);
 
       this._refLength =
         Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
@@ -611,6 +615,57 @@ export class MainView extends React.Component<IProps, IStates> {
     // Reset reflength if there are no objects
     if (!this._meshGroup.children.length) {
       this._refLength = null;
+    }
+
+    if (this._explodedView) {
+      const center = new THREE.Vector3();
+      this._boundingGroup.getCenter(center);
+
+      this._explodedViewLinesHelperGroup = new THREE.Group();
+
+      for (const mesh of this._meshGroup.children as THREE.Mesh<
+        THREE.BufferGeometry,
+        THREE.MeshBasicMaterial
+      >[]) {
+        if (!mesh.visible) {
+          continue;
+        }
+
+        const geometryCenter = new THREE.Vector3();
+        mesh.geometry.boundingBox?.getCenter(geometryCenter);
+
+        const centerToMesh = new THREE.Vector3(
+          geometryCenter.x - center.x,
+          geometryCenter.y - center.y,
+          geometryCenter.z - center.z
+        );
+        const distance = centerToMesh.length() * this._explodedViewFactor;
+
+        centerToMesh.normalize();
+
+        mesh.translateOnAxis(centerToMesh, distance);
+
+        const newGeometryCenter = new THREE.Vector3(
+          geometryCenter.x + distance * centerToMesh.x,
+          geometryCenter.y + distance * centerToMesh.y,
+          geometryCenter.z + distance * centerToMesh.z
+        );
+
+        // Draw lines
+        const material = new THREE.LineBasicMaterial({
+          color: 'black',
+          linewidth: 2
+        });
+        const geometry = new THREE.BufferGeometry().setFromPoints([
+          center,
+          newGeometryCenter
+        ]);
+        const line = new THREE.Line(geometry, material);
+
+        this._explodedViewLinesHelperGroup.add(line);
+      }
+
+      this._scene.add(this._explodedViewLinesHelperGroup);
     }
 
     this._scene.add(this._meshGroup);
@@ -961,6 +1016,13 @@ export class MainView extends React.Component<IProps, IStates> {
   > | null = null;
 
   private _meshGroup: THREE.Group | null = null; // The list of ThreeJS meshes
+
+  private _boundingGroup = new THREE.Box3();
+
+  // TODO Make this a shared property
+  private _explodedView = true;
+  private _explodedViewFactor = 0.5;
+  private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
 
   private _scene: THREE.Scene; // Threejs scene
   private _camera: THREE.PerspectiveCamera; // Threejs camera
