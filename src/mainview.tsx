@@ -920,7 +920,7 @@ export class MainView extends React.Component<IProps, IStates> {
               linewidth: 2
             });
             const geometry = new THREE.BufferGeometry().setFromPoints([
-              center,
+              geometryCenter,
               newGeometryCenter
             ]);
             const line = new THREE.Line(geometry, material);
