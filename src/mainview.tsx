@@ -2,7 +2,11 @@ import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { User } from '@jupyterlab/services';
 
+import { MapChange } from '@jupyter/ydoc';
+
 import { JSONValue } from '@lumino/coreutils';
+import { ContextMenu } from '@lumino/widgets';
+import { CommandRegistry } from '@lumino/commands';
 
 import * as React from 'react';
 import * as Color from 'd3-color';
@@ -16,6 +20,7 @@ import {
 } from 'three-mesh-bvh';
 
 import { v4 as uuid } from 'uuid';
+
 import {
   AxeHelper,
   IDict,
@@ -29,11 +34,8 @@ import {
   MainAction,
   WorkerAction
 } from './types';
-
-import { ContextMenu } from '@lumino/widgets';
-import { CommandRegistry } from '@lumino/commands';
-import { MapChange } from '@jupyter/ydoc';
 import { FloatingAnnotation } from './annotation/view';
+import { throttle } from './tools';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -227,6 +229,13 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.setSize(500, 500, false);
       this.divRef.current.appendChild(this._renderer.domElement); // mount using React ref
 
+      this._syncPointer = throttle((position: THREE.Vector3 | undefined) => {
+        if (position) {
+          this._model.syncPointer(position);
+        } else {
+          this._model.syncPointer(undefined);
+        }
+      }, 100);
       this._renderer.domElement.addEventListener(
         'pointermove',
         this._onPointerMove.bind(this)
@@ -259,23 +268,26 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       this._controls = controls;
 
-      this._controls.addEventListener('change', () => {
-        this._updateAnnotation({ updatePosition: true });
+      this._controls.addEventListener(
+        'change',
+        throttle(() => {
+          this._updateAnnotation({ updatePosition: true });
 
-        // Not syncing camera state if following someone else
-        if (this._model.localState?.remoteUser) {
-          return;
-        }
+          // Not syncing camera state if following someone else
+          if (this._model.localState?.remoteUser) {
+            return;
+          }
 
-        this._model.syncCamera(
-          {
-            position: this._camera.position.toArray([]),
-            rotation: this._camera.rotation.toArray([]),
-            up: this._camera.up.toArray([])
-          },
-          this.state.id
-        );
-      });
+          this._model.syncCamera(
+            {
+              position: this._camera.position.toArray([]),
+              rotation: this._camera.rotation.toArray([]),
+              up: this._camera.up.toArray([])
+            },
+            this.state.id
+          );
+        }, 100)
+      );
     }
   };
 
@@ -409,11 +421,15 @@ export class MainView extends React.Component<IProps, IStates> {
     this._pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
     const picked = this._pick();
-    if (picked) {
-      this._model.syncPointer(picked.position);
-    } else {
-      this._model.syncPointer(undefined);
+
+    // Update our 3D pointer locally so there is no visual latency in the local pointer movement
+    const localPointer = this._collaboratorPointers[this._model.getClientId()];
+    if (localPointer && picked) {
+      localPointer.position.copy(picked.position);
     }
+
+    // Throttle the syncing of the pointer position with other clients
+    this._syncPointer(picked?.position);
   }
 
   private _onClick(e: MouseEvent) {
@@ -650,7 +666,12 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   private _selectObject(name: string): void {
+    if (name === this._selectedMesh?.name) {
+      return;
+    }
+
     const selected = this._meshGroup?.getObjectByName(name);
+
     if (selected) {
       this._selectedMesh = selected as THREE.Mesh<
         THREE.BufferGeometry,
@@ -677,6 +698,7 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     this._selectedMesh.material.color = originalColor;
+    this._selectedMesh = null;
   }
 
   private _onSharedMetadataChanged = (
@@ -724,13 +746,12 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       // Sync selected
-      // Deselect old selection
-      this._deselectObject();
-      // select new object
-      if (remoteState.selected.value) {
-        this._selectObject(remoteState.selected.value);
-      } else {
-        this._selectedMesh = null;
+      if (remoteState.selected.value !== this._selectedMesh?.name) {
+        this._deselectObject();
+
+        if (remoteState.selected.value) {
+          this._selectObject(remoteState.selected.value);
+        }
       }
 
       // Sync camera
@@ -758,15 +779,15 @@ export class MainView extends React.Component<IProps, IStates> {
         }
       }
 
-      // Sync local selection
+      // Sync local selection if needed
       const localState = this._model.localState;
-      // Deselect old selection
-      this._deselectObject();
-      if (localState?.selected?.value) {
-        // select new object
-        this._selectObject(localState.selected.value);
-      } else {
-        this._selectedMesh = null;
+
+      if (localState?.selected?.value !== this._selectedMesh?.name) {
+        this._deselectObject();
+
+        if (localState?.selected?.value) {
+          this._selectObject(localState.selected.value);
+        }
       }
     }
 
@@ -933,6 +954,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _messageChannel?: MessageChannel;
 
   private _pointer: THREE.Vector2;
+  private _syncPointer: (position: THREE.Vector3 | undefined) => void;
   private _selectedMesh: THREE.Mesh<
     THREE.BufferGeometry,
     THREE.MeshBasicMaterial
