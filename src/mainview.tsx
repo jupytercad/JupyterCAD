@@ -23,6 +23,7 @@ import { v4 as uuid } from 'uuid';
 
 import {
   AxeHelper,
+  ExplodedView,
   IDict,
   IDisplayShape,
   IJcadObjectDocChange,
@@ -617,57 +618,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._refLength = null;
     }
 
-    if (this._explodedView) {
-      const center = new THREE.Vector3();
-      this._boundingGroup.getCenter(center);
-
-      this._explodedViewLinesHelperGroup = new THREE.Group();
-
-      for (const mesh of this._meshGroup.children as THREE.Mesh<
-        THREE.BufferGeometry,
-        THREE.MeshBasicMaterial
-      >[]) {
-        if (!mesh.visible) {
-          continue;
-        }
-
-        const geometryCenter = new THREE.Vector3();
-        mesh.geometry.boundingBox?.getCenter(geometryCenter);
-
-        const centerToMesh = new THREE.Vector3(
-          geometryCenter.x - center.x,
-          geometryCenter.y - center.y,
-          geometryCenter.z - center.z
-        );
-        const distance = centerToMesh.length() * this._explodedViewFactor;
-
-        centerToMesh.normalize();
-
-        mesh.translateOnAxis(centerToMesh, distance);
-
-        const newGeometryCenter = new THREE.Vector3(
-          geometryCenter.x + distance * centerToMesh.x,
-          geometryCenter.y + distance * centerToMesh.y,
-          geometryCenter.z + distance * centerToMesh.z
-        );
-
-        // Draw lines
-        const material = new THREE.LineBasicMaterial({
-          color: 'black',
-          linewidth: 2
-        });
-        const geometry = new THREE.BufferGeometry().setFromPoints([
-          center,
-          newGeometryCenter
-        ]);
-        const line = new THREE.Line(geometry, material);
-
-        this._explodedViewLinesHelperGroup.add(line);
-      }
-
-      this._scene.add(this._explodedViewLinesHelperGroup);
-    }
-
     this._scene.add(this._meshGroup);
     this.setState(old => ({ ...old, loading: false }));
   };
@@ -923,6 +873,73 @@ export class MainView extends React.Component<IProps, IStates> {
         this._scene.add(this._sceneAxe);
       }
     }
+
+    if (change.key === 'explodedView') {
+      const explodedView = change.newValue as ExplodedView | undefined;
+
+      if (change.type !== 'remove' && explodedView) {
+        if (explodedView.enabled) {
+          const center = new THREE.Vector3();
+          this._boundingGroup.getCenter(center);
+
+          this._explodedViewLinesHelperGroup = new THREE.Group();
+
+          for (const mesh of this._meshGroup?.children as THREE.Mesh<
+            THREE.BufferGeometry,
+            THREE.MeshBasicMaterial
+          >[]) {
+            if (!mesh.visible) {
+              continue;
+            }
+
+            const geometryCenter = new THREE.Vector3();
+            mesh.geometry.boundingBox?.getCenter(geometryCenter);
+
+            const centerToMesh = new THREE.Vector3(
+              geometryCenter.x - center.x,
+              geometryCenter.y - center.y,
+              geometryCenter.z - center.z
+            );
+            const distance = centerToMesh.length() * explodedView.factor;
+
+            centerToMesh.normalize();
+
+            mesh.position.set(0, 0, 0);
+            mesh.translateOnAxis(centerToMesh, distance);
+
+            const newGeometryCenter = new THREE.Vector3(
+              geometryCenter.x + distance * centerToMesh.x,
+              geometryCenter.y + distance * centerToMesh.y,
+              geometryCenter.z + distance * centerToMesh.z
+            );
+
+            // Draw lines
+            const material = new THREE.LineBasicMaterial({
+              color: 'black',
+              linewidth: 2
+            });
+            const geometry = new THREE.BufferGeometry().setFromPoints([
+              center,
+              newGeometryCenter
+            ]);
+            const line = new THREE.Line(geometry, material);
+
+            this._explodedViewLinesHelperGroup.add(line);
+          }
+
+          this._scene.add(this._explodedViewLinesHelperGroup);
+        } else {
+          // Exploded view is disabled, we reset the initial positions
+          for (const mesh of this._meshGroup?.children as THREE.Mesh<
+            THREE.BufferGeometry,
+            THREE.MeshBasicMaterial
+          >[]) {
+            mesh.position.set(0, 0, 0);
+          }
+          this._explodedViewLinesHelperGroup?.removeFromParent();
+        }
+      }
+    }
   }
 
   private _handleThemeChange = (): void => {
@@ -1020,8 +1037,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _boundingGroup = new THREE.Box3();
 
   // TODO Make this a shared property
-  private _explodedView = true;
-  private _explodedViewFactor = 0.5;
+  // private _explodedView = true;
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
 
   private _scene: THREE.Scene; // Threejs scene

@@ -122,6 +122,14 @@ export type AxeHelper = {
   visible: boolean;
 };
 
+/**
+ * The state of the exploded view
+ */
+export type ExplodedView = {
+  enabled: boolean;
+  factor: number;
+}
+
 export interface IJcadObjectDocChange {
   objectChange?: Array<{
     name: string;
