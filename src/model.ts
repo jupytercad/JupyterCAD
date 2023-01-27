@@ -21,7 +21,7 @@ import {
   IJupyterCadDoc,
   IJupyterCadDocChange,
   IJupyterCadModel,
-  PointerPosition
+  Pointer
 } from './types';
 
 export class JupyterCadModel implements IJupyterCadModel {
@@ -145,9 +145,9 @@ export class JupyterCadModel implements IJupyterCadModel {
     return this.sharedModel.objects;
   }
 
-  syncPointer(position?: PointerPosition, emitter?: string): void {
+  syncPointer(pointer?: Pointer, emitter?: string): void {
     this.sharedModel.awareness.setLocalStateField('pointer', {
-      value: position ? [position.x, position.y, position.z] : undefined,
+      value: pointer,
       emitter: emitter
     });
   }

@@ -97,9 +97,10 @@ export interface IWorkerInitialized {
 export type IMainMessage = IDisplayShape | IWorkerInitialized;
 
 /**
- * Position of the user pointer in the 3D environment
+ * User pointer in the 3D environment
  */
-export type PointerPosition = {
+export type Pointer = {
+  parent: string;
   x: number;
   y: number;
   z: number;
@@ -176,7 +177,7 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
 }
 
 export interface IJupyterCadClientState {
-  pointer: { value?: PointerPosition; emitter?: string | null };
+  pointer: { value?: Pointer; emitter?: string | null };
   camera: { value?: Camera; emitter?: string | null };
   selected: { value?: string; emitter?: string | null };
   selectedPropField?: {
@@ -211,7 +212,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;
 
-  syncPointer(position: PointerPosition | undefined, emitter?: string): void;
+  syncPointer(position: Pointer | undefined, emitter?: string): void;
   syncCamera(camera: Camera | undefined, emitter?: string): void;
   syncSelectedObject(name: string | undefined, emitter?: string): void;
   syncSelectedPropField(data: {
