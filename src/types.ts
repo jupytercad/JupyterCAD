@@ -246,6 +246,7 @@ export interface IAnnotation {
   label: string;
   position: [number, number, number];
   contents: IAnnotationContent[];
+  parent: string;
 }
 
 export interface IAnnotationModel {
@@ -261,7 +262,7 @@ export interface IAnnotationModel {
 
   getAnnotationIds(): string[];
 
-  addAnnotation(key: string, value: IDict): void;
+  addAnnotation(key: string, value: IAnnotation): void;
 
   removeAnnotation(key): void;
 

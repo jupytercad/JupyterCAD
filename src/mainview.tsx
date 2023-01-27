@@ -24,6 +24,7 @@ import { v4 as uuid } from 'uuid';
 import {
   AxeHelper,
   ExplodedView,
+  IAnnotation,
   IDict,
   IDisplayShape,
   IJcadObjectDocChange,
@@ -37,6 +38,7 @@ import {
 } from './types';
 import { FloatingAnnotation } from './annotation/view';
 import { throttle } from './tools';
+import { Vector2 } from 'three';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -65,7 +67,7 @@ interface IStates {
   loading: boolean;
   lightTheme: boolean;
   remoteUser?: User.IIdentity | null;
-  annotations: IDict;
+  annotations: IDict<IAnnotation>;
   firstLoad: boolean;
 }
 
@@ -189,22 +191,36 @@ export class MainView extends React.Component<IProps, IStates> {
     const commands = new CommandRegistry();
     commands.addCommand('add-annotation', {
       execute: () => {
-        const currentId = this._model.getClientId();
-        const localPointer = this._collaboratorPointers[currentId];
-        const position = localPointer?.mesh.position;
-        if (position) {
-          this._model.addMetadata(
-            `annotation_${uuid()}`,
-            JSON.stringify({
-              position: [position.x, position.y, position.z],
-              label: 'New annotation',
-              contents: []
-            })
+        if (!this._pointer3D) {
+          return;
+        }
+
+        const position = new THREE.Vector3().copy(
+          this._pointer3D.mesh.position
+        );
+
+        // If in exploded view, we scale down to the initial position (to before exploding the view)
+        if (this._explodedView.enabled) {
+          const explodedState = this._computeExplodedState(
+            this._pointer3D.mesh
+          );
+
+          position.add(
+            explodedState.vector.multiplyScalar(-explodedState.distance)
           );
         }
+
+        this._model.annotationModel.addAnnotation(uuid(), {
+          position: [position.x, position.y, position.z],
+          label: 'New annotation',
+          contents: [],
+          parent: this._pointer3D.parent.name
+        });
       },
       label: 'Add annotation',
-      isEnabled: () => true
+      isEnabled: () => {
+        return !!this._pointer3D;
+      }
     });
     this._contextMenu = new ContextMenu({ commands });
     this._contextMenu.addItem({
@@ -393,16 +409,16 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   };
 
-  private _projectVector = (
-    vector: [number, number, number]
-  ): [number, number] => {
-    const copy = new THREE.Vector3(vector[0], vector[1], vector[2]);
+  private _projectVector = (vector: THREE.Vector3): THREE.Vector2 => {
+    const copy = new THREE.Vector3().copy(vector);
     const canvas = this._renderer.domElement;
+
     copy.project(this._camera);
-    const newCoor: [number, number] = [0, 0];
-    newCoor[0] = (0.5 + copy.x / 2) * canvas.width;
-    newCoor[1] = (0.5 - copy.y / 2) * canvas.height;
-    return newCoor;
+
+    return new Vector2(
+      (0.5 + copy.x / 2) * canvas.width,
+      (0.5 - copy.y / 2) * canvas.height
+    );
   };
 
   private _updateAnnotation = (options: {
@@ -417,14 +433,33 @@ export class MainView extends React.Component<IProps, IStates> {
           (el.style.opacity !== '0' || options.updateDisplay !== undefined)
         ) {
           const annotation = this._model.annotationModel.getAnnotation(key);
-          let newPos: [number, number] | undefined;
-          if (annotation?.position) {
-            newPos = this._projectVector(annotation.position);
-          } else {
-            newPos = [0, 0];
+          let screenPosition = new THREE.Vector2();
+
+          if (annotation) {
+            const parent = this._meshGroup?.getObjectByName(
+              annotation.parent
+            ) as BasicMesh;
+            const position = new THREE.Vector3(
+              annotation.position[0],
+              annotation.position[1],
+              annotation.position[2]
+            );
+
+            // If in exploded view, we explode the annotation position as well
+            if (this._explodedView.enabled && parent) {
+              const explodedState = this._computeExplodedState(parent);
+              const explodeVector = explodedState.vector.multiplyScalar(
+                explodedState.distance
+              );
+
+              position.add(explodeVector);
+            }
+
+            screenPosition = this._projectVector(position);
           }
-          el.style.top = `${newPos[1]}px`;
-          el.style.left = `${newPos[0]}px`;
+
+          el.style.left = `${screenPosition.x}px`;
+          el.style.top = `${screenPosition.y}px`;
         }
         if (options.updateDisplay !== undefined) {
           el.style.opacity = options.updateDisplay.toString();
@@ -461,7 +496,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._pointer3D.parent = picked.mesh;
 
       // If in exploded view, we scale down to the initial position (to before exploding the view)
-      if (this._explodedView) {
+      if (this._explodedView.enabled) {
         const explodedState = this._computeExplodedState(
           this._pointer3D.parent
         );
@@ -1067,22 +1102,43 @@ export class MainView extends React.Component<IProps, IStates> {
             {`Following ${this.state.remoteUser.display_name}`}
           </div>
         ) : null}
-        {Object.entries(this.state.annotations).map(([key, value]) => {
-          const initialPosition = this._projectVector(value.position);
+        {Object.entries(this.state.annotations).map(([key, annotation]) => {
+          const parent = this._meshGroup?.getObjectByName(
+            annotation.parent
+          ) as BasicMesh;
+          const position = new THREE.Vector3(
+            annotation.position[0],
+            annotation.position[1],
+            annotation.position[2]
+          );
+
+          // If in exploded view, we explode the annotation position as well
+          if (this._explodedView.enabled && parent) {
+            const explodedState = this._computeExplodedState(parent);
+            const explodeVector = explodedState.vector.multiplyScalar(
+              explodedState.distance
+            );
+
+            position.add(explodeVector);
+          }
+
+          const screenPosition = this._projectVector(position);
+
           return (
             <div
               key={key}
               id={key}
               style={{
-                left: initialPosition[0],
-                top: initialPosition[1]
+                left: screenPosition.x,
+                top: screenPosition.y
               }}
               className={'jcad-Annotation-Wrapper'}
             >
               <FloatingAnnotation
                 itemId={key}
                 model={this._model.annotationModel}
-                open={value.open}
+                open={false}
+                // open={annotation.open} // TODO: "open" missing from the IAnnotation interface?
               />
             </div>
           );
