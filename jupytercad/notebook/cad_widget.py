@@ -69,7 +69,11 @@ class CadWidget(DOMWidget):
             multi_urljoin(base_ws_url, WS_YROOM_URL, room_name)
             + f'?token={token}'
         )
-        asyncio.create_task(self.__start(ws_url))
+        self.tk = asyncio.create_task(self.__start(ws_url))
+
+    def _handle_task_result(self, task: asyncio.Task) -> None:
+
+        print('ret', task.result())
 
     def __handle_frontend_msg(
         self, model: 'CadWidget', msg: Dict, buffer: List

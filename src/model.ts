@@ -313,7 +313,6 @@ export class JupyterCadDoc
     if (!obj) {
       return;
     }
-
     this.transact(() => obj.set(key, value));
   }
 

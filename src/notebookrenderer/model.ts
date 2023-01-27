@@ -43,7 +43,7 @@ export class NotebookWidgetModel implements IDisposable {
       factory: this._docModelFactory,
       docProviderFactory: this._docProviderFactory
     });
-    await this._context.initialize(false);
+    await this._context.initialize(false);  
     const serverSettings = ServerConnection.makeSettings();
     const { appUrl, baseUrl, token, wsUrl } = serverSettings;
 

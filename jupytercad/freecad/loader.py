@@ -2,10 +2,7 @@ import traceback
 from typing import Dict, List, Type
 import tempfile
 import base64
-from pathlib import Path
 import os
-import xml
-import zipfile
 
 from .props.base_prop import BaseProp
 from . import props as Props
@@ -123,6 +120,7 @@ class FCStd:
         )
 
         # Get objects
+        self._objects = []
         for obj in fc_file.Objects:
             self._objects.append(self._fc_to_jcad_obj(obj))
 
@@ -140,7 +138,9 @@ class FCStd:
             fc_file.Meta = metadata
 
             new_objs = dict([(o["name"], o) for o in objects])
+
             current_objs = dict([(o.Name, o) for o in fc_file.Objects])
+
             to_remove = [x for x in current_objs if x not in new_objs]
             to_add = [x for x in new_objs if x not in current_objs]
             for obj_name in to_remove:

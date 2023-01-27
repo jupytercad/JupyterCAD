@@ -14,6 +14,10 @@ class YFCStd(YBaseDoc):
         self._virtual_file = FCStd()
 
     @property
+    def objects(self) -> Y.YArray:
+        return self._yobjects
+
+    @property
     def source(self):
         fc_objects = self._yobjects.to_json()
         options = self._yoptions.to_json()
@@ -29,12 +33,10 @@ class YFCStd(YBaseDoc):
 
         for obj in virtual_file.objects:
             objects.append(Y.YMap(obj))
-
         with self._ydoc.begin_transaction() as t:
             length = len(self._yobjects)
             self._yobjects.delete_range(t, 0, length)
             self._yobjects.extend(t, objects)
-
             self._yoptions.update(t, virtual_file.options.items())
             self._ymeta.update(t, virtual_file.metadata.items())
 
