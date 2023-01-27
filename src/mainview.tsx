@@ -857,7 +857,10 @@ export class MainView extends React.Component<IProps, IStates> {
         if (!collaboratorPointer) {
           const mesh = this._createPointer(clientState.user);
 
-          collaboratorPointer = this._collaboratorPointers[clientId] = { mesh, parent };
+          collaboratorPointer = this._collaboratorPointers[clientId] = {
+            mesh,
+            parent
+          };
           this._scene.add(mesh);
         }
 
