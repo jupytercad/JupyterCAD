@@ -75,7 +75,7 @@ interface IStates {
 interface IPointer {
   parent: BasicMesh;
   readonly mesh: BasicMesh;
-};
+}
 
 /**
  * The result of mesh picking, contains the picked mesh and the 3D position of the pointer.
@@ -198,7 +198,7 @@ export class MainView extends React.Component<IProps, IStates> {
             JSON.stringify({
               position: [position.x, position.y, position.z],
               label: 'New annotation',
-              contents: [],
+              contents: []
             })
           );
         }
@@ -243,18 +243,21 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.setSize(500, 500, false);
       this.divRef.current.appendChild(this._renderer.domElement); // mount using React ref
 
-      this._syncPointer = throttle((position: THREE.Vector3 | undefined, parent: string | undefined) => {
-        if (position && parent) {
-          this._model.syncPointer({
-            parent,
-            x: position.x,
-            y: position.y,
-            z: position.z
-          });
-        } else {
-          this._model.syncPointer(undefined);
-        }
-      }, 100);
+      this._syncPointer = throttle(
+        (position: THREE.Vector3 | undefined, parent: string | undefined) => {
+          if (position && parent) {
+            this._model.syncPointer({
+              parent,
+              x: position.x,
+              y: position.y,
+              z: position.z
+            });
+          } else {
+            this._model.syncPointer(undefined);
+          }
+        },
+        100
+      );
       this._renderer.domElement.addEventListener(
         'pointermove',
         this._onPointerMove.bind(this)
@@ -439,14 +442,42 @@ export class MainView extends React.Component<IProps, IStates> {
     const picked = this._pick();
 
     // Update our 3D pointer locally so there is no visual latency in the local pointer movement
-    const localPointer = this._collaboratorPointers[this._model.getClientId()];
-    if (localPointer && picked) {
-      localPointer.mesh.position.copy(picked.position);
-      localPointer.parent = picked.mesh;
+    if (!this._pointer3D && this._model.localState && picked) {
+      this._pointer3D = {
+        parent: picked.mesh,
+        mesh: this._createPointer(this._model.localState.user)
+      };
+      this._scene.add(this._pointer3D.mesh);
     }
 
-    // Throttle the syncing of the pointer position with other clients
-    this._syncPointer(picked?.position, picked?.mesh.name);
+    if (picked) {
+      if (!this._pointer3D) {
+        this._syncPointer(undefined, undefined);
+        return;
+      }
+
+      this._pointer3D.mesh.visible = true;
+      this._pointer3D.mesh.position.copy(picked.position);
+      this._pointer3D.parent = picked.mesh;
+
+      // If in exploded view, we scale down to the initial position (to before exploding the view)
+      if (this._explodedView) {
+        const explodedState = this._computeExplodedState(
+          this._pointer3D.parent
+        );
+
+        picked.position.add(
+          explodedState.vector.multiplyScalar(-explodedState.distance)
+        );
+      }
+
+      this._syncPointer(picked.position, picked.mesh.name);
+    } else {
+      if (this._pointer3D) {
+        this._pointer3D.mesh.visible = false;
+      }
+      this._syncPointer(undefined, undefined);
+    }
   }
 
   private _onClick(e: MouseEvent) {
@@ -653,7 +684,8 @@ export class MainView extends React.Component<IProps, IStates> {
     this._pointerGeometry = new THREE.SphereGeometry(refLength / 10, 32, 32);
 
     for (const clientId in this._collaboratorPointers) {
-      this._collaboratorPointers[clientId].mesh.geometry = this._pointerGeometry;
+      this._collaboratorPointers[clientId].mesh.geometry =
+        this._pointerGeometry;
     }
   }
 
@@ -808,37 +840,54 @@ export class MainView extends React.Component<IProps, IStates> {
 
     // Displaying collaborators pointers
     clients.forEach((clientState, clientId) => {
-      const pointerPosition = clientState.pointer?.value;
-      const parentName = clientState.pointer.value?.parent;
+      const pointer = clientState.pointer?.value;
 
-      if (!parentName) {
-        // This should never happen
+      // We already display our own cursor on mouse move
+      if (this._model.getClientId() === clientId) {
         return;
       }
 
-      const parent = this._meshGroup?.getObjectByName(parentName) as BasicMesh;
+      let collaboratorPointer = this._collaboratorPointers[clientId];
 
-      if (!this._collaboratorPointers[clientId] && clientState.pointer.value) {
-        const mesh = this._createPointer(clientState.user);
+      if (pointer) {
+        const parent = this._meshGroup?.getObjectByName(
+          pointer.parent
+        ) as BasicMesh;
 
-        this._collaboratorPointers[clientId] = { mesh, parent };
-        this._scene.add(mesh);
-      }
+        if (!collaboratorPointer) {
+          const mesh = this._createPointer(clientState.user);
 
-      const collaboratorPointer = this._collaboratorPointers[clientId];
+          collaboratorPointer = this._collaboratorPointers[clientId] = { mesh, parent };
+          this._scene.add(mesh);
+        }
 
-      if (pointerPosition) {
         collaboratorPointer.mesh.visible = true;
-        collaboratorPointer.mesh.position.copy(
-          new THREE.Vector3(
-            pointerPosition[0],
-            pointerPosition[1],
-            pointerPosition[2]
-          )
-        );
+
+        // If we are in exploded view, we display the collaborator cursor at the exploded position
+        if (this._explodedView.enabled) {
+          const explodedState = this._computeExplodedState(parent);
+          const explodeVector = explodedState.vector.multiplyScalar(
+            explodedState.distance
+          );
+
+          collaboratorPointer.mesh.position.copy(
+            new THREE.Vector3(
+              pointer.x + explodeVector.x,
+              pointer.y + explodeVector.y,
+              pointer.z + explodeVector.z
+            )
+          );
+        } else {
+          collaboratorPointer.mesh.position.copy(
+            new THREE.Vector3(pointer.x, pointer.y, pointer.z)
+          );
+        }
+
         collaboratorPointer.parent = parent;
       } else {
-        collaboratorPointer.mesh.visible = false;
+        if (this._collaboratorPointers[clientId]) {
+          this._collaboratorPointers[clientId].mesh.visible = false;
+        }
       }
     });
   };
@@ -897,6 +946,8 @@ export class MainView extends React.Component<IProps, IStates> {
       const explodedView = change.newValue as ExplodedView | undefined;
 
       if (change.type !== 'remove' && explodedView) {
+        this._explodedView = explodedView;
+
         if (explodedView.enabled) {
           const center = new THREE.Vector3();
           this._boundingGroup.getCenter(center);
@@ -909,26 +960,10 @@ export class MainView extends React.Component<IProps, IStates> {
               continue;
             }
 
-            const geometryCenter = new THREE.Vector3();
-            mesh.geometry.boundingBox?.getCenter(geometryCenter);
-
-            const centerToMesh = new THREE.Vector3(
-              geometryCenter.x - center.x,
-              geometryCenter.y - center.y,
-              geometryCenter.z - center.z
-            );
-            const distance = centerToMesh.length() * explodedView.factor;
-
-            centerToMesh.normalize();
+            const explodedState = this._computeExplodedState(mesh);
 
             mesh.position.set(0, 0, 0);
-            mesh.translateOnAxis(centerToMesh, distance);
-
-            const newGeometryCenter = new THREE.Vector3(
-              geometryCenter.x + distance * centerToMesh.x,
-              geometryCenter.y + distance * centerToMesh.y,
-              geometryCenter.z + distance * centerToMesh.z
-            );
+            mesh.translateOnAxis(explodedState.vector, explodedState.distance);
 
             // Draw lines
             const material = new THREE.LineBasicMaterial({
@@ -936,8 +971,8 @@ export class MainView extends React.Component<IProps, IStates> {
               linewidth: 2
             });
             const geometry = new THREE.BufferGeometry().setFromPoints([
-              geometryCenter,
-              newGeometryCenter
+              explodedState.oldGeometryCenter,
+              explodedState.newGeometryCenter
             ]);
             const line = new THREE.Line(geometry, material);
 
@@ -954,6 +989,36 @@ export class MainView extends React.Component<IProps, IStates> {
         }
       }
     }
+  }
+
+  private _computeExplodedState(mesh: BasicMesh) {
+    const center = new THREE.Vector3();
+    this._boundingGroup.getCenter(center);
+
+    const oldGeometryCenter = new THREE.Vector3();
+    mesh.geometry.boundingBox?.getCenter(oldGeometryCenter);
+
+    const centerToMesh = new THREE.Vector3(
+      oldGeometryCenter.x - center.x,
+      oldGeometryCenter.y - center.y,
+      oldGeometryCenter.z - center.z
+    );
+    const distance = centerToMesh.length() * this._explodedView.factor;
+
+    centerToMesh.normalize();
+
+    const newGeometryCenter = new THREE.Vector3(
+      oldGeometryCenter.x + distance * centerToMesh.x,
+      oldGeometryCenter.y + distance * centerToMesh.y,
+      oldGeometryCenter.z + distance * centerToMesh.z
+    );
+
+    return {
+      oldGeometryCenter,
+      newGeometryCenter,
+      vector: centerToMesh,
+      distance
+    };
   }
 
   private _handleThemeChange = (): void => {
@@ -1040,7 +1105,10 @@ export class MainView extends React.Component<IProps, IStates> {
   private _messageChannel?: MessageChannel;
 
   private _pointer: THREE.Vector2;
-  private _syncPointer: (position: THREE.Vector3 | undefined, parent: string | undefined) => void;
+  private _syncPointer: (
+    position: THREE.Vector3 | undefined,
+    parent: string | undefined
+  ) => void;
   private _selectedMesh: BasicMesh | null = null;
 
   private _meshGroup: THREE.Group | null = null; // The list of ThreeJS meshes
@@ -1048,7 +1116,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _boundingGroup = new THREE.Box3();
 
   // TODO Make this a shared property
-  // private _explodedView = true;
+  private _explodedView: ExplodedView = { enabled: false, factor: 0 };
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
 
   private _scene: THREE.Scene; // Threejs scene
@@ -1061,6 +1129,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _sceneAxe: THREE.Object3D | null; // Array of  X, Y and Z axe
   private _controls: OrbitControls; // Threejs control
   private _resizeTimeout: any;
+  private _pointer3D: IPointer | null = null;
   private _collaboratorPointers: IDict<IPointer>;
   private _pointerGeometry: THREE.SphereGeometry;
   private _contextMenu: ContextMenu;
