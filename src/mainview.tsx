@@ -957,9 +957,16 @@ export class MainView extends React.Component<IProps, IStates> {
           Object.prototype.hasOwnProperty.call(guidata[objName], 'visibility')
         ) {
           const obj = this._meshGroup?.getObjectByName(objName);
+          const explodedLineHelper =
+            this._explodedViewLinesHelperGroup?.getObjectByName(objName);
           const objGuiData = guidata[objName];
+
           if (obj && objGuiData) {
             obj.visible = objGuiData['visibility'];
+
+            if (explodedLineHelper) {
+              explodedLineHelper.visible = objGuiData['visibility'];
+            }
           }
         }
       }
@@ -994,10 +1001,6 @@ export class MainView extends React.Component<IProps, IStates> {
           this._explodedViewLinesHelperGroup = new THREE.Group();
 
           for (const mesh of this._meshGroup?.children as BasicMesh[]) {
-            if (!mesh.visible) {
-              continue;
-            }
-
             const explodedState = this._computeExplodedState(mesh);
 
             mesh.position.set(0, 0, 0);
@@ -1013,6 +1016,8 @@ export class MainView extends React.Component<IProps, IStates> {
               explodedState.newGeometryCenter
             ]);
             const line = new THREE.Line(geometry, material);
+            line.name = mesh.name;
+            line.visible = mesh.visible;
 
             this._explodedViewLinesHelperGroup.add(line);
           }
