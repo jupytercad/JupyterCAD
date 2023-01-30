@@ -697,6 +697,9 @@ export class MainView extends React.Component<IProps, IStates> {
       this._refLength = null;
     }
 
+    // Set the expoded view if it's enabled
+    this._setupExplodedView();
+
     this._scene.add(this._meshGroup);
     this.setState(old => ({ ...old, loading: false }));
   };
@@ -993,44 +996,48 @@ export class MainView extends React.Component<IProps, IStates> {
       if (change.type !== 'remove' && explodedView) {
         this._explodedView = explodedView;
 
-        if (explodedView.enabled) {
-          const center = new THREE.Vector3();
-          this._boundingGroup.getCenter(center);
-
-          this._explodedViewLinesHelperGroup?.removeFromParent();
-          this._explodedViewLinesHelperGroup = new THREE.Group();
-
-          for (const mesh of this._meshGroup?.children as BasicMesh[]) {
-            const explodedState = this._computeExplodedState(mesh);
-
-            mesh.position.set(0, 0, 0);
-            mesh.translateOnAxis(explodedState.vector, explodedState.distance);
-
-            // Draw lines
-            const material = new THREE.LineBasicMaterial({
-              color: 'black',
-              linewidth: 2
-            });
-            const geometry = new THREE.BufferGeometry().setFromPoints([
-              explodedState.oldGeometryCenter,
-              explodedState.newGeometryCenter
-            ]);
-            const line = new THREE.Line(geometry, material);
-            line.name = mesh.name;
-            line.visible = mesh.visible;
-
-            this._explodedViewLinesHelperGroup.add(line);
-          }
-
-          this._scene.add(this._explodedViewLinesHelperGroup);
-        } else {
-          // Exploded view is disabled, we reset the initial positions
-          for (const mesh of this._meshGroup?.children as BasicMesh[]) {
-            mesh.position.set(0, 0, 0);
-          }
-          this._explodedViewLinesHelperGroup?.removeFromParent();
-        }
+        this._setupExplodedView();
       }
+    }
+  }
+
+  private _setupExplodedView() {
+    if (this._explodedView.enabled) {
+      const center = new THREE.Vector3();
+      this._boundingGroup.getCenter(center);
+
+      this._explodedViewLinesHelperGroup?.removeFromParent();
+      this._explodedViewLinesHelperGroup = new THREE.Group();
+
+      for (const mesh of this._meshGroup?.children as BasicMesh[]) {
+        const explodedState = this._computeExplodedState(mesh);
+
+        mesh.position.set(0, 0, 0);
+        mesh.translateOnAxis(explodedState.vector, explodedState.distance);
+
+        // Draw lines
+        const material = new THREE.LineBasicMaterial({
+          color: 'black',
+          linewidth: 2
+        });
+        const geometry = new THREE.BufferGeometry().setFromPoints([
+          explodedState.oldGeometryCenter,
+          explodedState.newGeometryCenter
+        ]);
+        const line = new THREE.Line(geometry, material);
+        line.name = mesh.name;
+        line.visible = mesh.visible;
+
+        this._explodedViewLinesHelperGroup.add(line);
+      }
+
+      this._scene.add(this._explodedViewLinesHelperGroup);
+    } else {
+      // Exploded view is disabled, we reset the initial positions
+      for (const mesh of this._meshGroup?.children as BasicMesh[]) {
+        mesh.position.set(0, 0, 0);
+      }
+      this._explodedViewLinesHelperGroup?.removeFromParent();
     }
   }
 
