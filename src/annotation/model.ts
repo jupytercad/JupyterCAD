@@ -4,7 +4,6 @@ import { User } from '@jupyterlab/services';
 import { ISignal, Signal } from '@lumino/signaling';
 
 import {
-  IDict,
   IAnnotationModel,
   IAnnotation,
   IAnnotationContent,
@@ -64,8 +63,11 @@ export class AnnotationModel implements IAnnotationModel {
     return annotationIds;
   }
 
-  addAnnotation(key: string, value: IDict): void {
-    this._context?.model.sharedModel.setMetadata(key, JSON.stringify(value));
+  addAnnotation(key: string, value: IAnnotation): void {
+    this._context?.model.sharedModel.setMetadata(
+      `annotation_${key}`,
+      JSON.stringify(value)
+    );
   }
 
   removeAnnotation(key: string): void {

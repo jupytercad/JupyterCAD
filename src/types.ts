@@ -97,9 +97,10 @@ export interface IWorkerInitialized {
 export type IMainMessage = IDisplayShape | IWorkerInitialized;
 
 /**
- * Position of the user pointer in the 3D environment
+ * User pointer in the 3D environment
  */
-export type PointerPosition = {
+export type Pointer = {
+  parent: string;
   x: number;
   y: number;
   z: number;
@@ -120,6 +121,14 @@ export type Camera = {
 export type AxeHelper = {
   size: number;
   visible: boolean;
+};
+
+/**
+ * The state of the exploded view
+ */
+export type ExplodedView = {
+  enabled: boolean;
+  factor: number;
 };
 
 export interface IJcadObjectDocChange {
@@ -168,7 +177,7 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
 }
 
 export interface IJupyterCadClientState {
-  pointer: { value?: PointerPosition; emitter?: string | null };
+  pointer: { value?: Pointer; emitter?: string | null };
   camera: { value?: Camera; emitter?: string | null };
   selected: { value?: string; emitter?: string | null };
   selectedPropField?: {
@@ -203,7 +212,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;
 
-  syncPointer(position: PointerPosition | undefined, emitter?: string): void;
+  syncPointer(position: Pointer | undefined, emitter?: string): void;
   syncCamera(camera: Camera | undefined, emitter?: string): void;
   syncSelectedObject(name: string | undefined, emitter?: string): void;
   syncSelectedPropField(data: {
@@ -237,6 +246,7 @@ export interface IAnnotation {
   label: string;
   position: [number, number, number];
   contents: IAnnotationContent[];
+  parent: string;
 }
 
 export interface IAnnotationModel {
@@ -252,7 +262,7 @@ export interface IAnnotationModel {
 
   getAnnotationIds(): string[];
 
-  addAnnotation(key: string, value: IDict): void;
+  addAnnotation(key: string, value: IAnnotation): void;
 
   removeAnnotation(key): void;
 
