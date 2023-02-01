@@ -9,7 +9,7 @@ import {
   closeIcon
 } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import { ReactTree, ThemeSettings, TreeNodeList } from '@naisutech/react-tree';
+import { ReactTree, ThemeSettings, TreeNode, TreeNodeList } from '@naisutech/react-tree';
 
 import visibilitySvg from '../../style/icon/visibility.svg';
 import visibilityOffSvg from '../../style/icon/visibilityOff.svg';
@@ -145,34 +145,74 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   }
 
   stateToTree = () => {
-    if (this.state.jcadObject) {
-      return this.state.jcadObject.map(obj => {
-        const name = obj.name;
+    if (!this.state.jcadObject) {
+      return [];
+    }
+      
+    const objects = this.state.jcadObject;
+    const nodes = new Map<string, TreeNode | string>();
+    console.debug("\n[ObjectTreeReact.stateToTree] objects:", objects);
+
+    objects.forEach(obj => {
+      if (obj.parameters && 'Group' in obj.parameters) {
+        const parentId = nodes.has(obj.name) ? nodes.get(obj.name) as string : null;
+        nodes.set(obj.name, {
+          id: obj.name,
+          label: `Group (#${obj.name})`,
+          parentId,
+          items: undefined
+        });
+
+        obj.parameters!['Group'].forEach(name => {
+          if (!nodes.has(name)) {
+            nodes.set(name, obj.name);
+          } else {
+            const node = nodes.get(name) as TreeNode;
+            node.parentId = obj.name;
+            nodes.set(name, node);
+          }
+        });
+      
+      } else {
         const items: TreeNodeList = [];
         if (obj.shape) {
           items.push({
-            id: `${name}#shape#${obj.shape}#${this.state.filePath}`,
+            id: `${obj.name}#shape#${obj.shape}#${this.state.filePath}`,
             label: 'Shape',
-            parentId: name
+            parentId: obj.name,
           });
         }
         if (obj.operators) {
           items.push({
-            id: `${name}#operator#${this.state.filePath}`,
+            id: `${obj.name}#operator#${this.state.filePath}`,
             label: 'Operators',
-            parentId: name
+            parentId: obj.name
           });
         }
-        return {
-          id: name,
-          label: obj.name ?? `Object (#${name})`,
+        nodes.set(obj.name, {
+          id: obj.name,
+          label: obj.name ?? `Object (#${obj.name})`,
           parentId: null,
           items
-        };
-      });
-    }
+        });
+      }
+    });
 
-    return [];
+    const rootNodes: TreeNodeList = [];
+    objects.forEach(obj => {
+      const node = nodes.get(obj.name) as TreeNode;
+
+      if (obj.parameters && 'Group' in obj.parameters) {
+        node.items = obj.parameters!['Group'].map(name => nodes.get(name));
+        nodes.set(obj.name, node);
+
+        if (node.parentId === null) {
+          rootNodes.push(node);
+        }
+      }
+    });
+
+    return rootNodes;
   };
 
   getObjectFromName(name: string | null): IJCadObject | undefined {
@@ -245,14 +285,17 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   render(): React.ReactNode {
     const { selectedNode, openNodes, options } = this.state;
     const data = this.stateToTree();
+    console.debug("\n[ObjectTreeReact.render] objects:", data);
 
     let selectedNodes: (number | string)[] = [];
     if (selectedNode) {
       const parentNode = data.filter(node => node.id === selectedNode);
-      if (parentNode.length > 0 && parentNode[0].items.length > 0) {
+      if (parentNode.length > 0 && parentNode[0].items && parentNode[0].items.length > 0) {
         selectedNodes = [parentNode[0].items[0].id];
       }
     }
+
+    console.debug("\n[ObjectTreeReact.render] selectedNodes:", selectedNodes);
 
     return (
       <div className="jpcad-treeview-wrapper">
@@ -264,6 +307,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
           theme={'labTheme'}
           themes={TREE_THEMES}
           onToggleSelectedNodes={id => {
+            console.debug("\n[ObjectTreeReact.onToggleSelectedNodes] id:", id);
             if (id && id.length > 0) {
               let name = id[0] as string;
 
