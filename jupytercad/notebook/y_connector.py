@@ -1,39 +1,45 @@
 import asyncio
 import json
+import logging
+import os
 from typing import Dict, List, Optional
 from urllib.parse import quote
-
 import requests
 import y_py as Y
-from ipywidgets import DOMWidget
-from traitlets import Unicode
-from websockets.legacy.client import WebSocketClientProtocol, connect
-from ypy_websocket import WebsocketProvider
 
-from ._frontend import module_name, module_version
-from .utils import MESSAGE_ACTION, multi_urljoin
+from websockets.legacy.client import WebSocketClientProtocol, connect
+from ypy_websocket.websocket_provider import WebsocketProvider
+
+from .utils import multi_urljoin
+import logging
+
+logger = logging.getLogger(__file__)
+
 
 FILE_PATH_TO_ROOM_ID_URL = 'api/yjs/roomid'
 WS_YROOM_URL = 'api/yjs'
 
+JUPYTERCAD_ENV = '__JUPYTERCAD_SERVER_INFO__'
 
-class CadWidget(DOMWidget):
 
-    _model_name = Unicode('JupyterCadWidgetModel').tag(sync=True)
-    _model_module = Unicode(module_name).tag(sync=True)
-    _model_module_version = Unicode(module_version).tag(sync=True)
-    _view_name = Unicode('JupyterCadWidgetView').tag(sync=True)
-    _view_module = Unicode(module_name).tag(sync=True)
-    _view_module_version = Unicode(module_version).tag(sync=True)
+class YDocConnector:
 
-    path = Unicode(None, allow_none=True).tag(sync=True)
-
-    def __init__(self, path: str, **kwargs) -> None:
+    def __init__(
+        self, path: str, server_info: Optional[Dict[str, str]] = None, **kwargs
+    ) -> None:
         super().__init__(**kwargs)
         self.path = path
-        self.on_msg(self.__handle_frontend_msg)
         self._ws: Optional[WebSocketClientProtocol] = None
         self._doc: Optional[Y.YDoc] = None
+        self.server_info = server_info
+        if not self.server_info:
+            self.server_info = self.__parse_env_variable()
+        self._start_task: Optional[asyncio.Task] = None
+
+    def __parse_env_variable(self) -> Optional[Dict[str, str]]:
+        env_str = os.environ.get(JUPYTERCAD_ENV, None)
+        if env_str:
+            return json.loads(env_str)
 
     async def __stop(self):
         if self._ws:
@@ -46,15 +52,24 @@ class CadWidget(DOMWidget):
             self._doc = Y.YDoc()
             self._ws = await connect(ws_url)
             WebsocketProvider(self._doc, self._ws)
+            await asyncio.sleep(0.5)
 
-    def __connect_room(self, payload: Dict) -> None:
-        base_url = payload['baseUrl']
-        base_ws_url = payload['wsUrl']
-        token = payload['token']
+
+    def disconnect_room(self) -> None:
+        self._stop_task = asyncio.create_task(self.__stop())
+
+    def connect_room(self) -> None:
+        if self.server_info is None:
+            logger.debug('Missing server information')
+            return
+        base_url = self.server_info['baseUrl']
+        base_ws_url = self.server_info['wsUrl']
+        token = self.server_info['token']
         path = quote(self.path, safe="()*!'")
         fileFormat = 'base64'
         fileType = 'FCStd'
         url = multi_urljoin(base_url, FILE_PATH_TO_ROOM_ID_URL, path)
+
         headers = {
             'Authorization': f'token {token}',
             'Content-Type': 'application/json',
@@ -69,20 +84,18 @@ class CadWidget(DOMWidget):
             multi_urljoin(base_ws_url, WS_YROOM_URL, room_name)
             + f'?token={token}'
         )
-        self.tk = asyncio.create_task(self.__start(ws_url))
 
-    def _handle_task_result(self, task: asyncio.Task) -> None:
+        self._start_task = asyncio.create_task(self.__start(ws_url))
 
-        print('ret', task.result())
+    
+    async def connected(self) -> bool:
+        if not self._start_task:
+            return False
+        while not self._start_task.done():
+            await asyncio.sleep(0.5) # Recheck after 0.5s
 
-    def __handle_frontend_msg(
-        self, model: 'CadWidget', msg: Dict, buffer: List
-    ) -> None:
-        if msg['action'] == MESSAGE_ACTION.CONNECT_ROOM:
-            self.__connect_room(msg['payload'])
-        elif msg['action'] == MESSAGE_ACTION.DISCONNECT_ROOM:
-            asyncio.create_task(self.__stop())
-
+        return True
+    
     @property
     def ydoc(self):
         return self._doc

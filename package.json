@@ -65,6 +65,7 @@
         "@jupyterlab/filebrowser": "~4.0.0-alpha.17",
         "@jupyterlab/launcher": "~4.0.0-alpha.17",
         "@jupyterlab/mainmenu": "~4.0.0-alpha.17",
+        "@jupyterlab/notebook": "~4.0.0-alpha.18",
         "@jupyterlab/observables": "~5.0.0-alpha.17",
         "@jupyterlab/services": "~7.0.0-alpha.17",
         "@jupyterlab/translation": "~4.0.0-alpha.17",
@@ -87,7 +88,8 @@
     },
     "resolutions": {
         "@jupyterlab/apputils": "~4.0.0-alpha.11",
-        "@lumino/coreutils":"~2.0.0-beta.0"
+        "@lumino/coreutils": "~2.0.0-beta.0",
+        "@jupyterlab/notebook": "~4.0.0-alpha.18"
     },
     "devDependencies": {
         "@apidevtools/json-schema-ref-parser": "^9.0.9",

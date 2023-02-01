@@ -17,16 +17,15 @@ class YFCStd(YBaseDoc):
     def objects(self) -> Y.YArray:
         return self._yobjects
 
-    @property
-    def source(self):
+    def get(self):
         fc_objects = self._yobjects.to_json()
         options = self._yoptions.to_json()
         meta = self._ymeta.to_json()
         self._virtual_file.save(fc_objects, options, meta)
         return self._virtual_file.sources
 
-    @source.setter
-    def source(self, value):
+    def set(self, value):
+        print('setting source')
         virtual_file = self._virtual_file
         virtual_file.load(value)
         objects = []

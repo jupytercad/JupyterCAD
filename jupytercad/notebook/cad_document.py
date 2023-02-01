@@ -1,7 +1,8 @@
-from typing import Callable, List, Optional
+import asyncio
+from typing import List, Optional
 
 from .objects import OBJECT_FACTORY
-from .cad_widget import CadWidget
+from .y_connector import YDocConnector
 from .utils import normalize_path
 from .objects import BaseObject
 import os
@@ -11,12 +12,14 @@ import y_py as Y
 class CadDocument:
     def __init__(self, path: str) -> None:
         self._path = path
-        self._widget = CadWidget(normalize_path(os.getcwd(), self._path))
+        self._yconnector = YDocConnector(normalize_path(os.getcwd(), self._path) )
         self._objects_array: Optional[Y.YArray] = None
+
+        self._yconnector.connect_room()
 
     @property
     def ydoc(self):
-        return self._widget.ydoc
+        return self._yconnector.ydoc
 
     @property
     def objects(self) -> Optional[List[str]]:
@@ -37,7 +40,7 @@ class CadDocument:
 
     def update_object(self, object: BaseObject) -> None:
         if self.check_exist(object.name):
-            yobject = self._get_yobject_by_name(object.name)
+            yobject: Y.YMap = self._get_yobject_by_name(object.name)
             with self.ydoc.begin_transaction() as t:
                 yobject.set(t, 'parameters', object.parameters)
                 yobject.set(t, 'visible', object.visible)
@@ -73,9 +76,17 @@ class CadDocument:
                     return index
         return -1
 
+    def disconnect(self) -> None:
+        self._yconnector.disconnect_room()
+
+
+    async def render(self) -> None:
+        from IPython.display import display
+        connected = await self._yconnector.connected()
+        if connected:
+            display({'application/FCStd': self._path}, raw=True)
+
     def _ipython_display_(
         self,
     ) -> None:
-        from IPython.display import display
-
-        display(self._widget)
+        asyncio.create_task(self.render())

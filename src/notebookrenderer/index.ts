@@ -1,38 +1,106 @@
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 import {
+  createRendermimePlugin,
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
+import { ISessionContext, WidgetTracker } from '@jupyterlab/apputils';
+import { IChangedArgs } from '@jupyterlab/coreutils';
 import { IDocumentProviderFactory } from '@jupyterlab/docprovider';
+import { MimeDocument } from '@jupyterlab/docregistry';
+import { INotebookTracker } from '@jupyterlab/notebook';
+import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
+import { IRenderMime } from '@jupyterlab/rendermime-interfaces';
+import { ServerConnection } from '@jupyterlab/services';
+import { IKernelConnection } from '@jupyterlab/services/lib/kernel/kernel';
 
-import { IAnnotationModel } from '../types';
+import { JupyterCadFCModelFactory } from '../fcplugin/modelfactory';
+import { IAnnotationModel, IDict } from '../types';
 import { IAnnotation } from './../token';
-import { MODULE_NAME, MODULE_VERSION } from './version';
-import * as widgetExports from './widget';
+import { NotebookRendererModel } from './model';
+import { NotebookRenderer } from './view';
 
-/**
- * Extension definition.
- */
-const notebookRendererPlugin: JupyterFrontEndPlugin<void> = {
+const MIME_TYPE = 'application/FCStd';
+
+export const notebookRendererPlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:notebookRenderer',
   autoStart: true,
-  requires: [IJupyterWidgetRegistry, IDocumentProviderFactory, IAnnotation],
+  requires: [IRenderMimeRegistry, IDocumentProviderFactory, IAnnotation],
   activate: (
     app: JupyterFrontEnd,
-    widgetRegistry: IJupyterWidgetRegistry,
+    rendermime: IRenderMimeRegistry,
     docProviderFactory: IDocumentProviderFactory,
     annotationModel: IAnnotationModel
   ) => {
-    widgetExports.JupyterCadWidgetModel.serviceManager = app.serviceManager;
-    widgetExports.JupyterCadWidgetModel.docProviderFactory = docProviderFactory;
-    widgetExports.JupyterCadWidgetModel.annotationModel = annotationModel;
-
-    widgetRegistry.registerWidget({
-      name: MODULE_NAME,
-      version: MODULE_VERSION,
-      exports: widgetExports
+    const model = new NotebookRendererModel({
+      manager: app.serviceManager,
+      docProviderFactory,
+      docModelFactory: new JupyterCadFCModelFactory({ annotationModel })
     });
+
+    const rendererFactory: IRenderMime.IRendererFactory = {
+      safe: true,
+      mimeTypes: [MIME_TYPE],
+      createRenderer: options => {
+        const mimeType = options.mimeType;
+        return new NotebookRenderer({ mimeType, model });
+      }
+    };
+
+    const namespace = 'jupytercad-mimedocuments';
+    const tracker = new WidgetTracker<MimeDocument>({ namespace });
+    const extension: IRenderMime.IExtension = {
+      id: 'jupytercad:notebookRenderer',
+      rendererFactory,
+      rank: 1000,
+      dataType: 'string'
+    };
+    const mimePlugin = createRendermimePlugin(tracker, extension);
+
+    mimePlugin.activate(app, rendermime);
   }
 };
 
-export default notebookRendererPlugin;
+function generatePythonCode(data: IDict): string {
+  const variables = JSON.stringify(data);
+  return `
+import os
+os.environ['__JUPYTERCAD_SERVER_INFO__'] = '${variables}'
+  `;
+}
+
+export const serverInfoPlugin: JupyterFrontEndPlugin<void> = {
+  id: 'jupytercad:serverInfoPlugin',
+  autoStart: true,
+  requires: [INotebookTracker],
+  activate: (app: JupyterFrontEnd, tracker: INotebookTracker) => {
+    const serverSettings = ServerConnection.makeSettings();
+    const { appUrl, baseUrl, token, wsUrl } = serverSettings;
+    const onKernelChanged = (
+      _: ISessionContext,
+      changedArgs: IChangedArgs<
+        IKernelConnection | null,
+        IKernelConnection | null,
+        'kernel'
+      >
+    ) => {
+      if (changedArgs.newValue) {
+        const kernelConnection = changedArgs.newValue;
+        const msg = kernelConnection.requestExecute({
+          code: generatePythonCode({ appUrl, baseUrl, token, wsUrl })
+        });
+        msg.onReply = e => {
+          if (e.content.status === 'error') {
+            console.error(e.content);
+          }
+        };
+      }
+    };
+    tracker.widgetAdded.connect(async (_, notebook) => {
+      notebook.sessionContext.kernelChanged.connect(onKernelChanged);
+      notebook.disposed.connect(() => {
+        notebook.sessionContext.kernelChanged.disconnect(onKernelChanged);
+      });
+    });
+  }
+};
