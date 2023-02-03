@@ -150,18 +150,21 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     }
       
     const objects = this.state.jcadObject;
+    const rootNodes: TreeNodeList = [];
     const nodes = new Map<string, TreeNode | string>();
-    console.debug("\n[ObjectTreeReact.stateToTree] objects:", objects);
 
     objects.forEach(obj => {
+      let node: TreeNode = {
+        id: obj.name,
+        label: obj.name,
+        parentId: null,
+        items: undefined
+      };
+
       if (obj.parameters && 'Group' in obj.parameters) {
-        const parentId = nodes.has(obj.name) ? nodes.get(obj.name) as string : null;
-        nodes.set(obj.name, {
-          id: obj.name,
-          label: `Group (#${obj.name})`,
-          parentId,
-          items: undefined
-        });
+        node.label = `Group (#${obj.name})`;
+        node.parentId = nodes.has(obj.name) ? nodes.get(obj.name) as string : null;
+        nodes.set(obj.name, node);
 
         obj.parameters!['Group'].forEach(name => {
           if (!nodes.has(name)) {
@@ -189,27 +192,12 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
             parentId: obj.name
           });
         }
-        nodes.set(obj.name, {
-          id: obj.name,
-          label: obj.name ?? `Object (#${obj.name})`,
-          parentId: null,
-          items
-        });
-      }
-    });
-
-    const rootNodes: TreeNodeList = [];
-    objects.forEach(obj => {
-      const node = nodes.get(obj.name) as TreeNode;
-
-      if (obj.parameters && 'Group' in obj.parameters) {
-        node.items = obj.parameters!['Group'].map(name => nodes.get(name));
+        node.label = `Object (#${obj.name})`;
+        node.items = items;
         nodes.set(obj.name, node);
-
-        if (node.parentId === null) {
-          rootNodes.push(node);
-        }
       }
+
+      rootNodes.push(node);
     });
 
     return rootNodes;
@@ -285,7 +273,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   render(): React.ReactNode {
     const { selectedNode, openNodes, options } = this.state;
     const data = this.stateToTree();
-    console.debug("\n[ObjectTreeReact.render] objects:", data);
 
     let selectedNodes: (number | string)[] = [];
     if (selectedNode) {
@@ -294,8 +281,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         selectedNodes = [parentNode[0].items[0].id];
       }
     }
-
-    console.debug("\n[ObjectTreeReact.render] selectedNodes:", selectedNodes);
 
     return (
       <div className="jpcad-treeview-wrapper">
@@ -307,7 +292,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
           theme={'labTheme'}
           themes={TREE_THEMES}
           onToggleSelectedNodes={id => {
-            console.debug("\n[ObjectTreeReact.onToggleSelectedNodes] id:", id);
             if (id && id.length > 0) {
               let name = id[0] as string;
 
