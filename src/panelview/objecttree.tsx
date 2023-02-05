@@ -9,7 +9,12 @@ import {
   closeIcon
 } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import { ReactTree, ThemeSettings, TreeNode, TreeNodeList } from '@naisutech/react-tree';
+import {
+  ReactTree,
+  ThemeSettings,
+  TreeNode,
+  TreeNodeList
+} from '@naisutech/react-tree';
 
 import visibilitySvg from '../../style/icon/visibility.svg';
 import visibilityOffSvg from '../../style/icon/visibilityOff.svg';
@@ -148,13 +153,13 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     if (!this.state.jcadObject) {
       return [];
     }
-      
+
     const objects = this.state.jcadObject;
     const rootNodes: TreeNodeList = [];
     const nodes = new Map<string, TreeNode | string>();
 
     objects.forEach(obj => {
-      let node: TreeNode = {
+      const node: TreeNode = {
         id: obj.name,
         label: obj.name,
         parentId: null,
@@ -163,7 +168,9 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
 
       if (obj.parameters && 'Group' in obj.parameters) {
         node.label = `Group (#${obj.name})`;
-        node.parentId = nodes.has(obj.name) ? nodes.get(obj.name) as string : null;
+        node.parentId = nodes.has(obj.name)
+          ? (nodes.get(obj.name) as string)
+          : null;
         nodes.set(obj.name, node);
 
         obj.parameters!['Group'].forEach(name => {
@@ -175,14 +182,13 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
             nodes.set(name, node);
           }
         });
-      
       } else {
         const items: TreeNodeList = [];
         if (obj.shape) {
           items.push({
             id: `${obj.name}#shape#${obj.shape}#${this.state.filePath}`,
             label: 'Shape',
-            parentId: obj.name,
+            parentId: obj.name
           });
         }
         if (obj.operators) {
@@ -277,7 +283,11 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     let selectedNodes: (number | string)[] = [];
     if (selectedNode) {
       const parentNode = data.filter(node => node.id === selectedNode);
-      if (parentNode.length > 0 && parentNode[0].items && parentNode[0].items.length > 0) {
+      if (
+        parentNode.length > 0 &&
+        parentNode[0].items &&
+        parentNode[0].items.length > 0
+      ) {
         selectedNodes = [parentNode[0].items[0].id];
       }
     }
