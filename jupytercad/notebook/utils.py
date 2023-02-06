@@ -7,9 +7,9 @@ class MESSAGE_ACTION(str, Enum):
     DISCONNECT_ROOM = 'disconnect_room'
 
 
-def multi_urljoin(*parts):
+def multi_urljoin(*parts) -> str:
     if len(parts) == 0:
-        return
+        return ''
     return urljoin(
         parts[0],
         '/'.join(part for part in parts[1:]),

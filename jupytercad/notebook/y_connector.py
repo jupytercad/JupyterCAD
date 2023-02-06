@@ -2,16 +2,15 @@ import asyncio
 import json
 import logging
 import os
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 from urllib.parse import quote
+
 import requests
 import y_py as Y
-
 from websockets.legacy.client import WebSocketClientProtocol, connect
 from ypy_websocket.websocket_provider import WebsocketProvider
 
 from .utils import multi_urljoin
-import logging
 
 logger = logging.getLogger(__file__)
 
@@ -23,7 +22,6 @@ JUPYTERCAD_ENV = '__JUPYTERCAD_SERVER_INFO__'
 
 
 class YDocConnector:
-
     def __init__(
         self, path: str, server_info: Optional[Dict[str, str]] = None, **kwargs
     ) -> None:
@@ -34,34 +32,19 @@ class YDocConnector:
         self.server_info = server_info
         if not self.server_info:
             self.server_info = self.__parse_env_variable()
-        self._start_task: Optional[asyncio.Task] = None
 
-    def __parse_env_variable(self) -> Optional[Dict[str, str]]:
-        env_str = os.environ.get(JUPYTERCAD_ENV, None)
-        if env_str:
-            return json.loads(env_str)
-
-    async def __stop(self):
-        if self._ws:
-            await self._ws.close(1000)
-        self._ws = None
-        self._doc = None
-
-    async def __start(self, ws_url):
-        if self._ws is None and self._doc is None:
-            self._doc = Y.YDoc()
-            self._ws = await connect(ws_url)
-            WebsocketProvider(self._doc, self._ws)
-            await asyncio.sleep(0.5)
-
+    @property
+    def ydoc(self):
+        return self._doc
 
     def disconnect_room(self) -> None:
-        self._stop_task = asyncio.create_task(self.__stop())
+        asyncio.create_task(self.__stop())
 
-    def connect_room(self) -> None:
+    async def connect_room(self) -> None:
         if self.server_info is None:
             logger.debug('Missing server information')
             return
+
         base_url = self.server_info['baseUrl']
         base_ws_url = self.server_info['wsUrl']
         token = self.server_info['token']
@@ -84,18 +67,29 @@ class YDocConnector:
             multi_urljoin(base_ws_url, WS_YROOM_URL, room_name)
             + f'?token={token}'
         )
+        self._synced = asyncio.Event()
+        await self.__start(ws_url=ws_url)
+        await self.synced()
 
-        self._start_task = asyncio.create_task(self.__start(ws_url))
-
-    
-    async def connected(self) -> bool:
-        if not self._start_task:
+    async def synced(self):
+        if not self._ws:
             return False
-        while not self._start_task.done():
-            await asyncio.sleep(0.5) # Recheck after 0.5s
+        await asyncio.sleep(0.1)   # TODO Need better solution!
+        self._synced.set()
 
-        return True
-    
-    @property
-    def ydoc(self):
-        return self._doc
+    def __parse_env_variable(self) -> Optional[Dict[str, str]]:
+        env_str = os.environ.get(JUPYTERCAD_ENV, None)
+        if env_str:
+            return json.loads(env_str)
+
+    async def __stop(self):
+        if self._ws:
+            await self._ws.close(1000)
+        self._ws = None
+        self._doc = None
+
+    async def __start(self, ws_url):
+        if self._ws is None and self._doc is None:
+            self._doc = Y.YDoc()
+            self._ws = await connect(ws_url)
+            WebsocketProvider(self._doc, self._ws)

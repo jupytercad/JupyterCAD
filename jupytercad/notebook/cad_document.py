@@ -1,37 +1,41 @@
-import asyncio
-from typing import List, Optional
-
-from .objects import OBJECT_FACTORY
-from .y_connector import YDocConnector
-from .utils import normalize_path
-from .objects import BaseObject
+import logging
 import os
+from typing import List, Optional, Union
+
 import y_py as Y
+
+from .objects import OBJECT_FACTORY, BaseObject
+from .utils import normalize_path
+from .y_connector import YDocConnector
+
+logger = logging.getLogger(__file__)
 
 
 class CadDocument:
-    def __init__(self, path: str) -> None:
+    def __init__(self) -> None:
+        self._path: Union[str, None] = None
+        self._yconnector: Union[YDocConnector, None] = None
+        self._ydoc: Union[Y.YDoc, None] = None
+        self._objects_array: Union[Y.YArray, None] = None
+
+    @classmethod
+    async def create(cls, path: str):
+        self = cls()
         self._path = path
-        self._yconnector = YDocConnector(normalize_path(os.getcwd(), self._path) )
-        self._objects_array: Optional[Y.YArray] = None
-
-        self._yconnector.connect_room()
+        self._yconnector = YDocConnector(
+            normalize_path(os.getcwd(), self._path)
+        )
+        await self._yconnector.connect_room()
+        self._ydoc = self._yconnector.ydoc
+        if self._ydoc:
+            self._objects_array = self._ydoc.get_array('objects')
+        return self
 
     @property
-    def ydoc(self):
-        return self._yconnector.ydoc
-
-    @property
-    def objects(self) -> Optional[List[str]]:
-        if not self.ydoc:
-            return []
-        if not self._objects_array:
-            objects = self.ydoc.get_array('objects')
-            if not objects:
-                return
-            self._objects_array = objects
-
-        return [x['name'] for x in self._objects_array]
+    def objects(self) -> List[str]:
+        if self._objects_array:
+            return [x['name'] for x in self._objects_array]
+        return []
 
     def get_object(self, name: str) -> Optional[BaseObject]:
         if self.check_exist(name):
@@ -39,9 +43,9 @@ class CadDocument:
             return OBJECT_FACTORY.create_object(data)
 
     def update_object(self, object: BaseObject) -> None:
-        if self.check_exist(object.name):
-            yobject: Y.YMap = self._get_yobject_by_name(object.name)
-            with self.ydoc.begin_transaction() as t:
+        yobject: Optional[Y.YMap] = self._get_yobject_by_name(object.name)
+        if yobject:
+            with self._ydoc.begin_transaction() as t:
                 yobject.set(t, 'parameters', object.parameters)
                 yobject.set(t, 'visible', object.visible)
 
@@ -56,11 +60,21 @@ class CadDocument:
             new_map = Y.YMap(new_object.to_dict())
             with self.ydoc.begin_transaction() as t:
                 self._objects_array.append(t, new_map)
+        else:
+            logger.error(f'Can not add object {new_object.name}')
 
     def check_exist(self, name: str) -> bool:
         if self.objects:
             return name in self.objects
         return False
+
+    def disconnect(self) -> None:
+        self._yconnector.disconnect_room()
+
+    def render(self) -> None:
+        from IPython.display import display
+
+        display({'application/FCStd': self._path}, raw=True)
 
     def _get_yobject_by_name(self, name: str) -> Optional[Y.YMap]:
         if self._objects_array:
@@ -76,17 +90,7 @@ class CadDocument:
                     return index
         return -1
 
-    def disconnect(self) -> None:
-        self._yconnector.disconnect_room()
-
-
-    async def render(self) -> None:
-        from IPython.display import display
-        connected = await self._yconnector.connected()
-        if connected:
-            display({'application/FCStd': self._path}, raw=True)
-
     def _ipython_display_(
         self,
     ) -> None:
-        asyncio.create_task(self.render())
+        self.render()
