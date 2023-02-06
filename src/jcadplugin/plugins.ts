@@ -34,7 +34,7 @@ const activate = (
   annotationModel: IAnnotationModel,
   browserFactory: IFileBrowserFactory,
   launcher: ILauncher | null,
-  palette: ICommandPalette | null,
+  palette: ICommandPalette | null
 ): void => {
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
@@ -74,13 +74,14 @@ const activate = (
   });
 
   app.commands.addCommand(CommandIDs.createNew, {
-    label: args => args['isPalette'] ? 'New JCAD Editor' : 'JCAD Editor',
+    label: args => (args['isPalette'] ? 'New JCAD Editor' : 'JCAD Editor'),
     caption: 'Create a new JCAD Editor',
     icon: args => (args['isPalette'] ? undefined : fileIcon),
     execute: async args => {
       // Get the directory in which the JCAD file must be created;
       // otherwise take the current filebrowser directory
-      const cwd = (args['cwd'] || browserFactory.tracker.currentWidget?.model.path) as string;
+      const cwd = (args['cwd'] ||
+        browserFactory.tracker.currentWidget?.model.path) as string;
 
       // Create a new untitled Blockly file
       let model = await app.serviceManager.contents.newUntitled({
@@ -89,16 +90,13 @@ const activate = (
         ext: '.jcad'
       });
 
-      console.debug("Model:", model);
-      model = await app.serviceManager.contents.save(
-        model.path,
-        {
-          ...model,
-          format: 'text',
-          size: undefined,
-          content: "{\n\t\"objects\": [],\n\t\"options\": {},\n\t\"metadata\": {}\n}"
-        }
-      );
+      console.debug('Model:', model);
+      model = await app.serviceManager.contents.save(model.path, {
+        ...model,
+        format: 'text',
+        size: undefined,
+        content: '{\n\t"objects": [],\n\t"options": {},\n\t"metadata": {}\n}'
+      });
 
       // Open the newly created file with the 'Editor'
       return app.commands.execute('docmanager:open', {
@@ -129,7 +127,12 @@ const activate = (
 
 const jcadPlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:jcadplugin',
-  requires: [IJupyterCadDocTracker, IThemeManager, IAnnotation, IFileBrowserFactory],
+  requires: [
+    IJupyterCadDocTracker,
+    IThemeManager,
+    IAnnotation,
+    IFileBrowserFactory
+  ],
   optional: [ILauncher, ICommandPalette],
   autoStart: true,
   activate

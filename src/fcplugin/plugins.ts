@@ -22,7 +22,7 @@ import { IAnnotationModel, IJupyterCadWidget } from '../types';
 
 const FACTORY = 'Jupytercad Freecad Factory';
 
-const PALETTE_CATEGORY = 'JupyterCAD';
+// const PALETTE_CATEGORY = 'JupyterCAD';
 
 namespace CommandIDs {
   export const createNew = 'jupytercad:create-new-FCStd-file';
@@ -35,7 +35,7 @@ const activate = (
   annotationModel: IAnnotationModel,
   browserFactory: IFileBrowserFactory,
   launcher: ILauncher | null,
-  palette: ICommandPalette | null,
+  palette: ICommandPalette | null
 ): void => {
   // Creating the widget factory to register it so the document manager knows about
   // our new DocumentWidget
@@ -79,13 +79,14 @@ const activate = (
   });
 
   app.commands.addCommand(CommandIDs.createNew, {
-    label: args => args['isPalette'] ? 'New FCStd Editor' : 'FCStd Editor',
+    label: args => (args['isPalette'] ? 'New FCStd Editor' : 'FCStd Editor'),
     caption: 'Create a new FCStd Editor',
     icon: args => (args['isPalette'] ? undefined : fileIcon),
     execute: async args => {
       // Get the directory in which the FCStd file must be created;
       // otherwise take the current filebrowser directory
-      const cwd = (args['cwd'] || browserFactory.tracker.currentWidget?.model.path) as string;
+      const cwd = (args['cwd'] ||
+        browserFactory.tracker.currentWidget?.model.path) as string;
 
       // Create a new untitled Blockly file
       let model = await app.serviceManager.contents.newUntitled({
@@ -94,16 +95,13 @@ const activate = (
         ext: '.FCStd'
       });
 
-      console.debug("Model:", model);
-      model = await app.serviceManager.contents.save(
-        model.path,
-        {
-          ...model,
-          format: 'base64',
-          size: undefined,
-          content: btoa("")
-        }
-      );
+      console.debug('Model:', model);
+      model = await app.serviceManager.contents.save(model.path, {
+        ...model,
+        format: 'base64',
+        size: undefined,
+        content: btoa('')
+      });
 
       // Open the newly created file with the 'Editor'
       return app.commands.execute('docmanager:open', {
@@ -115,26 +113,31 @@ const activate = (
 
   // Add the command to the launcher
   if (launcher) {
-    launcher.add({
+    /* launcher.add({
       command: CommandIDs.createNew,
       category: 'Other',
       rank: 1
-    });
+    }); */
   }
 
   // Add the command to the palette
   if (palette) {
-    palette.addItem({
+    /* palette.addItem({
       command: CommandIDs.createNew,
       args: { isPalette: true },
       category: PALETTE_CATEGORY
-    });
+    }); */
   }
 };
 
 const fcplugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:fcplugin',
-  requires: [IJupyterCadDocTracker, IThemeManager, IAnnotation, IFileBrowserFactory],
+  requires: [
+    IJupyterCadDocTracker,
+    IThemeManager,
+    IAnnotation,
+    IFileBrowserFactory
+  ],
   optional: [ILauncher, ICommandPalette],
   autoStart: true,
   activate
