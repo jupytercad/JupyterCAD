@@ -159,10 +159,11 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     const nodes = new Map<string, TreeNode | string>();
 
     objects.forEach(obj => {
+      console.debug("Object:", obj);
       const node: TreeNode = {
         id: obj.name,
         label: obj.name,
-        parentId: null,
+        parentId: nodes.has(obj.name) ? (nodes.get(obj.name) as string) : null,
         items: undefined
       };
 
@@ -173,7 +174,8 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
           : null;
         nodes.set(obj.name, node);
 
-        obj.parameters!['Group'].forEach(name => {
+        console.debug("\tGroup:", obj.parameters['Group']);
+        obj.parameters['Group'].forEach(name => {
           if (!nodes.has(name)) {
             nodes.set(name, obj.name);
           } else {
@@ -182,6 +184,29 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
             nodes.set(name, node);
           }
         });
+
+        console.debug("\tOriginFeatures:", obj.parameters['OriginFeatures']);
+        obj.parameters['OriginFeatures']?.forEach(name => {
+          if (!nodes.has(name)) {
+            nodes.set(name, obj.name);
+          } else {
+            const node = nodes.get(name) as TreeNode;
+            node.parentId = obj.name;
+            nodes.set(name, node);
+          }
+        });
+
+        if ('Origin' in obj.parameters) {
+          const name = obj.parameters['Origin'];
+          if (!nodes.has(name)) {
+            nodes.set(name, obj.name);
+          } else {
+            const node = nodes.get(name) as TreeNode;
+            node.parentId = obj.name;
+            nodes.set(name, node);
+          }
+        }
+
       } else {
         const items: TreeNodeList = [];
         if (obj.shape) {
@@ -198,7 +223,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
             parentId: obj.name
           });
         }
-        node.label = `Object (#${obj.name})`;
+        //node.label = `Object (#${obj.name})`;
         node.items = items;
         nodes.set(obj.name, node);
       }
@@ -206,6 +231,8 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       rootNodes.push(node);
     });
 
+    console.debug("rootNodes:", rootNodes);
+    console.debug("\n\n");
     return rootNodes;
   };
 
