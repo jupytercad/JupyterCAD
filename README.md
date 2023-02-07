@@ -4,7 +4,6 @@
 
 ![jupytercad](./jupytercad-screenshot.png)
 
-
 ## Requirements
 
 - JupyterLab >= 3.0
