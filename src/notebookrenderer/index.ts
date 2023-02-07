@@ -1,4 +1,3 @@
-import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 import {
   createRendermimePlugin,
   JupyterFrontEnd,
@@ -6,7 +5,6 @@ import {
 } from '@jupyterlab/application';
 import { ISessionContext, WidgetTracker } from '@jupyterlab/apputils';
 import { IChangedArgs } from '@jupyterlab/coreutils';
-import { IDocumentProviderFactory } from '@jupyterlab/docprovider';
 import { MimeDocument } from '@jupyterlab/docregistry';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
@@ -14,10 +12,9 @@ import { IRenderMime } from '@jupyterlab/rendermime-interfaces';
 import { ServerConnection } from '@jupyterlab/services';
 import { IKernelConnection } from '@jupyterlab/services/lib/kernel/kernel';
 
-import { JupyterCadFCModelFactory } from '../fcplugin/modelfactory';
 import { IAnnotationModel, IDict } from '../types';
 import { IAnnotation } from './../token';
-import { NotebookRendererModel } from './model';
+import { NotebookRendererModelFactory } from './modelFactory';
 import { NotebookRenderer } from './view';
 
 const MIME_TYPE = 'application/FCStd';
@@ -25,17 +22,15 @@ const MIME_TYPE = 'application/FCStd';
 export const notebookRendererPlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:notebookRenderer',
   autoStart: true,
-  requires: [IRenderMimeRegistry, IDocumentProviderFactory, IAnnotation],
+  requires: [IRenderMimeRegistry, IAnnotation],
   activate: (
     app: JupyterFrontEnd,
     rendermime: IRenderMimeRegistry,
-    docProviderFactory: IDocumentProviderFactory,
     annotationModel: IAnnotationModel
   ) => {
-    const model = new NotebookRendererModel({
+    const modelFactory = new NotebookRendererModelFactory({
       manager: app.serviceManager,
-      docProviderFactory,
-      docModelFactory: new JupyterCadFCModelFactory({ annotationModel })
+      annotationModel
     });
 
     const rendererFactory: IRenderMime.IRendererFactory = {
@@ -43,7 +38,7 @@ export const notebookRendererPlugin: JupyterFrontEndPlugin<void> = {
       mimeTypes: [MIME_TYPE],
       createRenderer: options => {
         const mimeType = options.mimeType;
-        return new NotebookRenderer({ mimeType, model });
+        return new NotebookRenderer({ mimeType, factory: modelFactory });
       }
     };
 

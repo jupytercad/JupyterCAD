@@ -45,10 +45,10 @@ export class JupyterCadPanel extends ReactWidget {
    *
    * @param context - The documents context.
    */
-  constructor(context: DocumentRegistry.IContext<IJupyterCadModel>) {
+  constructor(options: { model: IJupyterCadModel }) {
     super();
     this.addClass('jp-jupytercad-panel');
-    this._context = context;
+    this._jcadModel = options.model;
 
     this._view = new ObservableMap<JSONValue>();
   }
@@ -92,9 +92,9 @@ export class JupyterCadPanel extends ReactWidget {
   }
 
   render(): JSX.Element {
-    return <MainView view={this._view} context={this._context} />;
+    return <MainView view={this._view} jcadModel={this._jcadModel} />;
   }
 
   private _view: ObservableMap<JSONValue>;
-  private _context: DocumentRegistry.IContext<IJupyterCadModel>;
+  private _jcadModel: IJupyterCadModel;
 }

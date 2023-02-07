@@ -73,8 +73,8 @@ class CadDocument:
 
     def render(self) -> None:
         from IPython.display import display
-
-        display({'application/FCStd': self._path}, raw=True)
+        if self._yconnector:
+            display({'application/FCStd': self._yconnector.room_name}, raw=True)
 
     def _get_yobject_by_name(self, name: str) -> Optional[Y.YMap]:
         if self._objects_array:

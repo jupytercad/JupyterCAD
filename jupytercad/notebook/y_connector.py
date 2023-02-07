@@ -37,6 +37,10 @@ class YDocConnector:
     def ydoc(self):
         return self._doc
 
+    @property
+    def room_name(self):
+        return self._room_name
+
     def disconnect_room(self) -> None:
         asyncio.create_task(self.__stop())
 
@@ -62,9 +66,9 @@ class YDocConnector:
             headers=headers,
             data=json.dumps({'format': fileFormat, 'type': fileType}),
         )
-        room_name = response.text
+        self._room_name = response.text
         ws_url = (
-            multi_urljoin(base_ws_url, WS_YROOM_URL, room_name)
+            multi_urljoin(base_ws_url, WS_YROOM_URL, response.text)
             + f'?token={token}'
         )
         self._synced = asyncio.Event()
@@ -72,9 +76,7 @@ class YDocConnector:
         await self.synced()
 
     async def synced(self):
-        if not self._ws:
-            return False
-        await asyncio.sleep(0.1)   # TODO Need better solution!
+        await asyncio.sleep(0.25)   # TODO Need better solution!
         self._synced.set()
 
     def __parse_env_variable(self) -> Optional[Dict[str, str]]:
@@ -93,3 +95,6 @@ class YDocConnector:
             self._doc = Y.YDoc()
             self._ws = await connect(ws_url)
             WebsocketProvider(self._doc, self._ws)
+
+    def __del__(self):
+        print('Destructor called')

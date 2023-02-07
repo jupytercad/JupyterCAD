@@ -85,11 +85,16 @@ export class JupyterCadModel implements IJupyterCadModel {
     return this.sharedModel.objectsChanged;
   }
 
+  get disposed(): ISignal<JupyterCadModel, void> {
+    return this._disposed;
+  }
+
   dispose(): void {
     if (this._isDisposed) {
       return;
     }
     this._isDisposed = true;
+    this._disposed.emit();
     Signal.clearData(this);
   }
 
@@ -204,6 +209,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _readOnly = false;
   private _isDisposed = false;
 
+  private _disposed = new Signal<this, void>(this);
   private _contentChanged = new Signal<this, void>(this);
   private _stateChanged = new Signal<this, IChangedArgs<any>>(this);
   private _themeChanged = new Signal<this, IChangedArgs<any>>(this);
@@ -211,6 +217,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     this,
     Map<number, IJupyterCadClientState>
   >(this);
+
   static worker: Worker;
 }
 
@@ -224,7 +231,6 @@ export class JupyterCadDoc
     this._options = this.ydoc.getMap<Y.Map<any>>('options');
     this._objects = this.ydoc.getArray<Y.Map<any>>('objects');
     this._metadata = this.ydoc.getMap<string>('metadata');
-
     this.undoManager.addToScope(this._objects);
 
     this._objects.observeDeep(this._objectsObserver);
