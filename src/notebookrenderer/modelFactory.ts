@@ -1,11 +1,10 @@
-import { IDocumentProviderFactory } from '@jupyterlab/docprovider';
-import { Context, DocumentRegistry } from '@jupyterlab/docregistry';
+import { URLExt } from '@jupyterlab/coreutils';
 import { ServerConnection, ServiceManager, User } from '@jupyterlab/services';
 import { IDisposable } from '@lumino/disposable';
-import { JupyterCadModel } from '../model';
 import { WebsocketProvider as YWebsocketProvider } from 'y-websocket';
+
+import { JupyterCadModel } from '../model';
 import { IAnnotationModel, IJupyterCadModel } from '../types';
-import { URLExt } from '@jupyterlab/coreutils';
 
 const Y_DOCUMENT_PROVIDER_URL = 'api/yjs';
 

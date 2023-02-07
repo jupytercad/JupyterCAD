@@ -27,6 +27,7 @@ class YDocConnector:
     ) -> None:
         super().__init__(**kwargs)
         self.path = path
+        self.ext = path.split('.')[1]
         self._ws: Optional[WebSocketClientProtocol] = None
         self._doc: Optional[Y.YDoc] = None
         self.server_info = server_info
@@ -44,17 +45,22 @@ class YDocConnector:
     def disconnect_room(self) -> None:
         asyncio.create_task(self.__stop())
 
-    async def connect_room(self) -> None:
+    async def connect_room(self) -> bin:
         if self.server_info is None:
             logger.debug('Missing server information')
-            return
+            return False
 
         base_url = self.server_info['baseUrl']
         base_ws_url = self.server_info['wsUrl']
         token = self.server_info['token']
         path = quote(self.path, safe="()*!'")
-        fileFormat = 'base64'
-        fileType = 'FCStd'
+        if self.ext == 'FCStd':
+            fileFormat = 'base64'
+        elif self.ext == 'jcad':
+            fileFormat = 'text'
+        else:
+            return False   
+        fileType = self.ext
         url = multi_urljoin(base_url, FILE_PATH_TO_ROOM_ID_URL, path)
 
         headers = {
@@ -71,13 +77,13 @@ class YDocConnector:
             multi_urljoin(base_ws_url, WS_YROOM_URL, response.text)
             + f'?token={token}'
         )
-        self._synced = asyncio.Event()
-        await self.__start(ws_url=ws_url)
-        await self.synced()
 
-    async def synced(self):
+        await self.__start(ws_url=ws_url)
+        await self.__synced()
+        return True
+        
+    async def __synced(self):
         await asyncio.sleep(0.25)   # TODO Need better solution!
-        self._synced.set()
 
     def __parse_env_variable(self) -> Optional[Dict[str, str]]:
         env_str = os.environ.get(JUPYTERCAD_ENV, None)
@@ -97,4 +103,5 @@ class YDocConnector:
             WebsocketProvider(self._doc, self._ws)
 
     def __del__(self):
-        print('Destructor called')
+        self.disconnect_room()
+

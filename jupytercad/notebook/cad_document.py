@@ -19,13 +19,20 @@ class CadDocument:
         self._objects_array: Union[Y.YArray, None] = None
 
     @classmethod
-    async def create(cls, path: str):
+    async def open(cls, path: str):
         self = cls()
         self._path = path
         self._yconnector = YDocConnector(
             normalize_path(os.getcwd(), self._path)
         )
-        await self._yconnector.connect_room()
+        try:
+            success = await self._yconnector.connect_room()
+        except Exception as e:
+            logger.error('Can not connect to the server!', e)
+            return None
+        if not success:
+            logger.error('Can not connect to the server!')
+            return None
         self._ydoc = self._yconnector.ydoc
         if self._ydoc:
             self._objects_array = self._ydoc.get_array('objects')
@@ -73,8 +80,11 @@ class CadDocument:
 
     def render(self) -> None:
         from IPython.display import display
+
         if self._yconnector:
-            display({'application/FCStd': self._yconnector.room_name}, raw=True)
+            display(
+                {'application/FCStd': self._yconnector.room_name}, raw=True
+            )
 
     def _get_yobject_by_name(self, name: str) -> Optional[Y.YMap]:
         if self._objects_array:

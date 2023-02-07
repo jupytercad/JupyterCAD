@@ -56,9 +56,9 @@ export class PartToolbarReact extends React.Component<IProps> {
       shape: 'Part::Cone',
       schema: this.props.toolbarModel.formSchema['Part::Cone'],
       default: {
-        Radius1: 5,
-        Radius2: 4,
-        Height: 10,
+        Radius1: 1,
+        Radius2: 0.5,
+        Height: 1,
         Angle: 360,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       }

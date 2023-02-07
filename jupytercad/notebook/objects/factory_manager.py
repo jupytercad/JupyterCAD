@@ -26,6 +26,5 @@ class ObjectFactoryManager(metaclass=SingletonMeta):
         object_type = data.get('shape', None)
         if object_type and object_type in self._factories:
             return self._factories[object_type].factory_method(data)
-        
-        return None
 
+        return None

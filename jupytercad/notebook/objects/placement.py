@@ -1,5 +1,4 @@
 from typing import Dict
-from .base import BaseObject
 
 
 class Placement:

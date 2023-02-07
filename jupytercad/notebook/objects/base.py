@@ -3,16 +3,22 @@ from typing import Any, Dict
 
 
 class BaseObject(ABC):
-    
+    def __init__(self) -> None:
+        super().__init__()
+        self._name = None
+        self._visible = True
+
     @property
-    @abstractmethod
     def name(self) -> str:
-        pass
-    
+        return self._name
+
     @property
-    @abstractmethod
     def visible(self) -> bool:
-        pass
+        return self._visible
+
+    @visible.setter
+    def visible(self, val: bool) -> None:
+        self._visible = val
 
     @property
     @abstractmethod
@@ -32,5 +38,5 @@ class BaseObject(ABC):
     def from_dict(self, value: Dict[str, Any]) -> None:
         pass
 
-    def __repr__ (self) -> str:
+    def __repr__(self) -> str:
         return str(self.to_dict())
