@@ -123,3 +123,6 @@ ui-tests/playwright-report/
 examples/*.ipynb
 # Hatchling 
 jupytercad/_version.py
+
+#Schema
+jupytercad/notebook/objects/_schema

@@ -1,8 +1,7 @@
 from .factory_manager import ObjectFactoryManager
-from .box import BoxFactory
-from .cone import ConeFactory
 from .base import BaseObject
-
+from ._schema.box import IBox
+from ._schema.jcad import Parts
 OBJECT_FACTORY = ObjectFactoryManager()
-OBJECT_FACTORY.register_factory(BoxFactory())
-OBJECT_FACTORY.register_factory(ConeFactory())
+OBJECT_FACTORY.register_factory(Parts.Part__Box.value, IBox)
+
