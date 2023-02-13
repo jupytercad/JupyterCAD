@@ -30,8 +30,14 @@ export class NotebookRenderer extends Widget {
     super.dispose();
   }
   async renderModel(mimeModel: IRenderMime.IMimeModel): Promise<void> {
-    const path = mimeModel.data[this._mimeType] as string;
-    this._jcadModel = await this._modelFactory.createJcadModel(path);
+    const data = JSON.parse(mimeModel.data[this._mimeType] as string) as {
+      commId: string;
+      path: string;
+      format: string;
+      contentType: string;
+    };
+
+    this._jcadModel = await this._modelFactory.createJcadModel(data);
     if (!this._jcadModel) {
       return;
     }

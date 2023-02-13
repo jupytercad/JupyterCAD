@@ -4986,6 +4986,13 @@ lib0@^0.2.31, lib0@^0.2.42, lib0@^0.2.49, lib0@^0.2.52:
   dependencies:
     isomorphic.js "^0.2.4"
 
+lib0@^0.2.62:
+  version "0.2.62"
+  resolved "https://registry.yarnpkg.com/lib0/-/lib0-0.2.62.tgz#c4e6860751ba7674a0dca51bb3c23d80985852de"
+  integrity sha512-DY0G8AaQloUvpiss7EpAo/t4R82b9m/AydbQRNAa9Khssn9oGDJnSN8Q1qQ8u82Wog4iaT1O8yM+DfhzGCrrpQ==
+  dependencies:
+    isomorphic.js "^0.2.4"
+
 license-webpack-plugin@^2.3.14:
   version "2.3.21"
   resolved "https://registry.yarnpkg.com/license-webpack-plugin/-/license-webpack-plugin-2.3.21.tgz#152f5e82d5f51f8bab78905731f2b8042aa5691b"

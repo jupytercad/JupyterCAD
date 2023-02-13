@@ -23,7 +23,7 @@ import { IAnnotationModel } from './types';
 import { JupyterCadWidget } from './widget';
 import { ToolbarWidget } from './toolbar/widget';
 import { AnnotationModel } from './annotation/model';
-import { notebookRendererPlugin, serverInfoPlugin } from './notebookrenderer';
+import { notebookRendererPlugin, ypyWidgetManager } from './notebookrenderer';
 
 const NAME_SPACE = 'jupytercad';
 
@@ -171,5 +171,5 @@ export default [
   jcadPlugin,
   annotationPlugin,
   notebookRendererPlugin,
-  serverInfoPlugin
+  ypyWidgetManager
 ];

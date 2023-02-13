@@ -25,7 +25,6 @@ class YFCStd(YBaseDoc):
         return self._virtual_file.sources
 
     def set(self, value):
-        print('setting source')
         virtual_file = self._virtual_file
         virtual_file.load(value)
         objects = []
@@ -43,6 +42,8 @@ class YFCStd(YBaseDoc):
         self.unobserve()
         self._subscriptions[self._ystate] = self._ystate.observe(callback)
         self._subscriptions[self._ysource] = self._ysource.observe(callback)
-        self._subscriptions[self._yobjects] = self._yobjects.observe_deep(callback)
+        self._subscriptions[self._yobjects] = self._yobjects.observe_deep(
+            callback
+        )
         self._subscriptions[self._yoptions] = self._yoptions.observe(callback)
         self._subscriptions[self._ymeta] = self._ymeta.observe_deep(callback)

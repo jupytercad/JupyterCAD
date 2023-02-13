@@ -1,10 +1,14 @@
 import { URLExt } from '@jupyterlab/coreutils';
+import { INotebookTracker } from '@jupyterlab/notebook';
 import { ServerConnection, ServiceManager, User } from '@jupyterlab/services';
+import { IKernelConnection } from '@jupyterlab/services/lib/kernel/kernel';
 import { IDisposable } from '@lumino/disposable';
-import { WebsocketProvider as YWebsocketProvider } from 'y-websocket';
-
+import { WebSocketProvider } from '@jupyterlab/docprovider';
+import * as Y from 'yjs';
 import { JupyterCadModel } from '../model';
 import { IAnnotationModel, IJupyterCadModel } from '../types';
+import { IJupyterCadWidgetManager, IJupyterCadWidgetRegistry } from './token';
+import { YCommProvider } from './yCommProvider';
 
 const Y_DOCUMENT_PROVIDER_URL = 'api/yjs';
 
@@ -12,6 +16,7 @@ export class NotebookRendererModelFactory implements IDisposable {
   constructor(options: NotebookRendererModel.IOptions) {
     this._manager = options.manager;
     this._annotationModel = options.annotationModel;
+    this._wm = options.widgetManager;
   }
 
   get isDisposed(): boolean {
@@ -25,7 +30,19 @@ export class NotebookRendererModelFactory implements IDisposable {
     this._isDisposed = true;
   }
 
-  async createJcadModel(roomId: string): Promise<IJupyterCadModel | undefined> {
+  async createJcadModel(options: {
+    commId: string;
+    path: string;
+    format: string;
+    contentType: string;
+  }): Promise<IJupyterCadModel | undefined> {
+    await new Promise(r => setTimeout(r, 250));
+    const { commId, path, format, contentType } = options;
+    const comm = this._wm?.getComm(commId);
+    if (!comm) {
+      return;
+    }
+
     const server = ServerConnection.makeSettings();
     const serverUrl = URLExt.join(server.wsUrl, Y_DOCUMENT_PROVIDER_URL);
 
@@ -44,16 +61,22 @@ export class NotebookRendererModelFactory implements IDisposable {
       .catch(e => console.error(e));
     user.userChanged.connect(_onUserChanged, this);
 
-    await new Promise(r => setTimeout(r, 250));
-
-    const ywsProvider = new YWebsocketProvider(
-      serverUrl,
-      roomId,
-      jcadModel.sharedModel.ydoc,
-      { awareness }
-    );
+    const ywsProvider = new WebSocketProvider({
+      url: serverUrl,
+      path,
+      format,
+      contentType,
+      model: jcadModel.sharedModel,
+      user
+    });
     jcadModel.disposed.connect(() => {
-      ywsProvider.destroy();
+      ywsProvider.dispose();
+    });
+    await ywsProvider.ready;
+
+    new YCommProvider({
+      comm,
+      ydoc: jcadModel.sharedModel.ydoc
     });
 
     return jcadModel;
@@ -62,11 +85,13 @@ export class NotebookRendererModelFactory implements IDisposable {
   private _isDisposed = false;
   private _annotationModel: IAnnotationModel;
   private _manager: ServiceManager.IManager;
+  private _wm: IJupyterCadWidgetManager | undefined;
 }
 
 export namespace NotebookRendererModel {
   export interface IOptions {
     manager: ServiceManager.IManager;
     annotationModel: IAnnotationModel;
+    widgetManager?: IJupyterCadWidgetManager;
   }
 }
