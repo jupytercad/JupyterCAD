@@ -1,15 +1,22 @@
-import { IComm } from '@jupyterlab/services/lib/kernel/kernel';
+import {
+  IComm,
+  IKernelConnection
+} from '@jupyterlab/services/lib/kernel/kernel';
 import { Token } from '@lumino/coreutils';
+import { IJupyterCadModel } from '../types';
+
+export interface IJupyterCadWidgetModelRegistry {
+  getModel(id: string): IJupyterCadModel | undefined;
+}
 
 export interface IJupyterCadWidgetManager {
-  getComm(id: string): IComm;
+  registerKernel(kernel: IKernelConnection): void;
+  getWidgetModel(
+    kernelId: string,
+    commId: string
+  ): IJupyterCadModel | undefined;
 }
 
-export interface IJupyterCadWidgetRegistry {
-  registerWidgetManager(kernelId: string, wm: IJupyterCadWidgetManager): void;
-  getWidgetManager(kernelId?: string): IJupyterCadWidgetManager | undefined;
-}
-
-export const IJupyterCadWidgetRegistry = new Token<IJupyterCadWidgetRegistry>(
-  'jupyterCadWidgetManagerRegistry'
+export const IJupyterCadWidgetManager = new Token<IJupyterCadWidgetManager>(
+  'jupyterCadWidgetManager'
 );

@@ -1,6 +1,8 @@
 from enum import Enum
 from urllib.parse import urljoin
 
+from typing import Optional
+
 
 class MESSAGE_ACTION(str, Enum):
     CONNECT_ROOM = 'connect_room'
@@ -16,5 +18,5 @@ def multi_urljoin(*parts) -> str:
     )
 
 
-def normalize_path(cwd: str, path: str) -> str:
+def normalize_path(cwd: str, path: Optional[str]) -> Optional[str]:
     return path

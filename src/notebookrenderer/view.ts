@@ -2,7 +2,7 @@ import { MessageLoop } from '@lumino/messaging';
 import { Widget } from '@lumino/widgets';
 
 import { JupyterCadPanel } from '../widget';
-import { NotebookRendererModelFactory } from './modelFactory';
+import { NotebookRendererModel } from './modelFactory';
 import { IRenderMime } from '@jupyterlab/rendermime';
 import { IJupyterCadModel } from '../types';
 
@@ -12,10 +12,7 @@ export class NotebookRenderer extends Widget {
   /**
    * Construct a new output widget.
    */
-  constructor(options: {
-    factory: NotebookRendererModelFactory;
-    mimeType: string;
-  }) {
+  constructor(options: { factory: NotebookRendererModel; mimeType: string }) {
     super();
     this._modelFactory = options.factory;
     this._mimeType = options.mimeType;
@@ -30,14 +27,11 @@ export class NotebookRenderer extends Widget {
     super.dispose();
   }
   async renderModel(mimeModel: IRenderMime.IMimeModel): Promise<void> {
-    const data = JSON.parse(mimeModel.data[this._mimeType] as string) as {
+    const { commId } = JSON.parse(mimeModel.data[this._mimeType] as string) as {
       commId: string;
-      path: string;
-      format: string;
-      contentType: string;
     };
 
-    this._jcadModel = await this._modelFactory.createJcadModel(data);
+    this._jcadModel = await this._modelFactory.createJcadModel(commId);
     if (!this._jcadModel) {
       return;
     }
@@ -57,7 +51,7 @@ export class NotebookRenderer extends Widget {
     }
   };
   private _jcadWidget: JupyterCadPanel;
-  private _modelFactory: NotebookRendererModelFactory;
+  private _modelFactory: NotebookRendererModel;
   private _mimeType: string;
   private _jcadModel?: IJupyterCadModel;
 }

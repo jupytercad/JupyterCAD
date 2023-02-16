@@ -23,14 +23,28 @@ import {
   IJupyterCadModel,
   Pointer
 } from './types';
-
+interface IOptions {
+  annotationModel?: IAnnotationModel;
+  sharedModel?: IJupyterCadDoc;
+  languagePreference?: string;
+}
 export class JupyterCadModel implements IJupyterCadModel {
-  constructor(annotationModel: IAnnotationModel, languagePreference?: string) {
+  constructor(options: IOptions) {
+    const { annotationModel, sharedModel } = options;
+    if (sharedModel) {
+      this._sharedModel = sharedModel;
+    } else {
+      this._sharedModel = JupyterCadDoc.create();
+    }
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
     this.annotationModel = annotationModel;
   }
 
   readonly collaborative = true;
+
+  get sharedModel(): IJupyterCadDoc {
+    return this._sharedModel;
+  }
 
   get isDisposed(): boolean {
     return this._isDisposed;
@@ -202,8 +216,9 @@ export class JupyterCadModel implements IJupyterCadModel {
 
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
-  readonly sharedModel = JupyterCadDoc.create();
-  readonly annotationModel: IAnnotationModel;
+  readonly annotationModel?: IAnnotationModel;
+
+  private _sharedModel: IJupyterCadDoc;
 
   private _dirty = false;
   private _readOnly = false;

@@ -78,10 +78,9 @@ export class JupyterCadFCModelFactory
     languagePreference?: string | undefined,
     collaborationEnabled?: boolean | undefined
   ): JupyterCadModel {
-    const model = new JupyterCadModel(
-      this._annotationModel,
-      languagePreference
-    );
+    const model = new JupyterCadModel({
+      annotationModel: this._annotationModel
+    });
     return model;
   }
 

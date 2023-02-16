@@ -13,70 +13,54 @@ import { IKernelConnection } from '@jupyterlab/services/lib/kernel/kernel';
 
 import { IAnnotationModel } from '../types';
 import { IAnnotation } from './../token';
-import { NotebookRendererModelFactory } from './modelFactory';
-import { IJupyterCadWidgetRegistry } from './token';
+import { NotebookRendererModel } from './modelFactory';
+import { IJupyterCadWidgetManager } from './token';
 import { NotebookRenderer } from './view';
-import { WidgetManager, WidgetManagerRegister } from './widgetManager';
+import { JupyterCadWidgetManager } from './widgetManager';
 
 const MIME_TYPE = 'application/FCStd';
 
 export const notebookRendererPlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:notebookRenderer',
   autoStart: true,
-  requires: [
-    IRenderMimeRegistry,
-    IAnnotation,
-    INotebookTracker,
-    IJupyterCadWidgetRegistry
-  ],
+  requires: [IRenderMimeRegistry, INotebookTracker, IJupyterCadWidgetManager],
   activate: (
     app: JupyterFrontEnd,
     rendermime: IRenderMimeRegistry,
-    annotationModel: IAnnotationModel,
     nbTracker: INotebookTracker,
-    wmRegistry: IJupyterCadWidgetRegistry
+    wmManager: IJupyterCadWidgetManager
   ) => {
     const rendererFactory: IRenderMime.IRendererFactory = {
       safe: true,
       mimeTypes: [MIME_TYPE],
       createRenderer: options => {
-        const kernel = nbTracker.currentWidget?.sessionContext.session?.kernel;
-        const widgetManager = wmRegistry.getWidgetManager(kernel?.id);
+        const kernelId =
+          nbTracker.currentWidget?.sessionContext.session?.kernel?.id;
         const mimeType = options.mimeType;
-        const modelFactory = new NotebookRendererModelFactory({
-          manager: app.serviceManager,
-          widgetManager,
-          annotationModel
+        const modelFactory = new NotebookRendererModel({
+          kernelId,
+          widgetManager: wmManager
         });
         return new NotebookRenderer({ mimeType, factory: modelFactory });
       }
     };
-
-    const namespace = 'jupytercad-mimedocuments';
-    const tracker = new WidgetTracker<MimeDocument>({ namespace });
-    const extension: IRenderMime.IExtension = {
-      id: 'jupytercad:notebookRenderer',
-      rendererFactory,
-      rank: 1000,
-      dataType: 'string'
-    };
-    const mimePlugin = createRendermimePlugin(tracker, extension);
-
-    mimePlugin.activate(app, rendermime);
+    rendermime.addFactory(rendererFactory, -100);
   }
 };
 
-export const ypyWidgetManager: JupyterFrontEndPlugin<IJupyterCadWidgetRegistry> =
+export const ypyWidgetManager: JupyterFrontEndPlugin<IJupyterCadWidgetManager> =
   {
     id: 'jupytercad:serverInfoPlugin',
     autoStart: true,
     requires: [INotebookTracker],
-    provides: IJupyterCadWidgetRegistry,
+    provides: IJupyterCadWidgetManager,
     activate: (
       app: JupyterFrontEnd,
       tracker: INotebookTracker
-    ): IJupyterCadWidgetRegistry => {
-      const registry = new WidgetManagerRegister();
+    ): IJupyterCadWidgetManager => {
+      const registry = new JupyterCadWidgetManager({
+        manager: app.serviceManager
+      });
       const onKernelChanged = (
         _: ISessionContext,
         changedArgs: IChangedArgs<
@@ -87,11 +71,10 @@ export const ypyWidgetManager: JupyterFrontEndPlugin<IJupyterCadWidgetRegistry> 
       ) => {
         const { newValue, oldValue } = changedArgs;
         if (newValue) {
-          registry.removeWidgetManager(oldValue?.id);
-          const wm = new WidgetManager(newValue);
-          registry.registerWidgetManager(newValue.id, wm);
+          registry.unregisterKernel(oldValue?.id);
+          registry.registerKernel(newValue);
           newValue.disposed.connect(() => {
-            registry.removeWidgetManager(newValue.id);
+            registry.unregisterKernel(newValue.id);
           });
         }
       };

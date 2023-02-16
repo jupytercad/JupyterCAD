@@ -49,7 +49,7 @@ class ObjectFactoryManager(metaclass=SingletonMeta):
 
     def create_object(self, data: Dict) -> Optional[PythonJcadObject]:
         object_type = data.get('shape', None)
-        name = data.get('name', None)
+        name: str = data.get('name', None)
         if object_type and object_type in self._factories:
             Model = self._factories[object_type]
             args = {}

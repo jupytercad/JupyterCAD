@@ -197,7 +197,7 @@ export class MainView extends React.Component<IProps, IStates> {
           );
         }
 
-        this._model.annotationModel.addAnnotation(uuid(), {
+        this._model.annotationModel?.addAnnotation(uuid(), {
           position: [position.x, position.y, position.z],
           label: 'New annotation',
           contents: [],
@@ -418,7 +418,7 @@ export class MainView extends React.Component<IProps, IStates> {
           options.updatePosition &&
           (el.style.opacity !== '0' || options.updateDisplay !== undefined)
         ) {
-          const annotation = this._model.annotationModel.getAnnotation(key);
+          const annotation = this._model.annotationModel?.getAnnotation(key);
           let screenPosition = new THREE.Vector2();
 
           if (annotation) {
@@ -1100,6 +1100,9 @@ export class MainView extends React.Component<IProps, IStates> {
           </div>
         ) : null}
         {Object.entries(this.state.annotations).map(([key, annotation]) => {
+          if (!this._model.annotationModel) {
+            return null;
+          }
           const parent = this._meshGroup?.getObjectByName(
             annotation.parent
           ) as BasicMesh;

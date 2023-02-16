@@ -14,24 +14,13 @@ logger = logging.getLogger(__file__)
 
 
 class CadDocument:
-    def __init__(self, path: str):
+    def __init__(self, path: Optional[str] = None):
         self._path = path
         self._yconnector = YDocConnector(
             normalize_path(os.getcwd(), self._path)
         )
         self._ydoc: Union[Y.YDoc, None] = None
         self._objects_array: Union[Y.YArray, None] = None
-        self.initialize()
-
-    def initialize(self):
-        try:
-            success = self._yconnector.connect_room()
-        except Exception as e:
-            logger.error('Can not connect to the server!', e)
-            return None
-        if not success:
-            logger.error('Can not connect to the server!')
-            return None
         self._ydoc = self._yconnector.ydoc
         if self._ydoc:
             self._objects_array = self._ydoc.get_array('objects')
@@ -60,7 +49,9 @@ class CadDocument:
                 self._objects_array.delete(t, index)
 
     def add_object(self, new_object: PythonJcadObject) -> None:
-        if self._objects_array and not self.check_exist(new_object.name):
+        if self._objects_array is not None and not self.check_exist(
+            new_object.name
+        ):
             obj_dict = json.loads(new_object.json())
             obj_dict['visible'] = True
             new_map = Y.YMap(obj_dict)
@@ -73,9 +64,6 @@ class CadDocument:
         if self.objects:
             return name in self.objects
         return False
-
-    def disconnect(self) -> None:
-        self._yconnector.disconnect_room()
 
     def _get_yobject_by_name(self, name: str) -> Optional[Y.YMap]:
         if self._objects_array:
@@ -90,3 +78,11 @@ class CadDocument:
                 if item['name'] == name:
                     return index
         return -1
+
+    def _repr_mimebundle_(self, **kwargs):
+        data = {
+            'application/FCStd': json.dumps(
+                {'commId': self._yconnector.comm_id}
+            ),
+        }
+        return data

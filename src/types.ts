@@ -184,7 +184,7 @@ export interface IJupyterCadClientState {
 export interface IJupyterCadModel extends DocumentRegistry.IModel {
   isDisposed: boolean;
   sharedModel: IJupyterCadDoc;
-  annotationModel: IAnnotationModel;
+  annotationModel?: IAnnotationModel;
   localState: IJupyterCadClientState | null;
 
   themeChanged: Signal<
