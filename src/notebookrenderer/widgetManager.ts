@@ -1,10 +1,6 @@
 import { URLExt } from '@jupyterlab/coreutils';
 import { ServerConnection, ServiceManager, User } from '@jupyterlab/services';
-import {
-  IComm,
-  IKernelConnection
-} from '@jupyterlab/services/lib/kernel/kernel';
-import { ICommOpenMsg } from '@jupyterlab/services/lib/kernel/messages';
+import { Kernel, KernelMessage } from '@jupyterlab/services';
 import { JupyterCadModel } from '../model';
 import {
   IJupyterCadWidgetModelRegistry,
@@ -20,7 +16,7 @@ export class JupyterCadWidgetManager implements IJupyterCadWidgetManager {
   constructor(options: { manager: ServiceManager.IManager }) {
     this._manager = options.manager;
   }
-  registerKernel(kernel: IKernelConnection): void {
+  registerKernel(kernel: Kernel.IKernelConnection): void {
     const wm = new WidgetModelRegistry({ kernel, manager: this._manager });
     this._registry.set(kernel.id, wm);
   }
@@ -44,7 +40,7 @@ export class JupyterCadWidgetManager implements IJupyterCadWidgetManager {
 
 export class WidgetModelRegistry implements IJupyterCadWidgetModelRegistry {
   constructor(options: {
-    kernel: IKernelConnection;
+    kernel: Kernel.IKernelConnection;
     manager: ServiceManager.IManager;
   }) {
     const { kernel, manager } = options;
@@ -60,8 +56,8 @@ export class WidgetModelRegistry implements IJupyterCadWidgetModelRegistry {
    * Handle when a comm is opened.
    */
   private _handle_comm_open = async (
-    comm: IComm,
-    msg: ICommOpenMsg
+    comm: Kernel.IComm,
+    msg: KernelMessage.ICommOpenMsg
   ): Promise<void> => {
     const { path, format, contentType } = msg.content.data as {
       path?: string;

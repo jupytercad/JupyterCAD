@@ -1,5 +1,4 @@
-import { IComm } from '@jupyterlab/services/lib/kernel/kernel';
-import { ICommMsgMsg } from '@jupyterlab/services/lib/kernel/messages';
+import { Kernel, KernelMessage } from '@jupyterlab/services';
 import * as decoding from 'lib0/decoding';
 import * as encoding from 'lib0/encoding';
 import * as syncProtocol from 'y-protocols/sync';
@@ -11,7 +10,7 @@ export enum YMessageType {
   AWARENESS = 1
 }
 export class YCommProvider implements IDisposable {
-  constructor(options: { comm: IComm; ydoc: Y.Doc }) {
+  constructor(options: { comm: Kernel.IComm; ydoc: Y.Doc }) {
     this._comm = options.comm;
     this._ydoc = options.ydoc;
     this._ydoc.on('update', this._updateHandler);
@@ -42,7 +41,7 @@ export class YCommProvider implements IDisposable {
     this._comm.close();
     this._isDisposed = true;
   }
-  private _onMsg = (msg: ICommMsgMsg<'iopub' | 'shell'>) => {
+  private _onMsg = (msg: KernelMessage.ICommMsgMsg<'iopub' | 'shell'>) => {
     if (msg.buffers) {
       const buffer = msg.buffers[0] as ArrayBuffer;
       const encoder = Private.readMessage(this, new Uint8Array(buffer), true);
@@ -75,7 +74,7 @@ export class YCommProvider implements IDisposable {
     this._comm.send({}, undefined, [bufferArray.buffer]);
   }
 
-  private _comm: IComm;
+  private _comm: Kernel.IComm;
   private _ydoc: Y.Doc;
   private _synced: boolean;
   private _isDisposed = false;

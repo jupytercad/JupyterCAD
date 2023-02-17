@@ -1,7 +1,4 @@
-import {
-  IComm,
-  IKernelConnection
-} from '@jupyterlab/services/lib/kernel/kernel';
+import { Kernel } from '@jupyterlab/services';
 import { Token } from '@lumino/coreutils';
 import { IJupyterCadModel } from '../types';
 
@@ -10,7 +7,7 @@ export interface IJupyterCadWidgetModelRegistry {
 }
 
 export interface IJupyterCadWidgetManager {
-  registerKernel(kernel: IKernelConnection): void;
+  registerKernel(kernel: Kernel.IKernelConnection): void;
   getWidgetModel(
     kernelId: string,
     commId: string

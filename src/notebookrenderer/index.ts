@@ -1,18 +1,14 @@
 import {
-  createRendermimePlugin,
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import { ISessionContext, WidgetTracker } from '@jupyterlab/apputils';
+import { ISessionContext } from '@jupyterlab/apputils';
 import { IChangedArgs } from '@jupyterlab/coreutils';
-import { MimeDocument } from '@jupyterlab/docregistry';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { IRenderMime } from '@jupyterlab/rendermime-interfaces';
-import { IKernelConnection } from '@jupyterlab/services/lib/kernel/kernel';
+import { Kernel } from '@jupyterlab/services';
 
-import { IAnnotationModel } from '../types';
-import { IAnnotation } from './../token';
 import { NotebookRendererModel } from './model';
 import { IJupyterCadWidgetManager } from './token';
 import { NotebookRenderer } from './view';
@@ -64,8 +60,8 @@ export const ypyWidgetManager: JupyterFrontEndPlugin<IJupyterCadWidgetManager> =
       const onKernelChanged = (
         _: ISessionContext,
         changedArgs: IChangedArgs<
-          IKernelConnection | null,
-          IKernelConnection | null,
+          Kernel.IKernelConnection | null,
+          Kernel.IKernelConnection | null,
           'kernel'
         >
       ) => {

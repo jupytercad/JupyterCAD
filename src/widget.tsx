@@ -1,20 +1,17 @@
+import { ReactWidget } from '@jupyterlab/apputils';
+import { DocumentWidget } from '@jupyterlab/docregistry';
+import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
+import { JSONValue } from '@lumino/coreutils';
+import { ISignal, Signal } from '@lumino/signaling';
 import * as React from 'react';
 
-import { ReactWidget } from '@jupyterlab/apputils';
-import { ObservableMap, IObservableMap } from '@jupyterlab/observables';
-import { DocumentRegistry, DocumentWidget } from '@jupyterlab/docregistry';
-
-import { ISignal, Signal } from '@lumino/signaling';
-
 import { MainView } from './mainview';
-import { JupyterCadModel } from './model';
 import {
   AxeHelper,
   ExplodedView,
   IJupyterCadModel,
   IJupyterCadWidget
 } from './types';
-import { JSONValue } from '@lumino/coreutils';
 
 export class JupyterCadWidget
   extends DocumentWidget<JupyterCadPanel, IJupyterCadModel>
