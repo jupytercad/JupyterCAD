@@ -79,7 +79,7 @@ version-cmd = "python scripts/bump-version.py"
 
 [tool.jupyter-releaser.hooks]
 before-build-npm = [
-    "python -m pip install jupyterlab --pre -U",
+    "python -m pip install datamodel-code-generator jupyterlab --pre -U",
     "jlpm",
     "jlpm build:prod",
 ]

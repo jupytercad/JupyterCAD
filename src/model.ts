@@ -108,6 +108,7 @@ export class JupyterCadModel implements IJupyterCadModel {
       return;
     }
     this._isDisposed = true;
+    this._sharedModel.dispose();
     this._disposed.emit();
     Signal.clearData(this);
   }
@@ -257,6 +258,7 @@ export class JupyterCadDoc
     this._objects.unobserveDeep(this._objectsObserver);
     this._metadata.unobserve(this._metaObserver);
     this._options.unobserve(this._optionsObserver);
+    super.dispose();
   }
 
   get objects(): Array<IJCadObject> {

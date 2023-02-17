@@ -1,14 +1,14 @@
 import { MessageLoop } from '@lumino/messaging';
-import { Widget } from '@lumino/widgets';
+import { Panel, Widget } from '@lumino/widgets';
 
 import { JupyterCadPanel } from '../widget';
-import { NotebookRendererModel } from './modelFactory';
+import { NotebookRendererModel } from './model';
 import { IRenderMime } from '@jupyterlab/rendermime';
 import { IJupyterCadModel } from '../types';
 
 export const CLASS_NAME = 'mimerenderer-jupytercad';
 
-export class NotebookRenderer extends Widget {
+export class NotebookRenderer extends Panel implements IRenderMime.IRenderer {
   /**
    * Construct a new output widget.
    */
@@ -36,10 +36,7 @@ export class NotebookRenderer extends Widget {
       return;
     }
     this._jcadWidget = new JupyterCadPanel({ model: this._jcadModel });
-
-    MessageLoop.sendMessage(this._jcadWidget, Widget.Msg.BeforeAttach);
-    this.node.appendChild(this._jcadWidget.node);
-    MessageLoop.sendMessage(this._jcadWidget, Widget.Msg.AfterAttach);
+    this.addWidget(this._jcadWidget);
   }
 
   onResize = (): void => {

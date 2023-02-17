@@ -1,14 +1,12 @@
 import json
 import logging
 import os
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import y_py as Y
 
-from .objects import OBJECT_FACTORY, PythonJcadObject
 from .utils import normalize_path
 from .y_connector import YDocConnector
-from pydantic import BaseModel
 
 logger = logging.getLogger(__file__)
 
@@ -31,12 +29,14 @@ class CadDocument:
             return [x['name'] for x in self._objects_array]
         return []
 
-    def get_object(self, name: str) -> Optional[PythonJcadObject]:
+    def get_object(self, name: str) -> Optional['PythonJcadObject']:
+        from .objects import OBJECT_FACTORY
+
         if self.check_exist(name):
             data = self._get_yobject_by_name(name).to_json()
-            return OBJECT_FACTORY.create_object(data)
+            return OBJECT_FACTORY.create_object(data, self)
 
-    def update_object(self, object: PythonJcadObject) -> None:
+    def update_object(self, object: 'PythonJcadObject') -> None:
         yobject: Optional[Y.YMap] = self._get_yobject_by_name(object.name)
         if yobject:
             with self._ydoc.begin_transaction() as t:
@@ -48,7 +48,7 @@ class CadDocument:
             with self.ydoc.begin_transaction() as t:
                 self._objects_array.delete(t, index)
 
-    def add_object(self, new_object: PythonJcadObject) -> None:
+    def add_object(self, new_object: 'PythonJcadObject') -> None:
         if self._objects_array is not None and not self.check_exist(
             new_object.name
         ):
@@ -65,6 +65,13 @@ class CadDocument:
             return name in self.objects
         return False
 
+    def render(self) -> Dict:
+        return {
+            'application/FCStd': json.dumps(
+                {'commId': self._yconnector.comm_id}
+            ),
+        }
+
     def _get_yobject_by_name(self, name: str) -> Optional[Y.YMap]:
         if self._objects_array:
             for item in self._objects_array:
@@ -80,9 +87,4 @@ class CadDocument:
         return -1
 
     def _repr_mimebundle_(self, **kwargs):
-        data = {
-            'application/FCStd': json.dumps(
-                {'commId': self._yconnector.comm_id}
-            ),
-        }
-        return data
+        return self.render()

@@ -91,6 +91,7 @@ jobs:
         name: extension-artifacts
 
     - name: Install and Test
+    # TODO Update JupyterLab version
       run: |
         set -eux
         # Remove NodeJS, twice to take care of system and locally installed node versions.

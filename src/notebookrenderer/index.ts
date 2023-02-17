@@ -13,7 +13,7 @@ import { IKernelConnection } from '@jupyterlab/services/lib/kernel/kernel';
 
 import { IAnnotationModel } from '../types';
 import { IAnnotation } from './../token';
-import { NotebookRendererModel } from './modelFactory';
+import { NotebookRendererModel } from './model';
 import { IJupyterCadWidgetManager } from './token';
 import { NotebookRenderer } from './view';
 import { JupyterCadWidgetManager } from './widgetManager';

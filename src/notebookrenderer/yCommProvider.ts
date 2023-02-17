@@ -4,12 +4,13 @@ import * as decoding from 'lib0/decoding';
 import * as encoding from 'lib0/encoding';
 import * as syncProtocol from 'y-protocols/sync';
 import * as Y from 'yjs';
+import { IDisposable } from '@lumino/disposable';
 
 export enum YMessageType {
   SYNC = 0,
   AWARENESS = 1
 }
-export class YCommProvider {
+export class YCommProvider implements IDisposable {
   constructor(options: { comm: IComm; ydoc: Y.Doc }) {
     this._comm = options.comm;
     this._ydoc = options.ydoc;
@@ -30,6 +31,17 @@ export class YCommProvider {
     }
   }
 
+  get isDisposed(): boolean {
+    return this._isDisposed;
+  }
+
+  dispose(): void {
+    if (this._isDisposed) {
+      return;
+    }
+    this._comm.close();
+    this._isDisposed = true;
+  }
   private _onMsg = (msg: ICommMsgMsg<'iopub' | 'shell'>) => {
     if (msg.buffers) {
       const buffer = msg.buffers[0] as ArrayBuffer;
@@ -66,6 +78,7 @@ export class YCommProvider {
   private _comm: IComm;
   private _ydoc: Y.Doc;
   private _synced: boolean;
+  private _isDisposed = false;
 }
 
 namespace Private {

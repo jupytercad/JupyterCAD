@@ -1,4 +1,6 @@
-from typing import Dict, Optional, Union
+from typing import Any, Dict, Optional, Union
+from pydantic import BaseModel, Extra
+from ..cad_document import CadDocument
 from ._schema.box import IBox
 from ._schema.cone import ICone
 from ._schema.cut import ICut
@@ -9,10 +11,14 @@ from ._schema.intersection import IIntersection
 from ._schema.jcad import Parts
 from ._schema.sphere import ISphere
 from ._schema.torus import ITorus
-from pydantic import BaseModel
 
 
 class PythonJcadObject(BaseModel):
+    class Config:
+        arbitrary_types_allowed = True
+        underscore_attrs_are_private = True
+        extra = Extra.allow
+
     name: str
     shape: Parts
     parameters: Union[
@@ -26,6 +32,24 @@ class PythonJcadObject(BaseModel):
         ISphere,
         ITorus,
     ]
+
+    _caddoc = Optional[CadDocument]
+    _parent = Optional[CadDocument]
+
+    def __init__(__pydantic_self__, parent, **data: Any) -> None:   # noqa
+        super().__init__(**data)
+        __pydantic_self__._caddoc = CadDocument()
+        __pydantic_self__._caddoc.add_object(__pydantic_self__)
+        __pydantic_self__._parent = parent
+
+    def _repr_mimebundle_(self, **kwargs):
+        return self._caddoc.render()
+
+    def update_object(self):
+        if self._caddoc is not None:
+            self._caddoc.update_object(self)
+        if self._parent is not None:
+            self._parent.update_object(self)
 
 
 class SingletonMeta(type):
@@ -47,7 +71,9 @@ class ObjectFactoryManager(metaclass=SingletonMeta):
         if shape_type not in self._factories:
             self._factories[shape_type] = cls
 
-    def create_object(self, data: Dict) -> Optional[PythonJcadObject]:
+    def create_object(
+        self, data: Dict, parent: Optional[CadDocument] = None
+    ) -> Optional[PythonJcadObject]:
         object_type = data.get('shape', None)
         name: str = data.get('name', None)
         if object_type and object_type in self._factories:
@@ -58,7 +84,10 @@ class ObjectFactoryManager(metaclass=SingletonMeta):
                 args[field] = params.get(field, None)
             obj_params = Model(**args)
             return PythonJcadObject(
-                name=name, shape=object_type, parameters=obj_params
+                parent=parent,
+                name=name,
+                shape=object_type,
+                parameters=obj_params,
             )
 
         return None
