@@ -17,6 +17,8 @@ dependencies = [
     "jupyterlab==4.0.0a32",
     "jupyter_server>=2.0.6",
     "jupyter_ydoc>=0.2.0,<0.3.0",
+    "ypywidgets>=0.1.2,<0.2.0",
+    "comm>=0.1.2,<0.2.0"
 ]
 classifiers = [
     "License :: OSI Approved :: BSD License",

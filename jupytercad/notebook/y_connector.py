@@ -1,6 +1,5 @@
-import json
 import logging
-from typing import Dict, Optional
+from typing import Optional
 from ypywidgets.ypywidgets import Widget
 
 logger = logging.getLogger(__file__)
