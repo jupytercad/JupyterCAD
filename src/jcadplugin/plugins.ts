@@ -1,8 +1,19 @@
-import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
+
+import {
+  ICommandPalette,
+  IThemeManager,
+  WidgetTracker
+} from '@jupyterlab/apputils';
+
+import { fileIcon } from '@jupyterlab/ui-components';
+
+import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
+
+import { ILauncher } from '@jupyterlab/launcher';
 
 import { IAnnotationModel, IJupyterCadWidget } from './../types';
 import { IAnnotation, IJupyterCadDocTracker } from './../token';
@@ -10,12 +21,20 @@ import { JupyterCadWidgetFactory } from '../factory';
 import { JupyterCadJcadModelFactory } from './modelfactory';
 
 const FACTORY = 'Jupytercad Jcad Factory';
+const PALETTE_CATEGORY = 'JupyterCAD';
+
+namespace CommandIDs {
+  export const createNew = 'jupytercad:create-new-jcad-file';
+}
 
 const activate = (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
-  annotationModel: IAnnotationModel
+  annotationModel: IAnnotationModel,
+  browserFactory: IFileBrowserFactory,
+  launcher: ILauncher | null,
+  palette: ICommandPalette | null
 ): void => {
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
@@ -53,11 +72,68 @@ const activate = (
     app.shell.activateById('jupytercad::leftControlPanel');
     app.shell.activateById('jupytercad::rightControlPanel');
   });
+
+  app.commands.addCommand(CommandIDs.createNew, {
+    label: args => (args['isPalette'] ? 'New JCAD Editor' : 'JCAD Editor'),
+    caption: 'Create a new JCAD Editor',
+    icon: args => (args['isPalette'] ? undefined : fileIcon),
+    execute: async args => {
+      // Get the directory in which the JCAD file must be created;
+      // otherwise take the current filebrowser directory
+      const cwd = (args['cwd'] ||
+        browserFactory.tracker.currentWidget?.model.path) as string;
+
+      // Create a new untitled Blockly file
+      let model = await app.serviceManager.contents.newUntitled({
+        path: cwd,
+        type: 'file',
+        ext: '.jcad'
+      });
+
+      console.debug('Model:', model);
+      model = await app.serviceManager.contents.save(model.path, {
+        ...model,
+        format: 'text',
+        size: undefined,
+        content: '{\n\t"objects": [],\n\t"options": {},\n\t"metadata": {}\n}'
+      });
+
+      // Open the newly created file with the 'Editor'
+      return app.commands.execute('docmanager:open', {
+        path: model.path,
+        factory: FACTORY
+      });
+    }
+  });
+
+  // Add the command to the launcher
+  if (launcher) {
+    launcher.add({
+      command: CommandIDs.createNew,
+      category: 'Other',
+      rank: 1
+    });
+  }
+
+  // Add the command to the palette
+  if (palette) {
+    palette.addItem({
+      command: CommandIDs.createNew,
+      args: { isPalette: true },
+      category: PALETTE_CATEGORY
+    });
+  }
 };
 
 const jcadPlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:jcadplugin',
-  requires: [IJupyterCadDocTracker, IThemeManager, IAnnotation],
+  requires: [
+    IJupyterCadDocTracker,
+    IThemeManager,
+    IAnnotation,
+    IFileBrowserFactory
+  ],
+  optional: [ILauncher, ICommandPalette],
   autoStart: true,
   activate
 };
