@@ -60,9 +60,8 @@ def update(spec):
 
 
 @click.command()
-@click.option("--force", default=False, is_flag=True)
 @click.argument("spec", nargs=1)
-def bump(force, spec):
+def bump(spec):
     status = run("git status --porcelain").strip()
     if len(status) > 0:
         raise Exception("Must be in a clean git state with no untracked files")
@@ -77,10 +76,10 @@ def bump(force, spec):
         spec = "patch" if is_final else "build"
 
     if spec == "patch":
-        patch(force)
+        patch()
         return
 
-    update(spec, force)
+    update(spec)
 
 
 if __name__ == "__main__":
