@@ -1,5 +1,7 @@
 from typing import Any, Dict, Optional, Union
+
 from pydantic import BaseModel, Extra
+
 from ..cad_document import CadDocument
 from ._schema.box import IBox
 from ._schema.cone import ICone

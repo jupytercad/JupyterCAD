@@ -1,6 +1,7 @@
 from typing import Any, List
-from .geometry import geom_handlers
+
 from .base_prop import BaseProp
+from .geometry import geom_handlers
 
 
 class Part_PropertyGeometryList(BaseProp):

@@ -1,7 +1,6 @@
+import os
 from enum import Enum
 from urllib.parse import urljoin
-
-from typing import Optional
 
 
 class MESSAGE_ACTION(str, Enum):
@@ -18,5 +17,8 @@ def multi_urljoin(*parts) -> str:
     )
 
 
-def normalize_path(cwd: str, path: Optional[str]) -> Optional[str]:
-    return path
+def normalize_path(path: str) -> str:
+    if os.path.isabs(path):
+        return path
+    else:
+        return os.path.abspath(os.path.join(os.getcwd(), path))

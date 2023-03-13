@@ -9,7 +9,6 @@ import {
 import { WebSocketProvider } from '@jupyterlab/docprovider';
 import { YCommProvider } from './yCommProvider';
 import { IJupyterCadModel } from '../types';
-
 const Y_DOCUMENT_PROVIDER_URL = 'api/yjs';
 
 export class JupyterCadWidgetManager implements IJupyterCadWidgetManager {

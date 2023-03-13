@@ -1,18 +1,17 @@
+import base64
+import logging
+import os
+import tempfile
 import traceback
 from typing import Dict, List, Type
-import tempfile
-import base64
-import os
 
-from .props.base_prop import BaseProp
 from . import props as Props
-import logging
+from .props.base_prop import BaseProp
 
 logger = logging.getLogger(__file__)
 
 try:
     import freecad as fc
-
     import OfflineRenderingUtils
 
 except ImportError:

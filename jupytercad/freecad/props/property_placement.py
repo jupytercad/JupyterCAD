@@ -1,5 +1,6 @@
 import math
 from typing import Any
+
 from .base_prop import BaseProp
 
 try:
