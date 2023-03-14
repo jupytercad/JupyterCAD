@@ -1,5 +1,6 @@
-from typing import Any
 from io import StringIO
+from typing import Any
+
 from .base_prop import BaseProp
 
 

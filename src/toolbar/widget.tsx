@@ -19,25 +19,26 @@ export class ToolbarWidget extends Toolbar {
     super(rest);
     this.addClass('jpcad-toolbar-widget');
     this._model = model;
-
-    this.addItem(
-      'undo',
-      new CommandToolbarButton({
-        id: ToolbarWidget.CommandIDs.undo,
-        label: '',
-        icon: undoIcon,
-        commands: options.commands
-      })
-    );
-    this.addItem(
-      'redo',
-      new CommandToolbarButton({
-        id: ToolbarWidget.CommandIDs.redo,
-        label: '',
-        icon: redoIcon,
-        commands: options.commands
-      })
-    );
+    if (options.commands) {
+      this.addItem(
+        'undo',
+        new CommandToolbarButton({
+          id: ToolbarWidget.CommandIDs.undo,
+          label: '',
+          icon: undoIcon,
+          commands: options.commands
+        })
+      );
+      this.addItem(
+        'redo',
+        new CommandToolbarButton({
+          id: ToolbarWidget.CommandIDs.redo,
+          label: '',
+          icon: redoIcon,
+          commands: options.commands
+        })
+      );
+    }
 
     const body = ReactWidget.create(
       <ToolbarReact toolbarModel={this._model} />
@@ -51,7 +52,7 @@ export class ToolbarWidget extends Toolbar {
 export namespace ToolbarWidget {
   export interface IOptions extends Toolbar.IOptions {
     model: ToolbarModel;
-    commands: CommandRegistry;
+    commands?: CommandRegistry;
   }
 
   /**

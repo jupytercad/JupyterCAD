@@ -29,7 +29,9 @@
     },
     "scripts": {
         "build": "jlpm build:schema && jlpm run build:lib && jlpm run build:worker && jlpm run build:labextension:dev",
-        "build:schema": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions --cwd ./src/schema && cd src/schema && node ../../schema.js",
+        "build:schema": "jlpm build:schema:js && jlpm build:schema:py",
+        "build:schema:js": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions --cwd ./src/schema && cd src/schema && node ../../schema.js",
+        "build:schema:py": "datamodel-codegen --input src/schema --output jupytercad/notebook/objects/_schema",
         "build:prod": "jlpm run clean && jlpm build:schema && jlpm run build:worker:prod && jlpm run build:lib && jlpm run build:labextension",
         "build:labextension": "jupyter labextension build .",
         "build:labextension:dev": "jupyter labextension build --development True .",
@@ -55,6 +57,7 @@
     },
     "dependencies": {
         "@deathbeds/jupyterlab-rjsf": "^1.1.0",
+        "@jupyter-widgets/base": "^6.0.2",
         "@jupyter/ydoc": "~0.2.2",
         "@jupyterlab/application": "~4.0.0-alpha.17",
         "@jupyterlab/apputils": "~4.0.0-alpha.17",
@@ -64,6 +67,7 @@
         "@jupyterlab/filebrowser": "~4.0.0-alpha.17",
         "@jupyterlab/launcher": "~4.0.0-alpha.17",
         "@jupyterlab/mainmenu": "~4.0.0-alpha.17",
+        "@jupyterlab/notebook": "~4.0.0-alpha.18",
         "@jupyterlab/observables": "~5.0.0-alpha.17",
         "@jupyterlab/services": "~7.0.0-alpha.17",
         "@jupyterlab/translation": "~4.0.0-alpha.17",
@@ -78,14 +82,17 @@
         "@types/three": "^0.134.0",
         "d3-color": "^3.1.0",
         "jupytercad-opencascade": "^0.1.1-alpha.2",
+        "lib0": "^0.2.62",
+        "react": "^17.0.1",
         "styled-components": "^5.3.6",
         "three": "^0.135.0",
         "three-mesh-bvh": "^0.5.17",
-        "uuid": "^8.3.2",
-        "react": "^17.0.1"
+        "uuid": "^8.3.2"
     },
     "resolutions": {
-        "@jupyterlab/apputils": "~4.0.0-alpha.11"
+        "@jupyterlab/apputils": "~4.0.0-alpha.11",
+        "@lumino/coreutils": "~2.0.0-beta.0",
+        "@jupyterlab/notebook": "~4.0.0-alpha.18"
     },
     "devDependencies": {
         "@apidevtools/json-schema-ref-parser": "^9.0.9",
@@ -117,6 +124,12 @@
     "jupyterlab": {
         "extension": true,
         "outputDir": "jupytercad/labextension",
-        "webpackConfig": "./extension.webpack.config.js"
+        "webpackConfig": "./extension.webpack.config.js",
+        "sharedPackages": {
+            "@jupyter-widgets/base": {
+                "bundled": false,
+                "singleton": true
+            }
+        }
     }
 }

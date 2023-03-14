@@ -1,27 +1,24 @@
+import { ReactWidget } from '@jupyterlab/apputils';
+import { DocumentWidget } from '@jupyterlab/docregistry';
+import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
+import { JSONValue } from '@lumino/coreutils';
+import { ISignal, Signal } from '@lumino/signaling';
 import * as React from 'react';
 
-import { ReactWidget } from '@jupyterlab/apputils';
-import { ObservableMap, IObservableMap } from '@jupyterlab/observables';
-import { DocumentRegistry, DocumentWidget } from '@jupyterlab/docregistry';
-
-import { ISignal, Signal } from '@lumino/signaling';
-
 import { MainView } from './mainview';
-import { JupyterCadModel } from './model';
 import {
   AxeHelper,
   ExplodedView,
   IJupyterCadModel,
   IJupyterCadWidget
 } from './types';
-import { JSONValue } from '@lumino/coreutils';
 
 export class JupyterCadWidget
-  extends DocumentWidget<JupyterCadPanel, JupyterCadModel>
+  extends DocumentWidget<JupyterCadPanel, IJupyterCadModel>
   implements IJupyterCadWidget
 {
   constructor(
-    options: DocumentWidget.IOptions<JupyterCadPanel, JupyterCadModel>
+    options: DocumentWidget.IOptions<JupyterCadPanel, IJupyterCadModel>
   ) {
     super(options);
   }
@@ -45,10 +42,10 @@ export class JupyterCadPanel extends ReactWidget {
    *
    * @param context - The documents context.
    */
-  constructor(context: DocumentRegistry.IContext<IJupyterCadModel>) {
+  constructor(options: { model: IJupyterCadModel }) {
     super();
     this.addClass('jp-jupytercad-panel');
-    this._context = context;
+    this._jcadModel = options.model;
 
     this._view = new ObservableMap<JSONValue>();
   }
@@ -92,9 +89,9 @@ export class JupyterCadPanel extends ReactWidget {
   }
 
   render(): JSX.Element {
-    return <MainView view={this._view} context={this._context} />;
+    return <MainView view={this._view} jcadModel={this._jcadModel} />;
   }
 
   private _view: ObservableMap<JSONValue>;
-  private _context: DocumentRegistry.IContext<IJupyterCadModel>;
+  private _jcadModel: IJupyterCadModel;
 }

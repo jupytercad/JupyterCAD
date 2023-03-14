@@ -221,10 +221,7 @@ function buildModel(
   return occShapes;
 }
 
-function loadFile(payload: {
-  fileName: string;
-  content: IJCadContent;
-}): IDict | null {
+function loadFile(payload: { content: IJCadContent }): IDict | null {
   const { content } = payload;
   const shapeList = buildModel(content);
   const parser = new OccParser(shapeList);

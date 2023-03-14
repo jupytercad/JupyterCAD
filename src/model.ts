@@ -23,14 +23,28 @@ import {
   IJupyterCadModel,
   Pointer
 } from './types';
-
+interface IOptions {
+  annotationModel?: IAnnotationModel;
+  sharedModel?: IJupyterCadDoc;
+  languagePreference?: string;
+}
 export class JupyterCadModel implements IJupyterCadModel {
-  constructor(annotationModel: IAnnotationModel, languagePreference?: string) {
+  constructor(options: IOptions) {
+    const { annotationModel, sharedModel } = options;
+    if (sharedModel) {
+      this._sharedModel = sharedModel;
+    } else {
+      this._sharedModel = JupyterCadDoc.create();
+    }
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
     this.annotationModel = annotationModel;
   }
 
   readonly collaborative = true;
+
+  get sharedModel(): IJupyterCadDoc {
+    return this._sharedModel;
+  }
 
   get isDisposed(): boolean {
     return this._isDisposed;
@@ -85,11 +99,17 @@ export class JupyterCadModel implements IJupyterCadModel {
     return this.sharedModel.objectsChanged;
   }
 
+  get disposed(): ISignal<JupyterCadModel, void> {
+    return this._disposed;
+  }
+
   dispose(): void {
     if (this._isDisposed) {
       return;
     }
     this._isDisposed = true;
+    this._sharedModel.dispose();
+    this._disposed.emit();
     Signal.clearData(this);
   }
 
@@ -197,13 +217,15 @@ export class JupyterCadModel implements IJupyterCadModel {
 
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
-  readonly sharedModel = JupyterCadDoc.create();
-  readonly annotationModel: IAnnotationModel;
+  readonly annotationModel?: IAnnotationModel;
+
+  private _sharedModel: IJupyterCadDoc;
 
   private _dirty = false;
   private _readOnly = false;
   private _isDisposed = false;
 
+  private _disposed = new Signal<this, void>(this);
   private _contentChanged = new Signal<this, void>(this);
   private _stateChanged = new Signal<this, IChangedArgs<any>>(this);
   private _themeChanged = new Signal<this, IChangedArgs<any>>(this);
@@ -211,6 +233,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     this,
     Map<number, IJupyterCadClientState>
   >(this);
+
   static worker: Worker;
 }
 
@@ -224,7 +247,6 @@ export class JupyterCadDoc
     this._options = this.ydoc.getMap<Y.Map<any>>('options');
     this._objects = this.ydoc.getArray<Y.Map<any>>('objects');
     this._metadata = this.ydoc.getMap<string>('metadata');
-
     this.undoManager.addToScope(this._objects);
 
     this._objects.observeDeep(this._objectsObserver);
@@ -236,6 +258,7 @@ export class JupyterCadDoc
     this._objects.unobserveDeep(this._objectsObserver);
     this._metadata.unobserve(this._metaObserver);
     this._options.unobserve(this._optionsObserver);
+    super.dispose();
   }
 
   get objects(): Array<IJCadObject> {
@@ -313,7 +336,6 @@ export class JupyterCadDoc
     if (!obj) {
       return;
     }
-
     this.transact(() => obj.set(key, value));
   }
 

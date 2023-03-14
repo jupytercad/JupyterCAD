@@ -1,24 +1,18 @@
-import { DocumentRegistry } from '@jupyterlab/docregistry';
+import { MapChange } from '@jupyter/ydoc';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { User } from '@jupyterlab/services';
-
-import { MapChange } from '@jupyter/ydoc';
-
+import { CommandRegistry } from '@lumino/commands';
 import { JSONValue } from '@lumino/coreutils';
 import { ContextMenu } from '@lumino/widgets';
-import { CommandRegistry } from '@lumino/commands';
-
-import * as React from 'react';
 import * as Color from 'd3-color';
+import * as React from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-
 import {
+  acceleratedRaycast,
   computeBoundsTree,
-  disposeBoundsTree,
-  acceleratedRaycast
+  disposeBoundsTree
 } from 'three-mesh-bvh';
-
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { v4 as uuid } from 'uuid';
 
 import {
@@ -58,7 +52,7 @@ export type BasicMesh = THREE.Mesh<
 
 interface IProps {
   view: ObservableMap<JSONValue>;
-  context: DocumentRegistry.IContext<IJupyterCadModel>;
+  jcadModel: IJupyterCadModel;
 }
 
 interface IStates {
@@ -108,40 +102,38 @@ export class MainView extends React.Component<IProps, IStates> {
       firstLoad: true
     };
 
+    this._model = this.props.jcadModel;
+    this._worker = this._model.getWorker();
+
     this._pointer = new THREE.Vector2();
-
-    this._context = props.context;
     this._collaboratorPointers = {};
-    this._context.ready.then(() => {
-      this._model = this._context.model;
-      this._worker = this._model.getWorker();
-      this._messageChannel = new MessageChannel();
-      this._messageChannel.port1.onmessage = msgEvent => {
-        this.messageHandler(msgEvent.data);
-      };
-      this._postMessage(
-        { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
-        this._messageChannel.port2
-      );
-      this._model.themeChanged.connect(this._handleThemeChange, this);
+    this._messageChannel = new MessageChannel();
+    this._messageChannel.port1.onmessage = msgEvent => {
+      this.messageHandler(msgEvent.data);
+    };
+    this._postMessage(
+      { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
+      this._messageChannel.port2
+    );
+    this._model.themeChanged.connect(this._handleThemeChange, this);
 
-      this._model.sharedObjectsChanged.connect(
-        this._onSharedObjectsChanged,
-        this
-      );
-      this._model.sharedOptionsChanged.connect(
-        this._onSharedOptionsChanged,
-        this
-      );
-      this._model.clientStateChanged.connect(
-        this._onClientSharedStateChanged,
-        this
-      );
-      this._model.sharedMetadataChanged.connect(
-        this._onSharedMetadataChanged,
-        this
-      );
-    });
+    this._model.sharedObjectsChanged.connect(
+      this._onSharedObjectsChanged,
+      this
+    );
+    this._model.sharedOptionsChanged.connect(
+      this._onSharedOptionsChanged,
+      this
+    );
+    this._model.clientStateChanged.connect(
+      this._onClientSharedStateChanged,
+      this
+    );
+    this._model.sharedMetadataChanged.connect(
+      this._onSharedMetadataChanged,
+      this
+    );
+
     if (this._raycaster.params.Line) {
       this._raycaster.params.Line.threshold = 0.1;
     }
@@ -162,12 +154,7 @@ export class MainView extends React.Component<IProps, IStates> {
     window.removeEventListener('resize', this._handleWindowResize);
     this.props.view.changed.disconnect(this._onViewChanged, this);
     this._controls.dispose();
-    this._postMessage({
-      action: WorkerAction.CLOSE_FILE,
-      payload: {
-        fileName: this._context.path
-      }
-    });
+
     this._model.themeChanged.disconnect(this._handleThemeChange, this);
     this._model.sharedOptionsChanged.disconnect(
       this._onSharedOptionsChanged,
@@ -210,7 +197,7 @@ export class MainView extends React.Component<IProps, IStates> {
           );
         }
 
-        this._model.annotationModel.addAnnotation(uuid(), {
+        this._model.annotationModel?.addAnnotation(uuid(), {
           position: [position.x, position.y, position.z],
           label: 'New annotation',
           contents: [],
@@ -401,7 +388,6 @@ export class MainView extends React.Component<IProps, IStates> {
         this._postMessage({
           action: WorkerAction.LOAD_FILE,
           payload: {
-            fileName: this._context.path,
             content: this._model.getContent()
           }
         });
@@ -432,7 +418,7 @@ export class MainView extends React.Component<IProps, IStates> {
           options.updatePosition &&
           (el.style.opacity !== '0' || options.updateDisplay !== undefined)
         ) {
-          const annotation = this._model.annotationModel.getAnnotation(key);
+          const annotation = this._model.annotationModel?.getAnnotation(key);
           let screenPosition = new THREE.Vector2();
 
           if (annotation) {
@@ -943,7 +929,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._postMessage({
         action: WorkerAction.LOAD_FILE,
         payload: {
-          fileName: this._context.path,
           content: this._model.getContent()
         }
       });
@@ -1117,6 +1102,9 @@ export class MainView extends React.Component<IProps, IStates> {
           </div>
         ) : null}
         {Object.entries(this.state.annotations).map(([key, annotation]) => {
+          if (!this._model.annotationModel) {
+            return null;
+          }
           const parent = this._meshGroup?.getObjectByName(
             annotation.parent
           ) as BasicMesh;
@@ -1172,7 +1160,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private divRef = React.createRef<HTMLDivElement>(); // Reference of render div
 
-  private _context: DocumentRegistry.IContext<IJupyterCadModel>;
   private _model: IJupyterCadModel;
   private _worker?: Worker = undefined;
   private _messageChannel?: MessageChannel;

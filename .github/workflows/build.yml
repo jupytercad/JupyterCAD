@@ -28,7 +28,7 @@ jobs:
         channels: conda-forge/label/jupyterlab_alpha,conda-forge
         extra-specs: |
           python=3.9
-          nodejs=16
+          nodejs=18
           yarn
           jupyterlab=4.0.0a32
           freecad
@@ -91,6 +91,7 @@ jobs:
         name: extension-artifacts
 
     - name: Install and Test
+    # TODO Update JupyterLab version
       run: |
         set -eux
         # Remove NodeJS, twice to take care of system and locally installed node versions.
@@ -130,7 +131,7 @@ jobs:
         channels: conda-forge/label/jupyterlab_alpha,conda-forge
         extra-specs: |
           python=3.9
-          nodejs=16
+          nodejs=18
           yarn
           jupyterlab=4.0.0a32
           freecad
@@ -205,7 +206,7 @@ jobs:
         channels: conda-forge/label/jupyterlab_alpha,conda-forge
         extra-specs: |
           python=3.9
-          nodejs=16
+          nodejs=18
           yarn
           jupyterlab=4.0.0a32
           freecad

@@ -55,8 +55,5 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
       );
       break;
     }
-    case WorkerAction.CLOSE_FILE: {
-      break;
-    }
   }
 };

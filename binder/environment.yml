@@ -9,7 +9,7 @@ dependencies:
   - yarn
 
   # Dependencies
-  - jupyterlab >=4.0.0a32,<5.0.0a0
+  - jupyterlab ==4.0.0a32,<5.0.0a0
   - freecad
 
   # Binder

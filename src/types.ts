@@ -28,7 +28,6 @@ export type ValueOf<T> = T[keyof T];
 export enum WorkerAction {
   LOAD_FILE = 'LOAD_FILE',
   SAVE_FILE = 'SAVE_FILE',
-  CLOSE_FILE = 'CLOSE_FILE',
   REGISTER = 'REGISTER'
 }
 
@@ -46,19 +45,11 @@ export interface IRegister extends IMainId {
 export interface ILoadFile extends IMainId {
   action: WorkerAction.LOAD_FILE;
   payload: {
-    fileName: string;
     content: IJCadContent;
   };
 }
 
-export interface ICloseFile extends IMainId {
-  action: WorkerAction.CLOSE_FILE;
-  payload: {
-    fileName: string;
-  };
-}
-
-export type IWorkerMessage = ILoadFile | IRegister | ICloseFile;
+export type IWorkerMessage = ILoadFile | IRegister;
 
 /**
  * Action definitions for main thread
@@ -193,7 +184,7 @@ export interface IJupyterCadClientState {
 export interface IJupyterCadModel extends DocumentRegistry.IModel {
   isDisposed: boolean;
   sharedModel: IJupyterCadDoc;
-  annotationModel: IAnnotationModel;
+  annotationModel?: IAnnotationModel;
   localState: IJupyterCadClientState | null;
 
   themeChanged: Signal<
@@ -225,6 +216,8 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
 
   addMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;
+
+  disposed: ISignal<any, void>;
 }
 
 export type IJupyterCadWidget = IDocumentWidget<ReactWidget, IJupyterCadModel>;

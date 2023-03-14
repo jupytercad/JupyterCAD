@@ -23,6 +23,7 @@ import { IAnnotationModel } from './types';
 import { JupyterCadWidget } from './widget';
 import { ToolbarWidget } from './toolbar/widget';
 import { AnnotationModel } from './annotation/model';
+import { notebookRendererPlugin, ypyWidgetManager } from './notebookrenderer';
 
 const NAME_SPACE = 'jupytercad';
 
@@ -75,7 +76,6 @@ const annotationPlugin: JupyterFrontEndPlugin<IAnnotationModel> = {
     tracker.currentChanged.connect((_, changed) => {
       annotationModel.context = changed?.context || undefined;
     });
-
     return annotationModel;
   }
 };
@@ -114,8 +114,6 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     app.shell.add(rightControlPanel, 'right', { rank: 2000 });
   }
 };
-
-export default [plugin, controlPanel, fcplugin, jcadPlugin, annotationPlugin];
 
 /**
  * Add the FreeCAD commands to the application's command registry.
@@ -165,3 +163,13 @@ function populateMenus(mainMenu: IMainMenu, isEnabled: () => boolean): void {
     isEnabled
   });
 }
+
+export default [
+  plugin,
+  controlPanel,
+  fcplugin,
+  jcadPlugin,
+  annotationPlugin,
+  notebookRendererPlugin,
+  ypyWidgetManager
+];

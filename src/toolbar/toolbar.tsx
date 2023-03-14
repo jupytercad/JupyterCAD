@@ -75,8 +75,10 @@ export class ToolbarReact extends React.Component<IProps, IState> {
               }))
             }
           >
-            {this._toolbarOption.map(value => (
-              <option value={value}>{value}</option>
+            {this._toolbarOption.map((value, idx) => (
+              <option key={idx} value={value}>
+                {value}
+              </option>
             ))}
           </select>
           <span>
@@ -97,7 +99,7 @@ export class ToolbarReact extends React.Component<IProps, IState> {
                 xmlns="http://www.w3.org/2000/svg"
                 className="jp-icon3"
                 fill="#616161"
-                shape-rendering="geometricPrecision"
+                shapeRendering="geometricPrecision"
               >
                 <path d="M5.2,5.9L9,9.7l3.8-3.8l1.2,1.2l-4.9,5l-4.9-5L5.2,5.9z"></path>
               </g>
