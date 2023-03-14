@@ -171,6 +171,8 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   setMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;
 
+  disposed: ISignal<IJupyterCadDoc, any>;
+
   metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
   optionsChanged: ISignal<IJupyterCadDoc, MapChange>;
   objectsChanged: ISignal<IJupyterCadDoc, IJcadObjectDocChange>;

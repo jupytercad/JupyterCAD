@@ -236,6 +236,7 @@ export class JupyterCadDoc
     this._objects.unobserveDeep(this._objectsObserver);
     this._metadata.unobserve(this._metaObserver);
     this._options.unobserve(this._optionsObserver);
+    this._disposed.emit();
   }
 
   get objects(): Array<IJCadObject> {
@@ -262,6 +263,10 @@ export class JupyterCadDoc
 
   get metadataChanged(): ISignal<IJupyterCadDoc, MapChange> {
     return this._metadataChanged;
+  }
+
+  get disposed(): ISignal<IJupyterCadDoc, void> {
+    return this._disposed;
   }
 
   objectExists(name: string): boolean {
@@ -397,6 +402,7 @@ export class JupyterCadDoc
   private _objects: Y.Array<Y.Map<any>>;
   private _options: Y.Map<any>;
   private _metadata: Y.Map<string>;
+  private _disposed = new Signal<IJupyterCadDoc, void>(this);
   private _metadataChanged = new Signal<IJupyterCadDoc, MapChange>(this);
   private _optionsChanged = new Signal<IJupyterCadDoc, MapChange>(this);
   private _objectsChanged = new Signal<IJupyterCadDoc, IJcadObjectDocChange>(
