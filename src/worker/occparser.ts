@@ -1,3 +1,4 @@
+import { IDict } from './../types';
 import {
   Handle_Poly_Triangulation,
   OpenCascadeInstance,
@@ -25,6 +26,7 @@ export class OccParser {
       jcObject: IJCadObject;
       faceList: Array<IFace>;
       edgeList: Array<IEdge>;
+      guiData?: IDict;
     };
   } {
     const maxDeviation = 0.1;

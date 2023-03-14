@@ -571,7 +571,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._meshGroup = new THREE.Group();
     Object.entries(payload).forEach(([objName, data]) => {
-      const { faceList, edgeList } = data;
+      const { faceList, edgeList, jcObject } = data;
 
       const vertices: Array<any> = [];
       const normals: Array<any> = [];
@@ -598,7 +598,7 @@ export class MainView extends React.Component<IProps, IStates> {
         vInd += face.vertexCoord.length / 3;
       });
 
-      const objdata = guidata ? guidata[objName] : null;
+      const objdata = guidata ? guidata?.[objName] : null;
 
       let color = DEFAULT_MESH_COLOR;
       let visible = true;
@@ -607,9 +607,9 @@ export class MainView extends React.Component<IProps, IStates> {
           const rgba = objdata['color'] as number[];
           color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
         }
-        if (Object.prototype.hasOwnProperty.call(objdata, 'visibility')) {
-          visible = objdata['visibility'];
-        }
+        visible = guidata![objName]['visibility'] = jcObject.visible;
+      } else if (guidata) {
+        guidata[objName] = { visibility: jcObject.visible };
       }
 
       // Compile the connected vertices and faces into a model
@@ -673,7 +673,9 @@ export class MainView extends React.Component<IProps, IStates> {
         this._meshGroup.add(mesh);
       }
     });
-
+    if (guidata) {
+      this._model.sharedModel?.setOption('guidata', guidata);
+    }
     // Update the reflength
     if (this._refLength === null && this._meshGroup.children.length) {
       const boxSizeVec = new THREE.Vector3();

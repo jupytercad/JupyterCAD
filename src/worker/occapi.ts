@@ -150,6 +150,8 @@ function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
       content
     );
     if (base && tool) {
+      baseObject[0].visible = false;
+      toolObject[0].visible = false;
       const operator = new oc.BRepAlgoAPI_Cut_3(base, tool);
       if (operator.IsDone()) {
         return setShapePlacement(operator.Shape(), Placement);
@@ -174,6 +176,7 @@ function _Fuse(arg: IFuse, content: IJCadContent): TopoDS_Shape | undefined {
         content
       );
       occShapes.push(base);
+      baseObject[0].visible = false;
     }
   });
   const operator = new oc.BRepAlgoAPI_Fuse_3(occShapes[0], occShapes[1]);
@@ -202,6 +205,7 @@ function _Intersection(
         content
       );
       occShapes.push(base);
+      baseObject[0].visible = false;
     }
   });
   const operator = new oc.BRepAlgoAPI_Common_3(occShapes[0], occShapes[1]);
