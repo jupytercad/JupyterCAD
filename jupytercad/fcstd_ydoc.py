@@ -1,5 +1,5 @@
 import y_py as Y
-from jupyter_ydoc.ydoc import YBaseDoc
+from jupyter_ydoc.ybasedoc import YBaseDoc
 
 from jupytercad.freecad.loader import FCStd
 
