@@ -18,7 +18,7 @@ jobs:
     #- name: Base Setup
     #  uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
     #- name: Install dependencies
-    #  run: python -m pip install -U jupyterlab>=0.4.0a32
+    #  run: python -m pip install -U jupyterlab>=0.4.0b0
 
     - name: Install Conda environment with Micromamba
       uses: mamba-org/provision-with-micromamba@main
@@ -30,7 +30,7 @@ jobs:
           python=3.9
           nodejs=18
           yarn
-          jupyterlab=4.0.0a32
+          jupyterlab=4.0.0b0
           freecad
 
     - name: Lint the extension
@@ -97,7 +97,7 @@ jobs:
         # Remove NodeJS, twice to take care of system and locally installed node versions.
         sudo rm -rf $(which node)
         sudo rm -rf $(which node)
-        pip install "jupyterlab==4.0.0a32" jupytercad*.whl
+        pip install "jupyterlab==4.0.0b0" jupytercad*.whl
 
         jupyter labextension list
         jupyter labextension list 2>&1 | grep -ie "jupytercad.*OK"
@@ -121,7 +121,7 @@ jobs:
     #- name: Base Setup
     #  uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
     #- name: Install dependencies
-    #  run: python -m pip install -U jupyterlab>=0.4.0a32
+    #  run: python -m pip install -U jupyterlab>=0.4.0b0
 
     - name: Install Conda environment with Micromamba
       uses: mamba-org/provision-with-micromamba@main
@@ -133,7 +133,7 @@ jobs:
           python=3.9
           nodejs=18
           yarn
-          jupyterlab=4.0.0a32
+          jupyterlab=4.0.0b0
           freecad
 
     - name: Download extension package
@@ -208,7 +208,7 @@ jobs:
           python=3.9
           nodejs=18
           yarn
-          jupyterlab=4.0.0a32
+          jupyterlab=4.0.0b0
           freecad
 
     - name: Setup pip cache

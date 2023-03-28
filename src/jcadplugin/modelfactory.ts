@@ -70,14 +70,9 @@ export class JupyterCadJcadModelFactory
   /**
    * Create a new instance of JupyterCadModel.
    *
-   * @param languagePreference Language
-   * @param modelDB Model database
    * @returns The model
    */
-  createNew(
-    languagePreference?: string | undefined,
-    collaborationEnabled?: boolean | undefined
-  ): JupyterCadModel {
+  createNew(): JupyterCadModel {
     const model = new JupyterCadModel({
       annotationModel: this._annotationModel
     });

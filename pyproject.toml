@@ -3,7 +3,7 @@ build-backend = "hatchling.build"
 requires = [
     "hatchling>=1.4.0",
     "hatch-nodejs-version",
-    "jupyterlab==4.0.0a32",
+    "jupyterlab==4.0.0b0",
     "datamodel-code-generator",
 ]
 
@@ -14,9 +14,10 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.7"
 dependencies = [
-    "jupyterlab==4.0.0a32",
+    "jupyterlab==4.0.0b0",
     "jupyter_server>=2.0.6",
-    "jupyter_ydoc>=0.2.0,<0.3.0",
+    "jupyter_ydoc>=0.3.0,<0.4",
+    "jupyter_collaboration>=1.0.0a5,<2",
     "ypywidgets>=0.1.2,<0.2.0",
     "comm>=0.1.2,<0.2.0"
 ]

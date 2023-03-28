@@ -8,6 +8,7 @@ import { INotebookTracker } from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { IRenderMime } from '@jupyterlab/rendermime-interfaces';
 import { Kernel } from '@jupyterlab/services';
+import { ITranslator } from '@jupyterlab/translation';
 
 import { NotebookRendererModel } from './model';
 import { IJupyterCadWidgetManager } from './token';
@@ -48,14 +49,16 @@ export const ypyWidgetManager: JupyterFrontEndPlugin<IJupyterCadWidgetManager> =
   {
     id: 'jupytercad:serverInfoPlugin',
     autoStart: true,
-    requires: [INotebookTracker],
+    requires: [INotebookTracker, ITranslator],
     provides: IJupyterCadWidgetManager,
     activate: (
       app: JupyterFrontEnd,
-      tracker: INotebookTracker
+      tracker: INotebookTracker,
+      translator: ITranslator
     ): IJupyterCadWidgetManager => {
       const registry = new JupyterCadWidgetManager({
-        manager: app.serviceManager
+        manager: app.serviceManager,
+        translator
       });
       const onKernelChanged = (
         _: ISessionContext,
