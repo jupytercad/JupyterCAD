@@ -37,6 +37,9 @@ classifiers = [
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 
+[project.scripts]
+jupyter-cad = "jupytercad.app:main"
+
 [project.entry-points.jupyter_ydoc]
 jcad = "jupytercad.jcad_ydoc:YJCad"
 FCStd = "jupytercad.fcstd_ydoc:YFCStd"
@@ -52,6 +55,7 @@ artifacts = ["jupytercad/labextension"]
 exclude = [".github", "binder"]
 
 [tool.hatch.build.targets.wheel.shared-data]
+"etc/jupyter" = "etc/jupyter"
 "install.json" = "share/jupyter/labextensions/jupytercad/install.json"
 "jupytercad/labextension" = "share/jupyter/labextensions/jupytercad"
 
@@ -62,6 +66,7 @@ path = "jupytercad/_version.py"
 dependencies = ["hatch-jupyter-builder>=0.5"]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
+    "jupytercad/static/app.js",
     "jupytercad/labextension/static/style.js",
     "jupytercad/labextension/package.json",
 ]

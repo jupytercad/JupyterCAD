@@ -31,7 +31,7 @@ export const LuminoSchemaForm = (
   const ref = React.useRef<HTMLDivElement>(null);
   const { children } = props;
   React.useEffect(() => {
-    const widget = children as SchemaForm;
+    const widget = children;
     try {
       Widget.attach(widget, ref.current!);
     } catch (e) {

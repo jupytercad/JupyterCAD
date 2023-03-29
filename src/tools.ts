@@ -31,7 +31,7 @@ export function throttle<T extends (...args: any[]) => void>(
   delay = 100
 ): T {
   let last: number;
-  let timer: number;
+  let timer: NodeJS.Timer;
   return function (...args: any[]) {
     const now = +new Date();
     if (last && now < last + delay) {

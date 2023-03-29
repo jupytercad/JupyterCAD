@@ -19,7 +19,7 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
     "target": "es2017",
-    "types": [],
+    "types": ["node"],
     "skipLibCheck": true,
     "lib": ["ES2019", "WebWorker", "DOM"]
   },

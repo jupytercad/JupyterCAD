@@ -128,3 +128,6 @@ jupytercad/_version.py
 jupytercad/notebook/objects/_schema
 
 .yarn
+
+# Lab app
+jupytercad/static

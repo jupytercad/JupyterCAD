@@ -38,7 +38,7 @@ export class JupyterCadWidget
 
 export class JupyterCadPanel extends ReactWidget {
   /**
-   * Construct a `ExamplePanel`.
+   * Construct a `JupyterCADPanel`.
    *
    * @param context - The documents context.
    */
