@@ -23,13 +23,10 @@ import {
   IJupyterCadModel,
   Pointer
 } from './types';
-interface IOptions {
-  annotationModel?: IAnnotationModel;
-  sharedModel?: IJupyterCadDoc;
-  languagePreference?: string;
-}
+import { DocumentRegistry } from '@jupyterlab/docregistry';
+
 export class JupyterCadModel implements IJupyterCadModel {
-  constructor(options: IOptions) {
+  constructor(options: JupyterCadModel.IOptions) {
     const { annotationModel, sharedModel } = options;
     if (sharedModel) {
       this._sharedModel = sharedModel;
@@ -424,4 +421,10 @@ export class JupyterCadDoc
   private _objectsChanged = new Signal<IJupyterCadDoc, IJcadObjectDocChange>(
     this
   );
+}
+
+export namespace JupyterCadModel {
+  export interface IOptions extends DocumentRegistry.IModelOptions<IJupyterCadDoc> {
+    annotationModel?: IAnnotationModel;
+  }
 }

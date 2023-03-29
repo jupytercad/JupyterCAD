@@ -697,40 +697,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyter/collaboration@npm:~1.0.0-alpha.5":
-  version: 1.0.0-alpha.6
-  resolution: "@jupyter/collaboration@npm:1.0.0-alpha.6"
+"@jupyter/collaboration@npm:^1.0.0-alpha.7":
+  version: 1.0.0-alpha.7
+  resolution: "@jupyter/collaboration@npm:1.0.0-alpha.7"
   dependencies:
     "@codemirror/state": ^6.2.0
     "@codemirror/view": ^6.7.0
-    "@jupyterlab/apputils": ^4.0.0-alpha.22
-    "@jupyterlab/coreutils": ^6.0.0-alpha.22
-    "@jupyterlab/services": ^7.0.0-alpha.22
-    "@jupyterlab/ui-components": ^4.0.0-alpha.37
+    "@jupyterlab/apputils": ^4.0.0-beta.0
+    "@jupyterlab/coreutils": ^6.0.0-beta.0
+    "@jupyterlab/services": ^7.0.0-beta.0
+    "@jupyterlab/ui-components": ^4.0.0-beta.0
     "@lumino/coreutils": ^2.0.0
     "@lumino/virtualdom": ^2.0.0
     "@lumino/widgets": ^2.0.0
     react: ^18.2.0
     y-protocols: ^1.0.5
     yjs: ^13.5.40
-  checksum: 398c15d8437cf35f5f1097c205172485897444263a1853f7387dc160a6686a52cb5a4303c3606e0c76e38542483a83479b1065098eff60db5195938fffa2ec2a
+  checksum: 053a267df6791ab66231e2a79227626f502378fea1122626c6c51a1fb1f475ce3fbc916f09b9544acd7aa6142de8af4fd2126aa152daba68c271ee69b3ddc6af
   languageName: node
   linkType: hard
 
-"@jupyter/docprovider@npm:^1.0.0-alpha.5":
-  version: 1.0.0-alpha.6
-  resolution: "@jupyter/docprovider@npm:1.0.0-alpha.6"
+"@jupyter/docprovider@npm:^1.0.0-alpha.7":
+  version: 1.0.0-alpha.7
+  resolution: "@jupyter/docprovider@npm:1.0.0-alpha.7"
   dependencies:
     "@jupyter/ydoc": ^0.3.4
-    "@jupyterlab/coreutils": ^6.0.0-alpha.22
-    "@jupyterlab/services": ^7.0.0-alpha.22
+    "@jupyterlab/coreutils": ^6.0.0-beta.0
+    "@jupyterlab/services": ^7.0.0-beta.0
     "@lumino/coreutils": ^2.0.0
     "@lumino/disposable": ^2.0.0
     "@lumino/signaling": ^2.0.0
     y-protocols: ^1.0.5
     y-websocket: ^1.3.15
     yjs: ^13.5.40
-  checksum: d59d86eb37ab0a07ebabe4cd89edc45cdaeebead840c549bff59fceea828773e8d9bccc586697fe7004059f6d5faa54afee6ce0af2449b10986578b23b97821b
+  checksum: d99b5063bfc1cbdfea0679ba742b84dc243469fdfc38d8a5328232bcca2d9ef183509aa4ef72c57b78dc0a90cb9491d4885dccc4d1d8f318c0fe07c2db286672
   languageName: node
   linkType: hard
 
@@ -1035,7 +1035,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/coreutils@npm:^6.0.0-alpha.22, @jupyterlab/coreutils@npm:^6.0.0-beta.0, @jupyterlab/coreutils@npm:~6.0.0-beta.0":
+"@jupyterlab/coreutils@npm:^6.0.0-beta.0, @jupyterlab/coreutils@npm:~6.0.0-beta.0":
   version: 6.0.0-beta.0
   resolution: "@jupyterlab/coreutils@npm:6.0.0-beta.0"
   dependencies:
@@ -1383,7 +1383,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/services@npm:^7.0.0-alpha.22, @jupyterlab/services@npm:^7.0.0-beta.0, @jupyterlab/services@npm:~7.0.0-beta.0":
+"@jupyterlab/services@npm:^7.0.0-beta.0, @jupyterlab/services@npm:~7.0.0-beta.0":
   version: 7.0.0-beta.0
   resolution: "@jupyterlab/services@npm:7.0.0-beta.0"
   dependencies:
@@ -1569,7 +1569,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/ui-components@npm:^4.0.0-alpha.37, @jupyterlab/ui-components@npm:^4.0.0-beta.0, @jupyterlab/ui-components@npm:~4.0.0-beta.0":
+"@jupyterlab/ui-components@npm:^4.0.0-beta.0, @jupyterlab/ui-components@npm:~4.0.0-beta.0":
   version: 4.0.0-beta.0
   resolution: "@jupyterlab/ui-components@npm:4.0.0-beta.0"
   dependencies:
@@ -5149,8 +5149,8 @@ __metadata:
     "@apidevtools/json-schema-ref-parser": ^9.0.9
     "@deathbeds/jupyterlab-rjsf": ^1.1.0
     "@jupyter-widgets/base": ^6.0.2
-    "@jupyter/collaboration": ~1.0.0-alpha.5
-    "@jupyter/docprovider": ^1.0.0-alpha.5
+    "@jupyter/collaboration": ^1.0.0-alpha.7
+    "@jupyter/docprovider": ^1.0.0-alpha.7
     "@jupyter/ydoc": ^0.3.4
     "@jupyterlab/application": ~4.0.0-beta.0
     "@jupyterlab/apputils": ~4.0.0-beta.0

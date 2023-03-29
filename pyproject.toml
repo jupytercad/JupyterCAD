@@ -17,7 +17,7 @@ dependencies = [
     "jupyterlab==4.0.0b0",
     "jupyter_server>=2.0.6",
     "jupyter_ydoc>=0.3.0,<0.4",
-    "jupyter_collaboration>=1.0.0a5,<2",
+    "jupyter_collaboration>=1.0.0a7,<2",
     "ypywidgets>=0.1.2,<0.2.0",
     "comm>=0.1.2,<0.2.0"
 ]

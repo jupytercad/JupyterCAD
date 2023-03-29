@@ -15,10 +15,13 @@ import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 
 import { ILauncher } from '@jupyterlab/launcher';
 
+import { ICollaborativeDrive, SharedDocumentFactory } from '@jupyter/docprovider';
+
 import { JupyterCadWidgetFactory } from '../factory';
 import { IAnnotation, IJupyterCadDocTracker } from './../token';
 import { JupyterCadFCModelFactory } from './modelfactory';
 import { IAnnotationModel, IJupyterCadWidget } from '../types';
+import { JupyterCadDoc } from '../model';
 
 const FACTORY = 'Jupytercad Freecad Factory';
 
@@ -34,6 +37,7 @@ const activate = (
   themeManager: IThemeManager,
   annotationModel: IAnnotationModel,
   browserFactory: IFileBrowserFactory,
+  drive: ICollaborativeDrive,
   launcher: ILauncher | null,
   palette: ICommandPalette | null
 ): void => {
@@ -63,6 +67,11 @@ const activate = (
     fileFormat: 'base64',
     contentType: 'FCStd'
   });
+
+  const FCStdSharedModelFactory: SharedDocumentFactory = () => {
+    return new JupyterCadDoc();
+  };
+  drive.sharedModelFactory.registerDocumentFactory('FCStd', FCStdSharedModelFactory);
 
   widgetFactory.widgetCreated.connect((sender, widget) => {
     // Notify the instance tracker if restore data needs to update.
@@ -136,7 +145,8 @@ const fcplugin: JupyterFrontEndPlugin<void> = {
     IJupyterCadDocTracker,
     IThemeManager,
     IAnnotation,
-    IFileBrowserFactory
+    IFileBrowserFactory,
+    ICollaborativeDrive
   ],
   optional: [ILauncher, ICommandPalette],
   autoStart: true,

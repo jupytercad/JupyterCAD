@@ -11,9 +11,13 @@ class YJCad(YBaseDoc):
         self._yobjects = self._ydoc.get_array('objects')
         self._yoptions = self._ydoc.get_map('options')
         self._ymeta = self._ydoc.get_map('metadata')
-
-    @property
-    def source(self):
+    
+    def get(self) -> str:
+        """
+        Returns the content of the document.
+        :return: Document's content.
+        :rtype: Any
+        """
         objects = self._yobjects.to_json()
         options = self._yoptions.to_json()
         meta = self._ymeta.to_json()
@@ -21,8 +25,12 @@ class YJCad(YBaseDoc):
             dict(objects=objects, options=options, metadata=meta), indent=2
         )
 
-    @source.setter
-    def source(self, value):
+    def set(self, value: str) -> None:
+        """
+        Sets the content of the document.
+        :param value: The content of the document.
+        :type value: Any
+        """
         valueDict = json.loads(value)
         newObj = []
         for obj in valueDict['objects']:

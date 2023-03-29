@@ -1,7 +1,7 @@
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { Contents } from '@jupyterlab/services';
 
-import { IAnnotationModel } from '../types';
+import { IAnnotationModel, IJupyterCadDoc } from '../types';
 import { JupyterCadModel } from '../model';
 
 /**
@@ -13,6 +13,11 @@ export class JupyterCadJcadModelFactory
   constructor(options: JupyterCadJcadModelFactory.IOptions) {
     this._annotationModel = options.annotationModel;
   }
+
+  /**
+   * Whether the model is collaborative or not.
+   */
+  readonly collaborative = true;
 
   /**
    * The name of the model.
@@ -72,9 +77,11 @@ export class JupyterCadJcadModelFactory
    *
    * @returns The model
    */
-  createNew(): JupyterCadModel {
+  createNew(options: DocumentRegistry.IModelOptions<IJupyterCadDoc>): JupyterCadModel {
     const model = new JupyterCadModel({
-      annotationModel: this._annotationModel
+      sharedModel: options.sharedModel,
+      languagePreference: options.languagePreference,
+      annotationModel: this._annotationModel,
     });
     return model;
   }
