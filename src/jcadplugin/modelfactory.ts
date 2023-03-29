@@ -77,11 +77,13 @@ export class JupyterCadJcadModelFactory
    *
    * @returns The model
    */
-  createNew(options: DocumentRegistry.IModelOptions<IJupyterCadDoc>): JupyterCadModel {
+  createNew(
+    options: DocumentRegistry.IModelOptions<IJupyterCadDoc>
+  ): JupyterCadModel {
     const model = new JupyterCadModel({
       sharedModel: options.sharedModel,
       languagePreference: options.languagePreference,
-      annotationModel: this._annotationModel,
+      annotationModel: this._annotationModel
     });
     return model;
   }

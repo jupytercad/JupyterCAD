@@ -13,7 +13,10 @@ import { ITranslator } from '@jupyterlab/translation';
 const Y_DOCUMENT_PROVIDER_URL = 'api/yjs';
 
 export class JupyterCadWidgetManager implements IJupyterCadWidgetManager {
-  constructor(options: { manager: ServiceManager.IManager, translator: ITranslator }) {
+  constructor(options: {
+    manager: ServiceManager.IManager;
+    translator: ITranslator;
+  }) {
     this._manager = options.manager;
     this._trans = options.translator;
   }
@@ -86,7 +89,7 @@ export class WidgetModelRegistry implements IJupyterCadWidgetModelRegistry {
         contentType,
         model: jcadModel.sharedModel,
         user,
-        translator: this._trans.load('jupyterlab'),
+        translator: this._trans.load('jupyterlab')
       });
       jcadModel.disposed.connect(() => {
         ywsProvider.dispose();

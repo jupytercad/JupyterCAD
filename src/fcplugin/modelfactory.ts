@@ -18,7 +18,7 @@ export class JupyterCadFCModelFactory
    * Whether the model is collaborative or not.
    */
   readonly collaborative = true;
-  
+
   /**
    * The name of the model.
    *
@@ -77,12 +77,14 @@ export class JupyterCadFCModelFactory
    *
    * @returns The model
    */
-  createNew(options: DocumentRegistry.IModelOptions<IJupyterCadDoc>): JupyterCadModel {
-    console.debug("[JupyterCadFCModelFactory.createNew] options:", options);
+  createNew(
+    options: DocumentRegistry.IModelOptions<IJupyterCadDoc>
+  ): JupyterCadModel {
+    console.debug('[JupyterCadFCModelFactory.createNew] options:', options);
     const model = new JupyterCadModel({
       sharedModel: options.sharedModel,
       languagePreference: options.languagePreference,
-      annotationModel: this._annotationModel,
+      annotationModel: this._annotationModel
     });
     return model;
   }

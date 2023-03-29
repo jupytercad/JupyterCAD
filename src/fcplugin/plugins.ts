@@ -15,7 +15,10 @@ import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 
 import { ILauncher } from '@jupyterlab/launcher';
 
-import { ICollaborativeDrive, SharedDocumentFactory } from '@jupyter/docprovider';
+import {
+  ICollaborativeDrive,
+  SharedDocumentFactory
+} from '@jupyter/docprovider';
 
 import { JupyterCadWidgetFactory } from '../factory';
 import { IAnnotation, IJupyterCadDocTracker } from './../token';
@@ -71,7 +74,10 @@ const activate = (
   const FCStdSharedModelFactory: SharedDocumentFactory = () => {
     return new JupyterCadDoc();
   };
-  drive.sharedModelFactory.registerDocumentFactory('FCStd', FCStdSharedModelFactory);
+  drive.sharedModelFactory.registerDocumentFactory(
+    'FCStd',
+    FCStdSharedModelFactory
+  );
 
   widgetFactory.widgetCreated.connect((sender, widget) => {
     // Notify the instance tracker if restore data needs to update.

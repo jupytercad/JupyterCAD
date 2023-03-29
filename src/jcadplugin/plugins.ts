@@ -15,7 +15,10 @@ import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 
 import { ILauncher } from '@jupyterlab/launcher';
 
-import { ICollaborativeDrive, SharedDocumentFactory } from '@jupyter/docprovider';
+import {
+  ICollaborativeDrive,
+  SharedDocumentFactory
+} from '@jupyter/docprovider';
 
 import { IAnnotationModel, IJupyterCadWidget } from './../types';
 import { IAnnotation, IJupyterCadDocTracker } from './../token';
@@ -68,7 +71,10 @@ const activate = (
   const jcadSharedModelFactory: SharedDocumentFactory = () => {
     return new JupyterCadDoc();
   };
-  drive.sharedModelFactory.registerDocumentFactory('jcad', jcadSharedModelFactory);
+  drive.sharedModelFactory.registerDocumentFactory(
+    'jcad',
+    jcadSharedModelFactory
+  );
 
   widgetFactory.widgetCreated.connect((sender, widget) => {
     widget.context.pathChanged.connect(() => {

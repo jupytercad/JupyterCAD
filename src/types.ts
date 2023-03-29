@@ -3,7 +3,12 @@ import { IChangedArgs } from '@jupyterlab/coreutils';
 import { ReactWidget } from '@jupyterlab/ui-components';
 import { User } from '@jupyterlab/services';
 
-import { MapChange, YDocument, StateChange, DocumentChange } from '@jupyter/ydoc';
+import {
+  MapChange,
+  YDocument,
+  StateChange,
+  DocumentChange
+} from '@jupyter/ydoc';
 
 import { ISignal, Signal } from '@lumino/signaling';
 import { JSONObject } from '@lumino/coreutils';
