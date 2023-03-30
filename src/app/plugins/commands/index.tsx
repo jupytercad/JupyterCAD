@@ -7,11 +7,11 @@ import { showDialog, Dialog } from '@jupyterlab/apputils';
 
 import { jupyterIcon } from '@jupyterlab/ui-components';
 
-import { FileBrowser, FilterFileBrowserModel } from '@jupyterlab/filebrowser';
+// import { FileBrowser, FilterFileBrowserModel } from '@jupyterlab/filebrowser';
 
-import { DocumentRegistry } from '@jupyterlab/docregistry';
+// import { DocumentRegistry } from '@jupyterlab/docregistry';
 
-import { DocumentManager } from '@jupyterlab/docmanager';
+// import { DocumentManager } from '@jupyterlab/docmanager';
 
 import * as React from 'react';
 
@@ -26,15 +26,15 @@ const plugin: JupyterFrontEndPlugin<void> = {
   activate: (app: JupyterFrontEnd) => {
     const { commands } = app;
 
-    const docRegistry = new DocumentRegistry();
-    const docManager = new DocumentManager({
-      registry: docRegistry,
-      manager,
-      opener
-    });
-    const fbModel = new FilterFileBrowserModel({
-      manager: docManager
-    });
+    // const docRegistry = new DocumentRegistry();
+    // const docManager = new DocumentManager({
+    //   registry: docRegistry,
+    //   manager,
+    //   opener
+    // });
+    // const fbModel = new FilterFileBrowserModel({
+    //   manager: docManager
+    // });
 
     commands.addCommand(CommandIDs.newFile, {
       label: 'New',

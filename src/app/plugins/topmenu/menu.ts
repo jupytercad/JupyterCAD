@@ -1,8 +1,6 @@
-import { IJupyterLabMenu } from '@jupyterlab/mainmenu';
-
 import { CommandRegistry } from '@lumino/commands';
 
-import { MenuBar } from '@lumino/widgets';
+import { Menu, MenuBar } from '@lumino/widgets';
 
 import { FileMenu } from './file';
 import { HelpMenu } from './help';
@@ -31,14 +29,14 @@ export class MainMenu extends MenuBar implements IMainMenu {
   /**
    * Get the file menu.
    */
-  get fileMenu(): IJupyterLabMenu {
+  get fileMenu(): Menu {
     return this._fileMenu;
   }
 
   /**
    * Get the help menu.
    */
-  get helpMenu(): IJupyterLabMenu {
+  get helpMenu(): Menu {
     return this._helpMenu;
   }
 

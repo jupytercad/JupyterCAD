@@ -35,9 +35,9 @@ const plugin: JupyterFrontEndPlugin<IMainMenu> = {
 
     const menu = new MainMenu({ commands });
     menu.id = 'main-menu';
-    menu.fileMenu.addGroup([{ command: CommandIDs.newFile }]);
-    menu.fileMenu.addGroup([{ command: CommandIDs.loadFile }]);
-    menu.helpMenu.addGroup([{ command: CommandIDs.about }]);
+    menu.fileMenu.addItem({ command: CommandIDs.newFile });
+    menu.fileMenu.addItem({ command: CommandIDs.loadFile });
+    menu.helpMenu.addItem({ command: CommandIDs.about });
 
     app.shell.add(logo, 'top');
     app.shell.add(menu, 'top');

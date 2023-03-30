@@ -1,11 +1,9 @@
-import { JupyterLabMenu } from '@jupyterlab/mainmenu';
-
 import { Menu } from '@lumino/widgets';
 
 /**
  * The File menu.
  */
-export class FileMenu extends JupyterLabMenu {
+export class FileMenu extends Menu {
   /**
    * Construct a file menu.
    *

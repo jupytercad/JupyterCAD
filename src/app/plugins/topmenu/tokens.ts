@@ -1,5 +1,3 @@
-import { IJupyterLabMenu } from '@jupyterlab/mainmenu';
-
 import { Token } from '@lumino/coreutils';
 
 import { Menu } from '@lumino/widgets';
@@ -21,5 +19,10 @@ export interface IMainMenu {
   /**
    * The application "File" menu.
    */
-  readonly helpMenu: IJupyterLabMenu;
+  readonly fileMenu: Menu;
+
+  /**
+   * The application "Help" menu.
+   */
+  readonly helpMenu: Menu;
 }
