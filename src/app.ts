@@ -111,7 +111,6 @@ async function main(): Promise<void> {
   const extension_data = JSON.parse(
     PageConfig.getOption('federated_extensions')
   );
-  console.log('federated extensions', extension_data);
 
   const extensions = await Promise.allSettled(
     extension_data.map(async data => {
@@ -159,7 +158,6 @@ async function main(): Promise<void> {
         }
       }
     } else {
-      console.log('failed to load fed ext', p);
       console.error(p.reason);
     }
   });
@@ -171,7 +169,6 @@ async function main(): Promise<void> {
       console.error((e as any).reason);
     });
 
-  console.log('mods', mods);
   app.registerPluginModules(mods);
 
   await app.start();

@@ -21,8 +21,6 @@ const names = Object.keys(data.dependencies).filter(name => {
     return false;
   }
 });
-console.log('SHARED ', data.dependencies);
-console.log('NAMES ', names);
 
 const distRoot = path.resolve(__dirname, 'jupytercad', 'static');
 
