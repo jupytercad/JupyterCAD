@@ -59,7 +59,7 @@ async function main(): Promise<void> {
   // populate the list of disabled extensions
   const disabled: any[] = [
     'jupytercad:serverInfoPlugin',
-    'jupytercad:notebookRenderer',
+    'jupytercad:notebookRenderer'
   ];
 
   /**
@@ -91,16 +91,14 @@ async function main(): Promise<void> {
   const mods = [
     require('@jupyter/collaboration-extension'),
     require('@jupyterlab/application-extension').default.filter((m: any) =>
-      [
-        '@jupyterlab/application-extension:router',
-      ].includes(m.id)
+      ['@jupyterlab/application-extension:router'].includes(m.id)
     ),
     require('@jupyterlab/apputils-extension').default.filter((m: any) =>
       [
         '@jupyterlab/apputils-extension:state',
         '@jupyterlab/apputils-extension:settings',
         '@jupyterlab/apputils-extension:themes',
-        '@jupyterlab/apputils-extension:toolbar-registry',
+        '@jupyterlab/apputils-extension:toolbar-registry'
       ].includes(m.id)
     ),
     require('@jupyterlab/translation-extension'),
@@ -169,7 +167,7 @@ async function main(): Promise<void> {
   // Load all federated component styles and log errors for any that do not
   (await Promise.allSettled(federatedStylePromises))
     .filter(({ status }) => status === 'rejected')
-    .forEach((e) => {
+    .forEach(e => {
       console.error((e as any).reason);
     });
 
