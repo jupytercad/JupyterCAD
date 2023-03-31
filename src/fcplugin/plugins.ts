@@ -4,7 +4,6 @@ import {
 } from '@jupyterlab/application';
 
 import {
-  ICommandPalette,
   IThemeManager,
   WidgetTracker
 } from '@jupyterlab/apputils';
@@ -12,8 +11,6 @@ import {
 import { fileIcon } from '@jupyterlab/ui-components';
 
 import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
-
-import { ILauncher } from '@jupyterlab/launcher';
 
 import {
   ICollaborativeDrive,
@@ -41,8 +38,6 @@ const activate = (
   annotationModel: IAnnotationModel,
   browserFactory: IFileBrowserFactory,
   drive: ICollaborativeDrive,
-  launcher: ILauncher | null,
-  palette: ICommandPalette | null
 ): void => {
   // Creating the widget factory to register it so the document manager knows about
   // our new DocumentWidget
@@ -125,24 +120,6 @@ const activate = (
       });
     }
   });
-
-  // Add the command to the launcher
-  if (launcher) {
-    /* launcher.add({
-      command: CommandIDs.createNew,
-      category: 'Other',
-      rank: 1
-    }); */
-  }
-
-  // Add the command to the palette
-  if (palette) {
-    /* palette.addItem({
-      command: CommandIDs.createNew,
-      args: { isPalette: true },
-      category: PALETTE_CATEGORY
-    }); */
-  }
 };
 
 const fcplugin: JupyterFrontEndPlugin<void> = {
@@ -154,7 +131,6 @@ const fcplugin: JupyterFrontEndPlugin<void> = {
     IFileBrowserFactory,
     ICollaborativeDrive
   ],
-  optional: [ILauncher, ICommandPalette],
   autoStart: true,
   activate
 };

@@ -131,3 +131,4 @@ jupytercad/notebook/objects/_schema
 
 # Lab app
 jupytercad/static
+jupytercad/schemas

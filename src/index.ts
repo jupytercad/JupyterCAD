@@ -83,12 +83,13 @@ const annotationPlugin: JupyterFrontEndPlugin<IAnnotationModel> = {
 const controlPanel: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:controlpanel',
   autoStart: true,
-  requires: [ILayoutRestorer, IJupyterCadDocTracker, IAnnotation],
+  requires: [IJupyterCadDocTracker, IAnnotation],
+  optional: [ILayoutRestorer],
   activate: (
     app: JupyterFrontEnd,
-    restorer: ILayoutRestorer,
     tracker: IJupyterCadTracker,
-    annotationModel: IAnnotationModel
+    annotationModel: IAnnotationModel,
+    restorer: ILayoutRestorer | null,
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
 

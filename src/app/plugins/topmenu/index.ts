@@ -7,9 +7,9 @@ import { jupyterIcon } from '@jupyterlab/ui-components';
 
 import { Widget } from '@lumino/widgets';
 
-import { MainMenu } from './menu';
+import { MainMenu } from '@jupyterlab/mainmenu';
 
-import { IMainMenu } from './tokens';
+import { IMainMenu } from '@jupyterlab/mainmenu';
 
 import { CommandIDs } from '../commands/ids';
 
@@ -33,11 +33,14 @@ const plugin: JupyterFrontEndPlugin<IMainMenu> = {
 
     const { commands } = app;
 
-    const menu = new MainMenu({ commands });
+    const menu = new MainMenu(commands);
     menu.id = 'main-menu';
-    menu.fileMenu.addItem({ command: CommandIDs.newFile });
-    menu.fileMenu.addItem({ command: CommandIDs.loadFile });
-    menu.helpMenu.addItem({ command: CommandIDs.about });
+
+    menu.fileMenu.addGroup([
+      { command: CommandIDs.newFile },
+      { command: CommandIDs.loadFile }
+    ]);
+    // menu.helpMenu.addItem({ command: CommandIDs.about });
 
     app.shell.add(logo, 'top');
     app.shell.add(menu, 'top');

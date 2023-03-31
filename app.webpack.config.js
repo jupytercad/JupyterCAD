@@ -21,6 +21,8 @@ const names = Object.keys(data.dependencies).filter(name => {
     return false;
   }
 });
+console.log('SHARED ', data.dependencies);
+console.log('NAMES ', names);
 
 const distRoot = path.resolve(__dirname, 'jupytercad', 'static');
 
@@ -38,7 +40,7 @@ fs.copySync(libDir, buildDir);
 const extras = Build.ensureAssets({
   packageNames: names,
   output: buildDir,
-  staticOutput: path.resolve(distRoot)
+  schemaOutput: path.resolve(__dirname, 'jupytercad')
 });
 
 // Make a bootstrap entrypoint

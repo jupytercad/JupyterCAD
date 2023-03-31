@@ -53,7 +53,7 @@ class CADApp(LabServerApp):
     templates_dir = os.path.join(HERE, 'templates')
     app_version = __version__
     app_settings_dir = os.path.join(HERE, 'static', 'application_settings')
-    schemas_dir = os.path.join(HERE, 'static', 'schemas')
+    schemas_dir = os.path.join(HERE, 'schemas')
     themes_dir = os.path.join(HERE, 'static', 'themes')
     user_settings_dir = os.path.join(HERE, 'static', 'user_settings')
     workspaces_dir = os.path.join(HERE, 'static', 'workspaces')

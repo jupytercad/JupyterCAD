@@ -1,3 +1,5 @@
+import { Widget } from '@lumino/widgets';
+
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
@@ -7,11 +9,9 @@ import { showDialog, Dialog } from '@jupyterlab/apputils';
 
 import { jupyterIcon } from '@jupyterlab/ui-components';
 
-// import { FileBrowser, FilterFileBrowserModel } from '@jupyterlab/filebrowser';
+import { FileBrowser, FilterFileBrowserModel } from '@jupyterlab/filebrowser';
 
-// import { DocumentRegistry } from '@jupyterlab/docregistry';
-
-// import { DocumentManager } from '@jupyterlab/docmanager';
+import { DocumentManager } from '@jupyterlab/docmanager';
 
 import * as React from 'react';
 
@@ -26,15 +26,34 @@ const plugin: JupyterFrontEndPlugin<void> = {
   activate: (app: JupyterFrontEnd) => {
     const { commands } = app;
 
-    // const docRegistry = new DocumentRegistry();
-    // const docManager = new DocumentManager({
-    //   registry: docRegistry,
-    //   manager,
-    //   opener
-    // });
-    // const fbModel = new FilterFileBrowserModel({
-    //   manager: docManager
-    // });
+    const opener = {
+      open: (widget: Widget) => {
+        console.log('open ', widget);
+      },
+      get opened() {
+        return {
+          connect: () => {
+            return false;
+          },
+          disconnect: () => {
+            return false;
+          }
+        };
+      }
+    };
+
+    const docManager = new DocumentManager({
+      registry: app.docRegistry,
+      manager: app.serviceManager,
+      opener
+    });
+    const fbModel = new FilterFileBrowserModel({
+      manager: docManager
+    });
+    const fbWidget = new FileBrowser({
+      id: 'filebrowser',
+      model: fbModel
+    });
 
     commands.addCommand(CommandIDs.newFile, {
       label: 'New',
@@ -48,7 +67,16 @@ const plugin: JupyterFrontEndPlugin<void> = {
       label: 'Load',
       caption: 'Load a CAD File',
       execute: () => {
-        console.log('Load');
+        showDialog({
+          title: 'Load a CAD File',
+          body: fbWidget,
+          buttons: [
+            Dialog.createButton({
+              label: 'Dismiss',
+              className: 'about-button jp-mod-reject jp-mod-styled'
+            })
+          ]
+        });
       }
     });
 
