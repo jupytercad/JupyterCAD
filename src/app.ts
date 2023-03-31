@@ -50,6 +50,8 @@ async function createModule(scope, module) {
  */
 async function main(): Promise<void> {
   // Inject some packages in the shared scope
+  require('@jupyterlab/statedb');
+  require('@jupyterlab/settingregistry');
   require('@jupyterlab/launcher');
   require('@jupyterlab/notebook');
   require('@jupyterlab/rendermime');
@@ -89,7 +91,6 @@ async function main(): Promise<void> {
   }
 
   const mods = [
-    require('@jupyter/collaboration-extension'),
     require('@jupyterlab/application-extension').default.filter((m: any) =>
       ['@jupyterlab/application-extension:router'].includes(m.id)
     ),

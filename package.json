@@ -58,6 +58,8 @@
         "watch:labextension": "jupyter labextension watch ."
     },
     "dependencies": {
+        "@codemirror/state": "^6.2.0",
+        "@codemirror/view": "^6.9.3",
         "@deathbeds/jupyterlab-rjsf": "^1.1.0",
         "@jupyter-widgets/base": "^6.0.2",
         "@jupyter/collaboration": "^1.0.0-alpha.7",
@@ -107,7 +109,9 @@
         "@jupyterlab/services": "~7.0.0-beta.0",
         "@jupyterlab/settingeditor": "^4.0.0-beta.0",
         "@jupyterlab/settingeditor-extension": "^4.0.0-beta.0",
+        "@jupyterlab/settingregistry": "^4.0.0-beta.0",
         "@jupyterlab/shortcuts-extension": "^4.0.0-beta.0",
+        "@jupyterlab/statedb": "^4.0.0-beta.0",
         "@jupyterlab/terminal-extension": "^4.0.0-beta.0",
         "@jupyterlab/theme-dark-extension": "^4.0.0-beta.0",
         "@jupyterlab/theme-light-extension": "^4.0.0-beta.0",
@@ -123,6 +127,7 @@
         "@lumino/coreutils": "^2.0.0",
         "@lumino/messaging": "^2.0.0",
         "@lumino/signaling": "^2.0.0",
+        "@lumino/virtualdom": "^2.0.0",
         "@lumino/widgets": "^2.0.0",
         "@naisutech/react-tree": "^3.0.1",
         "@rjsf/core": "^4.2.0",

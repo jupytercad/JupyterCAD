@@ -46,7 +46,7 @@ class CADApp(LabServerApp):
     extension_url = '/cad'
     default_url = '/cad'
     app_url = "/cad"
-    load_other_extensions = False
+    load_other_extensions = True
     name = "cad"
     app_name = 'JupyterLab App Template'
     static_dir = os.path.join(HERE, 'static')
@@ -63,6 +63,7 @@ class CADApp(LabServerApp):
         """
         super().initialize_handlers()
         self.handlers.append(('/cad', CADHandler))
+        print(self.handlers)
 
 
 main = CADApp.launch_instance
