@@ -1,3 +1,4 @@
+@import url('~@jupyter/collaboration/style/index.css');
 @import url('~@jupyterlab/application/style/index.css');
 @import url('~@jupyterlab/filebrowser/style/index.css');
 @import url('~@jupyterlab/mainmenu/style/index.css');
