@@ -3,10 +3,7 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 
-import {
-  IThemeManager,
-  WidgetTracker
-} from '@jupyterlab/apputils';
+import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
 import { fileIcon } from '@jupyterlab/ui-components';
 
@@ -37,7 +34,7 @@ const activate = (
   themeManager: IThemeManager,
   annotationModel: IAnnotationModel,
   drive: ICollaborativeDrive,
-  browserFactory: IFileBrowserFactory | null,
+  browserFactory: IFileBrowserFactory | null
 ): void => {
   // Creating the widget factory to register it so the document manager knows about
   // our new DocumentWidget
@@ -96,7 +93,8 @@ const activate = (
       // Get the directory in which the FCStd file must be created;
       // otherwise take the current filebrowser directory
       const cwd = (args['cwd'] ||
-        browserFactory?.tracker.currentWidget?.model.path || '') as string;
+        browserFactory?.tracker.currentWidget?.model.path ||
+        '') as string;
 
       // Create a new untitled Blockly file
       let model = await app.serviceManager.contents.newUntitled({

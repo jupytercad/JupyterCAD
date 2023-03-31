@@ -41,7 +41,7 @@ const activate = (
   drive: ICollaborativeDrive,
   launcher: ILauncher | null,
   palette: ICommandPalette | null,
-  browserFactory: IFileBrowserFactory | null,
+  browserFactory: IFileBrowserFactory | null
 ): void => {
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
@@ -96,7 +96,8 @@ const activate = (
       // Get the directory in which the JCAD file must be created;
       // otherwise take the current filebrowser directory
       const cwd = (args['cwd'] ||
-        browserFactory?.tracker.currentWidget?.model.path || '') as string;
+        browserFactory?.tracker.currentWidget?.model.path ||
+        '') as string;
 
       // Create a new untitled Blockly file
       let model = await app.serviceManager.contents.newUntitled({
