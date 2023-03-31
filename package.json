@@ -61,6 +61,7 @@
         "@deathbeds/jupyterlab-rjsf": "^1.1.0",
         "@jupyter-widgets/base": "^6.0.2",
         "@jupyter/collaboration": "^1.0.0-alpha.7",
+        "@jupyter/collaboration-extension": "^1.0.0-alpha.7",
         "@jupyter/docprovider": "^1.0.0-alpha.7",
         "@jupyter/ydoc": "^0.3.4",
         "@jupyterlab/application": "~4.0.0-beta.0",

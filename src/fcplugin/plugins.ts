@@ -36,8 +36,8 @@ const activate = (
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
   annotationModel: IAnnotationModel,
-  browserFactory: IFileBrowserFactory,
   drive: ICollaborativeDrive,
+  browserFactory: IFileBrowserFactory | null,
 ): void => {
   // Creating the widget factory to register it so the document manager knows about
   // our new DocumentWidget
@@ -96,7 +96,7 @@ const activate = (
       // Get the directory in which the FCStd file must be created;
       // otherwise take the current filebrowser directory
       const cwd = (args['cwd'] ||
-        browserFactory.tracker.currentWidget?.model.path) as string;
+        browserFactory?.tracker.currentWidget?.model.path || '') as string;
 
       // Create a new untitled Blockly file
       let model = await app.serviceManager.contents.newUntitled({
@@ -128,9 +128,9 @@ const fcplugin: JupyterFrontEndPlugin<void> = {
     IJupyterCadDocTracker,
     IThemeManager,
     IAnnotation,
-    IFileBrowserFactory,
     ICollaborativeDrive
   ],
+  optional: [IFileBrowserFactory],
   autoStart: true,
   activate
 };

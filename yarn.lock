@@ -540,6 +540,29 @@
     jquery "^3.1.1"
     lodash "^4.17.4"
 
+"@jupyter/collaboration-extension@^1.0.0-alpha.7":
+  version "1.0.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/@jupyter/collaboration-extension/-/collaboration-extension-1.0.0-alpha.7.tgz#3dbee7324b9a6307fdb3e4a031aed4e2f2bd4fce"
+  integrity sha512-ThK1sf4SfCetkQIWCGT7QDVRXnk65pyOT2pp0AGAuL8FCWyjVI8zNDKV5hxQHjYFITdVqpMY/9KdoeHlNS5TcA==
+  dependencies:
+    "@jupyter/collaboration" "^1.0.0-alpha.7"
+    "@jupyter/docprovider" "^1.0.0-alpha.7"
+    "@jupyterlab/application" "^4.0.0-beta.0"
+    "@jupyterlab/apputils" "^4.0.0-beta.0"
+    "@jupyterlab/codemirror" "^4.0.0-beta.0"
+    "@jupyterlab/coreutils" "^6.0.0-beta.0"
+    "@jupyterlab/filebrowser" "^4.0.0-beta.0"
+    "@jupyterlab/services" "^7.0.0-beta.0"
+    "@jupyterlab/settingregistry" "^4.0.0-beta.0"
+    "@jupyterlab/statedb" "^4.0.0-beta.0"
+    "@jupyterlab/translation" "^4.0.0-beta.0"
+    "@jupyterlab/ui-components" "^4.0.0-beta.0"
+    "@lumino/commands" "^2.0.0"
+    "@lumino/widgets" "^2.0.0"
+    y-protocols "^1.0.5"
+    y-websocket "^1.3.15"
+    yjs "^13.5.40"
+
 "@jupyter/collaboration@^1.0.0-alpha.7":
   version "1.0.0-alpha.7"
   resolved "https://registry.yarnpkg.com/@jupyter/collaboration/-/collaboration-1.0.0-alpha.7.tgz#f047e7fff4d1f6cd65a543e81775892bd3bd1fcb"

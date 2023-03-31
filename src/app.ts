@@ -49,7 +49,6 @@ async function createModule(scope, module) {
  * The main function
  */
 async function main(): Promise<void> {
-
   // Inject some packages in the shared scope
   require('@jupyterlab/launcher');
   require('@jupyterlab/notebook');
@@ -89,6 +88,7 @@ async function main(): Promise<void> {
   const mods = [
     // require('@jupyterlab/rendermime-extension'),
     // require('@jupyterlab/notebook-extension'),
+    require('@jupyter/collaboration-extension'),
     require('@jupyterlab/apputils-extension').default.filter((m: any) =>
       [
         '@jupyterlab/apputils-extension:settings',
