@@ -89,7 +89,7 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     app: JupyterFrontEnd,
     tracker: IJupyterCadTracker,
     annotationModel: IAnnotationModel,
-    restorer: ILayoutRestorer | null,
+    restorer: ILayoutRestorer | null
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
 
