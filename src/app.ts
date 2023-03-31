@@ -57,7 +57,10 @@ async function main(): Promise<void> {
   const app = new App();
 
   // populate the list of disabled extensions
-  const disabled: any[] = [];
+  const disabled: any[] = [
+    'jupytercad:serverInfoPlugin',
+    'jupytercad:notebookRenderer',
+  ];
 
   /**
    * Iterate over active plugins in an extension.
@@ -151,7 +154,9 @@ async function main(): Promise<void> {
   federatedExtensions.forEach(p => {
     if (p.status === 'fulfilled') {
       for (let plugin of activePlugins(p.value)) {
-        mods.push(plugin);
+        if (!disabled.includes(plugin.id)) {
+          mods.push(plugin);
+        }
       }
     } else {
       console.log('failed to load fed ext', p);
