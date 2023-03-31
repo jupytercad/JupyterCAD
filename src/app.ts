@@ -89,11 +89,15 @@ async function main(): Promise<void> {
   }
 
   const mods = [
-    // require('@jupyterlab/rendermime-extension'),
-    // require('@jupyterlab/notebook-extension'),
     require('@jupyter/collaboration-extension'),
+    require('@jupyterlab/application-extension').default.filter((m: any) =>
+      [
+        '@jupyterlab/application-extension:router',
+      ].includes(m.id)
+    ),
     require('@jupyterlab/apputils-extension').default.filter((m: any) =>
       [
+        '@jupyterlab/apputils-extension:state',
         '@jupyterlab/apputils-extension:settings',
         '@jupyterlab/apputils-extension:themes',
         '@jupyterlab/apputils-extension:toolbar-registry',
