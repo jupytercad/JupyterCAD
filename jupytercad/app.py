@@ -48,7 +48,7 @@ class CADApp(LabServerApp):
     app_url = "/cad"
     load_other_extensions = True
     name = "cad"
-    app_name = 'JupyterLab App Template'
+    app_name = 'JupyterCAD'
     static_dir = os.path.join(HERE, 'static')
     templates_dir = os.path.join(HERE, 'templates')
     app_version = __version__

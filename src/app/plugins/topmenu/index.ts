@@ -34,13 +34,15 @@ const plugin: JupyterFrontEndPlugin<IMainMenu> = {
     const { commands } = app;
 
     const menu = new MainMenu(commands);
-    menu.id = 'main-menu';
+    menu.id = 'jp-MainMenu';
+    menu.addClass('jp-scrollbar-tiny');
 
     menu.fileMenu.addGroup([
       { command: CommandIDs.newFile },
       { command: CommandIDs.loadFile }
     ]);
-    // menu.helpMenu.addItem({ command: CommandIDs.about });
+    menu.helpMenu.addItem({ command: CommandIDs.about });
+    menu.update();
 
     app.shell.add(logo, 'top');
     app.shell.add(menu, 'top');

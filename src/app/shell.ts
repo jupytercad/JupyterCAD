@@ -52,6 +52,8 @@ export class Shell extends Widget implements JupyterFrontEnd.IShell {
     // rootLayout.direction = 'top-to-bottom';
 
     this._top = new Panel();
+    this._top.id = 'jp-top-panel';
+
     this._main = new DockPanelSvg();
 
     const hboxPanel = new BoxPanel();
