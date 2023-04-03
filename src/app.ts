@@ -11,7 +11,7 @@ import '@jupyterlab/application/style/index.js';
 import '@jupyterlab/filebrowser/style/index.js';
 import '@jupyterlab/ui-components/style/index.js';
 
-function loadScript(url) {
+function loadScript(url: string) {
   return new Promise((resolve, reject) => {
     const newScript = document.createElement('script');
     newScript.onerror = reject;
@@ -22,7 +22,7 @@ function loadScript(url) {
   });
 }
 
-async function loadComponent(url, scope) {
+async function loadComponent(url: string, scope: string) {
   await loadScript(url);
 
   // From MIT-licensed https://github.com/module-federation/module-federation-examples/blob/af043acd6be1718ee195b2511adf6011fba4233c/advanced-api/dynamic-remotes/app1/src/App.js#L6-L12
@@ -37,7 +37,7 @@ async function loadComponent(url, scope) {
   await container.init(__webpack_share_scopes__.default);
 }
 
-async function createModule(scope, module) {
+async function createModule(scope: string, module: string) {
   try {
     // @ts-ignore
     const factory = await window._JUPYTERLAB[scope].get(module);

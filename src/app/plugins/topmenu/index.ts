@@ -43,9 +43,10 @@ const plugin: JupyterFrontEndPlugin<IMainMenu> = {
     ]);
     menu.helpMenu.addItem({ command: CommandIDs.about });
     menu.update();
+    menu.setHidden(false);
 
-    app.shell.add(logo, 'top');
-    app.shell.add(menu, 'top');
+    app.shell.add(logo, 'menu');
+    app.shell.add(menu, 'menu');
 
     return menu;
   }

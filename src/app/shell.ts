@@ -32,7 +32,7 @@ export namespace IShell {
   /**
    * The areas of the application shell where widgets can reside.
    */
-  export type Area = 'main' | 'top' | 'left' | 'right';
+  export type Area = 'main' | 'top' | 'left' | 'right' | 'menu';
 }
 
 /**
@@ -53,6 +53,9 @@ export class Shell extends Widget implements JupyterFrontEnd.IShell {
 
     this._top = new Panel();
     this._top.id = 'jp-top-panel';
+
+    this._menuHandler = new Panel();
+    this._menuHandler.id = 'jp-menu-panel';
 
     this._main = new DockPanelSvg();
 
@@ -83,11 +86,16 @@ export class Shell extends Widget implements JupyterFrontEnd.IShell {
     this._main.id = 'main-panel';
 
     BoxLayout.setStretch(this._top, 1);
+    BoxLayout.setStretch(this._menuHandler, 0);
     BoxLayout.setStretch(hboxPanel, 30);
 
     this._main.spacing = 5;
 
     rootLayout.spacing = 0;
+
+    this._top.addWidget(this._menuHandler);
+
+    console.log(this._menuHandler);
 
     rootLayout.addWidget(this._top);
     rootLayout.addWidget(hboxPanel);
@@ -131,6 +139,9 @@ export class Shell extends Widget implements JupyterFrontEnd.IShell {
   ): void {
     if (area === 'top') {
       return this._top.addWidget(widget);
+    }
+    if (area === 'menu') {
+      return this._menuHandler.addWidget(widget);
     }
     if (area === 'left') {
       return this._leftHandler.addWidget(widget, options?.rank || 0);
@@ -190,6 +201,7 @@ export class Shell extends Widget implements JupyterFrontEnd.IShell {
 
   private _main: DockPanelSvg;
   private _top: Panel;
+  private _menuHandler: Panel;
   private _leftHandler: SideBarHandler;
   private _rightHandler: SideBarHandler;
 }
