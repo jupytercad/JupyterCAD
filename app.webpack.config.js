@@ -38,15 +38,12 @@ fs.copySync(libDir, buildDir);
 const extras = Build.ensureAssets({
   packageNames: names,
   output: buildDir,
-  schemaOutput: path.resolve(__dirname, 'jupytercad')
+  schemaOutput: path.resolve(__dirname, 'jupytercad'),
+  themeOutput: path.resolve(__dirname, 'jupytercad'),
 });
 
 // Make a bootstrap entrypoint
 const entryPoint = path.join(buildDir, 'bootstrap.js');
-
-// Also build the style bundle
-const styleDir = path.resolve(__dirname, 'app-style');
-const styleEntryPoint = path.join(styleDir, 'index.css');
 
 if (process.env.NODE_ENV === 'production') {
   baseConfig.mode = 'production';
@@ -76,13 +73,5 @@ module.exports = [
         }
       })
     ]
-  }),
-  merge(baseConfig, {
-    entry: './' + path.relative(__dirname, styleEntryPoint),
-    mode: 'production',
-    output: {
-      path: distRoot,
-      filename: 'app-style.js'
-    }
   })
 ].concat(extras);

@@ -6,6 +6,11 @@ import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 
 import { App } from './app/app';
 
+import '@jupyter/collaboration/style/index.js';
+import '@jupyterlab/application/style/index.js';
+import '@jupyterlab/filebrowser/style/index.js';
+import '@jupyterlab/ui-components/style/index.js';
+
 function loadScript(url) {
   return new Promise((resolve, reject) => {
     const newScript = document.createElement('script');
@@ -102,6 +107,8 @@ async function main(): Promise<void> {
         '@jupyterlab/apputils-extension:toolbar-registry'
       ].includes(m.id)
     ),
+    require('@jupyterlab/theme-light-extension'),
+    require('@jupyterlab/theme-dark-extension'),
     require('@jupyterlab/translation-extension'),
     require('@jupyterlab/codemirror-extension'),
     require('./app/plugins/paths'),

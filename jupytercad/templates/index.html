@@ -2,8 +2,26 @@
 <html>
 <head>
   <title>{{page_config['appName'] | e}}</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
 
-  <script src="{{page_config['fullStaticUrl'] | e}}/app-style.js"></script>
+    #main {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    #top-panel {
+      border-bottom: var(--jp-border-width) solid var(--jp-border-color0);
+      background: var(--jp-layout-color1);
+      display: flex;
+    }
+  </style>
 </head>
 <body>
 
