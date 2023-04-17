@@ -30,7 +30,7 @@ jobs:
           python=3.9
           nodejs=18
           yarn
-          jupyterlab=4.0.0b0
+          "jupyterlab>=4.0.0b0"
           freecad
 
     - name: Lint the extension
@@ -97,7 +97,7 @@ jobs:
         # Remove NodeJS, twice to take care of system and locally installed node versions.
         sudo rm -rf $(which node)
         sudo rm -rf $(which node)
-        pip install "jupyterlab==4.0.0b0" jupytercad*.whl
+        pip install "jupyterlab>=4.0.0b0" jupytercad*.whl
 
         jupyter labextension list
         jupyter labextension list 2>&1 | grep -ie "jupytercad.*OK"
@@ -133,7 +133,7 @@ jobs:
           python=3.9
           nodejs=18
           yarn
-          jupyterlab=4.0.0b0
+          "jupyterlab>=4.0.0b0"
           freecad
 
     - name: Download extension package
@@ -208,7 +208,7 @@ jobs:
           python=3.9
           nodejs=18
           yarn
-          jupyterlab=4.0.0b0
+          "jupyterlab>=4.0.0b0"
           freecad
 
     - name: Setup pip cache
