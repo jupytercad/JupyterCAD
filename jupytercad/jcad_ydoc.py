@@ -1,4 +1,6 @@
 import json
+from typing import Any, Callable
+from functools import partial
 
 import y_py as Y
 from jupyter_ydoc.ybasedoc import YBaseDoc
@@ -43,12 +45,12 @@ class YJCad(YBaseDoc):
             self._yoptions.update(t, valueDict['options'].items())
             self._ymeta.update(t, valueDict['metadata'].items())
 
-    def observe(self, callback):
+    def observe(self, callback: Callable[[str, Any], None]):
         self.unobserve()
-        self._subscriptions[self._ystate] = self._ystate.observe(callback)
-        self._subscriptions[self._ysource] = self._ysource.observe(callback)
+        self._subscriptions[self._ystate] = self._ystate.observe(partial(callback, "state"))
+        self._subscriptions[self._ysource] = self._ysource.observe(partial(callback, "source"))
         self._subscriptions[self._yobjects] = self._yobjects.observe_deep(
-            callback
+            partial(callback, "objects")
         )
-        self._subscriptions[self._yoptions] = self._yoptions.observe(callback)
-        self._subscriptions[self._ymeta] = self._ymeta.observe(callback)
+        self._subscriptions[self._yoptions] = self._yoptions.observe(partial(callback, "options"))
+        self._subscriptions[self._ymeta] = self._ymeta.observe(partial(callback, "meta"))
