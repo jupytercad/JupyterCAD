@@ -258,6 +258,10 @@ export class JupyterCadDoc
     super.dispose();
   }
 
+  get version(): string {
+    return '0.1.0';
+  }
+
   get objects(): Array<IJCadObject> {
     return this._objects.map(
       obj => JSONExt.deepCopy(obj.toJSON()) as IJCadObject
