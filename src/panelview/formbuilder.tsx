@@ -1,7 +1,8 @@
-import * as React from 'react';
-import { ISubmitEvent } from '@rjsf/core';
-import { Widget } from '@lumino/widgets';
 import { SchemaForm } from '@deathbeds/jupyterlab-rjsf';
+import { MessageLoop } from '@lumino/messaging';
+import { Widget } from '@lumino/widgets';
+import { ISubmitEvent } from '@rjsf/core';
+import * as React from 'react';
 
 import { IDict } from '../types';
 
@@ -33,7 +34,9 @@ export const LuminoSchemaForm = (
   React.useEffect(() => {
     const widget = children as SchemaForm;
     try {
-      Widget.attach(widget, ref.current!);
+      MessageLoop.sendMessage(widget, Widget.Msg.BeforeAttach);
+      ref.current!.insertBefore(widget.node, null);
+      MessageLoop.sendMessage(widget, Widget.Msg.AfterAttach);
     } catch (e) {
       console.warn('Exception while attaching Lumino widget.', e);
     }

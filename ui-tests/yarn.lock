@@ -1185,7 +1185,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.26.1":
+"@playwright/test@npm:^1.26.1, @playwright/test@npm:^1.32.3":
   version: 1.32.3
   resolution: "@playwright/test@npm:1.32.3"
   dependencies:
@@ -2814,6 +2814,7 @@ __metadata:
   resolution: "jupytercad-ui-tests@workspace:."
   dependencies:
     "@jupyterlab/galata": 5.0.0-alpha.14
+    "@playwright/test": ^1.32.3
   languageName: unknown
   linkType: soft
 
