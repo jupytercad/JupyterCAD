@@ -61,7 +61,7 @@ test.describe('Tree UI test', () => {
       .nth(4)
       .click();
 
-    // expect(errors).toBe(0);
+    expect(errors).toBe(0);
     const tree = await page.getByRole('region', {
       name: 'Objects tree Section'
     });
