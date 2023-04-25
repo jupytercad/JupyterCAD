@@ -191,6 +191,12 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.sharedModel.awareness.setLocalStateField('selectedPropField', data);
   }
 
+  syncFormData(form: any): void {
+    if (this._sharedModel) {
+      this._sharedModel.awareness.setLocalStateField('toolbarForm', form);
+    }
+  }
+
   getClientId(): number {
     return this.sharedModel.awareness.clientID;
   }

@@ -216,6 +216,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     value: any;
     parentType: 'panel' | 'dialog';
   });
+  syncFormData(form: any): void;
 
   getClientId(): number;
 
