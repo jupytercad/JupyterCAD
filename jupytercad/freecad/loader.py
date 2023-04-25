@@ -1,4 +1,5 @@
 import base64
+import json
 import logging
 import os
 import tempfile
@@ -137,7 +138,6 @@ class FCStd:
                 tmp.write(file_content)
             fc_file = fc.app.openDocument(tmp.name)
             fc_file.Meta = metadata
-
             new_objs = dict([(o['name'], o) for o in objects])
 
             current_objs = dict([(o.Name, o) for o in fc_file.Objects])
