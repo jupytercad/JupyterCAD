@@ -10,7 +10,7 @@
         "test:debug": "PWDEBUG=1 npx playwright test"
     },
     "devDependencies": {
-        "@jupyterlab/galata": "5.0.0-alpha.14",
-        "@playwright/test": "^1.32.3"
+        "@jupyterlab/galata": "^5.0.0-beta.0",
+        "@playwright/test": "^1.32.0"
     }
 }
