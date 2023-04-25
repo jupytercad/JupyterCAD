@@ -70,7 +70,7 @@ test.describe('Sketcher test', () => {
     await page.getByRole('button', { name: 'CIRCLE' }).click();
     await page
       .locator('canvas')
-      .nth(3)
+      .nth(1)
       .click({
         position: {
           x: 455,
@@ -79,7 +79,7 @@ test.describe('Sketcher test', () => {
       });
     await page
       .locator('canvas')
-      .nth(3)
+      .nth(1)
       .click({
         position: {
           x: 455,

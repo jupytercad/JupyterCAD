@@ -18,19 +18,19 @@ jobs:
     #- name: Base Setup
     #  uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
     #- name: Install dependencies
-    #  run: python -m pip install -U jupyterlab>=0.4.0a32
+    #  run: python -m pip install -U jupyterlab>=0.4.0b0
 
     - name: Install Conda environment with Micromamba
       uses: mamba-org/provision-with-micromamba@main
       with:
         environment-name: cad
         environment-file: false
-        channels: conda-forge/label/jupyterlab_alpha,conda-forge
+        channels: conda-forge/label/jupyterlab_beta,conda-forge
         extra-specs: |
           python=3.9
           nodejs=18
           yarn
-          jupyterlab=4.0.0a32
+          "jupyterlab>=4.0.0b0"
           freecad
 
     - name: Lint the extension
@@ -97,7 +97,7 @@ jobs:
         # Remove NodeJS, twice to take care of system and locally installed node versions.
         sudo rm -rf $(which node)
         sudo rm -rf $(which node)
-        pip install "jupyterlab==4.0.0a32" jupytercad*.whl
+        pip install "jupyterlab>=4.0.0b0" jupytercad*.whl
 
         jupyter labextension list
         jupyter labextension list 2>&1 | grep -ie "jupytercad.*OK"
@@ -121,19 +121,19 @@ jobs:
     #- name: Base Setup
     #  uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
     #- name: Install dependencies
-    #  run: python -m pip install -U jupyterlab>=0.4.0a32
+    #  run: python -m pip install -U jupyterlab>=0.4.0b0
 
     - name: Install Conda environment with Micromamba
       uses: mamba-org/provision-with-micromamba@main
       with:
         environment-name: cad
         environment-file: false
-        channels: conda-forge/label/jupyterlab_alpha,conda-forge
+        channels: conda-forge/label/jupyterlab_beta,conda-forge
         extra-specs: |
           python=3.9
           nodejs=18
           yarn
-          jupyterlab=4.0.0a32
+          "jupyterlab>=4.0.0b0"
           freecad
 
     - name: Download extension package
@@ -163,14 +163,14 @@ jobs:
 
     - name: Install browser
       shell: bash -l {0}
-      run: jlpm playwright install chromium
+      run: npx playwright install chromium
       working-directory: ui-tests
 
     - name: Execute integration tests
       shell: bash -l {0}
       working-directory: ui-tests
       run: |
-        jlpm playwright test
+        npx playwright test
 
     - name: Upload Playwright Test report
       if: always()
@@ -203,12 +203,12 @@ jobs:
       with:
         environment-name: cad
         environment-file: false
-        channels: conda-forge/label/jupyterlab_alpha,conda-forge
+        channels: conda-forge/label/jupyterlab_beta,conda-forge
         extra-specs: |
           python=3.9
           nodejs=18
           yarn
-          jupyterlab=4.0.0a32
+          "jupyterlab>=4.0.0b0"
           freecad
 
     - name: Setup pip cache
@@ -248,7 +248,6 @@ jobs:
       run: |
         jlpm
         jlpm run build
-        jlpm link
       working-directory: jupytercad-opencascade
 
     - name: Build the extension

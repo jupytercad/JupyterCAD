@@ -121,8 +121,10 @@ ui-tests/test-results/
 ui-tests/playwright-report/
 
 examples/*.ipynb
-# Hatchling 
+# Hatchling
 jupytercad/_version.py
 
 #Schema
 jupytercad/notebook/objects/_schema
+
+.yarn

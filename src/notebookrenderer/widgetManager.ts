@@ -6,17 +6,27 @@ import {
   IJupyterCadWidgetModelRegistry,
   IJupyterCadWidgetManager
 } from './token';
-import { WebSocketProvider } from '@jupyterlab/docprovider';
+import { WebSocketProvider } from '@jupyter/docprovider';
 import { YCommProvider } from './yCommProvider';
 import { IJupyterCadModel } from '../types';
+import { ITranslator } from '@jupyterlab/translation';
 const Y_DOCUMENT_PROVIDER_URL = 'api/yjs';
 
 export class JupyterCadWidgetManager implements IJupyterCadWidgetManager {
-  constructor(options: { manager: ServiceManager.IManager }) {
+  constructor(options: {
+    manager: ServiceManager.IManager;
+    translator: ITranslator;
+  }) {
     this._manager = options.manager;
+    this._trans = options.translator;
   }
+
   registerKernel(kernel: Kernel.IKernelConnection): void {
-    const wm = new WidgetModelRegistry({ kernel, manager: this._manager });
+    const wm = new WidgetModelRegistry({
+      kernel,
+      manager: this._manager,
+      translator: this._trans
+    });
     this._registry.set(kernel.id, wm);
   }
 
@@ -35,15 +45,18 @@ export class JupyterCadWidgetManager implements IJupyterCadWidgetManager {
 
   private _registry = new Map<string, IJupyterCadWidgetModelRegistry>();
   private _manager: ServiceManager.IManager;
+  private _trans: ITranslator;
 }
 
 export class WidgetModelRegistry implements IJupyterCadWidgetModelRegistry {
   constructor(options: {
     kernel: Kernel.IKernelConnection;
     manager: ServiceManager.IManager;
+    translator: ITranslator;
   }) {
-    const { kernel, manager } = options;
+    const { kernel, manager, translator } = options;
     this._manager = manager;
+    this._trans = translator;
     kernel.registerCommTarget('@jupytercad:widget', this._handle_comm_open);
   }
 
@@ -75,7 +88,8 @@ export class WidgetModelRegistry implements IJupyterCadWidgetModelRegistry {
         format,
         contentType,
         model: jcadModel.sharedModel,
-        user
+        user,
+        translator: this._trans.load('jupyterlab')
       });
       jcadModel.disposed.connect(() => {
         ywsProvider.dispose();
@@ -103,4 +117,5 @@ export class WidgetModelRegistry implements IJupyterCadWidgetModelRegistry {
 
   private _jcadModels: Map<string, IJupyterCadModel> = new Map();
   private _manager: ServiceManager.IManager;
+  private _trans: ITranslator;
 }

@@ -15,10 +15,16 @@ import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 
 import { ILauncher } from '@jupyterlab/launcher';
 
+import {
+  ICollaborativeDrive,
+  SharedDocumentFactory
+} from '@jupyter/docprovider';
+
 import { IAnnotationModel, IJupyterCadWidget } from './../types';
 import { IAnnotation, IJupyterCadDocTracker } from './../token';
 import { JupyterCadWidgetFactory } from '../factory';
 import { JupyterCadJcadModelFactory } from './modelfactory';
+import { JupyterCadDoc } from '../model';
 
 const FACTORY = 'Jupytercad Jcad Factory';
 const PALETTE_CATEGORY = 'JupyterCAD';
@@ -33,6 +39,7 @@ const activate = (
   themeManager: IThemeManager,
   annotationModel: IAnnotationModel,
   browserFactory: IFileBrowserFactory,
+  drive: ICollaborativeDrive,
   launcher: ILauncher | null,
   palette: ICommandPalette | null
 ): void => {
@@ -60,6 +67,14 @@ const activate = (
     fileFormat: 'text',
     contentType: 'jcad'
   });
+
+  const jcadSharedModelFactory: SharedDocumentFactory = () => {
+    return new JupyterCadDoc();
+  };
+  drive.sharedModelFactory.registerDocumentFactory(
+    'jcad',
+    jcadSharedModelFactory
+  );
 
   widgetFactory.widgetCreated.connect((sender, widget) => {
     widget.context.pathChanged.connect(() => {
@@ -131,7 +146,8 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IJupyterCadDocTracker,
     IThemeManager,
     IAnnotation,
-    IFileBrowserFactory
+    IFileBrowserFactory,
+    ICollaborativeDrive
   ],
   optional: [ILauncher, ICommandPalette],
   autoStart: true,
