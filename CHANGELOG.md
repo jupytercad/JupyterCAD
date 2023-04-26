@@ -2,6 +2,28 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.0a2
+
+([Full Changelog](https://github.com/QuantStack/jupytercad/compare/v0.1.0a1...2f7b81060a1adab614bb6df1284382b0a1a5a546))
+
+### Enhancements made
+
+- Hide source objects after executing operators [#117](https://github.com/QuantStack/jupytercad/pull/117) ([@trungleduc](https://github.com/trungleduc))
+- Expose JupyterCad 3d view and APIs in notebook [#102](https://github.com/QuantStack/jupytercad/pull/102) ([@trungleduc](https://github.com/trungleduc))
+
+### Maintenance and upkeep improvements
+
+- Update to JupyterLab beta 2 [#130](https://github.com/QuantStack/jupytercad/pull/130) ([@trungleduc](https://github.com/trungleduc))
+- Update to JupyterLab beta 0 [#119](https://github.com/QuantStack/jupytercad/pull/119) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/QuantStack/jupytercad/graphs/contributors?from=2023-03-09&to=2023-04-26&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-03-09..2023-04-26&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-03-09..2023-04-26&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-03-09..2023-04-26&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.0a1
 
 ([Full Changelog](https://github.com/QuantStack/jupytercad/compare/c58c7dd5a0ae9bcc010d24db38dbc9a2d68055c8...f7a0f6ba2b00a1661981ccbdda4166be9182d9fc))
@@ -103,5 +125,3 @@
 ([GitHub contributors page for this release](https://github.com/QuantStack/jupytercad/graphs/contributors?from=2021-11-24&to=2023-03-09&type=c))
 
 [@bollwyvl](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Abollwyvl+updated%3A2021-11-24..2023-03-09&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Adavidbrochart+updated%3A2021-11-24..2023-03-09&type=Issues) | [@github-actions](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Agithub-actions+updated%3A2021-11-24..2023-03-09&type=Issues) | [@hbcarlos](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Ahbcarlos+updated%3A2021-11-24..2023-03-09&type=Issues) | [@jtpio](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Ajtpio+updated%3A2021-11-24..2023-03-09&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3AmartinRenou+updated%3A2021-11-24..2023-03-09&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Atrungleduc+updated%3A2021-11-24..2023-03-09&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
