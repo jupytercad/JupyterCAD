@@ -81,9 +81,12 @@ source_dir = "src"
 build_dir = "jupytercad/labextension"
 
 [tool.jupyter-releaser.options]
-version-cmd = "python scripts/bump-version.py"
+version-cmd = "python scripts/bump-version.py --force"
 
 [tool.jupyter-releaser.hooks]
+before-bump-version = [
+    "python -m pip install hatch 'jupyterlab>=4.0.0b2'",
+]
 before-build-npm = [
     "python -m pip install datamodel-code-generator jupyterlab --pre -U",
     "jlpm",
