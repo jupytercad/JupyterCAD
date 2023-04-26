@@ -46,9 +46,12 @@ source = "nodejs"
 [tool.hatch.metadata.hooks.nodejs]
 fields = ["description", "authors", "urls"]
 
+[tool.hatch.build]
+exclude = [".github", "binder", "examples", "ui-tests"]
+artifacts = ["jupytercad/labextension"]
+
 [tool.hatch.build.target.sdist]
 artifacts = ["jupytercad/labextension"]
-exclude = [".github", "binder"]
 
 [tool.hatch.build.targets.wheel.shared-data]
 "install.json" = "share/jupyter/labextensions/jupytercad/install.json"
