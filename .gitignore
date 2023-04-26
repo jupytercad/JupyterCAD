@@ -113,12 +113,12 @@ dmypy.json
 .DS_Store
 .vscode
 
-src/_interface/
+**/_interface/
 *.db
 
 # Integration tests
-ui-tests/test-results/
-ui-tests/playwright-report/
+**/ui-tests/test-results/
+**/ui-tests/playwright-report/
 
 examples/*.ipynb
 # Hatchling

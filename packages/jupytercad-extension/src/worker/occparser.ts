@@ -1,11 +1,11 @@
-import { IDict } from './../types';
+import { IDict } from '../types';
 import {
   Handle_Poly_Triangulation,
   OpenCascadeInstance,
   TopoDS_Shape
-} from 'jupytercad-opencascade';
+} from '@jupytercad/jupytercad-opencascade';
 
-import { IJCadObject } from '../_interface/jcad.d';
+import { IJCadObject } from '../_interface/jcad';
 import { IEdge, IFace } from '../types';
 
 interface IShapeList {

@@ -1,5 +1,5 @@
 import { IJCadContent } from '../_interface/jcad';
-import { TopoDS_Shape } from 'jupytercad-opencascade';
+import { TopoDS_Shape } from '@jupytercad/jupytercad-opencascade';
 import { IBox } from '../_interface/box';
 import { ICylinder } from '../_interface/cylinder';
 import { ISphere } from '../_interface/sphere';

@@ -3,13 +3,17 @@ const path = require('path');
 
 const occPath = [
   __dirname,
+  '../',
+  '../',
   'node_modules',
-  'jupytercad-opencascade',
+  '@jupytercad/jupytercad-opencascade',
   'lib',
   '*.wasm'
 ];
 const staticPath = [
   __dirname,
+  '../',
+  '../',
   'jupytercad',
   'labextension',
   'static',
