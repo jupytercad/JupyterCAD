@@ -46,16 +46,17 @@ source = "nodejs"
 [tool.hatch.metadata.hooks.nodejs]
 fields = ["description", "authors", "urls"]
 
-[tool.hatch.build]
-exclude = [".github", "binder", "examples", "ui-tests"]
-artifacts = ["jupytercad/labextension"]
 
-[tool.hatch.build.target.sdist]
-artifacts = ["jupytercad/labextension"]
+[tool.hatch.build.targets.sdist]
+artifacts = ["/jupytercad/labextension"]
+exclude = ["/.github", "/binder", "node_modules", "examples", "ui-tests"]
+
+[tool.hatch.build.targets.sdist.force-include]
+"./packages" = "packages"
 
 [tool.hatch.build.targets.wheel.shared-data]
-"install.json" = "share/jupyter/labextensions/jupytercad/install.json"
-"jupytercad/labextension" = "share/jupyter/labextensions/jupytercad"
+"install.json" = "share/jupyter/labextensions/@jupytercad/jupytercad-extension/install.json"
+"jupytercad/labextension" = "share/jupyter/labextensions/@jupytercad/jupytercad-extension"
 
 [tool.hatch.build.hooks.version]
 path = "jupytercad/_version.py"
