@@ -14,12 +14,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    # Use mamba instead due to freecad
-    #- name: Base Setup
-    #  uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
-    #- name: Install dependencies
-    #  run: python -m pip install -U jupyterlab>=0.4.0b0
-
     - name: Install Conda environment with Micromamba
       uses: mamba-org/provision-with-micromamba@main
       with:
@@ -39,13 +33,6 @@ jobs:
         set -eux
         jlpm
         jlpm run lint:check
-
-    # We don't have tests
-    #- name: Test the extension
-    #  shell: bash -l {0}
-    #  run: |
-    #    set -eux
-    #    jlpm run test
 
     - name: Build the extension
       shell: bash -l {0}
