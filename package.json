@@ -28,6 +28,7 @@
         "build:prod": "lerna run build:prod",
         "build:test": "lerna run build:test",
         "clean": "lerna run clean",
+        "clean:all": "lerna run clean:all",
         "eslint": "eslint . --ext .ts,.tsx --fix",
         "eslint:check": "eslint . --ext .ts,.tsx",
         "prettier": "prettier --write \"**/*{.ts,.tsx,.js,.jsx,.css,.json,.md}\"",
