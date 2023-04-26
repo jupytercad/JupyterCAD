@@ -12,7 +12,9 @@
         "url": "https://github.com/QuantStack/jupytercad/issues"
     },
     "license": "BSD-3-Clause",
-    "author": "JupyterCad contributors",
+    "author": {
+        "name": "JupyterCad contributors"
+    },
     "files": [
         "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
         "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
@@ -35,9 +37,10 @@
         "build:lib": "tsc",
         "build:worker": "webpack --config worker.webpack.config.js --mode=development",
         "build:worker:prod": "webpack --config worker.webpack.config.js --mode=production",
+        "clean": "rimraf tsconfig.tsbuildinfo",
         "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
         "clean:labextension": "rimraf ../../jupytercad/labextension",
-        "clean": "jlpm run clean:lib && jlpm run clean:labextension",
+        "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
         "install:extension": "jlpm run build",
         "watch": "run-p watch:worker watch:src watch:labextension",
         "watch:src": "tsc -w",

@@ -17,7 +17,9 @@
     "bugs": {
         "url": "https://github.com/QuantStack/jupytercad/issues"
     },
-    "author": "JupyterCad contributors",
+    "author": {
+        "name": "JupyterCad contributors"
+    },
     "workspaces": [
         "packages/*"
     ],
