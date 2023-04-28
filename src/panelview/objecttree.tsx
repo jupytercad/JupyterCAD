@@ -9,7 +9,12 @@ import {
   closeIcon
 } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import { ReactTree, ThemeSettings, TreeNodeList } from '@naisutech/react-tree';
+import {
+  ReactTree,
+  ThemeSettings,
+  TreeNode,
+  TreeNodeList
+} from '@naisutech/react-tree';
 
 import visibilitySvg from '../../style/icon/visibility.svg';
 import visibilityOffSvg from '../../style/icon/visibilityOff.svg';
@@ -145,34 +150,89 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   }
 
   stateToTree = () => {
-    if (this.state.jcadObject) {
-      return this.state.jcadObject.map(obj => {
-        const name = obj.name;
+    if (!this.state.jcadObject) {
+      return [];
+    }
+
+    const objects = this.state.jcadObject;
+    const rootNodes: TreeNodeList = [];
+    const nodes = new Map<string, TreeNode | string>();
+
+    objects.forEach(obj => {
+      console.debug('Object:', obj);
+      const node: TreeNode = {
+        id: obj.name,
+        label: obj.name,
+        parentId: nodes.has(obj.name) ? (nodes.get(obj.name) as string) : null,
+        items: undefined
+      };
+
+      if (obj.parameters && 'Group' in obj.parameters) {
+        node.label = `Group (#${obj.name})`;
+        node.parentId = nodes.has(obj.name)
+          ? (nodes.get(obj.name) as string)
+          : null;
+        nodes.set(obj.name, node);
+
+        console.debug('\tGroup:', obj.parameters['Group']);
+        obj.parameters['Group'].forEach(name => {
+          if (!nodes.has(name)) {
+            nodes.set(name, obj.name);
+          } else {
+            const node = nodes.get(name) as TreeNode;
+            node.parentId = obj.name;
+            nodes.set(name, node);
+          }
+        });
+
+        console.debug('\tOriginFeatures:', obj.parameters['OriginFeatures']);
+        obj.parameters['OriginFeatures']?.forEach(name => {
+          if (!nodes.has(name)) {
+            nodes.set(name, obj.name);
+          } else {
+            const node = nodes.get(name) as TreeNode;
+            node.parentId = obj.name;
+            nodes.set(name, node);
+          }
+        });
+
+        if ('Origin' in obj.parameters) {
+          const name = obj.parameters['Origin'];
+          if (!nodes.has(name)) {
+            nodes.set(name, obj.name);
+          } else {
+            const node = nodes.get(name) as TreeNode;
+            node.parentId = obj.name;
+            nodes.set(name, node);
+          }
+        }
+      } else {
         const items: TreeNodeList = [];
         if (obj.shape) {
           items.push({
-            id: `${name}#shape#${obj.shape}#${this.state.filePath}`,
+            id: `${obj.name}#shape#${obj.shape}#${this.state.filePath}`,
             label: 'Shape',
-            parentId: name
+            parentId: obj.name
           });
         }
         if (obj.operators) {
           items.push({
-            id: `${name}#operator#${this.state.filePath}`,
+            id: `${obj.name}#operator#${this.state.filePath}`,
             label: 'Operators',
-            parentId: name
+            parentId: obj.name
           });
         }
-        return {
-          id: name,
-          label: obj.name ?? `Object (#${name})`,
-          parentId: null,
-          items
-        };
-      });
-    }
+        //node.label = `Object (#${obj.name})`;
+        node.items = items;
+        nodes.set(obj.name, node);
+      }
 
-    return [];
+      rootNodes.push(node);
+    });
+
+    console.debug('rootNodes:', rootNodes);
+    console.debug('\n\n');
+    return rootNodes;
   };
 
   getObjectFromName(name: string | null): IJCadObject | undefined {
@@ -249,7 +309,11 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     let selectedNodes: (number | string)[] = [];
     if (selectedNode) {
       const parentNode = data.filter(node => node.id === selectedNode);
-      if (parentNode.length > 0 && parentNode[0].items.length > 0) {
+      if (
+        parentNode.length > 0 &&
+        parentNode[0].items &&
+        parentNode[0].items.length > 0
+      ) {
         selectedNodes = [parentNode[0].items[0].id];
       }
     }
