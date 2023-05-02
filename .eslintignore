@@ -2,4 +2,9 @@ node_modules
 dist
 coverage
 **/*.d.ts
+**/*.js
 tests
+ui-tests
+**/build/
+jupytercad/
+examples/

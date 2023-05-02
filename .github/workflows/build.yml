@@ -33,6 +33,7 @@ jobs:
         run: |
           set -eux
           jlpm
+          export NODE_OPTIONS="--max-old-space-size=4096"
           jlpm run lint:check
 
       - name: Setup pip cache
