@@ -13,8 +13,6 @@
     "noUnusedLocals": true,
     "preserveWatchOutput": true,
     "resolveJsonModule": true,
-    "outDir": "lib",
-    "rootDir": "src",
     "strict": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
@@ -22,6 +20,5 @@
     "types": [],
     "skipLibCheck": true,
     "lib": ["ES2019", "WebWorker", "DOM"]
-  },
-  "include": ["src/**/*", "src/schema/*.json", "src/_interface/*.json"]
+  }
 }

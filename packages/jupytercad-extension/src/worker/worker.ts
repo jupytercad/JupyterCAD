@@ -1,4 +1,6 @@
-import initOpenCascade, { OpenCascadeInstance } from 'jupytercad-opencascade';
+import initOpenCascade, {
+  OpenCascadeInstance
+} from '@jupytercad/jupytercad-opencascade';
 import {
   WorkerAction,
   IWorkerMessage,

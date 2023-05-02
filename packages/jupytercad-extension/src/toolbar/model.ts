@@ -1,6 +1,6 @@
 import { Signal, ISignal } from '@lumino/signaling';
-import { IJCadModel } from './../_interface/jcad.d';
-import { IDict, IJupyterCadModel } from './../types';
+import { IJCadModel } from '../_interface/jcad';
+import { IDict, IJupyterCadModel } from '../types';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import formSchema from '../_interface/forms.json';
 import { IJupyterCadDoc } from '../types';

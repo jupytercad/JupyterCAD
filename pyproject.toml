@@ -46,13 +46,17 @@ source = "nodejs"
 [tool.hatch.metadata.hooks.nodejs]
 fields = ["description", "authors", "urls"]
 
-[tool.hatch.build.target.sdist]
-artifacts = ["jupytercad/labextension"]
-exclude = [".github", "binder"]
+
+[tool.hatch.build.targets.sdist]
+artifacts = ["/jupytercad/labextension"]
+exclude = ["/.github", "/binder", "node_modules", "examples", "ui-tests"]
+
+[tool.hatch.build.targets.sdist.force-include]
+"./packages" = "packages"
 
 [tool.hatch.build.targets.wheel.shared-data]
-"install.json" = "share/jupyter/labextensions/jupytercad/install.json"
-"jupytercad/labextension" = "share/jupyter/labextensions/jupytercad"
+"install.json" = "share/jupyter/labextensions/@jupytercad/jupytercad-extension/install.json"
+"jupytercad/labextension" = "share/jupyter/labextensions/@jupytercad/jupytercad-extension"
 
 [tool.hatch.build.hooks.version]
 path = "jupytercad/_version.py"
@@ -77,9 +81,12 @@ source_dir = "src"
 build_dir = "jupytercad/labextension"
 
 [tool.jupyter-releaser.options]
-version-cmd = "python scripts/bump-version.py"
+version-cmd = "python scripts/bump-version.py --force"
 
 [tool.jupyter-releaser.hooks]
+before-bump-version = [
+    "python -m pip install hatch 'jupyterlab>=4.0.0b2'",
+]
 before-build-npm = [
     "python -m pip install datamodel-code-generator jupyterlab --pre -U",
     "jlpm",

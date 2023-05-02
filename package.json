@@ -1,94 +1,41 @@
 {
-    "name": "jupytercad",
+    "name": "@jupytercad/jupytercad-root",
     "version": "0.1.0-a2",
+    "private": true,
+    "homepage": "https://github.com/QuantStack/jupytercad",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/QuantStack/jupytercad.git"
+    },
+    "license": "BSD-3-Clause",
     "description": "A JupyterLab extension for 3D modelling.",
     "keywords": [
         "jupyter",
         "jupyterlab",
         "jupyterlab-extension"
     ],
-    "homepage": "https://github.com/QuantStack/jupytercad",
     "bugs": {
         "url": "https://github.com/QuantStack/jupytercad/issues"
     },
-    "license": "BSD-3-Clause",
     "author": {
-        "name": "Trung Le",
-        "email": "leductrungxf@gmail.com"
+        "name": "JupyterCad contributors"
     },
-    "files": [
-        "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
-        "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+    "workspaces": [
+        "packages/*"
     ],
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
-    "style": "style/index.css",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/QuantStack/jupytercad.git"
-    },
     "scripts": {
-        "build": "jlpm build:schema && jlpm run build:lib && jlpm run build:worker && jlpm run build:labextension:dev",
-        "build:schema": "jlpm build:schema:js && jlpm build:schema:py",
-        "build:schema:js": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions --cwd ./src/schema && cd src/schema && node ../../schema.js",
-        "build:schema:py": "datamodel-codegen --input src/schema --output jupytercad/notebook/objects/_schema",
-        "build:prod": "jlpm run clean && jlpm build:schema && jlpm run build:worker:prod && jlpm run build:lib && jlpm run build:labextension",
-        "build:labextension": "jupyter labextension build .",
-        "build:labextension:dev": "jupyter labextension build --development True .",
-        "build:lib": "tsc",
-        "build:worker": "webpack --config worker.webpack.config.js --mode=development",
-        "build:worker:prod": "webpack --config worker.webpack.config.js --mode=production",
-        "clean": "jlpm run clean:lib",
-        "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
-        "clean:labextension": "rimraf jupytercad/labextension",
-        "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
+        "build": "lerna run build",
+        "build:prod": "lerna run build:prod",
+        "build:test": "lerna run build:test",
+        "clean": "lerna run clean",
+        "clean:all": "lerna run clean:all",
         "eslint": "eslint . --ext .ts,.tsx --fix",
         "eslint:check": "eslint . --ext .ts,.tsx",
-        "install:extension": "jlpm run build",
-        "lint": "jlpm prettier && jlpm eslint",
-        "lint:check": "jlpm prettier:check && jlpm eslint:check",
-        "prettier": "jlpm prettier:base --write --list-different",
-        "prettier:base": "prettier \"**/*{.ts,.tsx,.js,.jsx,.css,.json,.md}\"",
-        "prettier:check": "jlpm prettier:base --check",
-        "watch": "run-p watch:worker watch:src watch:labextension",
-        "watch:src": "tsc -w",
-        "watch:worker": "webpack --config worker.webpack.config.js --watch --mode=development",
-        "watch:labextension": "jupyter labextension watch ."
-    },
-    "dependencies": {
-        "@deathbeds/jupyterlab-rjsf": "^1.1.0",
-        "@jupyter-widgets/base": "^6.0.2",
-        "@jupyter/collaboration": "^1.0.0-alpha.7",
-        "@jupyter/docprovider": "^1.0.0-alpha.8",
-        "@jupyter/ydoc": "^0.3.4 || ^1.0.2",
-        "@jupyterlab/application": "^4.0.0-beta.2",
-        "@jupyterlab/apputils": "^4.0.0-beta.2",
-        "@jupyterlab/coreutils": "^6.0.0-beta.2",
-        "@jupyterlab/docregistry": "^4.0.0-beta.2",
-        "@jupyterlab/filebrowser": "^4.0.0-beta.2",
-        "@jupyterlab/launcher": "^4.0.0-beta.2",
-        "@jupyterlab/mainmenu": "^4.0.0-beta.2",
-        "@jupyterlab/notebook": "^4.0.0-beta.2",
-        "@jupyterlab/observables": "^5.0.0-beta.2",
-        "@jupyterlab/services": "^7.0.0-beta.2",
-        "@jupyterlab/translation": "^4.0.0-beta.2",
-        "@jupyterlab/ui-components": "^4.0.0-beta.2",
-        "@lumino/commands": "^2.0.0",
-        "@lumino/coreutils": "^2.0.0",
-        "@lumino/signaling": "^2.0.0",
-        "@lumino/widgets": "^2.0.0",
-        "@naisutech/react-tree": "^3.0.1",
-        "@rjsf/core": "^4.2.0",
-        "@types/d3-color": "^3.1.0",
-        "@types/three": "^0.134.0",
-        "d3-color": "^3.1.0",
-        "jupytercad-opencascade": "^0.1.1-alpha.2",
-        "lib0": "^0.2.62",
-        "react": "^18.0.1",
-        "styled-components": "^5.3.6",
-        "three": "^0.135.0",
-        "three-mesh-bvh": "^0.5.17",
-        "uuid": "^8.3.2"
+        "prettier": "prettier --write \"**/*{.ts,.tsx,.js,.jsx,.css,.json,.md}\"",
+        "prettier:check": "prettier --list-different \"**/*{.ts,.tsx,.js,.jsx,.css,.json,.md}\"",
+        "lint:check": "jlpm run prettier:check && jlpm run eslint:check",
+        "lint": "jlpm run prettier && jlpm run eslint",
+        "test": "lerna run test"
     },
     "resolutions": {
         "@jupyterlab/apputils": "~4.0.0-beta.2",
@@ -97,46 +44,17 @@
         "@jupyterlab/services": " ^7.0.0-beta.2"
     },
     "devDependencies": {
-        "@apidevtools/json-schema-ref-parser": "^9.0.9",
-        "@jupyterlab/builder": "^4.0.0-beta.2",
-        "@types/node": "^16.11.10",
         "@typescript-eslint/eslint-plugin": "^4.8.1",
         "@typescript-eslint/parser": "^4.8.1",
         "copy-webpack-plugin": "^10.0.0",
         "eslint": "^7.14.0",
         "eslint-config-prettier": "^6.15.0",
         "eslint-plugin-prettier": "^3.1.4",
-        "file-loader": "^6.2.0",
-        "json-schema-to-typescript": "^10.1.5",
+        "lerna": "^6.6.1",
         "npm-run-all": "^4.1.5",
         "prettier": "^2.1.1",
         "rimraf": "^3.0.2",
-        "source-map-loader": "^3.0.0",
-        "ts-loader": "^9.2.6",
         "typescript": "~4.1.3",
         "webpack": "^5.76.3"
-    },
-    "sideEffects": [
-        "style/*.css",
-        "style/index.js"
-    ],
-    "styleModule": "style/index.js",
-    "publishConfig": {
-        "access": "public"
-    },
-    "jupyterlab": {
-        "extension": true,
-        "outputDir": "jupytercad/labextension",
-        "webpackConfig": "./extension.webpack.config.js",
-        "sharedPackages": {
-            "@jupyter-widgets/base": {
-                "bundled": false,
-                "singleton": true
-            },
-            "yjs": {
-                "bundled": false,
-                "singleton": true
-            }
-        }
     }
 }
