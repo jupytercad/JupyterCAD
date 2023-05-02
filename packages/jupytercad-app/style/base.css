@@ -3,6 +3,8 @@
   padding: 10px !important;
   justify-content: flex-end;
   padding-right: 40px !important;
+  border-bottom: none;
+  background: #053b3e;
 }
 
 :root {
@@ -22,9 +24,12 @@
   background: radial-gradient(rgb(239, 237, 237), rgb(143, 144, 145));
 }
 
+#jp-menu-panel {
+  background: #053b3e !important;
+}
 .jcad-MainMenu {
   font-size: 30px;
-  color: var(--jp-inverse-layout-color3);
+  color: wheat;
   font-family: Poiret One !important;
   font-weight: bold;
 }

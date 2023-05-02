@@ -122,11 +122,14 @@ async function main(): Promise<void> {
     require('@jupyterlab/theme-dark-extension'),
     require('@jupyterlab/translation-extension'),
     require('@jupyterlab/codemirror-extension'),
-    require('@jupyterlab/filebrowser-extension'),
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    require('@jupyterlab/filebrowser-extension').default.filter(
+      (m: any) => !['@jupyterlab/filebrowser-extension:widget'].includes(m.id)
+    ),
     require('@jupyterlab/docmanager-extension'),
     require('./app/plugins/paths'),
-    require('./app/plugins/mainmenu')
-    // require('./app/plugins/topmenu')
+    require('./app/plugins/mainmenu'),
+    require('./app/plugins/browser')
   ];
 
   const federatedExtensionPromises: Promise<any>[] = [];
