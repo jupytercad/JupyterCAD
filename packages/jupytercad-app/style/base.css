@@ -1,0 +1,42 @@
+#jp-top-panel {
+  min-height: 60px !important;
+  padding: 10px !important;
+  justify-content: flex-end;
+  padding-right: 40px !important;
+  border-bottom: none;
+  background: #053b3e;
+}
+
+:root {
+  --jp-ui-font-color1: rgba(#4e5c65, 1) !important;
+}
+:root {
+  --jp-inverse-layout-color3: #09777c !important;
+}
+:root {
+  --jp-brand-color1: #09777c !important;
+}
+
+.jp-FileBrowser-toolbar {
+  display: None;
+}
+#jp-main-dock-panel {
+  background: radial-gradient(rgb(239, 237, 237), rgb(143, 144, 145));
+}
+
+#jp-menu-panel {
+  background: #053b3e !important;
+}
+.jcad-MainMenu {
+  font-size: 30px;
+  color: wheat;
+  font-family: Poiret One !important;
+  font-weight: bold;
+}
+#jp-UserMenu {
+  display: none;
+}
+
+h2.lm-Widget {
+  font-size: 1rem;
+}

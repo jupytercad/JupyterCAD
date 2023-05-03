@@ -30,12 +30,13 @@ const NAME_SPACE = 'jupytercad';
 const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
   id: 'jupytercad:plugin',
   autoStart: true,
-  requires: [IMainMenu, ITranslator],
+  requires: [ITranslator],
+  optional: [IMainMenu],
   provides: IJupyterCadDocTracker,
   activate: (
     app: JupyterFrontEnd,
-    mainMenu: IMainMenu,
-    translator: ITranslator
+    translator: ITranslator,
+    mainMenu?: IMainMenu
   ): IJupyterCadTracker => {
     const tracker = new WidgetTracker<JupyterCadWidget>({
       namespace: NAME_SPACE
@@ -57,7 +58,9 @@ const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
     };
 
     addCommands(app, tracker, translator);
-    populateMenus(mainMenu, isEnabled);
+    if (mainMenu) {
+      populateMenus(mainMenu, isEnabled);
+    }
 
     return tracker;
   }

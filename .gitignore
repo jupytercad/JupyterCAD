@@ -115,7 +115,7 @@ dmypy.json
 
 **/_interface/
 *.db
-
+.eslintcache
 # Integration tests
 **/ui-tests/test-results/
 **/ui-tests/playwright-report/
@@ -126,5 +126,8 @@ jupytercad/_version.py
 
 #Schema
 jupytercad/notebook/objects/_schema
+jupytercad/cadapp/static
+jupytercad/cadapp/schemas
+jupytercad/cadapp/themes
 
 .yarn
