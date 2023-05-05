@@ -437,7 +437,7 @@ export function addCommands(
   });
 
   commands.addCommand(CommandIDs.updateAxes, {
-    label: trans.__('Update 3D Axes Helper'),
+    label: trans.__('Axes Helper'),
     icon: axesIcon,
     execute: async () => {
       const current = tracker.currentWidget;
@@ -459,7 +459,7 @@ export function addCommands(
   });
 
   commands.addCommand(CommandIDs.updateExplodedView, {
-    label: trans.__('Update Exploded View Settings'),
+    label: trans.__('Exploded View'),
     icon: explodedViewIcon,
     execute: async () => {
       const current = tracker.currentWidget;
