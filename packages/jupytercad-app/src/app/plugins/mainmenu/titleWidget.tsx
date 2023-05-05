@@ -1,9 +1,9 @@
 import { Widget } from '@lumino/widgets';
 
-export class MainMenu extends Widget {
+export class AppTitle extends Widget {
   constructor() {
     super();
-    this.addClass('jcad-MainMenu');
+    this.addClass('jc-MainMenu-AppTitle');
     this.node.innerHTML = 'JupyterCAD';
   }
 }

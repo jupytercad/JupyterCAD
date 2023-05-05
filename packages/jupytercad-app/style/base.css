@@ -1,8 +1,9 @@
 #jp-top-panel {
   min-height: 60px !important;
   padding: 10px !important;
-  justify-content: flex-end;
-  padding-right: 40px !important;
+  justify-content: flex-start;
+  padding-left: 40px !important;
+  padding-right: 30px !important;
   border-bottom: none;
   background: #053b3e;
 }
@@ -26,8 +27,11 @@
 
 #jp-menu-panel {
   background: #053b3e !important;
+  display: flex;
+  flex-grow: 1;
+  column-gap: 10px;
 }
-.jcad-MainMenu {
+.jc-MainMenu-AppTitle {
   font-size: 30px;
   color: wheat;
   font-family: Poiret One !important;
@@ -43,4 +47,54 @@ h2.lm-Widget {
 
 .jp-Icon {
   color: var(--jp-inverse-layout-color3);
+}
+
+.jc-MenuBar-anonymousIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+  border-radius: 100%;
+}
+.jc-MenuBar-anonymousIcon span {
+  width: 40px;
+  text-align: center;
+  fill: var(--jp-ui-font-color1);
+  color: var(--jp-ui-font-color1);
+  font-size: 1.25rem;
+}
+
+.jp-Toolbar-spacer {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+#jupytercad-usermenu {
+  display: flex;
+  column-gap: 5px;
+}
+#jupytercad-usermenu > span {
+  color: wheat;
+  line-height: 40px;
+  font-size: 1.1rem;
+  border-left: solid 2px wheat;
+  padding-left: 17px;
+}
+
+.jc-MainMenu {
+  background: #053b3e;
+  color: wheat;
+  padding-top: 6px;
+  font-size: 1.1rem;
+}
+.jc-MainMenu .lm-MenuBar-item.lm-mod-active {
+  background: #096065 !important;
+}
+.jc-MenuBar-MenuItem {
+  background: #053b3e;
+  color: wheat;
+}
+.jc-MenuBar-MenuItem .lm-Menu-item.lm-mod-active {
+  background: #096065 !important;
 }
