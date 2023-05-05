@@ -6,8 +6,6 @@ import { CommandRegistry } from '@lumino/commands';
 import { JupyterCadModel } from './model';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import { ToolbarWidget } from './toolbar/widget';
-import { ToolbarModel } from './toolbar/model';
-// import { WidgetTracker } from '@jupyterlab/apputils';
 
 interface IOptios extends DocumentRegistry.IWidgetFactoryOptions {
   tracker: IJupyterCadTracker;
@@ -38,10 +36,9 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   ): JupyterCadWidget {
     const { model } = context;
     const content = new JupyterCadPanel({ model });
-    const toolbarModel = new ToolbarModel({ panel: content, context });
     const toolbar = new ToolbarWidget({
-      model: toolbarModel,
-      commands: this._commands
+      commands: this._commands,
+      model
     });
     return new JupyterCadWidget({ context, content, toolbar });
   }

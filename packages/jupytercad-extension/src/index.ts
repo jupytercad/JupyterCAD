@@ -21,9 +21,9 @@ import {
 import { jcLightIcon } from './tools';
 import { IAnnotationModel } from './types';
 import { JupyterCadWidget } from './widget';
-import { ToolbarWidget } from './toolbar/widget';
 import { AnnotationModel } from './annotation/model';
 import { notebookRendererPlugin, ypyWidgetManager } from './notebookrenderer';
+import { addCommands, CommandIDs } from './commands';
 
 const NAME_SPACE = 'jupytercad';
 
@@ -119,50 +119,16 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
 };
 
 /**
- * Add the FreeCAD commands to the application's command registry.
- */
-function addCommands(
-  app: JupyterFrontEnd,
-  tracker: WidgetTracker<JupyterCadWidget>,
-  translator: ITranslator
-): void {
-  const trans = translator.load('jupyterlab');
-  const { commands } = app;
-
-  commands.addCommand(ToolbarWidget.CommandIDs.redo, {
-    label: trans.__('Redo'),
-    execute: args => {
-      const current = tracker.currentWidget;
-
-      if (current) {
-        return current.context.model.sharedModel.redo();
-      }
-    }
-  });
-
-  commands.addCommand(ToolbarWidget.CommandIDs.undo, {
-    label: trans.__('Undo'),
-    execute: args => {
-      const current = tracker.currentWidget;
-
-      if (current) {
-        return current.context.model.sharedModel.undo();
-      }
-    }
-  });
-}
-
-/**
  * Populates the application menus for the notebook.
  */
 function populateMenus(mainMenu: IMainMenu, isEnabled: () => boolean): void {
   // Add undo/redo hooks to the edit menu.
   mainMenu.editMenu.undoers.redo.add({
-    id: ToolbarWidget.CommandIDs.redo,
+    id: CommandIDs.redo,
     isEnabled
   });
   mainMenu.editMenu.undoers.undo.add({
-    id: ToolbarWidget.CommandIDs.undo,
+    id: CommandIDs.undo,
     isEnabled
   });
 }

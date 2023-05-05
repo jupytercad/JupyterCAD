@@ -192,6 +192,13 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
   flex-grow: 1;
 }
 
+.jcad-Toolbar-Separator {
+  width: var(--jp-border-width);
+  background-color: var(--jp-border-color1);
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
 .jpcad-toolbar-usertoolbar .jp-MenuBar-anonymousIcon,
 .jpcad-toolbar-usertoolbar .jp-MenuBar-imageIcon {
   position: unset !important;

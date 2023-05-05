@@ -1,7 +1,17 @@
 import { LabIcon } from '@jupyterlab/ui-components';
 
 import jvControlLight from '../style/icon/jvcontrol.svg';
-import minimizeIConStr from '../style/icon/minimize.svg';
+import minimizeIconStr from '../style/icon/minimize.svg';
+import boxIconStr from '../style/icon/box.svg';
+import coneIconStr from '../style/icon/cone.svg';
+import sphereIconStr from '../style/icon/sphere.svg';
+import cylinderIconStr from '../style/icon/cylinder.svg';
+import torusIconStr from '../style/icon/torus.svg';
+import cutIconStr from '../style/icon/cut.svg';
+import unionIconStr from '../style/icon/union.svg';
+import intersectionIconStr from '../style/icon/intersection.svg';
+import extrusionIconStr from '../style/icon/extrusion.svg';
+import axesIconStr from '../style/icon/axes.svg';
 
 export const jcLightIcon = new LabIcon({
   name: 'jupytercad:control-light',
@@ -10,7 +20,62 @@ export const jcLightIcon = new LabIcon({
 
 export const minimizeIcon = new LabIcon({
   name: 'jupytercad:minimize-icon',
-  svgstr: minimizeIConStr
+  svgstr: minimizeIconStr
+});
+
+export const boxIcon = new LabIcon({
+  name: 'jupytercad:box-icon',
+  svgstr: boxIconStr
+});
+
+export const coneIcon = new LabIcon({
+  name: 'jupytercad:cone-icon',
+  svgstr: coneIconStr
+});
+
+export const sphereIcon = new LabIcon({
+  name: 'jupytercad:sphere-icon',
+  svgstr: sphereIconStr
+});
+
+export const cylinderIcon = new LabIcon({
+  name: 'jupytercad:cylinder-icon',
+  svgstr: cylinderIconStr
+});
+
+export const torusIcon = new LabIcon({
+  name: 'jupytercad:torus-icon',
+  svgstr: torusIconStr
+});
+
+export const cutIcon = new LabIcon({
+  name: 'jupytercad:cut-icon',
+  svgstr: cutIconStr
+});
+
+export const unionIcon = new LabIcon({
+  name: 'jupytercad:union-icon',
+  svgstr: unionIconStr
+});
+
+export const intersectionIcon = new LabIcon({
+  name: 'jupytercad:intersection-icon',
+  svgstr: intersectionIconStr
+});
+
+export const extrusionIcon = new LabIcon({
+  name: 'jupytercad:extrusion-icon',
+  svgstr: extrusionIconStr
+});
+
+export const axesIcon = new LabIcon({
+  name: 'jupytercad:axes-icon',
+  svgstr: axesIconStr
+});
+
+export const explodedViewIcon = new LabIcon({
+  name: 'jupytercad:explodedView-icon',
+  svgstr: jvControlLight
 });
 
 export const debounce = (

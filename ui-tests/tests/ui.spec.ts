@@ -129,9 +129,9 @@ test.describe('UI Test', () => {
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
-      const btn = await page.locator('button.jp-ToolbarButtonComponent', {
-        hasText: 'BOX'
-      });
+      const btn = await page.locator(
+        "button.jp-ToolbarButtonComponent[data-command='jupytercad:newBox']"
+      );
       await btn.click();
       const nameInput = await page.locator(
         'input[id^="id-jp-schemaform"][label="Name"]'

@@ -54,6 +54,11 @@ export interface ILoadFile extends IMainId {
   };
 }
 
+export interface IUserData {
+  userId: number;
+  userData: User.IIdentity;
+}
+
 export type IWorkerMessage = ILoadFile | IRegister;
 
 /**
@@ -216,6 +221,8 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     value: any;
     parentType: 'panel' | 'dialog';
   });
+  setUserToFollow(userId?: number): void;
+  syncFormData(form: any): void;
 
   getClientId(): number;
 

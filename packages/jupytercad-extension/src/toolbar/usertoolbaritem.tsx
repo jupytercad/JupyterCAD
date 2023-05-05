@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { ToolbarModel, IUserData } from './model';
+import { JupyterCadModel } from '../model';
+
+import { IUserData } from '../types';
 
 interface IProps {
-  toolbarModel: ToolbarModel;
+  model: JupyterCadModel;
 }
 
 interface IState {
@@ -10,16 +12,17 @@ interface IState {
   selectedUser?: IUserData;
 }
 
-export class UserToolbarReact extends React.Component<IProps, IState> {
+export class UsersItem extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-    this._model = props.toolbarModel;
+    this._model = props.model;
     this.state = { usersList: [] };
-    this._model.ready().then(() => {
-      this.setState(old => ({ ...old, usersList: this._model.users }));
-      this._model.userChanged.connect((_, usersList) => {
-        this.setState(old => ({ ...old, usersList: usersList }));
-      });
+  }
+
+  componentDidMount(): void {
+    this.setState(old => ({ ...old, usersList: this._model.users }));
+    this._model.userChanged.connect((_, usersList) => {
+      this.setState(old => ({ ...old, usersList: usersList }));
     });
   }
 
@@ -82,5 +85,5 @@ export class UserToolbarReact extends React.Component<IProps, IState> {
     );
   }
 
-  private _model: ToolbarModel;
+  private _model: JupyterCadModel;
 }

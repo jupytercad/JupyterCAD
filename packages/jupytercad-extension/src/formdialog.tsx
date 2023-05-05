@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Dialog } from '@jupyterlab/apputils';
-import { ObjectPropertiesForm } from '../panelview/formbuilder';
-import { IDict, IJupyterCadClientState, IJupyterCadModel } from '../types';
-import { ToolbarModel } from './model';
-import { focusInputField, removeStyleFromProperty } from '../tools';
+import { ObjectPropertiesForm } from './panelview/formbuilder';
+import { IDict, IJupyterCadClientState, IJupyterCadModel } from './types';
+import { focusInputField, removeStyleFromProperty } from './tools';
+import { DocumentRegistry } from '@jupyterlab/docregistry';
 
 export interface IFormDialogOptions {
   schema: IDict;
@@ -16,7 +16,7 @@ export interface IFormDialogOptions {
     value: any,
     parentType: 'dialog' | 'panel'
   ) => void;
-  toolbarModel: ToolbarModel;
+  context: DocumentRegistry.IContext<IJupyterCadModel>;
 }
 
 export class FormDialog extends Dialog<IDict> {
@@ -30,8 +30,8 @@ export class FormDialog extends Dialog<IDict> {
         this.resolve(0);
       };
     }
-    const filePath = options.toolbarModel.filePath;
-    const jcadModel = options.toolbarModel.jcadModel;
+    const filePath = options.context.path;
+    const jcadModel = options.context.model;
     const body = (
       <div style={{ overflow: 'hidden' }}>
         <ObjectPropertiesForm
