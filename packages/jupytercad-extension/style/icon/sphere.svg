@@ -3,48 +3,15 @@
    width="12.3"
    viewBox="0 0 18.45 12.3"
    version="1.1"
-   id="svg10"
    height="12.3"
-   sodipodi:docname="sphere.svg"
-   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview8"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     showgrid="true"
-     inkscape:zoom="20.172185"
-     inkscape:cx="-1.7102758"
-     inkscape:cy="2.6025936"
-     inkscape:window-width="2139"
-     inkscape:window-height="1259"
-     inkscape:window-x="100"
-     inkscape:window-y="140"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg10">
-    <inkscape:grid
-       type="xygrid"
-       id="grid237"
-       originx="-2.0250003"
-       originy="-5.2333354" />
-  </sodipodi:namedview>
-  <defs
-     id="defs14" />
   <g
      class="jp-icon3"
      fill="#616161"
-     id="g6"
      transform="translate(0.7503905,0.4996094)">
     <path
        d="M 8.4746094,-2.8242188 C 3.8055493,-2.8242188 0,0.98133055 0,5.6503906 0,10.319451 3.8055493,14.125 8.4746094,14.125 c 4.6690596,0 8.4746096,-3.805549 8.4746096,-8.4746094 0,-4.66906005 -3.80555,-8.4746094 -8.4746096,-8.4746094 z m 0,1.9492188 C 12.089812,-0.875 15,2.0351877 15,5.6503906 15,9.2655935 12.089812,12.175781 8.4746094,12.175781 4.8594065,12.175781 1.9492187,9.2655935 1.9492187,5.6503906 1.9492188,2.0351877 4.8594065,-0.875 8.4746094,-0.875 Z"
-       id="path343" />
+       />
   </g>
 </svg>
