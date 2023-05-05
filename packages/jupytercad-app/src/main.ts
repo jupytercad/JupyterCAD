@@ -10,6 +10,7 @@ import '@jupyter/collaboration/style/index.js';
 import '@jupyterlab/application/style/index.js';
 import '@jupyterlab/filebrowser/style/index.js';
 import '@jupyterlab/ui-components/style/index.js';
+import '@jupyterlab/launcher/style/index.js';
 import '../style/index.css';
 
 function loadScript(url: string) {
@@ -127,9 +128,11 @@ async function main(): Promise<void> {
       (m: any) => !['@jupyterlab/filebrowser-extension:widget'].includes(m.id)
     ),
     require('@jupyterlab/docmanager-extension'),
+    require('@jupyterlab/launcher-extension'),
     require('./app/plugins/paths'),
     require('./app/plugins/mainmenu'),
-    require('./app/plugins/browser')
+    require('./app/plugins/browser'),
+    require('./app/plugins/launcher')
   ];
 
   const federatedExtensionPromises: Promise<any>[] = [];

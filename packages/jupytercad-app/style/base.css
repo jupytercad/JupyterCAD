@@ -98,3 +98,19 @@ h2.lm-Widget {
 .jc-MenuBar-MenuItem .lm-Menu-item.lm-mod-active {
   background: #096065 !important;
 }
+
+:root {
+  --jp-private-launcher-card-size: 10rem !important;
+}
+.jp-LauncherCard {
+  border-radius: 20px;
+}
+.jp-LauncherCard-label p {
+  font-size: 1.1rem;
+}
+.jp-LauncherCard:hover {
+  background: #053b3e30;
+}
+.jp-Launcher-cwd {
+  display: none;
+}

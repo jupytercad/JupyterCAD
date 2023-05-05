@@ -34,7 +34,9 @@ const browserWidget: JupyterFrontEndPlugin<void> = {
       }
       return null;
     });
+    browser.id = 'jcad-file-browser';
     labShell.add(browser, 'left', { rank: 100, type: 'File Browser' });
+    labShell.activateById(browser.id);
   }
 };
 
