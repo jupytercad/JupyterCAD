@@ -40,3 +40,7 @@
 h2.lm-Widget {
   font-size: 1rem;
 }
+
+.jp-Icon {
+  color: var(--jp-inverse-layout-color3);
+}
