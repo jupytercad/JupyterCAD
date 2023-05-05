@@ -1,9 +1,22 @@
+import { CommandRegistry } from '@lumino/commands';
+import { Widget } from '@lumino/widgets';
+
 import { CommandToolbarButton } from '@jupyterlab/apputils';
 import { Toolbar, undoIcon, redoIcon } from '@jupyterlab/ui-components';
 
-import { CommandRegistry } from '@lumino/commands';
-
 import { CommandIDs } from '../commands';
+
+export const TOOLBAR_SEPARATOR_CLASS = 'jcad-Toolbar-Separator';
+
+export class Separator extends Widget {
+  /**
+   * Construct a new separator widget.
+   */
+  constructor() {
+    super();
+    this.addClass(TOOLBAR_SEPARATOR_CLASS);
+  }
+}
 
 export class ToolbarWidget extends Toolbar {
   constructor(options: ToolbarWidget.IOptions) {
@@ -30,6 +43,11 @@ export class ToolbarWidget extends Toolbar {
           icon: redoIcon,
           commands: options.commands
         })
+      );
+
+      this.addItem(
+        "separator1",
+        new Separator()
       );
 
       // Parts
@@ -74,6 +92,11 @@ export class ToolbarWidget extends Toolbar {
         })
       );
 
+      this.addItem(
+        "separator2",
+        new Separator()
+      );
+
       // Operators
       this.addItem(
         'Cut',
@@ -107,6 +130,12 @@ export class ToolbarWidget extends Toolbar {
           commands: options.commands
         })
       );
+
+      this.addItem(
+        "separator3",
+        new Separator()
+      );
+
       this.addItem(
         'New Sketch',
         new CommandToolbarButton({
@@ -114,6 +143,11 @@ export class ToolbarWidget extends Toolbar {
           label: '',
           commands: options.commands
         })
+      );
+
+      this.addItem(
+        "separator4",
+        new Separator()
       );
 
       // View helpers
@@ -133,6 +167,13 @@ export class ToolbarWidget extends Toolbar {
           commands: options.commands
         })
       );
+
+      this.addItem(
+        "spacer",
+        Toolbar.createSpacerItem()
+      );
+
+      // TODO user toolbar item
     }
   }
 }
