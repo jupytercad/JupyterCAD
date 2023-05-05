@@ -40,7 +40,9 @@ test.describe('Sketcher test', () => {
       .getByRole('tab', { name: 'JupyterCad Control Panel' })
       .click();
 
-    const btn = await page.locator("button.jp-ToolbarButtonComponent[data-command='jupytercad:sketch']");
+    const btn = await page.locator(
+      "button.jp-ToolbarButtonComponent[data-command='jupytercad:sketch']"
+    );
     await btn.click();
     const dialog = await page.$('.lm-Widget.lm-Panel.jp-Dialog-content');
     if (dialog) {
@@ -65,7 +67,9 @@ test.describe('Sketcher test', () => {
       .getByRole('tab', { name: 'JupyterCad Control Panel' })
       .click();
 
-    const btn = await page.locator("button.jp-ToolbarButtonComponent[data-command='jupytercad:sketch']");
+    const btn = await page.locator(
+      "button.jp-ToolbarButtonComponent[data-command='jupytercad:sketch']"
+    );
     await btn.click();
     await page.getByRole('button', { name: 'CIRCLE' }).click();
     await page
