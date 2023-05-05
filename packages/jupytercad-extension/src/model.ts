@@ -21,6 +21,7 @@ import {
   IJupyterCadDoc,
   IJupyterCadDocChange,
   IJupyterCadModel,
+  IUserData,
   Pointer
 } from './types';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
@@ -60,6 +61,25 @@ export class JupyterCadModel implements IJupyterCadModel {
     IChangedArgs<string, string | null, string>
   > {
     return this._themeChanged;
+  }
+
+  get currentUserId(): number | undefined {
+    return this.sharedModel?.awareness.clientID;
+  }
+
+  get users(): IUserData[] {
+    this._usersMap = this._sharedModel?.awareness.getStates();
+    const users: IUserData[] = [];
+    if (this._usersMap) {
+      this._usersMap.forEach((val, key) => {
+        users.push({ userId: key, userData: val.user });
+      });
+    }
+    return users;
+  }
+
+  get userChanged(): ISignal<this, IUserData[]> {
+    return this._userChanged;
   }
 
   get dirty(): boolean {
@@ -191,6 +211,12 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.sharedModel.awareness.setLocalStateField('selectedPropField', data);
   }
 
+  setUserToFollow(userId?: number): void {
+    if (this._sharedModel) {
+      this._sharedModel.awareness.setLocalStateField('remoteUser', userId);
+    }
+  }
+
   syncFormData(form: any): void {
     if (this._sharedModel) {
       this._sharedModel.awareness.setLocalStateField('toolbarForm', form);
@@ -216,6 +242,12 @@ export class JupyterCadModel implements IJupyterCadModel {
     >;
 
     this._clientStateChanged.emit(clients);
+
+    this._sharedModel.awareness.on('change', update => {
+      if (update.added.length || update.removed.length) {
+        this._userChanged.emit(this.users);
+      }
+    });
   };
 
   readonly defaultKernelName: string = '';
@@ -227,6 +259,9 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _dirty = false;
   private _readOnly = false;
   private _isDisposed = false;
+
+  private _userChanged = new Signal<this, IUserData[]>(this);
+  private _usersMap?: Map<number, any>;
 
   private _disposed = new Signal<this, void>(this);
   private _contentChanged = new Signal<this, void>(this);

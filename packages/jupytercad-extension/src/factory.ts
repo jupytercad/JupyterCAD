@@ -37,7 +37,8 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
     const { model } = context;
     const content = new JupyterCadPanel({ model });
     const toolbar = new ToolbarWidget({
-      commands: this._commands
+      commands: this._commands,
+      model
     });
     return new JupyterCadWidget({ context, content, toolbar });
   }

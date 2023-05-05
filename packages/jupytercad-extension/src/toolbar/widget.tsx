@@ -1,10 +1,19 @@
+import * as React from 'react';
+
 import { CommandRegistry } from '@lumino/commands';
 import { Widget } from '@lumino/widgets';
 
 import { CommandToolbarButton } from '@jupyterlab/apputils';
-import { Toolbar, undoIcon, redoIcon } from '@jupyterlab/ui-components';
+import {
+  Toolbar,
+  undoIcon,
+  redoIcon,
+  ReactWidget
+} from '@jupyterlab/ui-components';
 
 import { CommandIDs } from '../commands';
+import { JupyterCadModel } from '../model';
+import { UsersItem } from './usertoolbaritem';
 
 export const TOOLBAR_SEPARATOR_CLASS = 'jcad-Toolbar-Separator';
 
@@ -45,10 +54,7 @@ export class ToolbarWidget extends Toolbar {
         })
       );
 
-      this.addItem(
-        "separator1",
-        new Separator()
-      );
+      this.addItem('separator1', new Separator());
 
       // Parts
       this.addItem(
@@ -92,10 +98,7 @@ export class ToolbarWidget extends Toolbar {
         })
       );
 
-      this.addItem(
-        "separator2",
-        new Separator()
-      );
+      this.addItem('separator2', new Separator());
 
       // Operators
       this.addItem(
@@ -131,10 +134,7 @@ export class ToolbarWidget extends Toolbar {
         })
       );
 
-      this.addItem(
-        "separator3",
-        new Separator()
-      );
+      this.addItem('separator3', new Separator());
 
       this.addItem(
         'New Sketch',
@@ -145,10 +145,7 @@ export class ToolbarWidget extends Toolbar {
         })
       );
 
-      this.addItem(
-        "separator4",
-        new Separator()
-      );
+      this.addItem('separator4', new Separator());
 
       // View helpers
       this.addItem(
@@ -168,12 +165,13 @@ export class ToolbarWidget extends Toolbar {
         })
       );
 
-      this.addItem(
-        "spacer",
-        Toolbar.createSpacerItem()
-      );
+      this.addItem('spacer', Toolbar.createSpacerItem());
 
-      // TODO user toolbar item
+      // Users
+      this.addItem(
+        'users',
+        ReactWidget.create(<UsersItem model={options.model} />)
+      );
     }
   }
 }
@@ -181,5 +179,6 @@ export class ToolbarWidget extends Toolbar {
 export namespace ToolbarWidget {
   export interface IOptions extends Toolbar.IOptions {
     commands?: CommandRegistry;
+    model: JupyterCadModel;
   }
 }
