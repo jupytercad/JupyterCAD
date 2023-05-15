@@ -39,59 +39,86 @@ Object.keys(formSchema).forEach(key => {
   };
 });
 
+function newName(type: string, model: IJupyterCadModel): string {
+  const sharedModel = model.sharedModel;
+
+  let n = 1;
+  let name = `${type} 1`;
+  while (sharedModel.objectExists(name)) {
+    name = `${type} ${++n}`;
+  }
+
+  return name;
+}
+
 const PARTS = {
   box: {
     title: 'Box parameters',
     shape: 'Part::Box',
-    default: {
-      Length: 1,
-      Width: 1,
-      Height: 1,
-      Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+    default: (model: IJupyterCadModel) => {
+      return {
+        Name: newName('Box', model),
+        Length: 1,
+        Width: 1,
+        Height: 1,
+        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+      };
     }
   },
   cylinder: {
     title: 'Cylinder parameters',
     shape: 'Part::Cylinder',
-    default: {
-      Radius: 1,
-      Height: 1,
-      Angle: 360,
-      Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+    default: (model: IJupyterCadModel) => {
+      return {
+        Name: newName('Cylinder', model),
+        Radius: 1,
+        Height: 1,
+        Angle: 360,
+        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+      };
     }
   },
   sphere: {
     title: 'Sphere parameters',
     shape: 'Part::Sphere',
-    default: {
-      Radius: 5,
-      Angle1: -90,
-      Angle2: 90,
-      Angle3: 360,
-      Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+    default: (model: IJupyterCadModel) => {
+      return {
+        Name: newName('Sphere', model),
+        Radius: 5,
+        Angle1: -90,
+        Angle2: 90,
+        Angle3: 360,
+        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+      };
     }
   },
   cone: {
     title: 'Cone parameters',
     shape: 'Part::Cone',
-    default: {
-      Radius1: 1,
-      Radius2: 0.5,
-      Height: 1,
-      Angle: 360,
-      Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+    default: (model: IJupyterCadModel) => {
+      return {
+        Name: newName('Cone', model),
+        Radius1: 1,
+        Radius2: 0.5,
+        Height: 1,
+        Angle: 360,
+        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+      };
     }
   },
   torus: {
     title: 'Torus parameters',
     shape: 'Part::Torus',
-    default: {
-      Radius1: 10,
-      Radius2: 2,
-      Angle1: -180,
-      Angle2: 180,
-      Angle3: 360,
-      Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+    default: (model: IJupyterCadModel) => {
+      return {
+        Name: newName('Torus', model),
+        Radius1: 10,
+        Radius2: 2,
+        Angle1: -180,
+        Angle2: 180,
+        Angle3: 360,
+        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+      };
     }
   }
 };
@@ -103,6 +130,7 @@ const OPERATORS = {
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
       return {
+        Name: newName('Cut', model),
         Base: objects[0].name ?? '',
         Tool: objects[1].name ?? '',
         Refine: false,
@@ -150,6 +178,7 @@ const OPERATORS = {
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
       return {
+        Name: newName('Extrusion', model),
         Base: [objects[0].name ?? ''],
         Dir: [0, 0, 1],
         LengthFwd: 10,
@@ -189,6 +218,7 @@ const OPERATORS = {
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
       return {
+        Name: newName('Union', model),
         Shapes: [objects[0].name ?? '', objects[1].name ?? ''],
         Refine: false,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
@@ -225,6 +255,7 @@ const OPERATORS = {
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
       return {
+        Name: newName('Intersection', model),
         Shapes: [objects[0].name ?? '', objects[1].name ?? ''],
         Refine: false,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
@@ -541,7 +572,7 @@ namespace Private {
       const dialog = new FormDialog({
         context: current.context,
         title: value.title,
-        sourceData: value.default,
+        sourceData: value.default(current.context.model),
         schema: FORM_SCHEMA[value.shape],
         syncData: (props: IDict) => {
           const { Name, ...parameters } = props;
