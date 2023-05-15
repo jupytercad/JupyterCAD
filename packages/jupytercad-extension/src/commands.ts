@@ -130,10 +130,11 @@ const OPERATORS = {
     shape: 'Part::Cut',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
+      const selected = model.localState?.selected.value || [];
       return {
         Name: newName('Cut', model),
-        Base: objects[0].name ?? '',
-        Tool: objects[1].name ?? '',
+        Base: selected.length > 0 ? selected[0] : objects[0].name ?? '',
+        Tool: selected.length > 1 ? selected[1] : objects[1].name ?? '',
         Refine: false,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
@@ -178,9 +179,10 @@ const OPERATORS = {
     shape: 'Part::Extrusion',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
+      const selected = model.localState?.selected.value || [];
       return {
         Name: newName('Extrusion', model),
-        Base: [objects[0].name ?? ''],
+        Base: [selected.length > 0 ? selected[0] : objects[0].name ?? ''],
         Dir: [0, 0, 1],
         LengthFwd: 10,
         LengthRev: 0,
@@ -218,9 +220,13 @@ const OPERATORS = {
     shape: 'Part::MultiFuse',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
+      const selected = model.localState?.selected.value || [];
       return {
         Name: newName('Union', model),
-        Shapes: [objects[0].name ?? '', objects[1].name ?? ''],
+        Shapes: [
+          selected.length > 0 ? selected[0] : objects[0].name ?? '',
+          selected.length > 1 ? selected[1] : objects[1].name ?? ''
+        ],
         Refine: false,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
@@ -255,9 +261,13 @@ const OPERATORS = {
     shape: 'Part::MultiCommon',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
+      const selected = model.localState?.selected.value || [];
       return {
         Name: newName('Intersection', model),
-        Shapes: [objects[0].name ?? '', objects[1].name ?? ''],
+        Shapes: [
+          selected.length > 0 ? selected[0] : objects[0].name ?? '',
+          selected.length > 1 ? selected[1] : objects[1].name ?? ''
+        ],
         Refine: false,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };

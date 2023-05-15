@@ -196,7 +196,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     });
   }
 
-  syncSelectedObject(name?: string, emitter?: string): void {
+  syncSelectedObject(name: string[], emitter?: string): void {
     this.sharedModel.awareness.setLocalStateField('selected', {
       value: name,
       emitter: emitter

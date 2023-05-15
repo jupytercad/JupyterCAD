@@ -9,7 +9,12 @@ import {
   closeIcon
 } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
-import { ReactTree, ThemeSettings, TreeNodeList } from '@naisutech/react-tree';
+import {
+  ReactTree,
+  ThemeSettings,
+  TreeNodeId,
+  TreeNodeList
+} from '@naisutech/react-tree';
 
 import visibilitySvg from '../../style/icon/visibility.svg';
 import visibilityOffSvg from '../../style/icon/visibilityOff.svg';
@@ -80,7 +85,7 @@ interface IStates {
   jcadObject?: IJCadModel;
   options?: JSONObject;
   lightTheme: boolean;
-  selectedNode: string | null;
+  selectedNodes: string[];
   clientId: number | null; // ID of the yjs client
   id: string; // ID of the component, it is used to identify which component
   //is the source of awareness updates.
@@ -102,7 +107,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       filePath: this.props.cpModel.filePath,
       jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
       lightTheme,
-      selectedNode: null,
+      selectedNodes: [],
       clientId: null,
       id: uuid(),
       openNodes: []
@@ -213,26 +218,28 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       return;
     }
 
-    let selectedNode: string | null = null;
+    let selectedNodes: string[] = [];
     if (localState.remoteUser) {
       // We are in following mode.
       // Sync selections from a remote user
       const remoteState = clients.get(localState.remoteUser);
 
       if (remoteState?.selected?.value) {
-        selectedNode = remoteState?.selected?.value;
+        selectedNodes = remoteState.selected.value;
       }
-    } else if (localState.selected.value) {
-      selectedNode = localState.selected.value;
+    } else if (localState.selected?.value) {
+      selectedNodes = localState.selected.value;
     }
 
     const openNodes = [...this.state.openNodes];
 
-    if (selectedNode && openNodes.indexOf(selectedNode) === -1) {
-      openNodes.push(selectedNode);
+    for (const selectedNode of selectedNodes) {
+      if (selectedNode && openNodes.indexOf(selectedNode) === -1) {
+        openNodes.push(selectedNode);
+      }
     }
 
-    this.setState(old => ({ ...old, openNodes, selectedNode }));
+    this.setState(old => ({ ...old, openNodes, selectedNodes }));
   };
 
   private _onClientSharedOptionsChanged = (
@@ -243,50 +250,52 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   };
 
   render(): React.ReactNode {
-    const { selectedNode, openNodes, options } = this.state;
+    const { selectedNodes, openNodes, options } = this.state;
     const data = this.stateToTree();
 
-    let selectedNodes: (number | string)[] = [];
-    if (selectedNode) {
+    const selectedNodeIds: TreeNodeId[] = [];
+    for (const selectedNode of selectedNodes) {
       const parentNode = data.filter(node => node.id === selectedNode);
       if (parentNode.length > 0 && parentNode[0].items.length > 0) {
-        selectedNodes = [parentNode[0].items[0].id];
+        selectedNodeIds.push(parentNode[0].items[0].id);
       }
     }
 
     return (
       <div className="jpcad-treeview-wrapper">
         <ReactTree
+          multiSelect={true}
           nodes={data}
           openNodes={openNodes}
-          selectedNodes={selectedNodes}
+          selectedNodes={selectedNodeIds}
           messages={{ noData: 'No data' }}
           theme={'labTheme'}
           themes={TREE_THEMES}
           onToggleSelectedNodes={id => {
+            if (id === selectedNodeIds) {
+              return;
+            }
+
+            console.log('toggle selected', id);
+
             if (id && id.length > 0) {
-              let name = id[0] as string;
+              const names: string[] = [];
+              for (const subid of id) {
+                const name = subid as string;
 
-              if (name.includes('#')) {
-                name = name.split('#')[0];
-                this.props.cpModel.jcadModel?.syncSelectedObject(
-                  name,
-                  this.state.id
-                );
-                return;
+                if (name.includes('#')) {
+                  names.push(name.split('#')[0]);
+                } else {
+                  names.push(name);
+                }
               }
 
-              const openNodes = [...this.state.openNodes];
-              const index = openNodes.indexOf(name);
-
-              if (index !== -1) {
-                openNodes.splice(index, 1);
-              } else {
-                openNodes.push(name);
-              }
-              this.setState(old => ({ ...old, openNodes }));
+              this.props.cpModel.jcadModel?.syncSelectedObject(
+                names,
+                this.state.id
+              );
             } else {
-              this.props.cpModel.jcadModel?.syncSelectedObject(undefined);
+              this.props.cpModel.jcadModel?.syncSelectedObject([]);
             }
           }}
           RenderNode={opts => {
@@ -359,9 +368,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                           this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
                             objectId
                           );
-                          this.props.cpModel.jcadModel?.syncSelectedObject(
-                            undefined
-                          );
+                          this.props.cpModel.jcadModel?.syncSelectedObject([]);
                         }}
                         icon={closeIcon}
                       />
