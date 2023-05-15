@@ -88,7 +88,6 @@ export class MainView extends React.Component<IProps, IStates> {
     this._geometry = new THREE.BufferGeometry();
     this._geometry.setDrawRange(0, 3 * 10000);
 
-    this._resizeTimeout = null;
     this.props.view.changed.connect(this._onViewChanged, this);
 
     const lightTheme =
@@ -1065,11 +1064,8 @@ export class MainView extends React.Component<IProps, IStates> {
   };
 
   private _handleWindowResize = (): void => {
-    clearTimeout(this._resizeTimeout);
-    this._resizeTimeout = setTimeout(() => {
-      this.forceUpdate();
-      this._updateAnnotation({ updatePosition: true });
-    }, 500);
+    this.resizeCanvasToDisplaySize();
+    this._updateAnnotation({ updatePosition: true, updateDisplay: 1 });
   };
 
   render(): JSX.Element {
@@ -1188,7 +1184,6 @@ export class MainView extends React.Component<IProps, IStates> {
   private _refLength: number | null = null; // Length of bounding box of current object
   private _sceneAxe: THREE.Object3D | null; // Array of  X, Y and Z axe
   private _controls: OrbitControls; // Threejs control
-  private _resizeTimeout: any;
   private _pointer3D: IPointer | null = null;
   private _collaboratorPointers: IDict<IPointer>;
   private _pointerGeometry: THREE.SphereGeometry;
