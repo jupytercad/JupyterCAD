@@ -142,9 +142,7 @@ jobs:
           channels: conda-forge/label/jupyterlab_beta,conda-forge
           extra-specs: |
             python=3.9
-            nodejs=18
-            yarn
-            "jupyterlab>=4.0.0"
+            jupyterlab=4
             freecad
 
       - name: Download extension package
