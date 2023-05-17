@@ -2,6 +2,36 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.0b0
+
+([Full Changelog](https://github.com/QuantStack/jupytercad/compare/v0.1.0a2...6fee6db19323c0c8d48d6e3f0060a0de0029f5c9))
+
+### Enhancements made
+
+- Update to JupyterLab 4 [#147](https://github.com/QuantStack/jupytercad/pull/147) ([@martinRenou](https://github.com/martinRenou))
+- Simplify annotations update [#146](https://github.com/QuantStack/jupytercad/pull/146) ([@martinRenou](https://github.com/martinRenou))
+- Update annotations position on resize [#143](https://github.com/QuantStack/jupytercad/pull/143) ([@martinRenou](https://github.com/martinRenou))
+- Default shape/operator names [#141](https://github.com/QuantStack/jupytercad/pull/141) ([@martinRenou](https://github.com/martinRenou))
+- Lab app [#135](https://github.com/QuantStack/jupytercad/pull/135) ([@trungleduc](https://github.com/trungleduc))
+- Toolbar refactor and styling [#129](https://github.com/QuantStack/jupytercad/pull/129) ([@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- Update annotations position on resize [#143](https://github.com/QuantStack/jupytercad/pull/143) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Update to JupyterLab 4 [#147](https://github.com/QuantStack/jupytercad/pull/147) ([@martinRenou](https://github.com/martinRenou))
+- Create monorepo [#133](https://github.com/QuantStack/jupytercad/pull/133) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/QuantStack/jupytercad/graphs/contributors?from=2023-04-26&to=2023-05-17&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-04-26..2023-05-17&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-04-26..2023-05-17&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-04-26..2023-05-17&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.0a2
 
 ([Full Changelog](https://github.com/QuantStack/jupytercad/compare/v0.1.0a1...2f7b81060a1adab614bb6df1284382b0a1a5a546))
@@ -21,8 +51,6 @@
 ([GitHub contributors page for this release](https://github.com/QuantStack/jupytercad/graphs/contributors?from=2023-03-09&to=2023-04-26&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-03-09..2023-04-26&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-03-09..2023-04-26&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-03-09..2023-04-26&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.0a1
 
