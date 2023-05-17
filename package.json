@@ -38,10 +38,10 @@
         "test": "lerna run test"
     },
     "resolutions": {
-        "@jupyterlab/apputils": "~4.0.0-beta.2",
+        "@jupyterlab/apputils": "~4.0.0",
         "@lumino/coreutils": "^2.0.0",
-        "@jupyterlab/notebook": "~4.0.0-beta.2",
-        "@jupyterlab/services": " ^7.0.0-beta.2"
+        "@jupyterlab/notebook": "~4.0.0",
+        "@jupyterlab/services": " ^7.0.0"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "~5.55.0",

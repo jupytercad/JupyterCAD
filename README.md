@@ -10,7 +10,7 @@ JupyterCAD has support for FreeCAD files, which makes it easy to import and expo
 
 ## Requirements
 
-- JupyterLab >= 4.0.0b0
+- JupyterLab >= 4.0.0
 - freecad (optional)
 
 ## Installation
