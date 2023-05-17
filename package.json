@@ -1,6 +1,6 @@
 {
     "name": "@jupytercad/jupytercad-root",
-    "version": "0.1.0-b0",
+    "version": "0.1.0-rc0",
     "private": true,
     "homepage": "https://github.com/QuantStack/jupytercad",
     "repository": {
