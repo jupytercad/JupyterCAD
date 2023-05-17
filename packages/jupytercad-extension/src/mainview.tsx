@@ -265,11 +265,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this._onPointerMove.bind(this)
       );
       this._renderer.domElement.addEventListener('mouseup', e => {
-        this._updateAnnotation({ updateDisplay: 1, updatePosition: true });
         this._onClick.bind(this)(e);
-      });
-      this._renderer.domElement.addEventListener('mousedown', e => {
-        this._updateAnnotation({ updateDisplay: 0 });
       });
 
       this._renderer.domElement.addEventListener('contextmenu', e => {
@@ -292,11 +288,12 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       this._controls = controls;
 
+      this._controls.addEventListener('change', () => {
+        this._updateAnnotation();
+      });
       this._controls.addEventListener(
         'change',
         throttle(() => {
-          this._updateAnnotation({ updatePosition: true });
-
           // Not syncing camera state if following someone else
           if (this._model.localState?.remoteUser) {
             return;
@@ -406,52 +403,41 @@ export class MainView extends React.Component<IProps, IStates> {
     );
   };
 
-  private _updateAnnotation = (options: {
-    updatePosition?: boolean;
-    updateDisplay?: number;
-  }) => {
+  private _updateAnnotation() {
     Object.keys(this.state.annotations).forEach(key => {
       const el = document.getElementById(key);
       if (el) {
-        if (
-          options.updatePosition &&
-          (el.style.opacity !== '0' || options.updateDisplay !== undefined)
-        ) {
-          const annotation = this._model.annotationModel?.getAnnotation(key);
-          let screenPosition = new THREE.Vector2();
+        const annotation = this._model.annotationModel?.getAnnotation(key);
+        let screenPosition = new THREE.Vector2();
 
-          if (annotation) {
-            const parent = this._meshGroup?.getObjectByName(
-              annotation.parent
-            ) as BasicMesh;
-            const position = new THREE.Vector3(
-              annotation.position[0],
-              annotation.position[1],
-              annotation.position[2]
+        if (annotation) {
+          const parent = this._meshGroup?.getObjectByName(
+            annotation.parent
+          ) as BasicMesh;
+          const position = new THREE.Vector3(
+            annotation.position[0],
+            annotation.position[1],
+            annotation.position[2]
+          );
+
+          // If in exploded view, we explode the annotation position as well
+          if (this._explodedView.enabled && parent) {
+            const explodedState = this._computeExplodedState(parent);
+            const explodeVector = explodedState.vector.multiplyScalar(
+              explodedState.distance
             );
 
-            // If in exploded view, we explode the annotation position as well
-            if (this._explodedView.enabled && parent) {
-              const explodedState = this._computeExplodedState(parent);
-              const explodeVector = explodedState.vector.multiplyScalar(
-                explodedState.distance
-              );
-
-              position.add(explodeVector);
-            }
-
-            screenPosition = this._projectVector(position);
+            position.add(explodeVector);
           }
 
-          el.style.left = `${screenPosition.x}px`;
-          el.style.top = `${screenPosition.y}px`;
+          screenPosition = this._projectVector(position);
         }
-        if (options.updateDisplay !== undefined) {
-          el.style.opacity = options.updateDisplay.toString();
-        }
+
+        el.style.left = `${Math.round(screenPosition.x)}px`;
+        el.style.top = `${Math.round(screenPosition.y)}px`;
       }
     });
-  };
+  }
 
   private _onPointerMove(e: MouseEvent) {
     const rect = this._renderer.domElement.getBoundingClientRect();
@@ -1065,7 +1051,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _handleWindowResize = (): void => {
     this.resizeCanvasToDisplaySize();
-    this._updateAnnotation({ updatePosition: true, updateDisplay: 1 });
+    this._updateAnnotation();
   };
 
   render(): JSX.Element {
