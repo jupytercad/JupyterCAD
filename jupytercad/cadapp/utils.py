@@ -24,4 +24,12 @@ def get_page_config(base_url, app_name):
         page_config,
         gpc(labextensions_path),
     )
+    required_extensions = [
+        "@jupytercad/jupytercad-extension",
+        "@jupyter/collaboration-extension",
+    ]
+    federated_extensions = page_config["federated_extensions"]
+    page_config["federated_extensions"] = [
+        x for x in federated_extensions if x["name"] in required_extensions
+    ]
     return page_config

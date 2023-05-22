@@ -20,13 +20,16 @@ const MIME_TYPE = 'application/FCStd';
 export const notebookRendererPlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:notebookRenderer',
   autoStart: true,
-  requires: [IRenderMimeRegistry, INotebookTracker, IJupyterCadWidgetManager],
+  optional: [IRenderMimeRegistry, INotebookTracker, IJupyterCadWidgetManager],
   activate: (
     app: JupyterFrontEnd,
-    rendermime: IRenderMimeRegistry,
-    nbTracker: INotebookTracker,
-    wmManager: IJupyterCadWidgetManager
+    rendermime?: IRenderMimeRegistry,
+    nbTracker?: INotebookTracker,
+    wmManager?: IJupyterCadWidgetManager
   ) => {
+    if (!rendermime || !nbTracker || !wmManager) {
+      return;
+    }
     const rendererFactory: IRenderMime.IRendererFactory = {
       safe: true,
       mimeTypes: [MIME_TYPE],

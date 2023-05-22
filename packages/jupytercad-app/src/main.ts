@@ -12,6 +12,7 @@ import '@jupyterlab/filebrowser/style/index.js';
 import '@jupyterlab/ui-components/style/index.js';
 import '@jupyterlab/launcher/style/index.js';
 import '../style/index.css';
+import './sharedscope';
 
 function loadScript(url: string) {
   return new Promise((resolve, reject) => {
@@ -61,12 +62,6 @@ async function createModule(scope: string, module: string) {
  */
 async function main(): Promise<void> {
   // Inject some packages in the shared scope
-  require('@jupyterlab/statedb');
-  require('@jupyterlab/settingregistry');
-  require('@jupyterlab/launcher');
-  require('@jupyterlab/notebook');
-  require('@jupyterlab/rendermime');
-  require('@jupyterlab/filebrowser');
 
   const app = new App();
   // populate the list of disabled extensions
