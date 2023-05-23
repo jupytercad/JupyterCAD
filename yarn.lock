@@ -478,9 +478,9 @@ __metadata:
   linkType: hard
 
 "@codemirror/state@npm:^6.0.0, @codemirror/state@npm:^6.1.4, @codemirror/state@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "@codemirror/state@npm:6.2.0"
-  checksum: fdc99c773dc09c700dd02bf918f06132aa8d3069c262cc4eb6ca5c810ce24ae2d7e90719ae7630a8158fd263018de6d40bd78f312e6bfba754e737b64e6c6b3d
+  version: 6.2.1
+  resolution: "@codemirror/state@npm:6.2.1"
+  checksum: d12a321d0471b264b9d3259042bff913a8b939e8d28d408ff452004538a71ca9d5329df3f8a1d8a9183f5b42a7ef5b200737bcab1065714f5ae8e0a5ba9d59d3
   languageName: node
   linkType: hard
 
@@ -822,6 +822,7 @@ __metadata:
     "@jupyter/collaboration": ^1.0.0-alpha.7
     "@jupyter/docprovider": ^1.0.0-alpha.8
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
+    "@jupytercad/jupytercad-extension": 0.1.0
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/application-extension": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -870,7 +871,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-extension@workspace:packages/jupytercad-extension":
+"@jupytercad/jupytercad-extension@0.1.0, @jupytercad/jupytercad-extension@workspace:packages/jupytercad-extension":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-extension@workspace:packages/jupytercad-extension"
   dependencies:
@@ -3188,12 +3189,12 @@ __metadata:
   linkType: hard
 
 "@types/eslint@npm:*":
-  version: 8.37.0
-  resolution: "@types/eslint@npm:8.37.0"
+  version: 8.40.0
+  resolution: "@types/eslint@npm:8.40.0"
   dependencies:
     "@types/estree": "*"
     "@types/json-schema": "*"
-  checksum: 06d3b3fba12004294591b5c7a52e3cec439472195da54e096076b1f2ddfbb8a445973b9681046dd530a6ac31eca502f635abc1e3ce37d03513089358e6f822ee
+  checksum: bab41d7f590182e743853cdd5bf5359cbc4240df986223457c8a5f5674743a3fe2a8626704b65bf9121dfa0ce0a0efd760da8339cc329018f229d4d2d6ee1c43
   languageName: node
   linkType: hard
 
@@ -5289,9 +5290,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.284":
-  version: 1.4.402
-  resolution: "electron-to-chromium@npm:1.4.402"
-  checksum: d2e6473921df875169d58e6317bcb64f1d88127fbd841799218720458e1e6d30e5a3abaac97d20c5bf02c3c2246f3cc701d6503713e3f14ff656a87068489d1e
+  version: 1.4.404
+  resolution: "electron-to-chromium@npm:1.4.404"
+  checksum: 40e9ce607877e5d2a0578e78a3bd461ca6574cefb738f2dd82c171fad124c833cb078844947d9d21d6e6cf13a7d9b75b500ef4522c8cc67e99ad47d6b36cf078
   languageName: node
   linkType: hard
 
@@ -9553,15 +9554,15 @@ __metadata:
   linkType: hard
 
 "postcss-modules-local-by-default@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "postcss-modules-local-by-default@npm:4.0.1"
+  version: 4.0.2
+  resolution: "postcss-modules-local-by-default@npm:4.0.2"
   dependencies:
     icss-utils: ^5.0.0
     postcss-selector-parser: ^6.0.2
     postcss-value-parser: ^4.1.0
   peerDependencies:
     postcss: ^8.1.0
-  checksum: 1a95eb8bc54a363a77dbd77a0a88f500e7937ecbed5903becef9362eace28de406e6fdf62640126c22964678370e87eb10481eea2703702772935b4515603bfd
+  checksum: 2f3a12a16f1c19bc5776aa761fab836502a8efc9ce5fd48aa7597c728f62550dd7f9f72ca2f2791a21e7efb377d180c12bec50270ceb4e5bc80d602d743215b9
   languageName: node
   linkType: hard
 
@@ -11084,8 +11085,8 @@ __metadata:
   linkType: hard
 
 "terser@npm:^5.16.8":
-  version: 5.17.5
-  resolution: "terser@npm:5.17.5"
+  version: 5.17.6
+  resolution: "terser@npm:5.17.6"
   dependencies:
     "@jridgewell/source-map": ^0.3.2
     acorn: ^8.5.0
@@ -11093,7 +11094,7 @@ __metadata:
     source-map-support: ~0.5.20
   bin:
     terser: bin/terser
-  checksum: f9990932a62ef6fcc424894f483d71aa647b0524ac18167f945201a32401c09702e480a3198dcaf9d6d755243d3d73c13418cdb28711ef167c028d3ff2a866bf
+  checksum: 9c0ab0261a99a61c5f53d05d4ecc7f68c552bae6af481464fdd596bc9d7e89ce8e21b1833cb3ce06ad5f658e2b226081d543e4fe6e324b2cdf03ee8b7eeec01a
   languageName: node
   linkType: hard
 
