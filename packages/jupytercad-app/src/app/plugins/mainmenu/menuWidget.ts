@@ -1,4 +1,4 @@
-import { RankedMenu, MenuSvg } from '@jupyterlab/ui-components';
+import { RankedMenu, MenuSvg, homeIcon } from '@jupyterlab/ui-components';
 import { CommandRegistry } from '@lumino/commands';
 import { MenuBar } from '@lumino/widgets';
 import { CommandIDs } from '@jupytercad/jupytercad-extension/lib/commands';
@@ -23,11 +23,11 @@ export class MainMenu extends MenuBar {
       label: 'Documentation',
       execute: () => {
         window.open('https://github.com/QuantStack/jupytercad', '_blank');
-      }
+      },
+      icon: homeIcon
     });
-    const helpMenu = new RankedMenu({
-      commands: this._commands,
-      rank: 200
+    const helpMenu = new MenuSvg({
+      commands: this._commands
     });
     helpMenu.title.label = 'Help';
     helpMenu.title.mnemonic = 0;
@@ -39,9 +39,8 @@ export class MainMenu extends MenuBar {
     });
   }
   private _createFileMenu(): void {
-    const menu = new RankedMenu({
-      commands: this._commands,
-      rank: 100
+    const menu = new MenuSvg({
+      commands: this._commands
     });
     menu.title.label = 'File';
     menu.title.mnemonic = 0;
@@ -142,6 +141,7 @@ export class MainMenu extends MenuBar {
       command: CommandIDs.redo
     });
   }
+
   private _createViewMenu(): void {
     const menu = new MenuSvg({
       commands: this._commands

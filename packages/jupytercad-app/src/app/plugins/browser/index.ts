@@ -6,7 +6,7 @@ import {
 import { showErrorMessage } from '@jupyterlab/apputils';
 import { IDefaultFileBrowser } from '@jupyterlab/filebrowser';
 import { ITranslator } from '@jupyterlab/translation';
-import { folderIcon } from '@jupyterlab/ui-components';
+import { folderIcon, fileUploadIcon } from '@jupyterlab/ui-components';
 
 const browserWidget: JupyterFrontEndPlugin<void> = {
   id: '@jupyterlab/filebrowser-extension:widget',
@@ -61,6 +61,7 @@ const browserWidget: JupyterFrontEndPlugin<void> = {
     app.commands.addCommand('jupytercad:open-file', {
       label: 'Open files',
       caption: 'Open files from disk',
+      icon: fileUploadIcon,
       execute: args => {
         input.click();
       }
