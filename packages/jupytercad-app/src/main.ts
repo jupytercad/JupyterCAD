@@ -102,7 +102,8 @@ async function main(): Promise<void> {
       [
         '@jupyterlab/application-extension:router',
         '@jupyterlab/application-extension:layout',
-        '@jupyterlab/application-extension:shell'
+        '@jupyterlab/application-extension:shell',
+        '@jupyterlab/application-extension:context-menu'
       ].includes(m.id)
     ),
     // eslint-disable-next-line @typescript-eslint/no-var-requires

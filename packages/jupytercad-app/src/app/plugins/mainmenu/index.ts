@@ -7,6 +7,7 @@ import { AppTitle } from './titleWidget';
 import { UserMenu } from './userWidget';
 import { Toolbar } from '@jupyterlab/ui-components';
 import { MainMenu } from './menuWidget';
+import { IThemeManager } from '@jupyterlab/apputils';
 const PLUGIN_ID = 'jupytercad:topmenu';
 
 /**
@@ -14,9 +15,9 @@ const PLUGIN_ID = 'jupytercad:topmenu';
  */
 const plugin: JupyterFrontEndPlugin<void> = {
   id: PLUGIN_ID,
-  requires: [],
+  requires: [IThemeManager],
   autoStart: true,
-  activate: (app: JupyterFrontEnd): void => {
+  activate: (app: JupyterFrontEnd, themeManager: IThemeManager): void => {
     const { user } = app.serviceManager;
     const { commands } = app;
     const appTitle = new AppTitle();
@@ -26,7 +27,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     spacer.id = 'jupytercad-menu-spacer';
     app.shell.add(spacer, 'menu', { rank: 150 });
 
-    const mainMenu = new MainMenu(commands);
+    const mainMenu = new MainMenu({ commands, themeManager });
     mainMenu.id = 'jupytercad-menu-mainmenu';
     app.shell.add(mainMenu, 'menu', { rank: 175 });
 

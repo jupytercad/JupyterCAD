@@ -89,7 +89,7 @@ const activate = (
   });
 
   app.commands.addCommand(CommandIDs.createNew, {
-    label: args => (args['isPalette'] ? 'New JCAD Editor' : 'JCAD Editor'),
+    label: args => 'New JCAD File',
     caption: 'Create a new JCAD Editor',
     icon: args => (args['isPalette'] ? undefined : fileIcon),
     execute: async args => {

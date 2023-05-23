@@ -114,3 +114,17 @@ h2.lm-Widget {
 .jp-Launcher-cwd {
   display: none;
 }
+
+.lm-MenuBar.lm-mod-active .lm-MenuBar-item.lm-mod-active {
+  color: wheat;
+}
+
+.jc-MenuBar-MenuItem .jp-icon3[fill] {
+  fill: wheat !important;
+}
+.jc-MenuBar-ViewMenu .lm-Menu-itemIcon {
+  visibility: hidden;
+}
+.jc-MenuBar-FileMenu .lm-Menu-itemIcon {
+  visibility: hidden;
+}
