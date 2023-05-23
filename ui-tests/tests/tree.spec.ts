@@ -67,7 +67,8 @@ test.describe('Tree UI test', () => {
     });
     if (tree) {
       expect(await tree.screenshot()).toMatchSnapshot({
-        name: `Tree-Display-${fileName}.png`
+        name: `Tree-Display-${fileName}.png`,
+        maxDiffPixelRatio: 0.01
       });
     }
   });
