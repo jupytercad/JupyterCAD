@@ -16,7 +16,7 @@ const launcherPlugin: JupyterFrontEndPlugin<void> = {
       for (let idx = 0; idx < length; idx++) {
         const element = els.item(idx);
         if (element) {
-          element.innerHTML = 'Create new project';
+          element.innerHTML = 'Create New Project';
         }
       }
     });
