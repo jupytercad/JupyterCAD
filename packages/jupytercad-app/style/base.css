@@ -1,3 +1,17 @@
+body[data-jp-theme-light='false'] {
+  --jp-brand-color1: #0fa8b0 !important;
+  --jp-inverse-layout-color3: #0fa8b0 !important;
+  --jp-accept-color-normal: #0fa8b0 !important;
+  --jc-brand-color: #032122 !important;
+}
+
+body[data-jp-theme-light='true'] {
+  --jp-brand-color1: #09777c !important;
+  --jp-inverse-layout-color3: #09777c !important;
+  --jp-accept-color-normal: #09777c !important;
+  --jc-brand-color: #053b3e !important;
+}
+
 #jp-top-panel {
   min-height: 60px !important;
   padding: 10px !important;
@@ -5,25 +19,15 @@
   padding-left: 40px !important;
   padding-right: 30px !important;
   border-bottom: none;
-  background: #053b3e;
-}
-
-:root {
-  --jp-inverse-layout-color3: #09777c !important;
-}
-:root {
-  --jp-brand-color1: #09777c !important;
+  background: var(--jc-brand-color);
 }
 
 .jp-FileBrowser-toolbar {
   display: None;
 }
-#jp-main-dock-panel {
-  background: radial-gradient(rgb(239, 237, 237), rgb(143, 144, 145));
-}
 
 #jp-menu-panel {
-  background: #053b3e !important;
+  background: var(--jc-brand-color) !important;
   display: flex;
   flex-grow: 1;
   column-gap: 10px;
@@ -80,7 +84,7 @@ h2.lm-Widget {
 }
 
 .jc-MainMenu {
-  background: #053b3e;
+  background: var(--jc-brand-color);
   color: wheat;
   padding-top: 6px;
   font-size: 1.1rem;
@@ -89,7 +93,7 @@ h2.lm-Widget {
   background: #096065 !important;
 }
 .jc-MenuBar-MenuItem {
-  background: #053b3e;
+  background: var(--jc-brand-color);
   color: wheat;
 }
 .jc-MenuBar-MenuItem .lm-Menu-item.lm-mod-active {

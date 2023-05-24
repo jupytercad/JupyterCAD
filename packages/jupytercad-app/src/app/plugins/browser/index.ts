@@ -59,7 +59,7 @@ const browserWidget: JupyterFrontEndPlugin<void> = {
       }
     };
     app.commands.addCommand('jupytercad:open-file', {
-      label: 'Open files',
+      label: 'Open File',
       caption: 'Open files from disk',
       icon: fileUploadIcon,
       execute: args => {
