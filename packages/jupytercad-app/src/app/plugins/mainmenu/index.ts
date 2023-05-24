@@ -3,8 +3,11 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 
-import { MainMenu } from './widget';
-
+import { AppTitle } from './titleWidget';
+import { UserMenu } from './userWidget';
+import { Toolbar } from '@jupyterlab/ui-components';
+import { MainMenu } from './menuWidget';
+import { IThemeManager } from '@jupyterlab/apputils';
 const PLUGIN_ID = 'jupytercad:topmenu';
 
 /**
@@ -12,12 +15,25 @@ const PLUGIN_ID = 'jupytercad:topmenu';
  */
 const plugin: JupyterFrontEndPlugin<void> = {
   id: PLUGIN_ID,
-  requires: [],
+  requires: [IThemeManager],
   autoStart: true,
-  activate: (app: JupyterFrontEnd): void => {
-    const menu = new MainMenu();
-    menu.id = 'jupytercad-topmenu';
-    app.shell.add(menu, 'menu', { rank: 100 });
+  activate: (app: JupyterFrontEnd, themeManager: IThemeManager): void => {
+    const { user } = app.serviceManager;
+    const { commands } = app;
+    const appTitle = new AppTitle();
+    appTitle.id = 'jupytercad-topmenu';
+    app.shell.add(appTitle, 'menu', { rank: 100 });
+    const spacer = Toolbar.createSpacerItem();
+    spacer.id = 'jupytercad-menu-spacer';
+    app.shell.add(spacer, 'menu', { rank: 150 });
+
+    const mainMenu = new MainMenu({ commands, themeManager });
+    mainMenu.id = 'jupytercad-menu-mainmenu';
+    app.shell.add(mainMenu, 'menu', { rank: 175 });
+
+    const userMenu = new UserMenu({ user });
+    userMenu.id = 'jupytercad-usermenu';
+    app.shell.add(userMenu, 'menu', { rank: 200 });
   }
 };
 

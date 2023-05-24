@@ -1,33 +1,38 @@
+body[data-jp-theme-light='false'] {
+  --jp-brand-color1: #0fa8b0 !important;
+  --jp-inverse-layout-color3: #0fa8b0 !important;
+  --jp-accept-color-normal: #0fa8b0 !important;
+  --jc-brand-color: #032122 !important;
+}
+
+body[data-jp-theme-light='true'] {
+  --jp-brand-color1: #09777c !important;
+  --jp-inverse-layout-color3: #09777c !important;
+  --jp-accept-color-normal: #09777c !important;
+  --jc-brand-color: #053b3e !important;
+}
+
 #jp-top-panel {
   min-height: 60px !important;
   padding: 10px !important;
-  justify-content: flex-end;
-  padding-right: 40px !important;
+  justify-content: flex-start;
+  padding-left: 40px !important;
+  padding-right: 30px !important;
   border-bottom: none;
-  background: #053b3e;
-}
-
-:root {
-  --jp-ui-font-color1: rgba(#4e5c65, 1) !important;
-}
-:root {
-  --jp-inverse-layout-color3: #09777c !important;
-}
-:root {
-  --jp-brand-color1: #09777c !important;
+  background: var(--jc-brand-color);
 }
 
 .jp-FileBrowser-toolbar {
   display: None;
 }
-#jp-main-dock-panel {
-  background: radial-gradient(rgb(239, 237, 237), rgb(143, 144, 145));
-}
 
 #jp-menu-panel {
-  background: #053b3e !important;
+  background: var(--jc-brand-color) !important;
+  display: flex;
+  flex-grow: 1;
+  column-gap: 10px;
 }
-.jcad-MainMenu {
+.jc-MainMenu-AppTitle {
   font-size: 30px;
   color: wheat;
   font-family: Poiret One !important;
@@ -43,4 +48,82 @@ h2.lm-Widget {
 
 .jp-Icon {
   color: var(--jp-inverse-layout-color3);
+}
+
+.jc-MenuBar-anonymousIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+  border-radius: 100%;
+}
+.jc-MenuBar-anonymousIcon span {
+  width: 40px;
+  text-align: center;
+  fill: var(--jp-ui-font-color1);
+  color: var(--jp-ui-font-color1);
+  font-size: 1.25rem;
+}
+
+.jp-Toolbar-spacer {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+#jupytercad-usermenu {
+  display: flex;
+  column-gap: 5px;
+}
+#jupytercad-usermenu > span {
+  color: wheat;
+  line-height: 40px;
+  font-size: 1.1rem;
+  border-left: solid 2px wheat;
+  padding-left: 17px;
+}
+
+.jc-MainMenu {
+  background: var(--jc-brand-color);
+  color: wheat;
+  padding-top: 6px;
+  font-size: 1.1rem;
+}
+.jc-MainMenu .lm-MenuBar-item.lm-mod-active {
+  background: #096065 !important;
+}
+.jc-MenuBar-MenuItem {
+  background: var(--jc-brand-color);
+  color: wheat;
+}
+.jc-MenuBar-MenuItem .lm-Menu-item.lm-mod-active {
+  background: #096065 !important;
+}
+
+:root {
+  --jp-private-launcher-card-size: 10rem !important;
+}
+.jp-LauncherCard {
+  border-radius: 20px;
+}
+.jp-LauncherCard-label p {
+  font-size: 1.1rem;
+}
+.jp-LauncherCard:hover {
+  background: #053b3e30;
+}
+.jp-Launcher-cwd {
+  display: none;
+}
+
+.lm-MenuBar.lm-mod-active .lm-MenuBar-item.lm-mod-active {
+  color: wheat;
+}
+
+.jc-MenuBar-MenuItem .lm-Menu-item.lm-mod-disabled {
+  color: #f5deb382;
+}
+
+.jc-MenuBar-MenuItem .jp-icon3[fill] {
+  fill: wheat !important;
 }

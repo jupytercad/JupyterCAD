@@ -3,10 +3,10 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-
+import { showErrorMessage } from '@jupyterlab/apputils';
 import { IDefaultFileBrowser } from '@jupyterlab/filebrowser';
 import { ITranslator } from '@jupyterlab/translation';
-import { folderIcon } from '@jupyterlab/ui-components';
+import { folderIcon, fileUploadIcon } from '@jupyterlab/ui-components';
 
 const browserWidget: JupyterFrontEndPlugin<void> = {
   id: '@jupyterlab/filebrowser-extension:widget',
@@ -34,7 +34,38 @@ const browserWidget: JupyterFrontEndPlugin<void> = {
       }
       return null;
     });
+    browser.id = 'jcad-file-browser';
     labShell.add(browser, 'left', { rank: 100, type: 'File Browser' });
+    labShell.activateById(browser.id);
+    browser.model.fileChanged.connect(
+      async () => await browser.model.refresh()
+    );
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = '.FCStd, .fcstd,.jcad, .JCAD';
+    input.onclick = () => void (input.value = '');
+    input.onchange = () => {
+      const files = input.files;
+      if (files) {
+        const pending = Array.from(files).map(file =>
+          browser.model.upload(file)
+        );
+        void Promise.all(pending)
+          .catch(error => {
+            void showErrorMessage('Upload Error', error);
+          })
+          .then(async () => await browser.model.refresh());
+      }
+    };
+    app.commands.addCommand('jupytercad:open-file', {
+      label: 'Open File',
+      caption: 'Open files from disk',
+      icon: fileUploadIcon,
+      execute: args => {
+        input.click();
+      }
+    });
   }
 };
 

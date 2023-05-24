@@ -10,7 +10,9 @@ import '@jupyter/collaboration/style/index.js';
 import '@jupyterlab/application/style/index.js';
 import '@jupyterlab/filebrowser/style/index.js';
 import '@jupyterlab/ui-components/style/index.js';
+import '@jupyterlab/launcher/style/index.js';
 import '../style/index.css';
+import './sharedscope';
 
 function loadScript(url: string) {
   return new Promise((resolve, reject) => {
@@ -60,12 +62,6 @@ async function createModule(scope: string, module: string) {
  */
 async function main(): Promise<void> {
   // Inject some packages in the shared scope
-  require('@jupyterlab/statedb');
-  require('@jupyterlab/settingregistry');
-  require('@jupyterlab/launcher');
-  require('@jupyterlab/notebook');
-  require('@jupyterlab/rendermime');
-  require('@jupyterlab/filebrowser');
 
   const app = new App();
   // populate the list of disabled extensions
@@ -106,7 +102,8 @@ async function main(): Promise<void> {
       [
         '@jupyterlab/application-extension:router',
         '@jupyterlab/application-extension:layout',
-        '@jupyterlab/application-extension:shell'
+        '@jupyterlab/application-extension:shell',
+        '@jupyterlab/application-extension:context-menu'
       ].includes(m.id)
     ),
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -127,9 +124,11 @@ async function main(): Promise<void> {
       (m: any) => !['@jupyterlab/filebrowser-extension:widget'].includes(m.id)
     ),
     require('@jupyterlab/docmanager-extension'),
+    require('@jupyterlab/launcher-extension'),
     require('./app/plugins/paths'),
     require('./app/plugins/mainmenu'),
-    require('./app/plugins/browser')
+    require('./app/plugins/browser'),
+    require('./app/plugins/launcher')
   ];
 
   const federatedExtensionPromises: Promise<any>[] = [];

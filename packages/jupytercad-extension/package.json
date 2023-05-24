@@ -49,7 +49,6 @@
     },
     "dependencies": {
         "@deathbeds/jupyterlab-rjsf": "^1.1.0",
-        "@jupyter-widgets/base": "^6.0.2",
         "@jupyter/collaboration": "^1.0.0-alpha.7",
         "@jupyter/docprovider": "^1.0.0-alpha.8",
         "@jupyter/ydoc": "^0.3.4 || ^1.0.2",
@@ -89,6 +88,7 @@
         "copy-webpack-plugin": "^10.0.0",
         "file-loader": "^6.2.0",
         "json-schema-to-typescript": "^10.1.5",
+        "npm-run-all": "^4.1.5",
         "source-map-loader": "^3.0.0",
         "ts-loader": "^9.2.6",
         "typescript": "^5",
@@ -107,10 +107,6 @@
         "outputDir": "../../jupytercad/labextension",
         "webpackConfig": "./extension.webpack.config.js",
         "sharedPackages": {
-            "@jupyter-widgets/base": {
-                "bundled": false,
-                "singleton": true
-            },
             "yjs": {
                 "bundled": false,
                 "singleton": true

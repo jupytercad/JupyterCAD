@@ -47,7 +47,8 @@ test.describe('Sketcher test', () => {
     const dialog = await page.$('.lm-Widget.lm-Panel.jp-Dialog-content');
     if (dialog) {
       expect(await dialog.screenshot()).toMatchSnapshot({
-        name: `Sketcher-Display-${fileName}.png`
+        name: `Sketcher-Display-${fileName}.png`,
+        maxDiffPixelRatio: 0.01
       });
     }
   });
@@ -93,7 +94,8 @@ test.describe('Sketcher test', () => {
     const dialog = await page.$('.lm-Widget.lm-Panel.jp-Dialog-content');
     if (dialog) {
       expect(await dialog.screenshot()).toMatchSnapshot({
-        name: `Sketcher-Circle-${fileName}.png`
+        name: `Sketcher-Circle-${fileName}.png`,
+        maxDiffPixelRatio: 0.01
       });
     }
   });

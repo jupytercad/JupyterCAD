@@ -21,6 +21,7 @@ import { IDict, IJupyterCadModel } from './types';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import formSchema from './_interface/forms.json';
 import { IJCadObject, Parts } from './_interface/jcad';
+import { redoIcon, undoIcon } from '@jupyterlab/ui-components';
 
 const FORM_SCHEMA = {};
 // Injecting "name" in the schema, as it's not part of the official schema but
@@ -369,29 +370,33 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.redo, {
     label: trans.__('Redo'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     execute: args => {
       const current = tracker.currentWidget;
 
       if (current) {
         return current.context.model.sharedModel.redo();
       }
-    }
+    },
+    icon: redoIcon
   });
 
   commands.addCommand(CommandIDs.undo, {
     label: trans.__('Undo'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     execute: args => {
       const current = tracker.currentWidget;
 
       if (current) {
         return current.context.model.sharedModel.undo();
       }
-    }
+    },
+    icon: undoIcon
   });
-
   commands.addCommand(CommandIDs.newSketch, {
     label: trans.__('New Sketch'),
     iconClass: 'fa fa-pencil',
+    isEnabled: () => Boolean(tracker.currentWidget),
     execute: async args => {
       const current = tracker.currentWidget;
 
@@ -415,60 +420,70 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.newBox, {
     label: trans.__('New Box'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     icon: boxIcon,
     execute: Private.createPart('box', tracker)
   });
 
   commands.addCommand(CommandIDs.newCylinder, {
     label: trans.__('New Cylinder'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     icon: cylinderIcon,
     execute: Private.createPart('cylinder', tracker)
   });
 
   commands.addCommand(CommandIDs.newSphere, {
     label: trans.__('New Sphere'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     icon: sphereIcon,
     execute: Private.createPart('sphere', tracker)
   });
 
   commands.addCommand(CommandIDs.newCone, {
     label: trans.__('New Cone'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     icon: coneIcon,
     execute: Private.createPart('cone', tracker)
   });
 
   commands.addCommand(CommandIDs.newTorus, {
     label: trans.__('New Torus'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     icon: torusIcon,
     execute: Private.createPart('torus', tracker)
   });
 
   commands.addCommand(CommandIDs.extrusion, {
     label: trans.__('Extrusion'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     icon: extrusionIcon,
     execute: Private.executeOperator('extrusion', tracker)
   });
 
   commands.addCommand(CommandIDs.cut, {
     label: trans.__('Cut'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     icon: cutIcon,
     execute: Private.executeOperator('cut', tracker)
   });
 
   commands.addCommand(CommandIDs.union, {
     label: trans.__('Union'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     icon: unionIcon,
     execute: Private.executeOperator('union', tracker)
   });
 
   commands.addCommand(CommandIDs.intersection, {
     label: trans.__('Intersection'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     icon: intersectionIcon,
     execute: Private.executeOperator('intersection', tracker)
   });
 
   commands.addCommand(CommandIDs.updateAxes, {
     label: trans.__('Axes Helper'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     icon: axesIcon,
     execute: async () => {
       const current = tracker.currentWidget;
@@ -491,6 +506,7 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.updateExplodedView, {
     label: trans.__('Exploded View'),
+    isEnabled: () => Boolean(tracker.currentWidget),
     icon: explodedViewIcon,
     execute: async () => {
       const current = tracker.currentWidget;

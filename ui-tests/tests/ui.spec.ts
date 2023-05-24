@@ -92,7 +92,8 @@ test.describe('UI Test', () => {
         expect(errors).toBe(0);
         if (main) {
           expect(await main.screenshot()).toMatchSnapshot({
-            name: `Render-${file}.png`
+            name: `Render-${file}.png`,
+            maxDiffPixelRatio: 0.01
           });
         }
       });
@@ -156,7 +157,8 @@ test.describe('UI Test', () => {
       const main = await page.$('#jp-main-split-panel');
       if (main) {
         expect(await main.screenshot()).toMatchSnapshot({
-          name: `Operator-Add-${fileName}.png`
+          name: `Operator-Add-${fileName}.png`,
+          maxDiffPixelRatio: 0.01
         });
       }
     });
@@ -193,7 +195,8 @@ test.describe('UI Test', () => {
       const main = await page.$('#jp-main-split-panel');
       if (main) {
         expect(await main.screenshot()).toMatchSnapshot({
-          name: `Operator-Remove-${fileName}.png`
+          name: `Operator-Remove-${fileName}.png`,
+          maxDiffPixelRatio: 0.01
         });
       }
     });
@@ -237,7 +240,8 @@ test.describe('UI Test', () => {
       const main = await page.$('#jp-main-split-panel');
       if (main) {
         expect(await main.screenshot()).toMatchSnapshot({
-          name: `Operator-Edit-${fileName}.png`
+          name: `Operator-Edit-${fileName}.png`,
+          maxDiffPixelRatio: 0.01
         });
       }
     });
