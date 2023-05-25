@@ -1,4 +1,4 @@
-const d3Color: any = require('d3-color');
+import * as d3Color from 'd3-color';
 
 import { LabIcon } from '@jupyterlab/ui-components';
 
