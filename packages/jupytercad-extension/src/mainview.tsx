@@ -39,10 +39,12 @@ THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
-const DEFAULT_MESH_COLOR = () => new THREE.Color(getCSSVariableColor('--jp-inverse-layout-color4'));
-const DEFAULT_EDGE_COLOR = () => new THREE.Color(getCSSVariableColor('--jp-inverse-layout-color2'));
-const SELECTED_MESH_COLOR = () => new THREE.Color(getCSSVariableColor('--jp-brand-color0'));
-
+const DEFAULT_MESH_COLOR = () =>
+  new THREE.Color(getCSSVariableColor('--jp-inverse-layout-color4'));
+const DEFAULT_EDGE_COLOR = () =>
+  new THREE.Color(getCSSVariableColor('--jp-inverse-layout-color2'));
+const SELECTED_MESH_COLOR = () =>
+  new THREE.Color(getCSSVariableColor('--jp-brand-color0'));
 
 export type BasicMesh = THREE.Mesh<
   THREE.BufferGeometry,

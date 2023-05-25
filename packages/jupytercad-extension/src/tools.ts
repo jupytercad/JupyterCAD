@@ -200,7 +200,8 @@ export function nearest(n: number, tol: number): number {
 }
 
 export function getCSSVariableColor(name: string): string {
-  const color = window.getComputedStyle(document.body).getPropertyValue(name) || '#ffffff';
+  const color =
+    window.getComputedStyle(document.body).getPropertyValue(name) || '#ffffff';
 
   return d3Color.rgb(color).formatHex();
 }
