@@ -43,9 +43,15 @@ const DEFAULT_MESH_COLOR_CSS = '--jp-inverse-layout-color4';
 const DEFAULT_EDGE_COLOR_CSS = '--jp-inverse-layout-color2';
 const SELECTED_MESH_COLOR_CSS = '--jp-brand-color0';
 
-const DEFAULT_MESH_COLOR = new THREE.Color(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
-const DEFAULT_EDGE_COLOR = new THREE.Color(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
-const SELECTED_MESH_COLOR = new THREE.Color(getCSSVariableColor(SELECTED_MESH_COLOR_CSS));
+const DEFAULT_MESH_COLOR = new THREE.Color(
+  getCSSVariableColor(DEFAULT_MESH_COLOR_CSS)
+);
+const DEFAULT_EDGE_COLOR = new THREE.Color(
+  getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS)
+);
+const SELECTED_MESH_COLOR = new THREE.Color(
+  getCSSVariableColor(SELECTED_MESH_COLOR_CSS)
+);
 
 export type BasicMesh = THREE.Mesh<
   THREE.BufferGeometry,
