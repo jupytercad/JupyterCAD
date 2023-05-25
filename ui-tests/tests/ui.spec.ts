@@ -292,6 +292,8 @@ test.describe('UI Test', () => {
         });
       }
 
+      await page.waitForTimeout(1000);
+
       // Apply a cut operator from the selection
       const cutbtn = await page.locator(
         "button.jp-ToolbarButtonComponent[data-command='jupytercad:cut']"
