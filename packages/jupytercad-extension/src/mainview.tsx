@@ -31,7 +31,7 @@ import {
   WorkerAction
 } from './types';
 import { FloatingAnnotation } from './annotation/view';
-import { throttle } from './tools';
+import { getCSSVariableColor, throttle } from './tools';
 import { Vector2 } from 'three';
 
 // Apply the BVH extension
@@ -39,8 +39,10 @@ THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
-const DEFAULT_MESH_COLOR = new THREE.Color('#434442');
-const SELECTED_MESH_COLOR = new THREE.Color('#AB5118');
+const DEFAULT_MESH_COLOR = () => new THREE.Color(getCSSVariableColor('--jp-inverse-layout-color4'));
+const DEFAULT_EDGE_COLOR = () => new THREE.Color(getCSSVariableColor('--jp-inverse-layout-color2'));
+const SELECTED_MESH_COLOR = () => new THREE.Color(getCSSVariableColor('--jp-brand-color0'));
+
 
 export type BasicMesh = THREE.Mesh<
   THREE.BufferGeometry,
@@ -491,7 +493,7 @@ export class MainView extends React.Component<IProps, IStates> {
     if (selection) {
       // Deselect old selection
       if (this._selectedMesh) {
-        let originalColor = DEFAULT_MESH_COLOR;
+        let originalColor = DEFAULT_MESH_COLOR();
         if (
           guidata &&
           guidata[this._selectedMesh.name] &&
@@ -517,7 +519,7 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       if (this._selectedMesh) {
-        this._selectedMesh.material.color = SELECTED_MESH_COLOR;
+        this._selectedMesh.material.color = SELECTED_MESH_COLOR();
         this._model.syncSelectedObject(this._selectedMesh.name, this.state.id);
       } else {
         this._model.syncSelectedObject(undefined, this.state.id);
@@ -568,7 +570,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       const objdata = guidata ? guidata?.[objName] : null;
 
-      let color = DEFAULT_MESH_COLOR;
+      let color = DEFAULT_MESH_COLOR();
       let visible = true;
       if (objdata) {
         if (Object.prototype.hasOwnProperty.call(objdata, 'color')) {
@@ -618,12 +620,12 @@ export class MainView extends React.Component<IProps, IStates> {
 
       if (this._selectedMesh?.name === objName) {
         this._selectedMesh = mesh;
-        mesh.material.color = SELECTED_MESH_COLOR;
+        mesh.material.color = SELECTED_MESH_COLOR();
       }
 
       const edgeMaterial = new THREE.LineBasicMaterial({
         linewidth: 5,
-        color: 'black'
+        color: DEFAULT_EDGE_COLOR()
       });
       edgeList.forEach(edge => {
         const edgeVertices = new THREE.Float32BufferAttribute(
@@ -732,7 +734,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     if (selected) {
       this._selectedMesh = selected as BasicMesh;
-      this._selectedMesh.material.color = SELECTED_MESH_COLOR;
+      this._selectedMesh.material.color = SELECTED_MESH_COLOR();
     }
   }
 
@@ -741,7 +743,7 @@ export class MainView extends React.Component<IProps, IStates> {
       return;
     }
 
-    let originalColor = DEFAULT_MESH_COLOR;
+    let originalColor = DEFAULT_MESH_COLOR();
     const guidata = this._model.sharedModel.getOption('guidata');
     if (
       guidata &&
@@ -986,7 +988,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
         // Draw lines
         const material = new THREE.LineBasicMaterial({
-          color: 'black',
+          color: DEFAULT_EDGE_COLOR(),
           linewidth: 2
         });
         const geometry = new THREE.BufferGeometry().setFromPoints([

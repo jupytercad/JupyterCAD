@@ -1,4 +1,5 @@
 body[data-jp-theme-light='false'] {
+  --jp-brand-color0: #0fa8b0 !important;
   --jp-brand-color1: #0fa8b0 !important;
   --jp-inverse-layout-color3: #0fa8b0 !important;
   --jp-accept-color-normal: #0fa8b0 !important;
@@ -6,6 +7,7 @@ body[data-jp-theme-light='false'] {
 }
 
 body[data-jp-theme-light='true'] {
+  --jp-brand-color0: #09777c !important;
   --jp-brand-color1: #09777c !important;
   --jp-inverse-layout-color3: #09777c !important;
   --jp-accept-color-normal: #09777c !important;
