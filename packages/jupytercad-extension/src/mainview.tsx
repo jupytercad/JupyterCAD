@@ -39,9 +39,6 @@ THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
-const DARK_BG_COLOR = 'linear-gradient(rgb(0, 0, 42), rgb(82, 87, 110))';
-const LIGHT_BG_COLOR = 'radial-gradient(#efeded, #8f9091)';
-
 const DEFAULT_MESH_COLOR = new THREE.Color('#434442');
 const SELECTED_MESH_COLOR = new THREE.Color('#AB5118');
 
@@ -1133,7 +1130,6 @@ export class MainView extends React.Component<IProps, IStates> {
           style={{
             width: '100%',
             height: 'calc(100%)',
-            background: this.state.lightTheme ? LIGHT_BG_COLOR : DARK_BG_COLOR
           }}
         />
       </div>
