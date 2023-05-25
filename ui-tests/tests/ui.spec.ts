@@ -300,6 +300,7 @@ test.describe('UI Test', () => {
       );
       await cutbtn.click();
       await page
+        .locator('.jp-Dialog-body')
         .locator('div.jp-Dialog-buttonLabel', {
           hasText: 'Submit'
         })
