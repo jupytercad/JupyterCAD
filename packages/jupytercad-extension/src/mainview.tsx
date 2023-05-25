@@ -39,12 +39,13 @@ THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
-const DEFAULT_MESH_COLOR = () =>
-  new THREE.Color(getCSSVariableColor('--jp-inverse-layout-color4'));
-const DEFAULT_EDGE_COLOR = () =>
-  new THREE.Color(getCSSVariableColor('--jp-inverse-layout-color2'));
-const SELECTED_MESH_COLOR = () =>
-  new THREE.Color(getCSSVariableColor('--jp-brand-color0'));
+const DEFAULT_MESH_COLOR_CSS = '--jp-inverse-layout-color4';
+const DEFAULT_EDGE_COLOR_CSS = '--jp-inverse-layout-color2';
+const SELECTED_MESH_COLOR_CSS = '--jp-brand-color0';
+
+const DEFAULT_MESH_COLOR = new THREE.Color(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
+const DEFAULT_EDGE_COLOR = new THREE.Color(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
+const SELECTED_MESH_COLOR = new THREE.Color(getCSSVariableColor(SELECTED_MESH_COLOR_CSS));
 
 export type BasicMesh = THREE.Mesh<
   THREE.BufferGeometry,
@@ -219,6 +220,10 @@ export class MainView extends React.Component<IProps, IStates> {
 
   sceneSetup = (): void => {
     if (this.divRef.current !== null) {
+      DEFAULT_MESH_COLOR.set(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
+      DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
+      SELECTED_MESH_COLOR.set(getCSSVariableColor(SELECTED_MESH_COLOR_CSS));
+
       this._camera = new THREE.PerspectiveCamera(90, 2, 0.1, 1000);
       this._camera.position.set(8, 8, 8);
       this._camera.up.set(0, 0, 1);
@@ -495,7 +500,7 @@ export class MainView extends React.Component<IProps, IStates> {
     if (selection) {
       // Deselect old selection
       if (this._selectedMesh) {
-        let originalColor = DEFAULT_MESH_COLOR();
+        let originalColor = DEFAULT_MESH_COLOR;
         if (
           guidata &&
           guidata[this._selectedMesh.name] &&
@@ -521,7 +526,7 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       if (this._selectedMesh) {
-        this._selectedMesh.material.color = SELECTED_MESH_COLOR();
+        this._selectedMesh.material.color = SELECTED_MESH_COLOR;
         this._model.syncSelectedObject(this._selectedMesh.name, this.state.id);
       } else {
         this._model.syncSelectedObject(undefined, this.state.id);
@@ -572,7 +577,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       const objdata = guidata ? guidata?.[objName] : null;
 
-      let color = DEFAULT_MESH_COLOR();
+      let color = DEFAULT_MESH_COLOR;
       let visible = true;
       if (objdata) {
         if (Object.prototype.hasOwnProperty.call(objdata, 'color')) {
@@ -622,12 +627,12 @@ export class MainView extends React.Component<IProps, IStates> {
 
       if (this._selectedMesh?.name === objName) {
         this._selectedMesh = mesh;
-        mesh.material.color = SELECTED_MESH_COLOR();
+        mesh.material.color = SELECTED_MESH_COLOR;
       }
 
       const edgeMaterial = new THREE.LineBasicMaterial({
         linewidth: 5,
-        color: DEFAULT_EDGE_COLOR()
+        color: DEFAULT_EDGE_COLOR
       });
       edgeList.forEach(edge => {
         const edgeVertices = new THREE.Float32BufferAttribute(
@@ -736,7 +741,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     if (selected) {
       this._selectedMesh = selected as BasicMesh;
-      this._selectedMesh.material.color = SELECTED_MESH_COLOR();
+      this._selectedMesh.material.color = SELECTED_MESH_COLOR;
     }
   }
 
@@ -745,7 +750,7 @@ export class MainView extends React.Component<IProps, IStates> {
       return;
     }
 
-    let originalColor = DEFAULT_MESH_COLOR();
+    let originalColor = DEFAULT_MESH_COLOR;
     const guidata = this._model.sharedModel.getOption('guidata');
     if (
       guidata &&
@@ -990,7 +995,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
         // Draw lines
         const material = new THREE.LineBasicMaterial({
-          color: DEFAULT_EDGE_COLOR(),
+          color: DEFAULT_EDGE_COLOR,
           linewidth: 2
         });
         const geometry = new THREE.BufferGeometry().setFromPoints([
@@ -1047,6 +1052,11 @@ export class MainView extends React.Component<IProps, IStates> {
   private _handleThemeChange = (): void => {
     const lightTheme =
       document.body.getAttribute('data-jp-theme-light') === 'true';
+
+    DEFAULT_MESH_COLOR.set(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
+    DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
+    SELECTED_MESH_COLOR.set(getCSSVariableColor(SELECTED_MESH_COLOR_CSS));
+
     this.setState(old => ({ ...old, lightTheme }));
   };
 
