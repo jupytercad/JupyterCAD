@@ -31,7 +31,7 @@ import {
   WorkerAction
 } from './types';
 import { FloatingAnnotation } from './annotation/view';
-import { throttle } from './tools';
+import { getCSSVariableColor, throttle } from './tools';
 import { Vector2 } from 'three';
 
 // Apply the BVH extension
@@ -39,11 +39,19 @@ THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
-const DARK_BG_COLOR = 'linear-gradient(rgb(0, 0, 42), rgb(82, 87, 110))';
-const LIGHT_BG_COLOR = 'radial-gradient(#efeded, #8f9091)';
+const DEFAULT_MESH_COLOR_CSS = '--jp-inverse-layout-color4';
+const DEFAULT_EDGE_COLOR_CSS = '--jp-inverse-layout-color2';
+const SELECTED_MESH_COLOR_CSS = '--jp-brand-color0';
 
-const DEFAULT_MESH_COLOR = new THREE.Color('#434442');
-const SELECTED_MESH_COLOR = new THREE.Color('#AB5118');
+const DEFAULT_MESH_COLOR = new THREE.Color(
+  getCSSVariableColor(DEFAULT_MESH_COLOR_CSS)
+);
+const DEFAULT_EDGE_COLOR = new THREE.Color(
+  getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS)
+);
+const SELECTED_MESH_COLOR = new THREE.Color(
+  getCSSVariableColor(SELECTED_MESH_COLOR_CSS)
+);
 
 export type BasicMesh = THREE.Mesh<
   THREE.BufferGeometry,
@@ -218,6 +226,10 @@ export class MainView extends React.Component<IProps, IStates> {
 
   sceneSetup = (): void => {
     if (this.divRef.current !== null) {
+      DEFAULT_MESH_COLOR.set(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
+      DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
+      SELECTED_MESH_COLOR.set(getCSSVariableColor(SELECTED_MESH_COLOR_CSS));
+
       this._camera = new THREE.PerspectiveCamera(90, 2, 0.1, 1000);
       this._camera.position.set(8, 8, 8);
       this._camera.up.set(0, 0, 1);
@@ -626,7 +638,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       const edgeMaterial = new THREE.LineBasicMaterial({
         linewidth: 5,
-        color: 'black'
+        color: DEFAULT_EDGE_COLOR
       });
       edgeList.forEach(edge => {
         const edgeVertices = new THREE.Float32BufferAttribute(
@@ -989,7 +1001,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
         // Draw lines
         const material = new THREE.LineBasicMaterial({
-          color: 'black',
+          color: DEFAULT_EDGE_COLOR,
           linewidth: 2
         });
         const geometry = new THREE.BufferGeometry().setFromPoints([
@@ -1046,6 +1058,11 @@ export class MainView extends React.Component<IProps, IStates> {
   private _handleThemeChange = (): void => {
     const lightTheme =
       document.body.getAttribute('data-jp-theme-light') === 'true';
+
+    DEFAULT_MESH_COLOR.set(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
+    DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
+    SELECTED_MESH_COLOR.set(getCSSVariableColor(SELECTED_MESH_COLOR_CSS));
+
     this.setState(old => ({ ...old, lightTheme }));
   };
 
@@ -1132,8 +1149,7 @@ export class MainView extends React.Component<IProps, IStates> {
           ref={this.divRef}
           style={{
             width: '100%',
-            height: 'calc(100%)',
-            background: this.state.lightTheme ? LIGHT_BG_COLOR : DARK_BG_COLOR
+            height: 'calc(100%)'
           }}
         />
       </div>
