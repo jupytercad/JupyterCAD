@@ -1129,7 +1129,7 @@ export class MainView extends React.Component<IProps, IStates> {
           ref={this.divRef}
           style={{
             width: '100%',
-            height: 'calc(100%)',
+            height: 'calc(100%)'
           }}
         />
       </div>
