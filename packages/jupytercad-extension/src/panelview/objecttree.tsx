@@ -276,8 +276,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
               return;
             }
 
-            console.log('toggle selected', id);
-
             if (id && id.length > 0) {
               const names: string[] = [];
               for (const subid of id) {
