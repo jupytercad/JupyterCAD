@@ -1,3 +1,5 @@
+import * as d3Color from 'd3-color';
+
 import { LabIcon } from '@jupyterlab/ui-components';
 
 import jvControlLight from '../style/icon/jvcontrol.svg';
@@ -195,4 +197,11 @@ export function nearest(n: number, tol: number): number {
   } else {
     return n;
   }
+}
+
+export function getCSSVariableColor(name: string): string {
+  const color =
+    window.getComputedStyle(document.body).getPropertyValue(name) || '#ffffff';
+
+  return d3Color.rgb(color).formatHex();
 }
