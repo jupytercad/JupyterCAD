@@ -66,6 +66,7 @@ jobs:
 
       - uses: jupyterlab/maintainer-tools/.github/actions/update-snapshots@v1
         with:
+          npm_client: jlpm
           github_token: ${{ secrets.GITHUB_TOKEN }}
           start_server_script: 'null'
           test_folder: ui-tests
