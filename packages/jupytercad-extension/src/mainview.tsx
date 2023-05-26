@@ -500,43 +500,37 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _onClick(e: MouseEvent) {
     const selection = this._pick();
-
-    const guidata = this._model.sharedModel.getOption('guidata');
+    const selectedMeshesNames = new Set(
+      this._selectedMeshes.map(sel => sel.name)
+    );
 
     if (selection) {
-      // Deselect old selection
-      if (this._selectedMesh) {
-        let originalColor = DEFAULT_MESH_COLOR;
-        if (
-          guidata &&
-          guidata[this._selectedMesh.name] &&
-          guidata[this._selectedMesh.name]['color']
-        ) {
-          const rgba = guidata[this._selectedMesh.name]['color'] as number[];
-          originalColor = new THREE.Color(rgba[0], rgba[1], rgba[2]);
-        }
-
-        this._selectedMesh.material.color = originalColor;
+      // TODO Support selecting edges?
+      let selectionName = '';
+      if (selection.mesh.name.startsWith('edge')) {
+        selectionName = (selection.mesh.parent as BasicMesh).name;
+      } else {
+        selectionName = selection.mesh.name;
       }
 
-      // Set new selection
-      if (selection.mesh === this._selectedMesh) {
-        this._selectedMesh = null;
-      } else {
-        // TODO Support selecting edges?
-        if (selection.mesh.name.startsWith('edge')) {
-          this._selectedMesh = selection.mesh.parent as BasicMesh;
+      if (e.ctrlKey) {
+        if (selectedMeshesNames.has(selectionName)) {
+          selectedMeshesNames.delete(selectionName);
         } else {
-          this._selectedMesh = selection.mesh;
+          selectedMeshesNames.add(selectionName);
+        }
+      } else {
+        const alreadySelected = selectedMeshesNames.has(selectionName);
+        selectedMeshesNames.clear();
+
+        if (!alreadySelected) {
+          selectedMeshesNames.add(selectionName);
         }
       }
 
-      if (this._selectedMesh) {
-        this._selectedMesh.material.color = SELECTED_MESH_COLOR;
-        this._model.syncSelectedObject(this._selectedMesh.name, this.state.id);
-      } else {
-        this._model.syncSelectedObject(undefined, this.state.id);
-      }
+      const names = Array.from(selectedMeshesNames);
+      this._updateSelected(names);
+      this._model.syncSelectedObject(names, this.state.id);
     }
   }
 
@@ -549,6 +543,9 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     const guidata = this._model.sharedModel.getOption('guidata');
+
+    const selectedNames = this._selectedMeshes.map(sel => sel.name);
+    this._selectedMeshes = [];
 
     this._boundingGroup = new THREE.Box3();
 
@@ -631,8 +628,8 @@ export class MainView extends React.Component<IProps, IStates> {
         this._boundingGroup.expandByObject(mesh);
       }
 
-      if (this._selectedMesh?.name === objName) {
-        this._selectedMesh = mesh;
+      if (selectedNames.includes(objName)) {
+        this._selectedMeshes.push(mesh);
         mesh.material.color = SELECTED_MESH_COLOR;
       }
 
@@ -738,37 +735,36 @@ export class MainView extends React.Component<IProps, IStates> {
     return new THREE.Mesh(this._pointerGeometry, material);
   }
 
-  private _selectObject(name: string): void {
-    if (name === this._selectedMesh?.name) {
-      return;
+  private _updateSelected(names: string[]) {
+    // Reset original color for old selection
+    for (const selectedMesh of this._selectedMeshes) {
+      let originalColor = DEFAULT_MESH_COLOR;
+      const guidata = this._model.sharedModel.getOption('guidata');
+      if (
+        guidata &&
+        guidata[selectedMesh.name] &&
+        guidata[selectedMesh.name]['color']
+      ) {
+        const rgba = guidata[selectedMesh.name]['color'] as number[];
+        originalColor = new THREE.Color(rgba[0], rgba[1], rgba[2]);
+      }
+
+      selectedMesh.material.color = originalColor;
     }
 
-    const selected = this._meshGroup?.getObjectByName(name);
+    // Set new selection
+    this._selectedMeshes = [];
+    for (const name of names) {
+      const selected = this._meshGroup?.getObjectByName(name) as
+        | BasicMesh
+        | undefined;
+      if (!selected) {
+        continue;
+      }
 
-    if (selected) {
-      this._selectedMesh = selected as BasicMesh;
-      this._selectedMesh.material.color = SELECTED_MESH_COLOR;
+      this._selectedMeshes.push(selected);
+      selected.material.color = SELECTED_MESH_COLOR;
     }
-  }
-
-  private _deselectObject(): void {
-    if (!this._selectedMesh) {
-      return;
-    }
-
-    let originalColor = DEFAULT_MESH_COLOR;
-    const guidata = this._model.sharedModel.getOption('guidata');
-    if (
-      guidata &&
-      guidata[this._selectedMesh.name] &&
-      guidata[this._selectedMesh.name]['color']
-    ) {
-      const rgba = guidata[this._selectedMesh.name]['color'] as number[];
-      originalColor = new THREE.Color(rgba[0], rgba[1], rgba[2]);
-    }
-
-    this._selectedMesh.material.color = originalColor;
-    this._selectedMesh = null;
   }
 
   private _onSharedMetadataChanged = (
@@ -816,12 +812,8 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       // Sync selected
-      if (remoteState.selected.value !== this._selectedMesh?.name) {
-        this._deselectObject();
-
-        if (remoteState.selected.value) {
-          this._selectObject(remoteState.selected.value);
-        }
+      if (Array.isArray(remoteState.selected.value)) {
+        this._updateSelected(remoteState.selected.value);
       }
 
       // Sync camera
@@ -852,12 +844,8 @@ export class MainView extends React.Component<IProps, IStates> {
       // Sync local selection if needed
       const localState = this._model.localState;
 
-      if (localState?.selected?.value !== this._selectedMesh?.name) {
-        this._deselectObject();
-
-        if (localState?.selected?.value) {
-          this._selectObject(localState.selected.value);
-        }
+      if (localState?.selected && Array.isArray(localState.selected.value)) {
+        this._updateSelected(localState.selected.value);
       }
     }
 
@@ -1167,7 +1155,7 @@ export class MainView extends React.Component<IProps, IStates> {
     position: THREE.Vector3 | undefined,
     parent: string | undefined
   ) => void;
-  private _selectedMesh: BasicMesh | null = null;
+  private _selectedMeshes: BasicMesh[] = [];
 
   private _meshGroup: THREE.Group | null = null; // The list of ThreeJS meshes
 
