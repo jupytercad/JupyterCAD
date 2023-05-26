@@ -214,7 +214,10 @@ test.describe('UI Test', () => {
         .locator('[data-test-id="react-tree-root"]')
         .getByText('myBox')
         .click();
-      await page.getByText('Shape').click();
+      await page
+        .locator('[data-test-id="react-tree-root"]')
+        .getByText('Shape')
+        .click();
       await page.getByLabel('Height*').click();
       await page.getByLabel('Height*').fill('32');
       await page.getByRole('button', { name: 'Submit' }).click();
