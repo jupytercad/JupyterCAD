@@ -236,9 +236,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._scene = new THREE.Scene();
 
-      this._scene.add(new THREE.AmbientLight(0xffffff, 0.8)); // soft white light
+      this._scene.add(new THREE.AmbientLight(0xffffff, 0.5)); // soft white light
 
-      const light = new THREE.SpotLight(0xffffff, 0.2);
+      const light = new THREE.PointLight(0xffffff, 1);
       light.castShadow = true;
       light.shadow.radius = 32;
       light.shadow.mapSize.width = 128;
@@ -601,7 +601,7 @@ export class MainView extends React.Component<IProps, IStates> {
         side: THREE.DoubleSide,
         wireframe: false,
         flatShading: false,
-        shininess: 40
+        shininess: 0
       });
 
       const geometry = new THREE.BufferGeometry();
