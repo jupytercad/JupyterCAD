@@ -17,7 +17,7 @@ import {
   unionIcon
 } from './tools';
 
-import { IDict, IJupyterCadModel } from './types';
+import { IDict, IJupyterCadDoc, IJupyterCadModel } from './types';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import formSchema from './_interface/forms.json';
 import { IJCadObject, Parts } from './_interface/jcad';
@@ -124,6 +124,18 @@ const PARTS = {
   }
 };
 
+function setVisible(sharedModel: IJupyterCadDoc, name: string, value: boolean) {
+  const guidata = sharedModel.getOption('guidata') || {};
+
+  if (guidata && guidata[name]) {
+    guidata[name]['visibility'] = false;
+  } else {
+    guidata[name] = { visibility: false };
+  }
+
+  sharedModel.setOption('guidata', guidata);
+}
+
 const OPERATORS = {
   cut: {
     title: 'Cut parameters',
@@ -151,16 +163,9 @@ const OPERATORS = {
         const sharedModel = model.sharedModel;
         if (sharedModel) {
           sharedModel.transact(() => {
-            sharedModel.updateObjectByName(
-              parameters['Base'],
-              'visible',
-              false
-            );
-            sharedModel.updateObjectByName(
-              parameters['Tool'],
-              'visible',
-              false
-            );
+            setVisible(sharedModel, parameters['Base'], false);
+            setVisible(sharedModel, parameters['Tool'], false);
+
             if (!sharedModel.objectExists(objectModel.name)) {
               sharedModel.addObject(objectModel);
             } else {
@@ -201,6 +206,8 @@ const OPERATORS = {
         };
         const sharedModel = model.sharedModel;
         if (sharedModel) {
+          setVisible(sharedModel, parameters['Base'], false);
+
           sharedModel.transact(() => {
             if (!sharedModel.objectExists(objectModel.name)) {
               sharedModel.addObject(objectModel);
@@ -243,6 +250,10 @@ const OPERATORS = {
         const sharedModel = model.sharedModel;
         if (sharedModel) {
           sharedModel.transact(() => {
+            parameters['Shapes'].map((shape: string) => {
+              setVisible(sharedModel, shape, false);
+            });
+
             if (!sharedModel.objectExists(objectModel.name)) {
               sharedModel.addObject(objectModel);
             } else {
@@ -284,6 +295,10 @@ const OPERATORS = {
         const sharedModel = model.sharedModel;
         if (sharedModel) {
           sharedModel.transact(() => {
+            parameters['Shapes'].map((shape: string) => {
+              setVisible(sharedModel, shape, false);
+            });
+
             if (!sharedModel.objectExists(objectModel.name)) {
               sharedModel.addObject(objectModel);
             } else {

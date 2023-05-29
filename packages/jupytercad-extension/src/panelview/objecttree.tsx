@@ -276,8 +276,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
               return;
             }
 
-            console.log('toggle selected', id);
-
             if (id && id.length > 0) {
               const names: string[] = [];
               for (const subid of id) {
@@ -304,13 +302,23 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
               opts.node.parentId as string
             );
             let visible = true;
+            if (jcadObj) {
+              visible = jcadObj.visible;
+            }
             if (
               jcadObj &&
               options &&
               options['guidata'] &&
-              options['guidata'][jcadObj?.name]
+              Object.prototype.hasOwnProperty.call(
+                options['guidata'],
+                jcadObj.name
+              ) &&
+              Object.prototype.hasOwnProperty.call(
+                options['guidata'][jcadObj.name],
+                'visibility'
+              )
             ) {
-              visible = options['guidata'][jcadObj?.name]!['visibility'];
+              visible = options['guidata'][jcadObj.name]['visibility'];
             }
             return (
               <div
