@@ -10,7 +10,8 @@ import { WebSocketProvider } from '@jupyter/docprovider';
 import { YCommProvider } from './yCommProvider';
 import { IJupyterCadModel } from '../types';
 import { ITranslator } from '@jupyterlab/translation';
-const Y_DOCUMENT_PROVIDER_URL = 'api/yjs';
+
+const Y_DOCUMENT_PROVIDER_URL = 'api/collaboration/room';
 
 export class JupyterCadWidgetManager implements IJupyterCadWidgetManager {
   constructor(options: {

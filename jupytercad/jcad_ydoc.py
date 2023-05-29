@@ -13,17 +13,17 @@ class YJCad(YBaseDoc):
         self._yobjects = self._ydoc.get_array('objects')
         self._yoptions = self._ydoc.get_map('options')
         self._ymeta = self._ydoc.get_map('metadata')
-    
+
     def version(self) -> str:
         return '0.1.0'
-    
+
     def get(self) -> str:
         """
         Returns the content of the document.
         :return: Document's content.
         :rtype: Any
         """
-        objects = json.loads(self._yobjects.to_json()) 
+        objects = json.loads(self._yobjects.to_json())
         options = json.loads(self._yoptions.to_json())
         meta = json.loads(self._ymeta.to_json())
         return json.dumps(
@@ -44,7 +44,7 @@ class YJCad(YBaseDoc):
             length = len(self._yobjects)
             self._yobjects.delete_range(t, 0, length)
             # workaround for https://github.com/y-crdt/ypy/issues/126:
-            #self._yobjects.extend(t, newObj) 
+            #self._yobjects.extend(t, newObj)
             for o in newObj:
                 self._yobjects.append(t, o)
             self._yoptions.update(t, valueDict['options'].items())
