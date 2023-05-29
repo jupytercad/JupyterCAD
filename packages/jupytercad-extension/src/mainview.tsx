@@ -239,10 +239,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._scene.add(new THREE.AmbientLight(0xffffff, 0.5)); // soft white light
 
       const light = new THREE.PointLight(0xffffff, 1);
-      light.castShadow = true;
-      light.shadow.radius = 32;
-      light.shadow.mapSize.width = 128;
-      light.shadow.mapSize.height = 128;
 
       this._camera.add(light);
 
@@ -620,7 +616,6 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       const mesh = new THREE.Mesh(geometry, material);
-      mesh.castShadow = true;
       mesh.name = objName;
       mesh.visible = visible;
 
