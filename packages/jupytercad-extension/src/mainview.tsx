@@ -574,18 +574,19 @@ export class MainView extends React.Component<IProps, IStates> {
         vInd += face.vertexCoord.length / 3;
       });
 
-      const objdata = guidata ? guidata?.[objName] : null;
-
       let color = DEFAULT_MESH_COLOR;
-      let visible = true;
-      if (objdata) {
+      let visible = jcObject.visible;
+      if (guidata && guidata[objName]) {
+        const objdata = guidata[objName];
+
         if (Object.prototype.hasOwnProperty.call(objdata, 'color')) {
           const rgba = objdata['color'] as number[];
           color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
         }
-        visible = guidata![objName]['visibility'] = jcObject.visible;
-      } else if (guidata) {
-        guidata[objName] = { visibility: jcObject.visible };
+
+        if (Object.prototype.hasOwnProperty.call(objdata, 'visibility')) {
+          visible = guidata[objName]['visibility'];
+        }
       }
 
       // Compile the connected vertices and faces into a model
