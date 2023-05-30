@@ -1,7 +1,7 @@
 import { getOcc } from './actions';
 import { TopoDS_Shape } from '@jupytercad/jupytercad-opencascade';
 import { IAllOperatorFunc, IOperatorArg } from './types';
-import { hashCode, toRad } from './utils';
+import { toRad } from './utils';
 import { IJCadContent, Parts } from '../_interface/jcad';
 import { IBox } from '../_interface/box';
 import { ICylinder } from '../_interface/cylinder';
@@ -16,25 +16,7 @@ import { ISketchObject } from '../_interface/sketch';
 import { _GeomCircle } from './geometry/geomCircle';
 import { _GeomLine } from './geometry/geomLineSegment';
 import { IExtrusion } from '../_interface/extrusion';
-
-const SHAPE_CACHE = new Map<string, TopoDS_Shape>();
-export function operatorCache<T>(
-  name: string,
-  ops: (args: T, content: IJCadContent) => TopoDS_Shape | undefined
-) {
-  return (args: T, content: IJCadContent): TopoDS_Shape | undefined => {
-    const hash = `${name}-${hashCode(JSON.stringify(args))}`;
-    if (SHAPE_CACHE.has(hash)) {
-      return SHAPE_CACHE.get(hash)!;
-    } else {
-      const shape = ops(args, content);
-      if (shape) {
-        SHAPE_CACHE.set(hash, shape);
-      }
-      return shape;
-    }
-  };
-}
+import { operatorCache } from './operatorcache';
 
 function setShapePlacement(
   shape: TopoDS_Shape,
@@ -319,15 +301,16 @@ export function _loadBrep(arg: { content: string }): TopoDS_Shape | undefined {
   return shape;
 }
 
-const Box = operatorCache<IBox>('Box', _Box);
-const Cylinder = operatorCache<ICylinder>('Cylinder', _Cylinder);
-const Sphere = operatorCache<ISphere>('Sphere', _Sphere);
-const Cone = operatorCache<ICone>('Cone', _Cone);
-const Torus = operatorCache<ITorus>('Torus', _Torus);
+const Box = operatorCache<IBox>('Part::Box', _Box);
+const Cylinder = operatorCache<ICylinder>('Part::Cylinder', _Cylinder);
+const Sphere = operatorCache<ISphere>('Part::Sphere', _Sphere);
+const Cone = operatorCache<ICone>('Part::Cone', _Cone);
+const Torus = operatorCache<ITorus>('Part::Torus', _Torus);
 const SketchObject = operatorCache<ISketchObject>(
-  'SketchObject',
+  'Sketcher::SketchObject',
   _SketchObject
 );
+const Cut = operatorCache<ICut>('Part::Cut', _Cut);
 
 export const BrepFile = operatorCache<{ content: string }>(
   'BrepFile',
@@ -341,7 +324,7 @@ export const ShapesFactory: {
   'Part::Sphere': Sphere,
   'Part::Cone': Cone,
   'Part::Torus': Torus,
-  'Part::Cut': _Cut,
+  'Part::Cut': Cut,
   'Part::MultiFuse': _Fuse,
   'Part::Extrusion': _Extrude,
   'Part::MultiCommon': _Intersection,
