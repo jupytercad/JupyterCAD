@@ -240,6 +240,7 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
 .jcad-FloatingAnnotation {
   position: absolute;
   width: 250px;
+  box-shadow: var(--jp-elevation-z6);
 }
 
 .jpcad-Annotations {
