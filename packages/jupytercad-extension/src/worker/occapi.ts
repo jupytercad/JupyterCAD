@@ -1,22 +1,23 @@
-import { getOcc } from './actions';
 import { TopoDS_Shape } from '@jupytercad/jupytercad-opencascade';
-import { IAllOperatorFunc, IOperatorArg } from './types';
-import { toRad } from './utils';
-import { IJCadContent, Parts } from '../_interface/jcad';
+import { v4 as uuid } from 'uuid';
+
 import { IBox } from '../_interface/box';
-import { ICylinder } from '../_interface/cylinder';
-import { ISphere } from '../_interface/sphere';
 import { ICone } from '../_interface/cone';
-import { ITorus } from '../_interface/torus';
 import { ICut } from '../_interface/cut';
+import { ICylinder } from '../_interface/cylinder';
+import { IExtrusion } from '../_interface/extrusion';
 import { IFuse } from '../_interface/fuse';
 import { IIntersection } from '../_interface/intersection';
-import { v4 as uuid } from 'uuid';
+import { IJCadContent, Parts } from '../_interface/jcad';
 import { ISketchObject } from '../_interface/sketch';
+import { ISphere } from '../_interface/sphere';
+import { ITorus } from '../_interface/torus';
+import { getOcc } from './actions';
 import { _GeomCircle } from './geometry/geomCircle';
 import { _GeomLine } from './geometry/geomLineSegment';
-import { IExtrusion } from '../_interface/extrusion';
 import { operatorCache } from './operatorcache';
+import { IAllOperatorFunc, IOperatorArg } from './types';
+import { toRad } from './utils';
 
 function setShapePlacement(
   shape: TopoDS_Shape,
@@ -302,20 +303,36 @@ export function _loadBrep(arg: { content: string }): TopoDS_Shape | undefined {
 }
 
 const Box = operatorCache<IBox>('Part::Box', _Box);
+
 const Cylinder = operatorCache<ICylinder>('Part::Cylinder', _Cylinder);
+
 const Sphere = operatorCache<ISphere>('Part::Sphere', _Sphere);
+
 const Cone = operatorCache<ICone>('Part::Cone', _Cone);
+
 const Torus = operatorCache<ITorus>('Part::Torus', _Torus);
+
 const SketchObject = operatorCache<ISketchObject>(
   'Sketcher::SketchObject',
   _SketchObject
 );
+
 const Cut = operatorCache<ICut>('Part::Cut', _Cut);
+
+const Fuse = operatorCache<IFuse>('Part::MultiFuse', _Fuse);
+
+const Intersection = operatorCache<IIntersection>(
+  'Part::MultiCommon',
+  _Intersection
+);
+
+const Extrude = operatorCache<IExtrusion>('Part::Extrusion', _Extrude);
 
 export const BrepFile = operatorCache<{ content: string }>(
   'BrepFile',
   _loadBrep
 );
+
 export const ShapesFactory: {
   [key in Parts]: IAllOperatorFunc;
 } = {
@@ -325,8 +342,8 @@ export const ShapesFactory: {
   'Part::Cone': Cone,
   'Part::Torus': Torus,
   'Part::Cut': Cut,
-  'Part::MultiFuse': _Fuse,
-  'Part::Extrusion': _Extrude,
-  'Part::MultiCommon': _Intersection,
+  'Part::MultiFuse': Fuse,
+  'Part::Extrusion': Extrude,
+  'Part::MultiCommon': Intersection,
   'Sketcher::SketchObject': SketchObject
 };
