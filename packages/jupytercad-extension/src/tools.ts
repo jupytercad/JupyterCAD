@@ -1,19 +1,20 @@
+import { URLExt } from '@jupyterlab/coreutils';
+import { ServerConnection } from '@jupyterlab/services';
+import { LabIcon } from '@jupyterlab/ui-components';
 import * as d3Color from 'd3-color';
 
-import { LabIcon } from '@jupyterlab/ui-components';
-
-import jvControlLight from '../style/icon/jvcontrol.svg';
-import minimizeIconStr from '../style/icon/minimize.svg';
+import axesIconStr from '../style/icon/axes.svg';
 import boxIconStr from '../style/icon/box.svg';
 import coneIconStr from '../style/icon/cone.svg';
-import sphereIconStr from '../style/icon/sphere.svg';
-import cylinderIconStr from '../style/icon/cylinder.svg';
-import torusIconStr from '../style/icon/torus.svg';
 import cutIconStr from '../style/icon/cut.svg';
-import unionIconStr from '../style/icon/union.svg';
-import intersectionIconStr from '../style/icon/intersection.svg';
+import cylinderIconStr from '../style/icon/cylinder.svg';
 import extrusionIconStr from '../style/icon/extrusion.svg';
-import axesIconStr from '../style/icon/axes.svg';
+import intersectionIconStr from '../style/icon/intersection.svg';
+import jvControlLight from '../style/icon/jvcontrol.svg';
+import minimizeIconStr from '../style/icon/minimize.svg';
+import sphereIconStr from '../style/icon/sphere.svg';
+import torusIconStr from '../style/icon/torus.svg';
+import unionIconStr from '../style/icon/union.svg';
 
 export const jcLightIcon = new LabIcon({
   name: 'jupytercad:control-light',
@@ -204,4 +205,43 @@ export function getCSSVariableColor(name: string): string {
     window.getComputedStyle(document.body).getPropertyValue(name) || '#ffffff';
 
   return d3Color.rgb(color).formatHex();
+}
+
+/**
+ * Call the API extension
+ *
+ * @param endPoint API REST end point for the extension
+ * @param init Initial values for the request
+ * @returns The response body interpreted as JSON
+ */
+export async function requestAPI<T>(
+  endPoint = '',
+  init: RequestInit = {}
+): Promise<T> {
+  // Make request to Jupyter API
+  const settings = ServerConnection.makeSettings();
+  const requestUrl = URLExt.join(settings.baseUrl, endPoint);
+
+  let response: Response;
+  try {
+    response = await ServerConnection.makeRequest(requestUrl, init, settings);
+  } catch (error) {
+    throw new ServerConnection.NetworkError(error as any);
+  }
+
+  let data: any = await response.text();
+
+  if (data.length > 0) {
+    try {
+      data = JSON.parse(data);
+    } catch (error) {
+      console.log('Not a JSON response body.', response);
+    }
+  }
+
+  if (!response.ok) {
+    throw new ServerConnection.ResponseError(response, data.message || data);
+  }
+
+  return data;
 }

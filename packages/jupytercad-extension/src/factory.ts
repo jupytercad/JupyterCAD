@@ -1,27 +1,25 @@
-import { IJupyterCadTracker } from './token';
 import { ABCWidgetFactory, DocumentRegistry } from '@jupyterlab/docregistry';
-
 import { CommandRegistry } from '@lumino/commands';
 
 import { JupyterCadModel } from './model';
-import { JupyterCadPanel, JupyterCadWidget } from './widget';
+import { IJupyterCadTracker } from './token';
 import { ToolbarWidget } from './toolbar/widget';
+import { JupyterCadPanel, JupyterCadWidget } from './widget';
 
 interface IOptios extends DocumentRegistry.IWidgetFactoryOptions {
   tracker: IJupyterCadTracker;
   commands: CommandRegistry;
+  backendCheck?: () => boolean;
 }
 
 export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   JupyterCadWidget,
   JupyterCadModel
 > {
-  private _commands: CommandRegistry;
-
   constructor(options: IOptios) {
-    const { ...rest } = options;
+    const { backendCheck, ...rest } = options;
     super(rest);
-
+    this._backendCheck = backendCheck;
     this._commands = options.commands;
   }
 
@@ -34,6 +32,12 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   protected createNewWidget(
     context: DocumentRegistry.IContext<JupyterCadModel>
   ): JupyterCadWidget {
+    if (this._backendCheck) {
+      const checked = this._backendCheck();
+      if (!checked) {
+        throw new Error('Requested backend is not installed');
+      }
+    }
     const { model } = context;
     const content = new JupyterCadPanel({ model });
     const toolbar = new ToolbarWidget({
@@ -42,4 +46,7 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
     });
     return new JupyterCadWidget({ context, content, toolbar });
   }
+
+  private _commands: CommandRegistry;
+  private _backendCheck?: () => boolean;
 }

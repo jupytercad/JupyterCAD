@@ -16,7 +16,6 @@ try:
     import OfflineRenderingUtils
 
 except ImportError:
-    logger.warn('[JupyterCad] Freecad is not installed!')
     fc = None
 
 
