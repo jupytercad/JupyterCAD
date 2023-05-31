@@ -39,8 +39,6 @@ const testCellOutputs = async (
       }
     });
 
-    await page.notebook.save();
-
     for (let c = 0; c < numCellImages; ++c) {
       expect(results[c]).toMatchSnapshot(
         getCaptureImageName(contextPrefix, notebook, c)
