@@ -1,0 +1,11 @@
+name: jupytercad
+channels:
+  - conda-forge
+  - conda
+dependencies:
+  - sphinx
+  - jupyterlab=4
+  - pip
+  - pydata-sphinx-theme
+  - pip:
+    - ..
