@@ -54,7 +54,7 @@ const activate = async (
   const backendCheck = () => {
     if (!installed) {
       showErrorMessage(
-        'FreeCAD in not installed',
+        'FreeCAD is not installed',
         'FreeCAD is required to open FCStd files'
       );
     }
