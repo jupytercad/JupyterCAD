@@ -52,6 +52,14 @@ const testCellOutputs = async (
 };
 
 test.describe('Notebook API Visual Regression', () => {
+  test.use({
+    mockSettings: {
+      '@jupyterlab/apputils-extension:notification': {
+        fetchNews: 'false'
+      }
+    }
+  });
+
   test.beforeEach(async ({ page, tmpPath }) => {
     page.on('console', message => {
       console.log('CONSOLE MSG ---', message.text());
