@@ -1,25 +1,19 @@
+import json
 import os
 
-from jupyter_server.base.handlers import JupyterHandler
-from jupyter_server.extension.handler import (
-    ExtensionHandlerMixin,
-    ExtensionHandlerJinjaMixin
-)
+import tornado
+from jupyter_server.base.handlers import APIHandler, JupyterHandler
+from jupyter_server.extension.handler import (ExtensionHandlerJinjaMixin,
+                                              ExtensionHandlerMixin)
 from jupyterlab_server import LabServerApp
-from jupyter_server.utils import url_path_join as ujoin
-
-from .utils import get_page_config
 
 from .._version import __version__
+from .utils import get_page_config
 
 HERE = os.path.dirname(__file__)
 
 
-class CADHandler(
-    ExtensionHandlerJinjaMixin,
-    ExtensionHandlerMixin,
-    JupyterHandler
-        ):
+class CADHandler(ExtensionHandlerJinjaMixin, ExtensionHandlerMixin, JupyterHandler):
     """Handle requests between the main app page and notebook server."""
 
     def get(self):
@@ -32,10 +26,27 @@ class CADHandler(
                 static=self.static_url,
                 base_url=self.base_url,
                 token=self.settings['token'],
-                page_config=page_config
-                )
+                page_config=page_config,
             )
+        )
 
+
+class BackendCheckHandler(APIHandler):
+    @tornado.web.authenticated
+    def post(self):
+        body = self.get_json_body()
+        backend = body.get('backend')
+        if backend == 'FreeCAD':
+            fc_installed = True
+            try:
+                import freecad
+            except ImportError:
+                fc_installed = False
+            self.finish(json.dumps({'installed': fc_installed}))
+        elif backend == 'JCAD':
+            self.finish(json.dumps({'installed': True}))
+        else:
+            self.finish(json.dumps({'installed': False}))
 
 class CadApp(LabServerApp):
 
@@ -55,9 +66,10 @@ class CadApp(LabServerApp):
     workspaces_dir = os.path.join(HERE, 'static', 'workspaces')
 
     def initialize_handlers(self):
-        """Add cad handler to Lab Server's handler list.
-        """
+        """Add cad handler to Lab Server's handler list."""
         self.handlers.append(('/cad', CADHandler))
+        self.handlers.append(('/cad/backend-check', BackendCheckHandler))
         super().initialize_handlers()
+
 
 main = CadApp.launch_instance

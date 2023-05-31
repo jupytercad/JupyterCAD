@@ -1,30 +1,27 @@
 import {
-  JupyterFrontEnd,
-  JupyterFrontEndPlugin
-} from '@jupyterlab/application';
-
-import {
-  ICommandPalette,
-  IThemeManager,
-  WidgetTracker
-} from '@jupyterlab/apputils';
-
-import { fileIcon } from '@jupyterlab/ui-components';
-
-import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
-
-import { ILauncher } from '@jupyterlab/launcher';
-
-import {
   ICollaborativeDrive,
   SharedDocumentFactory
 } from '@jupyter/docprovider';
+import {
+  JupyterFrontEnd,
+  JupyterFrontEndPlugin
+} from '@jupyterlab/application';
+import {
+  ICommandPalette,
+  IThemeManager,
+  showErrorMessage,
+  WidgetTracker
+} from '@jupyterlab/apputils';
+import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
+import { ILauncher } from '@jupyterlab/launcher';
+import { fileIcon } from '@jupyterlab/ui-components';
 
 import { JupyterCadWidgetFactory } from '../factory';
-import { IAnnotation, IJupyterCadDocTracker } from '../token';
-import { JupyterCadFCModelFactory } from './modelfactory';
-import { IAnnotationModel, IJupyterCadWidget } from '../types';
 import { JupyterCadDoc } from '../model';
+import { IAnnotation, IJupyterCadDocTracker } from '../token';
+import { requestAPI } from '../tools';
+import { IAnnotationModel, IJupyterCadWidget } from '../types';
+import { JupyterCadFCModelFactory } from './modelfactory';
 
 const FACTORY = 'Jupytercad Freecad Factory';
 
@@ -34,7 +31,7 @@ namespace CommandIDs {
   export const createNew = 'jupytercad:create-new-FCStd-file';
 }
 
-const activate = (
+const activate = async (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
@@ -43,16 +40,34 @@ const activate = (
   drive: ICollaborativeDrive,
   launcher: ILauncher | null,
   palette: ICommandPalette | null
-): void => {
-  // Creating the widget factory to register it so the document manager knows about
-  // our new DocumentWidget
+): Promise<void> => {
+  const fcCheck = await requestAPI<{ installed: boolean }>(
+    'cad/backend-check',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        backend: 'FreeCAD'
+      })
+    }
+  );
+  const { installed } = fcCheck;
+  const backendCheck = () => {
+    if (!installed) {
+      showErrorMessage(
+        'FreeCAD in not installed',
+        'To open a FCStd file, please install FreeCAD'
+      );
+    }
+    return installed;
+  };
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-fcmodel',
     fileTypes: ['FCStd'],
     defaultFor: ['FCStd'],
     tracker,
-    commands: app.commands
+    commands: app.commands,
+    backendCheck
   });
 
   // Registering the widget factory
