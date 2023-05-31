@@ -41,17 +41,19 @@ class CadDocument(Widget):
             try:
                 ext = file_name.split(".")[1].lower()
             except Exception:
-                raise Exception("Can not detect file extension!")
+                raise ValueError("Can not detect file extension!")
             if ext == "fcstd":
                 if fc is None:
-                    logger.warn('FreeCAD is required to open FCStd files')
+                    msg = 'FreeCAD is required to open FCStd files'
+                    logger.warn(msg)
+                    raise RuntimeError(msg)
                 format = "base64"
                 contentType = "FCStd"
             elif ext == "jcad":
                 format = "text"
                 contentType = "jcad"
             else:
-                raise Exception("File extension is not supported!")
+                raise ValueError("File extension is not supported!")
         comm_data = {
             "path": path,
             "format": format,
