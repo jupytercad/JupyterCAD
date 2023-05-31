@@ -55,7 +55,7 @@ const activate = async (
     if (!installed) {
       showErrorMessage(
         'FreeCAD in not installed',
-        'To open a FCStd file, please install FreeCAD'
+        'FreeCAD is required to open FCStd files'
       );
     }
     return installed;

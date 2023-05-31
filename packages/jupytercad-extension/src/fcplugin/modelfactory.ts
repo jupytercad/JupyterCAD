@@ -80,7 +80,6 @@ export class JupyterCadFCModelFactory
   createNew(
     options: DocumentRegistry.IModelOptions<IJupyterCadDoc>
   ): JupyterCadModel {
-    console.debug('[JupyterCadFCModelFactory.createNew] options:', options);
     const model = new JupyterCadModel({
       sharedModel: options.sharedModel,
       languagePreference: options.languagePreference,

@@ -6,6 +6,8 @@ from typing import Dict, List, Optional, Union
 import y_py as Y
 from ypywidgets.ypywidgets import Widget
 
+from jupytercad.freecad.loader import fc
+
 from .utils import normalize_path
 
 logger = logging.getLogger(__file__)
@@ -41,6 +43,8 @@ class CadDocument(Widget):
             except Exception:
                 raise Exception("Can not detect file extension!")
             if ext == "fcstd":
+                if fc is None:
+                    logger.warn('FreeCAD is required to open FCStd files')
                 format = "base64"
                 contentType = "FCStd"
             elif ext == "jcad":
