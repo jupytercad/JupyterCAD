@@ -111,7 +111,7 @@ class CadDocument(Widget):
 
         with tempfile.NamedTemporaryFile() as tmp:
             breptools_Write(shape, tmp.name, True, False, 1)
-            brepdata = tmp.read().decode('ascii')
+            brepdata = tmp.read().decode("ascii")
 
         data = {
             "shape": "Part::Any",
@@ -124,7 +124,7 @@ class CadDocument(Widget):
                     "Angle": rotation_angle,
                 },
             },
-            "visible": True
+            "visible": True,
         }
 
         with self.ydoc.begin_transaction() as t:
@@ -280,23 +280,7 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
-        objects = self.objects
-
-        if isinstance(base, str):
-            if base not in objects:
-                raise ValueError(f"Unknown object {base}")
-        elif isinstance(base, int):
-            base = objects[base]
-        else:
-            base = objects[-2]
-
-        if isinstance(tool, str):
-            if tool not in objects:
-                raise ValueError(f"Unknown object {tool}")
-        elif isinstance(tool, int):
-            tool = objects[tool]
-        else:
-            tool = objects[-1]
+        base, tool = self._get_boolean_operands(base, tool)
 
         data = {
             "shape": Parts.Part__Cut.value,
@@ -322,23 +306,7 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
-        objects = self.objects
-
-        if isinstance(shape1, str):
-            if shape1 not in objects:
-                raise ValueError(f"Unknown object {shape1}")
-        elif isinstance(shape1, int):
-            shape1 = objects[shape1]
-        else:
-            shape1 = objects[-2]
-
-        if isinstance(shape2, str):
-            if shape2 not in objects:
-                raise ValueError(f"Unknown object {shape2}")
-        elif isinstance(shape2, int):
-            shape2 = objects[shape2]
-        else:
-            shape2 = objects[-1]
+        shape1, shape2 = self._get_boolean_operands(shape1, shape2)
 
         data = {
             "shape": Parts.Part__MultiFuse.value,
@@ -363,7 +331,28 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
+        shape1, shape2 = self._get_boolean_operands(shape1, shape2)
+
+        data = {
+            "shape": Parts.Part__MultiCommon.value,
+            "name": name if name else self._new_name("Cut"),
+            "parameters": {
+                "Shapes": [shape1, shape2],
+                "Refine": refine,
+                "Placement": {"Position": [0, 0, 0], "Axis": [0, 0, 1], "Angle": 0},
+            },
+        }
+        self.set_visible(shape1, False)
+        self.set_visible(shape2, False)
+        return self.add_object(OBJECT_FACTORY.create_object(data, self))
+
+    def _get_boolean_operands(self, shape1: str | int | None, shape2: str | int | None):
         objects = self.objects
+
+        if len(self.objects) < 2:
+            raise ValueError(
+                "Cannot apply boolean operator if there are less than two objects in the document."
+            )
 
         if isinstance(shape1, str):
             if shape1 not in objects:
@@ -381,18 +370,7 @@ class CadDocument(Widget):
         else:
             shape2 = objects[-1]
 
-        data = {
-            "shape": Parts.Part__MultiCommon.value,
-            "name": name if name else self._new_name("Cut"),
-            "parameters": {
-                "Shapes": [shape1, shape2],
-                "Refine": refine,
-                "Placement": {"Position": [0, 0, 0], "Axis": [0, 0, 1], "Angle": 0},
-            },
-        }
-        self.set_visible(shape1, False)
-        self.set_visible(shape2, False)
-        return self.add_object(OBJECT_FACTORY.create_object(data, self))
+        return shape1, shape2
 
     def set_visible(self, name: str, value):
         obj: Optional[Y.YMap] = self._get_yobject_by_name(name)
