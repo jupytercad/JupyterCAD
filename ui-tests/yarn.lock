@@ -1752,6 +1752,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/klaw-sync@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "@types/klaw-sync@npm:6.0.1"
+  dependencies:
+    "@types/node": "*"
+  checksum: c18427dc30c9272154edc0c2e5bf37faca1831e4979973a019197603836e3a5317eac435177cd41749f1e38953c3eb8d96a7a27c2a444efda34ae5d704a9c263
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*":
   version: 18.16.0
   resolution: "@types/node@npm:18.16.0"
@@ -2501,7 +2510,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.6":
+"graceful-fs@npm:^4.1.11, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.6":
   version: 4.2.11
   resolution: "graceful-fs@npm:4.2.11"
   checksum: ac85f94da92d8eb6b7f5a8b20ce65e43d66761c55ce85ac96df6865308390da45a8d3f0296dd3a663de65d30ba497bd46c696cc1e248c72b13d6d567138a4fc7
@@ -2750,8 +2759,19 @@ __metadata:
   dependencies:
     "@jupyterlab/galata": ^5.0.0-beta.0
     "@playwright/test": ^1.32.0
+    "@types/klaw-sync": ^6.0.1
+    klaw-sync: ^6.0.0
   languageName: unknown
   linkType: soft
+
+"klaw-sync@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "klaw-sync@npm:6.0.0"
+  dependencies:
+    graceful-fs: ^4.1.11
+  checksum: 0da397f8961313c3ef8f79fb63af9002cde5a8fb2aeb1a37351feff0dd6006129c790400c3f5c3b4e757bedcabb13d21ec0a5eaef5a593d59515d4f2c291e475
+  languageName: node
+  linkType: hard
 
 "lib0@npm:^0.2.42, lib0@npm:^0.2.74":
   version: 0.2.74

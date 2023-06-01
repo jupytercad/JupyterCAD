@@ -1,6 +1,8 @@
 from ._version import __version__
 from .cadapp import CadApp
 
+from .notebook import *  # noqa
+
 def _jupyter_labextension_paths():
     return [{'src': 'labextension', 'dest': '@jupytercad/jupytercad-extension'}]
 

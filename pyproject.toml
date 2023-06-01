@@ -7,7 +7,6 @@ requires = [
     "datamodel-code-generator",
 ]
 
-
 [project]
 name = "jupytercad"
 readme = "README.md"
@@ -18,7 +17,8 @@ dependencies = [
     "jupyter_server>=2.0.6",
     "jupyter_collaboration>=1.0.0a9,<2",
     "ypywidgets>=0.1.2,<0.2.0",
-    "comm>=0.1.2,<0.2.0"
+    "comm>=0.1.2,<0.2.0",
+    "pydantic"
 ]
 classifiers = [
     "License :: OSI Approved :: BSD License",
@@ -47,10 +47,12 @@ source = "nodejs"
 [tool.hatch.metadata.hooks.nodejs]
 fields = ["description", "authors", "urls"]
 
-
 [tool.hatch.build.targets.sdist]
-artifacts = ["/jupytercad/labextension"]
+artifacts = ["/jupytercad/labextension", "/jupytercad/notebook/objects/_schema/*.py"]
 exclude = ["/.github", "/binder", "node_modules", "examples", "ui-tests"]
+
+[tool.hatch.build.targets.wheel]
+artifacts = ["/jupytercad/notebook/objects/_schema/*.py"]
 
 [tool.hatch.build.targets.sdist.force-include]
 "./packages" = "packages"
@@ -69,6 +71,7 @@ build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
     "jupytercad/labextension/static/style.js",
     "jupytercad/labextension/package.json",
+    "jupytercad/notebook/objects/_schema/box.py",
 ]
 skip-if-exists = ["jupytercad/labextension/static/style.js"]
 
