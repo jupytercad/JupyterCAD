@@ -86,7 +86,7 @@ source_dir = "src"
 build_dir = "jupytercad/labextension"
 
 [tool.jupyter-releaser.options]
-version-cmd = "python scripts/bump-version.py --force"
+version-cmd = "python scripts/bump-version.py"
 
 [tool.jupyter-releaser.hooks]
 before-bump-version = [
