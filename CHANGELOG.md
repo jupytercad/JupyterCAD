@@ -2,11 +2,51 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.2.0
+
+([Full Changelog](https://github.com/QuantStack/jupytercad/compare/@jupytercad/jupytercad-app@0.1.0...65c8ba939c9b1f86bf3dbd18f5d2eeb3fb67597e))
+
+### Enhancements made
+
+- Add backend installation check [#168](https://github.com/QuantStack/jupytercad/pull/168) ([@trungleduc](https://github.com/trungleduc))
+- Improve cache mechanism [#164](https://github.com/QuantStack/jupytercad/pull/164) ([@trungleduc](https://github.com/trungleduc))
+- Add shadow to annotation boxes [#163](https://github.com/QuantStack/jupytercad/pull/163) ([@trungleduc](https://github.com/trungleduc))
+- Python API [#162](https://github.com/QuantStack/jupytercad/pull/162) ([@martinRenou](https://github.com/martinRenou))
+- Remove shadowmapping [#159](https://github.com/QuantStack/jupytercad/pull/159) ([@martinRenou](https://github.com/martinRenou))
+- Improve lighting [#158](https://github.com/QuantStack/jupytercad/pull/158) ([@trungleduc](https://github.com/trungleduc))
+- Remove gradient background [#150](https://github.com/QuantStack/jupytercad/pull/150) ([@martinRenou](https://github.com/martinRenou))
+- Multi selection [#145](https://github.com/QuantStack/jupytercad/pull/145) ([@martinRenou](https://github.com/martinRenou))
+- Add top menu and launcher [#140](https://github.com/QuantStack/jupytercad/pull/140) ([@trungleduc](https://github.com/trungleduc))
+
+### Bugs fixed
+
+- Fixup visibility checking [#161](https://github.com/QuantStack/jupytercad/pull/161) ([@martinRenou](https://github.com/martinRenou))
+- Fix Notebook API view [#160](https://github.com/QuantStack/jupytercad/pull/160) ([@martinRenou](https://github.com/martinRenou))
+- Fix: prevent selecting invisible mesh [#155](https://github.com/QuantStack/jupytercad/pull/155) ([@martinRenou](https://github.com/martinRenou))
+- Fix broken SVG [#153](https://github.com/QuantStack/jupytercad/pull/153) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Install python-occ core on galata bot [#167](https://github.com/QuantStack/jupytercad/pull/167) ([@martinRenou](https://github.com/martinRenou))
+- Update jupyter_collaboration dependency [#166](https://github.com/QuantStack/jupytercad/pull/166) ([@martinRenou](https://github.com/martinRenou))
+- Fix galata bot [#152](https://github.com/QuantStack/jupytercad/pull/152) ([@martinRenou](https://github.com/martinRenou))
+- Install jupyter_collaboration on the Galata bot [#165](https://github.com/QuantStack/jupytercad/pull/165) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Update screenshot [#156](https://github.com/QuantStack/jupytercad/pull/156) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/QuantStack/jupytercad/graphs/contributors?from=2023-05-17&to=2023-06-02&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-05-17..2023-06-02&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-05-17..2023-06-02&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-05-17..2023-06-02&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.0
 
 No merged PRs
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.0rc0
 

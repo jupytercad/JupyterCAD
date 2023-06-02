@@ -822,7 +822,7 @@ __metadata:
     "@jupyter/collaboration": ^1.0.0-alpha.7
     "@jupyter/docprovider": ^1.0.0-alpha.8
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/jupytercad-extension": 0.1.0
+    "@jupytercad/jupytercad-extension": ^0.2.0-alpha.0
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/application-extension": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -871,7 +871,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-extension@0.1.0, @jupytercad/jupytercad-extension@workspace:packages/jupytercad-extension":
+"@jupytercad/jupytercad-extension@^0.2.0-alpha.0, @jupytercad/jupytercad-extension@workspace:packages/jupytercad-extension":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-extension@workspace:packages/jupytercad-extension"
   dependencies:
@@ -880,7 +880,7 @@ __metadata:
     "@jupyter/collaboration": ^1.0.0-alpha.7
     "@jupyter/docprovider": ^1.0.0-alpha.8
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/jupytercad-opencascade": ^0.1.1
+    "@jupytercad/jupytercad-opencascade": ^0.2.0-alpha.0
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -921,7 +921,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-opencascade@^0.1.1, @jupytercad/jupytercad-opencascade@workspace:packages/jupytercad-opencascade":
+"@jupytercad/jupytercad-opencascade@^0.2.0-alpha.0, @jupytercad/jupytercad-opencascade@workspace:packages/jupytercad-opencascade":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-opencascade@workspace:packages/jupytercad-opencascade"
   dependencies:

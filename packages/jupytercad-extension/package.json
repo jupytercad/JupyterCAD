@@ -1,6 +1,6 @@
 {
     "name": "@jupytercad/jupytercad-extension",
-    "version": "0.1.0",
+    "version": "0.2.0-alpha.0",
     "description": "A JupyterLab extension for 3D modelling.",
     "keywords": [
         "jupyter",
@@ -52,7 +52,7 @@
         "@jupyter/collaboration": "^1.0.0-alpha.7",
         "@jupyter/docprovider": "^1.0.0-alpha.8",
         "@jupyter/ydoc": "^0.3.4 || ^1.0.2",
-        "@jupytercad/jupytercad-opencascade": "^0.1.1",
+        "@jupytercad/jupytercad-opencascade": "^0.2.0-alpha.0",
         "@jupyterlab/application": "^4.0.0",
         "@jupyterlab/apputils": "^4.0.0",
         "@jupyterlab/coreutils": "^6.0.0",
