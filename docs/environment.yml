@@ -5,6 +5,7 @@ channels:
 dependencies:
   - sphinx
   - jupyterlab=4
+  - yarn
   - pip
   - pydata-sphinx-theme
   - pip:
