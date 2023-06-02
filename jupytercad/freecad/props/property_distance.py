@@ -6,7 +6,7 @@ from .base_prop import BaseProp
 class App_PropertyDistance(BaseProp):
     @staticmethod
     def name() -> str:
-        return 'App::PropertyDistance'
+        return "App::PropertyDistance"
 
     @staticmethod
     def fc_to_jcad(prop_value: Any, **kwargs) -> Any:

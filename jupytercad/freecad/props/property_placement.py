@@ -12,22 +12,22 @@ except ImportError:
 class App_PropertyPlacement(BaseProp):
     @staticmethod
     def name() -> str:
-        return 'App::PropertyPlacement'
+        return "App::PropertyPlacement"
 
     @staticmethod
     def fc_to_jcad(prop_value: Any, **kwargs) -> Any:
         return {
-            'Position': [
+            "Position": [
                 prop_value.Base.x,
                 prop_value.Base.y,
                 prop_value.Base.z,
             ],
-            'Axis': [
+            "Axis": [
                 prop_value.Rotation.Axis.x,
                 prop_value.Rotation.Axis.y,
                 prop_value.Rotation.Axis.z,
             ],
-            'Angle': 180 * prop_value.Rotation.Angle / math.pi,
+            "Angle": 180 * prop_value.Rotation.Angle / math.pi,
         }
 
     @staticmethod
@@ -35,7 +35,7 @@ class App_PropertyPlacement(BaseProp):
         if not fc:
             return
 
-        base = fc.app.Base.Vector(prop_value['Position'])
-        axis = fc.app.Base.Vector(prop_value['Axis'])
-        angle = prop_value['Angle']
+        base = fc.app.Base.Vector(prop_value["Position"])
+        axis = fc.app.Base.Vector(prop_value["Axis"])
+        angle = prop_value["Angle"]
         return fc.app.Placement(base, axis, angle)

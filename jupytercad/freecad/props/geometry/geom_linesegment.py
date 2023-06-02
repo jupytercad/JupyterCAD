@@ -12,7 +12,7 @@ except ImportError:
 class Part_GeomLineSegment(BaseProp):
     @staticmethod
     def name() -> str:
-        return 'Part::GeomLineSegment'
+        return "Part::GeomLineSegment"
 
     @staticmethod
     def fc_to_jcad(prop_value: Any, **kwargs) -> Any:
@@ -20,13 +20,13 @@ class Part_GeomLineSegment(BaseProp):
         end = prop_value.EndPoint
 
         return {
-            'TypeId': Part_GeomLineSegment.name(),
-            'StartX': start.x,
-            'StartY': start.y,
-            'StartZ': start.z,
-            'EndX': end.x,
-            'EndY': end.y,
-            'EndZ': end.z,
+            "TypeId": Part_GeomLineSegment.name(),
+            "StartX": start.x,
+            "StartY": start.y,
+            "StartZ": start.z,
+            "EndX": end.x,
+            "EndY": end.y,
+            "EndZ": end.z,
         }
 
     @staticmethod
@@ -34,10 +34,10 @@ class Part_GeomLineSegment(BaseProp):
         if not fc:
             return
         StartPoint = fc.app.Base.Vector(
-            prop_value['StartX'], prop_value['StartY'], prop_value['StartZ']
+            prop_value["StartX"], prop_value["StartY"], prop_value["StartZ"]
         )
         EndPoint = fc.app.Base.Vector(
-            prop_value['EndX'], prop_value['EndY'], prop_value['EndZ']
+            prop_value["EndX"], prop_value["EndY"], prop_value["EndZ"]
         )
         if fc_object:
             fc_object.StartPoint = StartPoint

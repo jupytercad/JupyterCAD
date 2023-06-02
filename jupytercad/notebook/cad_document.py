@@ -23,7 +23,6 @@ from .objects import (
     IExtrusion,
     IFuse,
     IIntersection,
-    Parts,
     ISphere,
     ITorus,
 )
@@ -35,8 +34,10 @@ class CadDocument(Widget):
     """
     Create a new CadDocument object.
 
-    :param path: the path to the file that you would like to open. If not provided, a new empty document will be created.
+    :param path: the path to the file that you would like to open.
+    If not provided, a new empty document will be created.
     """
+
     def __init__(self, path: Optional[str] = None):
         comm_data = CadDocument._path_to_comm(path)
 
@@ -70,7 +71,7 @@ class CadDocument(Widget):
                 raise ValueError("Can not detect file extension!")
             if ext == "fcstd":
                 if fc is None:
-                    msg = 'FreeCAD is required to open FCStd files'
+                    msg = "FreeCAD is required to open FCStd files"
                     logger.warn(msg)
                     raise RuntimeError(msg)
                 format = "base64"
@@ -119,7 +120,8 @@ class CadDocument(Widget):
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
-        Add an Open Cascade TopoDS shape to the document. You need pythonocc-core installed in order to use this method.
+        Add an Open Cascade TopoDS shape to the document.
+        You need `pythonocc-core` installed in order to use this method.
 
         :param shape: The Open Cascade shape to add.
         :param name: The name that will be used for the object in the document.
@@ -217,7 +219,7 @@ class CadDocument(Widget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """
+        """  # noqa 501
         data = {
             "shape": Parts.Part__Cone.value,
             "name": name if name else self._new_name("Cone"),
@@ -256,7 +258,7 @@ class CadDocument(Widget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """
+        """  # noqa E501
         data = {
             "shape": Parts.Part__Cylinder.value,
             "name": name if name else self._new_name("Cylinder"),
@@ -296,7 +298,7 @@ class CadDocument(Widget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """
+        """  # noqa E501
         data = {
             "shape": Parts.Part__Sphere.value,
             "name": name if name else self._new_name("Sphere"),
@@ -339,7 +341,7 @@ class CadDocument(Widget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """
+        """  # noqa E501
         data = {
             "shape": Parts.Part__Torus.value,
             "name": name if name else self._new_name("Torus"),
@@ -379,7 +381,7 @@ class CadDocument(Widget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """
+        """  # noqa E501
         base, tool = self._get_boolean_operands(base, tool)
 
         data = {
@@ -417,7 +419,7 @@ class CadDocument(Widget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """
+        """  # noqa E501
         shape1, shape2 = self._get_boolean_operands(shape1, shape2)
 
         data = {
@@ -444,7 +446,8 @@ class CadDocument(Widget):
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
-        Apply an intersection boolean operation between two objects. If no objects are provided as input, the last two created objects will be used as operands.
+        Apply an intersection boolean operation between two objects.
+        If no objects are provided as input, the last two created objects will be used as operands.
 
         :param name: The name that will be used for the object in the document.
         :param shape1: The first object used for the intersection. Can be the name of the object or its index in the objects list.
@@ -454,7 +457,7 @@ class CadDocument(Widget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """
+        """  # noqa E501
         shape1, shape2 = self._get_boolean_operands(shape1, shape2)
 
         data = {
@@ -475,7 +478,7 @@ class CadDocument(Widget):
 
         if len(self.objects) < 2:
             raise ValueError(
-                "Cannot apply boolean operator if there are less than two objects in the document."
+                "Cannot apply boolean operator if there are less than two objects in the document."  # noqa E501
             )
 
         if isinstance(shape1, str):

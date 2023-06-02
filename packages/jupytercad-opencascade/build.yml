@@ -85,16 +85,16 @@ mainBuild:
     - symbol: TopTools_IndexedMapOfShape
     - symbol: TopTools_ListOfShape
   emccFlags:
-    - "-flto"
-    - "-fexceptions"
-    - "-sDISABLE_EXCEPTION_CATCHING=1"
-    - "-O3"
-    - "-sEXPORT_ES6=1"
-    - "-sUSE_ES6_IMPORT_META=0"
+    - '-flto'
+    - '-fexceptions'
+    - '-sDISABLE_EXCEPTION_CATCHING=1'
+    - '-O3'
+    - '-sEXPORT_ES6=1'
+    - '-sUSE_ES6_IMPORT_META=0'
     - "-sEXPORTED_RUNTIME_METHODS=['FS']"
-    - "-sINITIAL_MEMORY=15MB"
-    - "-sMAXIMUM_MEMORY=4GB"
-    - "-sALLOW_MEMORY_GROWTH=1"
-    - "-sLLD_REPORT_UNDEFINED"
-    - "--no-entry"
+    - '-sINITIAL_MEMORY=15MB'
+    - '-sMAXIMUM_MEMORY=4GB'
+    - '-sALLOW_MEMORY_GROWTH=1'
+    - '-sLLD_REPORT_UNDEFINED'
+    - '--no-entry'
     - "-sENVIRONMENT='web'"

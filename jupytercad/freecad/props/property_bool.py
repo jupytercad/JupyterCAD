@@ -6,7 +6,7 @@ from .base_prop import BaseProp
 class App_PropertyBool(BaseProp):
     @staticmethod
     def name() -> str:
-        return 'App::PropertyBool'
+        return "App::PropertyBool"
 
     @staticmethod
     def fc_to_jcad(prop_value: Any, **kwargs) -> Any:

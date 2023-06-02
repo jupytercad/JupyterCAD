@@ -7,7 +7,7 @@ from .geometry import geom_handlers
 class Part_PropertyGeometryList(BaseProp):
     @staticmethod
     def name() -> str:
-        return 'Part::PropertyGeometryList'
+        return "Part::PropertyGeometryList"
 
     @staticmethod
     def fc_to_jcad(prop_value: List, **kwargs) -> Any:
@@ -26,8 +26,8 @@ class Part_PropertyGeometryList(BaseProp):
         if n_objects > 0 and n_objects == n_new_objects:
             # Update existing geometries
             for idx, jcad_geo in enumerate(prop_value):
-                if jcad_geo['TypeId'] in geom_handlers:
-                    geom_handlers[jcad_geo['TypeId']].jcad_to_fc(
+                if jcad_geo["TypeId"] in geom_handlers:
+                    geom_handlers[jcad_geo["TypeId"]].jcad_to_fc(
                         jcad_geo, fc_object=fc_prop[idx]
                     )
             return fc_prop
@@ -35,8 +35,8 @@ class Part_PropertyGeometryList(BaseProp):
         if n_objects == 0 and n_new_objects > 0:
             # Create new geometries
             for jcad_geo in prop_value:
-                if jcad_geo['TypeId'] in geom_handlers:
-                    fc_geo = geom_handlers[jcad_geo['TypeId']].jcad_to_fc(
+                if jcad_geo["TypeId"] in geom_handlers:
+                    fc_geo = geom_handlers[jcad_geo["TypeId"]].jcad_to_fc(
                         jcad_geo, fc_object=None
                     )
 

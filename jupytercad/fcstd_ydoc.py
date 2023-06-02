@@ -11,10 +11,10 @@ from jupytercad.freecad.loader import FCStd
 class YFCStd(YBaseDoc):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._ysource = self._ydoc.get_text('source')
-        self._yobjects = self._ydoc.get_array('objects')
-        self._yoptions = self._ydoc.get_map('options')
-        self._ymeta = self._ydoc.get_map('metadata')
+        self._ysource = self._ydoc.get_text("source")
+        self._yobjects = self._ydoc.get_array("objects")
+        self._yoptions = self._ydoc.get_map("options")
+        self._ymeta = self._ydoc.get_map("metadata")
         self._virtual_file = FCStd()
 
     @property
@@ -22,10 +22,10 @@ class YFCStd(YBaseDoc):
         return self._yobjects
 
     def version(self) -> str:
-        return '0.1.0'
-    
+        return "0.1.0"
+
     def get(self):
-        fc_objects = json.loads(self._yobjects.to_json()) 
+        fc_objects = json.loads(self._yobjects.to_json())
         options = json.loads(self._yoptions.to_json())
         meta = json.loads(self._ymeta.to_json())
 
@@ -42,8 +42,8 @@ class YFCStd(YBaseDoc):
         with self._ydoc.begin_transaction() as t:
             length = len(self._yobjects)
             self._yobjects.delete_range(t, 0, length)
-            #workaround for https://github.com/y-crdt/ypy/issues/126:
-            #self._yobjects.extend(t, objects)
+            # workaround for https://github.com/y-crdt/ypy/issues/126:
+            # self._yobjects.extend(t, objects)
             for o in objects:
                 self._yobjects.append(t, o)
             self._yoptions.update(t, virtual_file.options.items())
@@ -51,10 +51,18 @@ class YFCStd(YBaseDoc):
 
     def observe(self, callback: Callable[[str, Any], None]):
         self.unobserve()
-        self._subscriptions[self._ystate] = self._ystate.observe(partial(callback, "state"))
-        self._subscriptions[self._ysource] = self._ysource.observe(partial(callback, "source"))
+        self._subscriptions[self._ystate] = self._ystate.observe(
+            partial(callback, "state")
+        )
+        self._subscriptions[self._ysource] = self._ysource.observe(
+            partial(callback, "source")
+        )
         self._subscriptions[self._yobjects] = self._yobjects.observe_deep(
             partial(callback, "objects")
         )
-        self._subscriptions[self._yoptions] = self._yoptions.observe(partial(callback, "options"))
-        self._subscriptions[self._ymeta] = self._ymeta.observe_deep(partial(callback, "meta"))
+        self._subscriptions[self._yoptions] = self._yoptions.observe(
+            partial(callback, "options")
+        )
+        self._subscriptions[self._ymeta] = self._ymeta.observe_deep(
+            partial(callback, "meta")
+        )

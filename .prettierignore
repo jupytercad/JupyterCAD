@@ -3,3 +3,5 @@ node_modules
 **/lib
 **/package.json
 jupytercad
+**/*.d.ts
+**/*.js

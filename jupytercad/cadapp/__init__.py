@@ -1,1 +1,1 @@
-from .cadapp import CadApp, main
+from .cadapp import CadApp, main  # noqa
