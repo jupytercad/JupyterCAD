@@ -50,6 +50,21 @@ The ``CadDocument`` does **method chaining**, allowing you to perform multiple o
 
     doc
 
+You can also make use of the OpenCascade Python API using the ``pythonocc-core`` package:
+
+.. code-block:: Python
+
+    from jupytercad import CadDocument
+    ...
+    # Create a prism shape with OpenCascade
+    prism = BRepPrimAPI_MakePrism(profile, vec).Shape()
+    doc = CadDocument()
+    doc.add_occ_shape(prism)
+    display(doc)
+
+.. image:: python_occ.gif
+  :alt: JupyterCAD Python OpenCascade API support
+
 ``CadDocument`` API Reference
 =============================
 
