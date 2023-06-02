@@ -36,8 +36,8 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           pr: ${{github.event.issue.number}}
-          workflow: "build.yml"
-          workflow_conclusion: ""
+          workflow: 'build.yml'
+          workflow_conclusion: ''
           name: extension-artifacts
 
       - name: Setup mamba
