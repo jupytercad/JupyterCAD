@@ -17,7 +17,7 @@ dependencies = [
     "jupyter_collaboration>=1.0.0a9,<2",
     "ypywidgets>=0.1.2,<0.2.0",
     "comm>=0.1.2,<0.2.0",
-    "pydantic"
+    "pydantic",
 ]
 classifiers = [
     "License :: OSI Approved :: BSD License",
@@ -47,11 +47,15 @@ source = "nodejs"
 fields = ["description", "authors", "urls"]
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["/jupytercad/labextension", "/jupytercad/notebook/objects/_schema/*.py"]
+artifacts = [
+    "/jupytercad/labextension",
+    "/jupytercad/notebook/objects/_schema/*.py",
+    "/jupytercad/cadapp/",
+]
 exclude = ["/.github", "/binder", "node_modules", "examples", "ui-tests"]
 
 [tool.hatch.build.targets.wheel]
-artifacts = ["/jupytercad/notebook/objects/_schema/*.py"]
+artifacts = ["/jupytercad/notebook/objects/_schema/*.py", "/jupytercad/cadapp/"]
 
 [tool.hatch.build.targets.sdist.force-include]
 "./packages" = "packages"
@@ -88,9 +92,7 @@ build_dir = "jupytercad/labextension"
 version-cmd = "python scripts/bump-version.py"
 
 [tool.jupyter-releaser.hooks]
-before-bump-version = [
-    "python -m pip install hatch 'jupyterlab>=4.0.0'",
-]
+before-bump-version = ["python -m pip install hatch 'jupyterlab>=4.0.0'"]
 before-build-npm = [
     "python -m pip install datamodel-code-generator jupyterlab --pre -U",
     "jlpm",
