@@ -32,8 +32,13 @@ logger = logging.getLogger(__file__)
 
 
 class CadDocument(Widget):
+    """
+    Create a new CadDocument object.
+
+    :param path: the path to the file that you would like to open. If not provided, a new empty document will be created.
+    """
     def __init__(self, path: Optional[str] = None):
-        comm_data = CadDocument.path_to_comm(path)
+        comm_data = CadDocument._path_to_comm(path)
 
         super().__init__(name="@jupytercad:widget", open_comm=True, comm_data=comm_data)
 
@@ -43,12 +48,15 @@ class CadDocument(Widget):
 
     @property
     def objects(self) -> List[str]:
+        """
+        Get the list of objects that the document contains as a list of strings.
+        """
         if self._objects_array:
             return [x["name"] for x in self._objects_array]
         return []
 
     @classmethod
-    def path_to_comm(cls, filePath: Optional[str]) -> Dict:
+    def _path_to_comm(cls, filePath: Optional[str]) -> Dict:
         path = None
         format = None
         contentType = None
@@ -110,6 +118,16 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
+        """
+        Add an Open Cascade TopoDS shape to the document. You need pythonocc-core installed in order to use this method.
+
+        :param shape: The Open Cascade shape to add.
+        :param name: The name that will be used for the object in the document.
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """
         try:
             from OCC.Core.BRepTools import breptools_Write
         except ImportError:
@@ -148,6 +166,18 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
+        """
+        Add a box to the document.
+
+        :param name: The name that will be used for the object in the document.
+        :param length: The length of the box.
+        :param width: The width of the box.
+        :param height: The height of the box.
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """
         data = {
             "shape": Parts.Part__Box.value,
             "name": name if name else self._new_name("Box"),
@@ -175,6 +205,19 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
+        """
+        Add a cone to the document.
+
+        :param name: The name that will be used for the object in the document.
+        :param radius1: The bottom radius of the cone.
+        :param radius2: The top radius of the cone.
+        :param height: The height of the cone.
+        :param angle: The revolution angle of the cone (0: no cone, 180: half cone, 360: full cone).
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """
         data = {
             "shape": Parts.Part__Cone.value,
             "name": name if name else self._new_name("Cone"),
@@ -202,6 +245,18 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
+        """
+        Add a cylinder to the document.
+
+        :param name: The name that will be used for the object in the document.
+        :param radius: The radius of the cylinder.
+        :param height: The height of the cylinder.
+        :param angle: The revolution angle of the cylinder (0: no cylinder, 180: half cylinder, 360: full cylinder).
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """
         data = {
             "shape": Parts.Part__Cylinder.value,
             "name": name if name else self._new_name("Cylinder"),
@@ -229,6 +284,19 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
+        """
+        Add a sphere to the document.
+
+        :param name: The name that will be used for the object in the document.
+        :param radius: The radius of the sphere.
+        :param angle1: The revolution angle of the sphere on the X axis (0: no sphere, 180: half sphere, 360: full sphere).
+        :param angle2: The revolution angle of the sphere on the Y axis (0: no sphere, 180: half sphere, 360: full sphere).
+        :param angle3: The revolution angle of the sphere on the Z axis (0: no sphere, 180: half sphere, 360: full sphere).
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """
         data = {
             "shape": Parts.Part__Sphere.value,
             "name": name if name else self._new_name("Sphere"),
@@ -258,6 +326,20 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
+        """
+        Add a torus to the document.
+
+        :param name: The name that will be used for the object in the document.
+        :param radius1: The outer radius of the torus.
+        :param radius2: The inner radius of the torus.
+        :param angle1: The revolution angle of the torus on the X axis (0: no torus, 180: half torus, 360: full torus).
+        :param angle2: The revolution angle of the torus on the Y axis (0: no torus, 180: half torus, 360: full torus).
+        :param angle3: The revolution angle of the torus on the Z axis (0: no torus, 180: half torus, 360: full torus).
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """
         data = {
             "shape": Parts.Part__Torus.value,
             "name": name if name else self._new_name("Torus"),
@@ -286,6 +368,18 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
+        """
+        Apply a cut boolean operation between two objects. If no objects are provided as input, the last two created objects will be used as operands.
+
+        :param name: The name that will be used for the object in the document.
+        :param base: The base object that will be used for the cut. Can be the name of the object or its index in the objects list.
+        :param tool: The tool object that will be used for the cut. Can be the name of the object or its index in the objects list.
+        :param refine: Whether or not to refine the mesh during the cut computation.
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """
         base, tool = self._get_boolean_operands(base, tool)
 
         data = {
@@ -312,11 +406,23 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
+        """
+        Apply a union boolean operation between two objects. If no objects are provided as input, the last two created objects will be used as operands.
+
+        :param name: The name that will be used for the object in the document.
+        :param shape1: The first object used for the union. Can be the name of the object or its index in the objects list.
+        :param shape2: The first object used for the union. Can be the name of the object or its index in the objects list.
+        :param refine: Whether or not to refine the mesh during the union computation.
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """
         shape1, shape2 = self._get_boolean_operands(shape1, shape2)
 
         data = {
             "shape": Parts.Part__MultiFuse.value,
-            "name": name if name else self._new_name("Cut"),
+            "name": name if name else self._new_name("Fuse"),
             "parameters": {
                 "Shapes": [shape1, shape2],
                 "Refine": refine,
@@ -337,11 +443,23 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
+        """
+        Apply a intersection boolean operation between two objects. If no objects are provided as input, the last two created objects will be used as operands.
+
+        :param name: The name that will be used for the object in the document.
+        :param shape1: The first object used for the intersection. Can be the name of the object or its index in the objects list.
+        :param shape2: The first object used for the intersection. Can be the name of the object or its index in the objects list.
+        :param refine: Whether or not to refine the mesh during the intersection computation.
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """
         shape1, shape2 = self._get_boolean_operands(shape1, shape2)
 
         data = {
             "shape": Parts.Part__MultiCommon.value,
-            "name": name if name else self._new_name("Cut"),
+            "name": name if name else self._new_name("Intersection"),
             "parameters": {
                 "Shapes": [shape1, shape2],
                 "Refine": refine,
