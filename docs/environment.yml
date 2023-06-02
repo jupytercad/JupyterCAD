@@ -1,12 +1,9 @@
 name: jupytercad
 channels:
   - conda-forge
-  - conda
 dependencies:
-  - sphinx
-  - jupyterlab=4
-  - yarn
   - pip
+  - sphinx
   - pydata-sphinx-theme
   - pip:
-    - ..
+    - jupytercad
