@@ -444,7 +444,7 @@ class CadDocument(Widget):
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
-        Apply a intersection boolean operation between two objects. If no objects are provided as input, the last two created objects will be used as operands.
+        Apply an intersection boolean operation between two objects. If no objects are provided as input, the last two created objects will be used as operands.
 
         :param name: The name that will be used for the object in the document.
         :param shape1: The first object used for the intersection. Can be the name of the object or its index in the objects list.
