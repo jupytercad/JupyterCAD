@@ -7,7 +7,7 @@ from .base_prop import BaseProp
 class Part_PropertyPartShape(BaseProp):
     @staticmethod
     def name() -> str:
-        return 'Part::PropertyPartShape'
+        return "Part::PropertyPartShape"
 
     @staticmethod
     def fc_to_jcad(prop_value: Any, **kwargs) -> Any:

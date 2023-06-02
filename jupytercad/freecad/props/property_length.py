@@ -6,7 +6,7 @@ from .base_prop import BaseProp
 class App_PropertyLength(BaseProp):
     @staticmethod
     def name() -> str:
-        return 'App::PropertyLength'
+        return "App::PropertyLength"
 
     @staticmethod
     def fc_to_jcad(prop_value: Any, **kwargs) -> Any:

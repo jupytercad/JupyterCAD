@@ -6,7 +6,7 @@ from .base_prop import BaseProp
 class App_PropertyMap(BaseProp):
     @staticmethod
     def name() -> str:
-        return 'App::PropertyMap'
+        return "App::PropertyMap"
 
     @staticmethod
     def fc_to_jcad(prop_value: Any, **kwargs) -> Any:

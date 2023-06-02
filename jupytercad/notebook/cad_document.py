@@ -23,7 +23,6 @@ from .objects import (
     IExtrusion,
     IFuse,
     IIntersection,
-    Parts,
     ISphere,
     ITorus,
 )
@@ -70,7 +69,7 @@ class CadDocument(Widget):
                 raise ValueError("Can not detect file extension!")
             if ext == "fcstd":
                 if fc is None:
-                    msg = 'FreeCAD is required to open FCStd files'
+                    msg = "FreeCAD is required to open FCStd files"
                     logger.warn(msg)
                     raise RuntimeError(msg)
                 format = "base64"
@@ -475,7 +474,7 @@ class CadDocument(Widget):
 
         if len(self.objects) < 2:
             raise ValueError(
-                "Cannot apply boolean operator if there are less than two objects in the document."
+                "Cannot apply boolean operator if there are less than two objects in the document."  # noqa E501
             )
 
         if isinstance(shape1, str):

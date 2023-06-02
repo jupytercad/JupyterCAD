@@ -1,1 +1,1 @@
-from .cad_document import CadDocument
+from .cad_document import CadDocument  # noqa

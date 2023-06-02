@@ -1,5 +1,4 @@
 import base64
-import json
 import logging
 import os
 import tempfile
@@ -28,15 +27,15 @@ def _guidata_to_options(guidata):
 
         # We need to make a special case to "GuiCameraSettings" because freecad's
         # OfflineRenderingUtils mixes the camera settings with 3D objects
-        if obj_name == 'GuiCameraSettings':
+        if obj_name == "GuiCameraSettings":
             options[obj_name] = data
             continue
 
-        if 'ShapeColor' in data:
-            obj_options['color'] = list(data['ShapeColor']['value'])
+        if "ShapeColor" in data:
+            obj_options["color"] = list(data["ShapeColor"]["value"])
 
-        if 'Visibility' in data:
-            obj_options['visibility'] = data['Visibility']['value']
+        if "Visibility" in data:
+            obj_options["visibility"] = data["Visibility"]["value"]
 
         options[obj_name] = obj_options
 
@@ -52,18 +51,18 @@ def _options_to_guidata(options):
 
         # We need to make a special case to "GuiCameraSettings" because freecad's
         # OfflineRenderingUtils mixes the camera settings with 3D objects
-        if obj_name == 'GuiCameraSettings':
+        if obj_name == "GuiCameraSettings":
             options[obj_name] = data
             continue
 
-        if 'color' in data:
-            obj_data['ShapeColor'] = dict(
-                type='App::PropertyColor', value=tuple(data['color'])
+        if "color" in data:
+            obj_data["ShapeColor"] = dict(
+                type="App::PropertyColor", value=tuple(data["color"])
             )
 
-        if 'visibility' in data:
-            obj_data['Visibility'] = dict(
-                type='App::PropertyBool', value=data['visibility']
+        if "visibility" in data:
+            obj_data["Visibility"] = dict(
+                type="App::PropertyBool", value=data["visibility"]
             )
 
         gui_data[obj_name] = obj_data
@@ -73,7 +72,7 @@ def _options_to_guidata(options):
 
 class FCStd:
     def __init__(self) -> None:
-        self._sources = ''
+        self._sources = ""
         self._objects = []
         self._options = {}
         self._metadata = {}
@@ -104,7 +103,7 @@ class FCStd:
         if not fc:
             return
         self._sources = base64_content
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.FCStd') as tmp:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".FCStd") as tmp:
             file_content = base64.b64decode(base64_content)
             tmp.write(file_content)
 
@@ -114,7 +113,7 @@ class FCStd:
         self._metadata = fc_file.Meta
 
         # Get GuiData (metadata from the GuiDocument.xml file)
-        self._options['guidata'] = _guidata_to_options(
+        self._options["guidata"] = _guidata_to_options(
             OfflineRenderingUtils.getGuiData(tmp.name)
         )
 
@@ -130,14 +129,12 @@ class FCStd:
             if not fc or len(self._sources) == 0:
                 return
 
-            with tempfile.NamedTemporaryFile(
-                delete=False, suffix='.FCStd'
-            ) as tmp:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".FCStd") as tmp:
                 file_content = base64.b64decode(self._sources)
                 tmp.write(file_content)
             fc_file = fc.app.openDocument(tmp.name)
             fc_file.Meta = metadata
-            new_objs = dict([(o['name'], o) for o in objects])
+            new_objs = dict([(o["name"], o) for o in objects])
 
             current_objs = dict([(o.Name, o) for o in fc_file.Objects])
 
@@ -147,15 +144,15 @@ class FCStd:
                 fc_file.removeObject(obj_name)
             for obj_name in to_add:
                 py_obj = new_objs[obj_name]
-                fc_file.addObject(py_obj['shape'], py_obj['name'])
+                fc_file.addObject(py_obj["shape"], py_obj["name"])
             to_update = [x for x in new_objs if x in current_objs] + to_add
 
             for obj_name in to_update:
                 py_obj = new_objs[obj_name]
 
-                fc_obj = fc_file.getObject(py_obj['name'])
+                fc_obj = fc_file.getObject(py_obj["name"])
 
-                for prop, jcad_prop_value in py_obj['parameters'].items():
+                for prop, jcad_prop_value in py_obj["parameters"].items():
                     prop_type = fc_obj.getTypeIdOfProperty(prop)
                     prop_handler = self._prop_handlers.get(prop_type, None)
                     if prop_handler is not None:
@@ -169,16 +166,16 @@ class FCStd:
                         if fc_value:
                             try:
                                 setattr(fc_obj, prop, fc_value)
-                            except:
+                            except Exception:
                                 pass
 
             OfflineRenderingUtils.save(
                 fc_file,
-                guidata=_options_to_guidata(options.get('guidata', {})),
+                guidata=_options_to_guidata(options.get("guidata", {})),
             )
 
             fc_file.recompute()
-            with open(tmp.name, 'rb') as f:
+            with open(tmp.name, "rb") as f:
                 encoded = base64.b64encode(f.read())
                 self._sources = encoded.decode()
             os.remove(tmp.name)
@@ -200,5 +197,5 @@ class FCStd:
                 value = prop_handler.fc_to_jcad(prop_value, fc_object=obj)
             else:
                 value = None
-            obj_data['parameters'][prop] = value
+            obj_data["parameters"][prop] = value
         return obj_data

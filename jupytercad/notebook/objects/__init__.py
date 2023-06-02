@@ -1,10 +1,10 @@
-from ._schema.box import IBox
-from ._schema.cone import ICone
-from ._schema.cut import ICut
-from ._schema.cylinder import ICylinder
-from ._schema.extrusion import IExtrusion
-from ._schema.fuse import IFuse
-from ._schema.intersection import IIntersection
-from ._schema.jcad import Parts
-from ._schema.sphere import ISphere
-from ._schema.torus import ITorus
+from ._schema.box import IBox  # noqa
+from ._schema.cone import ICone  # noqa
+from ._schema.cut import ICut  # noqa
+from ._schema.cylinder import ICylinder  # noqa
+from ._schema.extrusion import IExtrusion  # noqa
+from ._schema.fuse import IFuse  # noqa
+from ._schema.intersection import IIntersection  # noqa
+from ._schema.jcad import Parts  # noqa
+from ._schema.sphere import ISphere  # noqa
+from ._schema.torus import ITorus  # noqa

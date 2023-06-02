@@ -6,7 +6,7 @@ from .base_prop import BaseProp
 class App_PropertyLink(BaseProp):
     @staticmethod
     def name() -> str:
-        return 'App::PropertyLink'
+        return "App::PropertyLink"
 
     @staticmethod
     def fc_to_jcad(prop_value: Any, **kwargs) -> Any:
