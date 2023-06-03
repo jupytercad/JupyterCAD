@@ -2,6 +2,33 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.2.1
+
+([Full Changelog](https://github.com/QuantStack/jupytercad/compare/v0.2.0...ec0b05cb38d16a1a8fc0a853a53328c4a05542dd))
+
+### Bugs fixed
+
+- Fix missing static files in cad app [#181](https://github.com/QuantStack/jupytercad/pull/181) ([@trungleduc](https://github.com/trungleduc))
+- NPM Package version fix [#173](https://github.com/QuantStack/jupytercad/pull/173) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Simplify bump version script [#178](https://github.com/QuantStack/jupytercad/pull/178) ([@martinRenou](https://github.com/martinRenou))
+- Fix file paths in Notebook.ipynb [#176](https://github.com/QuantStack/jupytercad/pull/176) ([@davidbrochart](https://github.com/davidbrochart))
+- Add releaser action and pre-commit config [#172](https://github.com/QuantStack/jupytercad/pull/172) ([@trungleduc](https://github.com/trungleduc))
+
+### Documentation improvements
+
+- Add docstrings [#177](https://github.com/QuantStack/jupytercad/pull/177) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/QuantStack/jupytercad/graphs/contributors?from=2023-06-02&to=2023-06-02&type=c))
+
+[@davidbrochart](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Adavidbrochart+updated%3A2023-06-02..2023-06-02&type=Issues) | [@github-actions](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-06-02..2023-06-02&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-06-02..2023-06-02&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-06-02..2023-06-02&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.2.0
 
 ([Full Changelog](https://github.com/QuantStack/jupytercad/compare/@jupytercad/jupytercad-app@0.1.0...65c8ba939c9b1f86bf3dbd18f5d2eeb3fb67597e))
@@ -41,8 +68,6 @@
 ([GitHub contributors page for this release](https://github.com/QuantStack/jupytercad/graphs/contributors?from=2023-05-17&to=2023-06-02&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-05-17..2023-06-02&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-05-17..2023-06-02&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-05-17..2023-06-02&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.0
 
