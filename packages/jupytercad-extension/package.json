@@ -49,8 +49,8 @@
     },
     "dependencies": {
         "@deathbeds/jupyterlab-rjsf": "^1.1.0",
-        "@jupyter/collaboration": "^1.0.0-alpha.7",
-        "@jupyter/docprovider": "^1.0.0-alpha.8",
+        "@jupyter/collaboration": "^1.0.0",
+        "@jupyter/docprovider": "^1.0.0",
         "@jupyter/ydoc": "^0.3.4 || ^1.0.2",
         "@jupytercad/jupytercad-opencascade": "^0.2.1",
         "@jupyterlab/application": "^4.0.0",
