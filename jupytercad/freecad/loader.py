@@ -5,17 +5,20 @@ import tempfile
 import traceback
 from typing import Dict, List, Type
 
+from .tools import redirect_stdout_stderr
+
 from . import props as Props
 from .props.base_prop import BaseProp
 
 logger = logging.getLogger(__file__)
 
-try:
-    import freecad as fc
-    import OfflineRenderingUtils
+with redirect_stdout_stderr():
+    try:
+        import freecad as fc
+        import OfflineRenderingUtils
 
-except ImportError:
-    fc = None
+    except ImportError:
+        fc = None
 
 
 def _guidata_to_options(guidata):
