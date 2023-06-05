@@ -13,9 +13,8 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.7"
 dependencies = [
-    "jupyter_core",
     "jupyter_server>=2.0.6",
-    "jupyterlab_server",
+    "jupyterlab>=4,<5",
     "jupyter_collaboration>=1.0.0a9,<2",
     "ypywidgets>=0.1.2,<0.2.0",
     "comm>=0.1.2,<0.2.0",
