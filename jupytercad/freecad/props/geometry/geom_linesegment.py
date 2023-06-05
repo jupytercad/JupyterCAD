@@ -1,12 +1,15 @@
 from typing import Any, Dict
 
+from ...tools import redirect_stdout_stderr
+
 from ..base_prop import BaseProp
 
-try:
-    import freecad as fc
-    import Part
-except ImportError:
-    fc = None
+with redirect_stdout_stderr():
+    try:
+        import freecad as fc
+        import Part
+    except ImportError:
+        fc = None
 
 
 class Part_GeomLineSegment(BaseProp):
