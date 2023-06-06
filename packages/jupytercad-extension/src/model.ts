@@ -390,13 +390,15 @@ export class JupyterCadDoc
   }
 
   setOption(key: keyof IJCadOptions, value: IDict): void {
-    this._options.set(key, value);
+    this.transact(() => void this._options.set(key, value));
   }
 
   setOptions(options: IJCadOptions): void {
-    for (const [key, value] of Object.entries(options)) {
-      this._options.set(key, value);
-    }
+    this.transact(() => {
+      for (const [key, value] of Object.entries(options)) {
+        this._options.set(key, value);
+      }
+    });
   }
 
   getMetadata(key: string): string | undefined {
@@ -404,12 +406,19 @@ export class JupyterCadDoc
   }
 
   setMetadata(key: string, value: string): void {
-    this._metadata.set(key, value);
+    this.transact(() => void this._metadata.set(key, value));
   }
 
   removeMetadata(key: string): void {
     if (this._metadata.has(key)) {
       this._metadata.delete(key);
+    }
+  }
+
+  setShapeMeta(name: string, meta?: IDict): void {
+    const obj = this._getObjectAsYMapByName(name);
+    if (meta && obj) {
+      this.transact(() => void obj.set('shapeMetadata', meta));
     }
   }
 
@@ -429,25 +438,32 @@ export class JupyterCadDoc
   private _objectsObserver = (events: Y.YEvent<any>[]): void => {
     const changes: Array<{
       name: string;
-      key: string;
+      key: keyof IJCadObject;
       newValue: IJCadObject;
     }> = [];
-
+    let needEmit = false;
     events.forEach(event => {
       const name = event.target.get('name');
+
       if (name) {
         event.keys.forEach((change, key) => {
+          if (!needEmit && key !== 'shapeMetadata') {
+            needEmit = true;
+          }
           changes.push({
             name,
-            key,
+            key: key as any,
             newValue: JSONExt.deepCopy(event.target.toJSON())
           });
         });
       }
     });
-
+    // Need render at first load
+    needEmit = changes.length === 0 ? true : needEmit;
+    if (needEmit) {
+      this._objectsChanged.emit({ objectChange: changes });
+    }
     this._changed.emit({ objectChange: changes });
-    this._objectsChanged.emit({ objectChange: changes });
   };
 
   private _metaObserver = (event: Y.YMapEvent<string>): void => {

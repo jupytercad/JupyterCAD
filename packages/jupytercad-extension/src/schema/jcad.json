@@ -54,6 +54,9 @@
         "parameters": {
           "type": "object"
         },
+        "shapeMetadata": {
+          "type": "object"
+        },
         "operators": {
           "type": "array",
           "items": {

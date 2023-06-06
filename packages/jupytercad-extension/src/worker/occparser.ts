@@ -1,4 +1,4 @@
-import { IDict } from '../types';
+import { IDict, IParsedShape } from '../types';
 import {
   Handle_Poly_Triangulation,
   OpenCascadeInstance,
@@ -13,6 +13,7 @@ interface IShapeList {
   jcObject: IJCadObject;
 }
 
+
 export class OccParser {
   private _shapeList: IShapeList[];
   private _occ: OpenCascadeInstance = (self as any).occ;
@@ -21,22 +22,9 @@ export class OccParser {
     this._shapeList = shapeList;
   }
 
-  execute(): {
-    [key: string]: {
-      jcObject: IJCadObject;
-      faceList: Array<IFace>;
-      edgeList: Array<IEdge>;
-      guiData?: IDict;
-    };
-  } {
+  execute(): IDict<IParsedShape> {
     const maxDeviation = 0.1;
-    const theejsData: {
-      [key: string]: {
-        jcObject: IJCadObject;
-        faceList: Array<IFace>;
-        edgeList: Array<IEdge>;
-      };
-    } = {};
+    const theejsData: IDict<IParsedShape> = {};
     this._shapeList.forEach(data => {
       const { occShape, jcObject } = data;
 
@@ -58,7 +46,8 @@ export class OccParser {
       theejsData[jcObject.name] = {
         jcObject,
         faceList,
-        edgeList: [...edgeList, ...wireList]
+        edgeList: [...edgeList, ...wireList],
+        meta: { foo: 'bar' }
       };
     });
 
