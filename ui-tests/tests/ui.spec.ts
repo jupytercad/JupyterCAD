@@ -4,14 +4,6 @@ import path from 'path';
 test.use({ autoGoto: false });
 
 test.describe('UI Test', () => {
-  test.use({
-    mockSettings: {
-      '@jupyterlab/apputils-extension:notification': {
-        fetchNews: 'false'
-      }
-    }
-  });
-
   const fileList = [
     'example_2D.FCStd',
     'example1.FCStd',
