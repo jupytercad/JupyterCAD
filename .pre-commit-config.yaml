@@ -31,13 +31,13 @@ repos:
       - id: black
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.263
+    rev: v0.0.270
     hooks:
       - id: ruff
         args: ['--fix']
 
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.39.0
+    rev: v8.42.0
     hooks:
       - id: eslint
         files: \.tsx?$
