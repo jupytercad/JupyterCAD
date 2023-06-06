@@ -10,11 +10,17 @@ import { IFuse } from '../_interface/fuse';
 import { IIntersection } from '../_interface/intersection';
 import { ISketchObject } from '../_interface/sketch';
 import { IExtrusion } from '../_interface/extrusion';
+import { IShapeMetadata } from '../types';
+
+export interface IOperatorFuncOutput {
+  occShape: TopoDS_Shape;
+  metadata?: IShapeMetadata | undefined;
+}
 
 type IOperatorFunc<T> = (
   args: T,
   jcadContent: IJCadContent
-) => TopoDS_Shape | undefined;
+) => IOperatorFuncOutput | undefined;
 
 export type IAllOperatorFunc =
   | IOperatorFunc<IBox>

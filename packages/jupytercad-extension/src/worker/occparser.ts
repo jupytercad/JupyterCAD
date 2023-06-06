@@ -7,12 +7,12 @@ import {
 
 import { IJCadObject } from '../_interface/jcad';
 import { IEdge, IFace } from '../types';
+import { IOperatorFuncOutput } from './types';
 
 interface IShapeList {
-  occShape: TopoDS_Shape;
+  shapeData: IOperatorFuncOutput;
   jcObject: IJCadObject;
 }
-
 
 export class OccParser {
   private _shapeList: IShapeList[];
@@ -26,8 +26,8 @@ export class OccParser {
     const maxDeviation = 0.1;
     const theejsData: IDict<IParsedShape> = {};
     this._shapeList.forEach(data => {
-      const { occShape, jcObject } = data;
-
+      const { shapeData, jcObject } = data;
+      const { occShape, metadata } = shapeData;
       new this._occ.BRepMesh_IncrementalMesh_2(
         occShape,
         maxDeviation,
@@ -47,7 +47,7 @@ export class OccParser {
         jcObject,
         faceList,
         edgeList: [...edgeList, ...wireList],
-        meta: { foo: 'bar' }
+        meta: metadata
       };
     });
 
