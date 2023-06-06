@@ -21,6 +21,10 @@ pip install jupytercad
 
 Once you have installed the extension, you should be able to open and edit `.fcstd` files in JupyterLab.
 
+## Documentation
+
+Check out the JupyterCAD documentation on ReadTheDocs! https://jupytercad.readthedocs.io
+
 ## Contributing
 
 JupyterCAD is an open-source project, and contributions are always welcome. If you would like to contribute to JupyterCAD, please fork the repository and submit a pull request.
