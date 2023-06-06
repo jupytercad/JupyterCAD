@@ -382,6 +382,7 @@ export class MainView extends React.Component<IProps, IStates> {
   messageHandler = (msg: IMainMessage): void => {
     switch (msg.action) {
       case MainAction.DISPLAY_SHAPE: {
+        this._saveMeta(msg.payload);
         this._shapeToMesh(msg.payload);
         break;
       }
@@ -529,7 +530,14 @@ export class MainView extends React.Component<IProps, IStates> {
       this._model.syncSelectedObject(names, this.state.id);
     }
   }
-
+  private _saveMeta = (payload: IDisplayShape['payload']) => {
+    if (!this._model) {
+      return;
+    }
+    Object.entries(payload).forEach(([objName, data]) => {
+      this._model.sharedModel.setShapeMeta(objName, data.meta);
+    });
+  };
   private _shapeToMesh = (payload: IDisplayShape['payload']) => {
     if (this._meshGroup !== null) {
       this._scene.remove(this._meshGroup);

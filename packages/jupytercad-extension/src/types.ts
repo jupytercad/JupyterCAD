@@ -80,15 +80,16 @@ export interface IEdge {
   vertexCoord: number[];
   numberOfCoords: number;
 }
+export interface IParsedShape {
+  jcObject: IJCadObject;
+  faceList: Array<IFace>;
+  edgeList: Array<IEdge>;
+  meta?: IDict;
+  guiData?: IDict;
+}
 export interface IDisplayShape {
   action: MainAction.DISPLAY_SHAPE;
-  payload: {
-    [key: string]: {
-      edgeList: IEdge[];
-      faceList: IFace[];
-      jcObject: IJCadObject;
-    };
-  };
+  payload: IDict<IParsedShape>;
 }
 export interface IWorkerInitialized {
   action: MainAction.INITIALIZED;
@@ -135,7 +136,7 @@ export type ExplodedView = {
 export interface IJcadObjectDocChange {
   objectChange?: Array<{
     name: string;
-    key: string;
+    key: keyof IJCadObject ;
     newValue: IJCadObject | undefined;
   }>;
 }
@@ -171,6 +172,8 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   getMetadata(key: string): string | undefined;
   setMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;
+
+  setShapeMeta(key: string, meta?: IDict): void;
 
   metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
   optionsChanged: ISignal<IJupyterCadDoc, MapChange>;
