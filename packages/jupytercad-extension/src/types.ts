@@ -136,7 +136,7 @@ export type ExplodedView = {
 export interface IJcadObjectDocChange {
   objectChange?: Array<{
     name: string;
-    key: keyof IJCadObject ;
+    key: keyof IJCadObject;
     newValue: IJCadObject | undefined;
   }>;
 }
@@ -275,4 +275,10 @@ export interface IAnnotationModel {
   removeAnnotation(key): void;
 
   addContent(id: string, value: string): void;
+}
+
+export interface IShapeMetadata {
+  mass: number;
+  centerOfMass: number[];
+  matrixOfInertia: number[][];
 }

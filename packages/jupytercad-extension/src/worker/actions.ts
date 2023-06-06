@@ -8,7 +8,7 @@ import {
 import { IDict, WorkerAction } from '../types';
 import { IJCadContent } from '../_interface/jcad';
 import { BrepFile, ShapesFactory } from './occapi';
-import { IOperatorArg } from './types';
+import { IOperatorArg, IOperatorFuncOutput } from './types';
 import { OccParser } from './occparser';
 
 let occ: OpenCascadeInstance;
@@ -196,8 +196,11 @@ export function shapeToThree(
 
 function buildModel(
   model: IJCadContent
-): { occShape: TopoDS_Shape; jcObject: IJCadObject }[] {
-  const occShapes: { occShape: TopoDS_Shape; jcObject: IJCadObject }[] = [];
+): { shapeData: IOperatorFuncOutput; jcObject: IJCadObject }[] {
+  const outputModel: {
+    shapeData: IOperatorFuncOutput;
+    jcObject: IJCadObject;
+  }[] = [];
   const { objects } = model;
 
   objects.forEach(object => {
@@ -206,25 +209,25 @@ function buildModel(
       return;
     }
     if (ShapesFactory[shape]) {
-      const occShape = ShapesFactory[shape](parameters as IOperatorArg, model);
-      if (occShape) {
-        occShapes.push({ occShape, jcObject: object });
+      const shapeData = ShapesFactory[shape](parameters as IOperatorArg, model);
+      if (shapeData) {
+        outputModel.push({ shapeData, jcObject: object });
       }
     } else if (parameters['Shape']) {
       // Creating occ shape from brep file.
-      const occShape = BrepFile({ content: parameters['Shape'] }, model);
-      if (occShape) {
-        occShapes.push({ occShape, jcObject: object });
+      const shapeData = BrepFile({ content: parameters['Shape'] }, model);
+      if (shapeData) {
+        outputModel.push({ shapeData, jcObject: object });
       }
     }
   });
-  return occShapes;
+  return outputModel;
 }
 
 function loadFile(payload: { content: IJCadContent }): IDict | null {
   const { content } = payload;
-  const shapeList = buildModel(content);
-  const parser = new OccParser(shapeList);
+  const outputModel = buildModel(content);
+  const parser = new OccParser(outputModel);
   const result = parser.execute();
   return result;
 }
