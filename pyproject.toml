@@ -91,6 +91,10 @@ build_dir = "jupytercad/labextension"
 
 [tool.jupyter-releaser.options]
 version-cmd = "python scripts/bump-version.py"
+python_packages = [
+    "jupyverse:fps-jupytercad",
+    ".:jupytercad:fps-jupytercad"
+]
 
 [tool.jupyter-releaser.hooks]
 before-bump-version = ["python -m pip install hatch 'jupyterlab>=4.0.0'"]
