@@ -1,7 +1,9 @@
 {
   "type": "object",
   "title": "IJCadContent",
-  "required": ["objects"],
+  "required": [
+    "objects"
+  ],
   "additionalProperties": false,
   "properties": {
     "objects": {
@@ -24,6 +26,7 @@
     "parts": {
       "type": "string",
       "enum": [
+        "Part::Any",
         "Part::Box",
         "Part::Cylinder",
         "Part::Sphere",
@@ -36,11 +39,44 @@
         "Sketcher::SketchObject"
       ]
     },
+    "shapeMetadata": {
+      "title": "IShapeMetadata",
+      "type": "object",
+      "required": [
+        "mass",
+        "centerOfMass",
+        "matrixOfInertia"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "mass": {
+          "type": "number"
+        },
+        "centerOfMass": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "matrixOfInertia": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
     "jcadObject": {
       "title": "IJCadObject",
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "visible"],
+      "required": [
+        "name",
+        "visible"
+      ],
       "properties": {
         "name": {
           "type": "string"
@@ -55,7 +91,7 @@
           "type": "object"
         },
         "shapeMetadata": {
-          "type": "object"
+          "$ref": "#/definitions/shapeMetadata"
         },
         "operators": {
           "type": "array",

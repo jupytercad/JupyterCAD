@@ -276,9 +276,3 @@ export interface IAnnotationModel {
 
   addContent(id: string, value: string): void;
 }
-
-export interface IShapeMetadata {
-  mass: number;
-  centerOfMass: number[];
-  matrixOfInertia: number[][];
-}

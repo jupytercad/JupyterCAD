@@ -1,7 +1,7 @@
 import { TopoDS_Shape } from '@jupytercad/jupytercad-opencascade';
 
-import { IJCadContent, Parts } from '../_interface/jcad';
-import { IDict, IShapeMetadata } from '../types';
+import { IJCadContent, Parts, IShapeMetadata } from '../_interface/jcad';
+import { IDict } from '../types';
 import { hashCode } from './utils';
 import { getOcc } from './actions';
 
@@ -24,7 +24,11 @@ const BOOLEAN_OPERATORS = [
   'Part::MultiCommon'
 ] as const;
 
-const MISC_OPERATORS = ['BrepFile', 'Sketcher::SketchObject'] as const;
+const MISC_OPERATORS = [
+  'BrepFile',
+  'Sketcher::SketchObject',
+  'Part::Any'
+] as const;
 
 export function expand_operator(
   name: Parts | 'BrepFile',
