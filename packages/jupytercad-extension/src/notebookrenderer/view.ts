@@ -26,6 +26,7 @@ export class NotebookRenderer extends Panel implements IRenderMime.IRenderer {
     this._jcadModel?.dispose();
     super.dispose();
   }
+
   async renderModel(mimeModel: IRenderMime.IMimeModel): Promise<void> {
     const { commId } = JSON.parse(mimeModel.data[this._mimeType] as string) as {
       commId: string;

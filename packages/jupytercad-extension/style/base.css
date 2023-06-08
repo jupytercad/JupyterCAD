@@ -382,11 +382,11 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
 .highlight {
   background-color: var(--jp-layout-color2) !important;
 }
-.mimerenderer-jupytercad {
+.jupytercad-notebook-widget {
   height: 600px;
   width: 100%;
 }
-.mimerenderer-jupytercad > div {
+.jupytercad-notebook-widget > div {
   height: 100%;
   width: 100%;
 }

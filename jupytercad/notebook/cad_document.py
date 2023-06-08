@@ -40,13 +40,19 @@ class CadDocument(Widget):
     """
 
     def __init__(self, path: Optional[str] = None):
-        comm_data = CadDocument._path_to_comm(path)
+        comm_metadata = CadDocument._path_to_comm(path)
 
-        super().__init__(name="@jupytercad:widget", open_comm=True, comm_data=comm_data)
+        ydoc = Y.YDoc()
+
+        super().__init__(
+            comm_metadata=dict(ymodel_name="@jupytercad:widget", **comm_metadata),
+            ydoc=ydoc,
+        )
+
+        self.ydoc = ydoc
 
         self._objects_array: Union[Y.YArray, None] = None
-        if self.ydoc:
-            self._objects_array = self.ydoc.get_array("objects")
+        self._objects_array = self.ydoc.get_array("objects")
 
     @property
     def objects(self) -> List[str]:
@@ -82,12 +88,9 @@ class CadDocument(Widget):
                 contentType = "jcad"
             else:
                 raise ValueError("File extension is not supported!")
-        comm_data = {
-            "path": path,
-            "format": format,
-            "contentType": contentType,
-        }
-        return comm_data
+        return dict(
+            path=path, format=format, contentType=contentType, create_ydoc=path is None
+        )
 
     def get_object(self, name: str) -> Optional["PythonJcadObject"]:
         if self.check_exist(name):
@@ -519,11 +522,6 @@ class CadDocument(Widget):
             return name in self.objects
         return False
 
-    def render(self) -> Dict:
-        return {
-            "application/FCStd": json.dumps({"commId": self.comm_id}),
-        }
-
     def _get_yobject_by_name(self, name: str) -> Optional[Y.YMap]:
         if self._objects_array:
             for index, item in enumerate(self._objects_array):
@@ -548,9 +546,6 @@ class CadDocument(Widget):
             n += 1
 
         return name
-
-    def _repr_mimebundle_(self, **kwargs):
-        return self.render()
 
 
 class PythonJcadObject(BaseModel):
@@ -582,9 +577,6 @@ class PythonJcadObject(BaseModel):
         __pydantic_self__._caddoc = CadDocument()
         __pydantic_self__._caddoc.add_object(__pydantic_self__)
         __pydantic_self__._parent = parent
-
-    def _repr_mimebundle_(self, **kwargs):
-        return self._caddoc.render()
 
 
 class SingletonMeta(type):

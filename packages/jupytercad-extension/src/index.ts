@@ -22,7 +22,7 @@ import { jcLightIcon } from './tools';
 import { IAnnotationModel } from './types';
 import { JupyterCadWidget } from './widget';
 import { AnnotationModel } from './annotation/model';
-import { notebookRendererPlugin, ypyWidgetManager } from './notebookrenderer';
+import { yJupyterCADWidgetPlugin } from './notebookrenderer';
 import { addCommands, CommandIDs } from './commands';
 
 const NAME_SPACE = 'jupytercad';
@@ -45,7 +45,9 @@ const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
       new URL('./worker', (import.meta as any).url)
     );
 
-    console.log('JupyterLab extension jupytercad is activated!');
+    console.log(
+      'JupyterLab extension jupytercad with my changes is activated!'
+    );
 
     /**
      * Whether there is an active notebook.
@@ -139,6 +141,5 @@ export default [
   fcplugin,
   jcadPlugin,
   annotationPlugin,
-  notebookRendererPlugin,
-  ypyWidgetManager
+  yJupyterCADWidgetPlugin
 ];

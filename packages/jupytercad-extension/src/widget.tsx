@@ -47,6 +47,8 @@ export class JupyterCadPanel extends ReactWidget {
     this.addClass('jp-jupytercad-panel');
     this._jcadModel = options.model;
 
+    console.log('creating jupyter cad panel');
+
     this._view = new ObservableMap<JSONValue>();
   }
 
