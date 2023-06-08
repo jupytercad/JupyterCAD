@@ -2,20 +2,18 @@ from __future__ import annotations
 
 import json
 import logging
+import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
-import tempfile
-
-from pydantic import BaseModel, Extra
 
 import y_py as Y
+from pydantic import BaseModel, Extra
 from ypywidgets.ypywidgets import Widget
 
 from jupytercad.freecad.loader import fc
+from jupytercad.notebook.objects._schema.any import IAny
 
-from .utils import normalize_path
 from .objects import (
-    Parts,
     IBox,
     ICone,
     ICut,
@@ -25,7 +23,10 @@ from .objects import (
     IIntersection,
     ISphere,
     ITorus,
+    Parts,
+    ShapeMetadata,
 )
+from .utils import normalize_path
 
 logger = logging.getLogger(__file__)
 
@@ -120,7 +121,7 @@ class CadDocument(Widget):
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
-        Add an Open Cascade TopoDS shape to the document.
+        Add an OpenCascade TopoDS shape to the document.
         You need `pythonocc-core` installed in order to use this method.
 
         :param shape: The Open Cascade shape to add.
@@ -135,13 +136,18 @@ class CadDocument(Widget):
         except ImportError:
             raise RuntimeError("Cannot add an OpenCascade shape if it's not installed.")
 
+        shape_name = name if name else self._new_name("Shape")
+        if self.check_exist(shape_name):
+            logger.error(f"Object {shape_name} already exists")
+            return
+
         with tempfile.NamedTemporaryFile() as tmp:
             breptools_Write(shape, tmp.name, True, False, 1)
             brepdata = tmp.read().decode("ascii")
 
         data = {
             "shape": "Part::Any",
-            "name": name if name else self._new_name("Shape"),
+            "name": shape_name,
             "parameters": {
                 "Shape": brepdata,
                 "Placement": {
@@ -556,6 +562,7 @@ class PythonJcadObject(BaseModel):
     name: str
     shape: Parts
     parameters: Union[
+        IAny,
         IBox,
         ICone,
         ICut,
@@ -566,7 +573,7 @@ class PythonJcadObject(BaseModel):
         ISphere,
         ITorus,
     ]
-
+    metadata: Optional[ShapeMetadata]
     _caddoc = Optional[CadDocument]
     _parent = Optional[CadDocument]
 
@@ -603,6 +610,7 @@ class ObjectFactoryManager(metaclass=SingletonMeta):
     ) -> Optional[PythonJcadObject]:
         object_type = data.get("shape", None)
         name: str = data.get("name", None)
+        meta = data.get("shapeMetadata", None)
         if object_type and object_type in self._factories:
             Model = self._factories[object_type]
             args = {}
@@ -615,6 +623,7 @@ class ObjectFactoryManager(metaclass=SingletonMeta):
                 name=name,
                 shape=object_type,
                 parameters=obj_params,
+                metadata=meta,
             )
 
         return None
@@ -622,6 +631,7 @@ class ObjectFactoryManager(metaclass=SingletonMeta):
 
 OBJECT_FACTORY = ObjectFactoryManager()
 
+OBJECT_FACTORY.register_factory(Parts.Part__Any.value, IAny)
 OBJECT_FACTORY.register_factory(Parts.Part__Box.value, IBox)
 OBJECT_FACTORY.register_factory(Parts.Part__Cone.value, ICone)
 OBJECT_FACTORY.register_factory(Parts.Part__Cut.value, ICut)

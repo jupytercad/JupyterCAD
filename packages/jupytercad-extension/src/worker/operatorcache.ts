@@ -1,10 +1,14 @@
 import { TopoDS_Shape } from '@jupytercad/jupytercad-opencascade';
 
-import { IJCadContent, Parts } from '../_interface/jcad';
+import { IJCadContent, Parts, IShapeMetadata } from '../_interface/jcad';
 import { IDict } from '../types';
 import { hashCode } from './utils';
+import { getOcc } from './actions';
 
-const SHAPE_CACHE = new Map<string, TopoDS_Shape>();
+const SHAPE_CACHE = new Map<
+  string,
+  { occShape: TopoDS_Shape; metadata?: IShapeMetadata | undefined }
+>();
 
 const PRIMITIVE_OPERATORS = [
   'Part::Box',
@@ -20,7 +24,11 @@ const BOOLEAN_OPERATORS = [
   'Part::MultiCommon'
 ] as const;
 
-const MISC_OPERATORS = ['BrepFile', 'Sketcher::SketchObject'] as const;
+const MISC_OPERATORS = [
+  'BrepFile',
+  'Sketcher::SketchObject',
+  'Part::Any'
+] as const;
 
 export function expand_operator(
   name: Parts | 'BrepFile',
@@ -104,21 +112,60 @@ export function expand_operator(
   return expanded_args;
 }
 
+export function shape_meta_data(shape: TopoDS_Shape): IShapeMetadata {
+  const occ = getOcc();
+  const system = new occ.GProp_GProps_1();
+  occ.BRepGProp.VolumeProperties_1(shape, system, false, false, false);
+  const mass = system.Mass();
+  const centerOfMass = system.CentreOfMass();
+  const matrixOfInertia = system.MatrixOfInertia();
+
+  return {
+    mass,
+    centerOfMass: [centerOfMass.X(), centerOfMass.Y(), centerOfMass.Z()],
+    matrixOfInertia: [
+      [
+        matrixOfInertia.Row(0).X(),
+        matrixOfInertia.Row(0).Y(),
+        matrixOfInertia.Row(0).Z()
+      ],
+      [
+        matrixOfInertia.Row(1).X(),
+        matrixOfInertia.Row(1).Y(),
+        matrixOfInertia.Row(1).Z()
+      ],
+      [
+        matrixOfInertia.Row(2).X(),
+        matrixOfInertia.Row(2).Y(),
+        matrixOfInertia.Row(2).Z()
+      ]
+    ]
+  };
+}
 export function operatorCache<T>(
   name: Parts | 'BrepFile',
   ops: (args: T, content: IJCadContent) => TopoDS_Shape | undefined
 ) {
-  return (args: T, content: IJCadContent): TopoDS_Shape | undefined => {
+  return (
+    args: T,
+    content: IJCadContent
+  ):
+    | { occShape: TopoDS_Shape; metadata?: IShapeMetadata | undefined }
+    | undefined => {
     const expandedArgs = expand_operator(name, args, content);
     const hash = `${hashCode(JSON.stringify(expandedArgs))}`;
     if (SHAPE_CACHE.has(hash)) {
       return SHAPE_CACHE.get(hash)!;
     } else {
-      const shape = ops(args, content);
-      if (shape) {
-        SHAPE_CACHE.set(hash, shape);
+      const occShape = ops(args, content);
+      if (occShape) {
+        const cacheData = {
+          occShape,
+          metadata: shape_meta_data(occShape)
+        };
+        SHAPE_CACHE.set(hash, cacheData);
+        return cacheData;
       }
-      return shape;
     }
   };
 }

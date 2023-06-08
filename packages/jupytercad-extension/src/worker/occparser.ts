@@ -1,4 +1,4 @@
-import { IDict } from '../types';
+import { IDict, IParsedShape } from '../types';
 import {
   Handle_Poly_Triangulation,
   OpenCascadeInstance,
@@ -7,9 +7,10 @@ import {
 
 import { IJCadObject } from '../_interface/jcad';
 import { IEdge, IFace } from '../types';
+import { IOperatorFuncOutput } from './types';
 
 interface IShapeList {
-  occShape: TopoDS_Shape;
+  shapeData: IOperatorFuncOutput;
   jcObject: IJCadObject;
 }
 
@@ -21,25 +22,12 @@ export class OccParser {
     this._shapeList = shapeList;
   }
 
-  execute(): {
-    [key: string]: {
-      jcObject: IJCadObject;
-      faceList: Array<IFace>;
-      edgeList: Array<IEdge>;
-      guiData?: IDict;
-    };
-  } {
+  execute(): IDict<IParsedShape> {
     const maxDeviation = 0.1;
-    const theejsData: {
-      [key: string]: {
-        jcObject: IJCadObject;
-        faceList: Array<IFace>;
-        edgeList: Array<IEdge>;
-      };
-    } = {};
+    const theejsData: IDict<IParsedShape> = {};
     this._shapeList.forEach(data => {
-      const { occShape, jcObject } = data;
-
+      const { shapeData, jcObject } = data;
+      const { occShape, metadata } = shapeData;
       new this._occ.BRepMesh_IncrementalMesh_2(
         occShape,
         maxDeviation,
@@ -58,7 +46,8 @@ export class OccParser {
       theejsData[jcObject.name] = {
         jcObject,
         faceList,
-        edgeList: [...edgeList, ...wireList]
+        edgeList: [...edgeList, ...wireList],
+        meta: metadata
       };
     });
 

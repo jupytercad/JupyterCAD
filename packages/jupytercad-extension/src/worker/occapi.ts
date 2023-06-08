@@ -18,15 +18,19 @@ import { _GeomLine } from './geometry/geomLineSegment';
 import { operatorCache } from './operatorcache';
 import { IAllOperatorFunc, IOperatorArg } from './types';
 import { toRad } from './utils';
+import { IAny } from '../_interface/any';
 
 function setShapePlacement(
   shape: TopoDS_Shape,
-  placement: {
+  placement?: {
     Position: number[];
     Axis: number[];
     Angle: number;
   }
 ): TopoDS_Shape {
+  if (!placement) {
+    return shape;
+  }
   const oc = getOcc();
   const trsf = new oc.gp_Trsf_1();
 
@@ -135,7 +139,7 @@ function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
     if (base && tool) {
       baseObject[0].visible = false;
       toolObject[0].visible = false;
-      const operator = new oc.BRepAlgoAPI_Cut_3(base, tool);
+      const operator = new oc.BRepAlgoAPI_Cut_3(base.occShape, tool.occShape);
       if (operator.IsDone()) {
         return setShapePlacement(operator.Shape(), Placement);
       }
@@ -249,7 +253,11 @@ function _Extrude(
     }
     const dirVec = new oc.gp_Vec_4(Dir[0], Dir[1], Dir[2]);
     const vec = dirVec.Multiplied(LengthFwd + LengthRev);
-    let baseCopy = new oc.BRepBuilderAPI_Copy_2(base, true, false).Shape();
+    let baseCopy = new oc.BRepBuilderAPI_Copy_2(
+      base.occShape,
+      true,
+      false
+    ).Shape();
     if (LengthRev !== 0) {
       const mov = new oc.gp_Trsf_1();
       mov.SetTranslation_1(dirVec.Multiplied(-LengthRev));
@@ -290,6 +298,17 @@ function _Extrude(
   return;
 }
 
+export function _Any(
+  arg: IAny,
+  content: IJCadContent
+): TopoDS_Shape | undefined {
+  const { Shape, Placement } = arg;
+  const result = _loadBrep({ content: Shape });
+  if (result) {
+    return setShapePlacement(result, Placement);
+  }
+}
+
 export function _loadBrep(arg: { content: string }): TopoDS_Shape | undefined {
   const oc = getOcc();
   const fakeFileName = `${uuid()}.brep`;
@@ -302,6 +321,7 @@ export function _loadBrep(arg: { content: string }): TopoDS_Shape | undefined {
   return shape;
 }
 
+const Any = operatorCache<IAny>('Part::Any', _Any);
 const Box = operatorCache<IBox>('Part::Box', _Box);
 
 const Cylinder = operatorCache<ICylinder>('Part::Cylinder', _Cylinder);
@@ -336,6 +356,7 @@ export const BrepFile = operatorCache<{ content: string }>(
 export const ShapesFactory: {
   [key in Parts]: IAllOperatorFunc;
 } = {
+  'Part::Any': Any,
   'Part::Box': Box,
   'Part::Cylinder': Cylinder,
   'Part::Sphere': Sphere,

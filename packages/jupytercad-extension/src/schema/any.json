@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "description": "Part::Any",
+  "title": "IAny",
+  "required": ["Shape"],
+  "additionalProperties": false,
+  "properties": {
+    "Shape": {
+      "type": "string",
+      "description": "The BREP string of the shape"
+    },
+    "Placement": {
+      "$ref": "./placement.json"
+    }
+  }
+}

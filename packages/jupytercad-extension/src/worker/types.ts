@@ -1,4 +1,4 @@
-import { IJCadContent } from '../_interface/jcad';
+import { IJCadContent, IShapeMetadata } from '../_interface/jcad';
 import { TopoDS_Shape } from '@jupytercad/jupytercad-opencascade';
 import { IBox } from '../_interface/box';
 import { ICylinder } from '../_interface/cylinder';
@@ -10,13 +10,20 @@ import { IFuse } from '../_interface/fuse';
 import { IIntersection } from '../_interface/intersection';
 import { ISketchObject } from '../_interface/sketch';
 import { IExtrusion } from '../_interface/extrusion';
+import { IAny } from '../_interface/any';
+
+export interface IOperatorFuncOutput {
+  occShape: TopoDS_Shape;
+  metadata?: IShapeMetadata | undefined;
+}
 
 type IOperatorFunc<T> = (
   args: T,
   jcadContent: IJCadContent
-) => TopoDS_Shape | undefined;
+) => IOperatorFuncOutput | undefined;
 
 export type IAllOperatorFunc =
+  | IOperatorFunc<IAny>
   | IOperatorFunc<IBox>
   | IOperatorFunc<ICylinder>
   | IOperatorFunc<ISphere>
@@ -27,7 +34,8 @@ export type IAllOperatorFunc =
   | IOperatorFunc<IIntersection>
   | IOperatorFunc<IExtrusion>
   | IOperatorFunc<ISketchObject>;
-export type IOperatorArg = IBox &
+export type IOperatorArg = IAny &
+  IBox &
   ICylinder &
   ISphere &
   ICone &
