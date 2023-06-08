@@ -1,9 +1,7 @@
 {
   "type": "object",
   "title": "IJCadContent",
-  "required": [
-    "objects"
-  ],
+  "required": ["objects"],
   "additionalProperties": false,
   "properties": {
     "objects": {
@@ -42,11 +40,7 @@
     "shapeMetadata": {
       "title": "IShapeMetadata",
       "type": "object",
-      "required": [
-        "mass",
-        "centerOfMass",
-        "matrixOfInertia"
-      ],
+      "required": ["mass", "centerOfMass", "matrixOfInertia"],
       "additionalProperties": false,
       "properties": {
         "mass": {
@@ -73,10 +67,7 @@
       "title": "IJCadObject",
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "name",
-        "visible"
-      ],
+      "required": ["name", "visible"],
       "properties": {
         "name": {
           "type": "string"

@@ -573,7 +573,7 @@ class PythonJcadObject(BaseModel):
         ISphere,
         ITorus,
     ]
-    shapeMetadata: Optional[ShapeMetadata]
+    metadata: Optional[ShapeMetadata]
     _caddoc = Optional[CadDocument]
     _parent = Optional[CadDocument]
 
@@ -608,9 +608,9 @@ class ObjectFactoryManager(metaclass=SingletonMeta):
     def create_object(
         self, data: Dict, parent: Optional[CadDocument] = None
     ) -> Optional[PythonJcadObject]:
-        print('###########DATA', data)
         object_type = data.get("shape", None)
         name: str = data.get("name", None)
+        meta = data.get("shapeMetadata", None)
         if object_type and object_type in self._factories:
             Model = self._factories[object_type]
             args = {}
@@ -623,6 +623,7 @@ class ObjectFactoryManager(metaclass=SingletonMeta):
                 name=name,
                 shape=object_type,
                 parameters=obj_params,
+                metadata=meta,
             )
 
         return None
