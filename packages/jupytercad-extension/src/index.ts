@@ -45,9 +45,7 @@ const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
       new URL('./worker', (import.meta as any).url)
     );
 
-    console.log(
-      'JupyterLab extension jupytercad with my changes is activated!'
-    );
+    console.log('JupyterLab extension jupytercad is activated!');
 
     /**
      * Whether there is an active notebook.
