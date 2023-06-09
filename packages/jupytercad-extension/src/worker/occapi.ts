@@ -150,7 +150,7 @@ function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
 function _Fuse(arg: IFuse, content: IJCadContent): TopoDS_Shape | undefined {
   const oc = getOcc();
   const { Shapes, Placement } = arg;
-  const occShapes: any = [];
+  const occShapes: TopoDS_Shape[] = [];
   Shapes.forEach(Base => {
     const baseObject = content.objects.filter(obj => obj.name === Base);
     if (baseObject.length === 0) {
@@ -162,8 +162,10 @@ function _Fuse(arg: IFuse, content: IJCadContent): TopoDS_Shape | undefined {
         baseObject[0].parameters as IOperatorArg,
         content
       );
-      occShapes.push(base);
-      baseObject[0].visible = false;
+      if (base) {
+        occShapes.push(base.occShape);
+        baseObject[0].visible = false;
+      }
     }
   });
   const operator = new oc.BRepAlgoAPI_Fuse_3(occShapes[0], occShapes[1]);
@@ -179,7 +181,7 @@ function _Intersection(
 ): TopoDS_Shape | undefined {
   const oc = getOcc();
   const { Shapes, Placement } = arg;
-  const occShapes: any = [];
+  const occShapes: TopoDS_Shape[] = [];
   Shapes.forEach(Base => {
     const baseObject = content.objects.filter(obj => obj.name === Base);
     if (baseObject.length === 0) {
@@ -191,8 +193,10 @@ function _Intersection(
         baseObject[0].parameters as IOperatorArg,
         content
       );
-      occShapes.push(base);
-      baseObject[0].visible = false;
+      if (base) {
+        occShapes.push(base.occShape);
+        baseObject[0].visible = false;
+      }
     }
   });
   const operator = new oc.BRepAlgoAPI_Common_3(occShapes[0], occShapes[1]);
