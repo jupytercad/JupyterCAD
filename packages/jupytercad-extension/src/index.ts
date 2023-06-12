@@ -22,7 +22,7 @@ import { jcLightIcon } from './tools';
 import { IAnnotationModel } from './types';
 import { JupyterCadWidget } from './widget';
 import { AnnotationModel } from './annotation/model';
-import { notebookRendererPlugin, ypyWidgetManager } from './notebookrenderer';
+import { yJupyterCADWidgetPlugin } from './notebookrenderer';
 import { addCommands, CommandIDs } from './commands';
 
 const NAME_SPACE = 'jupytercad';
@@ -139,6 +139,5 @@ export default [
   fcplugin,
   jcadPlugin,
   annotationPlugin,
-  notebookRendererPlugin,
-  ypyWidgetManager
+  yJupyterCADWidgetPlugin
 ];

@@ -79,7 +79,8 @@
         "styled-components": "^5.3.6",
         "three": "^0.135.0",
         "three-mesh-bvh": "^0.5.17",
-        "uuid": "^8.3.2"
+        "uuid": "^8.3.2",
+        "yjs-widgets": "^0.3.3"
     },
     "devDependencies": {
         "@apidevtools/json-schema-ref-parser": "^9.0.9",
@@ -108,6 +109,10 @@
         "webpackConfig": "./extension.webpack.config.js",
         "sharedPackages": {
             "yjs": {
+                "bundled": false,
+                "singleton": true
+            },
+            "yjs-widgets": {
                 "bundled": false,
                 "singleton": true
             }

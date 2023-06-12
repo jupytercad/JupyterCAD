@@ -67,7 +67,7 @@ async function main(): Promise<void> {
   // populate the list of disabled extensions
   const disabled: any[] = [
     'jupytercad:serverInfoPlugin',
-    'jupytercad:notebookRenderer'
+    'jupytercad:yjswidget-plugin'
   ];
 
   /**
