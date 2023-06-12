@@ -888,6 +888,7 @@ __metadata:
     typescript: ^5
     webpack: ^5.76.3
     yjs: ^13.5.40
+    yjs-widgets: ^0.3.4
   languageName: unknown
   linkType: soft
 
@@ -12433,7 +12434,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yjs-widgets@npm:^0.3.3":
+"yjs-widgets@npm:^0.3.3, yjs-widgets@npm:^0.3.4":
   version: 0.3.4
   resolution: "yjs-widgets@npm:0.3.4"
   dependencies:

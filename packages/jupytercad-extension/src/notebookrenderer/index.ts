@@ -78,12 +78,17 @@ class YJupyterCADWidget implements IJupyterYWidget {
 export const yJupyterCADWidgetPlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:yjswidget-plugin',
   autoStart: true,
-  requires: [ITranslator, IJupyterYWidgetManager],
+  requires: [ITranslator],
+  optional: [IJupyterYWidgetManager],
   activate: (
     app: JupyterFrontEnd,
     translator: ITranslator,
-    yWidgetManager: IJupyterYWidgetManager
+    yWidgetManager?: IJupyterYWidgetManager
   ): void => {
+    if (!yWidgetManager) {
+      console.error('Missing IJupyterYWidgetManager token!');
+      return;
+    }
     class YJupyterCADModelFactory extends YJupyterCADModel {
       ydocFactory(commMetadata: ICommMetadata): Y.Doc {
         const { path, format, contentType } = commMetadata;

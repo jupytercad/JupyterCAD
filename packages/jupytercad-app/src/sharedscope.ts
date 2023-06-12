@@ -6,3 +6,4 @@ import '@jupyterlab/notebook';
 import '@jupyterlab/rendermime';
 import '@jupyterlab/settingregistry';
 import '@jupyterlab/statedb';
+import 'yjs-widgets';
