@@ -71,8 +71,8 @@ class YJupyterCADWidget implements IJupyterYWidget {
     MessageLoop.sendMessage(widget, Widget.Msg.AfterAttach);
   }
 
-  yModel: YJupyterCADModel;
-  node: HTMLElement;
+  readonly yModel: YJupyterCADModel;
+  readonly node: HTMLElement;
 }
 
 export const yJupyterCADWidgetPlugin: JupyterFrontEndPlugin<void> = {
