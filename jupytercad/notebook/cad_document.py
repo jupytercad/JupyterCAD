@@ -57,7 +57,6 @@ class CadDocument(Widget):
         self._metadata = self.ydoc.get_map("metadata")
         self._options = self.ydoc.get_map("options")
 
-
     @property
     def objects(self) -> List[str]:
         """
