@@ -935,7 +935,7 @@ export class MainView extends React.Component<IProps, IStates> {
           | BasicMesh
           | undefined;
         if (!obj) {
-          return;
+          continue;
         }
         if (
           Object.prototype.hasOwnProperty.call(guidata[objName], 'visibility')

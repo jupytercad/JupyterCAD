@@ -139,8 +139,7 @@ class CadDocument(Widget):
         new_id = f"annotation_${uuid4()}"
         parent_obj = self.get_object(parent)
         if parent_obj is None:
-            logger.error("Parent object not found")
-            return
+            raise ValueError("Parent object not found")
 
         if position is None:
             position = (
