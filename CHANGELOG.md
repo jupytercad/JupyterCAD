@@ -2,6 +2,39 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.3.0
+
+([Full Changelog](https://github.com/QuantStack/jupytercad/compare/@jupytercad/jupytercad-app@0.2.3...6bed9412184621bcb457dc37c43772b23c386dd9))
+
+### Enhancements made
+
+- Add annotation and color API [#198](https://github.com/QuantStack/jupytercad/pull/198) ([@trungleduc](https://github.com/trungleduc))
+- Update to latest ypywidgets [#194](https://github.com/QuantStack/jupytercad/pull/194) ([@martinRenou](https://github.com/martinRenou))
+- Compute shape properties [#193](https://github.com/QuantStack/jupytercad/pull/193) ([@trungleduc](https://github.com/trungleduc))
+- Add Jupyverse plugin [#179](https://github.com/QuantStack/jupytercad/pull/179) ([@davidbrochart](https://github.com/davidbrochart))
+
+### Bugs fixed
+
+- Fix fuse and intersection operator [#197](https://github.com/QuantStack/jupytercad/pull/197) ([@trungleduc](https://github.com/trungleduc))
+- Hide FreeCAD import message [#187](https://github.com/QuantStack/jupytercad/pull/187) ([@trungleduc](https://github.com/trungleduc))
+
+### Maintenance and upkeep improvements
+
+- Remove mock setting in Galata tests [#188](https://github.com/QuantStack/jupytercad/pull/188) ([@trungleduc](https://github.com/trungleduc))
+
+### Documentation improvements
+
+- Add docs link in the README [#190](https://github.com/QuantStack/jupytercad/pull/190) ([@martinRenou](https://github.com/martinRenou))
+- Add some documentation [#169](https://github.com/QuantStack/jupytercad/pull/169) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/QuantStack/jupytercad/graphs/contributors?from=2023-06-05&to=2023-06-12&type=c))
+
+[@davidbrochart](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Adavidbrochart+updated%3A2023-06-05..2023-06-12&type=Issues) | [@github-actions](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-06-05..2023-06-12&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-06-05..2023-06-12&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Apre-commit-ci+updated%3A2023-06-05..2023-06-12&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-06-05..2023-06-12&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.2.3
 
 ([Full Changelog](https://github.com/QuantStack/jupytercad/compare/@jupytercad/jupytercad-app@0.2.2...a85d44387dbfefd8cd0a068d1d749a676cf5a82b))
@@ -15,8 +48,6 @@
 ([GitHub contributors page for this release](https://github.com/QuantStack/jupytercad/graphs/contributors?from=2023-06-03&to=2023-06-05&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-06-03..2023-06-05&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.2.2
 
