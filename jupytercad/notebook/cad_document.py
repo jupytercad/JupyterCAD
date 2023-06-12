@@ -51,7 +51,6 @@ class CadDocument(Widget):
 
         self.ydoc = ydoc
 
-        self._objects_array: Union[Y.YArray, None] = None
         self._objects_array = self.ydoc.get_array("objects")
 
     @property
