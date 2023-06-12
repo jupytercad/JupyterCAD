@@ -60,7 +60,7 @@ class YFCStd(YBaseDoc):
         self._subscriptions[self._yobjects] = self._yobjects.observe_deep(
             partial(callback, "objects")
         )
-        self._subscriptions[self._yoptions] = self._yoptions.observe(
+        self._subscriptions[self._yoptions] = self._yoptions.observe_deep(
             partial(callback, "options")
         )
         self._subscriptions[self._ymeta] = self._ymeta.observe_deep(

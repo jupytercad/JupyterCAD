@@ -1,4 +1,5 @@
 from __future__ import annotations
+from copy import deepcopy
 
 import json
 import logging
@@ -12,6 +13,7 @@ from ypywidgets.ypywidgets import Widget
 
 from jupytercad.freecad.loader import fc
 from jupytercad.notebook.objects._schema.any import IAny
+from uuid import uuid4
 
 from .objects import (
     IBox,
@@ -52,6 +54,8 @@ class CadDocument(Widget):
         self.ydoc = ydoc
 
         self._objects_array = self.ydoc.get_array("objects")
+        self._metadata = self.ydoc.get_map("metadata")
+        self._options = self.ydoc.get_map("options")
 
     @property
     def objects(self) -> List[str]:
@@ -113,6 +117,86 @@ class CadDocument(Widget):
         else:
             logger.error(f"Object {new_object.name} already exists")
         return self
+
+    def add_annotation(
+        self,
+        parent: str,
+        message: str,
+        *,
+        position: Optional[List[float]] = None,
+        user: Optional[Dict] = None,
+    ) -> Optional[str]:
+        """
+        Add an annotation to the document.
+
+        :param parent: The object which holds the annotation.
+        :param message: The first messages in the annotation.
+        :param position: The position of the annotation.
+        :param user: The user who create this annotation.
+        :return: The id of the annotation if it is created.
+        """
+        new_id = f"annotation_${uuid4()}"
+        parent_obj = self.get_object(parent)
+        if parent_obj is None:
+            raise ValueError("Parent object not found")
+
+        if position is None:
+            position = (
+                parent_obj.metadata.centerOfMass
+                if parent_obj.metadata is not None
+                else [0, 0, 0]
+            )
+        contents = [{"user": user, "value": message}]
+        if self._metadata is not None:
+            with self.ydoc.begin_transaction() as t:
+                self._metadata.set(
+                    t,
+                    new_id,
+                    json.dumps(
+                        {
+                            "position": position,
+                            "contents": contents,
+                            "parent": parent,
+                        }
+                    ),
+                )
+            return new_id
+
+    def remove_annotation(self, annotation_id: str) -> None:
+        """
+        Remove an annotation from the document.
+
+        :param annotation_id: The id of the annotation
+        """
+        if self._metadata is not None:
+            with self.ydoc.begin_transaction() as t:
+                self._metadata.pop(t, annotation_id, None)
+
+    def set_color(self, object_name: str, color: Optional[List]) -> None:
+        """
+        Set object color.
+
+        :param object_name: Object name.
+        :param color: Color value, set it to `None` to remove color.
+        """
+        if self._options and self.check_exist(object_name):
+            current_gui = self._options.get("guidata")
+            new_gui = None
+            if current_gui is not None:
+                new_gui = deepcopy(current_gui)
+                current_data: Dict = new_gui.get(object_name, {})
+                if color is not None:
+                    current_data["color"] = color
+                else:
+                    current_data.pop("color", None)
+
+                new_gui[object_name] = current_data
+            else:
+                if color is not None:
+                    new_gui = {object_name: {"color": color}}
+            if new_gui is not None:
+                with self.ydoc.begin_transaction() as t:
+                    self._options.set(t, "guidata", new_gui)
 
     def add_occ_shape(
         self,

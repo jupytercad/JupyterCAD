@@ -547,7 +547,6 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     const guidata = this._model.sharedModel.getOption('guidata');
-
     const selectedNames = this._selectedMeshes.map(sel => sel.name);
     this._selectedMeshes = [];
 
@@ -932,21 +931,33 @@ export class MainView extends React.Component<IProps, IStates> {
 
     if (guidata) {
       for (const objName in guidata) {
+        const obj = this._meshGroup?.getObjectByName(objName) as
+          | BasicMesh
+          | undefined;
+        if (!obj) {
+          continue;
+        }
         if (
           Object.prototype.hasOwnProperty.call(guidata[objName], 'visibility')
         ) {
-          const obj = this._meshGroup?.getObjectByName(objName);
           const explodedLineHelper =
             this._explodedViewLinesHelperGroup?.getObjectByName(objName);
           const objGuiData = guidata[objName];
 
-          if (obj && objGuiData) {
+          if (objGuiData) {
             obj.visible = objGuiData['visibility'];
 
             if (explodedLineHelper) {
               explodedLineHelper.visible = objGuiData['visibility'];
             }
           }
+        }
+        if ('color' in guidata[objName]) {
+          const rgba = guidata[objName]['color'] as number[];
+          const color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
+          obj.material.color = color;
+        } else {
+          obj.material.color = DEFAULT_MESH_COLOR;
         }
       }
     }
