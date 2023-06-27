@@ -13,7 +13,13 @@ JupyterCAD has support for FreeCAD files, which makes it easy to import and expo
 
 ## Installation
 
-You can install JupyterCAD using pip:
+You can install JupyterCAD using conda/mamba (this installs freecad automatically):
+
+```bash
+mamba install -c conda-forge jupytercad
+```
+
+Or using pip:
 
 ```bash
 pip install jupytercad
