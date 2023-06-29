@@ -137,7 +137,7 @@ export type ExplodedView = {
  * The state of the camera
  */
 export type CameraSettings = {
-  type: "Perspective" | "Orthographic";
+  type: 'Perspective' | 'Orthographic';
 };
 
 export interface IJcadObjectDocChange {

@@ -399,7 +399,7 @@ const CAMERA_FORM = {
   },
   default: (panel: JupyterCadPanel) => {
     return {
-      Type: panel.cameraSettings?.type ?? "Perspective"
+      Type: panel.cameraSettings?.type ?? 'Perspective'
     };
   },
   syncData: (panel: JupyterCadPanel) => {

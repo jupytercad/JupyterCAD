@@ -1058,7 +1058,12 @@ export class MainView extends React.Component<IProps, IStates> {
       const width = this.divRef.current?.clientWidth || 0;
       const height = this.divRef.current?.clientHeight || 0;
 
-      this._camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2);
+      this._camera = new THREE.OrthographicCamera(
+        width / -2,
+        width / 2,
+        height / 2,
+        height / -2
+      );
     }
 
     this._camera.add(this._cameraLight);
