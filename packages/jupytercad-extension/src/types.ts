@@ -133,6 +133,13 @@ export type ExplodedView = {
   factor: number;
 };
 
+/**
+ * The state of the camera
+ */
+export type CameraSettings = {
+  type: "Perspective" | "Orthographic";
+};
+
 export interface IJcadObjectDocChange {
   objectChange?: Array<{
     name: string;

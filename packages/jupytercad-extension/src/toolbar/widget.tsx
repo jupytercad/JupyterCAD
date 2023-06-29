@@ -164,6 +164,14 @@ export class ToolbarWidget extends Toolbar {
           commands: options.commands
         })
       );
+      this.addItem(
+        'Camera Settings',
+        new CommandToolbarButton({
+          id: CommandIDs.updateCameraSettings,
+          label: '',
+          commands: options.commands
+        })
+      );
 
       this.addItem('spacer', Toolbar.createSpacerItem());
 

@@ -17,6 +17,7 @@ import { v4 as uuid } from 'uuid';
 
 import {
   AxeHelper,
+  CameraSettings,
   ExplodedView,
   IAnnotation,
   IDict,
@@ -32,7 +33,6 @@ import {
 } from './types';
 import { FloatingAnnotation } from './annotation/view';
 import { getCSSVariableColor, throttle } from './tools';
-import { Vector2 } from 'three';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -238,9 +238,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._scene.add(new THREE.AmbientLight(0xffffff, 0.5)); // soft white light
 
-      const light = new THREE.PointLight(0xffffff, 1);
+      this._cameraLight = new THREE.PointLight(0xffffff, 1);
 
-      this._camera.add(light);
+      this._camera.add(this._cameraLight);
 
       this._scene.add(this._camera);
 
@@ -367,8 +367,15 @@ export class MainView extends React.Component<IProps, IStates> {
         this.divRef.current.clientHeight,
         false
       );
-      this._camera.aspect =
-        this.divRef.current.clientWidth / this.divRef.current.clientHeight;
+      if (this._camera.type === 'PerspectiveCamera') {
+        this._camera.aspect =
+          this.divRef.current.clientWidth / this.divRef.current.clientHeight;
+      } else {
+        this._camera.left = this.divRef.current.clientWidth / -2;
+        this._camera.right = this.divRef.current.clientWidth / 2;
+        this._camera.top = this.divRef.current.clientHeight / 2;
+        this._camera.bottom = this.divRef.current.clientHeight / -2;
+      }
       this._camera.updateProjectionMatrix();
     }
   };
@@ -406,7 +413,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     copy.project(this._camera);
 
-    return new Vector2(
+    return new THREE.Vector2(
       (0.5 + copy.x / 2) * canvas.width,
       (0.5 - copy.y / 2) * canvas.height
     );
@@ -986,6 +993,16 @@ export class MainView extends React.Component<IProps, IStates> {
         this._setupExplodedView();
       }
     }
+
+    if (change.key === 'cameraSettings') {
+      const cameraSettings = change.newValue as CameraSettings | undefined;
+
+      if (change.type !== 'remove' && cameraSettings) {
+        this._cameraSettings = cameraSettings;
+
+        this._updateCamera();
+      }
+    }
   }
 
   private _setupExplodedView() {
@@ -1026,6 +1043,31 @@ export class MainView extends React.Component<IProps, IStates> {
       }
       this._explodedViewLinesHelperGroup?.removeFromParent();
     }
+  }
+
+  private _updateCamera() {
+    const position = new THREE.Vector3().copy(this._camera.position);
+    const up = new THREE.Vector3().copy(this._camera.up);
+
+    this._camera.remove(this._cameraLight);
+    this._scene.remove(this._camera);
+
+    if (this._cameraSettings.type === 'Perspective') {
+      this._camera = new THREE.PerspectiveCamera(90, 2, 0.1, 1000);
+    } else {
+      const width = this.divRef.current?.clientWidth || 0;
+      const height = this.divRef.current?.clientHeight || 0;
+
+      this._camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2);
+    }
+
+    this._camera.add(this._cameraLight);
+
+    this._scene.add(this._camera);
+    this._controls.object = this._camera;
+
+    this._camera.position.copy(position);
+    this._camera.up.copy(up);
   }
 
   private _computeExplodedState(mesh: BasicMesh) {
@@ -1179,9 +1221,11 @@ export class MainView extends React.Component<IProps, IStates> {
   // TODO Make this a shared property
   private _explodedView: ExplodedView = { enabled: false, factor: 0 };
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
+  private _cameraSettings: CameraSettings = { type: 'Perspective' };
 
   private _scene: THREE.Scene; // Threejs scene
-  private _camera: THREE.PerspectiveCamera; // Threejs camera
+  private _camera: THREE.PerspectiveCamera | THREE.OrthographicCamera; // Threejs camera
+  private _cameraLight: THREE.PointLight;
   private _raycaster = new THREE.Raycaster();
   private _renderer: THREE.WebGLRenderer; // Threejs render
   private _requestID: any = null; // ID of window.requestAnimationFrame
