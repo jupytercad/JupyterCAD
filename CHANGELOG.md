@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.3.3
+
+([Full Changelog](https://github.com/QuantStack/jupytercad/compare/@jupytercad/jupytercad-app@0.3.2...e461738f2333d5c4e86ae3fcedc226776f37cbcb))
+
+### Enhancements made
+
+- Allow changing camera settings [#204](https://github.com/QuantStack/jupytercad/pull/204) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Fix check release [#205](https://github.com/QuantStack/jupytercad/pull/205) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Add conda instructions [#202](https://github.com/QuantStack/jupytercad/pull/202) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/QuantStack/jupytercad/graphs/contributors?from=2023-06-15&to=2023-06-29&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-06-15..2023-06-29&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-06-15..2023-06-29&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-06-15..2023-06-29&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.3.2
 
 ([Full Changelog](https://github.com/QuantStack/jupytercad/compare/@jupytercad/jupytercad-app@0.3.1...d9160970cc477eff9ec9657e4731d327aa8aaa5d))
@@ -15,8 +39,6 @@
 ([GitHub contributors page for this release](https://github.com/QuantStack/jupytercad/graphs/contributors?from=2023-06-12&to=2023-06-15&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-06-12..2023-06-15&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.3.1
 
