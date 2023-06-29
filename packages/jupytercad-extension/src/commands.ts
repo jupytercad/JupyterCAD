@@ -382,6 +382,36 @@ const EXPLODED_VIEW_FORM = {
   }
 };
 
+const CAMERA_FORM = {
+  title: 'Camera Settings',
+  schema: {
+    type: 'object',
+    required: ['Type'],
+    additionalProperties: false,
+    properties: {
+      Type: {
+        title: 'Projection',
+        description: 'The projection type',
+        type: 'string',
+        enum: ['Perspective', 'Orthographic']
+      }
+    }
+  },
+  default: (panel: JupyterCadPanel) => {
+    return {
+      Type: panel.cameraSettings?.type ?? 'Perspective'
+    };
+  },
+  syncData: (panel: JupyterCadPanel) => {
+    return (props: IDict) => {
+      const { Type } = props;
+      panel.cameraSettings = {
+        type: Type
+      };
+    };
+  }
+};
+
 /**
  * Add the FreeCAD commands to the application's command registry.
  */
@@ -551,6 +581,29 @@ export function addCommands(
       await dialog.launch();
     }
   });
+
+  commands.addCommand(CommandIDs.updateCameraSettings, {
+    label: trans.__('Camera Settings'),
+    isEnabled: () => Boolean(tracker.currentWidget),
+    iconClass: 'fa fa-camera',
+    execute: async () => {
+      const current = tracker.currentWidget;
+
+      if (!current) {
+        return;
+      }
+
+      const dialog = new FormDialog({
+        context: current.context,
+        title: CAMERA_FORM.title,
+        schema: CAMERA_FORM.schema,
+        sourceData: CAMERA_FORM.default(current.content),
+        syncData: CAMERA_FORM.syncData(current.content),
+        cancelButton: true
+      });
+      await dialog.launch();
+    }
+  });
 }
 
 /**
@@ -575,6 +628,7 @@ export namespace CommandIDs {
 
   export const updateAxes = 'jupytercad:updateAxes';
   export const updateExplodedView = 'jupytercad:updateExplodedView';
+  export const updateCameraSettings = 'jupytercad:updateCameraSettings';
 }
 
 namespace Private {

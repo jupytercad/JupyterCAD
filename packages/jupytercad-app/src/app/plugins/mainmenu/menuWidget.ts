@@ -159,6 +159,10 @@ export class MainMenu extends MenuBar {
       type: 'command',
       command: CommandIDs.updateAxes
     });
+    menu.addItem({
+      type: 'command',
+      command: CommandIDs.updateCameraSettings
+    });
 
     const themeMenu = new RankedMenu({
       commands: this._commands,

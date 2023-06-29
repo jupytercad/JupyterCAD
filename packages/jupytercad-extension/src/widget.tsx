@@ -9,6 +9,7 @@ import { MainView } from './mainview';
 import {
   AxeHelper,
   ExplodedView,
+  CameraSettings,
   IJupyterCadModel,
   IJupyterCadWidget
 } from './types';
@@ -82,6 +83,14 @@ export class JupyterCadPanel extends ReactWidget {
 
   set explodedView(value: ExplodedView | undefined) {
     this._view.set('explodedView', value || null);
+  }
+
+  get cameraSettings(): CameraSettings | undefined {
+    return this._view.get('cameraSettings') as CameraSettings | undefined;
+  }
+
+  set cameraSettings(value: CameraSettings | undefined) {
+    this._view.set('cameraSettings', value || null);
   }
 
   deleteAxes(): void {
