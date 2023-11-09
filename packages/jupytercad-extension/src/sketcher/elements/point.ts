@@ -1,7 +1,11 @@
 import { IPoint, IPosition } from '../types';
 
 export class Point implements IPoint {
-  constructor(x: number, y: number, public option?: { color: string }) {
+  constructor(
+    x: number,
+    y: number,
+    public option?: { color: string }
+  ) {
     this._x = x;
     this._y = y;
   }
