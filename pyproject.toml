@@ -19,7 +19,7 @@ dependencies = [
     "ypywidgets>=0.4.1,<0.5.0",
     "yjs-widgets>=0.3.4,<0.4",
     "comm>=0.1.2,<0.2.0",
-    "pydantic",
+    "pydantic>=2,<3",
 ]
 classifiers = [
     "License :: OSI Approved :: BSD License",
