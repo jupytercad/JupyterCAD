@@ -7,9 +7,9 @@
         "jupyterlab",
         "jupyterlab-extension"
     ],
-    "homepage": "https://github.com/QuantStack/jupytercad",
+    "homepage": "https://github.com/jupyter-cad/jupytercad",
     "bugs": {
-        "url": "https://github.com/QuantStack/jupytercad/issues"
+        "url": "https://github.com/jupyter-cad/jupytercad/issues"
     },
     "license": "BSD-3-Clause",
     "author": {
@@ -24,7 +24,7 @@
     "style": "style/index.css",
     "repository": {
         "type": "git",
-        "url": "https://github.com/QuantStack/jupytercad.git"
+        "url": "https://github.com/jupyter-cad/jupytercad.git"
     },
     "scripts": {
         "build": "jlpm build:schema && jlpm run build:lib && jlpm run build:worker && jlpm run build:labextension:dev",

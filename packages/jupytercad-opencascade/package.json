@@ -6,9 +6,9 @@
     "jupyter",
     "jupyterlab"
   ],
-  "homepage": "https://github.com/QuantStack/jupytercad",
+  "homepage": "https://github.com/jupyter-cad/jupytercad",
   "bugs": {
-    "url": "https://github.com/QuantStack/jupytercad/issues"
+    "url": "https://github.com/jupyter-cad/jupytercad/issues"
   },
   "license": "BSD-3-Clause",
   "author": {
@@ -23,7 +23,7 @@
   "types": "lib/jupytercad.opencascade.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/QuantStack/jupytercad.git"
+    "url": "https://github.com/jupyter-cad/jupytercad.git"
   },
   "scripts": {
     "build": "node build_opencascade.js",
