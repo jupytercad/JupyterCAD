@@ -22,7 +22,9 @@
   height: 6em;
   border-radius: 50%;
   position: relative;
-  animation: load3 1s infinite linear, fadeIn 1s;
+  animation:
+    load3 1s infinite linear,
+    fadeIn 1s;
 }
 
 .jpcad-SpinnerContent:before {

@@ -2,7 +2,10 @@ import { nearest } from '../tools';
 import { IPosition } from './types';
 
 export class PanZoom {
-  constructor(private ctx: CanvasRenderingContext2D, private gridSize: number) {
+  constructor(
+    private ctx: CanvasRenderingContext2D,
+    private gridSize: number
+  ) {
     this.x = 0;
     this.y = 0;
     this.scale = 1;
