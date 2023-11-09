@@ -1,5 +1,6 @@
 {
   "npmClient": "yarn",
   "version": "independent",
-  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "packages": ["packages/*", "python/jupytercad-core"]
 }

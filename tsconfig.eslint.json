@@ -1,4 +1,4 @@
 {
   "extends": "./tsconfigbase",
-  "include": ["packages/**/*"]
+  "include": ["packages/**/*", "python/**/*"]
 }
