@@ -21,7 +21,7 @@ import {
 } from '@jupyter/docprovider';
 
 import { IAnnotationModel, IJupyterCadWidget } from '../types';
-import { IAnnotation, IJupyterCadDocTracker } from '../token';
+import { IAnnotationToken, IJupyterCadDocTracker } from '../token';
 import { JupyterCadWidgetFactory } from '../factory';
 import { JupyterCadJcadModelFactory } from './modelfactory';
 import { JupyterCadDoc } from '../model';
@@ -145,7 +145,7 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
   requires: [
     IJupyterCadDocTracker,
     IThemeManager,
-    IAnnotation,
+    IAnnotationToken,
     IFileBrowserFactory,
     ICollaborativeDrive
   ],

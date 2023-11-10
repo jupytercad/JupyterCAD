@@ -9,6 +9,6 @@ export const IJupyterCadDocTracker = new Token<IJupyterCadTracker>(
   'jupyterCadDocTracker'
 );
 
-export const IAnnotation = new Token<IAnnotationModel>(
+export const IAnnotationToken = new Token<IAnnotationModel>(
   'jupytercadAnnotationModel'
 );

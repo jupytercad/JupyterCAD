@@ -18,7 +18,7 @@ import { fileIcon } from '@jupyterlab/ui-components';
 
 import { JupyterCadWidgetFactory } from '../factory';
 import { JupyterCadDoc } from '../model';
-import { IAnnotation, IJupyterCadDocTracker } from '../token';
+import { IAnnotationToken, IJupyterCadDocTracker } from '../token';
 import { requestAPI } from '../tools';
 import { IAnnotationModel, IJupyterCadWidget } from '../types';
 import { JupyterCadFCModelFactory } from './modelfactory';
@@ -165,7 +165,7 @@ const fcplugin: JupyterFrontEndPlugin<void> = {
   requires: [
     IJupyterCadDocTracker,
     IThemeManager,
-    IAnnotation,
+    IAnnotationToken,
     IFileBrowserFactory,
     ICollaborativeDrive
   ],

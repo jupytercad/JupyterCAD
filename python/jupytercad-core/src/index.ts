@@ -2,29 +2,79 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
+import {
+  IAnnotationModel,
+  IAnnotationToken,
+  IJupyterCadDocTracker,
+  IJupyterCadTracker,
+  JupyterCadModel,
+  AnnotationModel,
+  JupyterCadWidget
+} from '@jupytercad/jupytercad-extension';
+import { ITranslator } from '@jupyterlab/translation';
+import { IMainMenu } from '@jupyterlab/mainmenu';
+import { WidgetTracker } from '@jupyterlab/apputils';
+const NAME_SPACE = 'jupytercad';
 
-import { requestAPI } from './handler';
-
-/**
- * Initialization data for the jupytercad-core extension.
- */
-const plugin: JupyterFrontEndPlugin<void> = {
-  id: 'jupytercad-core:plugin',
-  description: 'JupyterCad core extension',
+const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
+  id: 'jupytercad:core-plugin',
   autoStart: true,
-  activate: (app: JupyterFrontEnd) => {
-    console.log('JupyterLab extension jupytercad-core is activated!');
+  requires: [ITranslator],
+  optional: [IMainMenu],
+  provides: IJupyterCadDocTracker,
+  activate: (
+    app: JupyterFrontEnd,
+    translator: ITranslator,
+    mainMenu?: IMainMenu
+  ): IJupyterCadTracker => {
+    const tracker = new WidgetTracker<JupyterCadWidget>({
+      namespace: NAME_SPACE
+    });
+    // TODO create worker registry
+    JupyterCadModel.worker = new Worker(
+      new URL('./worker', (import.meta as any).url)
+    );
 
-    requestAPI<any>('get-example')
-      .then(data => {
-        console.log(data);
-      })
-      .catch(reason => {
-        console.error(
-          `The jupytercad_core server extension appears to be missing.\n${reason}`
-        );
-      });
+    console.log('jupytercad:core-plugin is activated!');
+
+    /**
+     * @TODO Move commands to jupytercad-lab package
+     */
+
+    /**
+     * Whether there is an active notebook.
+     */
+    // const isEnabled = (): boolean => {
+    //   return (
+    //     tracker.currentWidget !== null &&
+    //     tracker.currentWidget === app.shell.currentWidget
+    //   );
+    // };
+
+    // addCommands(app, tracker, translator);
+    // if (mainMenu) {
+    //   populateMenus(mainMenu, isEnabled);
+    // }
+
+    return tracker;
   }
 };
 
-export default plugin;
+const annotationPlugin: JupyterFrontEndPlugin<IAnnotationModel> = {
+  id: 'jupytercad:annotation',
+  autoStart: true,
+  requires: [IJupyterCadDocTracker],
+  provides: IAnnotationToken,
+  activate: (app: JupyterFrontEnd, tracker: IJupyterCadTracker) => {
+    const annotationModel = new AnnotationModel({
+      context: tracker.currentWidget?.context
+    });
+
+    tracker.currentChanged.connect((_, changed) => {
+      annotationModel.context = changed?.context || undefined;
+    });
+    return annotationModel;
+  }
+};
+
+export default [plugin, annotationPlugin];
