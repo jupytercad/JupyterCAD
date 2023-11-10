@@ -59,6 +59,7 @@ mainBuild:
     - symbol: Handle_Poly_Polygon3D
     - symbol: Handle_Poly_PolygonOnTriangulation
     - symbol: Handle_Poly_Triangulation
+    - symbol: IFSelect_ReturnStatus
     - symbol: Message_ProgressRange
     - symbol: NCollection_BaseList
     - symbol: NCollection_BaseMap
@@ -69,6 +70,7 @@ mainBuild:
     - symbol: Poly_Triangulation
     - symbol: Standard_Transient
     - symbol: StdPrs_ToolTriangulatedShape
+    - symbol: STEPControl_Reader
     - symbol: TColgp_Array1OfDir
     - symbol: TColgp_Array1OfPnt
     - symbol: TColStd_Array1OfInteger
@@ -89,6 +91,7 @@ mainBuild:
     - symbol: TopTools_IndexedDataMapOfShapeListOfShape
     - symbol: TopTools_IndexedMapOfShape
     - symbol: TopTools_ListOfShape
+    - symbol: XSControl_Reader
   emccFlags:
     - "-flto"
     - "-fexceptions"

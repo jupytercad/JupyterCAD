@@ -2,7 +2,7 @@ import { OCC } from '@jupytercad/opencascade';
 import { IJCadContent, IJCadObject } from '@jupytercad/schema';
 
 import { IDict, WorkerAction } from './types';
-import { BrepFile, ShapesFactory } from './occapi';
+import { ObjectFile, ShapesFactory } from './occapi';
 import { OccParser } from './occparser';
 import { IOperatorArg, IOperatorFuncOutput } from './types';
 
@@ -34,9 +34,9 @@ function buildModel(
       if (shapeData) {
         outputModel.push({ shapeData, jcObject: object });
       }
-    } else if (parameters['Shape']) {
+    } else if (parameters['Shape'] && parameters['Type']) {
       // Creating occ shape from brep file.
-      const shapeData = BrepFile({ content: parameters['Shape'] }, model);
+      const shapeData = ObjectFile({ content: parameters['Shape'], type: parameters['Type'] }, model);
       if (shapeData) {
         outputModel.push({ shapeData, jcObject: object });
       }

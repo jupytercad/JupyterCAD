@@ -29,6 +29,7 @@ const browserWidget: JupyterFrontEndPlugin<void> = {
       if (e.type === 'directory') {
         return {};
       }
+      // TODO
       if (name.endsWith('fcstd') || name.endsWith('jcad')) {
         return {};
       }

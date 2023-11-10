@@ -2,12 +2,16 @@
   "type": "object",
   "description": "Part::Any",
   "title": "IAny",
-  "required": ["Shape"],
+  "required": ["Content", "Type"],
   "additionalProperties": false,
   "properties": {
-    "Shape": {
+    "Content": {
       "type": "string",
-      "description": "The BREP string of the shape"
+      "description": "The string content of the object"
+    },
+    "Type": {
+      "type": "string",
+      "description": "The type of the object"
     },
     "Placement": {
       "$ref": "./placement.json"

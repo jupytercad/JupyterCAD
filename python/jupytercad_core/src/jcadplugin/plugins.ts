@@ -27,7 +27,7 @@ import { fileIcon } from '@jupyterlab/ui-components';
 import { JupyterCadWidgetFactory } from '../factory';
 import { JupyterCadJcadModelFactory } from './modelfactory';
 
-const FACTORY = 'Jupytercad Jcad Factory';
+const FACTORY = 'JupyterCAD .jcad Viewer';
 const PALETTE_CATEGORY = 'JupyterCAD';
 
 namespace CommandIDs {

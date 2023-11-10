@@ -25,13 +25,13 @@ const BOOLEAN_OPERATORS = [
 ] as const;
 
 const MISC_OPERATORS = [
-  'BrepFile',
+  'ObjectFile',
   'Sketcher::SketchObject',
   'Part::Any'
 ] as const;
 
 export function expand_operator(
-  name: Parts | 'BrepFile',
+  name: Parts | 'ObjectFile',
   args: any,
   content: IJCadContent
 ): IDict {
@@ -143,7 +143,7 @@ export function shape_meta_data(shape: OCC.TopoDS_Shape): IShapeMetadata {
   };
 }
 export function operatorCache<T>(
-  name: Parts | 'BrepFile',
+  name: Parts | 'ObjectFile',
   ops: (args: T, content: IJCadContent) => OCC.TopoDS_Shape | undefined
 ) {
   return (
