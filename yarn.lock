@@ -912,6 +912,7 @@ __metadata:
   dependencies:
     "@jupytercad/jupytercad-extension": ^0.3.3
     "@jupytercad/jupytercad-opencascade": ^0.3.3
+    "@jupytercad/jupytercad-worker": ^0.3.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
     "@jupyterlab/coreutils": ^6.0.0
@@ -1008,7 +1009,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-schema@workspace:packages/jupytercad-schema":
+"@jupytercad/jupytercad-schema@^0.3.3, @jupytercad/jupytercad-schema@workspace:packages/jupytercad-schema":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-schema@workspace:packages/jupytercad-schema"
   dependencies:
@@ -1019,6 +1020,25 @@ __metadata:
     source-map-loader: ^3.0.0
     ts-loader: ^9.2.6
     typescript: ^5
+  languageName: unknown
+  linkType: soft
+
+"@jupytercad/jupytercad-worker@^0.3.3, @jupytercad/jupytercad-worker@workspace:packages/jupytercad-worker":
+  version: 0.0.0-use.local
+  resolution: "@jupytercad/jupytercad-worker@workspace:packages/jupytercad-worker"
+  dependencies:
+    "@jupytercad/jupytercad-opencascade": ^0.3.3
+    "@jupytercad/jupytercad-schema": ^0.3.3
+    "@types/node": ^18.15.11
+    copy-webpack-plugin: ^10.0.0
+    file-loader: ^6.2.0
+    npm-run-all: ^4.1.5
+    rimraf: ^3.0.2
+    source-map-loader: ^3.0.0
+    ts-loader: ^9.2.6
+    typescript: ^5
+    uuid: ^8.3.2
+    webpack: ^5.76.3
   languageName: unknown
   linkType: soft
 
