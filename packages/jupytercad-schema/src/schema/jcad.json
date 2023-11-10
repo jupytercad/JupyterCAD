@@ -1,0 +1,121 @@
+{
+  "type": "object",
+  "title": "IJCadContent",
+  "required": ["objects"],
+  "additionalProperties": false,
+  "properties": {
+    "objects": {
+      "$ref": "#/definitions/jcadModel"
+    },
+    "options": {
+      "$ref": "#/definitions/jcadOptions"
+    },
+    "metadata": {
+      "type": "object",
+      "patternProperties": {
+        "^.*$": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "parts": {
+      "type": "string",
+      "enum": [
+        "Part::Any",
+        "Part::Box",
+        "Part::Cylinder",
+        "Part::Sphere",
+        "Part::Cone",
+        "Part::Torus",
+        "Part::Cut",
+        "Part::MultiFuse",
+        "Part::MultiCommon",
+        "Part::Extrusion",
+        "Sketcher::SketchObject"
+      ]
+    },
+    "shapeMetadata": {
+      "title": "IShapeMetadata",
+      "type": "object",
+      "required": ["mass", "centerOfMass", "matrixOfInertia"],
+      "additionalProperties": false,
+      "properties": {
+        "mass": {
+          "type": "number"
+        },
+        "centerOfMass": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "matrixOfInertia": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "jcadObject": {
+      "title": "IJCadObject",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "visible"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "shape": {
+          "$ref": "#/definitions/parts"
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "shapeMetadata": {
+          "$ref": "#/definitions/shapeMetadata"
+        },
+        "operators": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "jcadModel": {
+      "title": "IJCadModel",
+      "type": "array",
+      "default": [],
+      "items": {
+        "$ref": "#/definitions/jcadObject"
+      }
+    },
+    "jcadOptions": {
+      "title": "IJCadOptions",
+      "type": "object",
+      "default": {},
+      "additionalProperties": false,
+      "properties": {
+        "guidata": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

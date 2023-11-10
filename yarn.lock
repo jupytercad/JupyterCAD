@@ -911,6 +911,7 @@ __metadata:
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad-core"
   dependencies:
     "@jupytercad/jupytercad-extension": ^0.3.3
+    "@jupytercad/jupytercad-opencascade": ^0.3.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
     "@jupyterlab/coreutils": ^6.0.0
@@ -1004,6 +1005,20 @@ __metadata:
     rimraf: ^3.0.2
     typescript: ^5
     webpack: ^5.76.3
+  languageName: unknown
+  linkType: soft
+
+"@jupytercad/jupytercad-schema@workspace:packages/jupytercad-schema":
+  version: 0.0.0-use.local
+  resolution: "@jupytercad/jupytercad-schema@workspace:packages/jupytercad-schema"
+  dependencies:
+    "@apidevtools/json-schema-ref-parser": ^9.0.9
+    "@types/node": ^18.15.11
+    json-schema-to-typescript: ^10.1.5
+    rimraf: ^3.0.2
+    source-map-loader: ^3.0.0
+    ts-loader: ^9.2.6
+    typescript: ^5
   languageName: unknown
   linkType: soft
 

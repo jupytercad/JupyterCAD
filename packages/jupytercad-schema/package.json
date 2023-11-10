@@ -1,0 +1,52 @@
+{
+    "name": "@jupytercad/jupytercad-schema",
+    "version": "0.3.3",
+    "description": "A Jupytercad schema package.",
+    "keywords": [
+        "jupytercad"
+    ],
+    "homepage": "https://github.com/jupyter-cad/jupytercad",
+    "bugs": {
+        "url": "https://github.com/jupyter-cad/jupytercad/issues"
+    },
+    "license": "BSD-3-Clause",
+    "author": {
+        "name": "JupyterCad contributors"
+    },
+    "files": [
+        "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+        "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+    ],
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "style": "style/index.css",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jupyter-cad/jupytercad.git"
+    },
+    "scripts": {
+        "build": "jlpm build:schema && jlpm run build:lib",
+        "build:schema": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions --cwd ./src/schema && cd src/schema && node ../../schema.js",
+        "build:prod": "jlpm run clean && jlpm build:schema && jlpm run build:lib",
+        "build:lib": "tsc",
+        "clean": "rimraf tsconfig.tsbuildinfo",
+        "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+        "clean:all": "jlpm run clean:lib",
+        "watch": "run-p watch:worker watch:src",
+        "watch:src": "tsc -w"
+    },
+    "dependencies": {
+        "@apidevtools/json-schema-ref-parser": "^9.0.9",
+        "json-schema-to-typescript": "^10.1.5"
+    },
+    "devDependencies": {
+        "@types/node": "^18.15.11",
+        "rimraf": "^3.0.2",
+        "source-map-loader": "^3.0.0",
+        "ts-loader": "^9.2.6",
+        "typescript": "^5"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}

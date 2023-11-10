@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "description": "Part::Cut",
+  "title": "ICut",
+  "required": ["Base", "Tool", "Refine", "Placement"],
+  "additionalProperties": false,
+  "properties": {
+    "Base": {
+      "type": "string",
+      "description": "The base of the cut operator",
+      "fcType": "App::PropertyLink"
+    },
+    "Tool": {
+      "type": "string",
+      "description": "The tool of the cut operator",
+      "fcType": "App::PropertyLink"
+    },
+    "Refine": {
+      "type": "boolean",
+      "description": "Refine shape"
+    },
+    "Placement": {
+      "$ref": "./placement.json"
+    }
+  }
+}
