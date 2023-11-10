@@ -2,8 +2,12 @@ import { showErrorMessage } from '@jupyterlab/apputils';
 import { v4 as uuid } from 'uuid';
 
 import { IDict, IJupyterCadDoc } from '../types';
-import { IJCadObject } from '../_interface/jcad';
-import { IGeomCircle, IGeomLineSegment } from '../_interface/sketch';
+
+import {
+  IGeomCircle,
+  IGeomLineSegment,
+  IJCadObject
+} from '@jupytercad/jupytercad-schema';
 
 import { distance } from './helper';
 import { Line } from './elements/line';

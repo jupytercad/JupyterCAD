@@ -10,8 +10,8 @@ import {
   IJCadModel,
   IJCadObject,
   IJCadOptions
-} from './_interface/jcad';
-import jcadSchema from './schema/jcad.json';
+} from '@jupytercad/jupytercad-schema';
+import jcadSchema from '@jupytercad/jupytercad-schema/lib/schema/jcad.json';
 import {
   Camera,
   IAnnotationModel,

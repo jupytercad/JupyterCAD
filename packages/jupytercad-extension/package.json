@@ -27,25 +27,12 @@
         "url": "https://github.com/jupyter-cad/jupytercad.git"
     },
     "scripts": {
-        "build": "jlpm build:schema && jlpm run build:lib && jlpm run build:worker && jlpm run build:labextension:dev",
-        "build:schema": "jlpm build:schema:js && jlpm build:schema:py",
-        "build:schema:js": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions --cwd ./src/schema && cd src/schema && node ../../schema.js",
-        "build:schema:py": "datamodel-codegen --input ./src/schema --output ../../jupytercad/notebook/objects/_schema --output-model-type pydantic_v2.BaseModel",
-        "build:prod": "jlpm run clean && jlpm build:schema && jlpm run build:worker:prod && jlpm run build:lib && jlpm run build:labextension",
-        "build:labextension": "jupyter labextension build .",
-        "build:labextension:dev": "jupyter labextension build --development True .",
-        "build:lib": "tsc",
-        "build:worker": "webpack --config worker.webpack.config.js --mode=development",
-        "build:worker:prod": "webpack --config worker.webpack.config.js --mode=production",
+        "build": "tsc -b",
+        "build:prod": "jlpm run clean && jlpm run build",
         "clean": "rimraf tsconfig.tsbuildinfo",
         "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
-        "clean:labextension": "rimraf ../../jupytercad/labextension",
-        "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
-        "install:extension": "jlpm run build",
-        "watch": "run-p watch:worker watch:src watch:labextension",
-        "watch:src": "tsc -w",
-        "watch:worker": "webpack --config worker.webpack.config.js --watch --mode=development",
-        "watch:labextension": "jupyter labextension watch ."
+        "clean:all": "jlpm run clean:lib",
+        "watch": "tsc -w"
     },
     "dependencies": {
         "@deathbeds/jupyterlab-rjsf": "^1.1.0",
@@ -53,6 +40,8 @@
         "@jupyter/docprovider": "^1.0.0",
         "@jupyter/ydoc": "^0.3.4 || ^1.0.2",
         "@jupytercad/jupytercad-opencascade": "^0.3.3",
+        "@jupytercad/jupytercad-schema": "^0.3.3",
+        "@jupytercad/jupytercad-worker": "^0.3.3",
         "@jupyterlab/application": "^4.0.0",
         "@jupyterlab/apputils": "^4.0.0",
         "@jupyterlab/coreutils": "^6.0.0",
@@ -90,6 +79,7 @@
         "file-loader": "^6.2.0",
         "json-schema-to-typescript": "^10.1.5",
         "npm-run-all": "^4.1.5",
+        "rimraf": "^3.0.2",
         "source-map-loader": "^3.0.0",
         "ts-loader": "^9.2.6",
         "typescript": "^5",
@@ -102,20 +92,5 @@
     "styleModule": "style/index.js",
     "publishConfig": {
         "access": "public"
-    },
-    "jupyterlab": {
-        "extension": true,
-        "outputDir": "../../jupytercad/labextension",
-        "webpackConfig": "./extension.webpack.config.js",
-        "sharedPackages": {
-            "yjs": {
-                "bundled": false,
-                "singleton": true
-            },
-            "yjs-widgets": {
-                "bundled": false,
-                "singleton": true
-            }
-        }
     }
 }

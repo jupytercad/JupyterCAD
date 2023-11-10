@@ -18,7 +18,7 @@ import {
 
 import visibilitySvg from '../../style/icon/visibility.svg';
 import visibilityOffSvg from '../../style/icon/visibilityOff.svg';
-import { IJCadModel, IJCadObject } from '../_interface/jcad';
+import { IJCadModel, IJCadObject } from '@jupytercad/jupytercad-schema';
 import {
   IControlPanelModel,
   IDict,

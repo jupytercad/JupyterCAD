@@ -1,4 +1,11 @@
 import { MapChange } from '@jupyter/ydoc';
+import {
+  IDisplayShape,
+  IMainMessage,
+  IWorkerMessage,
+  MainAction,
+  WorkerAction
+} from '@jupytercad/jupytercad-worker';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { User } from '@jupyterlab/services';
 import { CommandRegistry } from '@lumino/commands';
@@ -15,24 +22,19 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { v4 as uuid } from 'uuid';
 
+import { FloatingAnnotation } from './annotation/view';
+import { getCSSVariableColor, throttle } from './tools';
 import {
   AxeHelper,
   CameraSettings,
   ExplodedView,
   IAnnotation,
   IDict,
-  IDisplayShape,
   IJcadObjectDocChange,
   IJupyterCadClientState,
   IJupyterCadDoc,
-  IJupyterCadModel,
-  IMainMessage,
-  IWorkerMessage,
-  MainAction,
-  WorkerAction
+  IJupyterCadModel
 } from './types';
-import { FloatingAnnotation } from './annotation/view';
-import { getCSSVariableColor, throttle } from './tools';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;

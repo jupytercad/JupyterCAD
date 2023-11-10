@@ -19,8 +19,8 @@ import {
 
 import { IDict, IJupyterCadDoc, IJupyterCadModel } from './types';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
-import formSchema from './_interface/forms.json';
-import { IJCadObject, Parts } from './_interface/jcad';
+import formSchema from '@jupytercad/jupytercad-schema/lib/_interface/forms.json';
+import { IJCadObject, Parts } from '@jupytercad/jupytercad-schema';
 import { redoIcon, undoIcon } from '@jupyterlab/ui-components';
 
 const FORM_SCHEMA = {};

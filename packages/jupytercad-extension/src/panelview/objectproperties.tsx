@@ -1,17 +1,16 @@
+import { IJCadModel } from '@jupytercad/jupytercad-schema';
+import formSchema from '@jupytercad/jupytercad-schema/lib/_interface/forms.json';
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
-
 import { Panel } from '@lumino/widgets';
-
-import { v4 as uuid } from 'uuid';
 import * as React from 'react';
+import { v4 as uuid } from 'uuid';
 
 import {
   focusInputField,
   itemFromName,
   removeStyleFromProperty
 } from '../tools';
-
 import {
   IControlPanelModel,
   IDict,
@@ -20,9 +19,7 @@ import {
   IJupyterCadDoc,
   IJupyterCadModel
 } from '../types';
-import { IJCadModel } from '../_interface/jcad';
 import { ObjectPropertiesForm } from './formbuilder';
-import formSchema from '../_interface/forms.json';
 
 export class ObjectProperties extends PanelWithToolbar {
   constructor(params: ObjectProperties.IOptions) {
