@@ -37,7 +37,9 @@
         "prettier:check": "prettier --list-different \"**/*{.ts,.tsx,.js,.jsx,.css,.json,.md}\"",
         "lint:check": "jlpm run prettier:check && jlpm run eslint:check",
         "lint": "jlpm run prettier && jlpm run eslint",
-        "test": "lerna run test"
+        "test": "lerna run test",
+        "dev": "python scripts/dev-install.py",
+        "watch": "lerna run --stream watch"
     },
     "resolutions": {
         "@jupyterlab/apputils": "~4.0.0",

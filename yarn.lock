@@ -921,6 +921,8 @@ __metadata:
     mkdirp: ^1.0.3
     npm-run-all: ^4.1.5
     style-loader: ^3.3.1
+    typescript: ^5
+    webpack: ^5.76.3
     yjs: ^13.5.0
   languageName: unknown
   linkType: soft
@@ -3379,9 +3381,9 @@ __metadata:
   linkType: hard
 
 "@types/underscore@npm:*":
-  version: 1.11.13
-  resolution: "@types/underscore@npm:1.11.13"
-  checksum: f0b8700edd25c06213d5cfc87c921b731c8958fe62456e0c3ac789d26abde36a1e14a25b5430b8a0f4c00a9a26ae07c9d5624d5cc3662ba6628b0710416c1cab
+  version: 1.11.14
+  resolution: "@types/underscore@npm:1.11.14"
+  checksum: 7ce69740640fe37ce935e56d294e883b5bbf400fe193244c2701b0a6b5f9ae6b804a7f8f0e0f2c7f9d72f1c8033bb3b7c8a6308f7ac93b52642c45ad6c73c22d
   languageName: node
   linkType: hard
 
@@ -5527,9 +5529,9 @@ __metadata:
   linkType: hard
 
 "es-module-lexer@npm:^1.2.1":
-  version: 1.3.1
-  resolution: "es-module-lexer@npm:1.3.1"
-  checksum: 3beafa7e171eb1e8cc45695edf8d51638488dddf65294d7911f8d6a96249da6a9838c87529262cc6ea53988d8272cec0f4bff93f476ed031a54ba3afb51a0ed3
+  version: 1.4.0
+  resolution: "es-module-lexer@npm:1.4.0"
+  checksum: 8944067428d16b2fade0cec9c42c87780d1a31812f64cee12ba99ab0c02bef2fa5cb8097cd60d764b7a5b29c954a51398bfb1e4360f64fec9cf6c89ef126ab14
   languageName: node
   linkType: hard
 

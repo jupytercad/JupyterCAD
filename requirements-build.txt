@@ -1,0 +1,2 @@
+# minimum needed to build jupytercad.
+datamodel-code-generator>=0.23.0
