@@ -1,4 +1,4 @@
-import initOpenCascade, { OpenCascadeInstance } from '@jupytercad/opencascade';
+import { initializeOpenCascade, OCC } from '@jupytercad/opencascade';
 
 import WorkerHandler from './actions';
 import {
@@ -9,11 +9,11 @@ import {
   WorkerAction
 } from './types';
 
-let occ: OpenCascadeInstance;
+let occ: OCC.OpenCascadeInstance;
 const ports: IDict<MessagePort> = {};
 console.log('Initializing OCC...');
 
-initOpenCascade().then(occInstance => {
+initializeOpenCascade().then(occInstance => {
   console.log('Done!');
   occ = occInstance;
 

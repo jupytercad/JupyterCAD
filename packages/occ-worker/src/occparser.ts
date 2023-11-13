@@ -1,8 +1,5 @@
-import {
-  Handle_Poly_Triangulation,
-  OpenCascadeInstance,
-  TopoDS_Shape
-} from '@jupytercad/opencascade';
+
+import { OCC } from '@jupytercad/opencascade';
 import { IJCadObject } from '@jupytercad/schema';
 
 import {
@@ -20,7 +17,7 @@ interface IShapeList {
 
 export class OccParser {
   private _shapeList: IShapeList[];
-  private _occ: OpenCascadeInstance = (self as any).occ;
+  private _occ: OCC.OpenCascadeInstance = (self as any).occ;
   private _showEdge = true;
   constructor(shapeList: IShapeList[]) {
     this._shapeList = shapeList;
@@ -59,7 +56,7 @@ export class OccParser {
   }
 
   private _build_wire_mesh(
-    shape: TopoDS_Shape,
+    shape: OCC.TopoDS_Shape,
     maxDeviation: number
   ): Array<IEdge> {
     const edgeList: Array<IEdge> = [];
@@ -103,9 +100,9 @@ export class OccParser {
     return edgeList;
   }
 
-  private _build_face_mesh(shape: TopoDS_Shape): Array<IFace> {
+  private _build_face_mesh(shape: OCC.TopoDS_Shape): Array<IFace> {
     const faceList: Array<IFace> = [];
-    const triangulations: Array<Handle_Poly_Triangulation> = [];
+    const triangulations: Array<OCC.Handle_Poly_Triangulation> = [];
     const oc = this._occ;
     const expl = new oc.TopExp_Explorer_2(
       shape,
@@ -121,7 +118,7 @@ export class OccParser {
     while (expl.More()) {
       const face = oc.TopoDS.Face_1(expl.Current());
       const aLocation = new oc.TopLoc_Location_1();
-      const myT = oc.BRep_Tool.Triangulation(face, aLocation);
+      const myT = oc.BRep_Tool.Triangulation(face, aLocation, 0);
       if (myT.IsNull()) {
         console.error('Encountered Null Face!');
         expl.Next();
@@ -134,11 +131,14 @@ export class OccParser {
         numberOfTriangles: 0
       };
       const pc = new oc.Poly_Connect_2(myT);
-      const nodes = myT.get().Nodes();
+      const triangulation = myT.get();
+      const nbNodes = triangulation.NbNodes();
 
-      thisFace.vertexCoord = new Array(nodes.Length() * 3);
-      for (let i = 0; i < nodes.Length(); i++) {
-        const p = nodes.Value(i + 1).Transformed(aLocation.Transformation());
+      thisFace.vertexCoord = new Array(nbNodes * 3);
+      for (let i = 0; i < nbNodes; i++) {
+        const p = triangulation
+          .Node(i + 1)
+          .Transformed(aLocation.Transformation());
         thisFace.vertexCoord[i * 3 + 0] = p.X();
         thisFace.vertexCoord[i * 3 + 1] = p.Y();
         thisFace.vertexCoord[i * 3 + 2] = p.Z();
@@ -147,11 +147,7 @@ export class OccParser {
       const orient = face.Orientation_1();
 
       // Write normal buffer
-      const myNormal = new oc.TColgp_Array1OfDir_2(
-        nodes.Lower(),
-        nodes.Upper()
-      );
-      // let SST = new oc.StdPrs_ToolTriangulatedShape();
+      const myNormal = new oc.TColgp_Array1OfDir_2(1, nbNodes);
       oc.StdPrs_ToolTriangulatedShape.Normal(face, pc, myNormal);
       thisFace.normalCoord = new Array(myNormal.Length() * 3);
       for (let i = 0; i < myNormal.Length(); i++) {
@@ -161,12 +157,13 @@ export class OccParser {
         thisFace.normalCoord[i * 3 + 2] = d.Z();
       }
 
+      const nbTriangles = triangulation.NbTriangles();
+
       // Write triangle buffer
-      const triangles = myT.get().Triangles();
-      thisFace.triIndexes = new Array(triangles.Length() * 3);
+      thisFace.triIndexes = new Array(nbTriangles * 3);
       let validFaceTriCount = 0;
       for (let nt = 1; nt <= myT.get().NbTriangles(); nt++) {
-        const t = triangles.Value(nt);
+        const t = triangulation.Triangle(nt);
         let n1 = t.Value(1);
         let n2 = t.Value(2);
         const n3 = t.Value(3);
@@ -188,7 +185,7 @@ export class OccParser {
     }
     return faceList;
   }
-  private _build_edge_mesh(shape: TopoDS_Shape): IEdge[] {
+  private _build_edge_mesh(shape: OCC.TopoDS_Shape): IEdge[] {
     const oc = this._occ;
     const edgeList: IEdge[] = [];
     const mapOfShape = new oc.TopTools_IndexedMapOfShape_1();
@@ -225,8 +222,9 @@ export class OccParser {
         if (!aLoc.IsIdentity()) {
           myTransf = aLoc.Transformation();
         }
+        const poly = aPoly.get();
 
-        nbNodesInFace = aPoly.get().NbNodes();
+        nbNodesInFace = poly.NbNodes();
 
         theEdge.numberOfCoords = nbNodesInFace;
         theEdge.vertexCoord = new Array(nbNodesInFace * 3);
@@ -240,7 +238,7 @@ export class OccParser {
         }
       } else {
         const aFace = oc.TopoDS.Face_1(edgeMap.FindFromIndex(iEdge).First_1());
-        const aPolyTria = oc.BRep_Tool.Triangulation(aFace, aLoc);
+        const aPolyTria = oc.BRep_Tool.Triangulation(aFace, aLoc, 0);
         if (!aLoc.IsIdentity()) {
           myTransf = aLoc.Transformation();
         }
@@ -257,12 +255,12 @@ export class OccParser {
         theEdge.vertexCoord = new Array(nbNodesInFace * 3);
 
         const indices = aPoly.get().Nodes();
-        const nodeListOfFace = aPolyTria.get().Nodes();
+        const nodeListOfFace = aPolyTria.get();
 
         for (let jj = indices.Lower(); jj <= indices.Upper(); jj++) {
-          const v = nodeListOfFace.Value(indices.Value(jj));
+          const v = nodeListOfFace.Node(indices.Value(jj));
           v.Transform(myTransf);
-          const locIndex = jj - nodeListOfFace.Lower();
+          const locIndex = jj - 1;
 
           theEdge.vertexCoord[locIndex * 3 + 0] = v.X();
           theEdge.vertexCoord[locIndex * 3 + 1] = v.Y();

@@ -1,4 +1,4 @@
-import { TopoDS_Shape } from '@jupytercad/opencascade';
+import { OCC } from '@jupytercad/opencascade';
 import { v4 as uuid } from 'uuid';
 
 import {
@@ -25,13 +25,13 @@ import { IAllOperatorFunc, IOperatorArg } from './types';
 import { toRad } from './utils';
 
 function setShapePlacement(
-  shape: TopoDS_Shape,
+  shape: OCC.TopoDS_Shape,
   placement?: {
     Position: number[];
     Axis: number[];
     Angle: number;
   }
-): TopoDS_Shape {
+): OCC.TopoDS_Shape {
   if (!placement) {
     return shape;
   }
@@ -52,11 +52,11 @@ function setShapePlacement(
     )
   );
   const loc = new oc.TopLoc_Location_2(trsf);
-  shape.Location_2(loc);
+  shape.Location_2(loc, true);
   return shape;
 }
 
-function _Box(arg: IBox, _: IJCadContent): TopoDS_Shape | undefined {
+function _Box(arg: IBox, _: IJCadContent): OCC.TopoDS_Shape | undefined {
   const { Length, Width, Height, Placement } = arg;
   const oc = getOcc();
   const box = new oc.BRepPrimAPI_MakeBox_2(Length, Width, Height);
@@ -64,7 +64,10 @@ function _Box(arg: IBox, _: IJCadContent): TopoDS_Shape | undefined {
   return setShapePlacement(shape, Placement);
 }
 
-function _Cylinder(arg: ICylinder, _: IJCadContent): TopoDS_Shape | undefined {
+function _Cylinder(
+  arg: ICylinder,
+  _: IJCadContent
+): OCC.TopoDS_Shape | undefined {
   const { Radius, Height, Angle, Placement } = arg;
   const oc = getOcc();
   const cylinder = new oc.BRepPrimAPI_MakeCylinder_2(
@@ -76,7 +79,7 @@ function _Cylinder(arg: ICylinder, _: IJCadContent): TopoDS_Shape | undefined {
   return setShapePlacement(shape, Placement);
 }
 
-function _Sphere(arg: ISphere, _: IJCadContent): TopoDS_Shape | undefined {
+function _Sphere(arg: ISphere, _: IJCadContent): OCC.TopoDS_Shape | undefined {
   const { Radius, Angle1, Angle2, Angle3, Placement } = arg;
   const oc = getOcc();
   const sphere = new oc.BRepPrimAPI_MakeSphere_4(
@@ -89,7 +92,7 @@ function _Sphere(arg: ISphere, _: IJCadContent): TopoDS_Shape | undefined {
   return setShapePlacement(shape, Placement);
 }
 
-function _Cone(arg: ICone, _: IJCadContent): TopoDS_Shape | undefined {
+function _Cone(arg: ICone, _: IJCadContent): OCC.TopoDS_Shape | undefined {
   const { Radius1, Radius2, Height, Angle, Placement } = arg;
   const oc = getOcc();
   const cone = new oc.BRepPrimAPI_MakeCone_2(
@@ -102,7 +105,7 @@ function _Cone(arg: ICone, _: IJCadContent): TopoDS_Shape | undefined {
   return setShapePlacement(shape, Placement);
 }
 
-function _Torus(arg: ITorus, _: IJCadContent): TopoDS_Shape | undefined {
+function _Torus(arg: ITorus, _: IJCadContent): OCC.TopoDS_Shape | undefined {
   const { Radius1, Radius2, Angle1, Angle2, Angle3, Placement } = arg;
   const oc = getOcc();
   const torus = new oc.BRepPrimAPI_MakeTorus_4(
@@ -116,7 +119,7 @@ function _Torus(arg: ITorus, _: IJCadContent): TopoDS_Shape | undefined {
   return setShapePlacement(shape, Placement);
 }
 
-function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
+function _Cut(arg: ICut, content: IJCadContent): OCC.TopoDS_Shape | undefined {
   const { Placement, Base, Tool } = arg;
   const oc = getOcc();
   const baseObject = content.objects.filter(obj => obj.name === Base);
@@ -143,7 +146,11 @@ function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
     if (base && tool) {
       baseObject[0].visible = false;
       toolObject[0].visible = false;
-      const operator = new oc.BRepAlgoAPI_Cut_3(base.occShape, tool.occShape);
+      const operator = new oc.BRepAlgoAPI_Cut_3(
+        base.occShape,
+        tool.occShape,
+        new oc.Message_ProgressRange_1()
+      );
       if (operator.IsDone()) {
         return setShapePlacement(operator.Shape(), Placement);
       }
@@ -151,10 +158,13 @@ function _Cut(arg: ICut, content: IJCadContent): TopoDS_Shape | undefined {
   }
 }
 
-function _Fuse(arg: IFuse, content: IJCadContent): TopoDS_Shape | undefined {
+function _Fuse(
+  arg: IFuse,
+  content: IJCadContent
+): OCC.TopoDS_Shape | undefined {
   const oc = getOcc();
   const { Shapes, Placement } = arg;
-  const occShapes: TopoDS_Shape[] = [];
+  const occShapes: OCC.TopoDS_Shape[] = [];
   Shapes.forEach(Base => {
     const baseObject = content.objects.filter(obj => obj.name === Base);
     if (baseObject.length === 0) {
@@ -172,7 +182,11 @@ function _Fuse(arg: IFuse, content: IJCadContent): TopoDS_Shape | undefined {
       }
     }
   });
-  const operator = new oc.BRepAlgoAPI_Fuse_3(occShapes[0], occShapes[1]);
+  const operator = new oc.BRepAlgoAPI_Fuse_3(
+    occShapes[0],
+    occShapes[1],
+    new oc.Message_ProgressRange_1()
+  );
   if (operator.IsDone()) {
     return setShapePlacement(operator.Shape(), Placement);
   }
@@ -182,10 +196,10 @@ function _Fuse(arg: IFuse, content: IJCadContent): TopoDS_Shape | undefined {
 function _Intersection(
   arg: IIntersection,
   content: IJCadContent
-): TopoDS_Shape | undefined {
+): OCC.TopoDS_Shape | undefined {
   const oc = getOcc();
   const { Shapes, Placement } = arg;
-  const occShapes: TopoDS_Shape[] = [];
+  const occShapes: OCC.TopoDS_Shape[] = [];
   Shapes.forEach(Base => {
     const baseObject = content.objects.filter(obj => obj.name === Base);
     if (baseObject.length === 0) {
@@ -203,7 +217,11 @@ function _Intersection(
       }
     }
   });
-  const operator = new oc.BRepAlgoAPI_Common_3(occShapes[0], occShapes[1]);
+  const operator = new oc.BRepAlgoAPI_Common_3(
+    occShapes[0],
+    occShapes[1],
+    new oc.Message_ProgressRange_1()
+  );
   if (operator.IsDone()) {
     return setShapePlacement(operator.Shape(), Placement);
   }
@@ -213,7 +231,7 @@ function _Intersection(
 export function _SketchObject(
   arg: ISketchObject,
   content: IJCadContent
-): TopoDS_Shape | undefined {
+): OCC.TopoDS_Shape | undefined {
   const oc = getOcc();
   const builder = new oc.BRep_Builder();
   const compound = new oc.TopoDS_Compound();
@@ -241,7 +259,7 @@ export function _SketchObject(
 function _Extrude(
   arg: IExtrusion,
   content: IJCadContent
-): TopoDS_Shape | undefined {
+): OCC.TopoDS_Shape | undefined {
   const { Base, Dir, LengthFwd, LengthRev, Placement, Solid } = arg;
   const oc = getOcc();
   const baseObject = content.objects.filter(obj => obj.name === Base);
@@ -270,7 +288,7 @@ function _Extrude(
       const mov = new oc.gp_Trsf_1();
       mov.SetTranslation_1(dirVec.Multiplied(-LengthRev));
       const loc = new oc.TopLoc_Location_2(mov);
-      baseCopy.Move(loc);
+      baseCopy.Move(loc, true);
     }
 
     if (Solid) {
@@ -309,7 +327,7 @@ function _Extrude(
 export function _Any(
   arg: IAny,
   content: IJCadContent
-): TopoDS_Shape | undefined {
+): OCC.TopoDS_Shape | undefined {
   const { Shape, Placement } = arg;
   const result = _loadBrep({ content: Shape });
   if (result) {
@@ -317,7 +335,9 @@ export function _Any(
   }
 }
 
-export function _loadBrep(arg: { content: string }): TopoDS_Shape | undefined {
+export function _loadBrep(arg: {
+  content: string;
+}): OCC.TopoDS_Shape | undefined {
   const oc = getOcc();
   const fakeFileName = `${uuid()}.brep`;
   oc.FS.createDataFile('/', fakeFileName, arg.content, true, true, true);

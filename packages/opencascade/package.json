@@ -15,27 +15,30 @@
     "name": "JupyterCad contributors"
   },
   "files": [
+    "lib/index.js",
+    "lib/index.d.ts",
     "lib/jupytercad.opencascade.js",
     "lib/jupytercad.opencascade.d.ts",
     "lib/jupytercad.opencascade.wasm"
   ],
-  "main": "lib/jupytercad.opencascade.js",
-  "types": "lib/jupytercad.opencascade.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/jupyter-cad/jupytercad.git"
   },
   "scripts": {
-    "build": "node build_opencascade.js",
-    "build:prod": "node build_opencascade.js",
-    "clean": "rimraf ./lib",
-    "clean:all": "rimraf ./lib"
+    "build": "node build_opencascade_wasm.js && tsc && copyfiles --up 1 src/*.d.ts src/*.js src/*.wasm lib",
+    "build:prod": "node build_opencascade_wasm.js && tsc && copyfiles --up 1 src/*.d.ts src/*.js src/*.wasm lib"
   },
   "devDependencies": {
-    "js-yaml": "^4.1.0",
-    "rimraf": "^3.0.2"
+    "copyfiles": "^2.4.1",
+    "js-yaml": "^4.1.0"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "opencascade.js": "beta"
   }
 }

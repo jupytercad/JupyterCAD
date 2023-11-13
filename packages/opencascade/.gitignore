@@ -1,0 +1,5 @@
+src/*.wasm
+src/*.js
+src/*.d.ts
+src/*.yml
+src/*.version
