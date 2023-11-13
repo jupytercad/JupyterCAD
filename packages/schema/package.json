@@ -1,5 +1,5 @@
 {
-    "name": "@jupytercad/jupytercad-schema",
+    "name": "@jupytercad/schema",
     "version": "0.3.3",
     "description": "A Jupytercad schema package.",
     "keywords": [

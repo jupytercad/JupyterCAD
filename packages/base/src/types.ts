@@ -19,7 +19,7 @@ import {
   IJCadObject,
   IJCadModel,
   IJCadOptions
-} from '@jupytercad/jupytercad-schema';
+} from '@jupytercad/schema';
 
 export interface IDict<T = any> {
   [key: string]: T;

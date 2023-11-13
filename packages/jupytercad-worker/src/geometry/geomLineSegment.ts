@@ -1,4 +1,4 @@
-import { IGeomLineSegment } from '@jupytercad/jupytercad-schema';
+import { IGeomLineSegment } from '@jupytercad/schema';
 import { getOcc } from '../actions';
 
 export function _GeomLine(arg: IGeomLineSegment): any {

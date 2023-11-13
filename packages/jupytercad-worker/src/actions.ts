@@ -3,7 +3,7 @@ import {
   OpenCascadeInstance,
   TopoDS_Shape
 } from '@jupytercad/jupytercad-opencascade';
-import { IJCadContent, IJCadObject } from '@jupytercad/jupytercad-schema';
+import { IJCadContent, IJCadObject } from '@jupytercad/schema';
 
 import { IDict, WorkerAction } from './types';
 import { BrepFile, ShapesFactory } from './occapi';

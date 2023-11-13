@@ -1,5 +1,5 @@
-import { IJCadModel } from '@jupytercad/jupytercad-schema';
-import formSchema from '@jupytercad/jupytercad-schema/lib/_interface/forms.json';
+import { IJCadModel } from '@jupytercad/schema';
+import formSchema from '@jupytercad/schema/lib/_interface/forms.json';
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';

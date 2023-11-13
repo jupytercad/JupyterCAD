@@ -3,11 +3,7 @@ import { v4 as uuid } from 'uuid';
 
 import { IDict, IJupyterCadDoc } from '../types';
 
-import {
-  IGeomCircle,
-  IGeomLineSegment,
-  IJCadObject
-} from '@jupytercad/jupytercad-schema';
+import { IGeomCircle, IGeomLineSegment, IJCadObject } from '@jupytercad/schema';
 
 import { distance } from './helper';
 import { Line } from './elements/line';

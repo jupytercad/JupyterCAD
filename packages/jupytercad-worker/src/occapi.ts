@@ -15,7 +15,7 @@ import {
   ISphere,
   ITorus,
   IAny
-} from '@jupytercad/jupytercad-schema';
+} from '@jupytercad/schema';
 
 import { getOcc } from './actions';
 import { _GeomCircle } from './geometry/geomCircle';

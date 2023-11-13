@@ -898,8 +898,8 @@ __metadata:
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
     "@jupytercad/jupytercad-opencascade": ^0.3.3
-    "@jupytercad/jupytercad-schema": ^0.3.3
     "@jupytercad/jupytercad-worker": ^0.3.3
+    "@jupytercad/schema": ^0.3.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/coreutils": ^6.0.0
@@ -1035,8 +1035,8 @@ __metadata:
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
     "@jupytercad/jupytercad-opencascade": ^0.3.3
-    "@jupytercad/jupytercad-schema": ^0.3.3
     "@jupytercad/jupytercad-worker": ^0.3.3
+    "@jupytercad/schema": ^0.3.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1119,26 +1119,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-schema@^0.3.3, @jupytercad/jupytercad-schema@workspace:packages/jupytercad-schema":
-  version: 0.0.0-use.local
-  resolution: "@jupytercad/jupytercad-schema@workspace:packages/jupytercad-schema"
-  dependencies:
-    "@apidevtools/json-schema-ref-parser": ^9.0.9
-    "@types/node": ^18.15.11
-    json-schema-to-typescript: ^10.1.5
-    rimraf: ^3.0.2
-    source-map-loader: ^3.0.0
-    ts-loader: ^9.2.6
-    typescript: ^5
-  languageName: unknown
-  linkType: soft
-
 "@jupytercad/jupytercad-worker@^0.3.3, @jupytercad/jupytercad-worker@workspace:packages/jupytercad-worker":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-worker@workspace:packages/jupytercad-worker"
   dependencies:
     "@jupytercad/jupytercad-opencascade": ^0.3.3
-    "@jupytercad/jupytercad-schema": ^0.3.3
+    "@jupytercad/schema": ^0.3.3
     "@types/node": ^18.15.11
     copy-webpack-plugin: ^10.0.0
     file-loader: ^6.2.0
@@ -1149,6 +1135,20 @@ __metadata:
     typescript: ^5
     uuid: ^8.3.2
     webpack: ^5.76.3
+  languageName: unknown
+  linkType: soft
+
+"@jupytercad/schema@^0.3.3, @jupytercad/schema@workspace:packages/schema":
+  version: 0.0.0-use.local
+  resolution: "@jupytercad/schema@workspace:packages/schema"
+  dependencies:
+    "@apidevtools/json-schema-ref-parser": ^9.0.9
+    "@types/node": ^18.15.11
+    json-schema-to-typescript: ^10.1.5
+    rimraf: ^3.0.2
+    source-map-loader: ^3.0.0
+    ts-loader: ^9.2.6
+    typescript: ^5
   languageName: unknown
   linkType: soft
 

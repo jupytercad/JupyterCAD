@@ -1,9 +1,5 @@
 import { TopoDS_Shape } from '@jupytercad/jupytercad-opencascade';
-import {
-  IJCadContent,
-  IShapeMetadata,
-  Parts
-} from '@jupytercad/jupytercad-schema';
+import { IJCadContent, IShapeMetadata, Parts } from '@jupytercad/schema';
 
 import { getOcc } from './actions';
 import { IDict } from './types';

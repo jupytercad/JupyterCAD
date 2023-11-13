@@ -1,4 +1,4 @@
-import { IGeomCircle } from '@jupytercad/jupytercad-schema';
+import { IGeomCircle } from '@jupytercad/schema';
 import { getOcc } from '../actions';
 
 export function _GeomCircle(arg: IGeomCircle): any {
