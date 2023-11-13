@@ -2,6 +2,10 @@ import subprocess
 from pathlib import Path
 
 
+def execute(cmd: str):
+    subprocess.run(cmd.split(" "), check=True)
+
+
 def install_dev():
     root_path = Path(__file__).parents[1]
     requirements_build_path = root_path / "requirements-build.txt"
@@ -9,16 +13,17 @@ def install_dev():
     install_js_deps = "jlpm install"
     build_js = "jlpm build"
 
-    python_packages = ["python/jupytercad-core"]
+    python_package_prefix = "python"
+    python_packages = ["jupytercad-core", "jupytercad-lab"]
 
-    subprocess.run(install_build_deps.split(" "), check=True)
-    subprocess.run(install_js_deps.split(" "), check=True)
-    subprocess.run(build_js.split(" "), check=True)
+    execute(install_build_deps)
+    execute(install_js_deps)
+    execute(build_js)
     for py_package in python_packages:
-        subprocess.run(f"pip install -e {py_package}".split(" "), check=True)
-        subprocess.run(
-            f"jupyter labextension develop {py_package} --overwrite".split(" "),
-            check=True,
+        execute(f"pip uninstall {py_package} -y")
+        execute(f"pip install -e {python_package_prefix}/{py_package}")
+        execute(
+            f"jupyter labextension develop {python_package_prefix}/{py_package} --overwrite"
         )
 
 

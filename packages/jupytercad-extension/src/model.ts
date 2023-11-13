@@ -163,11 +163,6 @@ export class JupyterCadModel implements IJupyterCadModel {
   }
 
   getWorker(): Worker {
-    if (!JupyterCadModel.worker) {
-      JupyterCadModel.worker = new Worker(
-        new URL('./worker', (import.meta as any).url)
-      );
-    }
     return JupyterCadModel.worker;
   }
 

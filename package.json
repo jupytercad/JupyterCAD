@@ -22,7 +22,8 @@
     },
     "workspaces": [
         "packages/*",
-        "python/jupytercad-core"
+        "python/jupytercad-core",
+        "python/jupytercad-lab"
     ],
     "scripts": {
         "build": "lerna run build",

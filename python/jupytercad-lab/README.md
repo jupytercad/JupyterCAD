@@ -1,1 +1,1 @@
-# JupyterCad lab extension package
+# jupytercad_lab
