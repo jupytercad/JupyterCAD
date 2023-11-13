@@ -43,54 +43,6 @@ dynamic = ["version", "description", "authors", "urls", "keywords"]
 jcad = "jupytercad.jcad_ydoc:YJCad"
 FCStd = "jupytercad.fcstd_ydoc:YFCStd"
 
-[tool.hatch.version]
-source = "nodejs"
-
-[tool.hatch.metadata.hooks.nodejs]
-fields = ["description", "authors", "urls"]
-
-[tool.hatch.build.targets.sdist]
-artifacts = [
-    "/jupytercad/labextension",
-    "/jupytercad/notebook/objects/_schema/*.py",
-    "/jupytercad/cadapp/",
-]
-exclude = ["/.github", "/binder", "node_modules", "examples", "ui-tests"]
-
-[tool.hatch.build.targets.wheel]
-artifacts = ["/jupytercad/notebook/objects/_schema/*.py", "/jupytercad/cadapp/"]
-
-[tool.hatch.build.targets.sdist.force-include]
-"./packages" = "packages"
-
-[tool.hatch.build.targets.wheel.shared-data]
-"install.json" = "share/jupyter/labextensions/@jupytercad/jupytercad-extension/install.json"
-"jupytercad/labextension" = "share/jupyter/labextensions/@jupytercad/jupytercad-extension"
-"etc/jupyter" = "etc/jupyter"
-
-[tool.hatch.build.hooks.version]
-path = "jupytercad/_version.py"
-
-[tool.hatch.build.hooks.jupyter-builder]
-dependencies = ["hatch-jupyter-builder>=0.5"]
-build-function = "hatch_jupyter_builder.npm_builder"
-ensured-targets = [
-    "jupytercad/labextension/static/style.js",
-    "jupytercad/labextension/package.json",
-    "jupytercad/notebook/objects/_schema/box.py",
-]
-skip-if-exists = ["jupytercad/labextension/static/style.js"]
-
-[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
-build_cmd = "build:prod"
-npm = ["jlpm"]
-
-[tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
-build_cmd = "install:extension"
-npm = ["jlpm"]
-source_dir = "src"
-build_dir = "jupytercad/labextension"
-
 [tool.jupyter-releaser.options]
 version-cmd = "python scripts/bump-version.py"
 python_packages = [

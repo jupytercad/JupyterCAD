@@ -888,6 +888,59 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jupytercad/base@^0.3.3, @jupytercad/base@workspace:packages/base":
+  version: 0.0.0-use.local
+  resolution: "@jupytercad/base@workspace:packages/base"
+  dependencies:
+    "@apidevtools/json-schema-ref-parser": ^9.0.9
+    "@deathbeds/jupyterlab-rjsf": ^1.1.0
+    "@jupyter/collaboration": ^1.0.0
+    "@jupyter/docprovider": ^1.0.0
+    "@jupyter/ydoc": ^0.3.4 || ^1.0.2
+    "@jupytercad/jupytercad-opencascade": ^0.3.3
+    "@jupytercad/jupytercad-schema": ^0.3.3
+    "@jupytercad/jupytercad-worker": ^0.3.3
+    "@jupyterlab/application": ^4.0.0
+    "@jupyterlab/apputils": ^4.0.0
+    "@jupyterlab/coreutils": ^6.0.0
+    "@jupyterlab/docregistry": ^4.0.0
+    "@jupyterlab/filebrowser": ^4.0.0
+    "@jupyterlab/launcher": ^4.0.0
+    "@jupyterlab/mainmenu": ^4.0.0
+    "@jupyterlab/notebook": ^4.0.0
+    "@jupyterlab/observables": ^5.0.0
+    "@jupyterlab/services": ^7.0.0
+    "@jupyterlab/translation": ^4.0.0
+    "@jupyterlab/ui-components": ^4.0.0
+    "@lumino/commands": ^2.0.0
+    "@lumino/coreutils": ^2.0.0
+    "@lumino/signaling": ^2.0.0
+    "@lumino/widgets": ^2.0.0
+    "@naisutech/react-tree": ^3.0.1
+    "@rjsf/core": ^4.2.0
+    "@types/d3-color": ^3.1.0
+    "@types/node": ^18.15.11
+    "@types/three": ^0.134.0
+    copy-webpack-plugin: ^10.0.0
+    d3-color: ^3.1.0
+    file-loader: ^6.2.0
+    json-schema-to-typescript: ^10.1.5
+    lib0: ^0.2.62
+    npm-run-all: ^4.1.5
+    react: ^18.0.1
+    rimraf: ^3.0.2
+    source-map-loader: ^3.0.0
+    styled-components: ^5.3.6
+    three: ^0.135.0
+    three-mesh-bvh: ^0.5.17
+    ts-loader: ^9.2.6
+    typescript: ^5
+    uuid: ^8.3.2
+    webpack: ^5.76.3
+    yjs-widgets: ^0.3.3
+  languageName: unknown
+  linkType: soft
+
 "@jupytercad/jupytercad-app@workspace:packages/jupytercad-app":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-app@workspace:packages/jupytercad-app"
@@ -897,7 +950,7 @@ __metadata:
     "@jupyter/collaboration": ^1.0.0
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/jupytercad-extension": ^0.3.3
+    "@jupytercad/base": ^0.3.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/application-extension": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -952,7 +1005,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad-core"
   dependencies:
-    "@jupytercad/jupytercad-extension": ^0.3.3
+    "@jupytercad/base": ^0.3.3
     "@jupytercad/jupytercad-opencascade": ^0.3.3
     "@jupytercad/jupytercad-worker": ^0.3.3
     "@jupyterlab/application": ^4.0.0
@@ -973,11 +1026,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-extension@^0.3.3, @jupytercad/jupytercad-extension@workspace:packages/jupytercad-extension":
+"@jupytercad/jupytercad-lab@workspace:python/jupytercad-lab":
   version: 0.0.0-use.local
-  resolution: "@jupytercad/jupytercad-extension@workspace:packages/jupytercad-extension"
+  resolution: "@jupytercad/jupytercad-lab@workspace:python/jupytercad-lab"
   dependencies:
-    "@apidevtools/json-schema-ref-parser": ^9.0.9
     "@deathbeds/jupyterlab-rjsf": ^1.1.0
     "@jupyter/collaboration": ^1.0.0
     "@jupyter/docprovider": ^1.0.0
@@ -987,6 +1039,7 @@ __metadata:
     "@jupytercad/jupytercad-worker": ^0.3.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
+    "@jupyterlab/builder": ^4.0.0
     "@jupyterlab/coreutils": ^6.0.0
     "@jupyterlab/docregistry": ^4.0.0
     "@jupyterlab/filebrowser": ^4.0.0
@@ -1004,61 +1057,37 @@ __metadata:
     "@naisutech/react-tree": ^3.0.1
     "@rjsf/core": ^4.2.0
     "@types/d3-color": ^3.1.0
-    "@types/node": ^18.15.11
-    "@types/three": ^0.134.0
-    copy-webpack-plugin: ^10.0.0
-    d3-color: ^3.1.0
-    file-loader: ^6.2.0
-    json-schema-to-typescript: ^10.1.5
-    lib0: ^0.2.62
-    npm-run-all: ^4.1.5
-    react: ^18.0.1
-    rimraf: ^3.0.2
-    source-map-loader: ^3.0.0
-    styled-components: ^5.3.6
-    three: ^0.135.0
-    three-mesh-bvh: ^0.5.17
-    ts-loader: ^9.2.6
-    typescript: ^5
-    uuid: ^8.3.2
-    webpack: ^5.76.3
-    yjs-widgets: ^0.3.3
-  languageName: unknown
-  linkType: soft
-
-"@jupytercad/jupytercad-lab@workspace:python/jupytercad-lab":
-  version: 0.0.0-use.local
-  resolution: "@jupytercad/jupytercad-lab@workspace:python/jupytercad-lab"
-  dependencies:
-    "@jupytercad/jupytercad-extension": ^0.3.3
-    "@jupytercad/jupytercad-opencascade": ^0.3.3
-    "@jupytercad/jupytercad-worker": ^0.3.3
-    "@jupyterlab/application": ^4.0.0
-    "@jupyterlab/builder": ^4.0.0
-    "@jupyterlab/coreutils": ^6.0.0
-    "@jupyterlab/services": ^7.0.0
     "@types/json-schema": ^7.0.11
     "@types/react": ^18.0.26
     "@types/react-addons-linked-state-mixin": ^0.14.22
+    "@types/three": ^0.134.0
     "@typescript-eslint/eslint-plugin": ^6.1.0
     "@typescript-eslint/parser": ^6.1.0
     css-loader: ^6.7.1
+    d3-color: ^3.1.0
     eslint: ^8.36.0
     eslint-config-prettier: ^8.8.0
     eslint-plugin-prettier: ^5.0.0
+    lib0: ^0.2.62
     mkdirp: ^1.0.3
     npm-run-all: ^4.1.5
     prettier: ^3.0.0
+    react: ^18.0.1
     rimraf: ^5.0.1
     source-map-loader: ^1.0.2
     style-loader: ^3.3.1
+    styled-components: ^5.3.6
     stylelint: ^15.10.1
     stylelint-config-recommended: ^13.0.0
     stylelint-config-standard: ^34.0.0
     stylelint-csstree-validator: ^3.0.0
     stylelint-prettier: ^4.0.0
+    three: ^0.135.0
+    three-mesh-bvh: ^0.5.17
     typescript: ~5.0.2
+    uuid: ^8.3.2
     yjs: ^13.5.0
+    yjs-widgets: ^0.3.3
   languageName: unknown
   linkType: soft
 
@@ -2287,9 +2316,9 @@ __metadata:
   linkType: hard
 
 "@lezer/common@npm:^1.0.0, @lezer/common@npm:^1.0.2, @lezer/common@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@lezer/common@npm:1.1.0"
-  checksum: 93c208a44d1c0bdf7407853ba7c4ddcedf1c52d1b82170813d83b9bd6301aa23587405ac54332fe39ce8bc37f706936ab237ceb4d3d535d1dead650153b6474c
+  version: 1.1.1
+  resolution: "@lezer/common@npm:1.1.1"
+  checksum: 1e540c152c5e6000d81aee0d6998dc340f35685d0f3aebf9c83213674b8a84509e0f6a04ea9b28d9d04499f68c2e57b484703bde53eaacf426bc2fac6a9e892c
   languageName: node
   linkType: hard
 
@@ -2326,11 +2355,11 @@ __metadata:
   linkType: hard
 
 "@lezer/highlight@npm:^1.0.0, @lezer/highlight@npm:^1.1.3, @lezer/highlight@npm:^1.1.4":
-  version: 1.1.6
-  resolution: "@lezer/highlight@npm:1.1.6"
+  version: 1.2.0
+  resolution: "@lezer/highlight@npm:1.2.0"
   dependencies:
     "@lezer/common": ^1.0.0
-  checksum: 411a702394c4c996b7d7f145a38f3a85a8cc698b3918acc7121c629255bb76d4ab383753f69009e011dc415210c6acbbb5b27bde613259ab67e600b29397b03b
+  checksum: 5b9dfe741f95db13f6124cb9556a43011cb8041ecf490be98d44a86b04d926a66e912bcd3a766f6a3d79e064410f1a2f60ab240b50b645a12c56987bf4870086
   languageName: node
   linkType: hard
 
@@ -5656,9 +5685,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.535":
-  version: 1.4.580
-  resolution: "electron-to-chromium@npm:1.4.580"
-  checksum: 44c1dea2864a0855905fbb241d99298076f680e6cf033d837385ef8f9f380d9cb05d8de0554bae5cee135c88f586f648c72a1b60c6b698a3d6c37eea6517bb74
+  version: 1.4.582
+  resolution: "electron-to-chromium@npm:1.4.582"
+  checksum: a87ea18b4fbad7c96ae5fe587c3273c3878ee52b08c8a7acd6156949d05fd370f91809691126b0cee223a6cdd4688e6ff2f086c6603a712d004485f36a4b9093
   languageName: node
   linkType: hard
 
@@ -5839,9 +5868,9 @@ __metadata:
   linkType: hard
 
 "es-module-lexer@npm:^1.2.1":
-  version: 1.4.0
-  resolution: "es-module-lexer@npm:1.4.0"
-  checksum: 8944067428d16b2fade0cec9c42c87780d1a31812f64cee12ba99ab0c02bef2fa5cb8097cd60d764b7a5b29c954a51398bfb1e4360f64fec9cf6c89ef126ab14
+  version: 1.4.1
+  resolution: "es-module-lexer@npm:1.4.1"
+  checksum: a11b5a256d4e8e9c7d94c2fd87415ccd1591617b6edd847e064503f8eaece2d25e2e9078a02c5ce3ed5e83bb748f5b4820efbe78072c8beb07ac619c2edec35d
   languageName: node
   linkType: hard
 
@@ -6425,18 +6454,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"flat-cache@npm:^3.0.4":
-  version: 3.1.1
-  resolution: "flat-cache@npm:3.1.1"
-  dependencies:
-    flatted: ^3.2.9
-    keyv: ^4.5.3
-    rimraf: ^3.0.2
-  checksum: 4958cfe0f46acf84953d4e16676ef5f0d38eab3a92d532a1e8d5f88f11eea8b36d5d598070ff2aeae15f1fde18f8d7d089eefaf9db10b5a587cc1c9072325c7a
-  languageName: node
-  linkType: hard
-
-"flat-cache@npm:^3.1.1":
+"flat-cache@npm:^3.0.4, flat-cache@npm:^3.1.1":
   version: 3.2.0
   resolution: "flat-cache@npm:3.2.0"
   dependencies:
@@ -8495,9 +8513,11 @@ __metadata:
   linkType: hard
 
 "lru-cache@npm:^10.0.1, lru-cache@npm:^9.1.1 || ^10.0.0":
-  version: 10.0.1
-  resolution: "lru-cache@npm:10.0.1"
-  checksum: 06f8d0e1ceabd76bb6f644a26dbb0b4c471b79c7b514c13c6856113879b3bf369eb7b497dad4ff2b7e2636db202412394865b33c332100876d838ad1372f0181
+  version: 10.0.2
+  resolution: "lru-cache@npm:10.0.2"
+  dependencies:
+    semver: ^7.3.5
+  checksum: 83ad0e899d79f48574bdda131fe8157c6d65cbd073a6e78e0d1a3467a85dce1ef4d8dc9fd618a56c57a068271501c81d54471e13f84dd121e046b155ed061ed4
   languageName: node
   linkType: hard
 
@@ -10198,11 +10218,11 @@ __metadata:
   linkType: hard
 
 "prettier@npm:^3.0.0":
-  version: 3.0.3
-  resolution: "prettier@npm:3.0.3"
+  version: 3.1.0
+  resolution: "prettier@npm:3.1.0"
   bin:
     prettier: bin/prettier.cjs
-  checksum: e10b9af02b281f6c617362ebd2571b1d7fc9fb8a3bd17e371754428cda992e5e8d8b7a046e8f7d3e2da1dcd21aa001e2e3c797402ebb6111b5cd19609dd228e0
+  checksum: 44b556bd56f74d7410974fbb2418bb4e53a894d3e7b42f6f87779f69f27a6c272fa7fc27cec0118cd11730ef3246478052e002cbd87e9a253f9cd04a56aa7d9b
   languageName: node
   linkType: hard
 

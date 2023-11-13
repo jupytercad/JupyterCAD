@@ -1,7 +1,7 @@
 import { RankedMenu, MenuSvg, homeIcon } from '@jupyterlab/ui-components';
 import { CommandRegistry } from '@lumino/commands';
 import { MenuBar } from '@lumino/widgets';
-import { CommandIDs } from '@jupytercad/jupytercad-extension/lib/commands';
+import { CommandIDs } from '@jupytercad/base/lib/commands';
 import { IThemeManager } from '@jupyterlab/apputils';
 export class MainMenu extends MenuBar {
   constructor(options: {

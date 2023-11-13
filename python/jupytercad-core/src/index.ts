@@ -10,7 +10,7 @@ import {
   JupyterCadModel,
   AnnotationModel,
   JupyterCadWidget
-} from '@jupytercad/jupytercad-extension';
+} from '@jupytercad/base';
 import { ITranslator } from '@jupyterlab/translation';
 import { IMainMenu } from '@jupyterlab/mainmenu';
 import { WidgetTracker } from '@jupyterlab/apputils';

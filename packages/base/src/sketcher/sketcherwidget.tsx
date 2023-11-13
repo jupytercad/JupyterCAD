@@ -221,8 +221,8 @@ export class SketcherReactWidget extends React.Component<IProps, IState> {
       e.type === 'mousedown' && e.button === 2
         ? true
         : e.type === 'mouseup'
-        ? false
-        : this._mouse.button;
+          ? false
+          : this._mouse.button;
     if (e.type === 'wheel') {
       this._mouse.wheel += -(e as WheelEvent).deltaY;
       e.preventDefault();

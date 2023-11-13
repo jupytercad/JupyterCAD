@@ -1,5 +1,5 @@
 {
-    "name": "@jupytercad/jupytercad-extension",
+    "name": "@jupytercad/base",
     "version": "0.3.3",
     "description": "A JupyterLab extension for 3D modelling.",
     "keywords": [

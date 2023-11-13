@@ -53,7 +53,7 @@
         "build:worker:prod": "webpack --config worker.webpack.config.js --mode=production"
     },
     "dependencies": {
-        "@jupytercad/jupytercad-extension": "^0.3.3",
+        "@jupytercad/base": "^0.3.3",
         "@jupytercad/jupytercad-opencascade": "^0.3.3",
         "@jupytercad/jupytercad-worker": "^0.3.3",
         "@jupyterlab/application": "^4.0.0",
