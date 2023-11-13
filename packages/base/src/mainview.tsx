@@ -5,7 +5,7 @@ import {
   IWorkerMessage,
   MainAction,
   WorkerAction
-} from '@jupytercad/jupytercad-worker';
+} from '@jupytercad/occ-worker';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { User } from '@jupyterlab/services';
 import { CommandRegistry } from '@lumino/commands';

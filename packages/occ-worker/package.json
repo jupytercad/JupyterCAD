@@ -1,5 +1,5 @@
 {
-    "name": "@jupytercad/jupytercad-worker",
+    "name": "@jupytercad/occ-worker",
     "version": "0.3.3",
     "description": "Jupytercad opencascade worker package.",
     "keywords": [

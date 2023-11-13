@@ -32,10 +32,7 @@ const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
     });
     // TODO create worker registry
     JupyterCadModel.worker = new Worker(
-      new URL(
-        '@jupytercad/jupytercad-worker/lib/worker',
-        (import.meta as any).url
-      )
+      new URL('@jupytercad/occ-worker/lib/worker', (import.meta as any).url)
     );
 
     console.log('jupytercad:core-plugin is activated!');
