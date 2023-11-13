@@ -24,8 +24,9 @@
         "url": "https://github.com/jupyter-cad/jupytercad.git"
     },
     "scripts": {
-        "build": "webpack --config worker.webpack.config.js --mode=development",
-        "build:prod": "webpack --config worker.webpack.config.js --mode=production",
+        "build:lib": "tsc -b",
+        "build": "jlpm build:lib && webpack --config worker.webpack.config.js --mode=development",
+        "build:prod": "jlpm build:lib && webpack --config worker.webpack.config.js --mode=production",
         "clean": "rimraf tsconfig.tsbuildinfo",
         "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
         "clean:all": "jlpm run clean:lib",

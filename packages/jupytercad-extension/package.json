@@ -73,7 +73,6 @@
     },
     "devDependencies": {
         "@apidevtools/json-schema-ref-parser": "^9.0.9",
-        "@jupyterlab/builder": "^4.0.0",
         "@types/node": "^18.15.11",
         "copy-webpack-plugin": "^10.0.0",
         "file-loader": "^6.2.0",
