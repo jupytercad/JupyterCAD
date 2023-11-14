@@ -2,6 +2,7 @@ import {
   ICollaborativeDrive,
   SharedDocumentFactory
 } from '@jupyter/docprovider';
+import { IAnnotationModel, JupyterCadDoc } from '@jupytercad/schema';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
@@ -17,10 +18,9 @@ import { ILauncher } from '@jupyterlab/launcher';
 import { fileIcon } from '@jupyterlab/ui-components';
 
 import { JupyterCadWidgetFactory } from '../factory';
-import { JupyterCadDoc } from '../model';
 import { IAnnotationToken, IJupyterCadDocTracker } from '../token';
 import { requestAPI } from '../tools';
-import { IAnnotationModel, IJupyterCadWidget } from '../types';
+import { IJupyterCadWidget } from '../types';
 import { JupyterCadFCModelFactory } from './modelfactory';
 
 const FACTORY = 'Jupytercad Freecad Factory';

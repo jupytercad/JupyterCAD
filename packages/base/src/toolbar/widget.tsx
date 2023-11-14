@@ -1,18 +1,16 @@
-import * as React from 'react';
-
-import { CommandRegistry } from '@lumino/commands';
-import { Widget } from '@lumino/widgets';
-
+import { JupyterCadModel } from '@jupytercad/schema';
 import { CommandToolbarButton } from '@jupyterlab/apputils';
 import {
-  Toolbar,
-  undoIcon,
+  ReactWidget,
   redoIcon,
-  ReactWidget
+  Toolbar,
+  undoIcon
 } from '@jupyterlab/ui-components';
+import { CommandRegistry } from '@lumino/commands';
+import { Widget } from '@lumino/widgets';
+import * as React from 'react';
 
 import { CommandIDs } from '../commands';
-import { JupyterCadModel } from '../model';
 import { UsersItem } from './usertoolbaritem';
 
 export const TOOLBAR_SEPARATOR_CLASS = 'jcad-Toolbar-Separator';

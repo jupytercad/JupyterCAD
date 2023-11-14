@@ -1,13 +1,20 @@
-import * as React from 'react';
-import { JSONObject } from '@lumino/coreutils';
-
+import {
+  IDict,
+  IJCadModel,
+  IJCadObject,
+  IJcadObjectDocChange,
+  IJupyterCadClientState,
+  IJupyterCadDoc,
+  IJupyterCadModel
+} from '@jupytercad/schema';
 import { ReactWidget } from '@jupyterlab/apputils';
 import {
+  closeIcon,
   LabIcon,
   PanelWithToolbar,
-  ToolbarButtonComponent,
-  closeIcon
+  ToolbarButtonComponent
 } from '@jupyterlab/ui-components';
+import { JSONObject } from '@lumino/coreutils';
 import { Panel } from '@lumino/widgets';
 import {
   ReactTree,
@@ -15,19 +22,12 @@ import {
   TreeNodeId,
   TreeNodeList
 } from '@naisutech/react-tree';
+import * as React from 'react';
+import { v4 as uuid } from 'uuid';
 
 import visibilitySvg from '../../style/icon/visibility.svg';
 import visibilityOffSvg from '../../style/icon/visibilityOff.svg';
-import { IJCadModel, IJCadObject } from '@jupytercad/schema';
-import {
-  IControlPanelModel,
-  IDict,
-  IJcadObjectDocChange,
-  IJupyterCadClientState,
-  IJupyterCadDoc,
-  IJupyterCadModel
-} from '../types';
-import { v4 as uuid } from 'uuid';
+import { IControlPanelModel } from '../types';
 
 const visibilityIcon = new LabIcon({
   name: 'jupytercad:visibilityIcon',

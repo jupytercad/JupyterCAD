@@ -1,7 +1,5 @@
+import { IUserData, JupyterCadModel } from '@jupytercad/schema';
 import * as React from 'react';
-import { JupyterCadModel } from '../model';
-
-import { IUserData } from '../types';
 
 interface IProps {
   model: JupyterCadModel;

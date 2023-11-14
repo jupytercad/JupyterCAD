@@ -1,30 +1,25 @@
 import {
+  ICollaborativeDrive,
+  SharedDocumentFactory
+} from '@jupyter/docprovider';
+import { IAnnotationModel, JupyterCadDoc } from '@jupytercad/schema';
+import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-
 import {
   ICommandPalette,
   IThemeManager,
   WidgetTracker
 } from '@jupyterlab/apputils';
-
+import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
+import { ILauncher } from '@jupyterlab/launcher';
 import { fileIcon } from '@jupyterlab/ui-components';
 
-import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
-
-import { ILauncher } from '@jupyterlab/launcher';
-
-import {
-  ICollaborativeDrive,
-  SharedDocumentFactory
-} from '@jupyter/docprovider';
-
-import { IAnnotationModel, IJupyterCadWidget } from '../types';
-import { IAnnotationToken, IJupyterCadDocTracker } from '../token';
 import { JupyterCadWidgetFactory } from '../factory';
+import { IAnnotationToken, IJupyterCadDocTracker } from '../token';
+import { IJupyterCadWidget } from '../types';
 import { JupyterCadJcadModelFactory } from './modelfactory';
-import { JupyterCadDoc } from '../model';
 
 const FACTORY = 'Jupytercad Jcad Factory';
 const PALETTE_CATEGORY = 'JupyterCAD';

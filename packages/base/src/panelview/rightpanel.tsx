@@ -1,6 +1,6 @@
+import { JupyterCadDoc } from '@jupytercad/schema';
 import { SidePanel } from '@jupyterlab/ui-components';
 
-import { JupyterCadDoc } from '../model';
 import { IControlPanelModel } from '../types';
 import { ControlPanelHeader } from './header';
 import { ObjectProperties } from './objectproperties';

@@ -1,10 +1,9 @@
-import { caretRightIcon, closeIcon } from '@jupyterlab/ui-components';
+import { IAnnotationModel } from '@jupytercad/schema';
 import { Dialog, showDialog } from '@jupyterlab/apputils';
-
+import { caretRightIcon, closeIcon } from '@jupyterlab/ui-components';
 import * as React from 'react';
 
 import { minimizeIcon } from '../tools';
-import { IAnnotationModel } from '../types';
 import { Message } from './message';
 
 interface IAnnotationProps {

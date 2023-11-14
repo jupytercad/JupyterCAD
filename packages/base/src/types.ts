@@ -1,55 +1,11 @@
-import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
-import { IChangedArgs } from '@jupyterlab/coreutils';
+import { IDocumentWidget } from '@jupyterlab/docregistry';
 import { ReactWidget } from '@jupyterlab/ui-components';
-import { User } from '@jupyterlab/services';
-
-import {
-  MapChange,
-  YDocument,
-  StateChange,
-  DocumentChange
-} from '@jupyter/ydoc';
-
-import { ISignal, Signal } from '@lumino/signaling';
-import { JSONObject } from '@lumino/coreutils';
-
+import { ISignal } from '@lumino/signaling';
+import { IJupyterCadModel, IJupyterCadDoc, IDict } from '@jupytercad/schema';
 import { IJupyterCadTracker } from './token';
-import {
-  IJCadContent,
-  IJCadObject,
-  IJCadModel,
-  IJCadOptions
-} from '@jupytercad/schema';
 
-export interface IDict<T = any> {
-  [key: string]: T;
-}
-
+export { IDict };
 export type ValueOf<T> = T[keyof T];
-
-export interface IUserData {
-  userId: number;
-  userData: User.IIdentity;
-}
-
-/**
- * User pointer in the 3D environment
- */
-export type Pointer = {
-  parent: string;
-  x: number;
-  y: number;
-  z: number;
-};
-
-/**
- * Position and orientation of the user Camera
- */
-export type Camera = {
-  position: number[];
-  rotation: number[];
-  up: number[];
-};
 
 /**
  * Axe's dimensions
@@ -74,108 +30,6 @@ export type CameraSettings = {
   type: 'Perspective' | 'Orthographic';
 };
 
-export interface IJcadObjectDocChange {
-  objectChange?: Array<{
-    name: string;
-    key: keyof IJCadObject;
-    newValue: IJCadObject | undefined;
-  }>;
-}
-
-export interface IJupyterCadDocChange extends DocumentChange {
-  contextChange?: MapChange;
-  contentChange?: MapChange;
-  objectChange?: Array<{
-    name: string;
-    key: string;
-    newValue: IJCadObject | undefined;
-  }>;
-  optionChange?: MapChange;
-  stateChange?: StateChange<any>[];
-}
-
-export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
-  objects: Array<IJCadObject>;
-  options: JSONObject;
-  metadata: JSONObject;
-
-  objectExists(name: string): boolean;
-  getObjectByName(name: string): IJCadObject | undefined;
-  removeObjectByName(name: string): void;
-  addObject(value: IJCadObject): void;
-  addObjects(value: Array<IJCadObject>): void;
-  updateObjectByName(name: string, key: string, value: any): void;
-
-  getOption(key: keyof IJCadOptions): IDict | undefined;
-  setOption(key: keyof IJCadOptions, value: IDict): void;
-  setOptions(options: IJCadOptions): void;
-
-  getMetadata(key: string): string | undefined;
-  setMetadata(key: string, value: string): void;
-  removeMetadata(key: string): void;
-
-  setShapeMeta(key: string, meta?: IDict): void;
-
-  metadataChanged: ISignal<IJupyterCadDoc, MapChange>;
-  optionsChanged: ISignal<IJupyterCadDoc, MapChange>;
-  objectsChanged: ISignal<IJupyterCadDoc, IJcadObjectDocChange>;
-}
-
-export interface IJupyterCadClientState {
-  pointer: { value?: Pointer; emitter?: string | null };
-  camera: { value?: Camera; emitter?: string | null };
-  selected: { value?: string[]; emitter?: string | null };
-  selectedPropField?: {
-    id: string | null;
-    value: any;
-    parentType: 'panel' | 'dialog';
-  };
-  user: User.IIdentity;
-  remoteUser?: number;
-  toolbarForm?: IDict;
-}
-
-export interface IJupyterCadModel extends DocumentRegistry.IModel {
-  isDisposed: boolean;
-  sharedModel: IJupyterCadDoc;
-  annotationModel?: IAnnotationModel;
-  localState: IJupyterCadClientState | null;
-
-  themeChanged: Signal<
-    IJupyterCadModel,
-    IChangedArgs<string, string | null, string>
-  >;
-  clientStateChanged: ISignal<
-    IJupyterCadModel,
-    Map<number, IJupyterCadClientState>
-  >;
-  sharedMetadataChanged: ISignal<IJupyterCadDoc, MapChange>;
-  sharedOptionsChanged: ISignal<IJupyterCadDoc, MapChange>;
-  sharedObjectsChanged: ISignal<IJupyterCadDoc, IJcadObjectDocChange>;
-
-  getWorker(): Worker;
-  getContent(): IJCadContent;
-  getAllObject(): IJCadModel;
-
-  syncPointer(position: Pointer | undefined, emitter?: string): void;
-  syncCamera(camera: Camera | undefined, emitter?: string): void;
-  syncSelectedObject(name: string[], emitter?: string): void;
-  syncSelectedPropField(data: {
-    id: string | null;
-    value: any;
-    parentType: 'panel' | 'dialog';
-  });
-  setUserToFollow(userId?: number): void;
-  syncFormData(form: any): void;
-
-  getClientId(): number;
-
-  addMetadata(key: string, value: string): void;
-  removeMetadata(key: string): void;
-
-  disposed: ISignal<any, void>;
-}
-
 export type IJupyterCadWidget = IDocumentWidget<ReactWidget, IJupyterCadModel>;
 
 export interface IControlPanelModel {
@@ -184,36 +38,4 @@ export interface IControlPanelModel {
   filePath: string | undefined;
   jcadModel: IJupyterCadModel | undefined;
   sharedModel: IJupyterCadDoc | undefined;
-}
-
-export interface IAnnotationContent {
-  user?: User.IIdentity;
-  value: string;
-}
-
-export interface IAnnotation {
-  label: string;
-  position: [number, number, number];
-  contents: IAnnotationContent[];
-  parent: string;
-}
-
-export interface IAnnotationModel {
-  updateSignal: ISignal<this, null>;
-  user: User.IIdentity | undefined;
-
-  context: DocumentRegistry.IContext<IJupyterCadModel> | undefined;
-  contextChanged: ISignal<this, void>;
-
-  update(): void;
-
-  getAnnotation(id: string): IAnnotation | undefined;
-
-  getAnnotationIds(): string[];
-
-  addAnnotation(key: string, value: IAnnotation): void;
-
-  removeAnnotation(key): void;
-
-  addContent(id: string, value: string): void;
 }

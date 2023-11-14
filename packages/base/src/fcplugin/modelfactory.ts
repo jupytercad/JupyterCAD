@@ -1,8 +1,10 @@
+import {
+  IAnnotationModel,
+  IJupyterCadDoc,
+  JupyterCadModel
+} from '@jupytercad/schema';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { Contents } from '@jupyterlab/services';
-
-import { IAnnotationModel, IJupyterCadDoc } from '../types';
-import { JupyterCadModel } from '../model';
 
 /**
  * A Model factory to create new instances of JupyterCadModel.

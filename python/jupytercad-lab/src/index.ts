@@ -17,12 +17,12 @@ import {
   IJupyterCadDocTracker,
   IJupyterCadTracker,
   jcLightIcon,
-  IAnnotationModel,
   addCommands,
   CommandIDs,
   JupyterCadWidget,
   IAnnotationToken
 } from '@jupytercad/base';
+import { IAnnotationModel } from '@jupytercad/schema';
 import { WidgetTracker } from '@jupyterlab/apputils';
 
 // import { yJupyterCADWidgetPlugin } from './notebookrenderer';

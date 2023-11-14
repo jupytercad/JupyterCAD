@@ -29,7 +29,6 @@ export * from './commands';
 export * from './factory';
 export * from './formdialog';
 export * from './mainview';
-export * from './model';
 export * from './token';
 export * from './tools';
 export * from './types';

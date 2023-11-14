@@ -1,11 +1,10 @@
-import { DocumentRegistry } from '@jupyterlab/docregistry';
-import { Contents } from '@jupyterlab/services';
-
 import {
   IAnnotationModel,
   IJupyterCadDoc,
   JupyterCadModel
-} from '@jupytercad/base';
+} from '@jupytercad/schema';
+import { DocumentRegistry } from '@jupyterlab/docregistry';
+import { Contents } from '@jupyterlab/services';
 
 /**
  * A Model factory to create new instances of JupyterCadModel.

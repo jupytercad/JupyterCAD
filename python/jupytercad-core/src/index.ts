@@ -1,19 +1,19 @@
 import {
-  JupyterFrontEnd,
-  JupyterFrontEndPlugin
-} from '@jupyterlab/application';
-import {
-  IAnnotationModel,
+  AnnotationModel,
   IAnnotationToken,
   IJupyterCadDocTracker,
   IJupyterCadTracker,
-  JupyterCadModel,
-  AnnotationModel,
   JupyterCadWidget
 } from '@jupytercad/base';
-import { ITranslator } from '@jupyterlab/translation';
-import { IMainMenu } from '@jupyterlab/mainmenu';
+import { IAnnotationModel, JupyterCadModel } from '@jupytercad/schema';
+import {
+  JupyterFrontEnd,
+  JupyterFrontEndPlugin
+} from '@jupyterlab/application';
 import { WidgetTracker } from '@jupyterlab/apputils';
+import { IMainMenu } from '@jupyterlab/mainmenu';
+import { ITranslator } from '@jupyterlab/translation';
+
 const NAME_SPACE = 'jupytercad';
 
 const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {

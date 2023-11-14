@@ -1,8 +1,18 @@
+import {
+  IDict,
+  IJCadObject,
+  IJupyterCadDoc,
+  IJupyterCadModel,
+  Parts
+} from '@jupytercad/schema';
+import formSchema from '@jupytercad/schema/lib/_interface/forms.json';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { showErrorMessage, WidgetTracker } from '@jupyterlab/apputils';
 import { ITranslator } from '@jupyterlab/translation';
-import { SketcherDialog } from './sketcher/sketcherdialog';
+import { redoIcon, undoIcon } from '@jupyterlab/ui-components';
+
 import { FormDialog } from './formdialog';
+import { SketcherDialog } from './sketcher/sketcherdialog';
 import {
   axesIcon,
   boxIcon,
@@ -16,12 +26,7 @@ import {
   torusIcon,
   unionIcon
 } from './tools';
-
-import { IDict, IJupyterCadDoc, IJupyterCadModel } from './types';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
-import formSchema from '@jupytercad/schema/lib/_interface/forms.json';
-import { IJCadObject, Parts } from '@jupytercad/schema';
-import { redoIcon, undoIcon } from '@jupyterlab/ui-components';
 
 const FORM_SCHEMA = {};
 // Injecting "name" in the schema, as it's not part of the official schema but

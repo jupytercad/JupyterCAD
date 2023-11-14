@@ -1,13 +1,17 @@
+import {
+  IDict,
+  IGeomCircle,
+  IGeomLineSegment,
+  IJCadObject,
+  IJupyterCadDoc
+} from '@jupytercad/schema';
 import { showErrorMessage } from '@jupyterlab/apputils';
 import { v4 as uuid } from 'uuid';
 
-import { IDict, IJupyterCadDoc } from '../types';
-
-import { IGeomCircle, IGeomLineSegment, IJCadObject } from '@jupytercad/schema';
-
-import { distance } from './helper';
+import { Circle } from './elements/circle';
 import { Line } from './elements/line';
 import { Point } from './elements/point';
+import { distance } from './helper';
 import {
   ICircle,
   ILine,
@@ -17,7 +21,6 @@ import {
   IPosition,
   ISketcherModel
 } from './types';
-import { Circle } from './elements/circle';
 
 // TODO Refactor this model to make use of the elemental classes (Point, Circle...)
 export class SketcherModel implements ISketcherModel {

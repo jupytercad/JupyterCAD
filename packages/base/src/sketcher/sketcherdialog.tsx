@@ -1,6 +1,7 @@
+import { IDict, IJupyterCadDoc } from '@jupytercad/schema';
 import { Dialog } from '@jupyterlab/apputils';
 import * as React from 'react';
-import { IDict, IJupyterCadDoc } from '../types';
+
 import { SketcherModel } from './sketchermodel';
 import { SketcherReactWidget } from './sketcherwidget';
 

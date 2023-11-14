@@ -6,6 +6,14 @@ import {
   MainAction,
   WorkerAction
 } from '@jupytercad/occ-worker';
+import {
+  IAnnotation,
+  IDict,
+  IJcadObjectDocChange,
+  IJupyterCadClientState,
+  IJupyterCadDoc,
+  IJupyterCadModel
+} from '@jupytercad/schema';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { User } from '@jupyterlab/services';
 import { CommandRegistry } from '@lumino/commands';
@@ -24,17 +32,7 @@ import { v4 as uuid } from 'uuid';
 
 import { FloatingAnnotation } from './annotation/view';
 import { getCSSVariableColor, throttle } from './tools';
-import {
-  AxeHelper,
-  CameraSettings,
-  ExplodedView,
-  IAnnotation,
-  IDict,
-  IJcadObjectDocChange,
-  IJupyterCadClientState,
-  IJupyterCadDoc,
-  IJupyterCadModel
-} from './types';
+import { AxeHelper, CameraSettings, ExplodedView } from './types';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;

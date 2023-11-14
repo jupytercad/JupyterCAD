@@ -1,9 +1,14 @@
-import * as React from 'react';
+import {
+  IDict,
+  IJupyterCadClientState,
+  IJupyterCadModel
+} from '@jupytercad/schema';
 import { Dialog } from '@jupyterlab/apputils';
-import { ObjectPropertiesForm } from './panelview/formbuilder';
-import { IDict, IJupyterCadClientState, IJupyterCadModel } from './types';
-import { focusInputField, removeStyleFromProperty } from './tools';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
+import * as React from 'react';
+
+import { ObjectPropertiesForm } from './panelview/formbuilder';
+import { focusInputField, removeStyleFromProperty } from './tools';
 
 export interface IFormDialogOptions {
   schema: IDict;

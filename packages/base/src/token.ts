@@ -1,7 +1,8 @@
+import { IAnnotationModel } from '@jupytercad/schema';
 import { IWidgetTracker } from '@jupyterlab/apputils';
 import { Token } from '@lumino/coreutils';
 
-import { IJupyterCadWidget, IAnnotationModel } from './types';
+import { IJupyterCadWidget } from './types';
 
 export type IJupyterCadTracker = IWidgetTracker<IJupyterCadWidget>;
 

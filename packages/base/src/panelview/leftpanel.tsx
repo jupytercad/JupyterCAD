@@ -1,11 +1,11 @@
+import { IAnnotationModel, JupyterCadDoc } from '@jupytercad/schema';
 import { SidePanel } from '@jupyterlab/ui-components';
 
-import { JupyterCadDoc } from '../model';
-import { IControlPanelModel, IAnnotationModel } from '../types';
+import { IJupyterCadTracker } from '../token';
+import { IControlPanelModel } from '../types';
+import { Annotations } from './annotations';
 import { ControlPanelHeader } from './header';
 import { ObjectTree } from './objecttree';
-import { Annotations } from './annotations';
-import { IJupyterCadTracker } from '../token';
 
 export class LeftPanelWidget extends SidePanel {
   constructor(options: LeftPanelWidget.IOptions) {

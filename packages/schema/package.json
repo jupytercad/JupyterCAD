@@ -18,7 +18,7 @@
         "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
     ],
     "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "types": "lib/types.d.ts",
     "style": "style/index.css",
     "repository": {
         "type": "git",

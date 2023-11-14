@@ -1,3 +1,4 @@
+import { IJupyterCadModel } from '@jupytercad/schema';
 import { ReactWidget } from '@jupyterlab/apputils';
 import { DocumentWidget } from '@jupyterlab/docregistry';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
@@ -8,9 +9,8 @@ import * as React from 'react';
 import { MainView } from './mainview';
 import {
   AxeHelper,
-  ExplodedView,
   CameraSettings,
-  IJupyterCadModel,
+  ExplodedView,
   IJupyterCadWidget
 } from './types';
 

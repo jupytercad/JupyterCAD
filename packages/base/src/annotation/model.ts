@@ -1,14 +1,12 @@
-import { DocumentRegistry } from '@jupyterlab/docregistry';
-import { User } from '@jupyterlab/services';
-
-import { ISignal, Signal } from '@lumino/signaling';
-
 import {
-  IAnnotationModel,
   IAnnotation,
   IAnnotationContent,
+  IAnnotationModel,
   IJupyterCadModel
-} from '../types';
+} from '@jupytercad/schema';
+import { DocumentRegistry } from '@jupyterlab/docregistry';
+import { User } from '@jupyterlab/services';
+import { ISignal, Signal } from '@lumino/signaling';
 
 export class AnnotationModel implements IAnnotationModel {
   constructor(options: AnnotationModel.IOptions) {

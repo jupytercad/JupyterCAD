@@ -1,5 +1,6 @@
 import { MapChange, YDocument } from '@jupyter/ydoc';
 import { IChangedArgs } from '@jupyterlab/coreutils';
+import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { JSONExt, JSONObject, PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import Ajv from 'ajv';
@@ -10,8 +11,8 @@ import {
   IJCadModel,
   IJCadObject,
   IJCadOptions
-} from '@jupytercad/schema';
-import jcadSchema from '@jupytercad/schema/lib/schema/jcad.json';
+} from './_interface/jcad';
+import jcadSchema from './schema/jcad.json';
 import {
   Camera,
   IAnnotationModel,
@@ -23,9 +24,9 @@ import {
   IJupyterCadModel,
   IUserData,
   Pointer
-} from './types';
-import { DocumentRegistry } from '@jupyterlab/docregistry';
+} from './interfaces';
 
+// import { IJCadContent, IJCadModel, IJCadObject, IJCadOptions } from './index';
 export class JupyterCadModel implements IJupyterCadModel {
   constructor(options: JupyterCadModel.IOptions) {
     const { annotationModel, sharedModel } = options;

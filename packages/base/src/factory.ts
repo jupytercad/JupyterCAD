@@ -1,7 +1,7 @@
+import { JupyterCadModel } from '@jupytercad/schema';
 import { ABCWidgetFactory, DocumentRegistry } from '@jupyterlab/docregistry';
 import { CommandRegistry } from '@lumino/commands';
 
-import { JupyterCadModel } from './model';
 import { IJupyterCadTracker } from './token';
 import { ToolbarWidget } from './toolbar/widget';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';

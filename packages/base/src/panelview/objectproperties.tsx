@@ -1,4 +1,11 @@
-import { IJCadModel } from '@jupytercad/schema';
+import {
+  IDict,
+  IJCadModel,
+  IJcadObjectDocChange,
+  IJupyterCadClientState,
+  IJupyterCadDoc,
+  IJupyterCadModel
+} from '@jupytercad/schema';
 import formSchema from '@jupytercad/schema/lib/_interface/forms.json';
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
@@ -11,14 +18,7 @@ import {
   itemFromName,
   removeStyleFromProperty
 } from '../tools';
-import {
-  IControlPanelModel,
-  IDict,
-  IJcadObjectDocChange,
-  IJupyterCadClientState,
-  IJupyterCadDoc,
-  IJupyterCadModel
-} from '../types';
+import { IControlPanelModel } from '../types';
 import { ObjectPropertiesForm } from './formbuilder';
 
 export class ObjectProperties extends PanelWithToolbar {

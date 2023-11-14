@@ -19,7 +19,7 @@ import {
   IJupyterYWidget
 } from 'yjs-widgets';
 
-import { JupyterCadModel } from '../model';
+import { JupyterCadModel } from '@jupytercad/schema';
 import { JupyterCadPanel } from '../widget';
 
 export interface ICommMetadata {
