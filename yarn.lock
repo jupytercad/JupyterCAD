@@ -897,8 +897,8 @@ __metadata:
     "@jupyter/collaboration": ^1.0.0
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/jupytercad-opencascade": ^0.3.3
     "@jupytercad/occ-worker": ^0.3.3
+    "@jupytercad/opencascade": ^0.3.3
     "@jupytercad/schema": ^0.3.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -1006,8 +1006,8 @@ __metadata:
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad-core"
   dependencies:
     "@jupytercad/base": ^0.3.3
-    "@jupytercad/jupytercad-opencascade": ^0.3.3
     "@jupytercad/occ-worker": ^0.3.3
+    "@jupytercad/opencascade": ^0.3.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
     "@jupyterlab/coreutils": ^6.0.0
@@ -1034,8 +1034,8 @@ __metadata:
     "@jupyter/collaboration": ^1.0.0
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/jupytercad-opencascade": ^0.3.3
     "@jupytercad/occ-worker": ^0.3.3
+    "@jupytercad/opencascade": ^0.3.3
     "@jupytercad/schema": ^0.3.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -1091,15 +1091,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-opencascade@^0.3.3, @jupytercad/jupytercad-opencascade@workspace:packages/jupytercad-opencascade":
-  version: 0.0.0-use.local
-  resolution: "@jupytercad/jupytercad-opencascade@workspace:packages/jupytercad-opencascade"
-  dependencies:
-    js-yaml: ^4.1.0
-    rimraf: ^3.0.2
-  languageName: unknown
-  linkType: soft
-
 "@jupytercad/jupytercad-root@workspace:.":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-root@workspace:."
@@ -1123,7 +1114,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupytercad/occ-worker@workspace:packages/occ-worker"
   dependencies:
-    "@jupytercad/jupytercad-opencascade": ^0.3.3
+    "@jupytercad/opencascade": ^0.3.3
     "@jupytercad/schema": ^0.3.3
     "@types/node": ^18.15.11
     copy-webpack-plugin: ^10.0.0
@@ -1135,6 +1126,15 @@ __metadata:
     typescript: ^5
     uuid: ^8.3.2
     webpack: ^5.76.3
+  languageName: unknown
+  linkType: soft
+
+"@jupytercad/opencascade@^0.3.3, @jupytercad/opencascade@workspace:packages/opencascade":
+  version: 0.0.0-use.local
+  resolution: "@jupytercad/opencascade@workspace:packages/opencascade"
+  dependencies:
+    js-yaml: ^4.1.0
+    rimraf: ^3.0.2
   languageName: unknown
   linkType: soft
 

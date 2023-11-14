@@ -6,7 +6,7 @@ const occPath = [
   '../',
   '../',
   'node_modules',
-  '@jupytercad/jupytercad-opencascade',
+  '@jupytercad/opencascade',
   'lib',
   '*.wasm'
 ];

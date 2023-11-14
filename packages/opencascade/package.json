@@ -1,5 +1,5 @@
 {
-  "name": "@jupytercad/jupytercad-opencascade",
+  "name": "@jupytercad/opencascade",
   "version": "0.3.3",
   "description": "The custom OpenCascade build for JupyterCAD.",
   "keywords": [

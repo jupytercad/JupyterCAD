@@ -60,11 +60,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            packages/jupytercad-opencascade/lib/jupytercad.opencascade.js
-            packages/jupytercad-opencascade/lib/jupytercad.opencascade.wasm
-            packages/jupytercad-opencascade/lib/jupytercad.opencascade.d.ts
-            packages/jupytercad-opencascade/lib/jupytercad.opencascade.version
-          key: ${{ hashFiles('packages/jupytercad-opencascade/build.yml') }}
+            packages/opencascade/lib/jupytercad.opencascade.js
+            packages/opencascade/lib/jupytercad.opencascade.wasm
+            packages/opencascade/lib/jupytercad.opencascade.d.ts
+            packages/opencascade/lib/jupytercad.opencascade.version
+          key: ${{ hashFiles('packages/opencascade/build.yml') }}
 
       - name: Build the extension
         shell: bash -l {0}

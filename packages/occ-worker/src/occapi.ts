@@ -1,4 +1,4 @@
-import { TopoDS_Shape } from '@jupytercad/jupytercad-opencascade';
+import { TopoDS_Shape } from '@jupytercad/opencascade';
 import { v4 as uuid } from 'uuid';
 
 import {

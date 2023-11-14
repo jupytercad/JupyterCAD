@@ -33,7 +33,7 @@
         "watch": "webpack --config worker.webpack.config.js --watch --mode=development"
     },
     "dependencies": {
-        "@jupytercad/jupytercad-opencascade": "^0.3.3",
+        "@jupytercad/opencascade": "^0.3.3",
         "@jupytercad/schema": "^0.3.3",
         "uuid": "^8.3.2"
     },

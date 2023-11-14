@@ -1,6 +1,4 @@
-import initOpenCascade, {
-  OpenCascadeInstance
-} from '@jupytercad/jupytercad-opencascade';
+import initOpenCascade, { OpenCascadeInstance } from '@jupytercad/opencascade';
 
 import WorkerHandler from './actions';
 import {
