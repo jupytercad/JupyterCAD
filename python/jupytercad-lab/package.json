@@ -132,6 +132,12 @@
             }
         },
         "extension": true,
-        "outputDir": "jupytercad_lab/labextension"
+        "outputDir": "jupytercad_lab/labextension",
+        "sharedPackages": {
+            "@jupytercad/base": {
+              "singleton": true,
+              "bundled": false
+             }
+           }
     }
 }

@@ -17,7 +17,7 @@ import { WidgetTracker } from '@jupyterlab/apputils';
 const NAME_SPACE = 'jupytercad';
 
 const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
-  id: 'jupytercad:core-plugin',
+  id: 'jupytercad:core:tracker',
   autoStart: true,
   requires: [ITranslator],
   optional: [IMainMenu],
@@ -35,7 +35,7 @@ const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
       new URL('@jupytercad/occ-worker/lib/worker', (import.meta as any).url)
     );
 
-    console.log('jupytercad:core-plugin is activated!');
+    console.log('jupytercad:core:tracker is activated!');
 
     /**
      * @TODO Move commands to jupytercad-lab package

@@ -25,10 +25,19 @@
 // import { yJupyterCADWidgetPlugin } from './notebookrenderer';
 // import { addCommands, CommandIDs } from './commands';
 
-export * from './token';
-export * from './types';
+export * from './commands';
+export * from './factory';
+export * from './formdialog';
+export * from './mainview';
 export * from './model';
+export * from './token';
+export * from './tools';
+export * from './types';
 export * from './widget';
+
+export * from './panelview';
+export * from './sketcher';
+export * from './toolbar';
 export * from './annotation';
 
 // const plugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {

@@ -1,18 +1,112 @@
 import {
+  ILayoutRestorer,
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 
-/**
- * Initialization data for the @jupytercad/jupytercad-lab extension.
- */
+import { ITranslator, nullTranslator } from '@jupyterlab/translation';
+import { IMainMenu } from '@jupyterlab/mainmenu';
+
+// import fcplugin from './fcplugin/plugins';
+import jcadPlugin from './jcadplugin/plugins';
+
+import {
+  ControlPanelModel,
+  LeftPanelWidget,
+  RightPanelWidget,
+  IJupyterCadDocTracker,
+  IJupyterCadTracker,
+  jcLightIcon,
+  IAnnotationModel,
+  addCommands,
+  CommandIDs,
+  JupyterCadWidget,
+  IAnnotationToken
+} from '@jupytercad/base';
+import { WidgetTracker } from '@jupyterlab/apputils';
+
+// import { yJupyterCADWidgetPlugin } from './notebookrenderer';
+
+const NAME_SPACE = 'jupytercad';
+
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: '@jupytercad/jupytercad-lab:plugin',
-  description: 'A JupyterLab extension.',
+  id: 'jupytercad:lab:main-menu',
   autoStart: true,
-  activate: (app: JupyterFrontEnd) => {
-    console.log('jupytercad:lab-plugin is activated!');
+  requires: [IJupyterCadDocTracker],
+  optional: [IMainMenu, ITranslator],
+  activate: (
+    app: JupyterFrontEnd,
+    tracker: WidgetTracker<JupyterCadWidget>,
+    mainMenu?: IMainMenu,
+    translator?: ITranslator
+  ): void => {
+    console.log('jupytercad:lab:main-menu is activated!');
+    translator = translator ?? nullTranslator;
+    /**
+     * Whether there is an active notebook.
+     */
+    const isEnabled = (): boolean => {
+      return (
+        tracker.currentWidget !== null &&
+        tracker.currentWidget === app.shell.currentWidget
+      );
+    };
+
+    addCommands(app, tracker, translator);
+    if (mainMenu) {
+      populateMenus(mainMenu, isEnabled);
+    }
   }
 };
 
-export default plugin;
+const controlPanel: JupyterFrontEndPlugin<void> = {
+  id: 'jupytercad:lab:controlpanel',
+  autoStart: true,
+  requires: [ILayoutRestorer, IJupyterCadDocTracker, IAnnotationToken],
+  activate: (
+    app: JupyterFrontEnd,
+    restorer: ILayoutRestorer,
+    tracker: IJupyterCadTracker,
+    annotationModel: IAnnotationModel
+  ) => {
+    const controlModel = new ControlPanelModel({ tracker });
+
+    const leftControlPanel = new LeftPanelWidget({
+      model: controlModel,
+      annotationModel,
+      tracker
+    });
+    leftControlPanel.id = 'jupytercad::leftControlPanel';
+    leftControlPanel.title.caption = 'JupyterCad Control Panel';
+    leftControlPanel.title.icon = jcLightIcon;
+
+    const rightControlPanel = new RightPanelWidget({ model: controlModel });
+    rightControlPanel.id = 'jupytercad::rightControlPanel';
+    rightControlPanel.title.caption = 'JupyterCad Control Panel';
+    rightControlPanel.title.icon = jcLightIcon;
+
+    if (restorer) {
+      restorer.add(leftControlPanel, NAME_SPACE);
+      restorer.add(rightControlPanel, NAME_SPACE);
+    }
+    app.shell.add(leftControlPanel, 'left', { rank: 2000 });
+    app.shell.add(rightControlPanel, 'right', { rank: 2000 });
+  }
+};
+
+/**
+ * Populates the application menus for the notebook.
+ */
+function populateMenus(mainMenu: IMainMenu, isEnabled: () => boolean): void {
+  // Add undo/redo hooks to the edit menu.
+  mainMenu.editMenu.undoers.redo.add({
+    id: CommandIDs.redo,
+    isEnabled
+  });
+  mainMenu.editMenu.undoers.undo.add({
+    id: CommandIDs.undo,
+    isEnabled
+  });
+}
+
+export default [plugin, controlPanel, jcadPlugin];

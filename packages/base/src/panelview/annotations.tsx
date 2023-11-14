@@ -56,7 +56,7 @@ export class ReactAnnotations extends React.Component<IProps> {
 }
 
 export class Annotations extends PanelWithToolbar {
-  constructor(options: Annotation.IOptions) {
+  constructor(options: Annotations.IOptions) {
     super({});
 
     this.title.label = 'Annotations';
@@ -73,7 +73,7 @@ export class Annotations extends PanelWithToolbar {
   private _model: IAnnotationModel;
 }
 
-export namespace Annotation {
+export namespace Annotations {
   export interface IOptions {
     model: IAnnotationModel;
   }
