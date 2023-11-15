@@ -1,7 +1,10 @@
-import { MessageLoop } from '@lumino/messaging';
-import { Panel, Widget } from '@lumino/widgets';
-
 import { WebSocketProvider } from '@jupyter/docprovider';
+import { JupyterCadPanel } from '@jupytercad/base';
+import {
+  IJCadWorkerRegistry,
+  IJCadWorkerRegistryToken,
+  JupyterCadModel
+} from '@jupytercad/schema';
 
 import {
   JupyterFrontEnd,
@@ -9,18 +12,15 @@ import {
 } from '@jupyterlab/application';
 import { URLExt } from '@jupyterlab/coreutils';
 import { ServerConnection, User } from '@jupyterlab/services';
-import { ITranslator } from '@jupyterlab/translation';
-
+import { ITranslator, nullTranslator } from '@jupyterlab/translation';
+import { MessageLoop } from '@lumino/messaging';
+import { Panel, Widget } from '@lumino/widgets';
 import * as Y from 'yjs';
-
 import {
-  JupyterYModel,
+  IJupyterYWidget,
   IJupyterYWidgetManager,
-  IJupyterYWidget
+  JupyterYModel
 } from 'yjs-widgets';
-
-import { JupyterCadModel } from '@jupytercad/schema';
-import { JupyterCadPanel } from '../widget';
 
 export interface ICommMetadata {
   create_ydoc: boolean;
@@ -38,11 +38,14 @@ export class YJupyterCADModel extends JupyterYModel {
 }
 
 export class YJupyterCADLuminoWidget extends Panel {
-  constructor(model: JupyterCadModel) {
+  constructor(options: {
+    model: JupyterCadModel;
+    workerRegistry: IJCadWorkerRegistry;
+  }) {
     super();
 
     this.addClass(CLASS_NAME);
-    this._jcadWidget = new JupyterCadPanel({ model: model });
+    this._jcadWidget = new JupyterCadPanel(options);
     this.addWidget(this._jcadWidget);
   }
 
@@ -58,37 +61,22 @@ export class YJupyterCADLuminoWidget extends Panel {
   private _jcadWidget: JupyterCadPanel;
 }
 
-class YJupyterCADWidget implements IJupyterYWidget {
-  constructor(yModel: YJupyterCADModel, node: HTMLElement) {
-    this.yModel = yModel;
-    this.node = node;
-
-    const widget = new YJupyterCADLuminoWidget(yModel.jupyterCADModel);
-    // Widget.attach(widget, node);
-
-    MessageLoop.sendMessage(widget, Widget.Msg.BeforeAttach);
-    node.appendChild(widget.node);
-    MessageLoop.sendMessage(widget, Widget.Msg.AfterAttach);
-  }
-
-  readonly yModel: YJupyterCADModel;
-  readonly node: HTMLElement;
-}
-
-export const yJupyterCADWidgetPlugin: JupyterFrontEndPlugin<void> = {
+export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:yjswidget-plugin',
   autoStart: true,
-  requires: [ITranslator],
-  optional: [IJupyterYWidgetManager],
+  requires: [IJCadWorkerRegistryToken],
+  optional: [IJupyterYWidgetManager, ITranslator],
   activate: (
     app: JupyterFrontEnd,
-    translator: ITranslator,
-    yWidgetManager?: IJupyterYWidgetManager
+    workerRegistry: IJCadWorkerRegistry,
+    yWidgetManager?: IJupyterYWidgetManager,
+    translator?: ITranslator
   ): void => {
     if (!yWidgetManager) {
       console.error('Missing IJupyterYWidgetManager token!');
       return;
     }
+    const labTranslator = translator ?? nullTranslator;
     class YJupyterCADModelFactory extends YJupyterCADModel {
       ydocFactory(commMetadata: ICommMetadata): Y.Doc {
         const { path, format, contentType } = commMetadata;
@@ -105,7 +93,7 @@ export const yJupyterCADWidgetPlugin: JupyterFrontEndPlugin<void> = {
             contentType,
             model: this.jupyterCADModel.sharedModel,
             user,
-            translator: translator.load('jupyterlab')
+            translator: labTranslator.load('jupyterlab')
           });
           this.jupyterCADModel.disposed.connect(() => {
             ywsProvider.dispose();
@@ -126,6 +114,27 @@ export const yJupyterCADWidgetPlugin: JupyterFrontEndPlugin<void> = {
         return this.jupyterCADModel.sharedModel.ydoc;
       }
     }
+
+    class YJupyterCADWidget implements IJupyterYWidget {
+      constructor(yModel: YJupyterCADModel, node: HTMLElement) {
+        this.yModel = yModel;
+        this.node = node;
+
+        const widget = new YJupyterCADLuminoWidget({
+          model: yModel.jupyterCADModel,
+          workerRegistry
+        });
+        // Widget.attach(widget, node);
+
+        MessageLoop.sendMessage(widget, Widget.Msg.BeforeAttach);
+        node.appendChild(widget.node);
+        MessageLoop.sendMessage(widget, Widget.Msg.AfterAttach);
+      }
+
+      readonly yModel: YJupyterCADModel;
+      readonly node: HTMLElement;
+    }
+    console.log('yWidgetManager', yWidgetManager);
 
     yWidgetManager.registerWidget(
       '@jupytercad:widget',

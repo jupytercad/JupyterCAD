@@ -53,19 +53,27 @@
         "build:worker:prod": "webpack --config worker.webpack.config.js --mode=production"
     },
     "dependencies": {
+        "@jupyter/docprovider": "^1.0.0",
         "@jupytercad/base": "^0.3.3",
         "@jupytercad/occ-worker": "^0.3.3",
-        "@jupytercad/opencascade": "^0.3.3",
         "@jupytercad/schema": "^0.3.3",
         "@jupyterlab/application": "^4.0.0",
-        "@jupyterlab/coreutils": "^6.0.0",
-        "@jupyterlab/services": "^7.0.0"
+        "@jupyterlab/apputils": "^4.0.0",
+        "@jupyterlab/docregistry": "^4.0.0",
+        "@jupyterlab/filebrowser": "^4.0.0",
+        "@jupyterlab/launcher": "^4.0.0",
+        "@jupyterlab/mainmenu": "^4.0.0",
+        "@jupyterlab/services": "^7.0.0",
+        "@jupyterlab/translation": "^4.0.0",
+        "@jupyterlab/ui-components": "^4.0.0",
+        "@lumino/commands": "^2.0.0"
     },
     "devDependencies": {
         "@jupyterlab/builder": "^4.0.0",
         "@types/json-schema": "^7.0.11",
         "@types/react": "^18.0.26",
         "@types/react-addons-linked-state-mixin": "^0.14.22",
+        "copy-webpack-plugin": "^10.0.0",
         "css-loader": "^6.7.1",
         "mkdirp": "^1.0.3",
         "npm-run-all": "^4.1.5",

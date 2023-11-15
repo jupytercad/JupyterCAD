@@ -8,7 +8,6 @@ import { ITranslator, nullTranslator } from '@jupyterlab/translation';
 import { IMainMenu } from '@jupyterlab/mainmenu';
 
 // import fcplugin from './fcplugin/plugins';
-import jcadPlugin from './jcadplugin/plugins';
 
 import {
   ControlPanelModel,
@@ -26,6 +25,7 @@ import {
   IJupyterCadTracker
 } from '@jupytercad/schema';
 import { WidgetTracker } from '@jupyterlab/apputils';
+import { notebookRenderePlugin } from './notebookrenderer';
 
 // import { yJupyterCADWidgetPlugin } from './notebookrenderer';
 
@@ -108,4 +108,4 @@ function populateMenus(mainMenu: IMainMenu, isEnabled: () => boolean): void {
   });
 }
 
-export default [plugin, controlPanel, jcadPlugin];
+export default [plugin, controlPanel, notebookRenderePlugin];

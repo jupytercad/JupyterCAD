@@ -64,7 +64,7 @@ export type BasicMesh = THREE.Mesh<
 interface IProps {
   view: ObservableMap<JSONValue>;
   jcadModel: IJupyterCadModel;
-  workerRegistry?: IJCadWorkerRegistry;
+  workerRegistry: IJCadWorkerRegistry;
 }
 
 interface IStates {

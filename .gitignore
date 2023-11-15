@@ -125,7 +125,6 @@ examples/Untitled*.ipynb
 jupytercad/_version.py
 
 #Schema
-jupytercad/notebook/objects/_schema
 jupytercad/cadapp/static
 jupytercad/cadapp/schemas
 jupytercad/cadapp/themes

@@ -2,7 +2,6 @@ import {
   ICollaborativeDrive,
   SharedDocumentFactory
 } from '@jupyter/docprovider';
-import { JupyterCadWidgetFactory } from '@jupytercad/jupytercad-core';
 import {
   IAnnotationModel,
   IAnnotationToken,
@@ -25,6 +24,7 @@ import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { ILauncher } from '@jupyterlab/launcher';
 import { fileIcon } from '@jupyterlab/ui-components';
 
+import { JupyterCadWidgetFactory } from '../factory';
 import { JupyterCadJcadModelFactory } from './modelfactory';
 
 const FACTORY = 'Jupytercad Jcad Factory';
@@ -57,6 +57,7 @@ const activate = (
 
   // Registering the widget factory
   app.docRegistry.addWidgetFactory(widgetFactory);
+  console.log('activating jcad plugingf');
 
   // Creating and registering the model factory for our custom DocumentModel
   const modelFactory = new JupyterCadJcadModelFactory({

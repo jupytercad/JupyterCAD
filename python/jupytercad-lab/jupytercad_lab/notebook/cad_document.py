@@ -8,11 +8,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import y_py as Y
-from pydantic import BaseModel, Extra
+from pydantic import BaseModel
 from ypywidgets.ypywidgets import Widget
 
-from jupytercad.freecad.loader import fc
-from jupytercad.notebook.objects._schema.any import IAny
+from .objects._schema.any import IAny
 from uuid import uuid4
 
 from .objects import (
@@ -80,10 +79,6 @@ class CadDocument(Widget):
             except Exception:
                 raise ValueError("Can not detect file extension!")
             if ext == "fcstd":
-                if fc is None:
-                    msg = "FreeCAD is required to open FCStd files"
-                    logger.warn(msg)
-                    raise RuntimeError(msg)
                 format = "base64"
                 contentType = "FCStd"
             elif ext == "jcad":
@@ -634,7 +629,7 @@ class CadDocument(Widget):
 class PythonJcadObject(BaseModel):
     class Config:
         arbitrary_types_allowed = True
-        extra = Extra.allow
+        extra = "allow"
 
     name: str
     shape: Parts

@@ -41,7 +41,7 @@ export class JupyterCadPanel extends ReactWidget {
    */
   constructor(options: {
     model: IJupyterCadModel;
-    workerRegistry?: IJCadWorkerRegistry;
+    workerRegistry: IJCadWorkerRegistry;
   }) {
     super();
     this.addClass('jp-jupytercad-panel');
@@ -107,6 +107,6 @@ export class JupyterCadPanel extends ReactWidget {
   }
 
   private _view: ObservableMap<JSONValue>;
-  private _workerRegistry: IJCadWorkerRegistry | undefined;
+  private _workerRegistry: IJCadWorkerRegistry;
   private _jcadModel: IJupyterCadModel;
 }

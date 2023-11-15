@@ -1,3 +1,4 @@
+import jcadPlugin from './jcadplugin/plugins';
 import {
   annotationPlugin,
   trackerPlugin,
@@ -6,4 +7,9 @@ import {
 
 export * from './workerregistry';
 export * from './factory';
-export default [trackerPlugin, annotationPlugin, workerRegistryPlugin];
+export default [
+  trackerPlugin,
+  annotationPlugin,
+  workerRegistryPlugin,
+  jcadPlugin
+];
