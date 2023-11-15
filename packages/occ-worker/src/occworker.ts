@@ -57,11 +57,9 @@ export class OccWorker implements IJCadWorker {
   private _processMessage(msg: any): void {
     if (msg.data.action === MainAction.INITIALIZED) {
       this._ready.resolve();
-    } else {
-      this._handlers.forEach(cb => cb(msg.data));
     }
+    this._handlers.forEach(cb => cb(msg.data));
   }
-
   private _ready = new PromiseDelegate<void>();
   private _handlers = new Map<string, CallableFunction>();
   private _messageChannels = new Map<string, MessageChannel>();

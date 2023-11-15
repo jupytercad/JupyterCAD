@@ -104,10 +104,9 @@ export class MainView extends React.Component<IProps, IStates> {
     const lightTheme =
       document.body.getAttribute('data-jp-theme-light') === 'true';
 
-    this._worker = props.workerRegistry?.getWorker(OCC_WORKER_ID);
-
-    const id = this._worker!.initChannel();
-    this._worker!.registerHandler(id, this.messageHandler.bind(this));
+    this._worker = props.workerRegistry.getWorker(OCC_WORKER_ID)!;
+    const id = this._worker.initChannel();
+    this._worker.registerHandler(id, this.messageHandler.bind(this));
 
     this.state = {
       id,
@@ -913,7 +912,7 @@ export class MainView extends React.Component<IProps, IStates> {
     change: IJcadObjectDocChange
   ): Promise<void> {
     if (change.objectChange) {
-      await this._worker!.ready;
+      await this._worker.ready;
       this._postMessage({
         action: WorkerAction.LOAD_FILE,
         payload: {
@@ -1202,7 +1201,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private divRef = React.createRef<HTMLDivElement>(); // Reference of render div
 
   private _model: IJupyterCadModel;
-  private _worker?: IJCadWorker = undefined;
+  private _worker: IJCadWorker;
 
   private _pointer: THREE.Vector2;
   private _syncPointer: (

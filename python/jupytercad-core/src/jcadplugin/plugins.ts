@@ -57,7 +57,6 @@ const activate = (
 
   // Registering the widget factory
   app.docRegistry.addWidgetFactory(widgetFactory);
-  console.log('activating jcad plugingf');
 
   // Creating and registering the model factory for our custom DocumentModel
   const modelFactory = new JupyterCadJcadModelFactory({

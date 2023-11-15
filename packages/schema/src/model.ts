@@ -459,8 +459,11 @@ export class JupyterCadDoc
         });
       }
     });
-    // Need render at first load
-    needEmit = changes.length === 0 ? true : needEmit;
+    if (changes.length === 0 && this._firstEmit) {
+      // Need render at first load
+      needEmit = true;
+      this._firstEmit = false;
+    }
     if (needEmit) {
       this._objectsChanged.emit({ objectChange: changes });
     }
@@ -483,6 +486,7 @@ export class JupyterCadDoc
   private _objectsChanged = new Signal<IJupyterCadDoc, IJcadObjectDocChange>(
     this
   );
+  private _firstEmit = true;
 }
 
 export namespace JupyterCadModel {

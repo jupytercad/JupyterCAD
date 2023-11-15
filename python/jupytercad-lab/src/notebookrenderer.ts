@@ -134,7 +134,6 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
       readonly yModel: YJupyterCADModel;
       readonly node: HTMLElement;
     }
-    console.log('yWidgetManager', yWidgetManager);
 
     yWidgetManager.registerWidget(
       '@jupytercad:widget',

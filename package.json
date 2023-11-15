@@ -41,7 +41,7 @@
         "test": "lerna run test",
         "dev": "python scripts/dev-install.py",
         "watch:lib": "lerna run --stream watch",
-        "watch": "lerna watch --scope @jupytercad/jupytercad-lab -- lerna run build --since",
+        "watch": "lerna watch -- lerna run build --since",
         "build:lab": "lerna run --ignore @jupytercad/jupytercad-app build"
     },
     "resolutions": {

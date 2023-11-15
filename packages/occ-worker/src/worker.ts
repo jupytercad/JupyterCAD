@@ -39,6 +39,7 @@ const sendToMain = (msg: IMainMessage, id: string) => {
 self.onmessage = async (event: MessageEvent): Promise<void> => {
   const message = event.data as IWorkerMessage;
   const { id } = message;
+
   switch (message.action) {
     case WorkerAction.REGISTER: {
       const port = event.ports[0];
@@ -47,6 +48,7 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
     }
     case WorkerAction.LOAD_FILE: {
       const result = WorkerHandler[message.action](message.payload);
+
       sendToMain(
         {
           action: MainAction.DISPLAY_SHAPE,
