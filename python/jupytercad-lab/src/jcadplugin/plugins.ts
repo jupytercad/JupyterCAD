@@ -2,14 +2,16 @@ import {
   ICollaborativeDrive,
   SharedDocumentFactory
 } from '@jupyter/docprovider';
+import { JupyterCadWidgetFactory } from '@jupytercad/jupytercad-core';
 import {
+  IAnnotationModel,
   IAnnotationToken,
   IJCadWorkerRegistry,
+  IJCadWorkerRegistryToken,
   IJupyterCadDocTracker,
-  IJupyterCadWidget
-} from '@jupytercad/base';
-import { JupyterCadWidgetFactory } from '@jupytercad/jupytercad-core';
-import { IAnnotationModel, JupyterCadDoc } from '@jupytercad/schema';
+  IJupyterCadWidget,
+  JupyterCadDoc
+} from '@jupytercad/schema';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
@@ -150,7 +152,7 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IAnnotationToken,
     IFileBrowserFactory,
     ICollaborativeDrive,
-    IJCadWorkerRegistry
+    IJCadWorkerRegistryToken
   ],
   optional: [ILauncher, ICommandPalette],
   autoStart: true,

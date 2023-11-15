@@ -1,8 +1,6 @@
-import { IDocumentWidget } from '@jupyterlab/docregistry';
-import { ReactWidget } from '@jupyterlab/ui-components';
 import { ISignal } from '@lumino/signaling';
 import { IJupyterCadModel, IJupyterCadDoc, IDict } from '@jupytercad/schema';
-import { IJupyterCadTracker } from './token';
+import { IJupyterCadTracker, IJupyterCadWidget } from '@jupytercad/schema';
 
 export { IDict };
 export type ValueOf<T> = T[keyof T];
@@ -29,8 +27,6 @@ export type ExplodedView = {
 export type CameraSettings = {
   type: 'Perspective' | 'Orthographic';
 };
-
-export type IJupyterCadWidget = IDocumentWidget<ReactWidget, IJupyterCadModel>;
 
 export interface IControlPanelModel {
   disconnect(f: any): void;

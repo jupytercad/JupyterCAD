@@ -1,7 +1,10 @@
-import { IAnnotationModel, JupyterCadDoc } from '@jupytercad/schema';
+import {
+  IAnnotationModel,
+  JupyterCadDoc,
+  IJupyterCadTracker
+} from '@jupytercad/schema';
 import { SidePanel } from '@jupyterlab/ui-components';
 
-import { IJupyterCadTracker } from '../token';
 import { IControlPanelModel } from '../types';
 import { Annotations } from './annotations';
 import { ControlPanelHeader } from './header';

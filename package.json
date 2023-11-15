@@ -40,7 +40,9 @@
         "lint": "jlpm run prettier && jlpm run eslint",
         "test": "lerna run test",
         "dev": "python scripts/dev-install.py",
-        "watch": "lerna run --stream watch"
+        "watch:lib": "lerna run --stream watch",
+        "watch": "lerna watch --scope @jupytercad/jupytercad-lab -- lerna run build --since",
+        "build:lab": "lerna run --ignore @jupytercad/jupytercad-app build"
     },
     "resolutions": {
         "@jupyterlab/apputils": "~4.0.0",

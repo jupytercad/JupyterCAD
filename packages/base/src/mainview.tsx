@@ -11,6 +11,8 @@ import {
   IAnnotation,
   IDict,
   IJcadObjectDocChange,
+  IJCadWorker,
+  IJCadWorkerRegistry,
   IJupyterCadClientState,
   IJupyterCadDoc,
   IJupyterCadModel
@@ -34,7 +36,6 @@ import { v4 as uuid } from 'uuid';
 import { FloatingAnnotation } from './annotation/view';
 import { getCSSVariableColor, throttle } from './tools';
 import { AxeHelper, CameraSettings, ExplodedView } from './types';
-import { IJCadWorker, IJCadWorkerRegistry } from './token';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -103,8 +104,13 @@ export class MainView extends React.Component<IProps, IStates> {
     const lightTheme =
       document.body.getAttribute('data-jp-theme-light') === 'true';
 
+    this._worker = props.workerRegistry?.getWorker(OCC_WORKER_ID);
+
+    const id = this._worker!.initChannel();
+    this._worker!.registerHandler(id, this.messageHandler.bind(this));
+
     this.state = {
-      id: uuid(),
+      id,
       lightTheme,
       loading: true,
       annotations: {},
@@ -112,19 +118,9 @@ export class MainView extends React.Component<IProps, IStates> {
     };
 
     this._model = this.props.jcadModel;
-    this._worker = props.workerRegistry?.getWorker(OCC_WORKER_ID);
-    console.log('worker is ', this._worker);
 
     this._pointer = new THREE.Vector2();
     this._collaboratorPointers = {};
-    this._messageChannel = new MessageChannel();
-    this._messageChannel.port1.onmessage = msgEvent => {
-      this.messageHandler(msgEvent.data);
-    };
-    this._postMessage(
-      { action: WorkerAction.REGISTER, payload: { id: this.state.id } },
-      this._messageChannel.port2
-    );
     this._model.themeChanged.connect(this._handleThemeChange, this);
 
     this._model.sharedObjectsChanged.connect(
@@ -397,8 +393,6 @@ export class MainView extends React.Component<IProps, IStates> {
         break;
       }
       case MainAction.INITIALIZED: {
-        console.log('im here11');
-
         if (!this._model) {
           return;
         }
@@ -701,17 +695,10 @@ export class MainView extends React.Component<IProps, IStates> {
     this.setState(old => ({ ...old, loading: false }));
   };
 
-  private _postMessage = (
-    msg: Omit<IWorkerMessage, 'id'>,
-    port?: MessagePort
-  ) => {
+  private _postMessage = (msg: Omit<IWorkerMessage, 'id'>) => {
     if (this._worker) {
       const newMsg = { ...msg, id: this.state.id };
-      if (port) {
-        this._worker.postMessage(newMsg, [port]);
-      } else {
-        this._worker.postMessage(newMsg);
-      }
+      this._worker.postMessage(newMsg);
     }
   };
 
@@ -921,11 +908,12 @@ export class MainView extends React.Component<IProps, IStates> {
     });
   };
 
-  private _onSharedObjectsChanged(
+  private async _onSharedObjectsChanged(
     _: IJupyterCadDoc,
     change: IJcadObjectDocChange
-  ): void {
+  ): Promise<void> {
     if (change.objectChange) {
+      await this._worker!.ready;
       this._postMessage({
         action: WorkerAction.LOAD_FILE,
         payload: {

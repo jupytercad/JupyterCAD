@@ -140,6 +140,10 @@
                 "singleton": true,
                 "bundled": false
             },
+            "@jupytercad/schema": {
+                "singleton": true,
+                "bundled": false
+            },
             "@jupytercad/jupytercad-core": {
                 "singleton": true,
                 "bundled": false

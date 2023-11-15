@@ -1,4 +1,4 @@
-import { IJCadWorker, IJCadWorkerRegistry } from '@jupytercad/base';
+import { IJCadWorker, IJCadWorkerRegistry } from '@jupytercad/schema';
 
 export class JupyterCadWorkerRegistry implements IJCadWorkerRegistry {
   constructor() {
@@ -8,7 +8,7 @@ export class JupyterCadWorkerRegistry implements IJCadWorkerRegistry {
     if (!this._registry.has(workerId)) {
       this._registry.set(workerId, worker);
     } else {
-      console.error('Worker is already registered');
+      console.error('Worker is already registered!');
     }
   }
 

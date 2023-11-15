@@ -13,3 +13,4 @@ export * from './_interface/sphere';
 export * from './_interface/torus';
 export * from './interfaces';
 export * from './model';
+export * from './token';

@@ -1,8 +1,8 @@
 import { IJupyterCadDoc, IJupyterCadModel } from '@jupytercad/schema';
 import { ISignal } from '@lumino/signaling';
 
-import { IJupyterCadTracker } from '../token';
-import { IControlPanelModel, IJupyterCadWidget } from '../types';
+import { IJupyterCadTracker, IJupyterCadWidget } from '@jupytercad/schema';
+import { IControlPanelModel } from '../types';
 
 export class ControlPanelModel implements IControlPanelModel {
   constructor(options: ControlPanelModel.IOptions) {

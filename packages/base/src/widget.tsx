@@ -7,13 +7,8 @@ import { ISignal, Signal } from '@lumino/signaling';
 import * as React from 'react';
 
 import { MainView } from './mainview';
-import {
-  AxeHelper,
-  CameraSettings,
-  ExplodedView,
-  IJupyterCadWidget
-} from './types';
-import { IJCadWorkerRegistry } from './token';
+import { AxeHelper, CameraSettings, ExplodedView } from './types';
+import { IJCadWorkerRegistry, IJupyterCadWidget } from '@jupytercad/schema';
 
 export class JupyterCadWidget
   extends DocumentWidget<JupyterCadPanel, IJupyterCadModel>

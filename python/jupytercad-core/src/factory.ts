@@ -1,13 +1,15 @@
-import { JupyterCadModel } from '@jupytercad/schema';
+import {
+  JupyterCadModel,
+  IJupyterCadTracker,
+  IJCadWorkerRegistry
+} from '@jupytercad/schema';
 import { ABCWidgetFactory, DocumentRegistry } from '@jupyterlab/docregistry';
 import { CommandRegistry } from '@lumino/commands';
 
 import {
   JupyterCadPanel,
   JupyterCadWidget,
-  IJupyterCadTracker,
-  ToolbarWidget,
-  IJCadWorkerRegistry
+  ToolbarWidget
 } from '@jupytercad/base';
 
 interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {

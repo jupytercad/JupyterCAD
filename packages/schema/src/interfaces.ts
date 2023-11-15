@@ -4,9 +4,11 @@ import {
   StateChange,
   YDocument
 } from '@jupyter/ydoc';
+import { IWidgetTracker } from '@jupyterlab/apputils';
 import { IChangedArgs } from '@jupyterlab/coreutils';
-import { DocumentRegistry } from '@jupyterlab/docregistry';
+import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
 import { User } from '@jupyterlab/services';
+import { ReactWidget } from '@jupyterlab/ui-components';
 import { JSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 
@@ -178,3 +180,50 @@ export interface IAnnotation {
   contents: IAnnotationContent[];
   parent: string;
 }
+
+export interface IJCadWorker {
+  ready: Promise<void>;
+  initChannel(): string;
+  registerHandler(
+    id: string,
+    messageHandler: ((msg: any) => void) | ((msg: any) => Promise<void>),
+    thisArg?: any
+  ): void;
+  removeChannel(id: string): void;
+  postMessage(msg: any): void;
+}
+export interface IJCadWorkerRegistry {
+  /**
+   *
+   *
+   * @param {string} workerId
+   * @param {IJCadWorker} worker
+   */
+  registerWorker(workerId: string, worker: IJCadWorker): void;
+
+  /**
+   *
+   *
+   * @param {string} workerId
+   */
+  unregisterWorker(workerId: string): void;
+
+  /**
+   *
+   *
+   * @param {string} workerId
+   * @return {*}  {(IJCadWorker | undefined)}
+   */
+  getWorker(workerId: string): IJCadWorker | undefined;
+
+  /**
+   *
+   *
+   * @return {*}  {IJCadWorker[]}
+   */
+  getAllWorkers(): IJCadWorker[];
+}
+
+export type IJupyterCadWidget = IDocumentWidget<ReactWidget, IJupyterCadModel>;
+
+export type IJupyterCadTracker = IWidgetTracker<IJupyterCadWidget>;

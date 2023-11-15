@@ -1,13 +1,13 @@
-import {
-  AnnotationModel,
-  IAnnotationToken,
-  IJupyterCadDocTracker,
-  IJupyterCadTracker,
-  JupyterCadWidget
-} from '@jupytercad/base';
+import { AnnotationModel, JupyterCadWidget } from '@jupytercad/base';
 import { OCC_WORKER_ID, OccWorker } from '@jupytercad/occ-worker';
-import { IAnnotationModel } from '@jupytercad/schema';
-import { IJCadWorkerRegistry } from '@jupytercad/base';
+import {
+  IAnnotationModel,
+  IAnnotationToken,
+  IJCadWorkerRegistry,
+  IJCadWorkerRegistryToken,
+  IJupyterCadDocTracker,
+  IJupyterCadTracker
+} from '@jupytercad/schema';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
@@ -61,7 +61,7 @@ export const workerRegistryPlugin: JupyterFrontEndPlugin<IJCadWorkerRegistry> =
     id: 'jupytercad:core:worker-registry',
     autoStart: true,
     requires: [],
-    provides: IJCadWorkerRegistry,
+    provides: IJCadWorkerRegistryToken,
     activate: (app: JupyterFrontEnd): IJCadWorkerRegistry => {
       const workerRegistry = new JupyterCadWorkerRegistry();
       const worker = new Worker(

@@ -14,15 +14,17 @@ import {
   ControlPanelModel,
   LeftPanelWidget,
   RightPanelWidget,
-  IJupyterCadDocTracker,
-  IJupyterCadTracker,
   jcLightIcon,
   addCommands,
   CommandIDs,
-  JupyterCadWidget,
-  IAnnotationToken
+  JupyterCadWidget
 } from '@jupytercad/base';
-import { IAnnotationModel } from '@jupytercad/schema';
+import {
+  IAnnotationModel,
+  IAnnotationToken,
+  IJupyterCadDocTracker,
+  IJupyterCadTracker
+} from '@jupytercad/schema';
 import { WidgetTracker } from '@jupyterlab/apputils';
 
 // import { yJupyterCADWidgetPlugin } from './notebookrenderer';
@@ -42,9 +44,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
   ): void => {
     console.log('jupytercad:lab:main-menu is activated!');
     translator = translator ?? nullTranslator;
-    /**
-     * Whether there is an active notebook.
-     */
     const isEnabled = (): boolean => {
       return (
         tracker.currentWidget !== null &&
