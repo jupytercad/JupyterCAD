@@ -25,9 +25,13 @@ classifiers = [
 dependencies = [
     "jupyter_server>=2.0.6,<3",
     "jupyter_ydoc>=1.1.0,<2",
-    "y-py>=0.6.0,<0.7"
+    "y-py>=0.6.0,<0.7",
+    "jupyter-collaboration>=1.2.0,<2"
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
+
+[project.entry-points.jupyter_ydoc]
+jcad = "jupytercad_core.jcad_ydoc:YJCad"
 
 [tool.hatch.version]
 source = "nodejs"

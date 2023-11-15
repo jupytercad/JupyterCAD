@@ -32,8 +32,7 @@
         "clean": "rimraf tsconfig.tsbuildinfo",
         "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
         "clean:all": "jlpm run clean:lib",
-        "watch": "run-p watch:worker watch:src",
-        "watch:src": "tsc -w"
+        "watch": "tsc -w"
     },
     "dependencies": {
         "@apidevtools/json-schema-ref-parser": "^9.0.9",

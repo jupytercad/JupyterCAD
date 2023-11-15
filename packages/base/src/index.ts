@@ -26,7 +26,6 @@
 // import { addCommands, CommandIDs } from './commands';
 
 export * from './commands';
-export * from './factory';
 export * from './formdialog';
 export * from './mainview';
 export * from './token';

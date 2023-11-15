@@ -4,6 +4,7 @@ import {
   IMainMessage,
   IWorkerMessage,
   MainAction,
+  OCC_WORKER_ID,
   WorkerAction
 } from '@jupytercad/occ-worker';
 import {
@@ -33,6 +34,7 @@ import { v4 as uuid } from 'uuid';
 import { FloatingAnnotation } from './annotation/view';
 import { getCSSVariableColor, throttle } from './tools';
 import { AxeHelper, CameraSettings, ExplodedView } from './types';
+import { IJCadWorker, IJCadWorkerRegistry } from './token';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -61,6 +63,7 @@ export type BasicMesh = THREE.Mesh<
 interface IProps {
   view: ObservableMap<JSONValue>;
   jcadModel: IJupyterCadModel;
+  workerRegistry?: IJCadWorkerRegistry;
 }
 
 interface IStates {
@@ -92,7 +95,6 @@ interface IPickedResult {
 export class MainView extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
-
     this._geometry = new THREE.BufferGeometry();
     this._geometry.setDrawRange(0, 3 * 10000);
 
@@ -110,7 +112,8 @@ export class MainView extends React.Component<IProps, IStates> {
     };
 
     this._model = this.props.jcadModel;
-    this._worker = this._model.getWorker();
+    this._worker = props.workerRegistry?.getWorker(OCC_WORKER_ID);
+    console.log('worker is ', this._worker);
 
     this._pointer = new THREE.Vector2();
     this._collaboratorPointers = {};
@@ -394,6 +397,8 @@ export class MainView extends React.Component<IProps, IStates> {
         break;
       }
       case MainAction.INITIALIZED: {
+        console.log('im here11');
+
         if (!this._model) {
           return;
         }
@@ -1209,8 +1214,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private divRef = React.createRef<HTMLDivElement>(); // Reference of render div
 
   private _model: IJupyterCadModel;
-  private _worker?: Worker = undefined;
-  private _messageChannel?: MessageChannel;
+  private _worker?: IJCadWorker = undefined;
 
   private _pointer: THREE.Vector2;
   private _syncPointer: (

@@ -1001,7 +1001,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-core@workspace:python/jupytercad-core":
+"@jupytercad/jupytercad-core@^0.3.3, @jupytercad/jupytercad-core@workspace:python/jupytercad-core":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad-core"
   dependencies:
@@ -1034,6 +1034,8 @@ __metadata:
     "@jupyter/collaboration": ^1.0.0
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
+    "@jupytercad/base": ^0.3.3
+    "@jupytercad/jupytercad-core": ^0.3.3
     "@jupytercad/occ-worker": ^0.3.3
     "@jupytercad/opencascade": ^0.3.3
     "@jupytercad/schema": ^0.3.3

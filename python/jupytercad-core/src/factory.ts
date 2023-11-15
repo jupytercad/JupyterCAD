@@ -2,13 +2,18 @@ import { JupyterCadModel } from '@jupytercad/schema';
 import { ABCWidgetFactory, DocumentRegistry } from '@jupyterlab/docregistry';
 import { CommandRegistry } from '@lumino/commands';
 
-import { IJupyterCadTracker } from './token';
-import { ToolbarWidget } from './toolbar/widget';
-import { JupyterCadPanel, JupyterCadWidget } from './widget';
+import {
+  JupyterCadPanel,
+  JupyterCadWidget,
+  IJupyterCadTracker,
+  ToolbarWidget,
+  IJCadWorkerRegistry
+} from '@jupytercad/base';
 
-interface IOptios extends DocumentRegistry.IWidgetFactoryOptions {
+interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
   tracker: IJupyterCadTracker;
   commands: CommandRegistry;
+  workerRegistry: IJCadWorkerRegistry;
   backendCheck?: () => boolean;
 }
 
@@ -16,11 +21,12 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   JupyterCadWidget,
   JupyterCadModel
 > {
-  constructor(options: IOptios) {
+  constructor(options: IOptions) {
     const { backendCheck, ...rest } = options;
     super(rest);
     this._backendCheck = backendCheck;
     this._commands = options.commands;
+    this._workerRegistry = options.workerRegistry;
   }
 
   /**
@@ -39,7 +45,10 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
       }
     }
     const { model } = context;
-    const content = new JupyterCadPanel({ model });
+    const content = new JupyterCadPanel({
+      model,
+      workerRegistry: this._workerRegistry
+    });
     const toolbar = new ToolbarWidget({
       commands: this._commands,
       model
@@ -48,5 +57,6 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   }
 
   private _commands: CommandRegistry;
+  private _workerRegistry: IJCadWorkerRegistry;
   private _backendCheck?: () => boolean;
 }

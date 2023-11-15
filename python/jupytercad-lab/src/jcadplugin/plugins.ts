@@ -4,10 +4,11 @@ import {
 } from '@jupyter/docprovider';
 import {
   IAnnotationToken,
+  IJCadWorkerRegistry,
   IJupyterCadDocTracker,
-  IJupyterCadWidget,
-  JupyterCadWidgetFactory
+  IJupyterCadWidget
 } from '@jupytercad/base';
+import { JupyterCadWidgetFactory } from '@jupytercad/jupytercad-core';
 import { IAnnotationModel, JupyterCadDoc } from '@jupytercad/schema';
 import {
   JupyterFrontEnd,
@@ -38,6 +39,7 @@ const activate = (
   annotationModel: IAnnotationModel,
   browserFactory: IFileBrowserFactory,
   drive: ICollaborativeDrive,
+  workerRegistry: IJCadWorkerRegistry,
   launcher: ILauncher | null,
   palette: ICommandPalette | null
 ): void => {
@@ -47,14 +49,17 @@ const activate = (
     fileTypes: ['jcad'],
     defaultFor: ['jcad'],
     tracker,
-    commands: app.commands
+    commands: app.commands,
+    workerRegistry
   });
 
   // Registering the widget factory
   app.docRegistry.addWidgetFactory(widgetFactory);
 
   // Creating and registering the model factory for our custom DocumentModel
-  const modelFactory = new JupyterCadJcadModelFactory({ annotationModel });
+  const modelFactory = new JupyterCadJcadModelFactory({
+    annotationModel
+  });
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype
   app.docRegistry.addFileType({
@@ -103,7 +108,6 @@ const activate = (
         ext: '.jcad'
       });
 
-      console.debug('Model:', model);
       model = await app.serviceManager.contents.save(model.path, {
         ...model,
         format: 'text',
@@ -145,7 +149,8 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IThemeManager,
     IAnnotationToken,
     IFileBrowserFactory,
-    ICollaborativeDrive
+    ICollaborativeDrive,
+    IJCadWorkerRegistry
   ],
   optional: [ILauncher, ICommandPalette],
   autoStart: true,

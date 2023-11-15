@@ -13,6 +13,7 @@ import {
   ExplodedView,
   IJupyterCadWidget
 } from './types';
+import { IJCadWorkerRegistry } from './token';
 
 export class JupyterCadWidget
   extends DocumentWidget<JupyterCadPanel, IJupyterCadModel>
@@ -43,11 +44,14 @@ export class JupyterCadPanel extends ReactWidget {
    *
    * @param context - The documents context.
    */
-  constructor(options: { model: IJupyterCadModel }) {
+  constructor(options: {
+    model: IJupyterCadModel;
+    workerRegistry?: IJCadWorkerRegistry;
+  }) {
     super();
     this.addClass('jp-jupytercad-panel');
     this._jcadModel = options.model;
-
+    this._workerRegistry = options.workerRegistry;
     this._view = new ObservableMap<JSONValue>();
   }
 
@@ -98,9 +102,16 @@ export class JupyterCadPanel extends ReactWidget {
   }
 
   render(): JSX.Element {
-    return <MainView view={this._view} jcadModel={this._jcadModel} />;
+    return (
+      <MainView
+        view={this._view}
+        jcadModel={this._jcadModel}
+        workerRegistry={this._workerRegistry}
+      />
+    );
   }
 
   private _view: ObservableMap<JSONValue>;
+  private _workerRegistry: IJCadWorkerRegistry | undefined;
   private _jcadModel: IJupyterCadModel;
 }
