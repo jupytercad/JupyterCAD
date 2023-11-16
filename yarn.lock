@@ -894,10 +894,9 @@ __metadata:
   dependencies:
     "@apidevtools/json-schema-ref-parser": ^9.0.9
     "@deathbeds/jupyterlab-rjsf": ^1.1.0
-    "@jupyter/collaboration": ^1.0.0
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/opencascade": ^0.3.3
+    "@jupytercad/occ-worker": ^0.3.3
     "@jupytercad/schema": ^0.3.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -905,14 +904,13 @@ __metadata:
     "@jupyterlab/docregistry": ^4.0.0
     "@jupyterlab/filebrowser": ^4.0.0
     "@jupyterlab/launcher": ^4.0.0
-    "@jupyterlab/mainmenu": ^4.0.0
-    "@jupyterlab/notebook": ^4.0.0
     "@jupyterlab/observables": ^5.0.0
     "@jupyterlab/services": ^7.0.0
     "@jupyterlab/translation": ^4.0.0
     "@jupyterlab/ui-components": ^4.0.0
     "@lumino/commands": ^2.0.0
     "@lumino/coreutils": ^2.0.0
+    "@lumino/messaging": ^2.0.0
     "@lumino/signaling": ^2.0.0
     "@lumino/widgets": ^2.0.0
     "@naisutech/react-tree": ^3.0.1
@@ -920,22 +918,14 @@ __metadata:
     "@types/d3-color": ^3.1.0
     "@types/node": ^18.15.11
     "@types/three": ^0.134.0
-    copy-webpack-plugin: ^10.0.0
     d3-color: ^3.1.0
-    file-loader: ^6.2.0
-    json-schema-to-typescript: ^10.1.5
-    lib0: ^0.2.62
-    npm-run-all: ^4.1.5
     react: ^18.0.1
     rimraf: ^3.0.2
-    source-map-loader: ^3.0.0
     styled-components: ^5.3.6
     three: ^0.135.0
     three-mesh-bvh: ^0.5.17
-    ts-loader: ^9.2.6
     typescript: ^5
     uuid: ^8.3.2
-    webpack: ^5.76.3
     yjs-widgets: ^0.3.3
   languageName: unknown
   linkType: soft
@@ -1109,6 +1099,7 @@ __metadata:
   dependencies:
     "@jupytercad/opencascade": ^0.3.3
     "@jupytercad/schema": ^0.3.3
+    "@lumino/coreutils": ^2.0.0
     "@types/node": ^18.15.11
     copy-webpack-plugin: ^10.0.0
     file-loader: ^6.2.0
@@ -1136,12 +1127,22 @@ __metadata:
   resolution: "@jupytercad/schema@workspace:packages/schema"
   dependencies:
     "@apidevtools/json-schema-ref-parser": ^9.0.9
+    "@jupyter/ydoc": ^0.3.4 || ^1.0.2
+    "@jupyterlab/apputils": ^4.0.0
+    "@jupyterlab/coreutils": ^6.0.0
+    "@jupyterlab/docregistry": ^4.0.0
+    "@jupyterlab/services": ^7.0.0
+    "@jupyterlab/ui-components": ^4.0.0
+    "@lumino/coreutils": ^2.0.0
+    "@lumino/signaling": ^2.0.0
     "@types/node": ^18.15.11
+    ajv: ^8.12.0
     json-schema-to-typescript: ^10.1.5
     rimraf: ^3.0.2
     source-map-loader: ^3.0.0
     ts-loader: ^9.2.6
     typescript: ^5
+    yjs: ^13.5.40
   languageName: unknown
   linkType: soft
 
@@ -8293,7 +8294,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lib0@npm:^0.2.31, lib0@npm:^0.2.42, lib0@npm:^0.2.52, lib0@npm:^0.2.62, lib0@npm:^0.2.74, lib0@npm:^0.2.76, lib0@npm:^0.2.85":
+"lib0@npm:^0.2.31, lib0@npm:^0.2.42, lib0@npm:^0.2.52, lib0@npm:^0.2.74, lib0@npm:^0.2.76, lib0@npm:^0.2.85":
   version: 0.2.87
   resolution: "lib0@npm:0.2.87"
   dependencies:
@@ -12267,21 +12268,21 @@ __metadata:
 
 "typescript@patch:typescript@>=3 < 6#~builtin<compat/typescript>, typescript@patch:typescript@^5#~builtin<compat/typescript>":
   version: 5.2.2
-  resolution: "typescript@patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=85af82"
+  resolution: "typescript@patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 07106822b4305de3f22835cbba949a2b35451cad50888759b6818421290ff95d522b38ef7919e70fb381c5fe9c1c643d7dea22c8b31652a717ddbd57b7f4d554
+  checksum: 0f4da2f15e6f1245e49db15801dbee52f2bbfb267e1c39225afdab5afee1a72839cd86000e65ee9d7e4dfaff12239d28beaf5ee431357fcced15fb08583d72ca
   languageName: node
   linkType: hard
 
 "typescript@patch:typescript@~5.0.2#~builtin<compat/typescript>":
   version: 5.0.4
-  resolution: "typescript@patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=85af82"
+  resolution: "typescript@patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=b5f058"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: bb309d320c59a26565fb3793dba550576ab861018ff3fd1b7fccabbe46ae4a35546bc45f342c0a0b6f265c801ccdf64ffd68f548f117ceb7f0eac4b805cd52a9
+  checksum: d26b6ba97b6d163c55dbdffd9bbb4c211667ebebc743accfeb2c8c0154aace7afd097b51165a72a5bad2cf65a4612259344ff60f8e642362aa1695c760d303ac
   languageName: node
   linkType: hard
 

@@ -35,6 +35,7 @@
     "dependencies": {
         "@jupytercad/opencascade": "^0.3.3",
         "@jupytercad/schema": "^0.3.3",
+        "@lumino/coreutils": "^2.0.0",
         "uuid": "^8.3.2"
     },
     "devDependencies": {
