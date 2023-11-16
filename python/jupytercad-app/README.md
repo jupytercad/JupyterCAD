@@ -1,1 +1,1 @@
-# JupyterCad standalone application package
+# jupytercad_app

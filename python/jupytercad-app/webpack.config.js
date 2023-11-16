@@ -24,10 +24,7 @@ const names = Object.keys(data.dependencies).filter(name => {
 
 const distRoot = path.resolve(
   __dirname,
-  '..',
-  '..',
-  'jupytercad',
-  'cadapp',
+  'jupytercad_app',
   'static'
 );
 
@@ -45,8 +42,8 @@ fs.copySync(libDir, buildDir);
 const extras = Build.ensureAssets({
   packageNames: names,
   output: buildDir,
-  schemaOutput: path.resolve('..', '..', 'jupytercad', 'cadapp'),
-  themeOutput: path.resolve('..', '..', 'jupytercad', 'cadapp')
+  schemaOutput: path.resolve(__dirname, 'jupytercad_app'),
+  themeOutput: path.resolve(__dirname, 'jupytercad_app')
 });
 
 // Make a bootstrap entrypoint

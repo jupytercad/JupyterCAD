@@ -2,5 +2,10 @@
   "npmClient": "yarn",
   "version": "independent",
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "packages": ["packages/*", "python/jupytercad-core", "python/jupytercad-lab"]
+  "packages": [
+    "packages/*",
+    "python/jupytercad-core",
+    "python/jupytercad-lab",
+    "python/jupytercad-app"
+  ]
 }

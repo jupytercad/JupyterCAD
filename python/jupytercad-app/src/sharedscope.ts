@@ -7,3 +7,6 @@ import '@jupyterlab/rendermime';
 import '@jupyterlab/settingregistry';
 import '@jupyterlab/statedb';
 import 'yjs-widgets';
+
+import '@jupytercad/base';
+import '@jupytercad/schema';
