@@ -54,7 +54,6 @@ const activate = (
     commands: app.commands,
     workerRegistry
   });
-
   // Registering the widget factory
   app.docRegistry.addWidgetFactory(widgetFactory);
 

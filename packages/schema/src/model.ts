@@ -488,7 +488,6 @@ export class JupyterCadDoc
   );
   private _firstEmit = true;
 }
-
 export namespace JupyterCadModel {
   export interface IOptions
     extends DocumentRegistry.IModelOptions<IJupyterCadDoc> {

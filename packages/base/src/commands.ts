@@ -29,8 +29,6 @@ import {
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 
 const FORM_SCHEMA = {};
-// Injecting "name" in the schema, as it's not part of the official schema but
-// we still want to configure it in the dialog
 Object.keys(formSchema).forEach(key => {
   if (key === 'Placement of the box') {
     return;

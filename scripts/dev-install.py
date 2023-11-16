@@ -2,8 +2,8 @@ import subprocess
 from pathlib import Path
 
 
-def execute(cmd: str):
-    subprocess.run(cmd.split(" "), check=True)
+def execute(cmd: str, cwd=None):
+    subprocess.run(cmd.split(" "), check=True, cwd=cwd)
 
 
 def install_dev():
@@ -21,6 +21,7 @@ def install_dev():
     execute(build_js)
     for py_package in python_packages:
         execute(f"pip uninstall {py_package} -y")
+        execute("jlpm clean:all", cwd=root_path / "python" / py_package)
         execute(f"pip install -e {python_package_prefix}/{py_package}")
         execute(
             f"jupyter labextension develop {python_package_prefix}/{py_package} --overwrite"
