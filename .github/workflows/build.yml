@@ -74,6 +74,10 @@ jobs:
 
           jupyter labextension list 2>&1 | grep -ie "jupytercad.*OK"
 
+      - name: Test import
+        shell: bash -l {0}
+        run: python -c "import jupytercad"
+
       - name: Package the extension
         shell: bash -l {0}
         run: |
