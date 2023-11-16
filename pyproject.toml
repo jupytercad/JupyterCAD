@@ -1,53 +1,15 @@
-[build-system]
-build-backend = "hatchling.build"
-requires = [
-    "hatchling>=1.4.0",
-    "hatch-nodejs-version",
-    "jupyterlab>=4.0.0",
-    "datamodel-code-generator",
-    "pydantic==2.4",
-]
-
 [project]
-name = "jupytercad"
+name = "jupytercad-root"
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.7"
-dependencies = [
-    "jupyter_server>=2.0.6",
-    "jupyterlab>=4,<5",
-    "jupyter_collaboration>=1.0.0a9,<2",
-    "ypywidgets>=0.4.1,<0.5.0",
-    "yjs-widgets>=0.3.4,<0.4",
-    "comm>=0.1.2,<0.2.0",
-    "pydantic>=2,<3"
-]
-classifiers = [
-    "License :: OSI Approved :: BSD License",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Framework :: Jupyter",
-    "Framework :: Jupyter :: JupyterLab",
-    "Framework :: Jupyter :: JupyterLab :: 3",
-    "Framework :: Jupyter :: JupyterLab :: Extensions",
-    "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
-]
-dynamic = ["version", "description", "authors", "urls", "keywords"]
-
-[project.entry-points.jupyter_ydoc]
-jcad = "jupytercad.jcad_ydoc:YJCad"
-FCStd = "jupytercad.fcstd_ydoc:YFCStd"
+version = "0.3.3"
 
 [tool.jupyter-releaser.options]
 version-cmd = "python scripts/bump-version.py"
 python_packages = [
-    "jupyverse:fps-jupytercad",
-    ".:jupytercad:fps-jupytercad"
+    "python/jupytercad-app:jupytercad_app",
+    "python/jupytercad-core:jupytercad_core",
+    "python/jupytercad-lab:jupytercad_lab",
 ]
 
 [tool.jupyter-releaser.hooks]
@@ -61,6 +23,3 @@ before-build-python = ["jlpm clean:all"]
 
 [tool.check-wheel-contents]
 ignore = ["W002"]
-
-[project.scripts]
-jupyter-cad = "jupytercad.cadapp:main"

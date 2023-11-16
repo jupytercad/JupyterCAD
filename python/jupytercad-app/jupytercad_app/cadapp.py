@@ -1,8 +1,6 @@
-import json
 import os
 
-import tornado
-from jupyter_server.base.handlers import APIHandler, JupyterHandler
+from jupyter_server.base.handlers import JupyterHandler
 from jupyter_server.extension.handler import (
     ExtensionHandlerJinjaMixin,
     ExtensionHandlerMixin,
@@ -37,24 +35,6 @@ class CADHandler(ExtensionHandlerJinjaMixin, ExtensionHandlerMixin, JupyterHandl
         )
 
 
-class BackendCheckHandler(APIHandler):
-    @tornado.web.authenticated
-    def post(self):
-        body = self.get_json_body()
-        backend = body.get("backend")
-        if backend == "FreeCAD":
-            fc_installed = True
-            try:
-                pass
-            except ImportError:
-                fc_installed = False
-            self.finish(json.dumps({"installed": fc_installed}))
-        elif backend == "JCAD":
-            self.finish(json.dumps({"installed": True}))
-        else:
-            self.finish(json.dumps({"installed": False}))
-
-
 class CadApp(LabServerApp):
     extension_url = "/cad"
     default_url = "/cad"
@@ -74,7 +54,6 @@ class CadApp(LabServerApp):
     def initialize_handlers(self):
         """Add cad handler to Lab Server's handler list."""
         self.handlers.append(("/cad", CADHandler))
-        self.handlers.append(("/cad/backend-check", BackendCheckHandler))
         super().initialize_handlers()
 
 
