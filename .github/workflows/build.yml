@@ -70,27 +70,29 @@ jobs:
         shell: bash -l {0}
         run: |
           set -eux
-          python -m pip install . -vvv
-
-          jupyter labextension list 2>&1 | grep -ie "jupytercad.*OK"
+          yarn dev
+          jupyter labextension list 2>&1 | grep -ie "jupytercad-core.*OK"
+          jupyter labextension list 2>&1 | grep -ie "jupytercad-lab.*OK"
 
       - name: Test import
         shell: bash -l {0}
-        run: python -c "import jupytercad"
+        run: python -c "import jupytercad_app"
 
       - name: Package the extension
         shell: bash -l {0}
         run: |
           set -eux
           pip install build
-          python -m build
-          pip uninstall -y "jupytercad" jupyterlab
+          yarn build:packages
 
       - name: Upload extension packages
         uses: actions/upload-artifact@v3
         with:
           name: extension-artifacts
-          path: dist/jupytercad*
+          path: |
+            python/jupytercad-core/dist/jupytercad*
+            python/jupytercad-lab/dist/jupytercad*
+            python/jupytercad-app/dist/jupytercad*
           if-no-files-found: error
 
   test_isolated:

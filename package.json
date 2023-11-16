@@ -41,6 +41,7 @@
         "lint": "jlpm run prettier && jlpm run eslint",
         "test": "lerna run test",
         "dev": "python scripts/dev-install.py",
+        "build:packages": "python scripts/build_packages.py",
         "watch:lib": "lerna run --stream watch",
         "watch": "lerna watch -- lerna run build --scope=\\$LERNA_PACKAGE_NAME --include-dependents",
         "build:lab": "lerna run --ignore @jupytercad/jupytercad-app build",

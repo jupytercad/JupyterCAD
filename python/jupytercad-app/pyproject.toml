@@ -36,12 +36,10 @@ source = "nodejs"
 fields = ["description", "authors", "urls"]
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["jupytercad_app/labextension"]
+artifacts = ["jupytercad_app/static"]
 exclude = [".github", "binder"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupytercad_app/labextension" = "share/jupyter/labextensions/jupytercad-app"
-"install.json" = "share/jupyter/labextensions/jupytercad-app/install.json"
 "jupyter-config/server-config" = "etc/jupyter/jupyter_server_config.d"
 
 [tool.hatch.build.hooks.version]
@@ -73,7 +71,7 @@ before-build-npm = [
     "jlpm",
     "jlpm build:prod",
 ]
-before-build-python = ["jlpm clean:all"]
+before-build-python = ["jlpm clean"]
 
 [tool.check-wheel-contents]
 ignore = ["W002"]
