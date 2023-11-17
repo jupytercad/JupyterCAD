@@ -1,4 +1,4 @@
-import { TopoDS_Shape } from '@jupytercad/opencascade';
+import { OCC } from '@jupytercad/opencascade';
 import { IJCadContent, IShapeMetadata, Parts } from '@jupytercad/schema';
 
 import { getOcc } from './actions';
@@ -7,7 +7,7 @@ import { hashCode } from './utils';
 
 const SHAPE_CACHE = new Map<
   string,
-  { occShape: TopoDS_Shape; metadata?: IShapeMetadata | undefined }
+  { occShape: OCC.TopoDS_Shape; metadata?: IShapeMetadata | undefined }
 >();
 
 const PRIMITIVE_OPERATORS = [
@@ -112,7 +112,7 @@ export function expand_operator(
   return expanded_args;
 }
 
-export function shape_meta_data(shape: TopoDS_Shape): IShapeMetadata {
+export function shape_meta_data(shape: OCC.TopoDS_Shape): IShapeMetadata {
   const occ = getOcc();
   const system = new occ.GProp_GProps_1();
   occ.BRepGProp.VolumeProperties_1(shape, system, false, false, false);
@@ -144,13 +144,13 @@ export function shape_meta_data(shape: TopoDS_Shape): IShapeMetadata {
 }
 export function operatorCache<T>(
   name: Parts | 'BrepFile',
-  ops: (args: T, content: IJCadContent) => TopoDS_Shape | undefined
+  ops: (args: T, content: IJCadContent) => OCC.TopoDS_Shape | undefined
 ) {
   return (
     args: T,
     content: IJCadContent
   ):
-    | { occShape: TopoDS_Shape; metadata?: IShapeMetadata | undefined }
+    | { occShape: OCC.TopoDS_Shape; metadata?: IShapeMetadata | undefined }
     | undefined => {
     const expandedArgs = expand_operator(name, args, content);
     const hash = `${hashCode(JSON.stringify(expandedArgs))}`;

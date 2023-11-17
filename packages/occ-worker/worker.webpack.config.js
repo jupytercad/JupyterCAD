@@ -12,7 +12,10 @@ const rules = [
   {
     test: /\.wasm$/,
     type: 'javascript/auto',
-    loader: 'file-loader'
+    loader: 'file-loader',
+    options: {
+      name: '[name].[ext]',
+    }
   }
 ];
 

@@ -1,4 +1,4 @@
-import { TopoDS_Shape } from '@jupytercad/opencascade';
+import { OCC } from '@jupytercad/opencascade';
 import {
   IAny,
   IBox,
@@ -89,7 +89,7 @@ export interface IWorkerInitialized {
 export type IMainMessage = IDisplayShape | IWorkerInitialized;
 
 export interface IOperatorFuncOutput {
-  occShape: TopoDS_Shape;
+  occShape: OCC.TopoDS_Shape;
   metadata?: IShapeMetadata | undefined;
 }
 
