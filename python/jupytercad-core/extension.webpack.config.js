@@ -3,6 +3,10 @@ const path = require('path');
 
 const occPath = [
   __dirname,
+  '../',
+  '../',
+  'node_modules',
+  '@jupytercad/opencascade',
   'lib',
   'jupytercad.opencascade.wasm'
 ];
@@ -11,23 +15,10 @@ const staticPath = [
   'jupytercad_core',
   'labextension',
   'static',
-  'jupytercad.opencascade.wasm'
+  '[name].wasm'
 ];
 
 module.exports = {
-  module: {
-    rules: [
-      {
-        test: /\.wasm$/,
-        type: 'javascript/auto',
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-        }
-      }
-      // { test: /\.js$/, loader: 'source-map-loader' }
-    ]
-  },
   resolve: {
     fallback: {
       fs: false,
