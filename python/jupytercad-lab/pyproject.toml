@@ -7,7 +7,7 @@ requires = [
 build-backend = "hatchling.build"
 
 [project]
-name = "jupytercad_lab"
+name = "jupytercad-lab"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.8"
