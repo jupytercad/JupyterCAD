@@ -5,3 +5,4 @@ node_modules
 jupytercad
 **/*.d.ts
 **/*.js
+packages/opencascade/build.yml

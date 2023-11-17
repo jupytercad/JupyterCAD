@@ -21,7 +21,10 @@
         "name": "JupyterCad contributors"
     },
     "workspaces": [
-        "packages/*"
+        "packages/*",
+        "python/jupytercad-core",
+        "python/jupytercad-lab",
+        "python/jupytercad-app"
     ],
     "scripts": {
         "build": "lerna run build",
@@ -36,7 +39,13 @@
         "prettier:check": "prettier --list-different \"**/*{.ts,.tsx,.js,.jsx,.css,.json,.md}\"",
         "lint:check": "jlpm run prettier:check && jlpm run eslint:check",
         "lint": "jlpm run prettier && jlpm run eslint",
-        "test": "lerna run test"
+        "test": "lerna run test",
+        "dev": "python scripts/dev-install.py",
+        "build:packages": "python scripts/build_packages.py",
+        "watch:lib": "lerna run --stream watch",
+        "watch": "lerna watch -- lerna run build --scope=\\$LERNA_PACKAGE_NAME --include-dependents",
+        "build:lab": "lerna run --ignore @jupytercad/jupytercad-app build",
+        "build:app": "lerna run --ignore @jupytercad/jupytercad-lab build"
     },
     "resolutions": {
         "@jupyterlab/apputils": "~4.0.0",
@@ -51,7 +60,7 @@
         "eslint": "~8.36.0",
         "eslint-config-prettier": "~8.7.0",
         "eslint-plugin-prettier": "^5.0.0",
-        "lerna": "^6.6.1",
+        "lerna": "^7.0.0",
         "npm-run-all": "^4.1.5",
         "prettier": "^3.0.0",
         "rimraf": "^3.0.2",
