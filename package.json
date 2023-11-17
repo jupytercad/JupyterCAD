@@ -2,10 +2,10 @@
     "name": "@jupytercad/jupytercad-root",
     "version": "0.3.3",
     "private": true,
-    "homepage": "https://github.com/jupyter-cad/jupytercad",
+    "homepage": "https://github.com/jupytercad/jupytercad",
     "repository": {
         "type": "git",
-        "url": "https://github.com/jupyter-cad/jupytercad.git"
+        "url": "https://github.com/jupytercad/jupytercad.git"
     },
     "license": "BSD-3-Clause",
     "description": "A JupyterLab extension for 3D modelling.",
@@ -15,7 +15,7 @@
         "jupyterlab-extension"
     ],
     "bugs": {
-        "url": "https://github.com/jupyter-cad/jupytercad/issues"
+        "url": "https://github.com/jupytercad/jupytercad/issues"
     },
     "author": {
         "name": "JupyterCad contributors"
