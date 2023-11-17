@@ -1,4 +1,3 @@
-
 import { OCC } from '@jupytercad/opencascade';
 import { IJCadObject } from '@jupytercad/schema';
 
