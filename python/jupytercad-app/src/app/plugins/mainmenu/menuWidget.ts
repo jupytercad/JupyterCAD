@@ -22,7 +22,7 @@ export class MainMenu extends MenuBar {
     this._commands.addCommand('jupytercad:help-menu:documentation', {
       label: 'Documentation',
       execute: () => {
-        window.open('https://github.com/jupyter-cad/jupytercad', '_blank');
+        window.open('https://github.com/jupytercad/jupytercad', '_blank');
       },
       icon: homeIcon
     });

@@ -5,9 +5,9 @@
     "keywords": [
         "jupytercad"
     ],
-    "homepage": "https://github.com/jupyter-cad/jupytercad",
+    "homepage": "https://github.com/jupytercad/jupytercad",
     "bugs": {
-        "url": "https://github.com/jupyter-cad/jupytercad/issues"
+        "url": "https://github.com/jupytercad/jupytercad/issues"
     },
     "license": "BSD-3-Clause",
     "author": {
@@ -21,7 +21,7 @@
     "types": "lib/index.d.ts",
     "repository": {
         "type": "git",
-        "url": "https://github.com/jupyter-cad/jupytercad.git"
+        "url": "https://github.com/jupytercad/jupytercad.git"
     },
     "scripts": {
         "build:lib": "tsc -b",
