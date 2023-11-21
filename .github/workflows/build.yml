@@ -119,7 +119,8 @@ jobs:
           # Remove NodeJS, twice to take care of system and locally installed node versions.
           sudo rm -rf $(which node)
           sudo rm -rf $(which node)
-          ls
+          ls jupyercad-core
+          ls jupyercad-core/dist
           cp jupyercad-core/dist/jupytercad*.whl jupyercad-lab/dist/jupytercad*.whl jupyercad-app/dist/jupytercad*.whl .
           python -m pip install "jupyterlab>=4.0.0" jupytercad*.whl
 
