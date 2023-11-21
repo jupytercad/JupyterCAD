@@ -99,9 +99,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
       - name: Install Python
         uses: actions/setup-python@v4
         with:
@@ -119,8 +116,7 @@ jobs:
           # Remove NodeJS, twice to take care of system and locally installed node versions.
           sudo rm -rf $(which node)
           sudo rm -rf $(which node)
-          ls jupyercad-core
-          ls jupyercad-core/dist
+          find . | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
           cp jupyercad-core/dist/jupytercad*.whl jupyercad-lab/dist/jupytercad*.whl jupyercad-app/dist/jupytercad*.whl .
           python -m pip install "jupyterlab>=4.0.0" jupytercad*.whl
 

@@ -84,6 +84,7 @@ mainBuild:
     - symbol: TopoDS_Face
     - symbol: TopoDS_Iterator
     - symbol: TopoDS_Shape
+    - symbol: TopoDS_Shell
     - symbol: TopoDS_Wire
     - symbol: TopTools_IndexedDataMapOfShapeListOfShape
     - symbol: TopTools_IndexedMapOfShape

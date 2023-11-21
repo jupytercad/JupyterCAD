@@ -11,7 +11,7 @@ const yaml = require('js-yaml');
 const path = require('path');
 
 const IMAGE_NAME = 'donalffons/opencascade.js:2.0.0-beta.b5ff984';
-const OPEN_CASCADE_DIR = 'src';
+const OPEN_CASCADE_DIR = 'lib';
 const VERSION_FILE_NAME = 'jupytercad.opencascade.version';
 const VERSION_FILE_PATH = path.join(OPEN_CASCADE_DIR, VERSION_FILE_NAME);
 const BUILD_FILE_NAME = 'build.yml';
@@ -41,7 +41,6 @@ function checkNeedsRebuild() {
       needsRebuild = false;
     }
   }
-
   return needsRebuild;
 }
 
