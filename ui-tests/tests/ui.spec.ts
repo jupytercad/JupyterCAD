@@ -4,16 +4,17 @@ import path from 'path';
 test.use({ autoGoto: false });
 
 test.describe('UI Test', () => {
+  //TODO Move freecad test to jupytercad-freecad
   const fileList = [
-    'example_2D.FCStd',
-    'example1.FCStd',
-    'example2.FCStd',
-    'example3.FCStd',
-    'example4.FCStd',
-    'example5.FCStd',
-    'example6.FCStd',
-    'common.FCStd',
-    'cut.FCStd',
+    // 'example_2D.FCStd',
+    // 'example1.FCStd',
+    // 'example2.FCStd',
+    // 'example3.FCStd',
+    // 'example4.FCStd',
+    // 'example5.FCStd',
+    // 'example6.FCStd',
+    // 'common.FCStd',
+    // 'cut.FCStd',
     'test.jcad'
   ];
 

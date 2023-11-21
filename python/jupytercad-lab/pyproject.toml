@@ -1,44 +1,44 @@
 [build-system]
-requires = [
-    "hatchling>=1.5.0",
-    "jupyterlab>=4.0.0,<5",
-    "hatch-nodejs-version>=0.3.2",
-]
 build-backend = "hatchling.build"
+requires = [
+  "hatchling>=1.5.0",
+  "jupyterlab>=4.0.0,<5",
+  "hatch-nodejs-version>=0.3.2",
+]
 
 [project]
-name = "jupytercad-lab"
-readme = "README.md"
-license = { file = "LICENSE" }
-requires-python = ">=3.8"
 classifiers = [
-    "Framework :: Jupyter",
-    "Framework :: Jupyter :: JupyterLab",
-    "Framework :: Jupyter :: JupyterLab :: 4",
-    "Framework :: Jupyter :: JupyterLab :: Extensions",
-    "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
-    "License :: OSI Approved :: BSD License",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
+  "Framework :: Jupyter",
+  "Framework :: Jupyter :: JupyterLab",
+  "Framework :: Jupyter :: JupyterLab :: 4",
+  "Framework :: Jupyter :: JupyterLab :: Extensions",
+  "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
+  "License :: OSI Approved :: BSD License",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-    "jupyter_server>=2.0.1,<3",
-    "jupyter_ydoc>=1.1.0,<2",
-    "y-py>=0.6.0,<0.7",
-    "jupyterlab>=4,<5",
-    "jupyter_collaboration>=1.0.0a9,<2",
-    "ypywidgets>=0.4.1,<0.5.0",
-    "yjs-widgets>=0.3.4,<0.4",
-    "comm>=0.1.2,<0.2.0",
-    "pydantic>=2,<3",
-    "jupytercad-core>=0.3,<0.4"
+  "jupyter_server>=2.0.1,<3",
+  "jupyter_ydoc>=1.1.0,<2",
+  "y-py>=0.6.0,<0.7",
+  "jupyterlab>=4,<5",
+  "jupyter_collaboration>=1.0.0a9,<2",
+  "ypywidgets>=0.4.1,<0.5.0",
+  "yjs-widgets>=0.3.4,<0.4",
+  "comm>=0.1.2,<0.2.0",
+  "pydantic>=2,<3",
+  "jupytercad-core>=0.3,<0.4",
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
+license = {file = "LICENSE"}
+name = "jupytercad-lab"
+readme = "README.md"
+requires-python = ">=3.8"
 
 [tool.hatch.version]
 source = "nodejs"
@@ -47,22 +47,26 @@ source = "nodejs"
 fields = ["description", "authors", "urls"]
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["jupytercad_lab/labextension"]
+artifacts = ["jupytercad_lab/labextension", "/jupytercad_lab/notebook/objects/_schema/*.py"]
 exclude = [".github", "binder"]
 
+[tool.hatch.build.targets.wheel]
+artifacts = ["/jupytercad_lab/notebook/objects/_schema/*.py"]
+
 [tool.hatch.build.targets.wheel.shared-data]
-"jupytercad_lab/labextension" = "share/jupyter/labextensions/@jupytercad/jupytercad-lab"
 "install.json" = "share/jupyter/labextensions/@jupytercad/jupytercad-lab/install.json"
+"jupytercad_lab/labextension" = "share/jupyter/labextensions/@jupytercad/jupytercad-lab"
 
 [tool.hatch.build.hooks.version]
 path = "jupytercad_lab/_version.py"
 
 [tool.hatch.build.hooks.jupyter-builder]
-dependencies = ["hatch-jupyter-builder>=0.5"]
 build-function = "hatch_jupyter_builder.npm_builder"
+dependencies = ["hatch-jupyter-builder>=0.5"]
 ensured-targets = [
-    "jupytercad_lab/labextension/static/style.js",
-    "jupytercad_lab/labextension/package.json",
+  "jupytercad_lab/labextension/static/style.js",
+  "jupytercad_lab/labextension/package.json",
+  "jupytercad_lab/notebook/objects/_schema/box.py",
 ]
 skip-if-exists = ["jupytercad_lab/labextension/static/style.js"]
 
@@ -72,18 +76,18 @@ npm = ["jlpm"]
 
 [tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
 build_cmd = "install:extension"
+build_dir = "jupytercad_lab/labextension"
 npm = ["jlpm"]
 source_dir = "src"
-build_dir = "jupytercad_lab/labextension"
 
 [tool.jupyter-releaser.options]
 version_cmd = "hatch version"
 
 [tool.jupyter-releaser.hooks]
 before-build-npm = [
-    "python -m pip install 'jupyterlab>=4.0.0,<5'",
-    "jlpm",
-    "jlpm build:prod",
+  "python -m pip install 'jupyterlab>=4.0.0,<5'",
+  "jlpm",
+  "jlpm build:prod",
 ]
 before-build-python = ["jlpm clean:all"]
 

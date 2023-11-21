@@ -28,7 +28,7 @@ test.describe('Tree UI test', () => {
   test(`Should display the object tree`, async ({ page }) => {
     await page.goto();
 
-    const fileName = 'example1.FCStd';
+    const fileName = 'test.jcad';
     const fullPath = `examples/${fileName}`;
     await page.notebook.openByPath(fullPath);
     await page.notebook.activate(fullPath);
