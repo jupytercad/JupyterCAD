@@ -1,56 +1,56 @@
 {
-    "name": "@jupytercad/occ-worker",
-    "version": "0.3.3",
-    "description": "Jupytercad opencascade worker package.",
-    "keywords": [
-        "jupytercad"
-    ],
-    "homepage": "https://github.com/jupytercad/jupytercad",
-    "bugs": {
-        "url": "https://github.com/jupytercad/jupytercad/issues"
-    },
-    "license": "BSD-3-Clause",
-    "author": {
-        "name": "JupyterCad contributors"
-    },
-    "files": [
-        "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
-        "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
-    ],
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/jupytercad/jupytercad.git"
-    },
-    "scripts": {
-        "build:lib": "tsc -b",
-        "build": "jlpm build:lib && webpack --config worker.webpack.config.js --mode=development && jlpm run build:remove_full_occ_wasm",
-        "build:prod": "jlpm build:lib && webpack --config worker.webpack.config.js --mode=production && jlpm run build:remove_full_occ_wasm",
-        "build:remove_full_occ_wasm": "rimraf lib/opencascade.full.wasm",
-        "clean": "rimraf tsconfig.tsbuildinfo",
-        "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
-        "clean:all": "jlpm run clean:lib",
-        "watch": "webpack --config worker.webpack.config.js --watch --mode=development"
-    },
-    "dependencies": {
-        "@jupytercad/opencascade": "^0.3.3",
-        "@jupytercad/schema": "^0.3.3",
-        "@lumino/coreutils": "^2.0.0",
-        "uuid": "^8.3.2"
-    },
-    "devDependencies": {
-        "@types/node": "^18.15.11",
-        "copy-webpack-plugin": "^10.0.0",
-        "file-loader": "^6.2.0",
-        "npm-run-all": "^4.1.5",
-        "rimraf": "^3.0.2",
-        "source-map-loader": "^3.0.0",
-        "ts-loader": "^9.2.6",
-        "typescript": "^5",
-        "webpack": "^5.76.3"
-    },
-    "publishConfig": {
-        "access": "public"
-    }
+  "name": "@jupytercad/occ-worker",
+  "version": "0.3.3",
+  "description": "Jupytercad opencascade worker package.",
+  "keywords": [
+    "jupytercad"
+  ],
+  "homepage": "https://github.com/jupytercad/jupytercad",
+  "bugs": {
+    "url": "https://github.com/jupytercad/jupytercad/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "JupyterCad contributors"
+  },
+  "files": [
+    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+    "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jupytercad/jupytercad.git"
+  },
+  "scripts": {
+    "build:lib": "tsc -b",
+    "build": "jlpm build:lib && webpack --config worker.webpack.config.js --mode=development && jlpm run build:remove_full_occ_wasm",
+    "build:prod": "jlpm build:lib && webpack --config worker.webpack.config.js --mode=production && jlpm run build:remove_full_occ_wasm",
+    "build:remove_full_occ_wasm": "rimraf lib/opencascade.full.wasm",
+    "clean": "rimraf tsconfig.tsbuildinfo",
+    "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "clean:all": "jlpm run clean:lib",
+    "watch": "webpack --config worker.webpack.config.js --watch --mode=development"
+  },
+  "dependencies": {
+    "@jupytercad/opencascade": "^0.3.3",
+    "@jupytercad/schema": "^0.3.3",
+    "@lumino/coreutils": "^2.0.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "copy-webpack-plugin": "^10.0.0",
+    "file-loader": "^6.2.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "source-map-loader": "^3.0.0",
+    "ts-loader": "^9.2.6",
+    "typescript": "^5",
+    "webpack": "^5.76.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
