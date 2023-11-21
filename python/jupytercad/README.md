@@ -1,1 +1,1 @@
-# JupyterCad meta package
+# JupyterCad meta-package

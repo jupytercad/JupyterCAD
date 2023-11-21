@@ -7,9 +7,10 @@ version = "0.3.3"
 [tool.jupyter-releaser.options]
 version-cmd = "python scripts/bump-version.py"
 python_packages = [
-    "python/jupytercad-app:jupytercad_app",
-    "python/jupytercad-core:jupytercad_core",
-    "python/jupytercad-lab:jupytercad_lab",
+    "python/jupytercad:jupytercad",
+    "python/jupytercad-app:jupytercad-app",
+    "python/jupytercad-core:jupytercad-core",
+    "python/jupytercad-lab:jupytercad-lab",
 ]
 
 [tool.jupyter-releaser.hooks]
