@@ -16,7 +16,6 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install "jupyterlab>=4.0.0,<5"
-          yarn dev
       - name: Check Release
         uses: jupyter-server/jupyter_releaser/.github/actions/check-release@v2
         with:
