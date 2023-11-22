@@ -48,10 +48,6 @@ test.describe('Tree UI test', () => {
       .locator('[data-test-id="react-tree-root"] div.jpcad-control-panel-tree')
       .nth(2)
       .click();
-    await page
-      .locator('[data-test-id="react-tree-root"] div.jpcad-control-panel-tree')
-      .nth(4)
-      .click();
 
     expect(errors).toBe(0);
     const tree = await page.getByRole('region', {
