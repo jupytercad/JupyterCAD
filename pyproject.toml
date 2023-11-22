@@ -12,6 +12,9 @@ dynamic = ["version"]
 [tool.hatch.version]
 path = "python/jupytercad/jupytercad/__init__.py"
 
+[tool.jupyter-releaser]
+skip = [ "check-python" ]
+
 [tool.jupyter-releaser.options]
 version-cmd = "python scripts/bump-version.py"
 python_packages = [
@@ -26,7 +29,7 @@ before-bump-version = ["python -m pip install hatch 'jupyterlab>=4.0.0'"]
 before-build-npm = [
     "python -m pip install datamodel-code-generator",
     "jlpm",
-    "jlpm build:prod"
+    "jlpm build:prod",
 ]
 
 [tool.check-wheel-contents]
