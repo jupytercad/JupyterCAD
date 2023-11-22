@@ -24,6 +24,7 @@ jobs:
           extra-specs: |
             python=3.9
             jupyterlab=4
+            yarn=3
 
       - name: Setup pip cache
         uses: actions/cache@v2
@@ -61,6 +62,7 @@ jobs:
         shell: bash -l {0}
         run: |
           set -eux
+          yarn install
           yarn dev
           jupyter labextension list 2>&1 | grep -ie "jupytercad-core.*OK"
           jupyter labextension list 2>&1 | grep -ie "jupytercad-lab.*OK"
