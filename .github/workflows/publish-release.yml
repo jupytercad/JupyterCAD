@@ -16,7 +16,16 @@ jobs:
   publish_release:
     runs-on: ubuntu-latest
     steps:
-      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+      - name: Install Conda environment with Micromamba
+        uses: mamba-org/provision-with-micromamba@main
+        with:
+          environment-name: cad
+          environment-file: false
+          channels: conda-forge
+          extra-specs: |
+            python=3.9
+            jupyterlab=4
+            yarn=3
 
       - name: Populate Release
         id: populate-release
