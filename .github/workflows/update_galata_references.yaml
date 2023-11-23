@@ -48,7 +48,7 @@ jobs:
 
       - name: Create the conda environment
         shell: bash -l {0}
-        run: mamba install -q python=3.9 pip freecad jupyterlab=4 pythonocc-core
+        run: mamba install -q python=3.9 pip freecad jupyterlab=4 pythonocc-core=7.7.0
 
       - name: Install the extension
         shell: bash -l {0}
