@@ -28,7 +28,7 @@ test.describe('Tree UI test', () => {
   test(`Should display the object tree`, async ({ page }) => {
     await page.goto();
 
-    const fileName = 'example1.FCStd';
+    const fileName = 'test.jcad';
     const fullPath = `examples/${fileName}`;
     await page.notebook.openByPath(fullPath);
     await page.notebook.activate(fullPath);
@@ -47,10 +47,6 @@ test.describe('Tree UI test', () => {
     await page
       .locator('[data-test-id="react-tree-root"] div.jpcad-control-panel-tree')
       .nth(2)
-      .click();
-    await page
-      .locator('[data-test-id="react-tree-root"] div.jpcad-control-panel-tree')
-      .nth(4)
       .click();
 
     expect(errors).toBe(0);

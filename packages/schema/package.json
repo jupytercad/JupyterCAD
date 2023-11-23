@@ -1,63 +1,63 @@
 {
-    "name": "@jupytercad/schema",
-    "version": "0.3.3",
-    "description": "A Jupytercad schema package.",
-    "keywords": [
-        "jupytercad"
-    ],
-    "homepage": "https://github.com/jupytercad/jupytercad",
-    "bugs": {
-        "url": "https://github.com/jupytercad/jupytercad/issues"
-    },
-    "license": "BSD-3-Clause",
-    "author": {
-        "name": "JupyterCad contributors"
-    },
-    "files": [
-        "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
-        "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
-    ],
-    "main": "lib/index.js",
-    "types": "lib/types.d.ts",
-    "style": "style/index.css",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/jupytercad/jupytercad.git"
-    },
-    "scripts": {
-        "build": "jlpm build:schema && jlpm run build:lib",
-        "build:schema": "jlpm build:schema:js && jlpm build:schema:py",
-        "build:schema:js": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions --cwd ./src/schema && cd src/schema && node ../../schema.js",
-        "build:schema:py": "datamodel-codegen --input ./src/schema --output ../../python/jupytercad-lab/jupytercad_lab/notebook/objects/_schema --output-model-type pydantic_v2.BaseModel --input-file-type jsonschema",
-        "build:prod": "jlpm run clean && jlpm build:schema && jlpm run build:lib",
-        "build:lib": "tsc",
-        "clean": "rimraf tsconfig.tsbuildinfo",
-        "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
-        "clean:all": "jlpm run clean:lib",
-        "watch": "tsc -w"
-    },
-    "dependencies": {
-        "@apidevtools/json-schema-ref-parser": "^9.0.9",
-        "@jupyter/ydoc": "^0.3.4 || ^1.0.2",
-        "@jupyterlab/apputils": "^4.0.0",
-        "@jupyterlab/coreutils": "^6.0.0",
-        "@jupyterlab/docregistry": "^4.0.0",
-        "@jupyterlab/services": "^7.0.0",
-        "@jupyterlab/ui-components": "^4.0.0",
-        "@lumino/coreutils": "^2.0.0",
-        "@lumino/signaling": "^2.0.0",
-        "ajv": "^8.12.0",
-        "json-schema-to-typescript": "^10.1.5",
-        "yjs": "^13.5.40"
-    },
-    "devDependencies": {
-        "@types/node": "^18.15.11",
-        "rimraf": "^3.0.2",
-        "source-map-loader": "^3.0.0",
-        "ts-loader": "^9.2.6",
-        "typescript": "^5"
-    },
-    "publishConfig": {
-        "access": "public"
-    }
+  "name": "@jupytercad/schema",
+  "version": "0.3.3",
+  "description": "A Jupytercad schema package.",
+  "keywords": [
+    "jupytercad"
+  ],
+  "homepage": "https://github.com/jupytercad/jupytercad",
+  "bugs": {
+    "url": "https://github.com/jupytercad/jupytercad/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "JupyterCad contributors"
+  },
+  "files": [
+    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+    "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/types.d.ts",
+  "style": "style/index.css",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jupytercad/jupytercad.git"
+  },
+  "scripts": {
+    "build": "jlpm build:schema && jlpm run build:lib",
+    "build:schema": "jlpm build:schema:js && jlpm build:schema:py",
+    "build:schema:js": "json2ts -i src/schema -o src/_interface --no-unknownAny --unreachableDefinitions --cwd ./src/schema && cd src/schema && node ../../schema.js",
+    "build:schema:py": "datamodel-codegen --input ./src/schema --output ../../python/jupytercad-lab/jupytercad_lab/notebook/objects/_schema --output-model-type pydantic_v2.BaseModel --input-file-type jsonschema",
+    "build:prod": "jlpm run clean && jlpm build:schema && jlpm run build:lib",
+    "build:lib": "tsc",
+    "clean": "rimraf tsconfig.tsbuildinfo",
+    "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "clean:all": "jlpm run clean:lib",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "@apidevtools/json-schema-ref-parser": "^9.0.9",
+    "@jupyter/ydoc": "^0.3.4 || ^1.0.2",
+    "@jupyterlab/apputils": "^4.0.0",
+    "@jupyterlab/coreutils": "^6.0.0",
+    "@jupyterlab/docregistry": "^4.0.0",
+    "@jupyterlab/services": "^7.0.0",
+    "@jupyterlab/ui-components": "^4.0.0",
+    "@lumino/coreutils": "^2.0.0",
+    "@lumino/signaling": "^2.0.0",
+    "ajv": "^8.12.0",
+    "json-schema-to-typescript": "^10.1.5",
+    "yjs": "^13.5.40"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "rimraf": "^3.0.2",
+    "source-map-loader": "^3.0.0",
+    "ts-loader": "^9.2.6",
+    "typescript": "^5"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

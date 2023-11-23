@@ -28,12 +28,15 @@
     "url": "https://github.com/jupytercad/jupytercad.git"
   },
   "scripts": {
-    "build": "node build_opencascade_wasm.js && tsc && copyfiles --up 1 src/*.d.ts src/*.js src/*.wasm lib",
-    "build:prod": "node build_opencascade_wasm.js && tsc && copyfiles --up 1 src/*.d.ts src/*.js src/*.wasm lib"
+    "build": "tsc && node build_opencascade_wasm.js",
+    "build:prod": "tsc && node build_opencascade_wasm.js",
+    "clean": "rimraf tsconfig.tsbuildinfo lib"
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^5"
   },
   "publishConfig": {
     "access": "public"

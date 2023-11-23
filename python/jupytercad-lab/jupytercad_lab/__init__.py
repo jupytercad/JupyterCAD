@@ -9,6 +9,8 @@ except ImportError:
     warnings.warn("Importing 'jupytercad_lab' outside a proper installation.")
     __version__ = "dev"
 
+from .notebook import CadDocument  # noqa
+
 
 def _jupyter_labextension_paths():
     return [{"src": "labextension", "dest": "@jupytercad/jupytercad-lab"}]

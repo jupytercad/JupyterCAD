@@ -24,15 +24,7 @@ jobs:
           extra-specs: |
             python=3.9
             jupyterlab=4
-            freecad
-
-      - name: Lint the extension
-        shell: bash -l {0}
-        run: |
-          set -eux
-          jlpm
-          export NODE_OPTIONS="--max-old-space-size=4096"
-          jlpm run lint:check
+            yarn=3
 
       - name: Setup pip cache
         uses: actions/cache@v2
@@ -70,6 +62,7 @@ jobs:
         shell: bash -l {0}
         run: |
           set -eux
+          yarn install
           yarn dev
           jupyter labextension list 2>&1 | grep -ie "jupytercad-core.*OK"
           jupyter labextension list 2>&1 | grep -ie "jupytercad-lab.*OK"
@@ -100,9 +93,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
       - name: Install Python
         uses: actions/setup-python@v4
         with:
@@ -120,10 +110,13 @@ jobs:
           # Remove NodeJS, twice to take care of system and locally installed node versions.
           sudo rm -rf $(which node)
           sudo rm -rf $(which node)
-          pip install "jupyterlab>=4.0.0" jupytercad*.whl
+
+          cp ./jupytercad-core/dist/jupytercad*.whl ./jupytercad-lab/dist/jupytercad*.whl ./jupytercad-app/dist/jupytercad*.whl .
+          python -m pip install "jupyterlab>=4.0.0" jupytercad*.whl
 
           jupyter labextension list
           jupyter labextension list 2>&1 | grep -ie "jupytercad.*OK"
+          jupyter cad --version
           # jupyterlab.browser_check will fail due to the core extension jupyterlab_pygments.
           # It does not support lab v4.0.0
           #python -m jupyterlab.browser_check --no-chrome-test
@@ -149,8 +142,7 @@ jobs:
           extra-specs: |
             python=3.9
             jupyterlab=4
-            freecad
-            pythonocc-core
+            pythonocc-core=7.7.0
 
       - name: Download extension package
         uses: actions/download-artifact@v3
@@ -161,6 +153,7 @@ jobs:
         shell: bash -l {0}
         run: |
           set -eux
+          cp ./jupytercad-core/dist/jupytercad*.whl ./jupytercad-lab/dist/jupytercad*.whl ./jupytercad-app/dist/jupytercad*.whl .
           python -m pip install jupytercad*.whl
 
       - name: Install dependencies

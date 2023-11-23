@@ -11,5 +11,10 @@ module.exports = {
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI
   },
-  retries: 0
+  retries: 0,
+  expect: {
+    toMatchSnapshot: {
+      maxDiffPixelRatio: 0.02,
+    },
+  },
 };

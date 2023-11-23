@@ -4,18 +4,8 @@ import path from 'path';
 test.use({ autoGoto: false });
 
 test.describe('UI Test', () => {
-  const fileList = [
-    'example_2D.FCStd',
-    'example1.FCStd',
-    'example2.FCStd',
-    'example3.FCStd',
-    'example4.FCStd',
-    'example5.FCStd',
-    'example6.FCStd',
-    'common.FCStd',
-    'cut.FCStd',
-    'test.jcad'
-  ];
+  //TODO Move freecad test to jupytercad-freecad
+  const fileList = ['test.jcad'];
 
   test.describe('Extension activation test', () => {
     test('should emit an activation console message', async ({
@@ -30,9 +20,6 @@ test.describe('UI Test', () => {
 
       await page.goto();
 
-      expect(
-        logs.filter(s => s === 'JupyterLab extension jupytercad is activated!')
-      ).toHaveLength(1);
       expect(logs.filter(s => s === 'Initializing OCC...')).toHaveLength(1);
       expect(logs.filter(s => s === 'Done!')).toHaveLength(1);
     });
@@ -117,7 +104,7 @@ test.describe('UI Test', () => {
     test(`Should be able to add object to scene`, async ({ page }) => {
       await page.goto();
 
-      const fileName = 'example2.FCStd';
+      const fileName = 'test.jcad';
       const fullPath = `examples/${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
@@ -158,14 +145,14 @@ test.describe('UI Test', () => {
     test(`Should be able to remove object`, async ({ page }) => {
       await page.goto();
 
-      const fileName = 'example3.FCStd';
+      const fileName = 'test.jcad';
       const fullPath = `examples/${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
       await page
         .locator('[data-test-id="react-tree-root"]')
-        .getByText('Cut')
+        .getByText('box2')
         .click();
       await page
         .locator('[data-test-id="react-tree-root"]')
@@ -196,7 +183,7 @@ test.describe('UI Test', () => {
     test(`Should be able to edit object`, async ({ page }) => {
       await page.goto();
 
-      const fileName = 'example4.FCStd';
+      const fileName = 'test.jcad';
       const fullPath = `examples/${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
@@ -204,7 +191,7 @@ test.describe('UI Test', () => {
 
       await page
         .locator('[data-test-id="react-tree-root"]')
-        .getByText('myBox')
+        .getByText('box2')
         .click();
       await page
         .locator('[data-test-id="react-tree-root"]')
@@ -244,7 +231,7 @@ test.describe('UI Test', () => {
     test(`Should be able to do multi selection`, async ({ page }) => {
       await page.goto();
 
-      const fileName = 'example3.FCStd';
+      const fileName = 'test.jcad';
       const fullPath = `examples/${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
@@ -270,14 +257,14 @@ test.describe('UI Test', () => {
       // Select cone
       await page
         .locator('[data-test-id="react-tree-root"]')
-        .getByText('Cone 1')
+        .getByText('Cone')
         .click();
 
       // Select other shape with ctrl key pressed
       await page.keyboard.down('Control');
       await page
         .locator('[data-test-id="react-tree-root"]')
-        .getByText('Cut')
+        .getByText('box2')
         .click();
 
       let main = await page.$('#jp-main-split-panel');

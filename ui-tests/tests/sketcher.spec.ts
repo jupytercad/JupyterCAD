@@ -28,7 +28,7 @@ test.describe('Sketcher test', () => {
   test(`Should open the sketcher dialog`, async ({ page }) => {
     await page.goto();
 
-    const fileName = 'example_2D.FCStd';
+    const fileName = 'test.jcad';
     const fullPath = `examples/${fileName}`;
     await page.notebook.openByPath(fullPath);
     await page.notebook.activate(fullPath);
@@ -56,7 +56,7 @@ test.describe('Sketcher test', () => {
   test(`Should draw a circle`, async ({ page }) => {
     await page.goto();
 
-    const fileName = 'example_2D.FCStd';
+    const fileName = 'test.jcad';
     const fullPath = `examples/${fileName}`;
     await page.notebook.openByPath(fullPath);
     await page.notebook.activate(fullPath);
