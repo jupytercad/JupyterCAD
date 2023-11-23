@@ -2,6 +2,36 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.0a0
+
+([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v0.3.3...5e1b571bce595b1f2a995b2cce511f15fc71de8d))
+
+### Enhancements made
+
+- Organization rename [#225](https://github.com/jupytercad/jupytercad/pull/225) ([@martinRenou](https://github.com/martinRenou))
+- Update OCC build [#221](https://github.com/jupytercad/jupytercad/pull/221) ([@martinRenou](https://github.com/martinRenou))
+- Create jupytercad-\* packages [#220](https://github.com/jupytercad/jupytercad/pull/220) ([@trungleduc](https://github.com/trungleduc))
+
+### Bugs fixed
+
+- Pin pydantic (again) [#222](https://github.com/jupytercad/jupytercad/pull/222) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Update release script [#227](https://github.com/jupytercad/jupytercad/pull/227) ([@trungleduc](https://github.com/trungleduc))
+- Fix CI [#226](https://github.com/jupytercad/jupytercad/pull/226) ([@trungleduc](https://github.com/trungleduc))
+- Create jupytercad-\* packages [#220](https://github.com/jupytercad/jupytercad/pull/220) ([@trungleduc](https://github.com/trungleduc))
+- Update links to repository [#219](https://github.com/jupytercad/jupytercad/pull/219) ([@martinRenou](https://github.com/martinRenou))
+- Support pydantic 2 [#213](https://github.com/jupytercad/jupytercad/pull/213) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2023-06-29&to=2023-11-23&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-06-29..2023-11-23&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-06-29..2023-11-23&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Apre-commit-ci+updated%3A2023-06-29..2023-11-23&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-06-29..2023-11-23&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.3.3
 
 ([Full Changelog](https://github.com/QuantStack/jupytercad/compare/@jupytercad/jupytercad-app@0.3.2...e461738f2333d5c4e86ae3fcedc226776f37cbcb))
@@ -23,8 +53,6 @@
 ([GitHub contributors page for this release](https://github.com/QuantStack/jupytercad/graphs/contributors?from=2023-06-15&to=2023-06-29&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-06-15..2023-06-29&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-06-15..2023-06-29&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3AQuantStack%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-06-15..2023-06-29&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.3.2
 
