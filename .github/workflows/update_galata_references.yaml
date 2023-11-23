@@ -54,7 +54,7 @@ jobs:
         shell: bash -l {0}
         run: |
           whereis python
-          cp ./jupytercad-core/dist/jupytercad*.whl ./jupytercad-lab/dist/jupytercad*.whl ./jupytercad-app/dist/jupytercad*.whl .
+          cp ./jupytercad_core/dist/jupytercad*.whl ./jupytercad_lab/dist/jupytercad*.whl ./jupytercad_app/dist/jupytercad*.whl .
           python -m pip install jupytercad*.whl
 
       - name: Install dependencies

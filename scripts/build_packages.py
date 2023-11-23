@@ -12,7 +12,7 @@ def build_packages():
     install_build_deps = f"python -m pip install -r {requirements_build_path}"
 
     python_package_prefix = "python"
-    python_packages = ["jupytercad-core", "jupytercad-lab", "jupytercad-app"]
+    python_packages = ["jupytercad_core", "jupytercad_lab", "jupytercad_app"]
 
     execute(install_build_deps)
 

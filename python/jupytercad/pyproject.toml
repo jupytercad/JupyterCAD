@@ -19,9 +19,9 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-  "jupytercad-core>=1.0.0a0,<2",
-  "jupytercad-lab>=1.0.0a0,<2",
-  "jupytercad-app>=1.0.0a0,<2",
+  "jupytercad_core>=1.0.0a0,<2",
+  "jupytercad_lab>=1.0.0a0,<2",
+  "jupytercad_app>=1.0.0a0,<2",
 ]
 dynamic = ["version"]
 license = {file = "LICENSE"}
