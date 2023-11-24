@@ -14,7 +14,7 @@ def install_dev():
     build_js = "jlpm build"
 
     python_package_prefix = "python"
-    python_packages = ["jupytercad-core", "jupytercad-lab", "jupytercad-app"]
+    python_packages = ["jupytercad_core", "jupytercad_lab", "jupytercad_app"]
 
     execute(install_build_deps)
     execute(install_js_deps)
@@ -23,7 +23,7 @@ def install_dev():
         execute(f"pip uninstall {py_package} -y")
         execute("jlpm clean:all", cwd=root_path / "python" / py_package)
         execute(f"pip install -e {python_package_prefix}/{py_package}")
-        if py_package != "jupytercad-app":
+        if py_package != "jupytercad_app":
             execute(
                 f"jupyter labextension develop {python_package_prefix}/{py_package} --overwrite"
             )

@@ -75,7 +75,7 @@ jobs:
         shell: bash -l {0}
         run: |
           set -eux
-          pip install build
+          pip install hatch
           yarn build:packages
 
       - name: Upload extension packages
@@ -83,9 +83,9 @@ jobs:
         with:
           name: extension-artifacts
           path: |
-            python/jupytercad-core/dist/jupytercad*
-            python/jupytercad-lab/dist/jupytercad*
-            python/jupytercad-app/dist/jupytercad*
+            python/jupytercad_core/dist/jupytercad*
+            python/jupytercad_lab/dist/jupytercad*
+            python/jupytercad_app/dist/jupytercad*
           if-no-files-found: error
 
   test_isolated:
@@ -111,7 +111,7 @@ jobs:
           sudo rm -rf $(which node)
           sudo rm -rf $(which node)
 
-          cp ./jupytercad-core/dist/jupytercad*.whl ./jupytercad-lab/dist/jupytercad*.whl ./jupytercad-app/dist/jupytercad*.whl .
+          cp ./jupytercad_core/dist/jupytercad*.whl ./jupytercad_lab/dist/jupytercad*.whl ./jupytercad_app/dist/jupytercad*.whl .
           python -m pip install "jupyterlab>=4.0.0" jupytercad*.whl
 
           jupyter labextension list
@@ -153,7 +153,7 @@ jobs:
         shell: bash -l {0}
         run: |
           set -eux
-          cp ./jupytercad-core/dist/jupytercad*.whl ./jupytercad-lab/dist/jupytercad*.whl ./jupytercad-app/dist/jupytercad*.whl .
+          cp ./jupytercad_core/dist/jupytercad*.whl ./jupytercad_lab/dist/jupytercad*.whl ./jupytercad_app/dist/jupytercad*.whl .
           python -m pip install jupytercad*.whl
 
       - name: Install dependencies
