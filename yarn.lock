@@ -881,7 +881,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupytercad/base@^1.0.0-alpha.0, @jupytercad/base@workspace:packages/base":
+"@jupytercad/base@^1.0.0-alpha.1, @jupytercad/base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@jupytercad/base@workspace:packages/base"
   dependencies:
@@ -889,8 +889,8 @@ __metadata:
     "@deathbeds/jupyterlab-rjsf": ^1.1.0
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/occ-worker": ^1.0.0-alpha.0
-    "@jupytercad/schema": ^1.0.0-alpha.0
+    "@jupytercad/occ-worker": ^1.0.0-alpha.1
+    "@jupytercad/schema": ^1.0.0-alpha.1
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/coreutils": ^6.0.0
@@ -932,8 +932,8 @@ __metadata:
     "@jupyter/collaboration": ^1.0.0
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/base": ^1.0.0-alpha.0
-    "@jupytercad/schema": ^1.0.0-alpha.0
+    "@jupytercad/base": ^1.0.0-alpha.1
+    "@jupytercad/schema": ^1.0.0-alpha.1
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/application-extension": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -985,14 +985,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-core@^1.0.0-alpha.0, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
+"@jupytercad/jupytercad-core@^1.0.0-alpha.1, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad_core"
   dependencies:
     "@jupyter/docprovider": ^1.0.0
-    "@jupytercad/base": ^1.0.0-alpha.0
-    "@jupytercad/occ-worker": ^1.0.0-alpha.0
-    "@jupytercad/schema": ^1.0.0-alpha.0
+    "@jupytercad/base": ^1.0.0-alpha.1
+    "@jupytercad/occ-worker": ^1.0.0-alpha.1
+    "@jupytercad/schema": ^1.0.0-alpha.1
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1024,9 +1024,9 @@ __metadata:
   resolution: "@jupytercad/jupytercad-lab@workspace:python/jupytercad_lab"
   dependencies:
     "@jupyter/docprovider": ^1.0.0
-    "@jupytercad/base": ^1.0.0-alpha.0
-    "@jupytercad/jupytercad-core": ^1.0.0-alpha.0
-    "@jupytercad/schema": ^1.0.0-alpha.0
+    "@jupytercad/base": ^1.0.0-alpha.1
+    "@jupytercad/jupytercad-core": ^1.0.0-alpha.1
+    "@jupytercad/schema": ^1.0.0-alpha.1
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1074,12 +1074,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/occ-worker@^1.0.0-alpha.0, @jupytercad/occ-worker@workspace:packages/occ-worker":
+"@jupytercad/occ-worker@^1.0.0-alpha.1, @jupytercad/occ-worker@workspace:packages/occ-worker":
   version: 0.0.0-use.local
   resolution: "@jupytercad/occ-worker@workspace:packages/occ-worker"
   dependencies:
-    "@jupytercad/opencascade": ^1.0.0-alpha.0
-    "@jupytercad/schema": ^1.0.0-alpha.0
+    "@jupytercad/opencascade": ^1.0.0-alpha.1
+    "@jupytercad/schema": ^1.0.0-alpha.1
     "@lumino/coreutils": ^2.0.0
     "@types/node": ^18.15.11
     copy-webpack-plugin: ^10.0.0
@@ -1094,7 +1094,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/opencascade@^1.0.0-alpha.0, @jupytercad/opencascade@workspace:packages/opencascade":
+"@jupytercad/opencascade@^1.0.0-alpha.1, @jupytercad/opencascade@workspace:packages/opencascade":
   version: 0.0.0-use.local
   resolution: "@jupytercad/opencascade@workspace:packages/opencascade"
   dependencies:
@@ -1106,7 +1106,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/schema@^1.0.0-alpha.0, @jupytercad/schema@workspace:packages/schema":
+"@jupytercad/schema@^1.0.0-alpha.1, @jupytercad/schema@workspace:packages/schema":
   version: 0.0.0-use.local
   resolution: "@jupytercad/schema@workspace:packages/schema"
   dependencies:
@@ -3411,11 +3411,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 20.9.5
-  resolution: "@types/node@npm:20.9.5"
+  version: 20.10.0
+  resolution: "@types/node@npm:20.10.0"
   dependencies:
     undici-types: ~5.26.4
-  checksum: 050ebd958e31ad21143f93614a25b15a8de5d0004338359409f76a661f734c4549698d852f21176c62f5661dacb572a090669cffef93cf6361c959e4d27d8d95
+  checksum: face395140d6f2f1755b91fdd3b697cf56aeb9e2514529ce88d56e56f261ad65be7269d863520a9406d73c338699ea68b418e8677584de0c1efeed09539b6f97
   languageName: node
   linkType: hard
 
@@ -9507,7 +9507,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"opencascade.js@npm:beta":
+opencascade.js@beta:
   version: 2.0.0-beta.b5ff984
   resolution: "opencascade.js@npm:2.0.0-beta.b5ff984"
   peerDependencies:
