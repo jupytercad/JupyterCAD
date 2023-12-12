@@ -206,7 +206,7 @@ class CadDocument(Widget):
             logger.error(f"Object {shape_name} already exists")
             return
 
-        with open(path, 'r') as fobj:
+        with open(path, "r") as fobj:
             data = fobj.read()
 
         data = {

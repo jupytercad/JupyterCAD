@@ -36,7 +36,10 @@ function buildModel(
       }
     } else if (parameters['Shape'] && parameters['Type']) {
       // Creating occ shape from brep file.
-      const shapeData = ObjectFile({ content: parameters['Shape'], type: parameters['Type'] }, model);
+      const shapeData = ObjectFile(
+        { content: parameters['Shape'], type: parameters['Type'] },
+        model
+      );
       if (shapeData) {
         outputModel.push({ shapeData, jcObject: object });
       }

@@ -13,23 +13,19 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import {
-  IThemeManager,
-  WidgetTracker
-} from '@jupyterlab/apputils';
+import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
 import { JupyterCadJcadStepModelFactory } from './modelfactory';
 import { JupyterCadWidgetFactory } from '../factory';
 
 const FACTORY = 'JupyterCAD STEP Viewer';
 
-
 const activate = (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
   drive: ICollaborativeDrive,
-  workerRegistry: IJCadWorkerRegistry,
+  workerRegistry: IJCadWorkerRegistry
 ): void => {
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,

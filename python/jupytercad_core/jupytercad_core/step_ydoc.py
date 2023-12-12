@@ -2,7 +2,6 @@ import json
 from typing import Any, Callable
 from functools import partial
 
-import y_py as Y
 from jupyter_ydoc.ybasedoc import YBaseDoc
 
 
@@ -30,7 +29,6 @@ class YSTEP(YBaseDoc):
         """
         with self._ydoc.begin_transaction() as t:
             self._ysource.extend(t, value)
-
 
     def observe(self, callback: Callable[[str, Any], None]):
         self.unobserve()

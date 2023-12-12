@@ -520,10 +520,10 @@ export class JupyterCadStepDoc extends JupyterCadDoc {
         shape: 'Part::Any',
         parameters: {
           Content: this._source.toJSON(),
-          Type: 'STEP',
+          Type: 'STEP'
         }
       }
-    ]
+    ];
   }
 
   static create(): JupyterCadStepDoc {
