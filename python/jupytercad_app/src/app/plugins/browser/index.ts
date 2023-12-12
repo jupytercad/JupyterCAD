@@ -29,7 +29,11 @@ const browserWidget: JupyterFrontEndPlugin<void> = {
       if (e.type === 'directory') {
         return {};
       }
-      if (name.endsWith('fcstd') || name.endsWith('jcad') || name.endsWith('step')) {
+      if (
+        name.endsWith('fcstd') ||
+        name.endsWith('jcad') ||
+        name.endsWith('step')
+      ) {
         return {};
       }
       return null;
