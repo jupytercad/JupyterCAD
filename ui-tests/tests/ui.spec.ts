@@ -4,8 +4,7 @@ import path from 'path';
 test.use({ autoGoto: false });
 
 test.describe('UI Test', () => {
-  //TODO Move freecad test to jupytercad-freecad
-  const fileList = ['test.jcad'];
+  const fileList = ['test.jcad', '3M_CONNECTOR.STEP'];
 
   test.describe('Extension activation test', () => {
     test('should emit an activation console message', async ({
