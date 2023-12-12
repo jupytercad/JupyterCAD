@@ -43,15 +43,16 @@ jobs:
           workflow_conclusion: ''
           name: extension-artifacts
 
-      - name: Setup mamba
-        uses: conda-incubator/setup-miniconda@v2
+      - name: Install Conda environment with Micromamba
+        uses: mamba-org/provision-with-micromamba@main
         with:
-          miniforge-variant: Mambaforge
-          miniforge-version: latest
-
-      - name: Create the conda environment
-        shell: bash -l {0}
-        run: mamba install -q python=3.9 pip freecad jupyterlab=4 pythonocc-core=7.7.0
+          environment-name: cad
+          environment-file: false
+          channels: conda-forge
+          extra-specs: |
+            python=3.9
+            jupyterlab=4
+            pythonocc-core=7.7.0
 
       - name: Install the extension
         shell: bash -l {0}

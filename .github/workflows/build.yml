@@ -138,7 +138,7 @@ jobs:
         with:
           environment-name: cad
           environment-file: false
-          channels: conda-forge/label/jupyterlab_beta,conda-forge
+          channels: conda-forge
           extra-specs: |
             python=3.9
             jupyterlab=4
