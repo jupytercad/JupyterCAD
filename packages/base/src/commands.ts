@@ -428,7 +428,9 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.redo, {
     label: trans.__('Redo'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+    },
     execute: args => {
       const current = tracker.currentWidget;
 
@@ -441,7 +443,9 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.undo, {
     label: trans.__('Undo'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+    },
     execute: args => {
       const current = tracker.currentWidget;
 
@@ -454,7 +458,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.newSketch, {
     label: trans.__('New Sketch'),
     iconClass: 'fa fa-pencil',
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+    },
     execute: async args => {
       const current = tracker.currentWidget;
 
@@ -478,63 +484,81 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.newBox, {
     label: trans.__('New Box'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+    },
     icon: boxIcon,
     execute: Private.createPart('box', tracker)
   });
 
   commands.addCommand(CommandIDs.newCylinder, {
     label: trans.__('New Cylinder'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+    },
     icon: cylinderIcon,
     execute: Private.createPart('cylinder', tracker)
   });
 
   commands.addCommand(CommandIDs.newSphere, {
     label: trans.__('New Sphere'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+    },
     icon: sphereIcon,
     execute: Private.createPart('sphere', tracker)
   });
 
   commands.addCommand(CommandIDs.newCone, {
     label: trans.__('New Cone'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+    },
     icon: coneIcon,
     execute: Private.createPart('cone', tracker)
   });
 
   commands.addCommand(CommandIDs.newTorus, {
     label: trans.__('New Torus'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+    },
     icon: torusIcon,
     execute: Private.createPart('torus', tracker)
   });
 
   commands.addCommand(CommandIDs.extrusion, {
     label: trans.__('Extrusion'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+    },
     icon: extrusionIcon,
     execute: Private.executeOperator('extrusion', tracker)
   });
 
   commands.addCommand(CommandIDs.cut, {
     label: trans.__('Cut'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+    },
     icon: cutIcon,
     execute: Private.executeOperator('cut', tracker)
   });
 
   commands.addCommand(CommandIDs.union, {
     label: trans.__('Union'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+    },
     icon: unionIcon,
     execute: Private.executeOperator('union', tracker)
   });
 
   commands.addCommand(CommandIDs.intersection, {
     label: trans.__('Intersection'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+    },
     icon: intersectionIcon,
     execute: Private.executeOperator('intersection', tracker)
   });
