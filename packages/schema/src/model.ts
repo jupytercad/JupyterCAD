@@ -506,7 +506,6 @@ export class JupyterCadStepDoc extends JupyterCadDoc {
   get objects(): Array<IJCadObject> {
     const source = this._source.toJSON();
 
-
     if (!source) {
       return [];
     }
