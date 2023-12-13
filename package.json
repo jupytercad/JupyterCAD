@@ -1,6 +1,6 @@
 {
   "name": "@jupytercad/jupytercad-root",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "private": true,
   "homepage": "https://github.com/jupytercad/jupytercad",
   "repository": {

@@ -2,6 +2,31 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.0a2
+
+([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v1.0.0a1...4aa1881ba41a3962b59ce73f996e9f20ad0c9235))
+
+### Enhancements made
+
+- STEP files support [#232](https://github.com/jupytercad/jupytercad/pull/232) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Galata bot: Missing hub command [#233](https://github.com/jupytercad/jupytercad/pull/233) ([@martinRenou](https://github.com/martinRenou))
+- Fix missing dev dependency [#231](https://github.com/jupytercad/jupytercad/pull/231) ([@martinRenou](https://github.com/martinRenou))
+
+### Other merged PRs
+
+- Galata bot: Fix conda env [#234](https://github.com/jupytercad/jupytercad/pull/234) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2023-11-24&to=2023-12-13&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-11-24..2023-12-13&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-11-24..2023-12-13&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Apre-commit-ci+updated%3A2023-11-24..2023-12-13&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-11-24..2023-12-13&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.0a1
 
 ([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v1.0.0a0...68682824ecb6218681ff07b652d27492cad09a8d))
@@ -15,8 +40,6 @@
 ([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2023-11-23&to=2023-11-24&type=c))
 
 [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-11-23..2023-11-24&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.0.0a0
 
