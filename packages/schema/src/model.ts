@@ -26,7 +26,6 @@ import {
   Pointer
 } from './interfaces';
 
-
 export class JupyterCadModel implements IJupyterCadModel {
   constructor(options: JupyterCadModel.IOptions) {
     const { annotationModel, sharedModel } = options;
@@ -486,7 +485,6 @@ export class JupyterCadDoc
     this
   );
 }
-
 
 export class JupyterCadStepDoc extends JupyterCadDoc {
   constructor() {

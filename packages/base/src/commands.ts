@@ -429,7 +429,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.redo, {
     label: trans.__('Redo'),
     isEnabled: () => {
-      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     execute: args => {
       const current = tracker.currentWidget;
@@ -444,7 +446,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.undo, {
     label: trans.__('Undo'),
     isEnabled: () => {
-      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     execute: args => {
       const current = tracker.currentWidget;
@@ -459,7 +463,9 @@ export function addCommands(
     label: trans.__('New Sketch'),
     iconClass: 'fa fa-pencil',
     isEnabled: () => {
-      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     execute: async args => {
       const current = tracker.currentWidget;
@@ -485,7 +491,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.newBox, {
     label: trans.__('New Box'),
     isEnabled: () => {
-      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     icon: boxIcon,
     execute: Private.createPart('box', tracker)
@@ -494,7 +502,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.newCylinder, {
     label: trans.__('New Cylinder'),
     isEnabled: () => {
-      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     icon: cylinderIcon,
     execute: Private.createPart('cylinder', tracker)
@@ -503,7 +513,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.newSphere, {
     label: trans.__('New Sphere'),
     isEnabled: () => {
-      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     icon: sphereIcon,
     execute: Private.createPart('sphere', tracker)
@@ -512,7 +524,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.newCone, {
     label: trans.__('New Cone'),
     isEnabled: () => {
-      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     icon: coneIcon,
     execute: Private.createPart('cone', tracker)
@@ -521,7 +535,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.newTorus, {
     label: trans.__('New Torus'),
     isEnabled: () => {
-      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     icon: torusIcon,
     execute: Private.createPart('torus', tracker)
@@ -530,7 +546,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.extrusion, {
     label: trans.__('Extrusion'),
     isEnabled: () => {
-      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     icon: extrusionIcon,
     execute: Private.executeOperator('extrusion', tracker)
@@ -539,7 +557,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.cut, {
     label: trans.__('Cut'),
     isEnabled: () => {
-      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     icon: cutIcon,
     execute: Private.executeOperator('cut', tracker)
@@ -548,7 +568,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.union, {
     label: trans.__('Union'),
     isEnabled: () => {
-      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     icon: unionIcon,
     execute: Private.executeOperator('union', tracker)
@@ -557,7 +579,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.intersection, {
     label: trans.__('Intersection'),
     isEnabled: () => {
-      return tracker.currentWidget ? tracker.currentWidget.context.model.sharedModel.editable : false;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     icon: intersectionIcon,
     execute: Private.executeOperator('intersection', tracker)
