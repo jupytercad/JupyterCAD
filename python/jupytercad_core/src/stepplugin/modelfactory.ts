@@ -5,7 +5,7 @@ import { Contents } from '@jupyterlab/services';
 /**
  * A Model factory to create new instances of JupyterCadModel.
  */
-export class JupyterCadJcadStepModelFactory
+export class JupyterCadStepModelFactory
   implements DocumentRegistry.IModelFactory<JupyterCadModel>
 {
   /**

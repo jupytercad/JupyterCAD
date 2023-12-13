@@ -369,7 +369,7 @@ export function _loadStepFile(content: string): OCC.TopoDS_Shape | undefined {
 
 export function _loadObjectFile(arg: {
   content: string;
-  type: string;
+  type: IAny["Type"];
 }): OCC.TopoDS_Shape | undefined {
   switch (arg.type.toLowerCase()) {
     case 'brep':
@@ -408,7 +408,7 @@ const Intersection = operatorCache<IIntersection>(
 
 const Extrude = operatorCache<IExtrusion>('Part::Extrusion', _Extrude);
 
-export const ObjectFile = operatorCache<{ content: string; type: string }>(
+export const ObjectFile = operatorCache<{ content: string; type: IAny["Type"] }>(
   'ObjectFile',
   _loadObjectFile
 );

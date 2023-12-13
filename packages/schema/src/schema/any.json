@@ -11,6 +11,7 @@
     },
     "Type": {
       "type": "string",
+      "enum": ["brep", "step"],
       "description": "The type of the object"
     },
     "Placement": {

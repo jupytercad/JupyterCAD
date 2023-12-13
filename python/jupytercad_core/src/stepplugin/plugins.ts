@@ -15,7 +15,7 @@ import {
 } from '@jupyterlab/application';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
-import { JupyterCadJcadStepModelFactory } from './modelfactory';
+import { JupyterCadStepModelFactory } from './modelfactory';
 import { JupyterCadWidgetFactory } from '../factory';
 
 const FACTORY = 'JupyterCAD STEP Viewer';
@@ -40,7 +40,7 @@ const activate = (
   app.docRegistry.addWidgetFactory(widgetFactory);
 
   // Creating and registering the model factory for our custom DocumentModel
-  const modelFactory = new JupyterCadJcadStepModelFactory();
+  const modelFactory = new JupyterCadStepModelFactory();
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype
   app.docRegistry.addFileType({

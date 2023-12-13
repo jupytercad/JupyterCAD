@@ -201,7 +201,7 @@ class CadDocument(Widget):
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
-        shape_name = name if name else self._new_name("StepFile")
+        shape_name = name if name else Path(path).stem
         if self.check_exist(shape_name):
             logger.error(f"Object {shape_name} already exists")
             return
