@@ -328,25 +328,57 @@ export function _Any(
   arg: IAny,
   content: IJCadContent
 ): OCC.TopoDS_Shape | undefined {
-  const { Shape, Placement } = arg;
-  const result = _loadBrep({ content: Shape });
+  const { Content, Type, Placement } = arg;
+  const result = _loadObjectFile({ content: Content, type: Type });
   if (result) {
     return setShapePlacement(result, Placement);
   }
 }
 
-export function _loadBrep(arg: {
-  content: string;
-}): OCC.TopoDS_Shape | undefined {
+export function _loadBrepFile(content: string): OCC.TopoDS_Shape | undefined {
   const oc = getOcc();
   const fakeFileName = `${uuid()}.brep`;
-  oc.FS.createDataFile('/', fakeFileName, arg.content, true, true, true);
+  oc.FS.createDataFile('/', fakeFileName, content, true, true, true);
   const shape = new oc.TopoDS_Shape();
   const builder = new oc.BRep_Builder();
   const progress = new oc.Message_ProgressRange_1();
   oc.BRepTools.Read_2(shape, fakeFileName, builder, progress);
   oc.FS.unlink('/' + fakeFileName);
   return shape;
+}
+
+export function _loadStepFile(content: string): OCC.TopoDS_Shape | undefined {
+  const oc = getOcc();
+  const fakeFileName = `${uuid()}.STEP`;
+  oc.FS.createDataFile('/', fakeFileName, content, true, true, true);
+
+  const reader = new oc.STEPControl_Reader_1();
+
+  const readResult = reader.ReadFile(fakeFileName);
+
+  if (readResult === oc.IFSelect_ReturnStatus.IFSelect_RetDone) {
+    reader.TransferRoots(new oc.Message_ProgressRange_1());
+    const shape = reader.OneShape();
+    oc.FS.unlink('/' + fakeFileName);
+    return shape;
+  } else {
+    console.error('Something in OCCT went wrong trying to read');
+    return undefined;
+  }
+}
+
+export function _loadObjectFile(arg: {
+  content: string;
+  type: IAny['Type'];
+}): OCC.TopoDS_Shape | undefined {
+  switch (arg.type.toLowerCase()) {
+    case 'brep':
+      return _loadBrepFile(arg.content);
+    case 'step':
+      return _loadStepFile(arg.content);
+    default:
+      throw `${arg.type} file not supported`;
+  }
 }
 
 const Any = operatorCache<IAny>('Part::Any', _Any);
@@ -376,10 +408,10 @@ const Intersection = operatorCache<IIntersection>(
 
 const Extrude = operatorCache<IExtrusion>('Part::Extrusion', _Extrude);
 
-export const BrepFile = operatorCache<{ content: string }>(
-  'BrepFile',
-  _loadBrep
-);
+export const ObjectFile = operatorCache<{
+  content: string;
+  type: IAny['Type'];
+}>('ObjectFile', _loadObjectFile);
 
 export const ShapesFactory: {
   [key in Parts]: IAllOperatorFunc;

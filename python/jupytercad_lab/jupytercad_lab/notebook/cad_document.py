@@ -193,6 +193,42 @@ class CadDocument(Widget):
                 with self.ydoc.begin_transaction() as t:
                     self._options.set(t, "guidata", new_gui)
 
+    def add_step_file(
+        self,
+        path: str,
+        name: str = "",
+        position: List[float] = [0, 0, 0],
+        rotation_axis: List[float] = [0, 0, 1],
+        rotation_angle: float = 0,
+    ) -> CadDocument:
+        shape_name = name if name else Path(path).stem
+        if self.check_exist(shape_name):
+            logger.error(f"Object {shape_name} already exists")
+            return
+
+        with open(path, "r") as fobj:
+            data = fobj.read()
+
+        data = {
+            "shape": "Part::Any",
+            "name": shape_name,
+            "parameters": {
+                "Content": data,
+                "Type": "STEP",
+                "Placement": {
+                    "Position": position,
+                    "Axis": rotation_axis,
+                    "Angle": rotation_angle,
+                },
+            },
+            "visible": True,
+        }
+
+        with self.ydoc.begin_transaction() as t:
+            self._objects_array.append(t, Y.YMap(data))
+
+        return self
+
     def add_occ_shape(
         self,
         shape,
@@ -217,7 +253,7 @@ class CadDocument(Widget):
         except ImportError:
             raise RuntimeError("Cannot add an OpenCascade shape if it's not installed.")
 
-        shape_name = name if name else self._new_name("Shape")
+        shape_name = name if name else self._new_name("OCCShape")
         if self.check_exist(shape_name):
             logger.error(f"Object {shape_name} already exists")
             return
@@ -230,7 +266,8 @@ class CadDocument(Widget):
             "shape": "Part::Any",
             "name": shape_name,
             "parameters": {
-                "Shape": brepdata,
+                "Content": brepdata,
+                "Type": "brep",
                 "Placement": {
                     "Position": position,
                     "Axis": rotation_axis,

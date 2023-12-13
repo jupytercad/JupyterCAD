@@ -15,6 +15,7 @@ path = "python/jupytercad/jupytercad/__init__.py"
 [tool.jupyter-releaser]
 skip = [ "check-python" ]
 
+
 [tool.jupyter-releaser.options]
 version-cmd = "python scripts/bump-version.py"
 python_packages = [

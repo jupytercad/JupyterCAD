@@ -29,7 +29,11 @@ const browserWidget: JupyterFrontEndPlugin<void> = {
       if (e.type === 'directory') {
         return {};
       }
-      if (name.endsWith('fcstd') || name.endsWith('jcad')) {
+      if (
+        name.endsWith('fcstd') ||
+        name.endsWith('jcad') ||
+        name.endsWith('step')
+      ) {
         return {};
       }
       return null;
@@ -43,7 +47,7 @@ const browserWidget: JupyterFrontEndPlugin<void> = {
     const input = document.createElement('input');
     input.type = 'file';
     input.multiple = true;
-    input.accept = '.FCStd, .fcstd,.jcad, .JCAD';
+    input.accept = '.FCStd,.fcstd,.jcad,.JCAD,.step,.STEP';
     input.onclick = () => void (input.value = '');
     input.onchange = () => {
       const files = input.files;

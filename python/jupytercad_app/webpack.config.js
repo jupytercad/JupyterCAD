@@ -29,7 +29,7 @@ const distRoot = path.resolve(
 );
 
 // Ensure a clear build directory.
-const buildDir = path.resolve(__dirname, 'build');
+const buildDir = path.resolve(__dirname, 'build_dir');
 if (fs.existsSync(buildDir)) {
   fs.removeSync(buildDir);
 }
