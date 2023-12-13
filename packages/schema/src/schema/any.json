@@ -11,8 +11,7 @@
     },
     "Type": {
       "type": "string",
-      "enum": ["brep", "step"],
-      "description": "The type of the object"
+      "enum": ["brep", "step"]
     },
     "Placement": {
       "$ref": "./placement.json"
