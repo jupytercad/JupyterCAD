@@ -303,7 +303,6 @@ export class JupyterCadDoc
     const objs = this._objects.map(
       obj => JSONExt.deepCopy(obj.toJSON()) as IJCadObject
     );
-    console.log(objs);
     return objs;
   }
 
@@ -507,7 +506,6 @@ export class JupyterCadStepDoc extends JupyterCadDoc {
   get objects(): Array<IJCadObject> {
     const source = this._source.toJSON();
 
-    console.log('Source is', this._source, source);
 
     if (!source) {
       return [];
