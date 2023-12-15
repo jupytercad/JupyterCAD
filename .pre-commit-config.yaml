@@ -11,7 +11,7 @@ repos:
     hooks:
       - id: forbid-new-submodules
       - id: end-of-file-fixer
-        exclude: galata/.*-snapshots
+        exclude: galata/.*-snapshots, *.jcad
       - id: check-case-conflict
       - id: requirements-txt-fixer
       - id: check-added-large-files

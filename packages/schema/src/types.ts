@@ -11,6 +11,7 @@ export * from './_interface/placement';
 export * from './_interface/sketch';
 export * from './_interface/sphere';
 export * from './_interface/torus';
+export * from './_interface/postOperator';
 export * from './interfaces';
 export * from './model';
 export * from './token';

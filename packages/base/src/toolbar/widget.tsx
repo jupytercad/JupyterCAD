@@ -170,7 +170,15 @@ export class ToolbarWidget extends Toolbar {
           commands: options.commands
         })
       );
-
+      this.addItem('separator5', new Separator());
+      this.addItem(
+        'Mesh',
+        new CommandToolbarButton({
+          id: CommandIDs.mesh,
+          label: '',
+          commands: options.commands
+        })
+      );
       this.addItem('spacer', Toolbar.createSpacerItem());
 
       // Users

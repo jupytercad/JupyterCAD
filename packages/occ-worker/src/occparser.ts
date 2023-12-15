@@ -1,13 +1,7 @@
 import { OCC } from '@jupytercad/opencascade';
-import { IJCadObject } from '@jupytercad/schema';
+import { IEdge, IFace, IJCadObject, IParsedShape } from '@jupytercad/schema';
 
-import {
-  IDict,
-  IEdge,
-  IFace,
-  IOperatorFuncOutput,
-  IParsedShape
-} from './types';
+import { IDict, IOperatorFuncOutput } from './types';
 
 interface IShapeList {
   shapeData: IOperatorFuncOutput;
@@ -28,6 +22,9 @@ export class OccParser {
     this._shapeList.forEach(data => {
       const { shapeData, jcObject } = data;
       const { occShape, metadata } = shapeData;
+      if (!occShape) {
+        return;
+      }
       new this._occ.BRepMesh_IncrementalMesh_2(
         occShape,
         maxDeviation,

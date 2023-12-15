@@ -21,6 +21,8 @@ import {
 import {
   IAnnotationModel,
   IAnnotationToken,
+  IJCadFormSchemaRegistry,
+  IJCadFormSchemaRegistryToken,
   IJupyterCadDocTracker,
   IJupyterCadTracker
 } from '@jupytercad/schema';
@@ -61,12 +63,18 @@ const plugin: JupyterFrontEndPlugin<void> = {
 const controlPanel: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:lab:controlpanel',
   autoStart: true,
-  requires: [ILayoutRestorer, IJupyterCadDocTracker, IAnnotationToken],
+  requires: [
+    ILayoutRestorer,
+    IJupyterCadDocTracker,
+    IAnnotationToken,
+    IJCadFormSchemaRegistryToken
+  ],
   activate: (
     app: JupyterFrontEnd,
     restorer: ILayoutRestorer,
     tracker: IJupyterCadTracker,
-    annotationModel: IAnnotationModel
+    annotationModel: IAnnotationModel,
+    formSchemaRegistry: IJCadFormSchemaRegistry
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
 
@@ -79,7 +87,10 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     leftControlPanel.title.caption = 'JupyterCad Control Panel';
     leftControlPanel.title.icon = jcLightIcon;
 
-    const rightControlPanel = new RightPanelWidget({ model: controlModel });
+    const rightControlPanel = new RightPanelWidget({
+      model: controlModel,
+      formSchemaRegistry
+    });
     rightControlPanel.id = 'jupytercad::rightControlPanel';
     rightControlPanel.title.caption = 'JupyterCad Control Panel';
     rightControlPanel.title.icon = jcLightIcon;

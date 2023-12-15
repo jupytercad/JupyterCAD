@@ -1,8 +1,9 @@
 import { AnnotationModel, JupyterCadWidget } from '@jupytercad/base';
-import { OCC_WORKER_ID, OccWorker } from '@jupytercad/occ-worker';
 import {
   IAnnotationModel,
   IAnnotationToken,
+  IJCadFormSchemaRegistry,
+  IJCadFormSchemaRegistryToken,
   IJCadWorkerRegistry,
   IJCadWorkerRegistryToken,
   IJupyterCadDocTracker,
@@ -17,6 +18,7 @@ import { IMainMenu } from '@jupyterlab/mainmenu';
 import { ITranslator } from '@jupyterlab/translation';
 
 import { JupyterCadWorkerRegistry } from './workerregistry';
+import { JupyterCadFormSchemaRegistry } from './schemaregistry';
 
 const NAME_SPACE = 'jupytercad';
 
@@ -64,11 +66,18 @@ export const workerRegistryPlugin: JupyterFrontEndPlugin<IJCadWorkerRegistry> =
     provides: IJCadWorkerRegistryToken,
     activate: (app: JupyterFrontEnd): IJCadWorkerRegistry => {
       const workerRegistry = new JupyterCadWorkerRegistry();
-      const worker = new Worker(
-        new URL('@jupytercad/occ-worker/lib/worker', (import.meta as any).url)
-      );
-      const occWorker = new OccWorker({ worker });
-      workerRegistry.registerWorker(OCC_WORKER_ID, occWorker);
       return workerRegistry;
+    }
+  };
+
+export const formSchemaRegistryPlugin: JupyterFrontEndPlugin<IJCadFormSchemaRegistry> =
+  {
+    id: 'jupytercad:core:form-schema-registry',
+    autoStart: true,
+    requires: [],
+    provides: IJCadFormSchemaRegistryToken,
+    activate: (app: JupyterFrontEnd): IJCadFormSchemaRegistry => {
+      const registry = new JupyterCadFormSchemaRegistry();
+      return registry;
     }
   };

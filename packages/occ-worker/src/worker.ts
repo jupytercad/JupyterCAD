@@ -1,13 +1,8 @@
 import { initializeOpenCascade, OCC } from '@jupytercad/opencascade';
 
 import WorkerHandler from './actions';
-import {
-  IDict,
-  IMainMessage,
-  IWorkerMessage,
-  MainAction,
-  WorkerAction
-} from './types';
+import { IDict, IWorkerMessage } from './types';
+import { IMainMessage, MainAction, WorkerAction } from '@jupytercad/schema';
 
 let occ: OCC.OpenCascadeInstance;
 const ports: IDict<MessagePort> = {};

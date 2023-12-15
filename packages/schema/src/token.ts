@@ -3,7 +3,8 @@ import { Token } from '@lumino/coreutils';
 import {
   IJCadWorkerRegistry,
   IJupyterCadTracker,
-  IAnnotationModel
+  IAnnotationModel,
+  IJCadFormSchemaRegistry
 } from './interfaces';
 
 export const IJupyterCadDocTracker = new Token<IJupyterCadTracker>(
@@ -16,4 +17,8 @@ export const IAnnotationToken = new Token<IAnnotationModel>(
 
 export const IJCadWorkerRegistryToken = new Token<IJCadWorkerRegistry>(
   'jupytercadWorkerRegistry'
+);
+
+export const IJCadFormSchemaRegistryToken = new Token<IJCadFormSchemaRegistry>(
+  'jupytercadFormSchemaRegistry'
 );

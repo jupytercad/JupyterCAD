@@ -21,6 +21,7 @@ import {
   cylinderIcon,
   explodedViewIcon,
   extrusionIcon,
+  gridIcon,
   intersectionIcon,
   sphereIcon,
   torusIcon,
@@ -314,6 +315,47 @@ const OPERATORS = {
         }
       };
     }
+  },
+  mesh: {
+    title: 'Mesh parameters',
+    shape: 'Post::Operator',
+    default: (model: IJupyterCadModel) => {
+      const objects = model.getAllObject();
+      const selected = model.localState?.selected.value || [];
+      return {
+        Name: newName('Mesh', model),
+        Object: selected.length > 0 ? selected[0] : objects[0].name ?? '',
+        NumberOfSegment: 15
+      };
+    },
+    syncData: (model: IJupyterCadModel) => {
+      return (props: IDict) => {
+        const { Name, ...parameters } = props;
+        const objectModel: IJCadObject = {
+          shape: 'Post::Operator',
+          parameters,
+          visible: true,
+          name: Name
+        };
+        const sharedModel = model.sharedModel;
+        if (sharedModel) {
+          sharedModel.transact(() => {
+            if (parameters['Object'].length > 0) {
+              setVisible(sharedModel, parameters['Object'], false);
+            }
+
+            if (!sharedModel.objectExists(objectModel.name)) {
+              sharedModel.addObject(objectModel);
+            } else {
+              showErrorMessage(
+                'The object already exists',
+                'There is an existing object with the same name.'
+              );
+            }
+          });
+        }
+      };
+    }
   }
 };
 
@@ -587,6 +629,13 @@ export function addCommands(
     execute: Private.executeOperator('intersection', tracker)
   });
 
+  commands.addCommand(CommandIDs.mesh, {
+    label: trans.__('Mesh creation'),
+    isEnabled: () => Boolean(tracker.currentWidget),
+    icon: gridIcon,
+    execute: Private.executeOperator('mesh', tracker)
+  });
+
   commands.addCommand(CommandIDs.updateAxes, {
     label: trans.__('Axes Helper'),
     isEnabled: () => Boolean(tracker.currentWidget),
@@ -676,6 +725,7 @@ export namespace CommandIDs {
   export const extrusion = 'jupytercad:extrusion';
   export const union = 'jupytercad:union';
   export const intersection = 'jupytercad:intersection';
+  export const mesh = 'jupytercad:mesh';
 
   export const updateAxes = 'jupytercad:updateAxes';
   export const updateExplodedView = 'jupytercad:updateExplodedView';

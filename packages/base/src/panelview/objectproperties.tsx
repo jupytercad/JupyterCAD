@@ -1,12 +1,12 @@
 import {
   IDict,
+  IJCadFormSchemaRegistry,
   IJCadModel,
   IJcadObjectDocChange,
   IJupyterCadClientState,
   IJupyterCadDoc,
   IJupyterCadModel
 } from '@jupytercad/schema';
-import formSchema from '@jupytercad/schema/lib/_interface/forms.json';
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
@@ -26,7 +26,10 @@ export class ObjectProperties extends PanelWithToolbar {
     super(params);
     this.title.label = 'Objects Properties';
     const body = ReactWidget.create(
-      <ObjectPropertiesReact cpModel={params.controlPanelModel} />
+      <ObjectPropertiesReact
+        cpModel={params.controlPanelModel}
+        formSchemaRegistry={params.formSchemaRegistry}
+      />
     );
     this.addWidget(body);
     this.addClass('jpcad-sidebar-propertiespanel');
@@ -47,6 +50,7 @@ interface IStates {
 
 interface IProps {
   cpModel: IControlPanelModel;
+  formSchemaRegistry: IJCadFormSchemaRegistry;
 }
 
 class ObjectPropertiesReact extends React.Component<IProps, IStates> {
@@ -58,6 +62,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       clientId: null,
       id: uuid()
     };
+    this._formSchema = props.formSchemaRegistry.getSchemas();
     this.props.cpModel.jcadModel?.sharedObjectsChanged.connect(
       this._sharedJcadModelChanged
     );
@@ -219,7 +224,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
           }
 
           if (selectedObj.shape) {
-            schema = formSchema[selectedObj.shape];
+            schema = this._formSchema.get(selectedObj.shape);
           }
           const selectedObjectData = selectedObj['parameters'];
           this.setState(old => ({
@@ -251,6 +256,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   }
 
   private _lastSelectedPropFieldId?: string;
+  private _formSchema: Map<string, IDict>;
 }
 
 export namespace ObjectProperties {
@@ -259,5 +265,6 @@ export namespace ObjectProperties {
    */
   export interface IOptions extends Panel.IOptions {
     controlPanelModel: IControlPanelModel;
+    formSchemaRegistry: IJCadFormSchemaRegistry;
   }
 }

@@ -2,6 +2,7 @@ import jcadPlugin from './jcadplugin/plugins';
 import stepPlugin from './stepplugin/plugins';
 import {
   annotationPlugin,
+  formSchemaRegistryPlugin,
   trackerPlugin,
   workerRegistryPlugin
 } from './plugin';
@@ -13,5 +14,6 @@ export default [
   annotationPlugin,
   workerRegistryPlugin,
   jcadPlugin,
-  stepPlugin
+  stepPlugin,
+  formSchemaRegistryPlugin
 ];

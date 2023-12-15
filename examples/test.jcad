@@ -2,53 +2,69 @@
   "objects": [
     {
       "name": "box",
+      "visible": true,
       "shape": "Part::Box",
+      "shapeMetadata": {
+        "mass": 1995,
+        "centerOfMass": [
+          3.5,
+          7.5,
+          9.499999999999998
+        ],
+        "matrixOfInertia": [
+          [
+            0,
+            -2.9103830456733704e-11,
+            45552.5
+          ],
+          [
+            97422.50000000006,
+            0,
+            0
+          ],
+          [
+            0,
+            68162.50000000006,
+            -2.9103830456733704e-11
+          ]
+        ]
+      },
       "parameters": {
-        "Height": 19.0,
         "Placement": {
           "Axis": [
-            1.0,
-            0.0,
-            0.0
+            1,
+            0,
+            0
           ],
           "Position": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
-          "Angle": 0.0
+          "Angle": 0
         },
-        "Width": 15.0,
-        "Length": 7.0
-      },
-      "visible": true
+        "Width": 15,
+        "Length": 7,
+        "Height": 19
+      }
     },
     {
-      "visible": true,
+      "name": "Mesh 1",
+      "shape": "Post::Operator",
       "parameters": {
-        "Length": 10.0,
-        "Placement": {
-          "Position": [
-            0.0,
-            0.0,
-            0.0
-          ],
-          "Axis": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "Angle": 2.0
-        },
-        "Height": 9.0,
-        "Width": 25.0
+        "NumberOfSegment": 5,
+        "Object": "box"
       },
-      "shape": "Part::Box",
-      "name": "box2"
+      "visible": true
     }
   ],
   "options": {
-    "foo": 1.0
+    "foo": 1,
+    "guidata": {
+      "box": {
+        "visibility": false
+      }
+    }
   },
   "metadata": {}
 }

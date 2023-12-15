@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "description": "Post::Operator",
+  "title": "IPostOperator",
+  "required": ["Object"],
+  "additionalProperties": true,
+  "properties": {
+    "Object": {
+      "type": "string",
+      "description": "The name of input object"
+    },
+    "NumberOfSegment": {
+      "type": "number",
+      "description": "The number of segment"
+    }
+  }
+}
