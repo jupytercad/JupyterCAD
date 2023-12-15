@@ -1,8 +1,6 @@
 {
   "objects": [
     {
-      "visible": true,
-      "name": "box",
       "shapeMetadata": {
         "matrixOfInertia": [
           [
@@ -21,161 +19,87 @@
             0
           ]
         ],
-        "mass": 2970,
         "centerOfMass": [
           4.5,
           7.5,
           11
-        ]
+        ],
+        "mass": 2970
       },
       "parameters": {
-        "Width": 15,
-        "Height": 22,
-        "Length": 9,
         "Placement": {
-          "Angle": 0,
-          "Position": [
-            0,
-            0,
-            0
-          ],
           "Axis": [
             1,
             0,
             0
-          ]
-        }
-      },
-      "shape": "Part::Box"
-    },
-    {
-      "visible": true,
-      "shapeMetadata": {
-        "mass": 3900,
-        "centerOfMass": [
-          6.5,
-          12.28298835752369,
-          6.4325886708958375
-        ],
-        "matrixOfInertia": [
-          [
-            0,
-            -5452.340379025205,
-            257859.60007843364
           ],
-          [
-            249925,
-            0,
-            0
-          ],
-          [
-            0,
-            101915.39992156648,
-            -5452.340379025205
-          ]
-        ]
-      },
-      "name": "box2",
-      "parameters": {
-        "Width": 25,
-        "Placement": {
           "Position": [
             0,
             0,
             0
-          ],
-          "Angle": 2,
-          "Axis": [
-            1,
-            0,
-            0
-          ]
-        },
-        "Height": 12,
-        "Length": 13
-      },
-      "shape": "Part::Box"
-    },
-    {
-      "parameters": {
-        "Refine": false,
-        "Shapes": [
-          "box",
-          "box2"
-        ],
-        "Placement": {
-          "Position": [
-            0,
-            0,
-            0
-          ],
-          "Angle": 0,
-          "Axis": [
-            0,
-            0,
-            1
-          ]
-        }
-      },
-      "shape": "Part::MultiCommon",
-      "shapeMetadata": {
-        "mass": 1620.9874617640914,
-        "centerOfMass": [
-          4.5,
-          7.500000000000002,
-          6.26556303698104
-        ],
-        "matrixOfInertia": [
-          [
-            0,
-            -1061.3649281489343,
-            41335.18027498432
-          ],
-          [
-            49906.14888444988,
-            0,
-            0
-          ],
-          [
-            0,
-            30454.299343280843,
-            -1061.3649281489343
-          ]
-        ]
-      },
-      "name": "Intersection 1",
-      "visible": true
-    },
-    {
-      "name": "Salome mesh 1",
-      "shape": "Post::Operator",
-      "visible": true,
-      "parameters": {
-        "Object": "box",
-        "Placement": {
-          "Position": [
-            0,
-            0,
-            0
-          ],
-          "Axis": [
-            0,
-            0,
-            1
           ],
           "Angle": 0
-        }
-      }
+        },
+        "Width": 15,
+        "Length": 9,
+        "Height": 22
+      },
+      "shape": "Part::Box",
+      "visible": true,
+      "name": "box"
+    },
+    {
+      "shapeMetadata": {
+        "matrixOfInertia": [
+          [
+            5.024868394973242e-29,
+            1.0531142239564298e-30,
+            5235.987755982989
+          ],
+          [
+            5235.987755982988,
+            1.2438806679850384e-13,
+            5.024868394973242e-29
+          ],
+          [
+            1.2438806679850384e-13,
+            5235.987755982989,
+            1.0531142239564298e-30
+          ]
+        ],
+        "centerOfMass": [
+          -6.831173468593155e-17,
+          -6.762015639822762e-17,
+          -1.1723955140041649e-16
+        ],
+        "mass": 523.598775598299
+      },
+      "shape": "Part::Sphere",
+      "name": "Sphere 1",
+      "parameters": {
+        "Angle2": 90,
+        "Placement": {
+          "Position": [
+            0,
+            0,
+            0
+          ],
+          "Angle": 0,
+          "Axis": [
+            0,
+            0,
+            1
+          ]
+        },
+        "Angle1": -90,
+        "Radius": 5,
+        "Angle3": 360
+      },
+      "visible": true
     }
   ],
   "options": {
     "guidata": {
-      "box2": {
-        "visibility": true
-      },
-      "Intersection 1": {
-        "visibility": true
-      },
       "box": {
         "visibility": true
       }

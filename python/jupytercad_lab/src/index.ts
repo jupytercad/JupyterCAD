@@ -29,18 +29,17 @@ import {
 import { WidgetTracker } from '@jupyterlab/apputils';
 import { notebookRenderePlugin } from './notebookrenderer';
 
-// import { yJupyterCADWidgetPlugin } from './notebookrenderer';
-
 const NAME_SPACE = 'jupytercad';
 
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:lab:main-menu',
   autoStart: true,
-  requires: [IJupyterCadDocTracker],
+  requires: [IJupyterCadDocTracker, IJCadFormSchemaRegistryToken],
   optional: [IMainMenu, ITranslator],
   activate: (
     app: JupyterFrontEnd,
     tracker: WidgetTracker<JupyterCadWidget>,
+    formSchemaRegistry: IJCadFormSchemaRegistry,
     mainMenu?: IMainMenu,
     translator?: ITranslator
   ): void => {
@@ -53,7 +52,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       );
     };
 
-    addCommands(app, tracker, translator);
+    addCommands(app, tracker, translator, formSchemaRegistry);
     if (mainMenu) {
       populateMenus(mainMenu, isEnabled);
     }
