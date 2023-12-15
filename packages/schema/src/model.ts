@@ -26,7 +26,6 @@ import {
   Pointer
 } from './interfaces';
 
-// import { IJCadContent, IJCadModel, IJCadObject, IJCadOptions } from './index';
 export class JupyterCadModel implements IJupyterCadModel {
   constructor(options: JupyterCadModel.IOptions) {
     const { annotationModel, sharedModel } = options;
@@ -428,6 +427,8 @@ export class JupyterCadDoc
     return new JupyterCadDoc();
   }
 
+  editable = true;
+
   private _getObjectAsYMapByName(name: string): Y.Map<any> | undefined {
     for (const obj of this._objects) {
       if (obj.get('name') === name) {
@@ -485,7 +486,6 @@ export class JupyterCadDoc
   );
 }
 
-// TODO Change the IJupyterCadDoc interface to add an "editable" property allowing to make read-only docs?
 export class JupyterCadStepDoc extends JupyterCadDoc {
   constructor() {
     super();
@@ -526,6 +526,8 @@ export class JupyterCadStepDoc extends JupyterCadDoc {
   static create(): JupyterCadStepDoc {
     return new JupyterCadStepDoc();
   }
+
+  editable = false;
 
   private _sourceObserver = (events: Y.YEvent<any>[]): void => {
     const changes: Array<{
