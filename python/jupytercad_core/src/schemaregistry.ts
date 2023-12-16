@@ -4,7 +4,6 @@ import formSchema from '@jupytercad/schema/lib/_interface/forms.json';
 export class JupyterCadFormSchemaRegistry implements IJCadFormSchemaRegistry {
   constructor() {
     this._registry = new Map<string, IDict>(Object.entries(formSchema));
-    console.log('_registry', this._registry);
   }
 
   registerSchema(name: string, schema: IDict): void {

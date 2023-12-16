@@ -2,8 +2,10 @@
   "objects": [
     {
       "parameters": {
-        "Length": 1,
-        "Width": 1,
+        "Radius": 5,
+        "Angle2": 90,
+        "Angle3": 360,
+        "Angle1": -90,
         "Placement": {
           "Axis": [
             0,
@@ -16,39 +18,53 @@
             0,
             0
           ]
-        },
-        "Height": 1
+        }
       },
+      "shape": "Part::Sphere",
       "visible": true,
-      "shape": "Part::Box",
+      "name": "Sphere 1",
       "shapeMetadata": {
-        "mass": 0.9999999999999998,
+        "mass": 523.598775598299,
         "centerOfMass": [
-          0.5,
-          0.5,
-          0.5
+          -6.831173468593155e-17,
+          -6.762015639822762e-17,
+          -1.1723955140041649e-16
         ],
         "matrixOfInertia": [
           [
-            0,
-            0,
-            0.16666666666666674
+            5.024868394973242e-29,
+            1.0531142239564298e-30,
+            5235.987755982989
           ],
           [
-            0.16666666666666663,
-            0,
-            0
+            5235.987755982988,
+            1.2438806679850384e-13,
+            5.024868394973242e-29
           ],
           [
-            0,
-            0.16666666666666663,
-            0
+            1.2438806679850384e-13,
+            5235.987755982989,
+            1.0531142239564298e-30
           ]
         ]
+      }
+    },
+    {
+      "parameters": {
+        "Object": "Sphere 1",
+        "NumberOfSegments": 5
       },
-      "name": "Box 1"
+      "visible": true,
+      "shape": "Post::SalomeMesh",
+      "name": "Mesh 1"
     }
   ],
-  "options": {},
+  "options": {
+    "guidata": {
+      "Sphere 1": {
+        "visibility": false
+      }
+    }
+  },
   "metadata": {}
 }

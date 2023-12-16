@@ -35,20 +35,24 @@ function buildModel(
     if (!shape || !parameters) {
       return;
     }
+
+    let shapeData: IOperatorFuncOutput | undefined = undefined;
     if (ShapesFactory[shape]) {
-      const shapeData = ShapesFactory[shape](parameters as IOperatorArg, model);
-      if (shapeData) {
-        outputModel.push({ shapeData, jcObject: object });
-      }
+      shapeData = ShapesFactory[shape](parameters as IOperatorArg, model);
     } else if (parameters['Shape'] && parameters['Type']) {
       // Creating occ shape from brep file.
-      const shapeData = ObjectFile(
+      shapeData = ObjectFile(
         { content: parameters['Shape'], type: parameters['Type'] },
         model
       );
-      if (shapeData) {
-        outputModel.push({ shapeData, jcObject: object });
-      }
+    } else if (shape.startsWith('Post::')) {
+      shapeData = ShapesFactory['Post::Operator'](
+        parameters as IOperatorArg,
+        model
+      );
+    }
+    if (shapeData) {
+      outputModel.push({ shapeData, jcObject: object });
     }
   });
   return outputModel;
