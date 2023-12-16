@@ -29,7 +29,7 @@ import {
 } from './tools';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 
-function newName(type: string, model: IJupyterCadModel): string {
+export function newName(type: string, model: IJupyterCadModel): string {
   const sharedModel = model.sharedModel;
 
   let n = 1;
@@ -40,7 +40,12 @@ function newName(type: string, model: IJupyterCadModel): string {
 
   return name;
 }
-function setVisible(sharedModel: IJupyterCadDoc, name: string, value: boolean) {
+
+export function setVisible(
+  sharedModel: IJupyterCadDoc,
+  name: string,
+  value: boolean
+) {
   const guidata = sharedModel.getOption('guidata') || {};
 
   if (guidata && guidata[name]) {

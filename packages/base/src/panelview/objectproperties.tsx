@@ -63,6 +63,8 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       id: uuid()
     };
     this._formSchema = props.formSchemaRegistry.getSchemas();
+    console.log('this._formSchem', this._formSchema);
+
     this.props.cpModel.jcadModel?.sharedObjectsChanged.connect(
       this._sharedJcadModelChanged
     );

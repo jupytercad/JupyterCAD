@@ -4,6 +4,7 @@ ci:
   # skip any check that needs internet access
   autofix_prs: true
 
+exclude: '.*\.jcad$'
 repos:
   # Autoformat and linting, misc. details
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -11,7 +12,7 @@ repos:
     hooks:
       - id: forbid-new-submodules
       - id: end-of-file-fixer
-        exclude: galata/.*-snapshots, *.jcad
+        exclude: galata/.*-snapshots
       - id: check-case-conflict
       - id: requirements-txt-fixer
       - id: check-added-large-files

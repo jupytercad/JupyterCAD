@@ -2,6 +2,8 @@ import { AnnotationModel, JupyterCadWidget } from '@jupytercad/base';
 import {
   IAnnotationModel,
   IAnnotationToken,
+  IJCadExternalCommandRegistry,
+  IJCadExternalCommandRegistryToken,
   IJCadFormSchemaRegistry,
   IJCadFormSchemaRegistryToken,
   IJCadWorkerRegistry,
@@ -19,6 +21,7 @@ import { ITranslator } from '@jupyterlab/translation';
 
 import { JupyterCadWorkerRegistry } from './workerregistry';
 import { JupyterCadFormSchemaRegistry } from './schemaregistry';
+import { JupyterCadExternalCommandRegistry } from './externalcommand';
 
 const NAME_SPACE = 'jupytercad';
 
@@ -78,6 +81,18 @@ export const formSchemaRegistryPlugin: JupyterFrontEndPlugin<IJCadFormSchemaRegi
     provides: IJCadFormSchemaRegistryToken,
     activate: (app: JupyterFrontEnd): IJCadFormSchemaRegistry => {
       const registry = new JupyterCadFormSchemaRegistry();
+      return registry;
+    }
+  };
+
+export const externalCommandRegistryPlugin: JupyterFrontEndPlugin<IJCadExternalCommandRegistry> =
+  {
+    id: 'jupytercad:core:external-command-registry',
+    autoStart: true,
+    requires: [],
+    provides: IJCadExternalCommandRegistryToken,
+    activate: (app: JupyterFrontEnd): IJCadExternalCommandRegistry => {
+      const registry = new JupyterCadExternalCommandRegistry();
       return registry;
     }
   };

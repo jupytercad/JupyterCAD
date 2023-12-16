@@ -7,7 +7,9 @@ import {
   IJCadWorkerRegistryToken,
   IJupyterCadDocTracker,
   IJupyterCadWidget,
-  JupyterCadStepDoc
+  JupyterCadStepDoc,
+  IJCadExternalCommandRegistry,
+  IJCadExternalCommandRegistryToken
 } from '@jupytercad/schema';
 import {
   JupyterFrontEnd,
@@ -25,7 +27,8 @@ const activate = (
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
   drive: ICollaborativeDrive,
-  workerRegistry: IJCadWorkerRegistry
+  workerRegistry: IJCadWorkerRegistry,
+  externalCommandRegistry: IJCadExternalCommandRegistry
 ): void => {
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
@@ -34,7 +37,8 @@ const activate = (
     defaultFor: ['step'],
     tracker,
     commands: app.commands,
-    workerRegistry
+    workerRegistry,
+    externalCommandRegistry
   });
   // Registering the widget factory
   app.docRegistry.addWidgetFactory(widgetFactory);
@@ -79,7 +83,8 @@ const stepPlugin: JupyterFrontEndPlugin<void> = {
     IJupyterCadDocTracker,
     IThemeManager,
     ICollaborativeDrive,
-    IJCadWorkerRegistryToken
+    IJCadWorkerRegistryToken,
+    IJCadExternalCommandRegistryToken
   ],
   autoStart: true,
   activate

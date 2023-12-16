@@ -338,3 +338,14 @@ export interface IJCadFormSchemaRegistry {
    */
   has(name: string): boolean;
 }
+
+export interface IJCadExternalCommand {
+  name: string;
+  id: string;
+  label?: string;
+}
+
+export interface IJCadExternalCommandRegistry {
+  getCommands(): IJCadExternalCommand[];
+  registerCommand(command: IJCadExternalCommand): void;
+}

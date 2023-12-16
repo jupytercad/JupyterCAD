@@ -153,7 +153,6 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   render(): React.ReactNode {
     if (this.props.schema) {
       const schema = { ...this.props.schema, additionalProperties: true };
-      console.log('scuema', schema);
 
       const submitRef = React.createRef<HTMLButtonElement>();
 

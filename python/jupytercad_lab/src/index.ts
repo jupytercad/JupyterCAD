@@ -1,22 +1,11 @@
 import {
-  ILayoutRestorer,
-  JupyterFrontEnd,
-  JupyterFrontEndPlugin
-} from '@jupyterlab/application';
-
-import { ITranslator, nullTranslator } from '@jupyterlab/translation';
-import { IMainMenu } from '@jupyterlab/mainmenu';
-
-// import fcplugin from './fcplugin/plugins';
-
-import {
   ControlPanelModel,
+  jcLightIcon,
+  JupyterCadWidget,
   LeftPanelWidget,
   RightPanelWidget,
-  jcLightIcon,
   addCommands,
-  CommandIDs,
-  JupyterCadWidget
+  CommandIDs
 } from '@jupytercad/base';
 import {
   IAnnotationModel,
@@ -26,7 +15,15 @@ import {
   IJupyterCadDocTracker,
   IJupyterCadTracker
 } from '@jupytercad/schema';
+import {
+  ILayoutRestorer,
+  JupyterFrontEnd,
+  JupyterFrontEndPlugin
+} from '@jupyterlab/application';
 import { WidgetTracker } from '@jupyterlab/apputils';
+import { IMainMenu } from '@jupyterlab/mainmenu';
+import { ITranslator, nullTranslator } from '@jupyterlab/translation';
+
 import { notebookRenderePlugin } from './notebookrenderer';
 
 const NAME_SPACE = 'jupytercad';

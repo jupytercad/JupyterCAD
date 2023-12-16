@@ -4,7 +4,8 @@ import {
   IJCadWorkerRegistry,
   IJupyterCadTracker,
   IAnnotationModel,
-  IJCadFormSchemaRegistry
+  IJCadFormSchemaRegistry,
+  IJCadExternalCommandRegistry
 } from './interfaces';
 
 export const IJupyterCadDocTracker = new Token<IJupyterCadTracker>(
@@ -22,3 +23,6 @@ export const IJCadWorkerRegistryToken = new Token<IJCadWorkerRegistry>(
 export const IJCadFormSchemaRegistryToken = new Token<IJCadFormSchemaRegistry>(
   'jupytercadFormSchemaRegistry'
 );
+
+export const IJCadExternalCommandRegistryToken =
+  new Token<IJCadExternalCommandRegistry>('jupytercadExternalCommandRegistry');

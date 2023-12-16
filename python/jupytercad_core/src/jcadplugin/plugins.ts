@@ -5,6 +5,8 @@ import {
 import {
   IAnnotationModel,
   IAnnotationToken,
+  IJCadExternalCommandRegistry,
+  IJCadExternalCommandRegistryToken,
   IJCadWorkerRegistry,
   IJCadWorkerRegistryToken,
   IJupyterCadDocTracker,
@@ -42,6 +44,7 @@ const activate = (
   browserFactory: IFileBrowserFactory,
   drive: ICollaborativeDrive,
   workerRegistry: IJCadWorkerRegistry,
+  externalCommandRegistry: IJCadExternalCommandRegistry,
   launcher: ILauncher | null,
   palette: ICommandPalette | null
 ): void => {
@@ -52,7 +55,8 @@ const activate = (
     defaultFor: ['jcad'],
     tracker,
     commands: app.commands,
-    workerRegistry
+    workerRegistry,
+    externalCommandRegistry
   });
   // Registering the widget factory
   app.docRegistry.addWidgetFactory(widgetFactory);
@@ -151,7 +155,8 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IAnnotationToken,
     IFileBrowserFactory,
     ICollaborativeDrive,
-    IJCadWorkerRegistryToken
+    IJCadWorkerRegistryToken,
+    IJCadExternalCommandRegistryToken
   ],
   optional: [ILauncher, ICommandPalette],
   autoStart: true,
