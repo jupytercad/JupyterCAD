@@ -78,6 +78,7 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   objects: Array<IJCadObject>;
   options: JSONObject;
   metadata: JSONObject;
+  outputs: JSONObject;
   readonly editable: boolean;
 
   objectExists(name: string): boolean;
@@ -90,6 +91,10 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   getOption(key: keyof IJCadOptions): IDict | undefined;
   setOption(key: keyof IJCadOptions, value: IDict): void;
   setOptions(options: IJCadOptions): void;
+
+  getOutput(key: string): string | undefined;
+  setOutput(key: string, value: string): void;
+  removeOutput(key: string): void;
 
   getMetadata(key: string): string | undefined;
   setMetadata(key: string, value: string): void;
@@ -235,6 +240,7 @@ export interface IDisplayShape extends IMainMessageBase {
   payload: {
     result: IDict<IParsedShape>;
     postResult: IDict<IPostOperatorInput>;
+    init: boolean;
   };
 }
 export interface IWorkerInitialized extends IMainMessageBase {

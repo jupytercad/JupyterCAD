@@ -2,7 +2,12 @@
   "type": "object",
   "description": "Post::Operator",
   "title": "IPostOperator",
-  "required": [],
+  "required": ["Object"],
   "additionalProperties": true,
-  "properties": {}
+  "properties": {
+    "Object": {
+      "type": "string",
+      "description": "The name of input object"
+    }
+  }
 }

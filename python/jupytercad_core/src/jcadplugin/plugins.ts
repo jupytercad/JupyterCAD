@@ -117,7 +117,8 @@ const activate = (
         ...model,
         format: 'text',
         size: undefined,
-        content: '{\n\t"objects": [],\n\t"options": {},\n\t"metadata": {}\n}'
+        content:
+          '{\n\t"objects": [],\n\t"options": {},\n\t"metadata": {},\n\t"outputs": {}}'
       });
 
       // Open the newly created file with the 'Editor'

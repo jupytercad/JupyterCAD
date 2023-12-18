@@ -14,7 +14,8 @@ import {
   ISketchObject,
   ISphere,
   ITorus,
-  IAny
+  IAny,
+  IPostOperator
 } from '@jupytercad/schema';
 
 import { getOcc } from './actions';
@@ -336,7 +337,7 @@ export function _Any(
 }
 
 export function _PostOperator(
-  arg: any,
+  arg: IPostOperator,
   content: IJCadContent
 ): { occBrep: string } {
   const baseObject = content.objects.filter(obj => obj.name === arg.Object);

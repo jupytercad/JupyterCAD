@@ -13,6 +13,7 @@ class YJCad(YBaseDoc):
         self._yobjects = self._ydoc.get_array("objects")
         self._yoptions = self._ydoc.get_map("options")
         self._ymeta = self._ydoc.get_map("metadata")
+        self._youtputs = self._ydoc.get_map("outputs")
 
     def version(self) -> str:
         return "0.1.0"
@@ -26,8 +27,10 @@ class YJCad(YBaseDoc):
         objects = json.loads(self._yobjects.to_json())
         options = json.loads(self._yoptions.to_json())
         meta = json.loads(self._ymeta.to_json())
+        outputs = json.loads(self._youtputs.to_json())
         return json.dumps(
-            dict(objects=objects, options=options, metadata=meta), indent=2
+            dict(objects=objects, options=options, metadata=meta, outputs=outputs),
+            indent=2,
         )
 
     def set(self, value: str) -> None:
@@ -49,6 +52,7 @@ class YJCad(YBaseDoc):
                 self._yobjects.append(t, o)
             self._yoptions.update(t, valueDict["options"].items())
             self._ymeta.update(t, valueDict["metadata"].items())
+            self._youtputs.update(t, valueDict["outputs"].items())
 
     def observe(self, callback: Callable[[str, Any], None]):
         self.unobserve()

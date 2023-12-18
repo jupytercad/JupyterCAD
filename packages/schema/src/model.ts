@@ -280,6 +280,7 @@ export class JupyterCadDoc
     this._options = this.ydoc.getMap<Y.Map<any>>('options');
     this._objects = this.ydoc.getArray<Y.Map<any>>('objects');
     this._metadata = this.ydoc.getMap<string>('metadata');
+    this._outputs = this.ydoc.getMap<string>('outputs');
     this.undoManager.addToScope(this._objects);
 
     this._objects.observeDeep(this._objectsObserver);
@@ -311,6 +312,10 @@ export class JupyterCadDoc
 
   get metadata(): JSONObject {
     return JSONExt.deepCopy(this._metadata.toJSON());
+  }
+
+  get outputs(): JSONObject {
+    return JSONExt.deepCopy(this._outputs.toJSON());
   }
 
   get objectsChanged(): ISignal<IJupyterCadDoc, IJcadObjectDocChange> {
@@ -416,6 +421,20 @@ export class JupyterCadDoc
     }
   }
 
+  getOutput(key: string): string | undefined {
+    return this._outputs.get(key);
+  }
+
+  setOutput(key: string, value: string): void {
+    this.transact(() => void this._outputs.set(key, value));
+  }
+
+  removeOutput(key: string): void {
+    if (this._outputs.has(key)) {
+      this._outputs.delete(key);
+    }
+  }
+
   setShapeMeta(name: string, meta?: IDict): void {
     const obj = this._getObjectAsYMapByName(name);
     if (meta && obj) {
@@ -479,6 +498,7 @@ export class JupyterCadDoc
   private _objects: Y.Array<Y.Map<any>>;
   private _options: Y.Map<any>;
   private _metadata: Y.Map<string>;
+  private _outputs: Y.Map<string>;
   private _metadataChanged = new Signal<IJupyterCadDoc, MapChange>(this);
   private _optionsChanged = new Signal<IJupyterCadDoc, MapChange>(this);
   private _objectsChanged = new Signal<IJupyterCadDoc, IJcadObjectDocChange>(

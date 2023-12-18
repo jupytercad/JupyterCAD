@@ -35,6 +35,7 @@ export interface ILoadFile extends IWorkerMessageBase {
   action: WorkerAction.LOAD_FILE;
   payload: {
     content: IJCadContent;
+    init?: boolean;
   };
 }
 

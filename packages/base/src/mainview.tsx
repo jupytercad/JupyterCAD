@@ -95,6 +95,7 @@ interface IPickedResult {
 export class MainView extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
+
     this._geometry = new THREE.BufferGeometry();
     this._geometry.setDrawRange(0, 3 * 10000);
 
@@ -391,15 +392,23 @@ export class MainView extends React.Component<IProps, IStates> {
   messageHandler = (msg: IMainMessage): void => {
     switch (msg.action) {
       case MainAction.DISPLAY_SHAPE: {
-        this._saveMeta(msg.payload.result);
-        this._shapeToMesh(msg.payload.result);
-        this._postWorkerId.forEach((wk, id) => {
-          wk.postMessage({
-            id,
-            action: WorkerAction.POSTPROCESS,
-            payload: msg.payload.postResult
+        const { result, init } = msg.payload;
+        this._saveMeta(result);
+        this._shapeToMesh(result);
+        if (init) {
+          const outputs = this._model.sharedModel.outputs;
+          Object.entries(outputs).forEach(([objName, objGeo]) => {
+            this._objToMesh(objName, objGeo as string);
           });
-        });
+        } else {
+          this._postWorkerId.forEach((wk, id) => {
+            wk.postMessage({
+              id,
+              action: WorkerAction.POSTPROCESS,
+              payload: msg.payload.postResult
+            });
+          });
+        }
 
         break;
       }
@@ -407,39 +416,47 @@ export class MainView extends React.Component<IProps, IStates> {
         if (!this._model) {
           return;
         }
-        this._postMessage({
-          action: WorkerAction.LOAD_FILE,
-          payload: {
-            content: this._model.getContent()
-          }
-        });
+        const content = this._model.getContent();
+        if (content.objects.length > 0) {
+          this._postMessage({
+            action: WorkerAction.LOAD_FILE,
+            payload: {
+              content,
+              init: true
+            }
+          });
+        }
       }
     }
   };
+
+  _objToMesh(name: string, geoObj: string): void {
+    const loader = new STLLoader();
+    const obj = loader.parse(geoObj);
+    const material = new THREE.MeshPhongMaterial({
+      color: DEFAULT_MESH_COLOR,
+      polygonOffset: true,
+      polygonOffsetFactor: 1,
+      polygonOffsetUnits: 1
+    });
+    const mesh = new THREE.Mesh(obj, material);
+
+    const lineGeo = new THREE.WireframeGeometry(mesh.geometry);
+    const mat = new THREE.LineBasicMaterial({ color: 'black' });
+    const wireframe = new THREE.LineSegments(lineGeo, mat);
+    mesh.add(wireframe);
+    mesh.name = name;
+    mesh.visible = true;
+    this._meshGroup?.add(mesh);
+  }
 
   postProcessWorkerHandler = (msg: IMainMessage): void => {
     switch (msg.action) {
       case MainAction.DISPLAY_POST: {
         msg.payload.forEach(element => {
           const { jcObject, postResult } = element;
-          const geoObj = postResult.mesh;
-          const loader = new STLLoader();
-          const obj = loader.parse(geoObj);
-          const material = new THREE.MeshPhongMaterial({
-            color: DEFAULT_MESH_COLOR,
-            polygonOffset: true,
-            polygonOffsetFactor: 1,
-            polygonOffsetUnits: 1
-          });
-          const mesh = new THREE.Mesh(obj, material);
-
-          const lineGeo = new THREE.WireframeGeometry(mesh.geometry);
-          const mat = new THREE.LineBasicMaterial({ color: 'black' });
-          const wireframe = new THREE.LineSegments(lineGeo, mat);
-          mesh.add(wireframe);
-          mesh.name = jcObject.name;
-          mesh.visible = true;
-          this._meshGroup?.add(mesh);
+          this._model.sharedModel.setOutput(jcObject.name, postResult.mesh);
+          this._objToMesh(jcObject.name, postResult.mesh);
         });
         break;
       }
@@ -957,10 +974,12 @@ export class MainView extends React.Component<IProps, IStates> {
   ): Promise<void> {
     if (change.objectChange) {
       await this._worker.ready;
+
       this._postMessage({
         action: WorkerAction.LOAD_FILE,
         payload: {
-          content: this._model.getContent()
+          content: this._model.getContent(),
+          init: change.objectChange?.length === 0
         }
       });
     }
