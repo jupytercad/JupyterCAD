@@ -1,7 +1,7 @@
 import logging
 from typing import Optional
 
-from ypywidgets.ypywidgets import Widget
+from ypywidgets import Widget
 
 logger = logging.getLogger(__file__)
 

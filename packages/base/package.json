@@ -36,8 +36,8 @@
   },
   "dependencies": {
     "@deathbeds/jupyterlab-rjsf": "^1.1.0",
-    "@jupyter/docprovider": "^1.0.0",
-    "@jupyter/ydoc": "^0.3.4 || ^1.0.2",
+    "@jupyter/docprovider": "^2.0.0",
+    "@jupyter/ydoc": "^1.0.0",
     "@jupytercad/occ-worker": "^1.0.1",
     "@jupytercad/schema": "^1.0.1",
     "@jupyterlab/application": "^4.0.0",

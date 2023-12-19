@@ -2,18 +2,18 @@ import json
 from typing import Any, Callable
 from functools import partial
 
-import y_py as Y
+from pycrdt import Array, Map, Text
 from jupyter_ydoc.ybasedoc import YBaseDoc
 
 
 class YJCad(YBaseDoc):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._ysource = self._ydoc.get_text("source")
-        self._yobjects = self._ydoc.get_array("objects")
-        self._yoptions = self._ydoc.get_map("options")
-        self._ymeta = self._ydoc.get_map("metadata")
-        self._youtputs = self._ydoc.get_map("outputs")
+        self._ydoc["source"] = self._ysource = Text()
+        self._ydoc["objects"] = self._yobjects = Array()
+        self._ydoc["options"] = self._yoptions = Map()
+        self._ydoc["metadata"] = self._ymetadata = Map()
+        self._ydoc["outputs"] = self._youtputs = Map()
 
     def version(self) -> str:
         return "0.1.0"
@@ -24,10 +24,10 @@ class YJCad(YBaseDoc):
         :return: Document's content.
         :rtype: Any
         """
-        objects = json.loads(self._yobjects.to_json())
-        options = json.loads(self._yoptions.to_json())
-        meta = json.loads(self._ymeta.to_json())
-        outputs = json.loads(self._youtputs.to_json())
+        objects = self._yobjects.to_py()
+        options = self._yoptions.to_py()
+        meta = self._ymetadata.to_py()
+        outputs = self._youtputs.to_py()
         return json.dumps(
             dict(objects=objects, options=options, metadata=meta, outputs=outputs),
             indent=2,
@@ -42,18 +42,14 @@ class YJCad(YBaseDoc):
         valueDict = json.loads(value)
         newObj = []
         for obj in valueDict["objects"]:
-            newObj.append(Y.YMap(obj))
-        with self._ydoc.begin_transaction() as t:
-            length = len(self._yobjects)
-            self._yobjects.delete_range(t, 0, length)
-            # workaround for https://github.com/y-crdt/ypy/issues/126:
-            # self._yobjects.extend(t, newObj)
-            for o in newObj:
-                self._yobjects.append(t, o)
+            newObj.append(Map(obj))
 
-            self._replace_y_map(t, self._yoptions, valueDict["options"])
-            self._replace_y_map(t, self._ymeta, valueDict["metadata"])
-            self._replace_y_map(t, self._youtputs, valueDict.get("outputs", {}))
+        self._yobjects.clear()
+        self._yobjects.extend(newObj)
+
+        self._yoptions.update(valueDict["options"])
+        self._ymetadata.update(valueDict["metadata"])
+        self._youtputs.update(valueDict["outputs"])
 
     def observe(self, callback: Callable[[str, Any], None]):
         self.unobserve()
@@ -69,11 +65,6 @@ class YJCad(YBaseDoc):
         self._subscriptions[self._yoptions] = self._yoptions.observe_deep(
             partial(callback, "options")
         )
-        self._subscriptions[self._ymeta] = self._ymeta.observe_deep(
+        self._subscriptions[self._ymetadata] = self._ymetadata.observe_deep(
             partial(callback, "meta")
         )
-
-    def _replace_y_map(self, t: Y.YTransaction, y_map: Y.YMap, new_value: dict):
-        for key in y_map:
-            y_map.pop(t, key)
-        y_map.update(t, new_value.items())
