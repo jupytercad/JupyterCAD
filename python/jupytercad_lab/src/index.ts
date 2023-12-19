@@ -104,6 +104,9 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
  * Populates the application menus for the notebook.
  */
 function populateMenus(mainMenu: IMainMenu, isEnabled: () => boolean): void {
+  mainMenu.fileMenu.addItem({
+    command: CommandIDs.exportJcad
+  });
   // Add undo/redo hooks to the edit menu.
   mainMenu.editMenu.undoers.redo.add({
     id: CommandIDs.redo,

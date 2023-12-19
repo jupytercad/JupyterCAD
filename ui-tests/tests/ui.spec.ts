@@ -24,7 +24,7 @@ test.describe('UI Test', () => {
     });
   });
 
-  test.describe('File rendering test', () => {
+  test.describe('File operations', () => {
     test.beforeAll(async ({ request }) => {
       const content = galata.newContentsHelper(request);
       await content.deleteDirectory('/examples');
@@ -76,6 +76,51 @@ test.describe('UI Test', () => {
         }
       });
     }
+
+    test(`Should be able to do export .STEP to .jcad`, async ({ page }) => {
+      await page.goto();
+
+      const fileName = '3M_CONNECTOR.STEP';
+      const fullPath = `examples/${fileName}`;
+      await page.notebook.openByPath(fullPath);
+      await page.notebook.activate(fullPath);
+
+      await page.waitForTimeout(3000);
+
+      // Export to jcad
+      await page.getByRole('menuitem', { name: 'File' }).click();
+      await page.getByText('Export to .jcad').click();
+
+      const accept = await page.locator('div.jp-Dialog-buttonLabel', {
+        hasText: 'Submit'
+      });
+      accept.click();
+
+      await page.waitForTimeout(1000);
+
+      // Refresh file browser
+      const filebrowserId = 'filebrowser';
+      await page.sidebar.openTab(filebrowserId);
+      expect(await page.sidebar.isTabOpen(filebrowserId)).toBeTruthy();
+      await page.filebrowser.openDirectory('examples');
+      await page.filebrowser.refresh();
+
+      // Open new jcad file
+      const newFileName = '3M_CONNECTOR.jcad';
+      const newFullPath = `examples/${newFileName}`;
+
+      await page.notebook.openByPath(newFullPath);
+      await page.notebook.activate(newFullPath);
+
+      await page.waitForTimeout(1000);
+
+      const main = await page.$('#jp-main-split-panel');
+      if (main) {
+        expect(await main.screenshot()).toMatchSnapshot({
+          name: `JCAD-export-${fileName}.png`
+        });
+      }
+    });
   });
 
   test.describe('File operator test', () => {

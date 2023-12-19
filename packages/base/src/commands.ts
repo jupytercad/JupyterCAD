@@ -22,11 +22,14 @@ import {
   explodedViewIcon,
   extrusionIcon,
   intersectionIcon,
+  requestAPI,
   sphereIcon,
   torusIcon,
   unionIcon
 } from './tools';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
+import { DocumentRegistry } from '@jupyterlab/docregistry';
+import { PathExt } from '@jupyterlab/coreutils';
 
 export function newName(type: string, model: IJupyterCadModel): string {
   const sharedModel = model.sharedModel;
@@ -404,6 +407,43 @@ const CAMERA_FORM = {
   }
 };
 
+const EXPORT_FORM = {
+  title: 'Export to .jcad',
+  schema: {
+    type: 'object',
+    required: ['Name'],
+    additionalProperties: false,
+    properties: {
+      Name: {
+        title: 'File name',
+        description: 'The exported file name',
+        type: 'string'
+      }
+    }
+  },
+  default: (context: DocumentRegistry.IContext<IJupyterCadModel>) => {
+    return {
+      Name: PathExt.basename(context.path).replace(
+        PathExt.extname(context.path),
+        '.jcad'
+      )
+    };
+  },
+  syncData: (context: DocumentRegistry.IContext<IJupyterCadModel>) => {
+    return (props: IDict) => {
+      const { Name } = props;
+      console.log(`export to ${Name}`);
+      requestAPI<{ done: boolean }>('jupytercad/export', {
+        method: 'POST',
+        body: JSON.stringify({
+          path: context.path,
+          newName: Name
+        })
+      });
+    };
+  }
+};
+
 /**
  * Add the FreeCAD commands to the application's command registry.
  */
@@ -645,6 +685,33 @@ export function addCommands(
       await dialog.launch();
     }
   });
+
+  commands.addCommand(CommandIDs.exportJcad, {
+    label: trans.__('Export to .jcad'),
+    isEnabled: () => {
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.exportable
+        : false;
+    },
+    iconClass: 'fa fa-file-export',
+    execute: async () => {
+      const current = tracker.currentWidget;
+
+      if (!current) {
+        return;
+      }
+
+      const dialog = new FormDialog({
+        context: current.context,
+        title: EXPORT_FORM.title,
+        schema: EXPORT_FORM.schema,
+        sourceData: EXPORT_FORM.default(tracker.currentWidget?.context),
+        syncData: EXPORT_FORM.syncData(tracker.currentWidget?.context),
+        cancelButton: true
+      });
+      await dialog.launch();
+    }
+  });
 }
 
 /**
@@ -670,6 +737,8 @@ export namespace CommandIDs {
   export const updateAxes = 'jupytercad:updateAxes';
   export const updateExplodedView = 'jupytercad:updateExplodedView';
   export const updateCameraSettings = 'jupytercad:updateCameraSettings';
+
+  export const exportJcad = 'jupytercad:exportJcad';
 }
 
 namespace Private {

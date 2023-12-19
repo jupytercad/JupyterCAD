@@ -47,6 +47,7 @@ exclude = [".github", "binder"]
 [tool.hatch.build.targets.wheel.shared-data]
 "install.json" = "share/jupyter/labextensions/@jupytercad/jupytercad-core/install.json"
 "jupytercad_core/labextension" = "share/jupyter/labextensions/@jupytercad/jupytercad-core"
+"jupyter-config/server-config" = "etc/jupyter/jupyter_server_config.d"
 
 [tool.hatch.build.hooks.version]
 path = "jupytercad_core/_version.py"

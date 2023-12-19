@@ -446,6 +446,7 @@ export class JupyterCadDoc
   }
 
   editable = true;
+  exportable = false;
 
   private _getObjectAsYMapByName(name: string): Y.Map<any> | undefined {
     for (const obj of this._objects) {
@@ -547,6 +548,7 @@ export class JupyterCadStepDoc extends JupyterCadDoc {
   }
 
   editable = false;
+  exportable = true;
 
   private _sourceObserver = (events: Y.YEvent<any>[]): void => {
     const changes: Array<{
