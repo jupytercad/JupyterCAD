@@ -16,12 +16,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install Conda environment with Micromamba
-        uses: mamba-org/provision-with-micromamba@main
+        uses: mamba-org/setup-micromamba@v1
         with:
           environment-name: cad
-          environment-file: false
-          channels: conda-forge/label/jupyterlab_beta,conda-forge
-          extra-specs: |
+          create-args: >-
             python=3.9
             jupyterlab=4
             yarn=3
@@ -134,12 +132,11 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install Conda environment with Micromamba
-        uses: mamba-org/provision-with-micromamba@main
+        uses: mamba-org/setup-micromamba@v1
         with:
+          micromamba-version: '1.5.5-0'
           environment-name: cad
-          environment-file: false
-          channels: conda-forge
-          extra-specs: |
+          create-args: >-
             python=3.9
             jupyterlab=4
             pythonocc-core=7.7.0
