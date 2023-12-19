@@ -289,9 +289,6 @@ export class JupyterCadDoc
   }
 
   dispose(): void {
-    this._objects.unobserveDeep(this._objectsObserver);
-    this._metadata.unobserve(this._metaObserver);
-    this._options.unobserve(this._optionsObserver);
     super.dispose();
   }
 
@@ -359,6 +356,7 @@ export class JupyterCadDoc
           delete guidata[name];
           this.setOption('guidata', guidata);
         }
+        this.removeOutput(name);
       });
     }
   }

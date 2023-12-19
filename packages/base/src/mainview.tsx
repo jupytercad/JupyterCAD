@@ -392,22 +392,26 @@ export class MainView extends React.Component<IProps, IStates> {
   messageHandler = (msg: IMainMessage): void => {
     switch (msg.action) {
       case MainAction.DISPLAY_SHAPE: {
-        const { result, init } = msg.payload;
+        const { result, postResult } = msg.payload;
         this._saveMeta(result);
         this._shapeToMesh(result);
-        if (init) {
-          const outputs = this._model.sharedModel.outputs;
-          Object.entries(outputs).forEach(([objName, objGeo]) => {
-            this._objToMesh(objName, objGeo as string);
-          });
-        } else {
-          this._postWorkerId.forEach((wk, id) => {
-            wk.postMessage({
-              id,
-              action: WorkerAction.POSTPROCESS,
-              payload: msg.payload.postResult
+        if (Object.keys(result).length > 0) {
+          if (this._firstRender) {
+            const outputs = this._model.sharedModel.outputs;
+            Object.entries(outputs).forEach(([objName, objGeo]) => {
+              this._objToMesh(objName, objGeo as string);
             });
-          });
+            this._updateRefLength(true);
+            this._firstRender = false;
+          } else {
+            this._postWorkerId.forEach((wk, id) => {
+              wk.postMessage({
+                id,
+                action: WorkerAction.POSTPROCESS,
+                payload: postResult
+              });
+            });
+          }
         }
 
         break;
@@ -417,38 +421,16 @@ export class MainView extends React.Component<IProps, IStates> {
           return;
         }
         const content = this._model.getContent();
-        if (content.objects.length > 0) {
-          this._postMessage({
-            action: WorkerAction.LOAD_FILE,
-            payload: {
-              content,
-              init: true
-            }
-          });
-        }
+
+        this._postMessage({
+          action: WorkerAction.LOAD_FILE,
+          payload: {
+            content
+          }
+        });
       }
     }
   };
-
-  _objToMesh(name: string, geoObj: string): void {
-    const loader = new STLLoader();
-    const obj = loader.parse(geoObj);
-    const material = new THREE.MeshPhongMaterial({
-      color: DEFAULT_MESH_COLOR,
-      polygonOffset: true,
-      polygonOffsetFactor: 1,
-      polygonOffsetUnits: 1
-    });
-    const mesh = new THREE.Mesh(obj, material);
-
-    const lineGeo = new THREE.WireframeGeometry(mesh.geometry);
-    const mat = new THREE.LineBasicMaterial({ color: 'black' });
-    const wireframe = new THREE.LineSegments(lineGeo, mat);
-    mesh.add(wireframe);
-    mesh.name = name;
-    mesh.visible = true;
-    this._meshGroup?.add(mesh);
-  }
 
   postProcessWorkerHandler = (msg: IMainMessage): void => {
     switch (msg.action) {
@@ -458,6 +440,7 @@ export class MainView extends React.Component<IProps, IStates> {
           this._model.sharedModel.setOutput(jcObject.name, postResult.mesh);
           this._objToMesh(jcObject.name, postResult.mesh);
         });
+        this._updateRefLength(true);
         break;
       }
     }
@@ -723,34 +706,62 @@ export class MainView extends React.Component<IProps, IStates> {
       this._model.sharedModel?.setOption('guidata', guidata);
     }
     // Update the reflength
-    if (this._refLength === null && this._meshGroup.children.length) {
-      const boxSizeVec = new THREE.Vector3();
-      this._boundingGroup.getSize(boxSizeVec);
-
-      this._refLength =
-        Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
-      this._updatePointers(this._refLength);
-      this._camera.lookAt(this._scene.position);
-
-      this._camera.position.set(
-        10 * this._refLength,
-        10 * this._refLength,
-        10 * this._refLength
-      );
-      this._camera.far = 200 * this._refLength;
-    }
-
-    // Reset reflength if there are no objects
-    if (!this._meshGroup.children.length) {
-      this._refLength = null;
-    }
-
+    this._updateRefLength();
     // Set the expoded view if it's enabled
     this._setupExplodedView();
 
     this._scene.add(this._meshGroup);
     this.setState(old => ({ ...old, loading: false }));
   };
+
+  private _updateRefLength(force = false): void {
+    if (this._meshGroup) {
+      if (
+        force ||
+        (this._refLength === null && this._meshGroup.children.length)
+      ) {
+        const boxSizeVec = new THREE.Vector3();
+        this._boundingGroup.getSize(boxSizeVec);
+
+        this._refLength =
+          Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
+        this._updatePointers(this._refLength);
+        this._camera.lookAt(this._scene.position);
+
+        this._camera.position.set(
+          10 * this._refLength,
+          10 * this._refLength,
+          10 * this._refLength
+        );
+        this._camera.far = 200 * this._refLength;
+      }
+      if (!this._meshGroup.children.length) {
+        this._refLength = null;
+      }
+    }
+  }
+  private _objToMesh(name: string, geoObj: string): void {
+    const loader = new STLLoader();
+    const obj = loader.parse(geoObj);
+    const material = new THREE.MeshPhongMaterial({
+      color: DEFAULT_MESH_COLOR,
+      polygonOffset: true,
+      polygonOffsetFactor: 1,
+      polygonOffsetUnits: 1
+    });
+    const mesh = new THREE.Mesh(obj, material);
+
+    const lineGeo = new THREE.WireframeGeometry(mesh.geometry);
+    const mat = new THREE.LineBasicMaterial({ color: 'black' });
+    const wireframe = new THREE.LineSegments(lineGeo, mat);
+    mesh.add(wireframe);
+    mesh.name = name;
+    mesh.visible = true;
+    if (this._meshGroup) {
+      this._meshGroup.add(mesh);
+      this._boundingGroup?.expandByObject(mesh);
+    }
+  }
 
   private _postMessage = (msg: Omit<IWorkerMessage, 'id'>) => {
     if (this._worker) {
@@ -974,12 +985,10 @@ export class MainView extends React.Component<IProps, IStates> {
   ): Promise<void> {
     if (change.objectChange) {
       await this._worker.ready;
-
       this._postMessage({
         action: WorkerAction.LOAD_FILE,
         payload: {
-          content: this._model.getContent(),
-          init: change.objectChange?.length === 0
+          content: this._model.getContent()
         }
       });
     }
@@ -1299,4 +1308,5 @@ export class MainView extends React.Component<IProps, IStates> {
   private _pointerGeometry: THREE.SphereGeometry;
   private _contextMenu: ContextMenu;
   private _postWorkerId: Map<string, IJCadWorker> = new Map();
+  private _firstRender = true;
 }

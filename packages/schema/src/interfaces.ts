@@ -240,7 +240,6 @@ export interface IDisplayShape extends IMainMessageBase {
   payload: {
     result: IDict<IParsedShape>;
     postResult: IDict<IPostOperatorInput>;
-    init: boolean;
   };
 }
 export interface IWorkerInitialized extends IMainMessageBase {

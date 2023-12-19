@@ -50,9 +50,10 @@ class YJCad(YBaseDoc):
             # self._yobjects.extend(t, newObj)
             for o in newObj:
                 self._yobjects.append(t, o)
-            self._yoptions.update(t, valueDict["options"].items())
-            self._ymeta.update(t, valueDict["metadata"].items())
-            self._youtputs.update(t, valueDict.get("outputs", {}).items())
+
+            self._replace_y_map(t, self._yoptions, valueDict["options"])
+            self._replace_y_map(t, self._ymeta, valueDict["metadata"])
+            self._replace_y_map(t, self._youtputs, valueDict["outputs"])
 
     def observe(self, callback: Callable[[str, Any], None]):
         self.unobserve()
@@ -71,3 +72,8 @@ class YJCad(YBaseDoc):
         self._subscriptions[self._ymeta] = self._ymeta.observe_deep(
             partial(callback, "meta")
         )
+
+    def _replace_y_map(self, t: Y.YTransaction, y_map: Y.YMap, new_value: dict):
+        for key in y_map:
+            y_map.pop(t, key)
+        y_map.update(t, new_value.items())

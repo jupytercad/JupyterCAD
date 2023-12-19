@@ -354,7 +354,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                           const guidata =
                             this.props.cpModel.sharedModel?.getOption(
                               'guidata'
-                            ) || { objectId: {} };
+                            ) || { [objectId]: {} };
                           if (guidata) {
                             if (guidata[objectId]) {
                               guidata[objectId]['visibility'] = !visible;

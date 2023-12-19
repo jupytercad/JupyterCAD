@@ -58,12 +58,8 @@ function buildModel(
   return outputModel;
 }
 
-function loadFile(payload: {
-  content: IJCadContent;
-  init?: boolean;
-}): IDict | null {
+function loadFile(payload: { content: IJCadContent }): IDict | null {
   const { content } = payload;
-  const init = Boolean(payload?.init);
   const outputModel = buildModel(content);
 
   const parser = new OccParser(outputModel);
@@ -77,7 +73,7 @@ function loadFile(payload: {
       };
     }
   });
-  return { result, postResult, init };
+  return { result, postResult };
 }
 
 const WorkerHandler: {
