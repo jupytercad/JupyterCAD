@@ -53,7 +53,7 @@ class YJCad(YBaseDoc):
 
             self._replace_y_map(t, self._yoptions, valueDict["options"])
             self._replace_y_map(t, self._ymeta, valueDict["metadata"])
-            self._replace_y_map(t, self._youtputs, valueDict["outputs"])
+            self._replace_y_map(t, self._youtputs, valueDict.get("outputs", {}))
 
     def observe(self, callback: Callable[[str, Any], None]):
         self.unobserve()
