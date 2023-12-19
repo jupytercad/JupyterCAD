@@ -29,7 +29,6 @@ import {
 } from 'three-mesh-bvh';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
-// import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { v4 as uuid } from 'uuid';
 
 import { FloatingAnnotation } from './annotation/view';
