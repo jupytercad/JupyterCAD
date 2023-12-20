@@ -40,8 +40,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "opencascade.js": "beta"
   }
 }

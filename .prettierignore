@@ -5,3 +5,5 @@ jupytercad
 **/*.d.ts
 **/*.js
 packages/opencascade/build.yml
+yarn.lock
+*.jcad

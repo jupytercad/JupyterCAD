@@ -31,7 +31,9 @@
     "clean": "rimraf tsconfig.tsbuildinfo",
     "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
     "clean:all": "jlpm run clean:lib",
-    "watch": "webpack --config worker.webpack.config.js --watch --mode=development"
+    "watch:webpack": "webpack --config worker.webpack.config.js --watch --mode=development",
+    "watch:lib": "tsc -w",
+    "watch": "tsc-watch --onSuccess \"webpack --config worker.webpack.config.js --mode=development\""
   },
   "dependencies": {
     "@jupytercad/opencascade": "^1.0.0-alpha.2",
@@ -47,6 +49,7 @@
     "rimraf": "^3.0.2",
     "source-map-loader": "^3.0.0",
     "ts-loader": "^9.2.6",
+    "tsc-watch": "^6.0.0",
     "typescript": "^5",
     "webpack": "^5.76.3"
   },

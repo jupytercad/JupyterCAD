@@ -3,3 +3,4 @@ jupytercad_app/schemas
 jupytercad_app/themes
 # Version file is handled by hatchling
 jupytercad_app/_version.py
+build_dir/

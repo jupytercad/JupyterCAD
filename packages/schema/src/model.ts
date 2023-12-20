@@ -280,6 +280,7 @@ export class JupyterCadDoc
     this._options = this.ydoc.getMap<Y.Map<any>>('options');
     this._objects = this.ydoc.getArray<Y.Map<any>>('objects');
     this._metadata = this.ydoc.getMap<string>('metadata');
+    this._outputs = this.ydoc.getMap<string>('outputs');
     this.undoManager.addToScope(this._objects);
 
     this._objects.observeDeep(this._objectsObserver);
@@ -288,9 +289,6 @@ export class JupyterCadDoc
   }
 
   dispose(): void {
-    this._objects.unobserveDeep(this._objectsObserver);
-    this._metadata.unobserve(this._metaObserver);
-    this._options.unobserve(this._optionsObserver);
     super.dispose();
   }
 
@@ -311,6 +309,10 @@ export class JupyterCadDoc
 
   get metadata(): JSONObject {
     return JSONExt.deepCopy(this._metadata.toJSON());
+  }
+
+  get outputs(): JSONObject {
+    return JSONExt.deepCopy(this._outputs.toJSON());
   }
 
   get objectsChanged(): ISignal<IJupyterCadDoc, IJcadObjectDocChange> {
@@ -354,6 +356,7 @@ export class JupyterCadDoc
           delete guidata[name];
           this.setOption('guidata', guidata);
         }
+        this.removeOutput(name);
       });
     }
   }
@@ -413,6 +416,20 @@ export class JupyterCadDoc
   removeMetadata(key: string): void {
     if (this._metadata.has(key)) {
       this._metadata.delete(key);
+    }
+  }
+
+  getOutput(key: string): string | undefined {
+    return this._outputs.get(key);
+  }
+
+  setOutput(key: string, value: string): void {
+    this.transact(() => void this._outputs.set(key, value));
+  }
+
+  removeOutput(key: string): void {
+    if (this._outputs.has(key)) {
+      this._outputs.delete(key);
     }
   }
 
@@ -479,6 +496,7 @@ export class JupyterCadDoc
   private _objects: Y.Array<Y.Map<any>>;
   private _options: Y.Map<any>;
   private _metadata: Y.Map<string>;
+  private _outputs: Y.Map<string>;
   private _metadataChanged = new Signal<IJupyterCadDoc, MapChange>(this);
   private _optionsChanged = new Signal<IJupyterCadDoc, MapChange>(this);
   private _objectsChanged = new Signal<IJupyterCadDoc, IJcadObjectDocChange>(

@@ -1,44 +1,42 @@
 import {
-  ILayoutRestorer,
-  JupyterFrontEnd,
-  JupyterFrontEndPlugin
-} from '@jupyterlab/application';
-
-import { ITranslator, nullTranslator } from '@jupyterlab/translation';
-import { IMainMenu } from '@jupyterlab/mainmenu';
-
-// import fcplugin from './fcplugin/plugins';
-
-import {
   ControlPanelModel,
+  jcLightIcon,
+  JupyterCadWidget,
   LeftPanelWidget,
   RightPanelWidget,
-  jcLightIcon,
   addCommands,
-  CommandIDs,
-  JupyterCadWidget
+  CommandIDs
 } from '@jupytercad/base';
 import {
   IAnnotationModel,
   IAnnotationToken,
+  IJCadFormSchemaRegistry,
+  IJCadFormSchemaRegistryToken,
   IJupyterCadDocTracker,
   IJupyterCadTracker
 } from '@jupytercad/schema';
+import {
+  ILayoutRestorer,
+  JupyterFrontEnd,
+  JupyterFrontEndPlugin
+} from '@jupyterlab/application';
 import { WidgetTracker } from '@jupyterlab/apputils';
-import { notebookRenderePlugin } from './notebookrenderer';
+import { IMainMenu } from '@jupyterlab/mainmenu';
+import { ITranslator, nullTranslator } from '@jupyterlab/translation';
 
-// import { yJupyterCADWidgetPlugin } from './notebookrenderer';
+import { notebookRenderePlugin } from './notebookrenderer';
 
 const NAME_SPACE = 'jupytercad';
 
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:lab:main-menu',
   autoStart: true,
-  requires: [IJupyterCadDocTracker],
+  requires: [IJupyterCadDocTracker, IJCadFormSchemaRegistryToken],
   optional: [IMainMenu, ITranslator],
   activate: (
     app: JupyterFrontEnd,
     tracker: WidgetTracker<JupyterCadWidget>,
+    formSchemaRegistry: IJCadFormSchemaRegistry,
     mainMenu?: IMainMenu,
     translator?: ITranslator
   ): void => {
@@ -51,7 +49,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       );
     };
 
-    addCommands(app, tracker, translator);
+    addCommands(app, tracker, translator, formSchemaRegistry);
     if (mainMenu) {
       populateMenus(mainMenu, isEnabled);
     }
@@ -61,12 +59,18 @@ const plugin: JupyterFrontEndPlugin<void> = {
 const controlPanel: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:lab:controlpanel',
   autoStart: true,
-  requires: [ILayoutRestorer, IJupyterCadDocTracker, IAnnotationToken],
+  requires: [
+    ILayoutRestorer,
+    IJupyterCadDocTracker,
+    IAnnotationToken,
+    IJCadFormSchemaRegistryToken
+  ],
   activate: (
     app: JupyterFrontEnd,
     restorer: ILayoutRestorer,
     tracker: IJupyterCadTracker,
-    annotationModel: IAnnotationModel
+    annotationModel: IAnnotationModel,
+    formSchemaRegistry: IJCadFormSchemaRegistry
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
 
@@ -79,7 +83,10 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     leftControlPanel.title.caption = 'JupyterCad Control Panel';
     leftControlPanel.title.icon = jcLightIcon;
 
-    const rightControlPanel = new RightPanelWidget({ model: controlModel });
+    const rightControlPanel = new RightPanelWidget({
+      model: controlModel,
+      formSchemaRegistry
+    });
     rightControlPanel.id = 'jupytercad::rightControlPanel';
     rightControlPanel.title.caption = 'JupyterCad Control Panel';
     rightControlPanel.title.icon = jcLightIcon;

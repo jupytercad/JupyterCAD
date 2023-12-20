@@ -78,6 +78,7 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   objects: Array<IJCadObject>;
   options: JSONObject;
   metadata: JSONObject;
+  outputs: JSONObject;
   readonly editable: boolean;
 
   objectExists(name: string): boolean;
@@ -90,6 +91,10 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   getOption(key: keyof IJCadOptions): IDict | undefined;
   setOption(key: keyof IJCadOptions, value: IDict): void;
   setOptions(options: IJCadOptions): void;
+
+  getOutput(key: string): string | undefined;
+  setOutput(key: string, value: string): void;
+  removeOutput(key: string): void;
 
   getMetadata(key: string): string | undefined;
   setMetadata(key: string, value: string): void;
@@ -182,17 +187,92 @@ export interface IAnnotation {
   parent: string;
 }
 
+export interface IFace {
+  vertexCoord: Array<number>;
+  normalCoord: Array<number>;
+  triIndexes: Array<number>;
+  numberOfTriangles: number;
+}
+
+export interface IEdge {
+  vertexCoord: number[];
+  numberOfCoords: number;
+}
+export interface IParsedShape {
+  jcObject: IJCadObject;
+  faceList: Array<IFace>;
+  edgeList: Array<IEdge>;
+  meta?: IDict;
+  guiData?: IDict;
+}
+
+export interface IPostOperatorInput {
+  jcObject: IJCadObject;
+  occBrep?: string;
+}
+
+/**
+ * Action definitions for worker
+ */
+export enum WorkerAction {
+  LOAD_FILE = 'LOAD_FILE',
+  SAVE_FILE = 'SAVE_FILE',
+  REGISTER = 'REGISTER',
+  POSTPROCESS = 'POSTPROCESS'
+}
+
+/**
+ * Action definitions for main thread
+ */
+export enum MainAction {
+  DISPLAY_SHAPE = 'DISPLAY_SHAPE',
+  INITIALIZED = 'INITIALIZED',
+  DISPLAY_POST = 'DISPLAY_POST'
+}
+
+export interface IMainMessageBase {
+  action: MainAction;
+  payload: any;
+}
+
+export interface IDisplayShape extends IMainMessageBase {
+  action: MainAction.DISPLAY_SHAPE;
+  payload: {
+    result: IDict<IParsedShape>;
+    postResult: IDict<IPostOperatorInput>;
+  };
+}
+export interface IWorkerInitialized extends IMainMessageBase {
+  action: MainAction.INITIALIZED;
+  payload: boolean;
+}
+
+export interface IDisplayPost extends IMainMessageBase {
+  action: MainAction.DISPLAY_POST;
+  payload: {
+    jcObject: IJCadObject;
+    postResult: any;
+  }[];
+}
+
+export type IMainMessage = IDisplayShape | IWorkerInitialized | IDisplayPost;
+
+export interface IWorkerMessageBase {
+  id: string;
+  action: WorkerAction;
+  payload: any;
+}
+export type IMessageHandler =
+  | ((msg: IMainMessageBase) => void)
+  | ((msg: IMainMessageBase) => Promise<void>);
+
 export interface IJCadWorker {
   ready: Promise<void>;
-  initChannel(): string;
-  registerHandler(
-    id: string,
-    messageHandler: ((msg: any) => void) | ((msg: any) => Promise<void>),
-    thisArg?: any
-  ): void;
-  removeChannel(id: string): void;
-  postMessage(msg: any): void;
+  postMessage(msg: IWorkerMessageBase): void;
+  register(options: { messageHandler: IMessageHandler; thisArg?: any }): string;
+  unregister(id: string): void;
 }
+
 export interface IJCadWorkerRegistry {
   /**
    *
@@ -216,6 +296,13 @@ export interface IJCadWorkerRegistry {
    * @return {*}  {(IJCadWorker | undefined)}
    */
   getWorker(workerId: string): IJCadWorker | undefined;
+  /**
+   *
+   *
+   * @param {string} workerId
+   * @return {*}  {(IJCadWorker | undefined)}
+   */
+  getDefaultWorker(): IJCadWorker;
 
   /**
    *
@@ -228,3 +315,42 @@ export interface IJCadWorkerRegistry {
 export type IJupyterCadWidget = IDocumentWidget<ReactWidget, IJupyterCadModel>;
 
 export type IJupyterCadTracker = IWidgetTracker<IJupyterCadWidget>;
+
+export interface IJCadFormSchemaRegistry {
+  /**
+   *
+   *
+   * @return {*}  {IDict}
+   * @memberof IJCadFormSchemaRegistry
+   */
+  getSchemas(): Map<string, IDict>;
+
+  /**
+   *
+   *
+   * @param {string} name
+   * @param {IDict} schema
+   * @memberof IJCadFormSchemaRegistry
+   */
+  registerSchema(name: string, schema: IDict): void;
+
+  /**
+   *
+   *
+   * @param {string} name
+   * @return {*}  {boolean}
+   * @memberof IJCadFormSchemaRegistry
+   */
+  has(name: string): boolean;
+}
+
+export interface IJCadExternalCommand {
+  name: string;
+  id: string;
+  label?: string;
+}
+
+export interface IJCadExternalCommandRegistry {
+  getCommands(): IJCadExternalCommand[];
+  registerCommand(command: IJCadExternalCommand): void;
+}

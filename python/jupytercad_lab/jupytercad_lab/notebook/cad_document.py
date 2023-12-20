@@ -54,6 +54,7 @@ class CadDocument(Widget):
 
         self._objects_array = self.ydoc.get_array("objects")
         self._metadata = self.ydoc.get_map("metadata")
+        self._outputs = self.ydoc.get_map("outputs")
         self._options = self.ydoc.get_map("options")
 
     @property

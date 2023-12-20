@@ -1,4 +1,4 @@
-import { JupyterCadModel } from '@jupytercad/schema';
+import { IJCadExternalCommand, JupyterCadModel } from '@jupytercad/schema';
 import { CommandToolbarButton } from '@jupyterlab/apputils';
 import {
   ReactWidget,
@@ -170,7 +170,17 @@ export class ToolbarWidget extends Toolbar {
           commands: options.commands
         })
       );
-
+      this.addItem('separator5', new Separator());
+      (options.externalCommands ?? []).forEach(cmd => {
+        this.addItem(
+          cmd.name,
+          new CommandToolbarButton({
+            id: cmd.id,
+            label: cmd.label ?? '',
+            commands: options.commands!
+          })
+        );
+      });
       this.addItem('spacer', Toolbar.createSpacerItem());
 
       // Users
@@ -186,5 +196,6 @@ export namespace ToolbarWidget {
   export interface IOptions extends Toolbar.IOptions {
     commands?: CommandRegistry;
     model: JupyterCadModel;
+    externalCommands: IJCadExternalCommand[];
   }
 }

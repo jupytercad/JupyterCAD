@@ -4,6 +4,7 @@ ci:
   # skip any check that needs internet access
   autofix_prs: true
 
+exclude: '.*\.jcad$'
 repos:
   # Autoformat and linting, misc. details
   - repo: https://github.com/pre-commit/pre-commit-hooks

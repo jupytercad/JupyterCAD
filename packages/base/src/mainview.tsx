@@ -1,12 +1,5 @@
 import { MapChange } from '@jupyter/ydoc';
-import {
-  IDisplayShape,
-  IMainMessage,
-  IWorkerMessage,
-  MainAction,
-  OCC_WORKER_ID,
-  WorkerAction
-} from '@jupytercad/occ-worker';
+import { IWorkerMessage } from '@jupytercad/occ-worker';
 import {
   IAnnotation,
   IDict,
@@ -15,7 +8,11 @@ import {
   IJCadWorkerRegistry,
   IJupyterCadClientState,
   IJupyterCadDoc,
-  IJupyterCadModel
+  IJupyterCadModel,
+  MainAction,
+  IDisplayShape,
+  IMainMessage,
+  WorkerAction
 } from '@jupytercad/schema';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { User } from '@jupyterlab/services';
@@ -31,6 +28,7 @@ import {
   disposeBoundsTree
 } from 'three-mesh-bvh';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { v4 as uuid } from 'uuid';
 
 import { FloatingAnnotation } from './annotation/view';
@@ -96,25 +94,11 @@ interface IPickedResult {
 export class MainView extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
+
     this._geometry = new THREE.BufferGeometry();
     this._geometry.setDrawRange(0, 3 * 10000);
 
     this.props.view.changed.connect(this._onViewChanged, this);
-
-    const lightTheme =
-      document.body.getAttribute('data-jp-theme-light') === 'true';
-
-    this._worker = props.workerRegistry.getWorker(OCC_WORKER_ID)!;
-    const id = this._worker.initChannel();
-    this._worker.registerHandler(id, this.messageHandler.bind(this));
-
-    this.state = {
-      id,
-      lightTheme,
-      loading: true,
-      annotations: {},
-      firstLoad: true
-    };
 
     this._model = this.props.jcadModel;
 
@@ -142,6 +126,26 @@ export class MainView extends React.Component<IProps, IStates> {
     if (this._raycaster.params.Line) {
       this._raycaster.params.Line.threshold = 0.1;
     }
+
+    this._worker = props.workerRegistry.getDefaultWorker();
+    const id = this._worker.register({
+      messageHandler: this.messageHandler.bind(this)
+    });
+    props.workerRegistry.getAllWorkers().forEach(wk => {
+      const id = wk.register({
+        messageHandler: this.postProcessWorkerHandler.bind(this)
+      });
+      this._postWorkerId.set(id, wk);
+    });
+    const lightTheme =
+      document.body.getAttribute('data-jp-theme-light') === 'true';
+    this.state = {
+      id,
+      lightTheme,
+      loading: true,
+      annotations: {},
+      firstLoad: true
+    };
   }
 
   componentDidMount(): void {
@@ -387,20 +391,56 @@ export class MainView extends React.Component<IProps, IStates> {
   messageHandler = (msg: IMainMessage): void => {
     switch (msg.action) {
       case MainAction.DISPLAY_SHAPE: {
-        this._saveMeta(msg.payload);
-        this._shapeToMesh(msg.payload);
+        const { result, postResult } = msg.payload;
+        this._saveMeta(result);
+        this._shapeToMesh(result);
+        if (Object.keys(result).length > 0) {
+          if (this._firstRender) {
+            const outputs = this._model.sharedModel.outputs;
+            Object.entries(outputs).forEach(([objName, objGeo]) => {
+              this._objToMesh(objName, objGeo as string);
+            });
+            this._updateRefLength(true);
+            this._firstRender = false;
+          } else {
+            this._postWorkerId.forEach((wk, id) => {
+              wk.postMessage({
+                id,
+                action: WorkerAction.POSTPROCESS,
+                payload: postResult
+              });
+            });
+          }
+        }
+
         break;
       }
       case MainAction.INITIALIZED: {
         if (!this._model) {
           return;
         }
+        const content = this._model.getContent();
+
         this._postMessage({
           action: WorkerAction.LOAD_FILE,
           payload: {
-            content: this._model.getContent()
+            content
           }
         });
+      }
+    }
+  };
+
+  postProcessWorkerHandler = (msg: IMainMessage): void => {
+    switch (msg.action) {
+      case MainAction.DISPLAY_POST: {
+        msg.payload.forEach(element => {
+          const { jcObject, postResult } = element;
+          this._model.sharedModel.setOutput(jcObject.name, postResult.mesh);
+          this._objToMesh(jcObject.name, postResult.mesh);
+        });
+        this._updateRefLength(true);
+        break;
       }
     }
   };
@@ -535,7 +575,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._model.syncSelectedObject(names, this.state.id);
     }
   }
-  private _saveMeta = (payload: IDisplayShape['payload']) => {
+  private _saveMeta = (payload: IDisplayShape['payload']['result']) => {
     if (!this._model) {
       return;
     }
@@ -543,7 +583,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._model.sharedModel.setShapeMeta(objName, data.meta);
     });
   };
-  private _shapeToMesh = (payload: IDisplayShape['payload']) => {
+  private _shapeToMesh = (payload: IDisplayShape['payload']['result']) => {
     if (this._meshGroup !== null) {
       this._scene.remove(this._meshGroup);
     }
@@ -665,34 +705,62 @@ export class MainView extends React.Component<IProps, IStates> {
       this._model.sharedModel?.setOption('guidata', guidata);
     }
     // Update the reflength
-    if (this._refLength === null && this._meshGroup.children.length) {
-      const boxSizeVec = new THREE.Vector3();
-      this._boundingGroup.getSize(boxSizeVec);
-
-      this._refLength =
-        Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
-      this._updatePointers(this._refLength);
-      this._camera.lookAt(this._scene.position);
-
-      this._camera.position.set(
-        10 * this._refLength,
-        10 * this._refLength,
-        10 * this._refLength
-      );
-      this._camera.far = 200 * this._refLength;
-    }
-
-    // Reset reflength if there are no objects
-    if (!this._meshGroup.children.length) {
-      this._refLength = null;
-    }
-
+    this._updateRefLength();
     // Set the expoded view if it's enabled
     this._setupExplodedView();
 
     this._scene.add(this._meshGroup);
     this.setState(old => ({ ...old, loading: false }));
   };
+
+  private _updateRefLength(force = false): void {
+    if (this._meshGroup) {
+      if (
+        force ||
+        (this._refLength === null && this._meshGroup.children.length)
+      ) {
+        const boxSizeVec = new THREE.Vector3();
+        this._boundingGroup.getSize(boxSizeVec);
+
+        this._refLength =
+          Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
+        this._updatePointers(this._refLength);
+        this._camera.lookAt(this._scene.position);
+
+        this._camera.position.set(
+          10 * this._refLength,
+          10 * this._refLength,
+          10 * this._refLength
+        );
+        this._camera.far = 200 * this._refLength;
+      }
+      if (!this._meshGroup.children.length) {
+        this._refLength = null;
+      }
+    }
+  }
+  private _objToMesh(name: string, geoObj: string): void {
+    const loader = new STLLoader();
+    const obj = loader.parse(geoObj);
+    const material = new THREE.MeshPhongMaterial({
+      color: DEFAULT_MESH_COLOR,
+      polygonOffset: true,
+      polygonOffsetFactor: 1,
+      polygonOffsetUnits: 1
+    });
+    const mesh = new THREE.Mesh(obj, material);
+
+    const lineGeo = new THREE.WireframeGeometry(mesh.geometry);
+    const mat = new THREE.LineBasicMaterial({ color: 'black' });
+    const wireframe = new THREE.LineSegments(lineGeo, mat);
+    mesh.add(wireframe);
+    mesh.name = name;
+    mesh.visible = true;
+    if (this._meshGroup) {
+      this._meshGroup.add(mesh);
+      this._boundingGroup?.expandByObject(mesh);
+    }
+  }
 
   private _postMessage = (msg: Omit<IWorkerMessage, 'id'>) => {
     if (this._worker) {
@@ -749,8 +817,9 @@ export class MainView extends React.Component<IProps, IStates> {
         const rgba = guidata[selectedMesh.name]['color'] as number[];
         originalColor = new THREE.Color(rgba[0], rgba[1], rgba[2]);
       }
-
-      selectedMesh.material.color = originalColor;
+      if (selectedMesh?.material?.color) {
+        selectedMesh.material.color = originalColor;
+      }
     }
 
     // Set new selection
@@ -764,7 +833,9 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       this._selectedMeshes.push(selected);
-      selected.material.color = SELECTED_MESH_COLOR;
+      if (selected?.material?.color) {
+        selected.material.color = SELECTED_MESH_COLOR;
+      }
     }
   }
 
@@ -951,12 +1022,14 @@ export class MainView extends React.Component<IProps, IStates> {
             }
           }
         }
-        if ('color' in guidata[objName]) {
-          const rgba = guidata[objName]['color'] as number[];
-          const color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
-          obj.material.color = color;
-        } else {
-          obj.material.color = DEFAULT_MESH_COLOR;
+        if (obj.material.color) {
+          if ('color' in guidata[objName]) {
+            const rgba = guidata[objName]['color'] as number[];
+            const color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
+            obj.material.color = color;
+          } else {
+            obj.material.color = DEFAULT_MESH_COLOR;
+          }
         }
       }
     }
@@ -1233,4 +1306,6 @@ export class MainView extends React.Component<IProps, IStates> {
   private _collaboratorPointers: IDict<IPointer>;
   private _pointerGeometry: THREE.SphereGeometry;
   private _contextMenu: ContextMenu;
+  private _postWorkerId: Map<string, IJCadWorker> = new Map();
+  private _firstRender = true;
 }

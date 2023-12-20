@@ -18,6 +18,15 @@
         }
       },
       "additionalProperties": false
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^.*$": {
+          "type": "string"
+        }
+      }
     }
   },
   "definitions": {
@@ -34,7 +43,8 @@
         "Part::MultiFuse",
         "Part::MultiCommon",
         "Part::Extrusion",
-        "Sketcher::SketchObject"
+        "Sketcher::SketchObject",
+        "Post::Operator"
       ]
     },
     "shapeMetadata": {

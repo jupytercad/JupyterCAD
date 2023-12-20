@@ -514,13 +514,13 @@ __metadata:
   linkType: hard
 
 "@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.7.0, @codemirror/view@npm:^6.9.3, @codemirror/view@npm:^6.9.6":
-  version: 6.22.3
-  resolution: "@codemirror/view@npm:6.22.3"
+  version: 6.22.2
+  resolution: "@codemirror/view@npm:6.22.2"
   dependencies:
     "@codemirror/state": ^6.1.4
     style-mod: ^4.1.0
     w3c-keyname: ^2.2.4
-  checksum: 89d011afa87b754a4207d18393109c1972c9403762d288711e96c77f51c693a825431c8e35c26268a6eb0889f7184602080d8dcf27fa21354a87dff80636d971
+  checksum: a56f5d1f5cf8f3de290e912c96c57406cceb33e99d3463bfce1ffda5f6bd709ab75f3016d289f808bb01d797a1a484f001bf787a15002ffdf7579e48e3bd5c09
   languageName: node
   linkType: hard
 
@@ -1089,6 +1089,7 @@ __metadata:
     rimraf: ^3.0.2
     source-map-loader: ^3.0.0
     ts-loader: ^9.2.6
+    tsc-watch: ^6.0.0
     typescript: ^5
     uuid: ^8.3.2
     webpack: ^5.76.3
@@ -1101,7 +1102,6 @@ __metadata:
   dependencies:
     copyfiles: ^2.4.1
     js-yaml: ^4.1.0
-    opencascade.js: beta
     rimraf: ^3.0.2
     typescript: ^5
   languageName: unknown
@@ -3341,12 +3341,12 @@ __metadata:
   linkType: hard
 
 "@types/eslint@npm:*":
-  version: 8.44.9
-  resolution: "@types/eslint@npm:8.44.9"
+  version: 8.44.8
+  resolution: "@types/eslint@npm:8.44.8"
   dependencies:
     "@types/estree": "*"
     "@types/json-schema": "*"
-  checksum: 6f8889e94e67a5e43c15f5a2530798f864ace08c270bfb3f153cb705da4e30a80e0e9a0fc05317c8642c8dda909d528968172089eb4d52aca9f212761df25d90
+  checksum: c3bc70166075e6e9f7fb43978882b9ac0b22596b519900b08dc8a1d761bbbddec4c48a60cc4eb674601266223c6f11db30f3fb6ceaae96c23c54b35ad88022bc
   languageName: node
   linkType: hard
 
@@ -3460,13 +3460,13 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:*, @types/react@npm:^18.0.26":
-  version: 18.2.45
-  resolution: "@types/react@npm:18.2.45"
+  version: 18.2.43
+  resolution: "@types/react@npm:18.2.43"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 40b256bdce67b026348022b4f8616a693afdad88cf493b77f7b4e6c5f4b0e4ba13a6068e690b9b94572920840ff30d501ea3d8518e1f21cc8fb8204d4b140c8a
+  checksum: e7e4da18c7b14e4b8b1ea630d1d8224835698f2bb2485766455bfb9dea93b8ee6cc549a9fe1cb10c984e62685db44fcfb61e8fac913b008cd30a92087f25b9df
   languageName: node
   linkType: hard
 
@@ -4586,9 +4586,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001565":
-  version: 1.0.30001570
-  resolution: "caniuse-lite@npm:1.0.30001570"
-  checksum: 460be2c7a9b1c8a83b6aae4226661c276d9dada6c84209dee547699cf4b28030b9d1fc29ddd7626acee77412b6401993878ea0ef3eadbf3a63ded9034896ae20
+  version: 1.0.30001568
+  resolution: "caniuse-lite@npm:1.0.30001568"
+  checksum: 7092aaa246dc8531fbca5b47be91e92065db7e5c04cc9e3d864e848f8f1be769ac6754429e843a5e939f7331a771e8b0a1bc3b13495c66b748c65e2f5bdb1220
   languageName: node
   linkType: hard
 
@@ -5553,9 +5553,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.601":
-  version: 1.4.611
-  resolution: "electron-to-chromium@npm:1.4.611"
-  checksum: 17a4d83219f52cbfdc7b585e755cef0ea695c5992109ec1009a724bca4a44fad2f6245bfc2d5f4dad99d576a9fff3057d8a03703ff69196180dc40e8a91d803b
+  version: 1.4.610
+  resolution: "electron-to-chromium@npm:1.4.610"
+  checksum: 30e57a1483717e6e27882e7e35b167258b669f44a4e66f4f40460825b77c12646140d220f5e1f95668890fc76dd511c93fa73c6374cbf443fc78077d9634864d
   languageName: node
   linkType: hard
 
@@ -9517,15 +9517,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-opencascade.js@beta:
-  version: 2.0.0-beta.b5ff984
-  resolution: "opencascade.js@npm:2.0.0-beta.b5ff984"
-  peerDependencies:
-    ws: ^8.5.0
-  checksum: 751fa25e3625497fb562d4c586e884020478b9c5aeae61c43ce10bac9a011826f5c7518c2126fc6b1f79792c83bbc4d43069bff40dfbee4e48137cb9a496424e
-  languageName: node
-  linkType: hard
-
 "optionator@npm:^0.9.1":
   version: 0.9.3
   resolution: "optionator@npm:0.9.3"
@@ -12747,8 +12738,8 @@ opencascade.js@beta:
   linkType: hard
 
 "ws@npm:^8.11.0":
-  version: 8.15.1
-  resolution: "ws@npm:8.15.1"
+  version: 8.15.0
+  resolution: "ws@npm:8.15.0"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -12757,7 +12748,7 @@ opencascade.js@beta:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 8c67365f6e6134278ad635d558bfce466d7ef7543a043baea333aaa430429f0af8a130c0c36e7dd78f918d68167a659ba9b5067330b77c4b279e91533395952b
+  checksum: ca15c590aa49bc0197223b8ab7d15e7362ae6c4011d91ed0e5cd5867cdd5497fd71470ea36314833b4b078929fe64dc4ba7748b1e58e50a0f8e41f147db2b464
   languageName: node
   linkType: hard
 

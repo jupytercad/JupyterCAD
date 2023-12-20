@@ -1,11 +1,11 @@
 import {
   IDict,
+  IJCadFormSchemaRegistry,
   IJCadObject,
   IJupyterCadDoc,
   IJupyterCadModel,
   Parts
 } from '@jupytercad/schema';
-import formSchema from '@jupytercad/schema/lib/_interface/forms.json';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { showErrorMessage, WidgetTracker } from '@jupyterlab/apputils';
 import { ITranslator } from '@jupyterlab/translation';
@@ -28,22 +28,7 @@ import {
 } from './tools';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 
-const FORM_SCHEMA = {};
-Object.keys(formSchema).forEach(key => {
-  if (key === 'Placement of the box') {
-    return;
-  }
-  const value = (FORM_SCHEMA[key] = JSON.parse(
-    JSON.stringify(formSchema[key])
-  ));
-  value['required'] = ['Name', ...value['required']];
-  value['properties'] = {
-    Name: { type: 'string', description: 'The Name of the Object' },
-    ...value['properties']
-  };
-});
-
-function newName(type: string, model: IJupyterCadModel): string {
+export function newName(type: string, model: IJupyterCadModel): string {
   const sharedModel = model.sharedModel;
 
   let n = 1;
@@ -53,6 +38,22 @@ function newName(type: string, model: IJupyterCadModel): string {
   }
 
   return name;
+}
+
+export function setVisible(
+  sharedModel: IJupyterCadDoc,
+  name: string,
+  value: boolean
+) {
+  const guidata = sharedModel.getOption('guidata') || {};
+
+  if (guidata && guidata[name]) {
+    guidata[name]['visibility'] = false;
+  } else {
+    guidata[name] = { visibility: false };
+  }
+
+  sharedModel.setOption('guidata', guidata);
 }
 
 const PARTS = {
@@ -126,18 +127,6 @@ const PARTS = {
     }
   }
 };
-
-function setVisible(sharedModel: IJupyterCadDoc, name: string, value: boolean) {
-  const guidata = sharedModel.getOption('guidata') || {};
-
-  if (guidata && guidata[name]) {
-    guidata[name]['visibility'] = false;
-  } else {
-    guidata[name] = { visibility: false };
-  }
-
-  sharedModel.setOption('guidata', guidata);
-}
 
 const OPERATORS = {
   cut: {
@@ -421,11 +410,12 @@ const CAMERA_FORM = {
 export function addCommands(
   app: JupyterFrontEnd,
   tracker: WidgetTracker<JupyterCadWidget>,
-  translator: ITranslator
+  translator: ITranslator,
+  formSchemaRegistry: IJCadFormSchemaRegistry
 ): void {
   const trans = translator.load('jupyterlab');
   const { commands } = app;
-
+  Private.updateFormSchema(formSchemaRegistry);
   commands.addCommand(CommandIDs.redo, {
     label: trans.__('Redo'),
     isEnabled: () => {
@@ -683,6 +673,27 @@ export namespace CommandIDs {
 }
 
 namespace Private {
+  export const FORM_SCHEMA = {};
+
+  export function updateFormSchema(
+    formSchemaRegistry: IJCadFormSchemaRegistry
+  ) {
+    if (Object.keys(FORM_SCHEMA).length > 0) {
+      return;
+    }
+    const formSchema = formSchemaRegistry.getSchemas();
+    formSchema.forEach((val, key) => {
+      if (key === 'Placement of the box') {
+        return;
+      }
+      const value = (FORM_SCHEMA[key] = JSON.parse(JSON.stringify(val)));
+      value['required'] = ['Name', ...value['required']];
+      value['properties'] = {
+        Name: { type: 'string', description: 'The Name of the Object' },
+        ...value['properties']
+      };
+    });
+  }
   export function createPart(
     part: keyof typeof PARTS,
     tracker: WidgetTracker<JupyterCadWidget>

@@ -14,7 +14,8 @@ import {
   ISketchObject,
   ISphere,
   ITorus,
-  IAny
+  IAny,
+  IPostOperator
 } from '@jupytercad/schema';
 
 import { getOcc } from './actions';
@@ -143,7 +144,7 @@ function _Cut(arg: ICut, content: IJCadContent): OCC.TopoDS_Shape | undefined {
       toolObject[0].parameters as IOperatorArg,
       content
     );
-    if (base && tool) {
+    if (base && tool && base.occShape && tool.occShape) {
       baseObject[0].visible = false;
       toolObject[0].visible = false;
       const operator = new oc.BRepAlgoAPI_Cut_3(
@@ -176,7 +177,7 @@ function _Fuse(
         baseObject[0].parameters as IOperatorArg,
         content
       );
-      if (base) {
+      if (base && base.occShape) {
         occShapes.push(base.occShape);
         baseObject[0].visible = false;
       }
@@ -211,7 +212,7 @@ function _Intersection(
         baseObject[0].parameters as IOperatorArg,
         content
       );
-      if (base) {
+      if (base && base.occShape) {
         occShapes.push(base.occShape);
         baseObject[0].visible = false;
       }
@@ -274,7 +275,7 @@ function _Extrude(
       baseObject[0].parameters as IOperatorArg,
       content
     );
-    if (!base) {
+    if (!base || !base.occShape) {
       return;
     }
     const dirVec = new oc.gp_Vec_4(Dir[0], Dir[1], Dir[2]);
@@ -335,6 +336,28 @@ export function _Any(
   }
 }
 
+export function _PostOperator(
+  arg: IPostOperator,
+  content: IJCadContent
+): { occBrep: string } {
+  const baseObject = content.objects.filter(obj => obj.name === arg.Object);
+  if (baseObject.length === 0) {
+    return { occBrep: '' };
+  }
+  const baseShape = baseObject[0].shape;
+  if (baseShape && ShapesFactory[baseShape]) {
+    const base = ShapesFactory[baseShape](
+      baseObject[0].parameters as IOperatorArg,
+      content
+    );
+    if (base?.occShape) {
+      const occBrep = _writeBrep(base.occShape);
+      return { occBrep };
+    }
+  }
+  return { occBrep: '' };
+}
+
 export function _loadBrepFile(content: string): OCC.TopoDS_Shape | undefined {
   const oc = getOcc();
   const fakeFileName = `${uuid()}.brep`;
@@ -379,6 +402,23 @@ export function _loadObjectFile(arg: {
     default:
       throw `${arg.type} file not supported`;
   }
+}
+
+export function _writeBrep(shape: OCC.TopoDS_Shape): string {
+  const oc = getOcc();
+  const fakeFileName = `${uuid()}.brep`;
+  const progress = new oc.Message_ProgressRange_1();
+  oc.BRepTools.Write_4(
+    shape,
+    fakeFileName,
+    false,
+    false,
+    oc.TopTools_FormatVersion.TopTools_FormatVersion_VERSION_1 as any,
+    progress
+  );
+  const value = oc.FS.readFile('/' + fakeFileName, { encoding: 'utf8' });
+  oc.FS.unlink('/' + fakeFileName);
+  return value;
 }
 
 const Any = operatorCache<IAny>('Part::Any', _Any);
@@ -426,5 +466,6 @@ export const ShapesFactory: {
   'Part::MultiFuse': Fuse,
   'Part::Extrusion': Extrude,
   'Part::MultiCommon': Intersection,
-  'Sketcher::SketchObject': SketchObject
+  'Sketcher::SketchObject': SketchObject,
+  'Post::Operator': _PostOperator
 };

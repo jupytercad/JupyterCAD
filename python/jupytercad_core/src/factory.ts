@@ -1,7 +1,8 @@
 import {
   JupyterCadModel,
   IJupyterCadTracker,
-  IJCadWorkerRegistry
+  IJCadWorkerRegistry,
+  IJCadExternalCommandRegistry
 } from '@jupytercad/schema';
 import { ABCWidgetFactory, DocumentRegistry } from '@jupyterlab/docregistry';
 import { CommandRegistry } from '@lumino/commands';
@@ -16,6 +17,7 @@ interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
   tracker: IJupyterCadTracker;
   commands: CommandRegistry;
   workerRegistry: IJCadWorkerRegistry;
+  externalCommandRegistry: IJCadExternalCommandRegistry;
   backendCheck?: () => boolean;
 }
 
@@ -24,11 +26,12 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   JupyterCadModel
 > {
   constructor(options: IOptions) {
-    const { backendCheck, ...rest } = options;
+    const { backendCheck, externalCommandRegistry, ...rest } = options;
     super(rest);
     this._backendCheck = backendCheck;
     this._commands = options.commands;
     this._workerRegistry = options.workerRegistry;
+    this._externalCommandRegistry = externalCommandRegistry;
   }
 
   /**
@@ -53,12 +56,14 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
     });
     const toolbar = new ToolbarWidget({
       commands: this._commands,
-      model
+      model,
+      externalCommands: this._externalCommandRegistry.getCommands()
     });
     return new JupyterCadWidget({ context, content, toolbar });
   }
 
   private _commands: CommandRegistry;
   private _workerRegistry: IJCadWorkerRegistry;
+  private _externalCommandRegistry: IJCadExternalCommandRegistry;
   private _backendCheck?: () => boolean;
 }

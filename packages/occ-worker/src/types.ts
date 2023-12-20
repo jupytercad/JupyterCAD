@@ -9,11 +9,13 @@ import {
   IFuse,
   IIntersection,
   IJCadContent,
-  IJCadObject,
   IShapeMetadata,
   ISketchObject,
   ISphere,
-  ITorus
+  ITorus,
+  IPostOperator,
+  WorkerAction,
+  IWorkerMessageBase
 } from '@jupytercad/schema';
 
 export interface IDict<T = any> {
@@ -22,27 +24,14 @@ export interface IDict<T = any> {
 
 export type ValueOf<T> = T[keyof T];
 
-/**
- * Action definitions for worker
- */
-export enum WorkerAction {
-  LOAD_FILE = 'LOAD_FILE',
-  SAVE_FILE = 'SAVE_FILE',
-  REGISTER = 'REGISTER'
-}
-
-interface IMainId {
-  id: string;
-}
-
-export interface IRegister extends IMainId {
+export interface IRegister extends IWorkerMessageBase {
   action: WorkerAction.REGISTER;
   payload: {
     id: string;
   };
 }
 
-export interface ILoadFile extends IMainId {
+export interface ILoadFile extends IWorkerMessageBase {
   action: WorkerAction.LOAD_FILE;
   payload: {
     content: IJCadContent;
@@ -51,46 +40,10 @@ export interface ILoadFile extends IMainId {
 
 export type IWorkerMessage = ILoadFile | IRegister;
 
-/**
- * Action definitions for main thread
- */
-export enum MainAction {
-  DISPLAY_SHAPE = 'DISPLAY_SHAPE',
-  INITIALIZED = 'INITIALIZED'
-}
-
-export interface IFace {
-  vertexCoord: Array<number>;
-  normalCoord: Array<number>;
-  triIndexes: Array<number>;
-  numberOfTriangles: number;
-}
-
-export interface IEdge {
-  vertexCoord: number[];
-  numberOfCoords: number;
-}
-export interface IParsedShape {
-  jcObject: IJCadObject;
-  faceList: Array<IFace>;
-  edgeList: Array<IEdge>;
-  meta?: IDict;
-  guiData?: IDict;
-}
-export interface IDisplayShape {
-  action: MainAction.DISPLAY_SHAPE;
-  payload: IDict<IParsedShape>;
-}
-export interface IWorkerInitialized {
-  action: MainAction.INITIALIZED;
-  payload: boolean;
-}
-
-export type IMainMessage = IDisplayShape | IWorkerInitialized;
-
 export interface IOperatorFuncOutput {
-  occShape: OCC.TopoDS_Shape;
+  occShape?: OCC.TopoDS_Shape;
   metadata?: IShapeMetadata | undefined;
+  occBrep?: string;
 }
 
 type IOperatorFunc<T> = (
@@ -109,7 +62,9 @@ export type IAllOperatorFunc =
   | IOperatorFunc<IFuse>
   | IOperatorFunc<IIntersection>
   | IOperatorFunc<IExtrusion>
-  | IOperatorFunc<ISketchObject>;
+  | IOperatorFunc<ISketchObject>
+  | IOperatorFunc<IPostOperator>;
+
 export type IOperatorArg = IAny &
   IBox &
   ICylinder &
@@ -119,4 +74,5 @@ export type IOperatorArg = IAny &
   ICut &
   IFuse &
   IExtrusion &
-  ISketchObject;
+  ISketchObject &
+  IPostOperator;
