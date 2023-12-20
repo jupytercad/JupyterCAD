@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.0a3
+
+([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v1.0.0a2...be30ddf434ad65c7097702aa527ae90afb3cfa9d))
+
+### Enhancements made
+
+- Non-editable step file [#235](https://github.com/jupytercad/jupytercad/pull/235) ([@martinRenou](https://github.com/martinRenou))
+- Update worker and 3D viewer [#230](https://github.com/jupytercad/jupytercad/pull/230) ([@trungleduc](https://github.com/trungleduc))
+
+### Bugs fixed
+
+- Fix object selection [#242](https://github.com/jupytercad/jupytercad/pull/242) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2023-12-13&to=2023-12-20&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-12-13..2023-12-20&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-12-13..2023-12-20&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-12-13..2023-12-20&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.0a2
 
 ([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v1.0.0a1...4aa1881ba41a3962b59ce73f996e9f20ad0c9235))
@@ -24,8 +45,6 @@
 ([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2023-11-24&to=2023-12-13&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-11-24..2023-12-13&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-11-24..2023-12-13&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Apre-commit-ci+updated%3A2023-11-24..2023-12-13&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-11-24..2023-12-13&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.0.0a1
 

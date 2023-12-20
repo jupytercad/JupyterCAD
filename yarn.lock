@@ -514,48 +514,48 @@ __metadata:
   linkType: hard
 
 "@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.7.0, @codemirror/view@npm:^6.9.3, @codemirror/view@npm:^6.9.6":
-  version: 6.22.2
-  resolution: "@codemirror/view@npm:6.22.2"
+  version: 6.22.3
+  resolution: "@codemirror/view@npm:6.22.3"
   dependencies:
     "@codemirror/state": ^6.1.4
     style-mod: ^4.1.0
     w3c-keyname: ^2.2.4
-  checksum: a56f5d1f5cf8f3de290e912c96c57406cceb33e99d3463bfce1ffda5f6bd709ab75f3016d289f808bb01d797a1a484f001bf787a15002ffdf7579e48e3bd5c09
+  checksum: 89d011afa87b754a4207d18393109c1972c9403762d288711e96c77f51c693a825431c8e35c26268a6eb0889f7184602080d8dcf27fa21354a87dff80636d971
   languageName: node
   linkType: hard
 
 "@csstools/css-parser-algorithms@npm:^2.3.1":
-  version: 2.3.2
-  resolution: "@csstools/css-parser-algorithms@npm:2.3.2"
+  version: 2.4.0
+  resolution: "@csstools/css-parser-algorithms@npm:2.4.0"
   peerDependencies:
-    "@csstools/css-tokenizer": ^2.2.1
-  checksum: 71663a00369014727ac89ae738f0acd1341b2dc1474ff16799a6f4d24674c55c3ddb89d70c8f1ffc4e03508b18a621830f8f8a51707fda6cc5ea48f1a53cc559
+    "@csstools/css-tokenizer": ^2.2.2
+  checksum: 6a12040d405fd54c3bf8dee3b49dad796acaad5bcedbf0596270554526cd7889d6f75251f2205d2124ef8fb11fe78a10174d4a3d4abc48fd9e880f847841aceb
   languageName: node
   linkType: hard
 
 "@csstools/css-tokenizer@npm:^2.2.0":
-  version: 2.2.1
-  resolution: "@csstools/css-tokenizer@npm:2.2.1"
-  checksum: ebd9f65b253037d3a575ded45dbe41c12e71d83d6aa8a6a3a9fc2427862a805678df2a825cd19cf36b587be93f5cb1bd0932bb5c362d227ed9533db35b1fc6fa
+  version: 2.2.2
+  resolution: "@csstools/css-tokenizer@npm:2.2.2"
+  checksum: 8004469314460d300a7df9ca366c5fec96609c63b1e62259c9cc9f5d30fc29ace9865c21d44df721eaf8463f6e7a2de30014a21553a359cdce56f953ce4c83dd
   languageName: node
   linkType: hard
 
 "@csstools/media-query-list-parser@npm:^2.1.4":
-  version: 2.1.5
-  resolution: "@csstools/media-query-list-parser@npm:2.1.5"
+  version: 2.1.6
+  resolution: "@csstools/media-query-list-parser@npm:2.1.6"
   peerDependencies:
-    "@csstools/css-parser-algorithms": ^2.3.2
-    "@csstools/css-tokenizer": ^2.2.1
-  checksum: 119c27951377781c06c0b68ee6f7815c71d7623e439da0d5009f2101a6cd996f60b3fd60466d7059b8f7a936fbc9fbd2306ba953fa2daf9728a710881971ab08
+    "@csstools/css-parser-algorithms": ^2.4.0
+    "@csstools/css-tokenizer": ^2.2.2
+  checksum: 7f9fca67812fc20db4a0b93ef1ee17ce4fb69fd01abc88e5bc74bd50b1cfc3fd1dfaa9dfff213c7ff55cf6d61897e097ddfc484afba4562ca18bb408fedac5dd
   languageName: node
   linkType: hard
 
 "@csstools/selector-specificity@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@csstools/selector-specificity@npm:3.0.0"
+  version: 3.0.1
+  resolution: "@csstools/selector-specificity@npm:3.0.1"
   peerDependencies:
     postcss-selector-parser: ^6.0.13
-  checksum: 4a2dfe69998a499155d9dab4c2a0e7ae7594d8db98bb8a487d2d5347c0c501655051eb5eacad3fe323c86b0ba8212fe092c27fc883621e6ac2a27662edfc3528
+  checksum: e4b5aac3bd3ca1f824cb9578f52b16046a519aa8050ce291da37e611976a83cd3b2b2f908d2678dd4cbbe00bbde8ec28c34fffc40dbbf9a13608dfcaf382ee80
   languageName: node
   linkType: hard
 
@@ -816,12 +816,12 @@ __metadata:
   linkType: hard
 
 "@jupyter/collaboration@npm:^1.0.0":
-  version: 1.2.0
-  resolution: "@jupyter/collaboration@npm:1.2.0"
+  version: 1.2.1
+  resolution: "@jupyter/collaboration@npm:1.2.1"
   dependencies:
     "@codemirror/state": ^6.2.0
     "@codemirror/view": ^6.7.0
-    "@jupyter/docprovider": ^1.2.0
+    "@jupyter/docprovider": ^1.2.1
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/coreutils": ^6.0.0
     "@jupyterlab/services": ^7.0.0
@@ -832,13 +832,13 @@ __metadata:
     react: ^18.2.0
     y-protocols: ^1.0.5
     yjs: ^13.5.40
-  checksum: a20ce037b63bb8fa9bc0b79345ebd4ec3e6ae3043cfaaa5ee215bcdb08ae47961d0a50ab77c135be5c8b19b6fc3f7ac93da3955db55b802c6ce0e5c9141886b1
+  checksum: f38885112c337415df963782653866a058b68d1509faed9ca092c3d729cd27cdecb3e36365e49b78135d626a4d76c7c5479601a997f76142d61e7edf41015fc3
   languageName: node
   linkType: hard
 
-"@jupyter/docprovider@npm:^1.0.0, @jupyter/docprovider@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@jupyter/docprovider@npm:1.2.0"
+"@jupyter/docprovider@npm:^1.0.0, @jupyter/docprovider@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "@jupyter/docprovider@npm:1.2.1"
   dependencies:
     "@jupyter/ydoc": ^1.0.2
     "@jupyterlab/coreutils": ^6.0.0
@@ -849,7 +849,7 @@ __metadata:
     y-protocols: ^1.0.5
     y-websocket: ^1.3.15
     yjs: ^13.5.40
-  checksum: 8522dbb61a2e95162ad98a5377cb4d8defd7c88a7d51c4e74f67691f9cb00a0281e7b450c38af33f8aa17ca4b9c8bd76a46e0a8eae7afebe5fba2ae0f0df8b7b
+  checksum: 5a8ae37ec44f39754e30f0d7d697a0147bc15b2e9fe37aa98770971dfad77724cf83177220841e4a1ad21a2f5b021fc21bac95499e6476b281ec9491fd3a89b1
   languageName: node
   linkType: hard
 
@@ -881,7 +881,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupytercad/base@^1.0.0-alpha.2, @jupytercad/base@workspace:packages/base":
+"@jupytercad/base@^1.0.0-alpha.3, @jupytercad/base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@jupytercad/base@workspace:packages/base"
   dependencies:
@@ -889,8 +889,8 @@ __metadata:
     "@deathbeds/jupyterlab-rjsf": ^1.1.0
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/occ-worker": ^1.0.0-alpha.2
-    "@jupytercad/schema": ^1.0.0-alpha.2
+    "@jupytercad/occ-worker": ^1.0.0-alpha.3
+    "@jupytercad/schema": ^1.0.0-alpha.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/coreutils": ^6.0.0
@@ -932,8 +932,8 @@ __metadata:
     "@jupyter/collaboration": ^1.0.0
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/base": ^1.0.0-alpha.2
-    "@jupytercad/schema": ^1.0.0-alpha.2
+    "@jupytercad/base": ^1.0.0-alpha.3
+    "@jupytercad/schema": ^1.0.0-alpha.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/application-extension": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -985,14 +985,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-core@^1.0.0-alpha.2, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
+"@jupytercad/jupytercad-core@^1.0.0-alpha.3, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad_core"
   dependencies:
     "@jupyter/docprovider": ^1.0.0
-    "@jupytercad/base": ^1.0.0-alpha.2
-    "@jupytercad/occ-worker": ^1.0.0-alpha.2
-    "@jupytercad/schema": ^1.0.0-alpha.2
+    "@jupytercad/base": ^1.0.0-alpha.3
+    "@jupytercad/occ-worker": ^1.0.0-alpha.3
+    "@jupytercad/schema": ^1.0.0-alpha.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1024,9 +1024,9 @@ __metadata:
   resolution: "@jupytercad/jupytercad-lab@workspace:python/jupytercad_lab"
   dependencies:
     "@jupyter/docprovider": ^1.0.0
-    "@jupytercad/base": ^1.0.0-alpha.2
-    "@jupytercad/jupytercad-core": ^1.0.0-alpha.2
-    "@jupytercad/schema": ^1.0.0-alpha.2
+    "@jupytercad/base": ^1.0.0-alpha.3
+    "@jupytercad/jupytercad-core": ^1.0.0-alpha.3
+    "@jupytercad/schema": ^1.0.0-alpha.3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1075,12 +1075,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/occ-worker@^1.0.0-alpha.2, @jupytercad/occ-worker@workspace:packages/occ-worker":
+"@jupytercad/occ-worker@^1.0.0-alpha.3, @jupytercad/occ-worker@workspace:packages/occ-worker":
   version: 0.0.0-use.local
   resolution: "@jupytercad/occ-worker@workspace:packages/occ-worker"
   dependencies:
-    "@jupytercad/opencascade": ^1.0.0-alpha.2
-    "@jupytercad/schema": ^1.0.0-alpha.2
+    "@jupytercad/opencascade": ^1.0.0-alpha.3
+    "@jupytercad/schema": ^1.0.0-alpha.3
     "@lumino/coreutils": ^2.0.0
     "@types/node": ^18.15.11
     copy-webpack-plugin: ^10.0.0
@@ -1096,7 +1096,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/opencascade@^1.0.0-alpha.2, @jupytercad/opencascade@workspace:packages/opencascade":
+"@jupytercad/opencascade@^1.0.0-alpha.3, @jupytercad/opencascade@workspace:packages/opencascade":
   version: 0.0.0-use.local
   resolution: "@jupytercad/opencascade@workspace:packages/opencascade"
   dependencies:
@@ -1107,7 +1107,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/schema@^1.0.0-alpha.2, @jupytercad/schema@workspace:packages/schema":
+"@jupytercad/schema@^1.0.0-alpha.3, @jupytercad/schema@workspace:packages/schema":
   version: 0.0.0-use.local
   resolution: "@jupytercad/schema@workspace:packages/schema"
   dependencies:
@@ -2364,12 +2364,12 @@ __metadata:
   linkType: hard
 
 "@lezer/javascript@npm:^1.0.0":
-  version: 1.4.10
-  resolution: "@lezer/javascript@npm:1.4.10"
+  version: 1.4.11
+  resolution: "@lezer/javascript@npm:1.4.11"
   dependencies:
     "@lezer/highlight": ^1.1.3
     "@lezer/lr": ^1.3.0
-  checksum: 4fd222fc81c14eabd7ba938cebb1f8d4be030c394d3cb637682d42f466314ccd52fe64326438265416e20a9104f0e79964a3341e186dabc81d3949c5c0bb5527
+  checksum: aeae5cd01702054593740deb66ed246d82cd8fc9d9788b2724d71a0ddce00743fdf710a2598c244e74d67efc32fa9147d5c0cf5a8d1da7be36a5994bf518cf6f
   languageName: node
   linkType: hard
 
@@ -3341,12 +3341,12 @@ __metadata:
   linkType: hard
 
 "@types/eslint@npm:*":
-  version: 8.44.8
-  resolution: "@types/eslint@npm:8.44.8"
+  version: 8.56.0
+  resolution: "@types/eslint@npm:8.56.0"
   dependencies:
     "@types/estree": "*"
     "@types/json-schema": "*"
-  checksum: c3bc70166075e6e9f7fb43978882b9ac0b22596b519900b08dc8a1d761bbbddec4c48a60cc4eb674601266223c6f11db30f3fb6ceaae96c23c54b35ad88022bc
+  checksum: 8eca14c1ca8a4dbbcbf6bed67775db9dd2f9947802d6da39fa0c4c297a1e5465e898332232bb51980586a9a45b1b21bc13fd79fcc81adcd4c86062372e9bab6d
   languageName: node
   linkType: hard
 
@@ -3412,11 +3412,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 20.10.4
-  resolution: "@types/node@npm:20.10.4"
+  version: 20.10.5
+  resolution: "@types/node@npm:20.10.5"
   dependencies:
     undici-types: ~5.26.4
-  checksum: 054b296417e771ab524bea63cf3289559c6bdf290d45428f7cc68e9b00030ff7a0ece47b8c99a26b4f47a443919813bcf42beadff2f0bea7d8125fa541d92eb0
+  checksum: e216b679f545a8356960ce985a0e53c3a58fff0eacd855e180b9e223b8db2b5bd07b744a002b8c1f0c37f9194648ab4578533b5c12df2ec10cc02f61d20948d2
   languageName: node
   linkType: hard
 
@@ -3460,13 +3460,13 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:*, @types/react@npm:^18.0.26":
-  version: 18.2.43
-  resolution: "@types/react@npm:18.2.43"
+  version: 18.2.45
+  resolution: "@types/react@npm:18.2.45"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: e7e4da18c7b14e4b8b1ea630d1d8224835698f2bb2485766455bfb9dea93b8ee6cc549a9fe1cb10c984e62685db44fcfb61e8fac913b008cd30a92087f25b9df
+  checksum: 40b256bdce67b026348022b4f8616a693afdad88cf493b77f7b4e6c5f4b0e4ba13a6068e690b9b94572920840ff30d501ea3d8518e1f21cc8fb8204d4b140c8a
   languageName: node
   linkType: hard
 
@@ -4586,9 +4586,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001565":
-  version: 1.0.30001568
-  resolution: "caniuse-lite@npm:1.0.30001568"
-  checksum: 7092aaa246dc8531fbca5b47be91e92065db7e5c04cc9e3d864e848f8f1be769ac6754429e843a5e939f7331a771e8b0a1bc3b13495c66b748c65e2f5bdb1220
+  version: 1.0.30001570
+  resolution: "caniuse-lite@npm:1.0.30001570"
+  checksum: 460be2c7a9b1c8a83b6aae4226661c276d9dada6c84209dee547699cf4b28030b9d1fc29ddd7626acee77412b6401993878ea0ef3eadbf3a63ded9034896ae20
   languageName: node
   linkType: hard
 
@@ -5553,9 +5553,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.601":
-  version: 1.4.610
-  resolution: "electron-to-chromium@npm:1.4.610"
-  checksum: 30e57a1483717e6e27882e7e35b167258b669f44a4e66f4f40460825b77c12646140d220f5e1f95668890fc76dd511c93fa73c6374cbf443fc78077d9634864d
+  version: 1.4.615
+  resolution: "electron-to-chromium@npm:1.4.615"
+  checksum: 9ffb1d0dac11c629bd8aa38efa7d2e3f41de943cf81fb41ab05e960e954c464c168d1f2f7e571813805e85b895279f2882bcafa551a2f23089646008d7a5bd06
   languageName: node
   linkType: hard
 
@@ -6162,11 +6162,11 @@ __metadata:
   linkType: hard
 
 "fastq@npm:^1.6.0":
-  version: 1.15.0
-  resolution: "fastq@npm:1.15.0"
+  version: 1.16.0
+  resolution: "fastq@npm:1.16.0"
   dependencies:
     reusify: ^1.0.4
-  checksum: 0170e6bfcd5d57a70412440b8ef600da6de3b2a6c5966aeaf0a852d542daff506a0ee92d6de7679d1de82e644bce69d7a574a6c93f0b03964b5337eed75ada1a
+  checksum: 1d40ed1f100ae625e5720484e8602b7ad07649370f1cbc3e34a6b9630a0bfed6946bab0322d8a368a1e3cde87bb9bbb8d3bc2ae01a0c1f022fac1d07c04e4feb
   languageName: node
   linkType: hard
 
@@ -10509,9 +10509,9 @@ __metadata:
   linkType: hard
 
 "regenerator-runtime@npm:^0.14.0":
-  version: 0.14.0
-  resolution: "regenerator-runtime@npm:0.14.0"
-  checksum: 1c977ad82a82a4412e4f639d65d22be376d3ebdd30da2c003eeafdaaacd03fc00c2320f18120007ee700900979284fc78a9f00da7fb593f6e6eeebc673fba9a3
+  version: 0.14.1
+  resolution: "regenerator-runtime@npm:0.14.1"
+  checksum: 9f57c93277b5585d3c83b0cf76be47b473ae8c6d9142a46ce8b0291a04bb2cf902059f0f8445dcabb3fb7378e5fe4bb4ea1e008876343d42e46d3b484534ce38
   languageName: node
   linkType: hard
 
@@ -12738,8 +12738,8 @@ __metadata:
   linkType: hard
 
 "ws@npm:^8.11.0":
-  version: 8.15.0
-  resolution: "ws@npm:8.15.0"
+  version: 8.15.1
+  resolution: "ws@npm:8.15.1"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -12748,7 +12748,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: ca15c590aa49bc0197223b8ab7d15e7362ae6c4011d91ed0e5cd5867cdd5497fd71470ea36314833b4b078929fe64dc4ba7748b1e58e50a0f8e41f147db2b464
+  checksum: 8c67365f6e6134278ad635d558bfce466d7ef7543a043baea333aaa430429f0af8a130c0c36e7dd78f918d68167a659ba9b5067330b77c4b279e91533395952b
   languageName: node
   linkType: hard
 
@@ -12795,8 +12795,8 @@ __metadata:
   linkType: hard
 
 "y-websocket@npm:^1.3.15":
-  version: 1.5.0
-  resolution: "y-websocket@npm:1.5.0"
+  version: 1.5.1
+  resolution: "y-websocket@npm:1.5.1"
   dependencies:
     lib0: ^0.2.52
     lodash.debounce: ^4.0.8
@@ -12813,7 +12813,7 @@ __metadata:
   bin:
     y-websocket: bin/server.js
     y-websocket-server: bin/server.js
-  checksum: 0e532f7d488e9430b011814eab67f37c002b0b102ccc169c65250ad9fddd901b2f979ac0f26453e7ac625fe2f2fe84d208b90b47e9e3572ac449b01572884fb8
+  checksum: 9d37af4ee467ba4db43e95855f033e0d68450a100794980f1e06901b9d99fdd75f64164bf946be8fe2c620815fe25b2da3848e334f6d6455baf3c25200ff77dc
   languageName: node
   linkType: hard
 
