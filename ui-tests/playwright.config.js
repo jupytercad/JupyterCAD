@@ -12,6 +12,11 @@ module.exports = {
     reuseExistingServer: false
   },
   retries: 1,
+  use: {
+    ...baseConfig.use,
+    trace: 'off',
+
+  },
   expect: {
     toMatchSnapshot: {
       maxDiffPixelRatio: 0.02,
