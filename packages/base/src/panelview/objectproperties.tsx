@@ -211,6 +211,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
           this.setState(old => ({
             ...old,
             schema: undefined,
+            selectedObject: '',
             selectedObjectData: undefined
           }));
           return;

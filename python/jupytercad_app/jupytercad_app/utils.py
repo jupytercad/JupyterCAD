@@ -3,6 +3,7 @@ try:
 except ImportError:
     __version__ = "dev"
 
+from typing import Dict
 from jupyter_server.utils import url_path_join
 from jupyterlab_server.config import get_page_config as gpc
 from jupyter_server.config_manager import recursive_update
@@ -33,8 +34,10 @@ def get_page_config(base_url, app_name):
         "@jupytercad/jupytercad-core",
         "@jupyter/collaboration-extension",
     ]
-    federated_extensions = page_config["federated_extensions"]
+    federated_extensions: Dict[str, Dict] = page_config["federated_extensions"]
     page_config["federated_extensions"] = [
-        x for x in federated_extensions if x["name"] in required_extensions
+        x
+        for x in federated_extensions
+        if x["name"] in required_extensions or x["name"].startswith("@jupytercad/")
     ]
     return page_config

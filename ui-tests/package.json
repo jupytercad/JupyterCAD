@@ -5,9 +5,9 @@
   "private": true,
   "scripts": {
     "start": "jupyter lab --config jupyter_server_test_config.py",
-    "test": "npx playwright test",
+    "test": "npx playwright test --workers 1",
     "test:update": "npx playwright test --update-snapshots",
-    "test:debug": "PWDEBUG=1 npx playwright test"
+    "test:debug": "PWDEBUG=1 npx playwright test --workers 1"
   },
   "devDependencies": {
     "@jupyterlab/galata": "^5.0.8",
