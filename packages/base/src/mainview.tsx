@@ -548,13 +548,10 @@ export class MainView extends React.Component<IProps, IStates> {
 
     if (selection) {
       // TODO Support selecting edges?
-      let selectionName = '';
-      if (selection.mesh.name.startsWith('edge')) {
+      let selectionName = selection.mesh.name;
+      if (selectionName.startsWith('edge') || selectionName === '') {
         selectionName = (selection.mesh.parent as BasicMesh).name;
-      } else {
-        selectionName = selection.mesh.name;
       }
-
       if (e.ctrlKey) {
         if (selectedMeshesNames.has(selectionName)) {
           selectedMeshesNames.delete(selectionName);
