@@ -2,6 +2,24 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.0a4
+
+([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v1.0.0a3...402f0a2f9daa4cd98ef6e1ff61ba511b4f9c7a95))
+
+### Enhancements made
+
+- Support loading STL binary format [#244](https://github.com/jupytercad/jupytercad/pull/244) ([@trungleduc](https://github.com/trungleduc))
+
+### Maintenance and upkeep improvements
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2023-12-20&to=2024-01-03&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-12-20..2024-01-03&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Apre-commit-ci+updated%3A2023-12-20..2024-01-03&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-12-20..2024-01-03&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.0a3
 
 ([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v1.0.0a2...be30ddf434ad65c7097702aa527ae90afb3cfa9d))
@@ -20,8 +38,6 @@
 ([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2023-12-13&to=2023-12-20&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-12-13..2023-12-20&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2023-12-13..2023-12-20&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-12-13..2023-12-20&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.0.0a2
 
