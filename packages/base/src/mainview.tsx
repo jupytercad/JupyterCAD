@@ -3,15 +3,16 @@ import { IWorkerMessage } from '@jupytercad/occ-worker';
 import {
   IAnnotation,
   IDict,
+  IDisplayShape,
   IJcadObjectDocChange,
   IJCadWorker,
   IJCadWorkerRegistry,
   IJupyterCadClientState,
   IJupyterCadDoc,
   IJupyterCadModel,
-  MainAction,
-  IDisplayShape,
   IMainMessage,
+  IPostResult,
+  MainAction,
   WorkerAction
 } from '@jupytercad/schema';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
@@ -397,10 +398,9 @@ export class MainView extends React.Component<IProps, IStates> {
         if (Object.keys(result).length > 0) {
           if (this._firstRender) {
             const outputs = this._model.sharedModel.outputs;
-            Object.entries(outputs).forEach(([objName, objGeo]) => {
-              this._objToMesh(objName, objGeo as string);
+            Object.entries(outputs).forEach(([objName, postResult]) => {
+              this._objToMesh(objName, postResult as any);
             });
-            this._updateRefLength(true);
             this._firstRender = false;
           } else {
             this._postWorkerId.forEach((wk, id) => {
@@ -436,10 +436,10 @@ export class MainView extends React.Component<IProps, IStates> {
       case MainAction.DISPLAY_POST: {
         msg.payload.forEach(element => {
           const { jcObject, postResult } = element;
-          this._model.sharedModel.setOutput(jcObject.name, postResult.mesh);
-          this._objToMesh(jcObject.name, postResult.mesh);
+          this._model.sharedModel.setOutput(jcObject.name, postResult);
+          this._objToMesh(jcObject.name, postResult);
         });
-        this._updateRefLength(true);
+
         break;
       }
     }
@@ -739,9 +739,29 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     }
   }
-  private _objToMesh(name: string, geoObj: string): void {
-    const loader = new STLLoader();
-    const obj = loader.parse(geoObj);
+  private async _objToMesh(
+    name: string,
+    postResult: IPostResult
+  ): Promise<void> {
+    const { binary, format, value } = postResult;
+    let obj: THREE.BufferGeometry | undefined = undefined;
+    if (format === 'STL') {
+      let buff: string | ArrayBuffer;
+      if (binary) {
+        const str = `data:application/octet-stream;base64,${value}`;
+        const b = await fetch(str);
+        buff = await b.arrayBuffer();
+      } else {
+        buff = value;
+      }
+      const loader = new STLLoader();
+      obj = loader.parse(buff);
+    }
+
+    if (!obj) {
+      return;
+    }
+
     const material = new THREE.MeshPhongMaterial({
       color: DEFAULT_MESH_COLOR,
       polygonOffset: true,
@@ -760,6 +780,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._meshGroup.add(mesh);
       this._boundingGroup?.expandByObject(mesh);
     }
+    this._updateRefLength(true);
   }
 
   private _postMessage = (msg: Omit<IWorkerMessage, 'id'>) => {
