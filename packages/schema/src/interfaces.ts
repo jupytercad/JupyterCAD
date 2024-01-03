@@ -92,8 +92,8 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   setOption(key: keyof IJCadOptions, value: IDict): void;
   setOptions(options: IJCadOptions): void;
 
-  getOutput(key: string): string | undefined;
-  setOutput(key: string, value: string): void;
+  getOutput(key: string): IPostResult | undefined;
+  setOutput(key: string, value: IPostResult): void;
   removeOutput(key: string): void;
 
   getMetadata(key: string): string | undefined;
@@ -247,11 +247,16 @@ export interface IWorkerInitialized extends IMainMessageBase {
   payload: boolean;
 }
 
+export interface IPostResult {
+  format: 'STL'; // Supported format, for now only STL is supported.
+  value: any;
+  binary: boolean;
+}
 export interface IDisplayPost extends IMainMessageBase {
   action: MainAction.DISPLAY_POST;
   payload: {
     jcObject: IJCadObject;
-    postResult: any;
+    postResult: IPostResult;
   }[];
 }
 
