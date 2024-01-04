@@ -20,7 +20,13 @@ export class RightPanelWidget extends SidePanel {
     this.addWidget(properties);
     this._model.documentChanged.connect((_, changed) => {
       if (changed) {
-        header.title.label = changed.context.localPath;
+        if (changed.context.model.sharedModel.editable) {
+          header.title.label = changed.context.localPath;
+          properties.show();
+        } else {
+          header.title.label = `${changed.context.localPath} - Read Only`;
+          properties.hide();
+        }
       } else {
         header.title.label = '-';
       }
