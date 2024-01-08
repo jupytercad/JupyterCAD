@@ -575,7 +575,6 @@ export class JupyterCadStepDoc extends JupyterCadDoc {
   );
 }
 
-
 export class JupyterCadStlDoc extends JupyterCadDoc {
   constructor() {
     super();
