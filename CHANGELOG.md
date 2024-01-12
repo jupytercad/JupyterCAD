@@ -40,6 +40,26 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.0
+
+([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v1.0.0a4...13901c2592ff41f73c981f566305cbf5ad89332c))
+
+### Enhancements made
+
+- Don't show properties panel for readonly files [#245](https://github.com/jupytercad/jupytercad/pull/245) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Add changelog [#247](https://github.com/jupytercad/jupytercad/pull/247) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2024-01-03&to=2024-01-12&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2024-01-03..2024-01-12&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2024-01-03..2024-01-12&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2024-01-03..2024-01-12&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.0a4
 
 ([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v1.0.0a3...402f0a2f9daa4cd98ef6e1ff61ba511b4f9c7a95))
@@ -55,8 +75,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2023-12-20&to=2024-01-03&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2023-12-20..2024-01-03&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Apre-commit-ci+updated%3A2023-12-20..2024-01-03&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2023-12-20..2024-01-03&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.0.0a3
 
