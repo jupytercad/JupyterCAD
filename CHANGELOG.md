@@ -1,4 +1,42 @@
-# Changelog
+# JupyterCAD Changelog
+
+## 1.0.0 - Highlights
+
+Below are the major highlights in `JupyterCAD` 1.0.0
+
+### New packaging system
+
+From 1.0.0, `JupyterCAD` is split into multiple python and javascript packages, this makes deploying and extending `JupyterCAD` easier.
+
+- New python packages:
+  - `jupytercad-core`: package contains core plugins for worker registry, jcad file support, document tracker, and annotation
+  - `jupytercad-lab`: package contains plugins for lab interface and notebook support
+  - `jupytercad-app`: the standalone `JupyterCAD` application
+- New js packages:
+  - `@jupytercad/schema`: package contains the schema of the JCAD file and related models/interfaces
+  - `@jupytercad/opencascade`: the custom opencascade.js build for `JupyterCAD`
+  - `@jupytercad/occ-worker`: the opencascade worker of `JupyterCAD`.
+  - `@jupytercad/base`: package contains the UI components.
+
+The current `jupytercad` PYPI package is still available, but it has become a meta-package to facilitate the installation of the application. Users can continue to install `JupyterCAD` with
+
+```bash
+pip install jupytercad
+```
+
+### New extension system
+
+`JupyterCAD` now provides multiple tokens to allow extending its features by using the `JupyterLab` extension system. Users can register new file formats, register new operators, or add more post-processing capabilities to the application.
+
+By using the new system, `FreeCAD` file format is supported through [an extension of `JupyterCAD`](https://github.com/jupytercad/jupytercad-freecad), users can install it with
+
+```bash
+pip install jupytercad-freecad
+```
+
+### New supported file format
+
+`JupyterCAD` now can render the geometries of a STEP file. More improvement in the interoperability of the STEP file will be added in future versions.
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
