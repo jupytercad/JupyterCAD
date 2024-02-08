@@ -40,6 +40,28 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.1
+
+([Full Changelog](https://github.com/jupytercad/jupytercad/compare/@jupytercad/base@1.0.0...53bae1fd7621f80e42001cfcc831ea12ac86dc83))
+
+### Bugs fixed
+
+- Pin JupyterLab in publish release [#254](https://github.com/jupytercad/jupytercad/pull/254) ([@martinRenou](https://github.com/martinRenou))
+- Expose CadDocument from jupytercad [#252](https://github.com/jupytercad/jupytercad/pull/252) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Missing util [#255](https://github.com/jupytercad/jupytercad/pull/255) ([@martinRenou](https://github.com/martinRenou))
+- Fixing check-release workflow + Fix regression tests [#250](https://github.com/jupytercad/jupytercad/pull/250) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2024-01-12&to=2024-02-08&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2024-01-12..2024-02-08&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2024-01-12..2024-02-08&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.0
 
 ([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v1.0.0a4...13901c2592ff41f73c981f566305cbf5ad89332c))
@@ -57,8 +79,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2024-01-03&to=2024-01-12&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2024-01-03..2024-01-12&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2024-01-03..2024-01-12&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2024-01-03..2024-01-12&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.0.0a4
 

@@ -803,8 +803,8 @@ __metadata:
   linkType: hard
 
 "@jupyter-widgets/base@npm:^6.0.2":
-  version: 6.0.6
-  resolution: "@jupyter-widgets/base@npm:6.0.6"
+  version: 6.0.7
+  resolution: "@jupyter-widgets/base@npm:6.0.7"
   dependencies:
     "@jupyterlab/services": ^6.0.0 || ^7.0.0
     "@lumino/coreutils": ^1.11.1 || ^2.1
@@ -815,7 +815,7 @@ __metadata:
     backbone: 1.4.0
     jquery: ^3.1.1
     lodash: ^4.17.4
-  checksum: 6414a56d7aaf287462b97f192f5022f9f3f52809df2e6e49b64073cb6ab851dea005033d508730140159e4dc6ef54a2af2d637c6ce3b6813a52d29fc153be296
+  checksum: d4f385a8412b16d696db618eec771011000326f8a5645f6c3ca61ed6fa181aed6e16780189f792cb342fa80473092501299b418460a8be3a2eba5237c5a33f1d
   languageName: node
   linkType: hard
 
@@ -908,7 +908,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupytercad/base@^1.0.0, @jupytercad/base@workspace:packages/base":
+"@jupytercad/base@^1.0.1, @jupytercad/base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@jupytercad/base@workspace:packages/base"
   dependencies:
@@ -916,8 +916,8 @@ __metadata:
     "@deathbeds/jupyterlab-rjsf": ^1.1.0
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/occ-worker": ^1.0.0
-    "@jupytercad/schema": ^1.0.0
+    "@jupytercad/occ-worker": ^1.0.1
+    "@jupytercad/schema": ^1.0.1
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/coreutils": ^6.0.0
@@ -959,8 +959,8 @@ __metadata:
     "@jupyter/collaboration": ^1.0.0
     "@jupyter/docprovider": ^1.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/base": ^1.0.0
-    "@jupytercad/schema": ^1.0.0
+    "@jupytercad/base": ^1.0.1
+    "@jupytercad/schema": ^1.0.1
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/application-extension": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -1012,14 +1012,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-core@^1.0.0, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
+"@jupytercad/jupytercad-core@^1.0.1, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad_core"
   dependencies:
     "@jupyter/docprovider": ^1.0.0
-    "@jupytercad/base": ^1.0.0
-    "@jupytercad/occ-worker": ^1.0.0
-    "@jupytercad/schema": ^1.0.0
+    "@jupytercad/base": ^1.0.1
+    "@jupytercad/occ-worker": ^1.0.1
+    "@jupytercad/schema": ^1.0.1
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1052,9 +1052,9 @@ __metadata:
   resolution: "@jupytercad/jupytercad-lab@workspace:python/jupytercad_lab"
   dependencies:
     "@jupyter/docprovider": ^1.0.0
-    "@jupytercad/base": ^1.0.0
-    "@jupytercad/jupytercad-core": ^1.0.0
-    "@jupytercad/schema": ^1.0.0
+    "@jupytercad/base": ^1.0.1
+    "@jupytercad/jupytercad-core": ^1.0.1
+    "@jupytercad/schema": ^1.0.1
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1103,12 +1103,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/occ-worker@^1.0.0, @jupytercad/occ-worker@workspace:packages/occ-worker":
+"@jupytercad/occ-worker@^1.0.1, @jupytercad/occ-worker@workspace:packages/occ-worker":
   version: 0.0.0-use.local
   resolution: "@jupytercad/occ-worker@workspace:packages/occ-worker"
   dependencies:
-    "@jupytercad/opencascade": ^1.0.0
-    "@jupytercad/schema": ^1.0.0
+    "@jupytercad/opencascade": ^1.0.1
+    "@jupytercad/schema": ^1.0.1
     "@lumino/coreutils": ^2.0.0
     "@types/node": ^18.15.11
     copy-webpack-plugin: ^10.0.0
@@ -1124,7 +1124,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/opencascade@^1.0.0, @jupytercad/opencascade@workspace:packages/opencascade":
+"@jupytercad/opencascade@^1.0.1, @jupytercad/opencascade@workspace:packages/opencascade":
   version: 0.0.0-use.local
   resolution: "@jupytercad/opencascade@workspace:packages/opencascade"
   dependencies:
@@ -1135,7 +1135,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/schema@^1.0.0, @jupytercad/schema@workspace:packages/schema":
+"@jupytercad/schema@^1.0.1, @jupytercad/schema@workspace:packages/schema":
   version: 0.0.0-use.local
   resolution: "@jupytercad/schema@workspace:packages/schema"
   dependencies:
