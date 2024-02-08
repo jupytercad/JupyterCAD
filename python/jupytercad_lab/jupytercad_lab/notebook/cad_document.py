@@ -7,9 +7,9 @@ import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-import y_py as Y
+from pycrdt import Array, Doc, Map
 from pydantic import BaseModel
-from ypywidgets.ypywidgets import Widget
+from ypywidgets.comm import CommWidget
 
 from .objects._schema.any import IAny
 from uuid import uuid4
@@ -32,7 +32,7 @@ from .utils import normalize_path
 logger = logging.getLogger(__file__)
 
 
-class CadDocument(Widget):
+class CadDocument(CommWidget):
     """
     Create a new CadDocument object.
 
@@ -43,19 +43,17 @@ class CadDocument(Widget):
     def __init__(self, path: Optional[str] = None):
         comm_metadata = CadDocument._path_to_comm(path)
 
-        ydoc = Y.YDoc()
+        ydoc = Doc()
 
         super().__init__(
             comm_metadata=dict(ymodel_name="@jupytercad:widget", **comm_metadata),
             ydoc=ydoc,
         )
 
-        self.ydoc = ydoc
-
-        self._objects_array = self.ydoc.get_array("objects")
-        self._metadata = self.ydoc.get_map("metadata")
-        self._outputs = self.ydoc.get_map("outputs")
-        self._options = self.ydoc.get_map("options")
+        self.ydoc["objects"] = self._objects_array = Array()
+        self.ydoc["metadata"] = self._metadata = Map()
+        self.ydoc["outputs"] = self._outputs = Map()
+        self.ydoc["options"] = self._options = Map()
 
     @property
     def objects(self) -> List[str]:
@@ -88,18 +86,18 @@ class CadDocument(Widget):
             else:
                 raise ValueError("File extension is not supported!")
         return dict(
-            path=path, format=format, contentType=contentType, create_ydoc=path is None
+            path=path, format=format, contentType=contentType, createydoc=path is None
         )
 
     def get_object(self, name: str) -> Optional["PythonJcadObject"]:
         if self.check_exist(name):
-            data = json.loads(self._get_yobject_by_name(name).to_json())
+            data = json.loads(self._get_yobject_by_name(name).to_py())
             return OBJECT_FACTORY.create_object(data, self)
 
     def remove(self, name: str) -> CadDocument:
         index = self._get_yobject_index_by_name(name)
         if self._objects_array and index != -1:
-            with self.ydoc.begin_transaction() as t:
+            with self.ydoc.transaction() as t:
                 self._objects_array.delete(t, index)
         return self
 
@@ -107,9 +105,8 @@ class CadDocument(Widget):
         if self._objects_array is not None and not self.check_exist(new_object.name):
             obj_dict = json.loads(new_object.json())
             obj_dict["visible"] = True
-            new_map = Y.YMap(obj_dict)
-            with self.ydoc.begin_transaction() as t:
-                self._objects_array.append(t, new_map)
+            new_map = Map(obj_dict)
+            self._objects_array.append(new_map)
         else:
             logger.error(f"Object {new_object.name} already exists")
         return self
@@ -144,7 +141,7 @@ class CadDocument(Widget):
             )
         contents = [{"user": user, "value": message}]
         if self._metadata is not None:
-            with self.ydoc.begin_transaction() as t:
+            with self.ydoc.transaction() as t:
                 self._metadata.set(
                     t,
                     new_id,
@@ -165,7 +162,7 @@ class CadDocument(Widget):
         :param annotation_id: The id of the annotation
         """
         if self._metadata is not None:
-            with self.ydoc.begin_transaction() as t:
+            with self.ydoc.transaction() as t:
                 self._metadata.pop(t, annotation_id, None)
 
     def set_color(self, object_name: str, color: Optional[List]) -> None:
@@ -191,7 +188,7 @@ class CadDocument(Widget):
                 if color is not None:
                     new_gui = {object_name: {"color": color}}
             if new_gui is not None:
-                with self.ydoc.begin_transaction() as t:
+                with self.ydoc.transaction() as t:
                     self._options.set(t, "guidata", new_gui)
 
     def add_step_file(
@@ -225,8 +222,7 @@ class CadDocument(Widget):
             "visible": True,
         }
 
-        with self.ydoc.begin_transaction() as t:
-            self._objects_array.append(t, Y.YMap(data))
+        self._objects_array.append(Map(data))
 
         return self
 
@@ -278,8 +274,7 @@ class CadDocument(Widget):
             "visible": True,
         }
 
-        with self.ydoc.begin_transaction() as t:
-            self._objects_array.append(t, Y.YMap(data))
+        self._objects_array.append(Map(data))
 
         return self
 
@@ -625,20 +620,19 @@ class CadDocument(Widget):
         return shape1, shape2
 
     def set_visible(self, name: str, value):
-        obj: Optional[Y.YMap] = self._get_yobject_by_name(name)
+        obj: Optional[Map] = self._get_yobject_by_name(name)
 
         if obj is None:
             raise RuntimeError(f"No object named {name}")
 
-        with self.ydoc.begin_transaction() as t:
-            obj.set(t, "visible", False)
+        obj["visible"] = False
 
     def check_exist(self, name: str) -> bool:
         if self.objects:
             return name in self.objects
         return False
 
-    def _get_yobject_by_name(self, name: str) -> Optional[Y.YMap]:
+    def _get_yobject_by_name(self, name: str) -> Optional[Map]:
         if self._objects_array:
             for index, item in enumerate(self._objects_array):
                 if item["name"] == name:

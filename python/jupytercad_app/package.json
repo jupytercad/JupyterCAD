@@ -51,8 +51,8 @@
   "dependencies": {
     "@codemirror/state": "^6.2.0",
     "@codemirror/view": "^6.9.3",
-    "@jupyter/collaboration": "^1.0.0",
-    "@jupyter/docprovider": "^1.0.0",
+    "@jupyter/collaboration": "^2.0.0",
+    "@jupyter/docprovider": "^2.0.0",
     "@jupyter/ydoc": "^0.3.4 || ^1.0.2",
     "@jupytercad/base": "^1.0.1",
     "@jupytercad/schema": "^1.0.1",
