@@ -66,7 +66,8 @@
     "@jupyterlab/services": "^7.0.0",
     "@jupyterlab/translation": "^4.0.0",
     "@jupyterlab/ui-components": "^4.0.0",
-    "@lumino/commands": "^2.0.0"
+    "@lumino/commands": "^2.0.0",
+    "util": "^0.12.5"
   },
   "devDependencies": {
     "@jupyterlab/builder": "^4.0.0",

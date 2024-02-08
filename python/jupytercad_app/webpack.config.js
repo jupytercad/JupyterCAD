@@ -76,6 +76,11 @@ module.exports = [
           ...data.dependencies
         }
       })
-    ]
+    ],
+    resolve: {
+      fallback: {
+        util: require.resolve('util/')
+      }
+    }
   })
 ].concat(extras);
