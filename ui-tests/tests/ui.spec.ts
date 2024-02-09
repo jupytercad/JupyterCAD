@@ -105,6 +105,8 @@ test.describe('UI Test', () => {
       await page.filebrowser.openDirectory('examples');
       await page.filebrowser.refresh();
 
+      await page.waitForTimeout(1000);
+
       // Open new jcad file
       const newFileName = '3M_CONNECTOR.jcad';
       const newFullPath = `examples/${newFileName}`;
