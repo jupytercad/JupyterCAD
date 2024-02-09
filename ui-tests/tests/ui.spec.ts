@@ -108,13 +108,13 @@ test.describe('UI Test', () => {
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
-      await page.getByTitle("New Box").click();
-      page.locator(
-        'input[id^="id-jp-schemaform"][label="Name"]'
-      ).fill('Foo');
-      await page.locator('div.jp-Dialog-buttonLabel', {
-        hasText: 'Submit'
-      }).click();
+      await page.getByTitle('New Box').click();
+      page.locator('input[id^="id-jp-schemaform"][label="Name"]').fill('Foo');
+      await page
+        .locator('div.jp-Dialog-buttonLabel', {
+          hasText: 'Submit'
+        })
+        .click();
 
       await page
         .getByRole('tablist', { name: 'main sidebar' })
