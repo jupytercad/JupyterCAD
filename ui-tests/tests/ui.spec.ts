@@ -232,10 +232,7 @@ test.describe('UI Test', () => {
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
 
       // Create a cone
-      const btn = await page.locator(
-        "button.jp-ToolbarButtonComponent[data-command='jupytercad:newCone']"
-      );
-      await btn.click();
+      await page.getByTitle('New Cone').click();
       await page.getByLabel('Radius1').click();
       await page.getByLabel('Radius1').fill('15');
       await page.getByLabel('Radius2').click();
@@ -271,10 +268,7 @@ test.describe('UI Test', () => {
       await page.waitForTimeout(1000);
 
       // Apply a cut operator from the selection
-      const cutbtn = await page.locator(
-        "button.jp-ToolbarButtonComponent[data-command='jupytercad:cut']"
-      );
-      await cutbtn.click();
+      await page.getByTitle('Cut').click();
       await page
         .locator('.jp-Dialog-body')
         .locator('div.jp-Dialog-buttonLabel', {
