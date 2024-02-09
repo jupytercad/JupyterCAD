@@ -108,18 +108,13 @@ test.describe('UI Test', () => {
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
-      const btn = await page.locator(
-        "button.jp-ToolbarButtonComponent[data-command='jupytercad:newBox']"
-      );
-      await btn.click();
-      const nameInput = await page.locator(
+      await page.getByTitle("New Box").click();
+      page.locator(
         'input[id^="id-jp-schemaform"][label="Name"]'
-      );
-      nameInput.fill('Foo');
-      const accept = await page.locator('div.jp-Dialog-buttonLabel', {
+      ).fill('Foo');
+      await page.locator('div.jp-Dialog-buttonLabel', {
         hasText: 'Submit'
-      });
-      accept.click();
+      }).click();
 
       await page
         .getByRole('tablist', { name: 'main sidebar' })
