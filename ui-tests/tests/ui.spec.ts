@@ -24,7 +24,7 @@ test.describe('UI Test', () => {
     });
   });
 
-  test.describe('File rendering test', () => {
+  test.describe('File operations', () => {
     test.beforeAll(async ({ request }) => {
       const content = galata.newContentsHelper(request);
       await content.deleteDirectory('/examples');
