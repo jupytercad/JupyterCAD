@@ -108,18 +108,13 @@ test.describe('UI Test', () => {
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
-      const btn = await page.locator(
-        "button.jp-ToolbarButtonComponent[data-command='jupytercad:newBox']"
-      );
-      await btn.click();
-      const nameInput = await page.locator(
-        'input[id^="id-jp-schemaform"][label="Name"]'
-      );
-      nameInput.fill('Foo');
-      const accept = await page.locator('div.jp-Dialog-buttonLabel', {
-        hasText: 'Submit'
-      });
-      accept.click();
+      await page.getByTitle('New Box').click();
+      page.locator('input[id^="id-jp-schemaform"][label="Name"]').fill('Foo');
+      await page
+        .locator('div.jp-Dialog-buttonLabel', {
+          hasText: 'Submit'
+        })
+        .click();
 
       await page
         .getByRole('tablist', { name: 'main sidebar' })
@@ -237,10 +232,7 @@ test.describe('UI Test', () => {
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
 
       // Create a cone
-      const btn = await page.locator(
-        "button.jp-ToolbarButtonComponent[data-command='jupytercad:newCone']"
-      );
-      await btn.click();
+      await page.getByTitle('New Cone').click();
       await page.getByLabel('Radius1').click();
       await page.getByLabel('Radius1').fill('15');
       await page.getByLabel('Radius2').click();
@@ -276,10 +268,7 @@ test.describe('UI Test', () => {
       await page.waitForTimeout(1000);
 
       // Apply a cut operator from the selection
-      const cutbtn = await page.locator(
-        "button.jp-ToolbarButtonComponent[data-command='jupytercad:cut']"
-      );
-      await cutbtn.click();
+      await page.getByTitle('Cut').click();
       await page
         .locator('.jp-Dialog-body')
         .locator('div.jp-Dialog-buttonLabel', {
