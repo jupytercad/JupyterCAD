@@ -47,8 +47,13 @@ class YJCad(YBaseDoc):
         self._yobjects.clear()
         self._yobjects.extend(newObj)
 
+        self._yoptions.clear()
         self._yoptions.update(valueDict["options"])
+
+        self._ymetadata.clear()
         self._ymetadata.update(valueDict["metadata"])
+
+        self._youtputs.clear()
         self._youtputs.update(valueDict["outputs"])
 
     def observe(self, callback: Callable[[str, Any], None]):
