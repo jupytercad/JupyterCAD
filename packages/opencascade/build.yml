@@ -18,6 +18,7 @@ mainBuild:
     - symbol: BRepBuilderAPI_MakeEdge
     - symbol: BRepBuilderAPI_MakeFace
     - symbol: BRepBuilderAPI_MakeShape
+    - symbol: BRepBuilderAPI_MakeVertex
     - symbol: BRepBuilderAPI_MakeWire
     - symbol: BRepBuilderAPI_ModifyShape
     - symbol: BRepGProp
@@ -47,6 +48,7 @@ mainBuild:
     - symbol: gp_Dir
     - symbol: gp_Lin
     - symbol: gp_Mat
+    - symbol: gp_Pln
     - symbol: gp_Pnt
     - symbol: gp_Trsf
     - symbol: gp_Vec
@@ -87,6 +89,7 @@ mainBuild:
     - symbol: TopoDS_Iterator
     - symbol: TopoDS_Shape
     - symbol: TopoDS_Shell
+    - symbol: TopoDS_Vertex
     - symbol: TopoDS_Wire
     - symbol: TopTools_FormatVersion
     - symbol: TopTools_IndexedDataMapOfShapeListOfShape
