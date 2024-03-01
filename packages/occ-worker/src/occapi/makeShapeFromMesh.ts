@@ -16,15 +16,14 @@ export function makeShapeFromMesh(
   const oc = getOcc();
   const aNbNodes = myMesh.NbNodes();
   const aNbTriangles = myMesh.NbTriangles();
-
   const aPnt2VertexMap: Map<number, OCC.TopoDS_Vertex> = new Map();
   for (let idx = 1; idx <= aNbNodes; idx++) {
     const aP = myMesh.Node(idx);
-    const aV = new OCC.BRepBuilderAPI_MakeVertex(aP);
+    const aV = new oc.BRepBuilderAPI_MakeVertex(aP);
     aPnt2VertexMap.set(idx, aV.Vertex());
   }
 
-  const anEdgeToTEgeMap: Map<[number, number], OCC.TopoDS_Edge> = new Map();
+  const anEdgeToTEgeMap: Map<string, OCC.TopoDS_Edge> = new Map();
 
   for (let idx = 1; idx <= aNbTriangles; idx++) {
     const aTriangle = myMesh.Triangle(idx);
@@ -85,15 +84,15 @@ export function makeShapeFromMesh(
     if (anIdx[0] < anIdx[2]) {
       aTE3.Reverse();
     }
-    anEdgeToTEgeMap.set(aMeshEdge1, aTE1);
-    anEdgeToTEgeMap.set(aMeshEdge2, aTE2);
-    anEdgeToTEgeMap.set(aMeshEdge3, aTE3);
+    anEdgeToTEgeMap.set(`${aMeshEdge1[0]}:${aMeshEdge1[1]}`, aTE1);
+    anEdgeToTEgeMap.set(`${aMeshEdge2[0]}:${aMeshEdge2[1]}`, aTE2);
+    anEdgeToTEgeMap.set(`${aMeshEdge3[0]}:${aMeshEdge3[1]}`, aTE3);
   }
   const aResult = new oc.TopoDS_Compound();
   const aBB = new oc.BRep_Builder();
   aBB.MakeCompound(aResult);
 
-  for (let idx = 1; idx < aNbTriangles; idx++) {
+  for (let idx = 1; idx <= aNbTriangles; idx++) {
     const aTriangle = myMesh.Triangle(idx);
     const anIdx: [number, number, number] = [
       aTriangle.Value(1),
@@ -117,16 +116,20 @@ export function makeShapeFromMesh(
     const isReversed2 = anIdx[2] < anIdx[1];
     const isReversed3 = anIdx[0] < anIdx[2];
 
+    const aMeshKey1 = `${aMeshEdge1[0]}:${aMeshEdge1[1]}`;
+    const aMeshKey2 = `${aMeshEdge2[0]}:${aMeshEdge2[1]}`;
+    const aMeshKey3 = `${aMeshEdge3[0]}:${aMeshEdge3[1]}`;
     const aHasAllEdges =
-      anEdgeToTEgeMap.has(aMeshEdge1) &&
-      anEdgeToTEgeMap.has(aMeshEdge2) &&
-      anEdgeToTEgeMap.has(aMeshEdge3);
+      anEdgeToTEgeMap.has(aMeshKey1) &&
+      anEdgeToTEgeMap.has(aMeshKey2) &&
+      anEdgeToTEgeMap.has(aMeshKey3);
+
     if (!aHasAllEdges) {
       continue;
     }
-    const aTEdge1 = anEdgeToTEgeMap.get(aMeshEdge1);
-    const aTEdge2 = anEdgeToTEgeMap.get(aMeshEdge2);
-    const aTEdge3 = anEdgeToTEgeMap.get(aMeshEdge3);
+    const aTEdge1 = anEdgeToTEgeMap.get(aMeshKey1);
+    const aTEdge2 = anEdgeToTEgeMap.get(aMeshKey2);
+    const aTEdge3 = anEdgeToTEgeMap.get(aMeshKey3);
     if (!aTEdge1 || !aTEdge2 || !aTEdge3) {
       continue;
     }
@@ -166,5 +169,6 @@ export function makeShapeFromMesh(
     const aFace = aFaceMaker.Face();
     aBB.Add(aResult, aFace);
   }
+
   return aResult;
 }

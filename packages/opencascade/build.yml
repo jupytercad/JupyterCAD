@@ -70,6 +70,7 @@ mainBuild:
     - symbol: Poly_PolygonOnTriangulation
     - symbol: Poly_Triangle
     - symbol: Poly_Triangulation
+    - symbol: RWStl
     - symbol: Standard_Transient
     - symbol: StdPrs_ToolTriangulatedShape
     - symbol: STEPControl_Reader
