@@ -7,10 +7,3 @@ export function hashCode(str: string): number {
   }
   return hash;
 }
-
-export function toRad(deg: number): number {
-  return (Math.PI * deg) / 180;
-}
-export function toDeg(rad: number): number {
-  return (180 * rad) / Math.PI;
-}

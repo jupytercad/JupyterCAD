@@ -1,4 +1,3 @@
-import { OCC } from '@jupytercad/opencascade';
 import {
   IDict,
   IJCadContent,
@@ -7,19 +6,10 @@ import {
   WorkerAction
 } from '@jupytercad/schema';
 
-import { ObjectFile, ShapesFactory } from './occapi';
+import { ObjectFile, getShapesFactory } from './occapi';
 
 import { OccParser } from './occparser';
 import { IOperatorArg, IOperatorFuncOutput } from './types';
-
-let occ: OCC.OpenCascadeInstance;
-
-export function getOcc(): OCC.OpenCascadeInstance {
-  if (!occ) {
-    occ = (self as any).occ as OCC.OpenCascadeInstance;
-  }
-  return occ;
-}
 
 function buildModel(
   model: IJCadContent
@@ -35,10 +25,10 @@ function buildModel(
     if (!shape || !parameters) {
       return;
     }
-
+    const shapeFactory = getShapesFactory();
     let shapeData: IOperatorFuncOutput | undefined = undefined;
-    if (ShapesFactory[shape]) {
-      shapeData = ShapesFactory[shape](parameters as IOperatorArg, model);
+    if (shapeFactory[shape]) {
+      shapeData = shapeFactory[shape]?.(parameters as IOperatorArg, model);
     } else if (parameters['Shape'] && parameters['Type']) {
       // Creating occ shape from brep file.
       shapeData = ObjectFile(
@@ -46,7 +36,7 @@ function buildModel(
         model
       );
     } else if (shape.startsWith('Post::')) {
-      shapeData = ShapesFactory['Post::Operator'](
+      shapeData = shapeFactory['Post::Operator']?.(
         parameters as IOperatorArg,
         model
       );
