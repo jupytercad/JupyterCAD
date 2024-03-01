@@ -1,9 +1,9 @@
 import { OCC } from '@jupytercad/opencascade';
 import { IJCadContent, IShapeMetadata, Parts } from '@jupytercad/schema';
 
-import { getOcc } from './actions';
-import { IDict } from './types';
-import { hashCode } from './utils';
+import { getOcc } from './common';
+import { IDict } from '../types';
+import { hashCode } from '../utils';
 
 const SHAPE_CACHE = new Map<
   string,

@@ -1,5 +1,5 @@
 import { IGeomCircle } from '@jupytercad/schema';
-import { getOcc } from '../actions';
+import { getOcc } from './common';
 
 export function _GeomCircle(arg: IGeomCircle): any {
   const oc = getOcc();

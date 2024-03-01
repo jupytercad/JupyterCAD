@@ -3,6 +3,7 @@ import { initializeOpenCascade, OCC } from '@jupytercad/opencascade';
 import WorkerHandler from './actions';
 import { IDict, IWorkerMessage } from './types';
 import { IMainMessage, MainAction, WorkerAction } from '@jupytercad/schema';
+import { initShapesFactory } from './occapi';
 
 let occ: OCC.OpenCascadeInstance;
 const ports: IDict<MessagePort> = {};
@@ -13,6 +14,7 @@ initializeOpenCascade().then(occInstance => {
   occ = occInstance;
 
   (self as any).occ = occ;
+  initShapesFactory();
   for (const id of Object.keys(ports)) {
     sendToMain({ action: MainAction.INITIALIZED, payload: false }, id);
   }

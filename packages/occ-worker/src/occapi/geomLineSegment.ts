@@ -1,5 +1,5 @@
 import { IGeomLineSegment } from '@jupytercad/schema';
-import { getOcc } from '../actions';
+import { getOcc } from './common';
 
 export function _GeomLine(arg: IGeomLineSegment): any {
   const oc = getOcc();
