@@ -10,7 +10,7 @@ const ports: IDict<MessagePort> = {};
 console.log('Initializing OCC...');
 
 initializeOpenCascade().then(occInstance => {
-  console.log('Done!');
+  console.log('Done111!');
   occ = occInstance;
 
   (self as any).occ = occ;

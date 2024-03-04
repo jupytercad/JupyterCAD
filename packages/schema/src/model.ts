@@ -36,8 +36,17 @@ export class JupyterCadModel implements IJupyterCadModel {
       this._sharedModel = JupyterCadDoc.create();
     }
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
+    console.log('shared', sharedModel);
+    this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.annotationModel = annotationModel;
   }
+
+  private _onSharedModelChanged = (sender: any, changes: any): void => {
+    console.log('changed');
+
+    this._contentChanged.emit(void 0);
+    this.dirty = true;
+  };
 
   readonly collaborative = true;
 
@@ -149,6 +158,7 @@ export class JupyterCadModel implements IJupyterCadModel {
       this.sharedModel.addObjects(jsonData.objects);
       this.sharedModel.setOptions(jsonData.options ?? {});
     });
+    this.dirty = true;
   }
 
   toJSON(): PartialJSONObject {

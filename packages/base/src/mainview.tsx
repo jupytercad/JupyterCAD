@@ -796,17 +796,17 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   }
 
-  private _createPointer(user: User.IIdentity): BasicMesh {
+  private _createPointer(user?: User.IIdentity): BasicMesh {
     let clientColor: Color.RGBColor | null = null;
 
-    if (user.color?.startsWith('var')) {
+    if (user?.color?.startsWith('var')) {
       clientColor = Color.color(
         getComputedStyle(document.documentElement).getPropertyValue(
           user.color.slice(4, -1)
         )
       ) as Color.RGBColor;
     } else {
-      clientColor = Color.color(user.color) as Color.RGBColor;
+      clientColor = Color.color(user?.color ?? 'steelblue') as Color.RGBColor;
     }
 
     const material = new THREE.MeshBasicMaterial({
