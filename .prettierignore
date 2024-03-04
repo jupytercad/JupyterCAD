@@ -7,3 +7,4 @@ jupytercad
 packages/opencascade/build.yml
 yarn.lock
 *.jcad
+playwright.config.js
