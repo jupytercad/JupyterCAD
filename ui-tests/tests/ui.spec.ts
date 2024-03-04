@@ -4,7 +4,7 @@ import path from 'path';
 test.use({ autoGoto: false });
 
 test.describe('UI Test', () => {
-  const fileList = ['test.jcad', '3M_CONNECTOR.STEP'];
+  const fileList = ['test.jcad', '3M_CONNECTOR.STEP', 'fan.stl'];
 
   test.describe('Extension activation test', () => {
     test('should emit an activation console message', async ({

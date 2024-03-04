@@ -19,7 +19,7 @@ module.exports = {
   },
   expect: {
     toMatchSnapshot: {
-      maxDiffPixelRatio: 0.02,
+      maxDiffPixelRatio: 0.002,
     },
   },
 };
