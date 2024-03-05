@@ -1,0 +1,24 @@
+{
+  "LiteBuildConfig": {
+    "extra_file_types": {
+      "jcad": {
+        "name": "jcad",
+        "extensions": [".jcad", ".JCAD"],
+        "mimeTypes": ["text/plain"],
+        "fileFormat": "text"
+      },
+      "step": {
+        "name": "step",
+        "extensions": [".step", ".STEP"],
+        "mimeTypes": ["text/plain"],
+        "fileFormat": "text"
+      },
+      "stl": {
+        "name": "stl",
+        "extensions": [".stl", ".STL"],
+        "mimeTypes": ["text/plain"],
+        "fileFormat": "text"
+      }
+    }
+  }
+}
