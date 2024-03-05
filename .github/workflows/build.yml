@@ -195,3 +195,65 @@ jobs:
       - uses: actions/checkout@v3
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
       - uses: jupyterlab/maintainer-tools/.github/actions/check-links@v1
+
+  build-lite:
+    name: Build JupyterLite
+    needs: integration-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Conda environment with Micromamba
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          micromamba-version: '1.5.5-0'
+          environment-name: build-env
+          create-args: >-
+            python=3.10
+            pip
+            jupyterlite-core>=0.2.0,<0.3.0
+            jupyterlite-xeus>=0.1.2,<0.2
+
+      - name: Download extension package
+        uses: actions/download-artifact@v3
+        with:
+          name: extension-artifacts
+
+      - name: Install the extension
+        shell: bash -l {0}
+        run: |
+          set -eux
+          cp ./jupytercad_core/dist/jupytercad*.whl ./jupytercad_lab/dist/jupytercad*.whl ./jupytercad_app/dist/jupytercad*.whl .
+          python -m pip install jupytercad*.whl
+
+      - name: Build the lite site
+        shell: bash -l {0}
+        working-directory: lite
+        run: |
+          set -eux
+          mkdir -p content && cp ../examples/test.jcad ./content
+          jupyter lite build --contents content --output-dir dist
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./lite/dist
+
+  deploy:
+    needs: build-lite
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
