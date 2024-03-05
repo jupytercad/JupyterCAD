@@ -7,7 +7,6 @@ import {
   IJCadWorkerRegistryToken,
   IJupyterCadDocTracker,
   IJupyterCadWidget,
-  JupyterCadStepDoc,
   IJCadExternalCommandRegistry,
   IJCadExternalCommandRegistryToken
 } from '@jupytercad/schema';
@@ -19,6 +18,7 @@ import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
 import { JupyterCadStepModelFactory } from './modelfactory';
 import { JupyterCadWidgetFactory } from '../factory';
+import { JupyterCadStepDoc } from './model';
 
 const FACTORY = 'JupyterCAD STEP Viewer';
 

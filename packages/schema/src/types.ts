@@ -14,4 +14,5 @@ export * from './_interface/torus';
 export * from './_interface/postOperator';
 export * from './interfaces';
 export * from './model';
+export * from './doc';
 export * from './token';
