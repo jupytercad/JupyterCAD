@@ -7,7 +7,6 @@ import {
   IJCadWorkerRegistryToken,
   IJupyterCadDocTracker,
   IJupyterCadWidget,
-  JupyterCadStlDoc,
   IJCadExternalCommandRegistry,
   IJCadExternalCommandRegistryToken
 } from '@jupytercad/schema';
@@ -19,6 +18,7 @@ import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
 import { JupyterCadStlModelFactory } from './modelfactory';
 import { JupyterCadWidgetFactory } from '../factory';
+import { JupyterCadStlDoc } from './model';
 
 const FACTORY = 'JupyterCAD STL Viewer';
 
@@ -26,9 +26,9 @@ const activate = (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
-  drive: ICollaborativeDrive,
   workerRegistry: IJCadWorkerRegistry,
-  externalCommandRegistry: IJCadExternalCommandRegistry
+  externalCommandRegistry: IJCadExternalCommandRegistry,
+  drive: ICollaborativeDrive | null
 ): void => {
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
@@ -59,10 +59,12 @@ const activate = (
   const stlSharedModelFactory: SharedDocumentFactory = () => {
     return new JupyterCadStlDoc();
   };
-  drive.sharedModelFactory.registerDocumentFactory(
-    'stl',
-    stlSharedModelFactory
-  );
+  if (drive) {
+    drive.sharedModelFactory.registerDocumentFactory(
+      'stl',
+      stlSharedModelFactory
+    );
+  }
 
   widgetFactory.widgetCreated.connect((sender, widget) => {
     widget.context.pathChanged.connect(() => {
@@ -82,10 +84,10 @@ const stlPlugin: JupyterFrontEndPlugin<void> = {
   requires: [
     IJupyterCadDocTracker,
     IThemeManager,
-    ICollaborativeDrive,
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken
   ],
+  optional: [ICollaborativeDrive],
   autoStart: true,
   activate
 };

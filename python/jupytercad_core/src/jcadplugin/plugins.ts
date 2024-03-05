@@ -42,11 +42,11 @@ const activate = (
   themeManager: IThemeManager,
   annotationModel: IAnnotationModel,
   browserFactory: IFileBrowserFactory,
-  drive: ICollaborativeDrive,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
   launcher: ILauncher | null,
-  palette: ICommandPalette | null
+  palette: ICommandPalette | null,
+  drive: ICollaborativeDrive | null
 ): void => {
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
@@ -79,10 +79,12 @@ const activate = (
   const jcadSharedModelFactory: SharedDocumentFactory = () => {
     return new JupyterCadDoc();
   };
-  drive.sharedModelFactory.registerDocumentFactory(
-    'jcad',
-    jcadSharedModelFactory
-  );
+  if (drive) {
+    drive.sharedModelFactory.registerDocumentFactory(
+      'jcad',
+      jcadSharedModelFactory
+    );
+  }
 
   widgetFactory.widgetCreated.connect((sender, widget) => {
     widget.context.pathChanged.connect(() => {
@@ -155,11 +157,10 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IThemeManager,
     IAnnotationToken,
     IFileBrowserFactory,
-    ICollaborativeDrive,
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken
   ],
-  optional: [ILauncher, ICommandPalette],
+  optional: [ILauncher, ICommandPalette, ICollaborativeDrive],
   autoStart: true,
   activate
 };

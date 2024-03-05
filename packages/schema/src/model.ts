@@ -1,31 +1,23 @@
-import { MapChange, YDocument } from '@jupyter/ydoc';
+import { MapChange } from '@jupyter/ydoc';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
-import { JSONExt, JSONObject, PartialJSONObject } from '@lumino/coreutils';
+import { PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import Ajv from 'ajv';
-import * as Y from 'yjs';
 
-import {
-  IJCadContent,
-  IJCadModel,
-  IJCadObject,
-  IJCadOptions
-} from './_interface/jcad';
-import jcadSchema from './schema/jcad.json';
+import { IJCadContent, IJCadModel } from './_interface/jcad';
+import { JupyterCadDoc } from './doc';
 import {
   Camera,
   IAnnotationModel,
-  IDict,
   IJcadObjectDocChange,
   IJupyterCadClientState,
   IJupyterCadDoc,
-  IJupyterCadDocChange,
   IJupyterCadModel,
-  IPostResult,
   IUserData,
   Pointer
 } from './interfaces';
+import jcadSchema from './schema/jcad.json';
 
 export class JupyterCadModel implements IJupyterCadModel {
   constructor(options: JupyterCadModel.IOptions) {
@@ -34,10 +26,18 @@ export class JupyterCadModel implements IJupyterCadModel {
       this._sharedModel = sharedModel;
     } else {
       this._sharedModel = JupyterCadDoc.create();
+      this._sharedModel.changed.connect(this._onSharedModelChanged);
     }
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
     this.annotationModel = annotationModel;
   }
+
+  private _onSharedModelChanged = (sender: any, changes: any): void => {
+    if (changes && changes?.objectChange?.length) {
+      this._contentChanged.emit(void 0);
+      this.dirty = true;
+    }
+  };
 
   readonly collaborative = true;
 
@@ -149,6 +149,7 @@ export class JupyterCadModel implements IJupyterCadModel {
       this.sharedModel.addObjects(jsonData.objects);
       this.sharedModel.setOptions(jsonData.options ?? {});
     });
+    this.dirty = true;
   }
 
   toJSON(): PartialJSONObject {
@@ -269,378 +270,6 @@ export class JupyterCadModel implements IJupyterCadModel {
   >(this);
 
   static worker: Worker;
-}
-
-export class JupyterCadDoc
-  extends YDocument<IJupyterCadDocChange>
-  implements IJupyterCadDoc
-{
-  constructor() {
-    super();
-
-    this._options = this.ydoc.getMap<Y.Map<any>>('options');
-    this._objects = this.ydoc.getArray<Y.Map<any>>('objects');
-    this._metadata = this.ydoc.getMap<string>('metadata');
-    this._outputs = this.ydoc.getMap<IPostResult>('outputs');
-    this.undoManager.addToScope(this._objects);
-
-    this._objects.observeDeep(this._objectsObserver);
-    this._metadata.observe(this._metaObserver);
-    this._options.observe(this._optionsObserver);
-  }
-
-  dispose(): void {
-    super.dispose();
-  }
-
-  get version(): string {
-    return '0.1.0';
-  }
-
-  get objects(): Array<IJCadObject> {
-    const objs = this._objects.map(
-      obj => JSONExt.deepCopy(obj.toJSON()) as IJCadObject
-    );
-    return objs;
-  }
-
-  get options(): JSONObject {
-    return JSONExt.deepCopy(this._options.toJSON());
-  }
-
-  get metadata(): JSONObject {
-    return JSONExt.deepCopy(this._metadata.toJSON());
-  }
-
-  get outputs(): JSONObject {
-    return JSONExt.deepCopy(this._outputs.toJSON());
-  }
-
-  get objectsChanged(): ISignal<IJupyterCadDoc, IJcadObjectDocChange> {
-    return this._objectsChanged;
-  }
-
-  get optionsChanged(): ISignal<IJupyterCadDoc, MapChange> {
-    return this._optionsChanged;
-  }
-
-  get metadataChanged(): ISignal<IJupyterCadDoc, MapChange> {
-    return this._metadataChanged;
-  }
-
-  objectExists(name: string): boolean {
-    return Boolean(this._getObjectAsYMapByName(name));
-  }
-
-  getObjectByName(name: string): IJCadObject | undefined {
-    const obj = this._getObjectAsYMapByName(name);
-    if (obj) {
-      return JSONExt.deepCopy(obj.toJSON()) as IJCadObject;
-    }
-    return undefined;
-  }
-
-  removeObjectByName(name: string): void {
-    let index = 0;
-    for (const obj of this._objects) {
-      if (obj.get('name') === name) {
-        break;
-      }
-      index++;
-    }
-
-    if (this._objects.length > index) {
-      this.transact(() => {
-        this._objects.delete(index);
-        const guidata = this.getOption('guidata');
-        if (guidata) {
-          delete guidata[name];
-          this.setOption('guidata', guidata);
-        }
-        this.removeOutput(name);
-      });
-    }
-  }
-
-  addObject(value: IJCadObject): void {
-    this.addObjects([value]);
-  }
-
-  addObjects(value: Array<IJCadObject>): void {
-    this.transact(() => {
-      value.map(obj => {
-        if (!this.objectExists(obj.name)) {
-          this._objects.push([new Y.Map(Object.entries(obj))]);
-        } else {
-          console.error('There is already an object with the name:', obj.name);
-        }
-      });
-    });
-  }
-
-  updateObjectByName(name: string, key: string, value: any): void {
-    const obj = this._getObjectAsYMapByName(name);
-    if (!obj) {
-      return;
-    }
-    this.transact(() => obj.set(key, value));
-  }
-
-  getOption(key: keyof IJCadOptions): IDict | undefined {
-    const content = this._options.get(key);
-    if (!content) {
-      return;
-    }
-    return JSONExt.deepCopy(content) as IDict;
-  }
-
-  setOption(key: keyof IJCadOptions, value: IDict): void {
-    this.transact(() => void this._options.set(key, value));
-  }
-
-  setOptions(options: IJCadOptions): void {
-    this.transact(() => {
-      for (const [key, value] of Object.entries(options)) {
-        this._options.set(key, value);
-      }
-    });
-  }
-
-  getMetadata(key: string): string | undefined {
-    return this._metadata.get(key);
-  }
-
-  setMetadata(key: string, value: string): void {
-    this.transact(() => void this._metadata.set(key, value));
-  }
-
-  removeMetadata(key: string): void {
-    if (this._metadata.has(key)) {
-      this._metadata.delete(key);
-    }
-  }
-
-  getOutput(key: string): IPostResult | undefined {
-    return this._outputs.get(key);
-  }
-
-  setOutput(key: string, value: IPostResult): void {
-    this.transact(() => void this._outputs.set(key, value));
-  }
-
-  removeOutput(key: string): void {
-    if (this._outputs.has(key)) {
-      this._outputs.delete(key);
-    }
-  }
-
-  setShapeMeta(name: string, meta?: IDict): void {
-    const obj = this._getObjectAsYMapByName(name);
-    if (meta && obj) {
-      this.transact(() => void obj.set('shapeMetadata', meta));
-    }
-  }
-
-  static create(): IJupyterCadDoc {
-    return new JupyterCadDoc();
-  }
-
-  editable = true;
-  exportable = false;
-
-  private _getObjectAsYMapByName(name: string): Y.Map<any> | undefined {
-    for (const obj of this._objects) {
-      if (obj.get('name') === name) {
-        return obj;
-      }
-    }
-    return undefined;
-  }
-
-  private _objectsObserver = (events: Y.YEvent<any>[]): void => {
-    const changes: Array<{
-      name: string;
-      key: keyof IJCadObject;
-      newValue: IJCadObject;
-    }> = [];
-    let needEmit = false;
-    events.forEach(event => {
-      const name = event.target.get('name');
-
-      if (name) {
-        event.keys.forEach((change, key) => {
-          if (!needEmit && key !== 'shapeMetadata') {
-            needEmit = true;
-          }
-          changes.push({
-            name,
-            key: key as any,
-            newValue: JSONExt.deepCopy(event.target.toJSON())
-          });
-        });
-      }
-    });
-    needEmit = changes.length === 0 ? true : needEmit;
-    if (needEmit) {
-      this._objectsChanged.emit({ objectChange: changes });
-    }
-    this._changed.emit({ objectChange: changes });
-  };
-
-  private _metaObserver = (event: Y.YMapEvent<string>): void => {
-    this._metadataChanged.emit(event.keys);
-  };
-
-  private _optionsObserver = (event: Y.YMapEvent<Y.Map<string>>): void => {
-    this._optionsChanged.emit(event.keys);
-  };
-
-  private _objects: Y.Array<Y.Map<any>>;
-  private _options: Y.Map<any>;
-  private _metadata: Y.Map<string>;
-  private _outputs: Y.Map<IPostResult>;
-  private _metadataChanged = new Signal<IJupyterCadDoc, MapChange>(this);
-  private _optionsChanged = new Signal<IJupyterCadDoc, MapChange>(this);
-  private _objectsChanged = new Signal<IJupyterCadDoc, IJcadObjectDocChange>(
-    this
-  );
-}
-
-export class JupyterCadStepDoc extends JupyterCadDoc {
-  constructor() {
-    super();
-
-    this._source = this.ydoc.getText('source');
-
-    this._source.observeDeep(this._sourceObserver);
-  }
-
-  get version(): string {
-    return '0.1.0';
-  }
-
-  get objectsChanged(): ISignal<IJupyterCadDoc, IJcadObjectDocChange> {
-    return this._objectChanged;
-  }
-
-  get objects(): Array<IJCadObject> {
-    const source = this._source.toJSON();
-
-    if (!source) {
-      return [];
-    }
-
-    return [
-      {
-        name: 'Step File', // TODO get file name?
-        visible: true,
-        shape: 'Part::Any',
-        parameters: {
-          Content: this._source.toJSON(),
-          Type: 'STEP'
-        }
-      }
-    ];
-  }
-
-  static create(): JupyterCadStepDoc {
-    return new JupyterCadStepDoc();
-  }
-
-  editable = false;
-  exportable = true;
-
-  private _sourceObserver = (events: Y.YEvent<any>[]): void => {
-    const changes: Array<{
-      name: string;
-      key: keyof IJCadObject;
-      newValue: IJCadObject;
-    }> = [];
-    events.forEach(event => {
-      event.keys.forEach((change, key) => {
-        changes.push({
-          name: 'Step File',
-          key: key as any,
-          newValue: JSONExt.deepCopy(event.target.toJSON())
-        });
-      });
-    });
-    this._objectChanged.emit({ objectChange: changes });
-    this._changed.emit({ objectChange: changes });
-  };
-
-  private _source: Y.Text;
-  private _objectChanged = new Signal<IJupyterCadDoc, IJcadObjectDocChange>(
-    this
-  );
-}
-
-export class JupyterCadStlDoc extends JupyterCadDoc {
-  constructor() {
-    super();
-
-    this._source = this.ydoc.getText('source');
-
-    this._source.observeDeep(this._sourceObserver);
-  }
-
-  get version(): string {
-    return '0.1.0';
-  }
-
-  get objectsChanged(): ISignal<IJupyterCadDoc, IJcadObjectDocChange> {
-    return this._objectChanged;
-  }
-
-  get objects(): Array<IJCadObject> {
-    const source = this._source.toJSON();
-
-    if (!source) {
-      return [];
-    }
-
-    return [
-      {
-        name: 'Stl File', // TODO get file name?
-        visible: true,
-        shape: 'Part::Any',
-        parameters: {
-          Content: this._source.toJSON(),
-          Type: 'STL'
-        }
-      }
-    ];
-  }
-
-  static create(): JupyterCadStlDoc {
-    return new JupyterCadStlDoc();
-  }
-
-  editable = false;
-
-  private _sourceObserver = (events: Y.YEvent<any>[]): void => {
-    const changes: Array<{
-      name: string;
-      key: keyof IJCadObject;
-      newValue: IJCadObject;
-    }> = [];
-    events.forEach(event => {
-      event.keys.forEach((change, key) => {
-        changes.push({
-          name: 'Stl File',
-          key: key as any,
-          newValue: JSONExt.deepCopy(event.target.toJSON())
-        });
-      });
-    });
-    this._objectChanged.emit({ objectChange: changes });
-    this._changed.emit({ objectChange: changes });
-  };
-
-  private _source: Y.Text;
-  private _objectChanged = new Signal<IJupyterCadDoc, IJcadObjectDocChange>(
-    this
-  );
 }
 
 export namespace JupyterCadModel {

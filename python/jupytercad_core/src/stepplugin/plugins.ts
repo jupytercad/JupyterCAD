@@ -7,7 +7,6 @@ import {
   IJCadWorkerRegistryToken,
   IJupyterCadDocTracker,
   IJupyterCadWidget,
-  JupyterCadStepDoc,
   IJCadExternalCommandRegistry,
   IJCadExternalCommandRegistryToken
 } from '@jupytercad/schema';
@@ -19,6 +18,7 @@ import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
 import { JupyterCadStepModelFactory } from './modelfactory';
 import { JupyterCadWidgetFactory } from '../factory';
+import { JupyterCadStepDoc } from './model';
 
 const FACTORY = 'JupyterCAD STEP Viewer';
 
@@ -26,9 +26,9 @@ const activate = (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
-  drive: ICollaborativeDrive,
   workerRegistry: IJCadWorkerRegistry,
-  externalCommandRegistry: IJCadExternalCommandRegistry
+  externalCommandRegistry: IJCadExternalCommandRegistry,
+  drive: ICollaborativeDrive | null
 ): void => {
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
@@ -59,10 +59,12 @@ const activate = (
   const stepSharedModelFactory: SharedDocumentFactory = () => {
     return new JupyterCadStepDoc();
   };
-  drive.sharedModelFactory.registerDocumentFactory(
-    'step',
-    stepSharedModelFactory
-  );
+  if (drive) {
+    drive.sharedModelFactory.registerDocumentFactory(
+      'step',
+      stepSharedModelFactory
+    );
+  }
 
   widgetFactory.widgetCreated.connect((sender, widget) => {
     widget.context.pathChanged.connect(() => {
@@ -82,10 +84,10 @@ const stepPlugin: JupyterFrontEndPlugin<void> = {
   requires: [
     IJupyterCadDocTracker,
     IThemeManager,
-    ICollaborativeDrive,
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken
   ],
+  optional: [ICollaborativeDrive],
   autoStart: true,
   activate
 };
