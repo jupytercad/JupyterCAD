@@ -40,6 +40,29 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 2.0.0a2
+
+([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v2.0.0a1...5151f6d7bbb1a89ecf197c1587a4e4ce2c54c091))
+
+### Enhancements made
+
+- Update JupyterLite config [#332](https://github.com/jupytercad/jupytercad/pull/332) ([@trungleduc](https://github.com/trungleduc))
+- Support JupyterLite [#331](https://github.com/jupytercad/jupytercad/pull/331) ([@trungleduc](https://github.com/trungleduc))
+- Update occ API [#330](https://github.com/jupytercad/jupytercad/pull/330) ([@trungleduc](https://github.com/trungleduc))
+- Support for opening STL files [#246](https://github.com/jupytercad/jupytercad/pull/246) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Remove y-py [#329](https://github.com/jupytercad/jupytercad/pull/329) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2024-02-27&to=2024-03-06&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2024-02-27..2024-03-06&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2024-02-27..2024-03-06&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2024-02-27..2024-03-06&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.0.0a1
 
 ([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v2.0.0a0...349e04f56a58bc2ec6263180bd287f063d4019e5))
@@ -57,8 +80,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2024-02-08&to=2024-02-27&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2024-02-08..2024-02-27&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2024-02-08..2024-02-27&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Apre-commit-ci+updated%3A2024-02-08..2024-02-27&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2024-02-08..2024-02-27&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.0.0a0
 
