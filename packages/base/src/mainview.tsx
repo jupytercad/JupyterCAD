@@ -34,7 +34,7 @@ import { v4 as uuid } from 'uuid';
 
 import { FloatingAnnotation } from './annotation/view';
 import { getCSSVariableColor, throttle } from './tools';
-import { AxeHelper, CameraSettings, ExplodedView } from './types';
+import { AxeHelper, CameraSettings, ExplodedView, ClipSettings } from './types';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -1085,6 +1085,14 @@ export class MainView extends React.Component<IProps, IStates> {
 
         this._updateCamera();
       }
+    }
+
+    if (change.key === 'clipView') {
+      const clipSettings = change.newValue as ClipSettings | undefined;
+
+      console.log(clipSettings);
+
+      // if (change.type)
     }
   }
 

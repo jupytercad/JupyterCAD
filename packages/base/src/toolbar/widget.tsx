@@ -170,6 +170,14 @@ export class ToolbarWidget extends Toolbar {
           commands: options.commands
         })
       );
+      this.addItem(
+        'Clip View',
+        new CommandToolbarButton({
+          id: CommandIDs.updateClipView,
+          label: '',
+          commands: options.commands
+        })
+      );
       this.addItem('separator5', new Separator());
       (options.externalCommands ?? []).forEach(cmd => {
         this.addItem(

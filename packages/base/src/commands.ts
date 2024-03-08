@@ -407,6 +407,34 @@ const CAMERA_FORM = {
   }
 };
 
+const CLIP_VIEW_FORM = {
+  title: 'Clip View Settings',
+  schema: {
+    type: 'object',
+    required: ['Enabled'],
+    additionalProperties: false,
+    properties: {
+      Enabled: {
+        type: 'boolean',
+        description: 'Whether the clip view is enabled or not'
+      }
+    }
+  },
+  default: (panel: JupyterCadPanel) => {
+    return {
+      Enabled: panel.clipView?.enabled ?? false
+    };
+  },
+  syncData: (panel: JupyterCadPanel) => {
+    return (props: IDict) => {
+      const { Enabled } = props;
+      panel.clipView = {
+        enabled: Enabled
+      };
+    };
+  }
+};
+
 const EXPORT_FORM = {
   title: 'Export to .jcad',
   schema: {
@@ -686,6 +714,29 @@ export function addCommands(
     }
   });
 
+  commands.addCommand(CommandIDs.updateClipView, {
+    label: trans.__('Clip View'),
+    isEnabled: () => Boolean(tracker.currentWidget),
+    iconClass: 'fa fa-paperclip',
+    execute: async () => {
+      const current = tracker.currentWidget;
+
+      if (!current) {
+        return;
+      }
+
+      const dialog = new FormDialog({
+        context: current.context,
+        title: CLIP_VIEW_FORM.title,
+        schema: CLIP_VIEW_FORM.schema,
+        sourceData: CLIP_VIEW_FORM.default(current.content),
+        syncData: CLIP_VIEW_FORM.syncData(current.content),
+        cancelButton: true
+      });
+      await dialog.launch();
+    }
+  });
+
   commands.addCommand(CommandIDs.exportJcad, {
     label: trans.__('Export to .jcad'),
     isEnabled: () => {
@@ -737,6 +788,7 @@ export namespace CommandIDs {
   export const updateAxes = 'jupytercad:updateAxes';
   export const updateExplodedView = 'jupytercad:updateExplodedView';
   export const updateCameraSettings = 'jupytercad:updateCameraSettings';
+  export const updateClipView = 'jupytercad:updateClipView';
 
   export const exportJcad = 'jupytercad:exportJcad';
 }

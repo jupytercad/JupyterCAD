@@ -28,6 +28,13 @@ export type CameraSettings = {
   type: 'Perspective' | 'Orthographic';
 };
 
+/**
+ * The state of the clip view
+ */
+export type ClipSettings = {
+  enabled: boolean;
+};
+
 export interface IControlPanelModel {
   disconnect(f: any): void;
   documentChanged: ISignal<IJupyterCadTracker, IJupyterCadWidget | null>;
