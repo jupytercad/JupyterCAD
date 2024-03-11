@@ -286,6 +286,13 @@ export class MainView extends React.Component<IProps, IStates> {
         this._contextMenu.open(e);
       });
 
+      document.addEventListener('keydown', e => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this._onKeyDown.bind(this)(e);
+      });
+
       const controls = new OrbitControls(
         this._camera,
         this._renderer.domElement
@@ -618,6 +625,21 @@ export class MainView extends React.Component<IProps, IStates> {
       this._model.syncSelectedObject(names, this.state.id);
     }
   }
+
+  private _onKeyDown(event: KeyboardEvent) {
+    if (this._clipSettings.enabled) {
+      switch (event.key) {
+        case 'r':
+          if (this._transformControls.mode === 'rotate') {
+            this._transformControls.setMode('translate');
+          } else {
+            this._transformControls.setMode('rotate');
+          }
+          break;
+      }
+    }
+  }
+
   private _saveMeta = (payload: IDisplayShape['payload']['result']) => {
     if (!this._model) {
       return;
@@ -626,6 +648,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._model.sharedModel.setShapeMeta(objName, data.meta);
     });
   };
+
   private _shapeToMesh = (payload: IDisplayShape['payload']['result']) => {
     if (this._meshGroup !== null) {
       this._scene.remove(this._meshGroup);
