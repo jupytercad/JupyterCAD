@@ -29,6 +29,7 @@ import {
   disposeBoundsTree
 } from 'three-mesh-bvh';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { v4 as uuid } from 'uuid';
 
@@ -320,6 +321,51 @@ export class MainView extends React.Component<IProps, IStates> {
           );
         }, 100)
       );
+
+      // Setting up the transform controls
+      this._transformControls = new TransformControls(
+        this._camera,
+        this._renderer.domElement
+      );
+
+      // Dumb geometry for the controls when using it for the clip plane
+      // (the clip plane being just a mathematical plane that is not visible in the screen)
+      const plane = new THREE.Mesh(
+        new THREE.PlaneGeometry(1, 1),
+        new THREE.MeshBasicMaterial({ color: 'purple', side: THREE.DoubleSide })
+      );
+      plane.visible = false;
+
+      // Setting the fake plane position
+      const target = new THREE.Vector3(0, 0, 1);
+      this._clippingPlane.coplanarPoint(target);
+      plane.geometry.translate(target.x, target.y, target.z);
+      plane.quaternion.setFromUnitVectors(
+        new THREE.Vector3(0, 0, 1),
+        this._clippingPlane.normal
+      );
+
+      this._scene.add(plane);
+
+      // Disable the orbit control whenever we do transformation
+      this._transformControls.addEventListener('dragging-changed', event => {
+        this._controls.enabled = !event.value;
+      });
+
+      // Update the clipping plane whenever the transform UI move
+      this._transformControls.addEventListener('change', () => {
+        const normal = new THREE.Vector3(0, 0, 1);
+
+        this._clippingPlane.setFromNormalAndCoplanarPoint(
+          normal.applyEuler(plane.rotation),
+          plane.position
+        );
+      });
+      this._transformControls.attach(plane);
+      this._scene.add(this._transformControls);
+
+      this._transformControls.enabled = false;
+      this._transformControls.visible = false;
     }
   };
 
@@ -647,6 +693,7 @@ export class MainView extends React.Component<IProps, IStates> {
         side: THREE.DoubleSide,
         wireframe: false,
         flatShading: false,
+        clippingPlanes: this._clippingPlanes,
         shininess: 0
       });
 
@@ -680,7 +727,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
       const edgeMaterial = new THREE.LineBasicMaterial({
         linewidth: 5,
-        color: DEFAULT_EDGE_COLOR
+        color: DEFAULT_EDGE_COLOR,
+        clippingPlanes: this._clippingPlanes
       });
       edgeList.forEach(edge => {
         const edgeVertices = new THREE.Float32BufferAttribute(
@@ -1090,9 +1138,11 @@ export class MainView extends React.Component<IProps, IStates> {
     if (change.key === 'clipView') {
       const clipSettings = change.newValue as ClipSettings | undefined;
 
-      console.log(clipSettings);
+      if (change.type !== 'remove' && clipSettings) {
+        this._clipSettings = clipSettings;
 
-      // if (change.type)
+        this._updateClipping();
+      }
     }
   }
 
@@ -1164,6 +1214,18 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._camera.position.copy(position);
     this._camera.up.copy(up);
+  }
+
+  private _updateClipping() {
+    if (this._clipSettings.enabled) {
+      this._renderer.localClippingEnabled = true;
+      this._transformControls.enabled = true;
+      this._transformControls.visible = true;
+    } else {
+      this._renderer.localClippingEnabled = false;
+      this._transformControls.enabled = false;
+      this._transformControls.visible = false;
+    }
   }
 
   private _computeExplodedState(mesh: BasicMesh) {
@@ -1317,6 +1379,9 @@ export class MainView extends React.Component<IProps, IStates> {
   private _explodedView: ExplodedView = { enabled: false, factor: 0 };
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
   private _cameraSettings: CameraSettings = { type: 'Perspective' };
+  private _clipSettings: ClipSettings = { enabled: false };
+  private _clippingPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0);
+  private _clippingPlanes = [this._clippingPlane];
 
   private _scene: THREE.Scene; // Threejs scene
   private _camera: THREE.PerspectiveCamera | THREE.OrthographicCamera; // Threejs camera
@@ -1327,7 +1392,8 @@ export class MainView extends React.Component<IProps, IStates> {
   private _geometry: THREE.BufferGeometry; // Threejs BufferGeometry
   private _refLength: number | null = null; // Length of bounding box of current object
   private _sceneAxe: THREE.Object3D | null; // Array of  X, Y and Z axe
-  private _controls: OrbitControls; // Threejs control
+  private _controls: OrbitControls; // Mouse controls
+  private _transformControls: TransformControls; // Mesh position/rotation controls
   private _pointer3D: IPointer | null = null;
   private _collaboratorPointers: IDict<IPointer>;
   private _pointerGeometry: THREE.SphereGeometry;
