@@ -387,7 +387,20 @@ export class MainView extends React.Component<IProps, IStates> {
     if (intersects.length > 0) {
       // Find the first intersection with a visible object
       for (const intersect of intersects) {
+        // Object is hidden
         if (!intersect.object.visible || !intersect.object.parent?.visible) {
+          continue;
+        }
+
+        // Object is clipped
+        const planePoint = new THREE.Vector3();
+        this._clippingPlane.coplanarPoint(planePoint);
+        planePoint.sub(intersect.point);
+
+        if (
+          this._clipSettings.enabled &&
+          planePoint.dot(this._clippingPlane.normal) > 0
+        ) {
           continue;
         }
 
@@ -591,24 +604,7 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       // If clipping is enabled and picked position is hidden
-      // TODO This approach has its limitations. Users cannot select through a hidden part of the mesh.
-      // Doing the picking using color picking (going through the GPU pipeline instead of doing it on the CPU)
-      // can fix it
-      const planePoint = new THREE.Vector3();
-      this._clippingPlane.coplanarPoint(planePoint);
-      planePoint.sub(picked.position);
-
-      if (
-        this._clipSettings.enabled &&
-        planePoint.dot(this._clippingPlane.normal) > 0
-      ) {
-        if (this._pointer3D) {
-          this._pointer3D.mesh.visible = false;
-        }
-        this._syncPointer(undefined, undefined);
-      } else {
-        this._syncPointer(picked.position, picked.mesh.name);
-      }
+      this._syncPointer(picked.position, picked.mesh.name);
     } else {
       if (this._pointer3D) {
         this._pointer3D.mesh.visible = false;
