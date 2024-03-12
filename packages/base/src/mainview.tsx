@@ -334,22 +334,31 @@ export class MainView extends React.Component<IProps, IStates> {
 
       // Dumb geometry for the controls when using it for the clip plane
       // (the clip plane being just a mathematical plane that is not visible in the screen)
-      const plane = new THREE.Mesh(
+      this._clippingPlaneMeshControl = new THREE.Mesh(
         new THREE.PlaneGeometry(1, 1),
-        new THREE.MeshBasicMaterial({ color: 'purple', side: THREE.DoubleSide })
+        new THREE.MeshBasicMaterial({
+          color: 'black',
+          opacity: 0.2,
+          transparent: true,
+          side: THREE.DoubleSide
+        })
       );
-      plane.visible = false;
+      this._clippingPlaneMeshControl.visible = false;
 
       // Setting the fake plane position
       const target = new THREE.Vector3(0, 0, 1);
       this._clippingPlane.coplanarPoint(target);
-      plane.geometry.translate(target.x, target.y, target.z);
-      plane.quaternion.setFromUnitVectors(
+      this._clippingPlaneMeshControl.geometry.translate(
+        target.x,
+        target.y,
+        target.z
+      );
+      this._clippingPlaneMeshControl.quaternion.setFromUnitVectors(
         new THREE.Vector3(0, 0, 1),
         this._clippingPlane.normal
       );
 
-      this._scene.add(plane);
+      this._scene.add(this._clippingPlaneMeshControl);
 
       // Disable the orbit control whenever we do transformation
       this._transformControls.addEventListener('dragging-changed', event => {
@@ -361,11 +370,11 @@ export class MainView extends React.Component<IProps, IStates> {
         const normal = new THREE.Vector3(0, 0, 1);
 
         this._clippingPlane.setFromNormalAndCoplanarPoint(
-          normal.applyEuler(plane.rotation),
-          plane.position
+          normal.applyEuler(this._clippingPlaneMeshControl.rotation),
+          this._clippingPlaneMeshControl.position
         );
       });
-      this._transformControls.attach(plane);
+      this._transformControls.attach(this._clippingPlaneMeshControl);
       this._scene.add(this._transformControls);
 
       this._transformControls.enabled = false;
@@ -878,6 +887,12 @@ export class MainView extends React.Component<IProps, IStates> {
           10 * this._refLength
         );
         this._camera.far = 200 * this._refLength;
+
+        // Update clip plane size
+        this._clippingPlaneMeshControl.geometry = new THREE.PlaneGeometry(
+          this._refLength * 10,
+          this._refLength * 10
+        );
       }
       if (!this._meshGroup.children.length) {
         this._refLength = null;
@@ -1321,10 +1336,12 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.localClippingEnabled = true;
       this._transformControls.enabled = true;
       this._transformControls.visible = true;
+      this._clippingPlaneMeshControl.visible = true;
     } else {
       this._renderer.localClippingEnabled = false;
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
+      this._clippingPlaneMeshControl.visible = false;
     }
   }
 
@@ -1480,8 +1497,9 @@ export class MainView extends React.Component<IProps, IStates> {
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
   private _cameraSettings: CameraSettings = { type: 'Perspective' };
   private _clipSettings: ClipSettings = { enabled: false };
-  private _clippingPlaneMesh: THREE.Mesh | null = null;
-  private _clippingPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0);
+  private _clippingPlaneMeshControl: THREE.Mesh; // Plane mesh using for controlling the clip plane in the UI
+  private _clippingPlaneMesh: THREE.Mesh | null = null; // Plane mesh used for "filling the gaps"
+  private _clippingPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0); // Mathematical object for clipping computation
   private _clippingPlanes = [this._clippingPlane];
 
   private _scene: THREE.Scene; // Threejs scene
