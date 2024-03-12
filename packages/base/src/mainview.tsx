@@ -405,11 +405,11 @@ export class MainView extends React.Component<IProps, IStates> {
     this._requestID = window.requestAnimationFrame(this.startAnimationLoop);
 
     if (this._clipPlane !== null) {
-      this._clippingPlane.coplanarPoint( this._clipPlane.position );
+      this._clippingPlane.coplanarPoint(this._clipPlane.position);
       this._clipPlane.lookAt(
         this._clipPlane.position.x - this._clippingPlane.normal.x,
         this._clipPlane.position.y - this._clippingPlane.normal.y,
-        this._clipPlane.position.z - this._clippingPlane.normal.z,
+        this._clipPlane.position.z - this._clippingPlane.normal.z
       );
     }
 
@@ -834,7 +834,7 @@ export class MainView extends React.Component<IProps, IStates> {
       stencilFail: THREE.ReplaceStencilOp,
       stencilZFail: THREE.ReplaceStencilOp,
       stencilZPass: THREE.ReplaceStencilOp,
-      side: THREE.DoubleSide,
+      side: THREE.DoubleSide
     });
     this._clipPlane = new THREE.Mesh(planeGeom, planeMat);
     this._clipPlane.onAfterRender = function (renderer) {
