@@ -824,7 +824,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._refLength! * 10
     );
     const planeMat = new THREE.MeshStandardMaterial({
-      color: 0xe91e63,
+      color: DEFAULT_EDGE_COLOR,
       metalness: 0.1,
       roughness: 0.75,
 
