@@ -332,8 +332,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this._renderer.domElement
       );
 
-      // Dumb geometry for the controls when using it for the clip plane
-      // (the clip plane being just a mathematical plane that is not visible in the screen)
+      // Create half transparent plane mesh for controls
       this._clippingPlaneMeshControl = new THREE.Mesh(
         new THREE.PlaneGeometry(1, 1),
         new THREE.MeshBasicMaterial({
