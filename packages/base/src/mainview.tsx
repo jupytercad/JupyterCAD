@@ -287,9 +287,6 @@ export class MainView extends React.Component<IProps, IStates> {
       });
 
       document.addEventListener('keydown', e => {
-        e.preventDefault();
-        e.stopPropagation();
-
         this._onKeyDown.bind(this)(e);
       });
 
@@ -406,6 +403,15 @@ export class MainView extends React.Component<IProps, IStates> {
 
   startAnimationLoop = (): void => {
     this._requestID = window.requestAnimationFrame(this.startAnimationLoop);
+
+    if (this._clipPlane !== null) {
+      this._clippingPlane.coplanarPoint( this._clipPlane.position );
+      this._clipPlane.lookAt(
+        this._clipPlane.position.x - this._clippingPlane.normal.x,
+        this._clipPlane.position.y - this._clippingPlane.normal.y,
+        this._clipPlane.position.z - this._clippingPlane.normal.z,
+      );
+    }
 
     this._controls.update();
 
@@ -631,6 +637,9 @@ export class MainView extends React.Component<IProps, IStates> {
     if (this._clipSettings.enabled) {
       switch (event.key) {
         case 'r':
+          event.preventDefault();
+          event.stopPropagation();
+
           if (this._transformControls.mode === 'rotate') {
             this._transformControls.setMode('translate');
           } else {
@@ -808,10 +817,37 @@ export class MainView extends React.Component<IProps, IStates> {
     this._updateRefLength();
     // Set the expoded view if it's enabled
     this._setupExplodedView();
+
+    // Clip plane rendering
+    const planeGeom = new THREE.PlaneGeometry(
+      this._refLength! * 10, // *10 is a bit arbitrary and extreme but that does not impact performance or anything
+      this._refLength! * 10
+    );
+    const planeMat = new THREE.MeshStandardMaterial({
+      color: 0xe91e63,
+      metalness: 0.1,
+      roughness: 0.75,
+
+      stencilWrite: true,
+      stencilRef: 0,
+      stencilFunc: THREE.NotEqualStencilFunc,
+      stencilFail: THREE.ReplaceStencilOp,
+      stencilZFail: THREE.ReplaceStencilOp,
+      stencilZPass: THREE.ReplaceStencilOp,
+      side: THREE.DoubleSide,
+    });
+    this._clipPlane = new THREE.Mesh(planeGeom, planeMat);
+    this._clipPlane.onAfterRender = function (renderer) {
+      renderer.clearStencil();
+    };
+
+    this._scene.add(this._clipPlane);
     this._scene.add(this._meshGroup);
 
     this.setState(old => ({ ...old, loading: false }));
   };
+
+  private _clipPlane: THREE.Mesh | null = null;
 
   private _updateRefLength(force = false): void {
     if (this._meshGroup) {
