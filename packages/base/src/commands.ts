@@ -25,7 +25,8 @@ import {
   requestAPI,
   sphereIcon,
   torusIcon,
-  unionIcon
+  unionIcon,
+  clippingIcon
 } from './tools';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
@@ -715,9 +716,9 @@ export function addCommands(
   });
 
   commands.addCommand(CommandIDs.updateClipView, {
-    label: trans.__('Clip View'),
+    label: trans.__('Clipping'),
     isEnabled: () => Boolean(tracker.currentWidget),
-    iconClass: 'fa fa-paperclip',
+    icon: clippingIcon,
     execute: async () => {
       const current = tracker.currentWidget;
 

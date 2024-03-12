@@ -15,6 +15,7 @@ import minimizeIconStr from '../style/icon/minimize.svg';
 import sphereIconStr from '../style/icon/sphere.svg';
 import torusIconStr from '../style/icon/torus.svg';
 import unionIconStr from '../style/icon/union.svg';
+import clippingIconStr from '../style/icon/clipping.svg';
 
 export const jcLightIcon = new LabIcon({
   name: 'jupytercad:control-light',
@@ -79,6 +80,11 @@ export const axesIcon = new LabIcon({
 export const explodedViewIcon = new LabIcon({
   name: 'jupytercad:explodedView-icon',
   svgstr: jvControlLight
+});
+
+export const clippingIcon = new LabIcon({
+  name: 'jupytercad:clipping-icon',
+  svgstr: clippingIconStr
 });
 
 export const debounce = (
