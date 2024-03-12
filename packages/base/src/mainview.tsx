@@ -823,11 +823,8 @@ export class MainView extends React.Component<IProps, IStates> {
       this._refLength! * 10, // *10 is a bit arbitrary and extreme but that does not impact performance or anything
       this._refLength! * 10
     );
-    const planeMat = new THREE.MeshStandardMaterial({
+    const planeMat = new THREE.MeshPhongMaterial({
       color: DEFAULT_EDGE_COLOR,
-      metalness: 0.1,
-      roughness: 0.75,
-
       stencilWrite: true,
       stencilRef: 0,
       stencilFunc: THREE.NotEqualStencilFunc,
