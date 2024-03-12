@@ -590,7 +590,25 @@ export class MainView extends React.Component<IProps, IStates> {
         );
       }
 
-      this._syncPointer(picked.position, picked.mesh.name);
+      // If clipping is enabled and picked position is hidden
+      // TODO This approach has its limitations. Users cannot select through a hidden part of the mesh.
+      // Doing the picking using color picking (going through the GPU pipeline instead of doing it on the CPU)
+      // can fix it
+      const planePoint = new THREE.Vector3();
+      this._clippingPlane.coplanarPoint(planePoint);
+      planePoint.sub(picked.position);
+
+      if (
+        this._clipSettings.enabled &&
+        planePoint.dot(this._clippingPlane.normal) > 0
+      ) {
+        if (this._pointer3D) {
+          this._pointer3D.mesh.visible = false;
+        }
+        this._syncPointer(undefined, undefined);
+      } else {
+        this._syncPointer(picked.position, picked.mesh.name);
+      }
     } else {
       if (this._pointer3D) {
         this._pointer3D.mesh.visible = false;
@@ -602,7 +620,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _onClick(e: MouseEvent) {
     const selection = this._pick();
     const selectedMeshesNames = new Set(
-      this._selectedMeshes.map(sel => sel.name)
+      this._selectedMeshes.map(sel => sel.parent!.name)
     );
 
     if (selection) {
