@@ -29,12 +29,10 @@ function buildModel(
     let shapeData: IOperatorFuncOutput | undefined = undefined;
     if (shapeFactory[shape]) {
       shapeData = shapeFactory[shape]?.(parameters as IOperatorArg, model);
-    } else if (parameters['Shape'] && parameters['Type']) {
+    } else if (parameters['Shape']) {
       // Creating occ shape from brep file.
-      shapeData = ObjectFile(
-        { content: parameters['Shape'], type: parameters['Type'] },
-        model
-      );
+      const type = parameters['Type'] ?? 'brep';
+      shapeData = ObjectFile({ content: parameters['Shape'], type }, model);
     } else if (shape.startsWith('Post::')) {
       shapeData = shapeFactory['Post::Operator']?.(
         parameters as IOperatorArg,
