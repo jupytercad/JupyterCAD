@@ -417,12 +417,12 @@ export class MainView extends React.Component<IProps, IStates> {
   startAnimationLoop = (): void => {
     this._requestID = window.requestAnimationFrame(this.startAnimationLoop);
 
-    if (this._clipPlane !== null) {
-      this._clippingPlane.coplanarPoint(this._clipPlane.position);
-      this._clipPlane.lookAt(
-        this._clipPlane.position.x - this._clippingPlane.normal.x,
-        this._clipPlane.position.y - this._clippingPlane.normal.y,
-        this._clipPlane.position.z - this._clippingPlane.normal.z
+    if (this._clippingPlaneMesh !== null) {
+      this._clippingPlane.coplanarPoint(this._clippingPlaneMesh.position);
+      this._clippingPlaneMesh.lookAt(
+        this._clippingPlaneMesh.position.x - this._clippingPlane.normal.x,
+        this._clippingPlaneMesh.position.y - this._clippingPlane.normal.y,
+        this._clippingPlaneMesh.position.z - this._clippingPlane.normal.z
       );
     }
 
@@ -847,18 +847,16 @@ export class MainView extends React.Component<IProps, IStates> {
       stencilZPass: THREE.ReplaceStencilOp,
       side: THREE.DoubleSide
     });
-    this._clipPlane = new THREE.Mesh(planeGeom, planeMat);
-    this._clipPlane.onAfterRender = function (renderer) {
+    this._clippingPlaneMesh = new THREE.Mesh(planeGeom, planeMat);
+    this._clippingPlaneMesh.onAfterRender = function (renderer) {
       renderer.clearStencil();
     };
 
-    this._scene.add(this._clipPlane);
+    this._scene.add(this._clippingPlaneMesh);
     this._scene.add(this._meshGroup);
 
     this.setState(old => ({ ...old, loading: false }));
   };
-
-  private _clipPlane: THREE.Mesh | null = null;
 
   private _updateRefLength(force = false): void {
     if (this._meshGroup) {
@@ -1482,6 +1480,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
   private _cameraSettings: CameraSettings = { type: 'Perspective' };
   private _clipSettings: ClipSettings = { enabled: false };
+  private _clippingPlaneMesh: THREE.Mesh | null = null;
   private _clippingPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0);
   private _clippingPlanes = [this._clippingPlane];
 
