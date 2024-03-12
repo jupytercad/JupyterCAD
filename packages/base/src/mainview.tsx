@@ -627,6 +627,7 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   private _onKeyDown(event: KeyboardEvent) {
+    // TODO Make these Lumino commands? Or not?
     if (this._clipSettings.enabled) {
       switch (event.key) {
         case 'r':
@@ -735,17 +736,47 @@ export class MainView extends React.Component<IProps, IStates> {
         geometry.computeBoundsTree();
       }
 
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.name = objName;
-      mesh.visible = visible;
+      const meshGroup = new THREE.Group();
+      meshGroup.name = objName;
+      meshGroup.visible = visible;
+
+      const baseMat = new THREE.MeshBasicMaterial();
+      baseMat.depthWrite = false;
+      baseMat.depthTest = false;
+      baseMat.colorWrite = false;
+      baseMat.stencilWrite = true;
+      baseMat.stencilFunc = THREE.AlwaysStencilFunc;
+
+      // back faces
+      const mat0 = baseMat.clone();
+      mat0.side = THREE.BackSide;
+      mat0.clippingPlanes = this._clippingPlanes;
+      mat0.stencilFail = THREE.IncrementWrapStencilOp;
+      mat0.stencilZFail = THREE.IncrementWrapStencilOp;
+      mat0.stencilZPass = THREE.IncrementWrapStencilOp;
+      const backFaces = new THREE.Mesh(geometry, mat0);
+      meshGroup.add(backFaces);
+
+      // front faces
+      const mat1 = baseMat.clone();
+      mat1.side = THREE.FrontSide;
+      mat1.clippingPlanes = this._clippingPlanes;
+      mat1.stencilFail = THREE.DecrementWrapStencilOp;
+      mat1.stencilZFail = THREE.DecrementWrapStencilOp;
+      mat1.stencilZPass = THREE.DecrementWrapStencilOp;
+      const frontFaces = new THREE.Mesh(geometry, mat1);
+      meshGroup.add(frontFaces);
+
+      const mainMesh = new THREE.Mesh(geometry, material);
+      mainMesh.name = 'main';
 
       if (visible) {
-        this._boundingGroup.expandByObject(mesh);
+        this._boundingGroup.expandByObject(mainMesh);
       }
 
       if (selectedNames.includes(objName)) {
-        this._selectedMeshes.push(mesh);
-        mesh.material.color = SELECTED_MESH_COLOR;
+        this._selectedMeshes.push(mainMesh);
+        mainMesh.material.color = SELECTED_MESH_COLOR;
       }
 
       const edgeMaterial = new THREE.LineBasicMaterial({
@@ -763,12 +794,13 @@ export class MainView extends React.Component<IProps, IStates> {
         const edgesMesh = new THREE.Line(edgeGeometry, edgeMaterial);
         edgesMesh.name = 'edge';
 
-        mesh.add(edgesMesh);
+        mainMesh.add(edgesMesh);
       });
-      if (this._meshGroup) {
-        this._meshGroup.add(mesh);
-      }
+      meshGroup.add(mainMesh);
+
+      this._meshGroup?.add(meshGroup);
     });
+
     if (guidata) {
       this._model.sharedModel?.setOption('guidata', guidata);
     }
@@ -776,8 +808,8 @@ export class MainView extends React.Component<IProps, IStates> {
     this._updateRefLength();
     // Set the expoded view if it's enabled
     this._setupExplodedView();
-
     this._scene.add(this._meshGroup);
+
     this.setState(old => ({ ...old, loading: false }));
   };
 
@@ -914,9 +946,9 @@ export class MainView extends React.Component<IProps, IStates> {
     // Set new selection
     this._selectedMeshes = [];
     for (const name of names) {
-      const selected = this._meshGroup?.getObjectByName(name) as
-        | BasicMesh
-        | undefined;
+      const selected = this._meshGroup
+        ?.getObjectByName(name)
+        ?.getObjectByName('main') as BasicMesh | undefined;
       if (!selected) {
         continue;
       }
@@ -1022,9 +1054,9 @@ export class MainView extends React.Component<IProps, IStates> {
       let collaboratorPointer = this._collaboratorPointers[clientId];
 
       if (pointer) {
-        const parent = this._meshGroup?.getObjectByName(
-          pointer.parent
-        ) as BasicMesh;
+        const parent = this._meshGroup
+          ?.getObjectByName(pointer.parent)
+          ?.getObjectByName('main') as BasicMesh;
 
         if (!collaboratorPointer) {
           const mesh = this._createPointer(clientState.user);
@@ -1090,9 +1122,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
     if (guidata) {
       for (const objName in guidata) {
-        const obj = this._meshGroup?.getObjectByName(objName) as
-          | BasicMesh
-          | undefined;
+        const obj = this._meshGroup
+          ?.getObjectByName(objName)
+          ?.getObjectByName('main') as BasicMesh | undefined;
         if (!obj) {
           continue;
         }
@@ -1330,9 +1362,9 @@ export class MainView extends React.Component<IProps, IStates> {
           if (!this._model.annotationModel) {
             return null;
           }
-          const parent = this._meshGroup?.getObjectByName(
-            annotation.parent
-          ) as BasicMesh;
+          const parent = this._meshGroup
+            ?.getObjectByName(annotation.parent)
+            ?.getObjectByName('main') as BasicMesh;
           const position = new THREE.Vector3(
             annotation.position[0],
             annotation.position[1],
