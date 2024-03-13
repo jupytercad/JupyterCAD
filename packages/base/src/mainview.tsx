@@ -1268,11 +1268,13 @@ export class MainView extends React.Component<IProps, IStates> {
       this._explodedViewLinesHelperGroup?.removeFromParent();
       this._explodedViewLinesHelperGroup = new THREE.Group();
 
-      for (const mesh of this._meshGroup?.children as BasicMesh[]) {
-        const explodedState = this._computeExplodedState(mesh);
+      for (const group of this._meshGroup?.children as THREE.Group[]) {
+        const explodedState = this._computeExplodedState(
+          group.getObjectByName('main') as BasicMesh
+        );
 
-        mesh.position.set(0, 0, 0);
-        mesh.translateOnAxis(explodedState.vector, explodedState.distance);
+        group.position.set(0, 0, 0);
+        group.translateOnAxis(explodedState.vector, explodedState.distance);
 
         // Draw lines
         const material = new THREE.LineBasicMaterial({
@@ -1284,8 +1286,8 @@ export class MainView extends React.Component<IProps, IStates> {
           explodedState.newGeometryCenter
         ]);
         const line = new THREE.Line(geometry, material);
-        line.name = mesh.name;
-        line.visible = mesh.visible;
+        line.name = group.name;
+        line.visible = group.visible;
 
         this._explodedViewLinesHelperGroup.add(line);
       }
