@@ -56,7 +56,10 @@ test.describe('UI Test', () => {
         await page.notebook.openByPath(fullPath);
         await page.notebook.activate(fullPath);
         await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
-
+        await page.waitForTimeout(1000);
+        if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
+          await page.getByRole('button', { name: 'Ok' }).click();
+        }
         await page
           .getByRole('tablist', { name: 'main sidebar' })
           .getByRole('tab', { name: 'JupyterCad Control Panel' })
@@ -108,6 +111,12 @@ test.describe('UI Test', () => {
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
+
+      await page.waitForTimeout(1000);
+      if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
+        await page.getByRole('button', { name: 'Ok' }).click();
+      }
+
       await page.getByTitle('New Box').click();
       page.locator('input[id^="id-jp-schemaform"][label="Name"]').fill('Foo');
       await page
