@@ -422,7 +422,7 @@ const CLIP_VIEW_FORM = {
       ShowClipPlane: {
         type: 'boolean',
         description: 'Whether the clip plane should be rendered or not'
-      },
+      }
     }
   },
   default: (panel: JupyterCadPanel) => {
