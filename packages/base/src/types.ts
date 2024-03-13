@@ -33,6 +33,7 @@ export type CameraSettings = {
  */
 export type ClipSettings = {
   enabled: boolean;
+  showClipPlane: boolean;
 };
 
 export interface IControlPanelModel {

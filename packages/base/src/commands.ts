@@ -418,19 +418,25 @@ const CLIP_VIEW_FORM = {
       Enabled: {
         type: 'boolean',
         description: 'Whether the clip view is enabled or not'
-      }
+      },
+      ShowClipPlane: {
+        type: 'boolean',
+        description: 'Whether the clip plane should be rendered or not'
+      },
     }
   },
   default: (panel: JupyterCadPanel) => {
     return {
-      Enabled: panel.clipView?.enabled ?? false
+      Enabled: panel.clipView?.enabled ?? false,
+      ShowClipPlane: panel.clipView?.showClipPlane ?? true
     };
   },
   syncData: (panel: JupyterCadPanel) => {
     return (props: IDict) => {
-      const { Enabled } = props;
+      const { Enabled, ShowClipPlane } = props;
       panel.clipView = {
-        enabled: Enabled
+        enabled: Enabled,
+        showClipPlane: ShowClipPlane
       };
     };
   }

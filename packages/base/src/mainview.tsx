@@ -1337,7 +1337,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.localClippingEnabled = true;
       this._transformControls.enabled = true;
       this._transformControls.visible = true;
-      this._clippingPlaneMeshControl.visible = true;
+      this._clippingPlaneMeshControl.visible = this._clipSettings.showClipPlane;
     } else {
       this._renderer.localClippingEnabled = false;
       this._transformControls.enabled = false;
@@ -1497,7 +1497,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _explodedView: ExplodedView = { enabled: false, factor: 0 };
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
   private _cameraSettings: CameraSettings = { type: 'Perspective' };
-  private _clipSettings: ClipSettings = { enabled: false };
+  private _clipSettings: ClipSettings = { enabled: false, showClipPlane: true };
   private _clippingPlaneMeshControl: THREE.Mesh; // Plane mesh using for controlling the clip plane in the UI
   private _clippingPlaneMesh: THREE.Mesh | null = null; // Plane mesh used for "filling the gaps"
   private _clippingPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0); // Mathematical object for clipping computation
