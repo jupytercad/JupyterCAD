@@ -19,6 +19,10 @@ const testCellOutputs = async (
     await page.notebook.openByPath(`${tmpPath}/${notebook}`);
     await page.notebook.activate(notebook);
 
+    await page.waitForTimeout(1000);
+    if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
+      await page.getByRole('button', { name: 'Ok' }).click();
+    }
     let numCellImages = 0;
 
     const getCaptureImageName = (

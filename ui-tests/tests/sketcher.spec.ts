@@ -34,6 +34,10 @@ test.describe('Sketcher test', () => {
     await page.notebook.activate(fullPath);
     await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
 
+    await page.waitForTimeout(1000);
+    if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
+      await page.getByRole('button', { name: 'Ok' }).click();
+    }
     // Close the property panel
     await page
       .getByRole('tablist', { name: 'alternate sidebar' })
@@ -59,6 +63,10 @@ test.describe('Sketcher test', () => {
     await page.notebook.activate(fullPath);
     await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
 
+    await page.waitForTimeout(1000);
+    if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
+      await page.getByRole('button', { name: 'Ok' }).click();
+    }
     // Close the property panel
     await page
       .getByRole('tablist', { name: 'alternate sidebar' })
