@@ -7,7 +7,7 @@ import { ISignal, Signal } from '@lumino/signaling';
 import * as React from 'react';
 
 import { MainView } from './mainview';
-import { AxeHelper, CameraSettings, ExplodedView } from './types';
+import { AxeHelper, CameraSettings, ExplodedView, ClipSettings } from './types';
 import { IJCadWorkerRegistry, IJupyterCadWidget } from '@jupytercad/schema';
 
 export class JupyterCadWidget
@@ -90,6 +90,14 @@ export class JupyterCadPanel extends ReactWidget {
 
   set cameraSettings(value: CameraSettings | undefined) {
     this._view.set('cameraSettings', value || null);
+  }
+
+  get clipView(): ClipSettings | undefined {
+    return this._view.get('clipView') as ClipSettings | undefined;
+  }
+
+  set clipView(value: ClipSettings | undefined) {
+    this._view.set('clipView', value || null);
   }
 
   deleteAxes(): void {

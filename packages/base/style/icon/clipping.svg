@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="24px"
+   viewBox="0 0 24 24"
+   width="24px"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="clipping.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     id="namedview6"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="78.541667"
+     inkscape:cx="12"
+     inkscape:cy="12"
+     inkscape:window-width="3840"
+     inkscape:window-height="2091"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg6" />
+  <g
+     class="jp-icon3"
+     fill="#616161"
+     id="g6">
+    <g
+       id="g5">
+      <path
+         d="M2,6c0.55,0,1-0.45,1-1V4c0-0.55,0.45-1,1-1h1c0.55,0,1-0.45,1-1S5.55,1,5,1H4C2.34,1,1,2.34,1,4v1C1,5.55,1.45,6,2,6z"
+         id="path1" />
+      <path
+         d="M5,21H4c-0.55,0-1-0.45-1-1v-1c0-0.55-0.45-1-1-1c-0.55,0-1,0.45-1,1v1c0,1.66,1.34,3,3,3h1c0.55,0,1-0.45,1-1 S5.55,21,5,21z"
+         id="path2" />
+      <path
+         d="M20,1h-1c-0.55,0-1,0.45-1,1s0.45,1,1,1h1c0.55,0,1,0.45,1,1v1c0,0.55,0.45,1,1,1c0.55,0,1-0.45,1-1V4 C23,2.34,21.66,1,20,1z"
+         id="path3" />
+      <path
+         d="M22,18c-0.55,0-1,0.45-1,1v1c0,0.55-0.45,1-1,1h-1c-0.55,0-1,0.45-1,1s0.45,1,1,1h1c1.66,0,3-1.34,3-3v-1 C23,18.45,22.55,18,22,18z"
+         id="path4" />
+      <path
+         d="M 19,14.87 V 9.13 C 19,8.41 18.62,7.75 18,7.4 L 13,4.52 C 12.69,4.34 12.35,4.25 12,4.25 c -0.35,0 -0.69,0.09 -1,0.27 L 6,7.39 C 5.38,7.75 5,8.41 5,9.13 v 5.74 c 0,0.72 0.38,1.38 1,1.73 l 5,2.88 c 0.31,0.18 0.65,0.27 1,0.27 0.35,0 0.69,-0.09 1,-0.27 l 5,-2.88 c 0.62,-0.35 1,-1.01 1,-1.73 z m -8,2.3 -4,-2.3 v -4.63 l 4,2.33 z M 12,10.84 8.04,8.53 12,6.25 15.96,8.53 Z"
+         id="path5"
+         sodipodi:nodetypes="ssccsccssccsccscccccccccc" />
+    </g>
+  </g>
+</svg>

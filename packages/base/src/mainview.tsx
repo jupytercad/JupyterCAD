@@ -29,12 +29,13 @@ import {
   disposeBoundsTree
 } from 'three-mesh-bvh';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { v4 as uuid } from 'uuid';
 
 import { FloatingAnnotation } from './annotation/view';
 import { getCSSVariableColor, throttle } from './tools';
-import { AxeHelper, CameraSettings, ExplodedView } from './types';
+import { AxeHelper, CameraSettings, ExplodedView, ClipSettings } from './types';
 
 // Apply the BVH extension
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -285,6 +286,10 @@ export class MainView extends React.Component<IProps, IStates> {
         this._contextMenu.open(e);
       });
 
+      document.addEventListener('keydown', e => {
+        this._onKeyDown.bind(this)(e);
+      });
+
       const controls = new OrbitControls(
         this._camera,
         this._renderer.domElement
@@ -320,6 +325,59 @@ export class MainView extends React.Component<IProps, IStates> {
           );
         }, 100)
       );
+
+      // Setting up the transform controls
+      this._transformControls = new TransformControls(
+        this._camera,
+        this._renderer.domElement
+      );
+
+      // Create half transparent plane mesh for controls
+      this._clippingPlaneMeshControl = new THREE.Mesh(
+        new THREE.PlaneGeometry(1, 1),
+        new THREE.MeshBasicMaterial({
+          color: 'black',
+          opacity: 0.2,
+          transparent: true,
+          side: THREE.DoubleSide
+        })
+      );
+      this._clippingPlaneMeshControl.visible = false;
+
+      // Setting the fake plane position
+      const target = new THREE.Vector3(0, 0, 1);
+      this._clippingPlane.coplanarPoint(target);
+      this._clippingPlaneMeshControl.geometry.translate(
+        target.x,
+        target.y,
+        target.z
+      );
+      this._clippingPlaneMeshControl.quaternion.setFromUnitVectors(
+        new THREE.Vector3(0, 0, 1),
+        this._clippingPlane.normal
+      );
+
+      this._scene.add(this._clippingPlaneMeshControl);
+
+      // Disable the orbit control whenever we do transformation
+      this._transformControls.addEventListener('dragging-changed', event => {
+        this._controls.enabled = !event.value;
+      });
+
+      // Update the clipping plane whenever the transform UI move
+      this._transformControls.addEventListener('change', () => {
+        const normal = new THREE.Vector3(0, 0, 1);
+
+        this._clippingPlane.setFromNormalAndCoplanarPoint(
+          normal.applyEuler(this._clippingPlaneMeshControl.rotation),
+          this._clippingPlaneMeshControl.position
+        );
+      });
+      this._transformControls.attach(this._clippingPlaneMeshControl);
+      this._scene.add(this._transformControls);
+
+      this._transformControls.enabled = false;
+      this._transformControls.visible = false;
     }
   };
 
@@ -337,7 +395,20 @@ export class MainView extends React.Component<IProps, IStates> {
     if (intersects.length > 0) {
       // Find the first intersection with a visible object
       for (const intersect of intersects) {
+        // Object is hidden
         if (!intersect.object.visible || !intersect.object.parent?.visible) {
+          continue;
+        }
+
+        // Object is clipped
+        const planePoint = new THREE.Vector3();
+        this._clippingPlane.coplanarPoint(planePoint);
+        planePoint.sub(intersect.point);
+
+        if (
+          this._clipSettings.enabled &&
+          planePoint.dot(this._clippingPlane.normal) > 0
+        ) {
           continue;
         }
 
@@ -353,6 +424,15 @@ export class MainView extends React.Component<IProps, IStates> {
 
   startAnimationLoop = (): void => {
     this._requestID = window.requestAnimationFrame(this.startAnimationLoop);
+
+    if (this._clippingPlaneMesh !== null) {
+      this._clippingPlane.coplanarPoint(this._clippingPlaneMesh.position);
+      this._clippingPlaneMesh.lookAt(
+        this._clippingPlaneMesh.position.x - this._clippingPlane.normal.x,
+        this._clippingPlaneMesh.position.y - this._clippingPlane.normal.y,
+        this._clippingPlaneMesh.position.z - this._clippingPlane.normal.z
+      );
+    }
 
     this._controls.update();
 
@@ -531,6 +611,7 @@ export class MainView extends React.Component<IProps, IStates> {
         );
       }
 
+      // If clipping is enabled and picked position is hidden
       this._syncPointer(picked.position, picked.mesh.name);
     } else {
       if (this._pointer3D) {
@@ -543,7 +624,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _onClick(e: MouseEvent) {
     const selection = this._pick();
     const selectedMeshesNames = new Set(
-      this._selectedMeshes.map(sel => sel.name)
+      this._selectedMeshes.map(sel => sel.parent!.name)
     );
 
     if (selection) {
@@ -572,6 +653,25 @@ export class MainView extends React.Component<IProps, IStates> {
       this._model.syncSelectedObject(names, this.state.id);
     }
   }
+
+  private _onKeyDown(event: KeyboardEvent) {
+    // TODO Make these Lumino commands? Or not?
+    if (this._clipSettings.enabled) {
+      switch (event.key) {
+        case 'r':
+          event.preventDefault();
+          event.stopPropagation();
+
+          if (this._transformControls.mode === 'rotate') {
+            this._transformControls.setMode('translate');
+          } else {
+            this._transformControls.setMode('rotate');
+          }
+          break;
+      }
+    }
+  }
+
   private _saveMeta = (payload: IDisplayShape['payload']['result']) => {
     if (!this._model) {
       return;
@@ -580,6 +680,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._model.sharedModel.setShapeMeta(objName, data.meta);
     });
   };
+
   private _shapeToMesh = (payload: IDisplayShape['payload']['result']) => {
     if (this._meshGroup !== null) {
       this._scene.remove(this._meshGroup);
@@ -647,6 +748,7 @@ export class MainView extends React.Component<IProps, IStates> {
         side: THREE.DoubleSide,
         wireframe: false,
         flatShading: false,
+        clippingPlanes: this._clippingPlanes,
         shininess: 0
       });
 
@@ -665,22 +767,53 @@ export class MainView extends React.Component<IProps, IStates> {
         geometry.computeBoundsTree();
       }
 
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.name = objName;
-      mesh.visible = visible;
+      const meshGroup = new THREE.Group();
+      meshGroup.name = objName;
+      meshGroup.visible = visible;
+
+      const baseMat = new THREE.MeshBasicMaterial();
+      baseMat.depthWrite = false;
+      baseMat.depthTest = false;
+      baseMat.colorWrite = false;
+      baseMat.stencilWrite = true;
+      baseMat.stencilFunc = THREE.AlwaysStencilFunc;
+
+      // back faces
+      const mat0 = baseMat.clone();
+      mat0.side = THREE.BackSide;
+      mat0.clippingPlanes = this._clippingPlanes;
+      mat0.stencilFail = THREE.IncrementWrapStencilOp;
+      mat0.stencilZFail = THREE.IncrementWrapStencilOp;
+      mat0.stencilZPass = THREE.IncrementWrapStencilOp;
+      const backFaces = new THREE.Mesh(geometry, mat0);
+      meshGroup.add(backFaces);
+
+      // front faces
+      const mat1 = baseMat.clone();
+      mat1.side = THREE.FrontSide;
+      mat1.clippingPlanes = this._clippingPlanes;
+      mat1.stencilFail = THREE.DecrementWrapStencilOp;
+      mat1.stencilZFail = THREE.DecrementWrapStencilOp;
+      mat1.stencilZPass = THREE.DecrementWrapStencilOp;
+      const frontFaces = new THREE.Mesh(geometry, mat1);
+      meshGroup.add(frontFaces);
+
+      const mainMesh = new THREE.Mesh(geometry, material);
+      mainMesh.name = 'main';
 
       if (visible) {
-        this._boundingGroup.expandByObject(mesh);
+        this._boundingGroup.expandByObject(mainMesh);
       }
 
       if (selectedNames.includes(objName)) {
-        this._selectedMeshes.push(mesh);
-        mesh.material.color = SELECTED_MESH_COLOR;
+        this._selectedMeshes.push(mainMesh);
+        mainMesh.material.color = SELECTED_MESH_COLOR;
       }
 
       const edgeMaterial = new THREE.LineBasicMaterial({
         linewidth: 5,
-        color: DEFAULT_EDGE_COLOR
+        color: DEFAULT_EDGE_COLOR,
+        clippingPlanes: this._clippingPlanes
       });
       edgeList.forEach(edge => {
         const edgeVertices = new THREE.Float32BufferAttribute(
@@ -692,12 +825,13 @@ export class MainView extends React.Component<IProps, IStates> {
         const edgesMesh = new THREE.Line(edgeGeometry, edgeMaterial);
         edgesMesh.name = 'edge';
 
-        mesh.add(edgesMesh);
+        mainMesh.add(edgesMesh);
       });
-      if (this._meshGroup) {
-        this._meshGroup.add(mesh);
-      }
+      meshGroup.add(mainMesh);
+
+      this._meshGroup?.add(meshGroup);
     });
+
     if (guidata) {
       this._model.sharedModel?.setOption('guidata', guidata);
     }
@@ -706,7 +840,29 @@ export class MainView extends React.Component<IProps, IStates> {
     // Set the expoded view if it's enabled
     this._setupExplodedView();
 
+    // Clip plane rendering
+    const planeGeom = new THREE.PlaneGeometry(
+      this._refLength! * 10, // *10 is a bit arbitrary and extreme but that does not impact performance or anything
+      this._refLength! * 10
+    );
+    const planeMat = new THREE.MeshPhongMaterial({
+      color: DEFAULT_EDGE_COLOR,
+      stencilWrite: true,
+      stencilRef: 0,
+      stencilFunc: THREE.NotEqualStencilFunc,
+      stencilFail: THREE.ReplaceStencilOp,
+      stencilZFail: THREE.ReplaceStencilOp,
+      stencilZPass: THREE.ReplaceStencilOp,
+      side: THREE.DoubleSide
+    });
+    this._clippingPlaneMesh = new THREE.Mesh(planeGeom, planeMat);
+    this._clippingPlaneMesh.onAfterRender = function (renderer) {
+      renderer.clearStencil();
+    };
+
+    this._scene.add(this._clippingPlaneMesh);
     this._scene.add(this._meshGroup);
+
     this.setState(old => ({ ...old, loading: false }));
   };
 
@@ -730,6 +886,12 @@ export class MainView extends React.Component<IProps, IStates> {
           10 * this._refLength
         );
         this._camera.far = 200 * this._refLength;
+
+        // Update clip plane size
+        this._clippingPlaneMeshControl.geometry = new THREE.PlaneGeometry(
+          this._refLength * 10,
+          this._refLength * 10
+        );
       }
       if (!this._meshGroup.children.length) {
         this._refLength = null;
@@ -843,9 +1005,9 @@ export class MainView extends React.Component<IProps, IStates> {
     // Set new selection
     this._selectedMeshes = [];
     for (const name of names) {
-      const selected = this._meshGroup?.getObjectByName(name) as
-        | BasicMesh
-        | undefined;
+      const selected = this._meshGroup
+        ?.getObjectByName(name)
+        ?.getObjectByName('main') as BasicMesh | undefined;
       if (!selected) {
         continue;
       }
@@ -951,9 +1113,9 @@ export class MainView extends React.Component<IProps, IStates> {
       let collaboratorPointer = this._collaboratorPointers[clientId];
 
       if (pointer) {
-        const parent = this._meshGroup?.getObjectByName(
-          pointer.parent
-        ) as BasicMesh;
+        const parent = this._meshGroup
+          ?.getObjectByName(pointer.parent)
+          ?.getObjectByName('main') as BasicMesh;
 
         if (!collaboratorPointer) {
           const mesh = this._createPointer(clientState.user);
@@ -1019,9 +1181,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
     if (guidata) {
       for (const objName in guidata) {
-        const obj = this._meshGroup?.getObjectByName(objName) as
-          | BasicMesh
-          | undefined;
+        const obj = this._meshGroup
+          ?.getObjectByName(objName)
+          ?.getObjectByName('main') as BasicMesh | undefined;
         if (!obj) {
           continue;
         }
@@ -1086,6 +1248,16 @@ export class MainView extends React.Component<IProps, IStates> {
         this._updateCamera();
       }
     }
+
+    if (change.key === 'clipView') {
+      const clipSettings = change.newValue as ClipSettings | undefined;
+
+      if (change.type !== 'remove' && clipSettings) {
+        this._clipSettings = clipSettings;
+
+        this._updateClipping();
+      }
+    }
   }
 
   private _setupExplodedView() {
@@ -1096,11 +1268,13 @@ export class MainView extends React.Component<IProps, IStates> {
       this._explodedViewLinesHelperGroup?.removeFromParent();
       this._explodedViewLinesHelperGroup = new THREE.Group();
 
-      for (const mesh of this._meshGroup?.children as BasicMesh[]) {
-        const explodedState = this._computeExplodedState(mesh);
+      for (const group of this._meshGroup?.children as THREE.Group[]) {
+        const explodedState = this._computeExplodedState(
+          group.getObjectByName('main') as BasicMesh
+        );
 
-        mesh.position.set(0, 0, 0);
-        mesh.translateOnAxis(explodedState.vector, explodedState.distance);
+        group.position.set(0, 0, 0);
+        group.translateOnAxis(explodedState.vector, explodedState.distance);
 
         // Draw lines
         const material = new THREE.LineBasicMaterial({
@@ -1112,8 +1286,8 @@ export class MainView extends React.Component<IProps, IStates> {
           explodedState.newGeometryCenter
         ]);
         const line = new THREE.Line(geometry, material);
-        line.name = mesh.name;
-        line.visible = mesh.visible;
+        line.name = group.name;
+        line.visible = group.visible;
 
         this._explodedViewLinesHelperGroup.add(line);
       }
@@ -1156,6 +1330,20 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._camera.position.copy(position);
     this._camera.up.copy(up);
+  }
+
+  private _updateClipping() {
+    if (this._clipSettings.enabled) {
+      this._renderer.localClippingEnabled = true;
+      this._transformControls.enabled = true;
+      this._transformControls.visible = true;
+      this._clippingPlaneMeshControl.visible = this._clipSettings.showClipPlane;
+    } else {
+      this._renderer.localClippingEnabled = false;
+      this._transformControls.enabled = false;
+      this._transformControls.visible = false;
+      this._clippingPlaneMeshControl.visible = false;
+    }
   }
 
   private _computeExplodedState(mesh: BasicMesh) {
@@ -1237,9 +1425,9 @@ export class MainView extends React.Component<IProps, IStates> {
           if (!this._model.annotationModel) {
             return null;
           }
-          const parent = this._meshGroup?.getObjectByName(
-            annotation.parent
-          ) as BasicMesh;
+          const parent = this._meshGroup
+            ?.getObjectByName(annotation.parent)
+            ?.getObjectByName('main') as BasicMesh;
           const position = new THREE.Vector3(
             annotation.position[0],
             annotation.position[1],
@@ -1309,6 +1497,11 @@ export class MainView extends React.Component<IProps, IStates> {
   private _explodedView: ExplodedView = { enabled: false, factor: 0 };
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
   private _cameraSettings: CameraSettings = { type: 'Perspective' };
+  private _clipSettings: ClipSettings = { enabled: false, showClipPlane: true };
+  private _clippingPlaneMeshControl: THREE.Mesh; // Plane mesh using for controlling the clip plane in the UI
+  private _clippingPlaneMesh: THREE.Mesh | null = null; // Plane mesh used for "filling the gaps"
+  private _clippingPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0); // Mathematical object for clipping computation
+  private _clippingPlanes = [this._clippingPlane];
 
   private _scene: THREE.Scene; // Threejs scene
   private _camera: THREE.PerspectiveCamera | THREE.OrthographicCamera; // Threejs camera
@@ -1319,7 +1512,8 @@ export class MainView extends React.Component<IProps, IStates> {
   private _geometry: THREE.BufferGeometry; // Threejs BufferGeometry
   private _refLength: number | null = null; // Length of bounding box of current object
   private _sceneAxe: THREE.Object3D | null; // Array of  X, Y and Z axe
-  private _controls: OrbitControls; // Threejs control
+  private _controls: OrbitControls; // Mouse controls
+  private _transformControls: TransformControls; // Mesh position/rotation controls
   private _pointer3D: IPointer | null = null;
   private _collaboratorPointers: IDict<IPointer>;
   private _pointerGeometry: THREE.SphereGeometry;
