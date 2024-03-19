@@ -36,25 +36,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.23.5":
-  version: 7.23.5
-  resolution: "@babel/code-frame@npm:7.23.5"
+"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.23.5, @babel/code-frame@npm:^7.24.1":
+  version: 7.24.1
+  resolution: "@babel/code-frame@npm:7.24.1"
   dependencies:
-    "@babel/highlight": ^7.23.4
-    chalk: ^2.4.2
-  checksum: d90981fdf56a2824a9b14d19a4c0e8db93633fd488c772624b4e83e0ceac6039a27cd298a247c3214faa952bf803ba23696172ae7e7235f3b97f43ba278c569a
+    "@babel/highlight": ^7.24.1
+    picocolors: ^1.0.0
+  checksum: e43fc08c51ade6849c2f3bc19241aab1ffc7f8c47026b903a942b21d331ac124abc6bfa17a9e688f6ac8163b3bb5604bbf4657666340a2f43b4f49dfdcc67272
   languageName: node
   linkType: hard
 
-"@babel/generator@npm:^7.23.6":
-  version: 7.23.6
-  resolution: "@babel/generator@npm:7.23.6"
+"@babel/generator@npm:^7.24.1":
+  version: 7.24.1
+  resolution: "@babel/generator@npm:7.24.1"
   dependencies:
-    "@babel/types": ^7.23.6
-    "@jridgewell/gen-mapping": ^0.3.2
-    "@jridgewell/trace-mapping": ^0.3.17
+    "@babel/types": ^7.24.0
+    "@jridgewell/gen-mapping": ^0.3.5
+    "@jridgewell/trace-mapping": ^0.3.25
     jsesc: ^2.5.1
-  checksum: 1a1a1c4eac210f174cd108d479464d053930a812798e09fee069377de39a893422df5b5b146199ead7239ae6d3a04697b45fc9ac6e38e0f6b76374390f91fc6c
+  checksum: 98c6ce5ec7a1cba2bdf35cdf607273b90cf7cf82bbe75cd0227363fb84d7e1bd8efa74f40247d5900c8c009123f10132ad209a05283757698de918278c3c6700
   languageName: node
   linkType: hard
 
@@ -94,15 +94,15 @@ __metadata:
   linkType: hard
 
 "@babel/helper-module-imports@npm:^7.0.0, @babel/helper-module-imports@npm:^7.22.5":
-  version: 7.22.15
-  resolution: "@babel/helper-module-imports@npm:7.22.15"
+  version: 7.24.1
+  resolution: "@babel/helper-module-imports@npm:7.24.1"
   dependencies:
-    "@babel/types": ^7.22.15
-  checksum: ecd7e457df0a46f889228f943ef9b4a47d485d82e030676767e6a2fdcbdaa63594d8124d4b55fd160b41c201025aec01fc27580352b1c87a37c9c6f33d116702
+    "@babel/types": ^7.24.0
+  checksum: b43387b32f7de93475fade85335a68da564bf0038921eda6c5ce8abec6dce501eedd5e5efe806a41f32c7c91ad7b7c1bdd615513e7d9bf02c5bf40d12e24c7e5
   languageName: node
   linkType: hard
 
-"@babel/helper-plugin-utils@npm:^7.22.5":
+"@babel/helper-plugin-utils@npm:^7.24.0":
   version: 7.24.0
   resolution: "@babel/helper-plugin-utils@npm:7.24.0"
   checksum: e2baa0eede34d2fa2265947042aa84d444aa48dc51e9feedea55b67fc1bc3ab051387e18b33ca7748285a6061390831ab82f8a2c767d08470b93500ec727e9b9
@@ -119,9 +119,9 @@ __metadata:
   linkType: hard
 
 "@babel/helper-string-parser@npm:^7.23.4":
-  version: 7.23.4
-  resolution: "@babel/helper-string-parser@npm:7.23.4"
-  checksum: c0641144cf1a7e7dc93f3d5f16d5327465b6cf5d036b48be61ecba41e1eece161b48f46b7f960951b67f8c3533ce506b16dece576baef4d8b3b49f8c65410f90
+  version: 7.24.1
+  resolution: "@babel/helper-string-parser@npm:7.24.1"
+  checksum: 8404e865b06013979a12406aab4c0e8d2e377199deec09dfe9f57b833b0c9ce7b6e8c1c553f2da8d0bcd240c5005bd7a269f4fef0d628aeb7d5fe035c436fb67
   languageName: node
   linkType: hard
 
@@ -132,43 +132,44 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/highlight@npm:^7.23.4":
-  version: 7.23.4
-  resolution: "@babel/highlight@npm:7.23.4"
+"@babel/highlight@npm:^7.24.1":
+  version: 7.24.1
+  resolution: "@babel/highlight@npm:7.24.1"
   dependencies:
     "@babel/helper-validator-identifier": ^7.22.20
     chalk: ^2.4.2
     js-tokens: ^4.0.0
-  checksum: 643acecdc235f87d925979a979b539a5d7d1f31ae7db8d89047269082694122d11aa85351304c9c978ceeb6d250591ccadb06c366f358ccee08bb9c122476b89
+    picocolors: ^1.0.0
+  checksum: 1960f451218dcda3e2f6d976eb318dcc565b40a41c2cfc23f073c2b7cdfe2c3e7659ec5f6f9a9f8616d6e2f35cacdcd736d020e086d9df6acc70e27496868a4a
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.24.0":
-  version: 7.24.0
-  resolution: "@babel/parser@npm:7.24.0"
+"@babel/parser@npm:^7.24.0, @babel/parser@npm:^7.24.1":
+  version: 7.24.1
+  resolution: "@babel/parser@npm:7.24.1"
   bin:
     parser: ./bin/babel-parser.js
-  checksum: 4a6afec49487a212e7a27345b0c090b56905efb62c0b3a1499b0a57a5b3bf43d9d1e99e31b137080eacc24dee659a29699740d0a6289999117c0d8c5a04bd68f
+  checksum: a1068941dddf82ffdf572565b8b7b2cddb963ff9ddf97e6e28f50e843d820b4285e6def8f59170104a94e2a91ae2e3b326489886d77a57ea29d468f6a5e79bf9
   languageName: node
   linkType: hard
 
 "@babel/plugin-syntax-jsx@npm:^7.22.5":
-  version: 7.23.3
-  resolution: "@babel/plugin-syntax-jsx@npm:7.23.3"
+  version: 7.24.1
+  resolution: "@babel/plugin-syntax-jsx@npm:7.24.1"
   dependencies:
-    "@babel/helper-plugin-utils": ^7.22.5
+    "@babel/helper-plugin-utils": ^7.24.0
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 89037694314a74e7f0e7a9c8d3793af5bf6b23d80950c29b360db1c66859d67f60711ea437e70ad6b5b4b29affe17eababda841b6c01107c2b638e0493bafb4e
+  checksum: 712f7e7918cb679f106769f57cfab0bc99b311032665c428b98f4c3e2e6d567601d45386a4f246df6a80d741e1f94192b3f008800d66c4f1daae3ad825c243f0
   languageName: node
   linkType: hard
 
 "@babel/runtime@npm:^7.1.2":
-  version: 7.24.0
-  resolution: "@babel/runtime@npm:7.24.0"
+  version: 7.24.1
+  resolution: "@babel/runtime@npm:7.24.1"
   dependencies:
     regenerator-runtime: ^0.14.0
-  checksum: 7a6a5d40fbdd68491ec183ba2e631c07415119960083b4fd76564cce3751e9acd2f12ab89575e38496fa389fa06d458732776e69ee1858e366cc3fbdb049f847
+  checksum: 5c8f3b912ba949865f03b3cf8395c60e1f4ebd1033fbd835bdfe81b6cac8a87d85bc3c7aded5fcdf07be044c9ab8c818f467abe0deca50020c72496782639572
   languageName: node
   linkType: hard
 
@@ -184,24 +185,24 @@ __metadata:
   linkType: hard
 
 "@babel/traverse@npm:^7.4.5":
-  version: 7.24.0
-  resolution: "@babel/traverse@npm:7.24.0"
+  version: 7.24.1
+  resolution: "@babel/traverse@npm:7.24.1"
   dependencies:
-    "@babel/code-frame": ^7.23.5
-    "@babel/generator": ^7.23.6
+    "@babel/code-frame": ^7.24.1
+    "@babel/generator": ^7.24.1
     "@babel/helper-environment-visitor": ^7.22.20
     "@babel/helper-function-name": ^7.23.0
     "@babel/helper-hoist-variables": ^7.22.5
     "@babel/helper-split-export-declaration": ^7.22.6
-    "@babel/parser": ^7.24.0
+    "@babel/parser": ^7.24.1
     "@babel/types": ^7.24.0
     debug: ^4.3.1
     globals: ^11.1.0
-  checksum: 790cf14a6452575ceef767285bad0dd96d14b3640ed4e6a4ddb5b592e4e66020424bac21e4a4b965ac0d2fe9ed504fe3644748b1922fb8ac37c681cb435c3995
+  checksum: 92a5ca906abfba9df17666d2001ab23f18600035f706a687055a0e392a690ae48d6fec67c8bd4ef19ba18699a77a5b7f85727e36b83f7d110141608fe0c24fe9
   languageName: node
   linkType: hard
 
-"@babel/types@npm:^7.22.15, @babel/types@npm:^7.22.5, @babel/types@npm:^7.23.0, @babel/types@npm:^7.23.6, @babel/types@npm:^7.24.0, @babel/types@npm:^7.8.3":
+"@babel/types@npm:^7.22.5, @babel/types@npm:^7.23.0, @babel/types@npm:^7.24.0, @babel/types@npm:^7.8.3":
   version: 7.24.0
   resolution: "@babel/types@npm:7.24.0"
   dependencies:
@@ -737,7 +738,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jridgewell/gen-mapping@npm:^0.3.2, @jridgewell/gen-mapping@npm:^0.3.5":
+"@jridgewell/gen-mapping@npm:^0.3.5":
   version: 0.3.5
   resolution: "@jridgewell/gen-mapping@npm:0.3.5"
   dependencies:
@@ -779,7 +780,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jridgewell/trace-mapping@npm:^0.3.17, @jridgewell/trace-mapping@npm:^0.3.20, @jridgewell/trace-mapping@npm:^0.3.24, @jridgewell/trace-mapping@npm:^0.3.25":
+"@jridgewell/trace-mapping@npm:^0.3.20, @jridgewell/trace-mapping@npm:^0.3.24, @jridgewell/trace-mapping@npm:^0.3.25":
   version: 0.3.25
   resolution: "@jridgewell/trace-mapping@npm:0.3.25"
   dependencies:
@@ -822,7 +823,7 @@ __metadata:
 
 "@jupyter/collaboration@file:../jupyter-collaboration/packages/collaboration::locator=%40jupytercad%2Fjupytercad-root%40workspace%3A.":
   version: 2.0.3
-  resolution: "@jupyter/collaboration@file:../jupyter-collaboration/packages/collaboration#../jupyter-collaboration/packages/collaboration::hash=443abf&locator=%40jupytercad%2Fjupytercad-root%40workspace%3A."
+  resolution: "@jupyter/collaboration@file:../jupyter-collaboration/packages/collaboration#../jupyter-collaboration/packages/collaboration::hash=026fdc&locator=%40jupytercad%2Fjupytercad-root%40workspace%3A."
   dependencies:
     "@codemirror/state": ^6.2.0
     "@codemirror/view": ^6.7.0
@@ -838,13 +839,13 @@ __metadata:
     react: ^18.2.0
     y-protocols: ^1.0.5
     yjs: ^13.5.40
-  checksum: b363b6586fe445ec3a1a29c346959f7a1d718a8e4afbe6ab71fc219284311cf94fa94bfd9c5b8ddab23d8a54549608d68643baf878af369a94139266bbd5f191
+  checksum: 33734d9877b7ec391268ed987670755eb60c80c6030d10bcb5f4fa97e7f608b09244df59dca7e8acb2a9abaed01222b6c6d9a067c235088c61838b74ac0d5908
   languageName: node
   linkType: hard
 
 "@jupyter/docprovider@file:../jupyter-collaboration/packages/docprovider::locator=%40jupytercad%2Fjupytercad-root%40workspace%3A.":
   version: 2.0.3
-  resolution: "@jupyter/docprovider@file:../jupyter-collaboration/packages/docprovider#../jupyter-collaboration/packages/docprovider::hash=0bc498&locator=%40jupytercad%2Fjupytercad-root%40workspace%3A."
+  resolution: "@jupyter/docprovider@file:../jupyter-collaboration/packages/docprovider#../jupyter-collaboration/packages/docprovider::hash=8034ea&locator=%40jupytercad%2Fjupytercad-root%40workspace%3A."
   dependencies:
     "@jupyter/ydoc": ^2.0.1
     "@jupyterlab/coreutils": ^6.2.0-alpha.1
@@ -855,7 +856,7 @@ __metadata:
     y-protocols: ^1.0.5
     y-websocket: ^1.3.15
     yjs: ^13.5.40
-  checksum: b3602d5b835411a717be3f44f9af56c7cb6b2b79e5853f4aee4a818873ed255d76f2017bdcab0c5528a18a965fd38421840fcb9023af6d2e193854de938597e9
+  checksum: c346790eaf4abf6f5dc6af44f70a715d918a8b9f2dddd14628e28c8cad0dfabf52bf16436eb15fc47d9c7089b039897c3b50cf9a66b8d5982525026c9d2cc01a
   languageName: node
   linkType: hard
 
@@ -884,7 +885,7 @@ __metadata:
 
 "@jupyter/ydoc@file:../jupyter_ydoc/javascript::locator=%40jupytercad%2Fjupytercad-root%40workspace%3A.":
   version: 2.0.1
-  resolution: "@jupyter/ydoc@file:../jupyter_ydoc/javascript#../jupyter_ydoc/javascript::hash=263bbc&locator=%40jupytercad%2Fjupytercad-root%40workspace%3A."
+  resolution: "@jupyter/ydoc@file:../jupyter_ydoc/javascript#../jupyter_ydoc/javascript::hash=d56393&locator=%40jupytercad%2Fjupytercad-root%40workspace%3A."
   dependencies:
     "@jupyterlab/application": ^4.2.0-alpha.1
     "@jupyterlab/nbformat": ^3.0.0 || ^4.0.0-alpha.21 || ^4.2.0-alpha.1
@@ -893,7 +894,7 @@ __metadata:
     "@lumino/signaling": ^1.10.0 || ^2.0.0
     y-protocols: ^1.0.5
     yjs: ^13.5.40
-  checksum: 5fc1a75ff29b08e40ce0f7989582efe316a4b33ac9cd04761850c06595df987cbf5638e85899818723e49360c2702af4b9e6911b904117ab7cc350f73e6c7db8
+  checksum: 9d9f65e612e44342bcf262a43d5aae6da8560ec4abe7f1323ec5adbd7fff5e4e69c98556fc885624140b70cc9b2d95bf842fd88265e3f34fdc2439ec85dfe2c9
   languageName: node
   linkType: hard
 
@@ -3643,12 +3644,12 @@ __metadata:
   linkType: hard
 
 "@types/eslint@npm:*":
-  version: 8.56.5
-  resolution: "@types/eslint@npm:8.56.5"
+  version: 8.56.6
+  resolution: "@types/eslint@npm:8.56.6"
   dependencies:
     "@types/estree": "*"
     "@types/json-schema": "*"
-  checksum: 95a7a23ca38c78e5c27a2ed36ef60f094d5e6589e3473c320b6ff69eb3ca6333d5b7f0d5053416369f5ab2fb86874df19562d4d67a98237c17def6e30abff540
+  checksum: 960996940c8702c6e9bf221f2927f088d8f6463ad21ae1eb8260c62642ce48097a79a4277d99cb7cafde6939beadbd79610015fdd08b18679e565bcad5fcd36f
   languageName: node
   linkType: hard
 
@@ -3714,20 +3715,20 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 20.11.28
-  resolution: "@types/node@npm:20.11.28"
+  version: 20.11.29
+  resolution: "@types/node@npm:20.11.29"
   dependencies:
     undici-types: ~5.26.4
-  checksum: 83fe7e649c6439103872a292f7b9808233e1eea4bf7d5afa6fce71729e3f7a06933cd792543db84cf65b89ca985fb6f44efaeb748e2ce51a6525ade030338af8
+  checksum: d6d37d4f72a372b033b8737ce615abb2ad8668c689ca4ef8c49b85249f8448fa9348ec8c67e96db3d11f64badd7e598c3da53c6804ea0fca8dd3bea585d93c29
   languageName: node
   linkType: hard
 
 "@types/node@npm:^18.15.11":
-  version: 18.19.24
-  resolution: "@types/node@npm:18.19.24"
+  version: 18.19.25
+  resolution: "@types/node@npm:18.19.25"
   dependencies:
     undici-types: ~5.26.4
-  checksum: 9b5d3ee4269c0934908dd8a0aa2adbc59467d90dcbad2967db4e63c4012b7142f1c7ea07a72e32e58f3b80f4d43ba10e9d355d2246fc1a028b25935e298dd501
+  checksum: b3210d160a5b7a843683bf6162581dcdb162130162fb00424706ed59a09cb142eb0013e876bd68f753b805447234c9f364b3477275aca9c83e26ec58b16154a9
   languageName: node
   linkType: hard
 
@@ -5334,9 +5335,9 @@ __metadata:
   linkType: hard
 
 "core-js-pure@npm:^3.6.5":
-  version: 3.36.0
-  resolution: "core-js-pure@npm:3.36.0"
-  checksum: 12a0588981efdc710426c688f6d5f6abaee76858ff32d21c6d7b81bc81c39b7cebb2733f8e822862b2a7f329f8fe37065a33ff6c4fd9253b3a1ad3cf636e483e
+  version: 3.36.1
+  resolution: "core-js-pure@npm:3.36.1"
+  checksum: 5318607e4bca7cc25f4de0a1bbb9f25a0f4d2e6c14963ccc1c7b4fe8a245bdf7ff1453b61e2b36b1eb486c9259399862b9a1f2d6bda2b0dcbc74a7e334628e20
   languageName: node
   linkType: hard
 
@@ -5846,9 +5847,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.668":
-  version: 1.4.708
-  resolution: "electron-to-chromium@npm:1.4.708"
-  checksum: 2d4684b785f9cd6e501a0707e16c8fba89a99a36032917523fdc04f2bf109e63c3c2854ecf6d34e243ecdfe11a77839ebcb23e3b8d466853abebea2df3a76314
+  version: 1.4.710
+  resolution: "electron-to-chromium@npm:1.4.710"
+  checksum: 1f68232a054abcde73a3e5a22d12ab2cca70c04761a36923e8848a56d429ac97e3205b51688a61a5c2c90401b2b0a4e9ef8dc95698e95382aa1ae62e698cedcd
   languageName: node
   linkType: hard
 
@@ -6052,9 +6053,9 @@ __metadata:
   linkType: hard
 
 "es-module-lexer@npm:^1.2.1":
-  version: 1.4.1
-  resolution: "es-module-lexer@npm:1.4.1"
-  checksum: a11b5a256d4e8e9c7d94c2fd87415ccd1591617b6edd847e064503f8eaece2d25e2e9078a02c5ce3ed5e83bb748f5b4820efbe78072c8beb07ac619c2edec35d
+  version: 1.4.2
+  resolution: "es-module-lexer@npm:1.4.2"
+  checksum: f4cfb9e1227f63c786d1c861a086cad477d2b9b29128b343d20e34ae775341a62f62cea0119976a1db58908c99f50a469ef9f3ec0529de012c6d780b41456912
   languageName: node
   linkType: hard
 

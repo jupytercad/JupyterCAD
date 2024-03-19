@@ -48,7 +48,7 @@
     "build:packages": "python scripts/build_packages.py",
     "watch:lib": "lerna run --stream watch",
     "watch": "lerna watch -- lerna run build --scope=\\$LERNA_PACKAGE_NAME --include-dependents",
-    "build:lab": "lerna run --ignore @jupytercad/jupytercad-app build",
+    "build:lab": "lerna run --ignore @jupytercad/jupytercad-app --ignore @jupytercad/opencascade --ignore @jupytercad/occ-worker build",
     "build:app": "lerna run --ignore @jupytercad/jupytercad-lab build"
   },
   "resolutions": {
