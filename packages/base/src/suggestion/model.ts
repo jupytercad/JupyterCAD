@@ -1,104 +1,71 @@
-import {
-  IAnnotation,
-  IAnnotationContent,
-  IAnnotationModel,
-  IJupyterCadModel
-} from '@jupytercad/schema';
-import { DocumentRegistry } from '@jupyterlab/docregistry';
-import { User } from '@jupyterlab/services';
+import { IJupyterCadDoc, IJupyterCadDocChange } from '@jupytercad/schema';
 import { ISignal, Signal } from '@lumino/signaling';
 
-export class SuggestionModel implements IAnnotationModel {
-  constructor(options: AnnotationModel.IOptions) {
-    this.context = options.context;
+export class SuggestionModel {
+  constructor(options: SuggestionModel.IOptions) {
+    this.sharedModel = options.sharedModel;
   }
 
-  get updateSignal(): ISignal<this, null> {
-    return this._updateSignal;
+  set sharedModel(newSharedModel: IJupyterCadDoc | undefined) {
+    this._sharedModel?.changed.disconnect(this._onStateChanged, this);
+    this._sharedModel = newSharedModel;
+    this._sharedModel?.changed.connect(this._onStateChanged.bind(this), this);
+  }
+  get sharedModel(): IJupyterCadDoc | undefined {
+    return this._sharedModel;
   }
 
-  get user(): User.IIdentity | undefined {
-    return this._user;
+  get allForks(): string[] {
+    return this._allForks;
   }
 
-  set context(
-    context: DocumentRegistry.IContext<IJupyterCadModel> | undefined
+  get forksUpdated(): ISignal<SuggestionModel, void> {
+    return this._forksUpdated;
+  }
+
+  async createFork(): Promise<string | undefined> {
+    const sharedModel = this.sharedModel;
+    console.log('sssss', sharedModel);
+    if (sharedModel) {
+      const forkId = await sharedModel.provider.fork();
+      console.log('CCCCCCCCCC', forkId);
+      sharedModel.provider.connect(forkId);
+      return forkId;
+    }
+  }
+
+  private _onStateChanged(
+    sender: IJupyterCadDoc,
+    changes: IJupyterCadDocChange
   ) {
-    this._context = context;
-
-    const state = this._context?.model.sharedModel.awareness.getLocalState();
-    this._user = state?.user;
-
-    this._contextChanged.emit(void 0);
-  }
-
-  get context(): DocumentRegistry.IContext<IJupyterCadModel> | undefined {
-    return this._context;
-  }
-
-  get contextChanged(): ISignal<this, void> {
-    return this._contextChanged;
-  }
-
-  update(): void {
-    this._updateSignal.emit(null);
-  }
-
-  getAnnotation(id: string): IAnnotation | undefined {
-    const rawData = this._context?.model.sharedModel.getMetadata(id);
-    if (rawData) {
-      return JSON.parse(rawData) as IAnnotation;
+    let forkUpdated = false;
+    if (changes.stateChange) {
+      const forkPrefix = 'fork_';
+      changes.stateChange.forEach(value => {
+        if (value.name === 'merge') {
+          // TODO
+        } else if (value.name.startsWith(forkPrefix)) {
+          const forkId = value.name.slice(forkPrefix.length);
+          if (value.newValue === 'new') {
+            this._allForks.push(forkId);
+            forkUpdated = true;
+          } else if (value.newValue === undefined) {
+            // TODO
+          }
+        }
+      });
+    }
+    if (forkUpdated) {
+      this._forksUpdated.emit();
     }
   }
-
-  getAnnotationIds(): string[] {
-    const annotationIds: string[] = [];
-    for (const id in this._context?.model.sharedModel.metadata) {
-      if (id.startsWith('annotation')) {
-        annotationIds.push(id);
-      }
-    }
-    return annotationIds;
-  }
-
-  addAnnotation(key: string, value: IAnnotation): void {
-    this._context?.model.sharedModel.setMetadata(
-      `annotation_${key}`,
-      JSON.stringify(value)
-    );
-  }
-
-  removeAnnotation(key: string): void {
-    this._context?.model.removeMetadata(key);
-  }
-
-  addContent(id: string, value: string): void {
-    const newContent: IAnnotationContent = {
-      value,
-      user: this._user
-    };
-    const currentAnnotation = this.getAnnotation(id);
-    if (currentAnnotation) {
-      const newAnnotation: IAnnotation = {
-        ...currentAnnotation,
-        contents: [...currentAnnotation.contents, newContent]
-      };
-
-      this._context?.model.sharedModel.setMetadata(
-        id,
-        JSON.stringify(newAnnotation)
-      );
-    }
-  }
-
-  private _context: DocumentRegistry.IContext<IJupyterCadModel> | undefined;
-  private _contextChanged = new Signal<this, void>(this);
-  private _updateSignal = new Signal<this, null>(this);
-  private _user?: User.IIdentity;
+  private _sharedModel: IJupyterCadDoc | undefined;
+  private _allForks: string[] = [];
+  private _forksUpdated: Signal<this, void> = new Signal(this);
 }
 
-namespace AnnotationModel {
+namespace SuggestionModel {
   export interface IOptions {
-    context: DocumentRegistry.IContext<IJupyterCadModel> | undefined;
+    sharedModel: IJupyterCadDoc | undefined;
   }
 }

@@ -9,6 +9,7 @@ import { IControlPanelModel } from '../types';
 import { ControlPanelHeader } from './header';
 import { SuggestionPanel } from '../suggestion/suggestionpanel';
 import { AnnotationsPanel } from '../annotation/annotationspanel';
+import { SuggestionModel } from '../suggestion';
 
 export class RightPanelWidget extends SidePanel {
   constructor(options: RightPanelWidget.IOptions) {
@@ -23,9 +24,10 @@ export class RightPanelWidget extends SidePanel {
     const annotations = new AnnotationsPanel({ model: this._annotationModel });
     this.addWidget(annotations);
 
-    const suggestion = new SuggestionPanel({
-      sharedModel: this._model.sharedModel
+    const suggestionModel = new SuggestionModel({
+      sharedModel: this._model?.sharedModel
     });
+    const suggestion = new SuggestionPanel({ model: suggestionModel });
     this.addWidget(suggestion);
 
     this._model.documentChanged.connect((_, changed) => {
@@ -33,9 +35,11 @@ export class RightPanelWidget extends SidePanel {
         header.title.label = changed.context.localPath;
         this._annotationModel.context =
           options.tracker.currentWidget?.context || undefined;
+        suggestionModel.sharedModel = changed.context?.model?.sharedModel;
       } else {
         header.title.label = '-';
         this._annotationModel.context = undefined;
+        suggestionModel.sharedModel = undefined;
       }
     });
   }
