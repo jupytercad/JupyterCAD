@@ -1,11 +1,20 @@
+import { requestDocMerge } from '@jupyter/docprovider';
 import { IJupyterCadDoc, IJupyterCadDocChange } from '@jupytercad/schema';
 import { ISignal, Signal } from '@lumino/signaling';
 
 export class SuggestionModel {
   constructor(options: SuggestionModel.IOptions) {
     this.sharedModel = options.sharedModel;
+    this._title = options.title;
   }
 
+  get title(): string {
+    return this._title ?? '';
+  }
+
+  set title(newTitle: string) {
+    this._title = newTitle;
+  }
   set sharedModel(newSharedModel: IJupyterCadDoc | undefined) {
     this._sharedModel?.changed.disconnect(this._onStateChanged, this);
     this._sharedModel = newSharedModel;
@@ -22,15 +31,50 @@ export class SuggestionModel {
   get forksUpdated(): ISignal<SuggestionModel, void> {
     return this._forksUpdated;
   }
+  get forkSwitched(): ISignal<SuggestionModel, string> {
+    return this._forkSwitched;
+  }
+  get contextChanged(): ISignal<SuggestionModel, void> {
+    return this._contextChanged;
+  }
 
+  switchContext(context: {
+    title: string;
+    sharedModel: IJupyterCadDoc | undefined;
+  }): void {
+    this._title = context.title;
+    this.sharedModel = context.sharedModel;
+    this._contextChanged.emit();
+  }
+
+  async mergeFork(forkId: string): Promise<void> {
+    if (this.sharedModel?.rootRoomId) {
+      await requestDocMerge(forkId, this.sharedModel.rootRoomId);
+    }
+  }
   async createFork(): Promise<string | undefined> {
     const sharedModel = this.sharedModel;
-    console.log('sssss', sharedModel);
+
     if (sharedModel) {
       const forkId = await sharedModel.provider.fork();
-      console.log('CCCCCCCCCC', forkId);
-      sharedModel.provider.connect(forkId);
+
+      sharedModel.provider;
+      await sharedModel.provider.connect(forkId);
+      this._forkSwitched.emit(forkId);
       return forkId;
+    }
+  }
+
+  async backToRoot(): Promise<void> {
+    if (this.sharedModel) {
+      await this.sharedModel.provider.connect(this.sharedModel.rootRoomId);
+      this._forkSwitched.emit(this.sharedModel.rootRoomId);
+    }
+  }
+
+  async checkoutFork(forkId: string): Promise<void> {
+    if (this.sharedModel) {
+      await this.sharedModel.provider.connect(forkId);
     }
   }
 
@@ -62,10 +106,14 @@ export class SuggestionModel {
   private _sharedModel: IJupyterCadDoc | undefined;
   private _allForks: string[] = [];
   private _forksUpdated: Signal<this, void> = new Signal(this);
+  private _forkSwitched: Signal<this, string> = new Signal(this);
+  private _contextChanged: Signal<this, void> = new Signal(this);
+  private _title: string | undefined;
 }
 
 namespace SuggestionModel {
   export interface IOptions {
     sharedModel: IJupyterCadDoc | undefined;
+    title: string;
   }
 }

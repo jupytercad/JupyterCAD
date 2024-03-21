@@ -823,7 +823,7 @@ __metadata:
 
 "@jupyter/collaboration@file:../jupyter-collaboration/packages/collaboration::locator=%40jupytercad%2Fjupytercad-root%40workspace%3A.":
   version: 2.0.3
-  resolution: "@jupyter/collaboration@file:../jupyter-collaboration/packages/collaboration#../jupyter-collaboration/packages/collaboration::hash=026fdc&locator=%40jupytercad%2Fjupytercad-root%40workspace%3A."
+  resolution: "@jupyter/collaboration@file:../jupyter-collaboration/packages/collaboration#../jupyter-collaboration/packages/collaboration::hash=443abf&locator=%40jupytercad%2Fjupytercad-root%40workspace%3A."
   dependencies:
     "@codemirror/state": ^6.2.0
     "@codemirror/view": ^6.7.0
@@ -839,13 +839,13 @@ __metadata:
     react: ^18.2.0
     y-protocols: ^1.0.5
     yjs: ^13.5.40
-  checksum: 33734d9877b7ec391268ed987670755eb60c80c6030d10bcb5f4fa97e7f608b09244df59dca7e8acb2a9abaed01222b6c6d9a067c235088c61838b74ac0d5908
+  checksum: b363b6586fe445ec3a1a29c346959f7a1d718a8e4afbe6ab71fc219284311cf94fa94bfd9c5b8ddab23d8a54549608d68643baf878af369a94139266bbd5f191
   languageName: node
   linkType: hard
 
 "@jupyter/docprovider@file:../jupyter-collaboration/packages/docprovider::locator=%40jupytercad%2Fjupytercad-root%40workspace%3A.":
   version: 2.0.3
-  resolution: "@jupyter/docprovider@file:../jupyter-collaboration/packages/docprovider#../jupyter-collaboration/packages/docprovider::hash=8034ea&locator=%40jupytercad%2Fjupytercad-root%40workspace%3A."
+  resolution: "@jupyter/docprovider@file:../jupyter-collaboration/packages/docprovider#../jupyter-collaboration/packages/docprovider::hash=ef093d&locator=%40jupytercad%2Fjupytercad-root%40workspace%3A."
   dependencies:
     "@jupyter/ydoc": ^2.0.1
     "@jupyterlab/coreutils": ^6.2.0-alpha.1
@@ -856,7 +856,7 @@ __metadata:
     y-protocols: ^1.0.5
     y-websocket: ^1.3.15
     yjs: ^13.5.40
-  checksum: c346790eaf4abf6f5dc6af44f70a715d918a8b9f2dddd14628e28c8cad0dfabf52bf16436eb15fc47d9c7089b039897c3b50cf9a66b8d5982525026c9d2cc01a
+  checksum: 874d8ac84a750d383573b3a9e34324f7a189cf65073d97869b6d26bcda645ab4e544b8c962d964d83aa3e3fd0955a4128535160aea264b0fb53188f89fb2628e
   languageName: node
   linkType: hard
 
@@ -885,7 +885,7 @@ __metadata:
 
 "@jupyter/ydoc@file:../jupyter_ydoc/javascript::locator=%40jupytercad%2Fjupytercad-root%40workspace%3A.":
   version: 2.0.1
-  resolution: "@jupyter/ydoc@file:../jupyter_ydoc/javascript#../jupyter_ydoc/javascript::hash=d56393&locator=%40jupytercad%2Fjupytercad-root%40workspace%3A."
+  resolution: "@jupyter/ydoc@file:../jupyter_ydoc/javascript#../jupyter_ydoc/javascript::hash=a178ef&locator=%40jupytercad%2Fjupytercad-root%40workspace%3A."
   dependencies:
     "@jupyterlab/application": ^4.2.0-alpha.1
     "@jupyterlab/nbformat": ^3.0.0 || ^4.0.0-alpha.21 || ^4.2.0-alpha.1
@@ -894,7 +894,7 @@ __metadata:
     "@lumino/signaling": ^1.10.0 || ^2.0.0
     y-protocols: ^1.0.5
     yjs: ^13.5.40
-  checksum: 9d9f65e612e44342bcf262a43d5aae6da8560ec4abe7f1323ec5adbd7fff5e4e69c98556fc885624140b70cc9b2d95bf842fd88265e3f34fdc2439ec85dfe2c9
+  checksum: 458c58f648888a9241f06ab71454b6e8883d692600b3dc5bd6114893e3072a2ca6534b884355bccecb0ced1c3c85f0bb261f98d8c69936d8ba570735f00a2253
   languageName: node
   linkType: hard
 
@@ -1079,6 +1079,7 @@ __metadata:
     eslint: 8.36.0
     eslint-config-prettier: 8.7.0
     eslint-plugin-prettier: 5.0.1
+    eslint-plugin-react-hooks: ^4.6.0
     lerna: ^7.0.0
     npm-run-all: ^4.1.5
     prettier: ^3.0.0
@@ -6183,6 +6184,15 @@ __metadata:
     eslint-config-prettier:
       optional: true
   checksum: c2261033b97bafe99ccb7cc47c2fac6fa85b8bbc8b128042e52631f906b69e12afed2cdd9d7e3021cc892ee8dd4204a3574e1f32a0b718b4bb3b440944b6983b
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-react-hooks@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "eslint-plugin-react-hooks@npm:4.6.0"
+  peerDependencies:
+    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
+  checksum: 23001801f14c1d16bf0a837ca7970d9dd94e7b560384b41db378b49b6e32dc43d6e2790de1bd737a652a86f81a08d6a91f402525061b47719328f586a57e86c3
   languageName: node
   linkType: hard
 

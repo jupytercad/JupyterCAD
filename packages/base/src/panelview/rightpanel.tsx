@@ -25,7 +25,8 @@ export class RightPanelWidget extends SidePanel {
     this.addWidget(annotations);
 
     const suggestionModel = new SuggestionModel({
-      sharedModel: this._model?.sharedModel
+      sharedModel: this._model?.sharedModel,
+      title: ''
     });
     const suggestion = new SuggestionPanel({ model: suggestionModel });
     this.addWidget(suggestion);
@@ -35,11 +36,17 @@ export class RightPanelWidget extends SidePanel {
         header.title.label = changed.context.localPath;
         this._annotationModel.context =
           options.tracker.currentWidget?.context || undefined;
-        suggestionModel.sharedModel = changed.context?.model?.sharedModel;
+        suggestionModel.switchContext({
+          title: changed.context.localPath,
+          sharedModel: changed.context?.model?.sharedModel
+        });
       } else {
         header.title.label = '-';
+        suggestionModel.switchContext({
+          title: '',
+          sharedModel: undefined
+        });
         this._annotationModel.context = undefined;
-        suggestionModel.sharedModel = undefined;
       }
     });
   }
