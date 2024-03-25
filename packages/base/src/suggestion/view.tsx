@@ -81,7 +81,8 @@ export const Suggestion = (props: ISuggestionProps): JSX.Element => {
                         onClick={async () => {
                           setCurrentForkId(opts.node.id as string);
                           await props.model.checkoutFork(
-                            opts.node.id as string
+                            opts.node.id as string,
+                            true
                           );
                         }}
                         icon={

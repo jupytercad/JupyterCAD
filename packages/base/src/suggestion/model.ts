@@ -1,11 +1,16 @@
 import { requestDocMerge } from '@jupyter/docprovider';
-import { IJupyterCadDoc, IJupyterCadDocChange } from '@jupytercad/schema';
+import {
+  IJupyterCadDoc,
+  IJupyterCadDocChange,
+  IJupyterCadTracker
+} from '@jupytercad/schema';
 import { ISignal, Signal } from '@lumino/signaling';
 
 export class SuggestionModel {
   constructor(options: SuggestionModel.IOptions) {
     this.sharedModel = options.sharedModel;
     this._title = options.title;
+    this._tracker = options.tracker;
   }
 
   get title(): string {
@@ -50,6 +55,16 @@ export class SuggestionModel {
   async mergeFork(forkId: string): Promise<void> {
     if (this.sharedModel?.rootRoomId) {
       await requestDocMerge(forkId, this.sharedModel.rootRoomId);
+      const current = this._tracker.currentWidget as any;
+      if (!current) {
+        return;
+      }
+      if (current.content.splitScreen) {
+        current.content.splitScreen = {
+          enabled: false
+        };
+      }
+      this._forkSwitched.emit(this.sharedModel?.rootRoomId);
     }
   }
   async createFork(): Promise<string | undefined> {
@@ -72,8 +87,21 @@ export class SuggestionModel {
     }
   }
 
-  async checkoutFork(forkId: string): Promise<void> {
+  async checkoutFork(forkId: string, split = false): Promise<void> {
     if (this.sharedModel) {
+      if (split) {
+        const current = this._tracker.currentWidget as any;
+        console.log('current ', current, current.content.splitScreen);
+
+        if (!current) {
+          return;
+        }
+        if (current.content.splitScreen) {
+          current.content.splitScreen = {
+            enabled: true
+          };
+        }
+      }
       await this.sharedModel.provider.connect(forkId);
     }
   }
@@ -109,11 +137,13 @@ export class SuggestionModel {
   private _forkSwitched: Signal<this, string> = new Signal(this);
   private _contextChanged: Signal<this, void> = new Signal(this);
   private _title: string | undefined;
+  private _tracker: IJupyterCadTracker;
 }
 
 namespace SuggestionModel {
   export interface IOptions {
     sharedModel: IJupyterCadDoc | undefined;
     title: string;
+    tracker: IJupyterCadTracker;
   }
 }

@@ -26,7 +26,8 @@ export class RightPanelWidget extends SidePanel {
 
     const suggestionModel = new SuggestionModel({
       sharedModel: this._model?.sharedModel,
-      title: ''
+      title: '',
+      tracker: options.tracker
     });
     const suggestion = new SuggestionPanel({ model: suggestionModel });
     this.addWidget(suggestion);
