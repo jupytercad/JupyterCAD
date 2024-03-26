@@ -369,10 +369,12 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                         className={'jp-ToolbarButtonComponent'}
                         onClick={() => {
                           const objectId = opts.node.parentId as string;
+
                           const guidata =
                             this.props.cpModel.sharedModel?.getOption(
                               'guidata'
                             ) || { [objectId]: {} };
+
                           if (guidata) {
                             if (guidata[objectId]) {
                               guidata[objectId]['visibility'] = !visible;
@@ -380,6 +382,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                               guidata[objectId] = { visibility: !visible };
                             }
                           }
+
                           this.props.cpModel.sharedModel?.setOption(
                             'guidata',
                             guidata
