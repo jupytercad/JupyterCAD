@@ -27,7 +27,9 @@ import {
   sphereIcon,
   torusIcon,
   unionIcon,
-  clippingIcon
+  clippingIcon,
+  chamferIcon,
+  filletIcon
 } from './tools';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
@@ -784,7 +786,7 @@ export function addCommands(
         ? tracker.currentWidget.context.model.sharedModel.editable
         : false;
     },
-    iconClass: 'fa fa-grip-lines',
+    icon: chamferIcon,
     execute: Private.executeOperator('chamfer', tracker)
   });
 
@@ -795,7 +797,7 @@ export function addCommands(
         ? tracker.currentWidget.context.model.sharedModel.editable
         : false;
     },
-    iconClass: 'fa fa-grip-lines',
+    icon: filletIcon,
     execute: Private.executeOperator('fillet', tracker)
   });
 
