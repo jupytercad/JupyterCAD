@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "description": "Edge::Chamfer",
+  "description": "Part::Chamfer",
   "title": "IChamfer",
   "required": ["Base", "Edge", "Dist", "Placement"],
   "additionalProperties": false,

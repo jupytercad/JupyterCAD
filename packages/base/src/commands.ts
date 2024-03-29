@@ -355,7 +355,7 @@ const OPERATORS = {
   },
   chamfer: {
     title: 'Chamfer parameters',
-    shape: 'Edge::Chamfer',
+    shape: 'Part::Chamfer',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
       const selectedEdge = getSelectedEdge(model.localState?.selected.value);
@@ -371,7 +371,7 @@ const OPERATORS = {
       return (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
-          shape: 'Edge::Chamfer',
+          shape: 'Part::Chamfer',
           parameters,
           visible: true,
           name: Name
@@ -396,7 +396,7 @@ const OPERATORS = {
   },
   fillet: {
     title: 'Fillet parameters',
-    shape: 'Edge::Fillet',
+    shape: 'Part::Fillet',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
       const selectedEdge = getSelectedEdge(model.localState?.selected.value);
@@ -412,7 +412,7 @@ const OPERATORS = {
       return (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
-          shape: 'Edge::Fillet',
+          shape: 'Part::Fillet',
           parameters,
           visible: true,
           name: Name

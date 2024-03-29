@@ -59,9 +59,9 @@ export const Intersection = operatorCache<IIntersection>(
 
 export const Extrude = operatorCache<IExtrusion>('Part::Extrusion', _Extrude);
 
-export const Chamfer = operatorCache<IChamfer>('Edge::Chamfer', _Chamfer);
+export const Chamfer = operatorCache<IChamfer>('Part::Chamfer', _Chamfer);
 
-export const Fillet = operatorCache<IFillet>('Edge::Fillet', _Fillet);
+export const Fillet = operatorCache<IFillet>('Part::Fillet', _Fillet);
 
 export const ObjectFile = operatorCache<{
   content: string;
@@ -79,8 +79,8 @@ export function initShapesFactory() {
   setShapesFactory('Part::MultiFuse', Fuse);
   setShapesFactory('Part::Extrusion', Extrude);
   setShapesFactory('Part::MultiCommon', Intersection);
-  setShapesFactory('Edge::Chamfer', Chamfer);
-  setShapesFactory('Edge::Fillet', Fillet);
+  setShapesFactory('Part::Chamfer', Chamfer);
+  setShapesFactory('Part::Fillet', Fillet);
   setShapesFactory('Sketcher::SketchObject', SketchObject);
   setShapesFactory('Post::Operator', _PostOperator);
 }

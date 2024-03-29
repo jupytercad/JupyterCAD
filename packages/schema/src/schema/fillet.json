@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "description": "Edge::Fillet",
+  "description": "Part::Fillet",
   "title": "IFillet",
   "required": ["Base", "Edge", "Radius", "Placement"],
   "additionalProperties": false,
