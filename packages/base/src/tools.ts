@@ -16,6 +16,8 @@ import sphereIconStr from '../style/icon/sphere.svg';
 import torusIconStr from '../style/icon/torus.svg';
 import unionIconStr from '../style/icon/union.svg';
 import clippingIconStr from '../style/icon/clipping.svg';
+import chamferIconStr from '../style/icon/chamfer.svg';
+import filletIconStr from '../style/icon/fillet.svg';
 
 export const jcLightIcon = new LabIcon({
   name: 'jupytercad:control-light',
@@ -85,6 +87,16 @@ export const explodedViewIcon = new LabIcon({
 export const clippingIcon = new LabIcon({
   name: 'jupytercad:clipping-icon',
   svgstr: clippingIconStr
+});
+
+export const chamferIcon = new LabIcon({
+  name: 'jupytercad:chamfer-icon',
+  svgstr: chamferIconStr
+});
+
+export const filletIcon = new LabIcon({
+  name: 'jupytercad:fillet-icon',
+  svgstr: filletIconStr
 });
 
 export const debounce = (

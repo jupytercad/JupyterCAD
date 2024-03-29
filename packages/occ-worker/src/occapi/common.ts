@@ -62,6 +62,8 @@ const _ShapesFactory: {
   'Part::MultiFuse': undefined,
   'Part::Extrusion': undefined,
   'Part::MultiCommon': undefined,
+  'Part::Chamfer': undefined,
+  'Part::Fillet': undefined,
   'Sketcher::SketchObject': undefined,
   'Post::Operator': undefined
 };

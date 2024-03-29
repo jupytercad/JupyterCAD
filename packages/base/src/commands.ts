@@ -4,6 +4,7 @@ import {
   IJCadObject,
   IJupyterCadDoc,
   IJupyterCadModel,
+  ISelection,
   Parts
 } from '@jupytercad/schema';
 import { JupyterFrontEnd } from '@jupyterlab/application';
@@ -26,7 +27,9 @@ import {
   sphereIcon,
   torusIcon,
   unionIcon,
-  clippingIcon
+  clippingIcon,
+  chamferIcon,
+  filletIcon
 } from './tools';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
@@ -132,17 +135,60 @@ const PARTS = {
   }
 };
 
+function getSelectedMeshName(
+  selection: { [key: string]: ISelection } | undefined,
+  index: number
+): string {
+  if (selection === undefined) {
+    return '';
+  }
+
+  const selectedNames = Object.keys(selection);
+
+  if (selectedNames[index]) {
+    const selected = selection[selectedNames[index]];
+
+    if (selected.type === 'shape') {
+      return selectedNames[index];
+    } else {
+      return selected.parent as string;
+    }
+  }
+
+  return '';
+}
+
+function getSelectedEdge(
+  selection: { [key: string]: ISelection } | undefined
+): { shape: string; edgeIndex: number } | undefined {
+  if (selection === undefined) {
+    return;
+  }
+
+  const selectedNames = Object.keys(selection);
+  for (const name of selectedNames) {
+    if (selection[name].type === 'edge') {
+      return {
+        shape: selection[name].parent!,
+        edgeIndex: selection[name].edgeIndex!
+      };
+    }
+  }
+}
+
 const OPERATORS = {
   cut: {
     title: 'Cut parameters',
     shape: 'Part::Cut',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selected = model.localState?.selected.value || [];
+      const selected = model.localState?.selected.value || {};
+      const sel0 = getSelectedMeshName(selected, 0);
+      const sel1 = getSelectedMeshName(selected, 1);
       return {
         Name: newName('Cut', model),
-        Base: selected.length > 0 ? selected[0] : objects[0].name ?? '',
-        Tool: selected.length > 1 ? selected[1] : objects[1].name ?? '',
+        Base: sel0 || objects[0].name || '',
+        Tool: sel1 || objects[1].name || '',
         Refine: false,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
@@ -180,10 +226,11 @@ const OPERATORS = {
     shape: 'Part::Extrusion',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selected = model.localState?.selected.value || [];
+      const selected = model.localState?.selected.value || {};
+      const sel0 = getSelectedMeshName(selected, 0);
       return {
         Name: newName('Extrusion', model),
-        Base: [selected.length > 0 ? selected[0] : objects[0].name ?? ''],
+        Base: [sel0 || objects[0].name || ''],
         Dir: [0, 0, 1],
         LengthFwd: 10,
         LengthRev: 0,
@@ -223,13 +270,12 @@ const OPERATORS = {
     shape: 'Part::MultiFuse',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selected = model.localState?.selected.value || [];
+      const selected = model.localState?.selected.value || {};
+      const sel0 = getSelectedMeshName(selected, 0);
+      const sel1 = getSelectedMeshName(selected, 1);
       return {
         Name: newName('Union', model),
-        Shapes: [
-          selected.length > 0 ? selected[0] : objects[0].name ?? '',
-          selected.length > 1 ? selected[1] : objects[1].name ?? ''
-        ],
+        Shapes: [sel0 || objects[0].name || '', sel1 || objects[1].name || ''],
         Refine: false,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
@@ -268,13 +314,12 @@ const OPERATORS = {
     shape: 'Part::MultiCommon',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selected = model.localState?.selected.value || [];
+      const selected = model.localState?.selected.value || {};
+      const sel0 = getSelectedMeshName(selected, 0);
+      const sel1 = getSelectedMeshName(selected, 1);
       return {
         Name: newName('Intersection', model),
-        Shapes: [
-          selected.length > 0 ? selected[0] : objects[0].name ?? '',
-          selected.length > 1 ? selected[1] : objects[1].name ?? ''
-        ],
+        Shapes: [sel0 || objects[0].name || '', sel1 || objects[1].name || ''],
         Refine: false,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
@@ -294,6 +339,88 @@ const OPERATORS = {
             parameters['Shapes'].map((shape: string) => {
               setVisible(sharedModel, shape, false);
             });
+
+            if (!sharedModel.objectExists(objectModel.name)) {
+              sharedModel.addObject(objectModel);
+            } else {
+              showErrorMessage(
+                'The object already exists',
+                'There is an existing object with the same name.'
+              );
+            }
+          });
+        }
+      };
+    }
+  },
+  chamfer: {
+    title: 'Chamfer parameters',
+    shape: 'Part::Chamfer',
+    default: (model: IJupyterCadModel) => {
+      const objects = model.getAllObject();
+      const selectedEdge = getSelectedEdge(model.localState?.selected.value);
+      return {
+        Name: newName('Chamfer', model),
+        Base: selectedEdge?.shape || objects[0].name || '',
+        Edge: selectedEdge?.edgeIndex || 0,
+        Dist: 0.2,
+        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+      };
+    },
+    syncData: (model: IJupyterCadModel) => {
+      return (props: IDict) => {
+        const { Name, ...parameters } = props;
+        const objectModel: IJCadObject = {
+          shape: 'Part::Chamfer',
+          parameters,
+          visible: true,
+          name: Name
+        };
+        const sharedModel = model.sharedModel;
+        if (sharedModel) {
+          sharedModel.transact(() => {
+            setVisible(sharedModel, parameters['Base'], false);
+
+            if (!sharedModel.objectExists(objectModel.name)) {
+              sharedModel.addObject(objectModel);
+            } else {
+              showErrorMessage(
+                'The object already exists',
+                'There is an existing object with the same name.'
+              );
+            }
+          });
+        }
+      };
+    }
+  },
+  fillet: {
+    title: 'Fillet parameters',
+    shape: 'Part::Fillet',
+    default: (model: IJupyterCadModel) => {
+      const objects = model.getAllObject();
+      const selectedEdge = getSelectedEdge(model.localState?.selected.value);
+      return {
+        Name: newName('Fillet', model),
+        Base: selectedEdge?.shape || objects[0].name || '',
+        Edge: selectedEdge?.edgeIndex || 0,
+        Radius: 0.2,
+        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
+      };
+    },
+    syncData: (model: IJupyterCadModel) => {
+      return (props: IDict) => {
+        const { Name, ...parameters } = props;
+        const objectModel: IJCadObject = {
+          shape: 'Part::Fillet',
+          parameters,
+          visible: true,
+          name: Name
+        };
+        const sharedModel = model.sharedModel;
+        if (sharedModel) {
+          sharedModel.transact(() => {
+            setVisible(sharedModel, parameters['Base'], false);
 
             if (!sharedModel.objectExists(objectModel.name)) {
               sharedModel.addObject(objectModel);
@@ -652,6 +779,28 @@ export function addCommands(
     execute: Private.executeOperator('intersection', tracker)
   });
 
+  commands.addCommand(CommandIDs.chamfer, {
+    label: trans.__('Make chamfer'),
+    isEnabled: () => {
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
+    },
+    icon: chamferIcon,
+    execute: Private.executeOperator('chamfer', tracker)
+  });
+
+  commands.addCommand(CommandIDs.fillet, {
+    label: trans.__('Make fillet'),
+    isEnabled: () => {
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
+    },
+    icon: filletIcon,
+    execute: Private.executeOperator('fillet', tracker)
+  });
+
   commands.addCommand(CommandIDs.updateAxes, {
     label: trans.__('Axes Helper'),
     isEnabled: () => Boolean(tracker.currentWidget),
@@ -792,6 +941,9 @@ export namespace CommandIDs {
   export const union = 'jupytercad:union';
   export const intersection = 'jupytercad:intersection';
 
+  export const chamfer = 'jupytercad:chamfer';
+  export const fillet = 'jupytercad:fillet';
+
   export const updateAxes = 'jupytercad:updateAxes';
   export const updateExplodedView = 'jupytercad:updateExplodedView';
   export const updateCameraSettings = 'jupytercad:updateCameraSettings';
@@ -822,6 +974,7 @@ namespace Private {
       };
     });
   }
+
   export function createPart(
     part: keyof typeof PARTS,
     tracker: WidgetTracker<JupyterCadWidget>
