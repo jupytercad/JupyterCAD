@@ -1,10 +1,3 @@
-import * as Color from 'd3-color';
-import * as React from 'react';
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
-
 import { MapChange } from '@jupyter/ydoc';
 import {
   IAnnotation,
@@ -13,13 +6,22 @@ import {
   IJupyterCadClientState,
   IJupyterCadDoc,
   IJupyterCadModel,
-  IPostResult
+  IPostResult,
+  ISelection
 } from '@jupytercad/schema';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { User } from '@jupyterlab/services';
 import { CommandRegistry } from '@lumino/commands';
 import { JSONValue } from '@lumino/coreutils';
 import { ContextMenu } from '@lumino/widgets';
+import * as Color from 'd3-color';
+import * as React from 'react';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
+
+import { FloatingAnnotation } from '../annotation';
 import { getCSSVariableColor, isLightTheme, throttle } from '../tools';
 import {
   AxeHelper,
@@ -27,24 +29,25 @@ import {
   ClipSettings,
   ExplodedView
 } from '../types';
+import { FollowIndicator } from './followindicator';
 import {
   BasicMesh,
   buildShape,
   computeExplodedState,
   DEFAULT_EDGE_COLOR,
   DEFAULT_EDGE_COLOR_CSS,
+  DEFAULT_LINEWIDTH,
   DEFAULT_MESH_COLOR,
   DEFAULT_MESH_COLOR_CSS,
   IPickedResult,
   IPointer,
   projectVector,
+  SELECTED_LINEWIDTH,
   SELECTED_MESH_COLOR,
   SELECTED_MESH_COLOR_CSS
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
-import { FollowIndicator } from './followindicator';
-import { FloatingAnnotation } from '../annotation';
 
 interface IProps {
   viewModel: MainViewModel;
@@ -87,9 +90,12 @@ export class MainView extends React.Component<IProps, IStates> {
       this
     );
     this._mainViewModel.renderSignal.connect(this._requestRender, this);
-    if (this._raycaster.params.Line) {
-      this._raycaster.params.Line.threshold = 0.1;
-    }
+
+    // @ts-ignore Missing ThreeJS typing
+    this._raycaster.params.Line2 = {};
+    // Is this threshold in pixels? It looks like it
+    // @ts-ignore Missing ThreeJS typing
+    this._raycaster.params.Line2.threshold = 50;
 
     this.state = {
       id: this._mainViewModel.id,
@@ -336,8 +342,15 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   };
 
-  startAnimationLoop = (): void => {
-    this._requestID = window.requestAnimationFrame(this.startAnimationLoop);
+  animate = (): void => {
+    this._requestID = window.requestAnimationFrame(this.animate);
+
+    for (const material of this._edgeMaterials) {
+      material.resolution.set(
+        this._renderer.domElement.width,
+        this._renderer.domElement.height
+      );
+    }
 
     if (this._clippingPlaneMesh !== null) {
       this._clippingPlane.coplanarPoint(this._clippingPlaneMesh.position);
@@ -376,7 +389,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
   generateScene = (): void => {
     this.sceneSetup();
-    this.startAnimationLoop();
+    this.animate();
     this.resizeCanvasToDisplaySize();
   };
 
@@ -475,10 +488,18 @@ export class MainView extends React.Component<IProps, IStates> {
         ) {
           continue;
         }
-
+        const intersectMesh = intersect.object.name.includes('-front')
+          ? intersect.object.parent.getObjectByName(
+              intersect.object.name.replace('-front', '')
+            )
+          : intersect.object;
         return {
-          mesh: intersect.object as BasicMesh,
-          position: intersect.point
+          mesh: intersectMesh as BasicMesh,
+          // @ts-ignore Missing threejs typing
+          position: intersect.pointOnLine
+            ? // @ts-ignore Missing threejs typing
+              intersect.pointOnLine
+            : intersect.point
         };
       }
     }
@@ -489,15 +510,11 @@ export class MainView extends React.Component<IProps, IStates> {
   private _onClick(e: MouseEvent) {
     const selection = this._pick();
     const selectedMeshesNames = new Set(
-      this._selectedMeshes.map(sel => sel.parent!.name)
+      this._selectedMeshes.map(sel => sel.name)
     );
 
     if (selection) {
-      // TODO Support selecting edges?
-      let selectionName = selection.mesh.name;
-      if (selectionName.startsWith('edge') || selectionName === '') {
-        selectionName = (selection.mesh.parent as BasicMesh).name;
-      }
+      const selectionName = selection.mesh.name;
       if (e.ctrlKey) {
         if (selectedMeshesNames.has(selectionName)) {
           selectedMeshesNames.delete(selectionName);
@@ -514,8 +531,15 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       const names = Array.from(selectedMeshesNames);
-      this._updateSelected(names);
-      this._model.syncSelectedObject(names, this.state.id);
+
+      const newSelection: { [key: string]: ISelection } = {};
+      for (const name of names) {
+        newSelection[name] = this._meshGroup?.getObjectByName(name)
+          ?.userData as ISelection;
+      }
+
+      this._updateSelected(newSelection);
+      this._model.syncSelected(newSelection, this.state.id);
     }
   }
 
@@ -551,6 +575,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._boundingGroup = new THREE.Box3();
 
+    this._edgeMaterials = [];
+
     this._meshGroup = new THREE.Group();
 
     Object.entries(payload).forEach(([objName, data]) => {
@@ -564,13 +590,21 @@ export class MainView extends React.Component<IProps, IStates> {
       });
 
       if (output) {
-        const { meshGroup, mainMesh } = output;
+        const { meshGroup, mainMesh, edgesMeshes } = output;
         if (meshGroup.visible) {
           this._boundingGroup.expandByObject(mainMesh);
         }
         if (selected) {
           this._selectedMeshes.push(mainMesh);
         }
+        edgesMeshes.forEach(el => {
+          this._edgeMaterials.push(el.material);
+          if (selectedNames.includes(el.name)) {
+            this._selectedMeshes.push(el as any as BasicMesh);
+            el.material.color = SELECTED_MESH_COLOR;
+            el.material.linewidth = SELECTED_LINEWIDTH;
+          }
+        });
         this._meshGroup?.add(meshGroup);
       }
     });
@@ -666,10 +700,7 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     const material = new THREE.MeshPhongMaterial({
-      color: DEFAULT_MESH_COLOR,
-      polygonOffset: true,
-      polygonOffsetFactor: 1,
-      polygonOffsetUnits: 1
+      color: DEFAULT_MESH_COLOR
     });
     const mesh = new THREE.Mesh(obj, material);
 
@@ -735,7 +766,7 @@ export class MainView extends React.Component<IProps, IStates> {
     return new THREE.Mesh(this._pointerGeometry, material);
   }
 
-  private _updateSelected(names: string[]) {
+  private _updateSelected(selection: { [key: string]: ISelection }) {
     // Reset original color for old selection
     for (const selectedMesh of this._selectedMeshes) {
       let originalColor = DEFAULT_MESH_COLOR;
@@ -748,24 +779,35 @@ export class MainView extends React.Component<IProps, IStates> {
         const rgba = guidata[selectedMesh.name]['color'] as number[];
         originalColor = new THREE.Color(rgba[0], rgba[1], rgba[2]);
       }
-      if (selectedMesh?.material?.color) {
+      if (selectedMesh.material?.color) {
         selectedMesh.material.color = originalColor;
+      }
+      // @ts-ignore
+      if (selectedMesh.material?.linewidth) {
+        // @ts-ignore
+        selectedMesh.material.linewidth = DEFAULT_LINEWIDTH;
       }
     }
 
     // Set new selection
     this._selectedMeshes = [];
-    for (const name of names) {
-      const selected = this._meshGroup
-        ?.getObjectByName(name)
-        ?.getObjectByName('main') as BasicMesh | undefined;
-      if (!selected) {
+    for (const selectionName in selection) {
+      const selectedMesh = this._meshGroup?.getObjectByName(
+        selectionName
+      ) as BasicMesh;
+
+      if (!selectedMesh) {
         continue;
       }
 
-      this._selectedMeshes.push(selected);
-      if (selected?.material?.color) {
-        selected.material.color = SELECTED_MESH_COLOR;
+      this._selectedMeshes.push(selectedMesh);
+      if (selectedMesh?.material?.color) {
+        selectedMesh.material.color = SELECTED_MESH_COLOR;
+      }
+      // @ts-ignore
+      if (selectedMesh?.material?.linewidth) {
+        // @ts-ignore
+        selectedMesh.material.linewidth = SELECTED_LINEWIDTH;
       }
     }
   }
@@ -815,7 +857,7 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       // Sync selected
-      if (Array.isArray(remoteState.selected.value)) {
+      if (remoteState.selected?.value) {
         this._updateSelected(remoteState.selected.value);
       }
 
@@ -847,7 +889,7 @@ export class MainView extends React.Component<IProps, IStates> {
       // Sync local selection if needed
       const localState = this._model.localState;
 
-      if (localState?.selected && Array.isArray(localState.selected.value)) {
+      if (localState?.selected?.value) {
         this._updateSelected(localState.selected.value);
       }
     }
@@ -864,9 +906,9 @@ export class MainView extends React.Component<IProps, IStates> {
       let collaboratorPointer = this._collaboratorPointers[clientId];
 
       if (pointer) {
-        const parent = this._meshGroup
-          ?.getObjectByName(pointer.parent)
-          ?.getObjectByName('main') as BasicMesh;
+        const parent = this._meshGroup?.getObjectByName(
+          pointer.parent
+        ) as BasicMesh;
 
         if (!collaboratorPointer) {
           const mesh = this._createPointer(clientState.user);
@@ -921,9 +963,10 @@ export class MainView extends React.Component<IProps, IStates> {
 
     if (guidata) {
       for (const objName in guidata) {
-        const objGroup = this._meshGroup?.getObjectByName(objName);
-        const obj = objGroup?.getObjectByName('main') as BasicMesh | undefined;
-        if (!objGroup || !obj) {
+        const obj = this._meshGroup?.getObjectByName(objName) as
+          | BasicMesh
+          | undefined;
+        if (!obj) {
           continue;
         }
         if (
@@ -933,8 +976,7 @@ export class MainView extends React.Component<IProps, IStates> {
             this._explodedViewLinesHelperGroup?.getObjectByName(objName);
           const objGuiData = guidata[objName];
           if (objGuiData) {
-            objGroup.visible = objGuiData['visibility'];
-            obj.visible = objGuiData['visibility'];
+            obj.parent!.visible = objGuiData['visibility'];
 
             if (explodedLineHelper) {
               explodedLineHelper.visible = objGuiData['visibility'];
@@ -1009,7 +1051,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
       for (const group of this._meshGroup?.children as THREE.Group[]) {
         const explodedState = computeExplodedState({
-          mesh: group.getObjectByName('main') as BasicMesh,
+          mesh: group.getObjectByName(
+            group.name.replace('-group', '')
+          ) as BasicMesh,
           boundingGroup: this._boundingGroup,
           factor: this._explodedView.factor
         });
@@ -1020,7 +1064,7 @@ export class MainView extends React.Component<IProps, IStates> {
         // Draw lines
         const material = new THREE.LineBasicMaterial({
           color: DEFAULT_EDGE_COLOR,
-          linewidth: 2
+          linewidth: DEFAULT_LINEWIDTH
         });
         const geometry = new THREE.BufferGeometry().setFromPoints([
           explodedState.oldGeometryCenter,
@@ -1103,9 +1147,9 @@ export class MainView extends React.Component<IProps, IStates> {
   };
 
   private _computeAnnotationPosition(annotation: IAnnotation): THREE.Vector2 {
-    const parent = this._meshGroup
-      ?.getObjectByName(annotation.parent)
-      ?.getObjectByName('main') as BasicMesh;
+    const parent = this._meshGroup?.getObjectByName(
+      annotation.parent
+    ) as BasicMesh;
     const position = new THREE.Vector3(
       annotation.position[0],
       annotation.position[1],
@@ -1206,6 +1250,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _clippingPlaneMesh: THREE.Mesh | null = null; // Plane mesh used for "filling the gaps"
   private _clippingPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0); // Mathematical object for clipping computation
   private _clippingPlanes = [this._clippingPlane];
+  private _edgeMaterials: any[] = [];
 
   private _scene: THREE.Scene; // Threejs scene
   private _camera: THREE.PerspectiveCamera | THREE.OrthographicCamera; // Threejs camera

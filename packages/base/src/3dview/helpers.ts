@@ -1,11 +1,18 @@
+import { IDict, IParsedShape } from '@jupytercad/schema';
 import * as THREE from 'three';
-import { getCSSVariableColor } from '../tools';
 import {
   acceleratedRaycast,
   computeBoundsTree,
   disposeBoundsTree
 } from 'three-mesh-bvh';
-import { IDict, IParsedShape } from '@jupytercad/schema';
+import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
+import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
+
+import { getCSSVariableColor } from '../tools';
+
+export const DEFAULT_LINEWIDTH = 4;
+export const SELECTED_LINEWIDTH = 12;
 
 // Apply the BVH extension
 
@@ -109,6 +116,7 @@ export function buildShape(options: {
 }): {
   meshGroup: THREE.Group;
   mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>;
+  edgesMeshes: LineSegments2[];
 } | null {
   const { objName, data, guidata, clippingPlanes, selected } = options;
   const { faceList, edgeList, jcObject } = data;
@@ -179,7 +187,7 @@ export function buildShape(options: {
   }
 
   const meshGroup = new THREE.Group();
-  meshGroup.name = objName;
+  meshGroup.name = `${objName}-group`;
   meshGroup.visible = visible;
 
   const baseMat = new THREE.MeshBasicMaterial();
@@ -197,6 +205,7 @@ export function buildShape(options: {
   mat0.stencilZFail = THREE.IncrementWrapStencilOp;
   mat0.stencilZPass = THREE.IncrementWrapStencilOp;
   const backFaces = new THREE.Mesh(geometry, mat0);
+  backFaces.name = `${objName}-back`;
   meshGroup.add(backFaces);
 
   // front faces
@@ -207,36 +216,49 @@ export function buildShape(options: {
   mat1.stencilZFail = THREE.DecrementWrapStencilOp;
   mat1.stencilZPass = THREE.DecrementWrapStencilOp;
   const frontFaces = new THREE.Mesh(geometry, mat1);
+  frontFaces.name = `${objName}-front`;
   meshGroup.add(frontFaces);
 
   const mainMesh = new THREE.Mesh(geometry, material);
-  mainMesh.name = 'main';
-
-  if (visible) {
-    // this._boundingGroup.expandByObject(mainMesh);
-  }
+  mainMesh.name = objName;
+  mainMesh.userData = {
+    type: 'shape'
+  };
 
   if (selected) {
-    //selectedNames.includes(objName)
-    // this._selectedMeshes.push(mainMesh);
     mainMesh.material.color = SELECTED_MESH_COLOR;
   }
 
-  const edgeMaterial = new THREE.LineBasicMaterial({
-    linewidth: 5,
-    color: DEFAULT_EDGE_COLOR,
-    clippingPlanes
-  });
+  let edgeIdx = 0;
+  const edgesMeshes: LineSegments2[] = [];
   edgeList.forEach(edge => {
-    const edgeVertices = new THREE.Float32BufferAttribute(edge.vertexCoord, 3);
-    const edgeGeometry = new THREE.BufferGeometry();
-    edgeGeometry.setAttribute('position', edgeVertices);
-    const edgesMesh = new THREE.Line(edgeGeometry, edgeMaterial);
-    edgesMesh.name = 'edge';
+    const edgeMaterial = new LineMaterial({
+      linewidth: DEFAULT_LINEWIDTH,
+      // @ts-ignore Missing typing in ThreeJS
+      color: DEFAULT_EDGE_COLOR,
+      clippingPlanes,
+      // Depth offset so that lines are most always on top of faces
+      polygonOffset: true,
+      polygonOffsetFactor: -5,
+      polygonOffsetUnits: -5
+    });
 
-    mainMesh.add(edgesMesh);
+    const edgeGeometry = new LineGeometry();
+    edgeGeometry.setPositions(edge.vertexCoord);
+    const edgesMesh = new LineSegments2(edgeGeometry, edgeMaterial);
+    edgesMesh.name = `edge-${objName}-${edgeIdx}`;
+    edgesMesh.userData = {
+      type: 'edge',
+      edgeIndex: edgeIdx,
+      parent: objName
+    };
+
+    edgesMeshes.push(edgesMesh);
+
+    edgeIdx++;
   });
+  meshGroup.add(...edgesMeshes);
   meshGroup.add(mainMesh);
 
-  return { meshGroup, mainMesh };
+  return { meshGroup, mainMesh, edgesMeshes };
 }
