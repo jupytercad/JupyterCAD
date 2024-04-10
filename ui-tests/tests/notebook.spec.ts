@@ -35,7 +35,7 @@ const testCellOutputs = async (
 
     await page.notebook.runCellByCell({
       onAfterCellRun: async (cellIndex: number) => {
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(5000);
 
         const cell = await page.notebook.getCellOutput(cellIndex);
         if (cell) {
