@@ -40,6 +40,12 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 2.0.0a4
+
+No merged PRs
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.0.0a3
 
 ([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v2.0.0a2...b7f3443d2215c3d15a6b6a36f9513612819efd0c))
@@ -66,8 +72,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2024-03-06&to=2024-04-10&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2024-03-06..2024-04-10&type=Issues) | [@IsabelParedes](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AIsabelParedes+updated%3A2024-03-06..2024-04-10&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2024-03-06..2024-04-10&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2024-03-06..2024-04-10&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.0.0a2
 
