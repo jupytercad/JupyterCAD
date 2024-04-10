@@ -40,6 +40,35 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 2.0.0a3
+
+([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v2.0.0a2...b7f3443d2215c3d15a6b6a36f9513612819efd0c))
+
+### Enhancements made
+
+- Add chamfer and fillet icons [#342](https://github.com/jupytercad/jupytercad/pull/342) ([@IsabelParedes](https://github.com/IsabelParedes))
+- Edge operators [#340](https://github.com/jupytercad/jupytercad/pull/340) ([@martinRenou](https://github.com/martinRenou))
+- Implement clipping [#333](https://github.com/jupytercad/jupytercad/pull/333) ([@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- Update svg files [#338](https://github.com/jupytercad/jupytercad/pull/338) ([@trungleduc](https://github.com/trungleduc))
+- Fix build shape from brep string [#334](https://github.com/jupytercad/jupytercad/pull/334) ([@trungleduc](https://github.com/trungleduc))
+
+### Maintenance and upkeep improvements
+
+- Visual regression tests: Increase cell execution timeout [#347](https://github.com/jupytercad/jupytercad/pull/347) ([@trungleduc](https://github.com/trungleduc))
+- Refactor 3D view [#341](https://github.com/jupytercad/jupytercad/pull/341) ([@trungleduc](https://github.com/trungleduc))
+- Close warning before starting the UI test [#336](https://github.com/jupytercad/jupytercad/pull/336) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2024-03-06&to=2024-04-10&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2024-03-06..2024-04-10&type=Issues) | [@IsabelParedes](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AIsabelParedes+updated%3A2024-03-06..2024-04-10&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2024-03-06..2024-04-10&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2024-03-06..2024-04-10&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.0.0a2
 
 ([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v2.0.0a1...5151f6d7bbb1a89ecf197c1587a4e4ce2c54c091))
@@ -60,8 +89,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2024-02-27&to=2024-03-06&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2024-02-27..2024-03-06&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2024-02-27..2024-03-06&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2024-02-27..2024-03-06&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.0.0a1
 
