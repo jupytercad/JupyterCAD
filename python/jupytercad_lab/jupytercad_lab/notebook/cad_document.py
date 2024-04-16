@@ -671,7 +671,7 @@ class CadDocument(CommWidget):
         self.set_visible(shape, False)
         return self.add_object(OBJECT_FACTORY.create_object(data, self))
 
-    def _get_operand(self, shape: str | int | None, default_idx: int=-1):
+    def _get_operand(self, shape: str | int | None, default_idx: int = -1):
         if isinstance(shape, str):
             if shape not in self.objects:
                 raise ValueError(f"Unknown object {shape}")
