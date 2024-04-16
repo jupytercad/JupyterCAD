@@ -8,3 +8,5 @@ from ._schema.intersection import IIntersection  # noqa
 from ._schema.jcad import Parts, ShapeMetadata  # noqa
 from ._schema.sphere import ISphere  # noqa
 from ._schema.torus import ITorus  # noqa
+from ._schema.chamfer import IChamfer  # noqa
+from ._schema.fillet import IFillet  # noqa

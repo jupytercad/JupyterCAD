@@ -23,6 +23,8 @@ from .objects import (
     IFuse,
     IIntersection,
     ISphere,
+    IChamfer,
+    IFillet,
     ITorus,
     Parts,
     ShapeMetadata,
@@ -593,29 +595,101 @@ class CadDocument(CommWidget):
         self.set_visible(shape2, False)
         return self.add_object(OBJECT_FACTORY.create_object(data, self))
 
-    def _get_boolean_operands(self, shape1: str | int | None, shape2: str | int | None):
-        objects = self.objects
+    def chamfer(
+        self,
+        name: str = "",
+        shape: str | int = None,
+        edge: int = 0,
+        dist: float = 0.1,
+        position: List[float] = [0, 0, 0],
+        rotation_axis: List[float] = [0, 0, 1],
+        rotation_angle: float = 0,
+    ) -> CadDocument:
+        """
+        Apply a chamfer operation on an object.
+        If no objects are provided as input, the last created object will be used as operand.
 
+        :param name: The name that will be used for the object in the document.
+        :param shape: The input object used for the chamfer. Can be the name of the object or its index in the objects list.
+        :param edge: The edge index where to apply chamfer.
+        :param dist: The distance of the chamfer.
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """  # noqa E501
+        shape = self._get_operand(shape)
+
+        data = {
+            "shape": Parts.Part__Chamfer.value,
+            "name": name if name else self._new_name("Chamfer"),
+            "parameters": {
+                "Base": shape,
+                "Edge": edge,
+                "Dist": dist,
+                "Placement": {"Position": [0, 0, 0], "Axis": [0, 0, 1], "Angle": 0},
+            },
+        }
+        self.set_visible(shape, False)
+        return self.add_object(OBJECT_FACTORY.create_object(data, self))
+
+    def fillet(
+        self,
+        name: str = "",
+        shape: str | int = None,
+        edge: int = 0,
+        radius: float = 0.1,
+        position: List[float] = [0, 0, 0],
+        rotation_axis: List[float] = [0, 0, 1],
+        rotation_angle: float = 0,
+    ) -> CadDocument:
+        """
+        Apply a fillet operation on an object.
+        If no objects are provided as input, the last created object will be used as operand.
+
+        :param name: The name that will be used for the object in the document.
+        :param shape: The input object used for the fillet. Can be the name of the object or its index in the objects list.
+        :param edge: The edge index where to apply fillet.
+        :param radius: The radius of the fillet.
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """  # noqa E501
+        shape = self._get_operand(shape)
+
+        data = {
+            "shape": Parts.Part__Fillet.value,
+            "name": name if name else self._new_name("Fillet"),
+            "parameters": {
+                "Base": shape,
+                "Edge": edge,
+                "Radius": radius,
+                "Placement": {"Position": [0, 0, 0], "Axis": [0, 0, 1], "Angle": 0},
+            },
+        }
+        self.set_visible(shape, False)
+        return self.add_object(OBJECT_FACTORY.create_object(data, self))
+
+    def _get_operand(self, shape: str | int | None, default_idx: int = -1):
+        if isinstance(shape, str):
+            if shape not in self.objects:
+                raise ValueError(f"Unknown object {shape}")
+        elif isinstance(shape, int):
+            shape = self.objects[shape]
+        else:
+            shape = self.objects[default_idx]
+
+        return shape
+
+    def _get_boolean_operands(self, shape1: str | int | None, shape2: str | int | None):
         if len(self.objects) < 2:
             raise ValueError(
                 "Cannot apply boolean operator if there are less than two objects in the document."  # noqa E501
             )
 
-        if isinstance(shape1, str):
-            if shape1 not in objects:
-                raise ValueError(f"Unknown object {shape1}")
-        elif isinstance(shape1, int):
-            shape1 = objects[shape1]
-        else:
-            shape1 = objects[-2]
-
-        if isinstance(shape2, str):
-            if shape2 not in objects:
-                raise ValueError(f"Unknown object {shape2}")
-        elif isinstance(shape2, int):
-            shape2 = objects[shape2]
-        else:
-            shape2 = objects[-1]
+        shape1 = self._get_operand(shape1, -2)
+        shape2 = self._get_operand(shape2, -1)
 
         return shape1, shape2
 
@@ -676,6 +750,8 @@ class PythonJcadObject(BaseModel):
         IFuse,
         ISphere,
         ITorus,
+        IFillet,
+        IChamfer,
     ]
     metadata: Optional[ShapeMetadata]
     _caddoc = Optional[CadDocument]
@@ -742,3 +818,5 @@ OBJECT_FACTORY.register_factory(Parts.Part__MultiCommon.value, IIntersection)
 OBJECT_FACTORY.register_factory(Parts.Part__MultiFuse.value, IFuse)
 OBJECT_FACTORY.register_factory(Parts.Part__Sphere.value, ISphere)
 OBJECT_FACTORY.register_factory(Parts.Part__Torus.value, ITorus)
+OBJECT_FACTORY.register_factory(Parts.Part__Chamfer.value, IChamfer)
+OBJECT_FACTORY.register_factory(Parts.Part__Fillet.value, IFillet)

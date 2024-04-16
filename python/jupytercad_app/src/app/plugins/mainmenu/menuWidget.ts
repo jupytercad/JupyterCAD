@@ -127,6 +127,14 @@ export class MainMenu extends MenuBar {
       type: 'command',
       command: CommandIDs.union
     });
+    operatorMenu.addItem({
+      type: 'command',
+      command: CommandIDs.chamfer
+    });
+    operatorMenu.addItem({
+      type: 'command',
+      command: CommandIDs.fillet
+    });
     menu.addItem({
       type: 'submenu',
       submenu: operatorMenu
