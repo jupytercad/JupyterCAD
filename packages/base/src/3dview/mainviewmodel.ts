@@ -15,6 +15,7 @@ import {
   MainAction,
   WorkerAction
 } from '@jupytercad/schema';
+import { showErrorMessage } from '@jupyterlab/apputils';
 import { ObservableMap } from '@jupyterlab/observables';
 import { JSONValue } from '@lumino/coreutils';
 import { IDisposable } from '@lumino/disposable';
@@ -126,6 +127,14 @@ export class MainViewModel implements IDisposable {
 
         break;
       }
+      case MainAction.ERROR: {
+        if (!this._errorCache.has(msg.payload)) {
+          showErrorMessage('Failed to compute OCC shape', msg.payload);
+          this._errorCache.add(msg.payload);
+        }
+
+        break;
+      }
       case MainAction.INITIALIZED: {
         if (!this._jcadModel) {
           return;
@@ -219,6 +228,7 @@ export class MainViewModel implements IDisposable {
     }
   }
 
+  private _errorCache: Set<string> = new Set();
   private _jcadModel: IJupyterCadModel;
   private _viewSetting: ObservableMap<JSONValue>;
   private _workerRegistry: IJCadWorkerRegistry;

@@ -44,15 +44,33 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
       break;
     }
     case WorkerAction.LOAD_FILE: {
-      const result = WorkerHandler[message.action](message.payload);
+      try {
+        const result = WorkerHandler[message.action](message.payload);
 
-      sendToMain(
-        {
-          action: MainAction.DISPLAY_SHAPE,
-          payload: result
-        },
-        id
-      );
+        sendToMain(
+          {
+            action: MainAction.DISPLAY_SHAPE,
+            payload: result
+          },
+          id
+        );
+      } catch (e) {
+        let message = '';
+
+        if (typeof e === 'string') {
+          message = e;
+        } else if (e instanceof Error) {
+          message = e.message;
+        }
+
+        sendToMain(
+          {
+            action: MainAction.ERROR,
+            payload: message
+          },
+          id
+        );
+      }
       break;
     }
   }
