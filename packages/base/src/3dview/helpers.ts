@@ -1,4 +1,8 @@
-import { IDict, IParsedShape } from '@jupytercad/schema';
+import {
+  IDict,
+  IParsedShape,
+  JCadWorkerSupportedFormat
+} from '@jupytercad/schema';
 import * as THREE from 'three';
 import {
   acceleratedRaycast,
@@ -261,4 +265,15 @@ export function buildShape(options: {
   meshGroup.add(mainMesh);
 
   return { meshGroup, mainMesh, edgesMeshes };
+}
+
+export function parseShapeName(name?: string): {
+  format?: JCadWorkerSupportedFormat;
+  workerId?: string;
+} {
+  if (!name) {
+    return {};
+  }
+  const [_, format, workerId] = name.split('::');
+  return { format, workerId } as any;
 }

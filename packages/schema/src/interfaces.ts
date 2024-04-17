@@ -278,8 +278,13 @@ export type IMessageHandler =
   | ((msg: IMainMessageBase) => void)
   | ((msg: IMainMessageBase) => Promise<void>);
 
+export enum JCadWorkerSupportedFormat {
+  BREP = 'BREP',
+  GLTF = 'GLTF'
+}
 export interface IJCadWorker {
   ready: Promise<void>;
+  shapeFormat?: JCadWorkerSupportedFormat;
   postMessage(msg: IWorkerMessageBase): void;
   register(options: { messageHandler: IMessageHandler; thisArg?: any }): string;
   unregister(id: string): void;

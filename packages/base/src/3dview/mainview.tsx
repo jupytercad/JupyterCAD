@@ -6,6 +6,7 @@ import {
   IJupyterCadClientState,
   IJupyterCadDoc,
   IJupyterCadModel,
+  IPostOperatorInput,
   IPostResult,
   ISelection
 } from '@jupytercad/schema';
@@ -48,7 +49,7 @@ import {
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
-
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 interface IProps {
   viewModel: MainViewModel;
 }
@@ -719,11 +720,42 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _requestRender(
     sender: MainViewModel,
-    renderData: { shapes: any; postShapes: any }
+    renderData: {
+      shapes: any;
+      postShapes?: IDict<IPostResult> | null;
+      postResult?: IDict<IPostOperatorInput>;
+    }
   ) {
-    const { shapes, postShapes } = renderData;
+    const { shapes, postShapes, postResult } = renderData;
     if (shapes !== null && shapes !== undefined) {
       this._shapeToMesh(renderData.shapes);
+      const options = {
+        binary: true
+      };
+
+      if (postResult && this._meshGroup) {
+        const exporter = new GLTFExporter();
+        Object.values(postResult).forEach(pos => {
+          const objName = pos.jcObject.parameters?.['Object'];
+          if (!objName) {
+            return;
+          }
+          const threeShape = this._meshGroup!.getObjectByName(
+            `${objName}-group`
+          );
+          if (!threeShape) {
+            return;
+          }
+          exporter.parse(
+            threeShape,
+            exported => {
+              pos.occBrep = exported as any;
+            },
+            options
+          );
+        });
+        this._mainViewModel.sendRawGeomeryToWorker(postResult);
+      }
     }
     if (postShapes !== null && postShapes !== undefined) {
       Object.entries(postShapes).forEach(([objName, postResult]) => {

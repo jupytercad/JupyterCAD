@@ -3,6 +3,7 @@ import {
   IJCadContent,
   IJCadObject,
   IPostOperatorInput,
+  JCadWorkerSupportedFormat,
   WorkerAction
 } from '@jupytercad/schema';
 
@@ -34,10 +35,27 @@ function buildModel(
       const type = parameters['Type'] ?? 'brep';
       shapeData = ObjectFile({ content: parameters['Shape'], type }, model);
     } else if (shape.startsWith('Post::')) {
-      shapeData = shapeFactory['Post::Operator']?.(
-        parameters as IOperatorArg,
-        model
-      );
+      const shapeFormat = (shape.split('::')[1] ??
+        JCadWorkerSupportedFormat.BREP) as JCadWorkerSupportedFormat;
+
+      switch (shapeFormat) {
+        case JCadWorkerSupportedFormat.BREP: {
+          shapeData = shapeFactory['Post::Operator']?.(
+            parameters as IOperatorArg,
+            model
+          );
+          break;
+        }
+        case JCadWorkerSupportedFormat.GLTF: {
+          shapeData = {
+            occBrep: ''
+          };
+          break;
+        }
+
+        default:
+          break;
+      }
     }
     if (shapeData) {
       outputModel.push({ shapeData, jcObject: object });
@@ -61,6 +79,7 @@ function loadFile(payload: { content: IJCadContent }): IDict | null {
       };
     }
   });
+
   return { result, postResult };
 }
 
