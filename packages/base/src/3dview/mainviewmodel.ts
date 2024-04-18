@@ -20,7 +20,6 @@ import { JSONValue } from '@lumino/coreutils';
 import { IDisposable } from '@lumino/disposable';
 import { ISignal, Signal } from '@lumino/signaling';
 import { v4 as uuid } from 'uuid';
-import { parseShapeName } from './helpers';
 
 export class MainViewModel implements IDisposable {
   constructor(options: MainViewModel.IOptions) {
@@ -93,7 +92,7 @@ export class MainViewModel implements IDisposable {
         const threejsPostResult: IDict<IPostOperatorInput> = {};
 
         Object.entries(postResult).forEach(([key, val]) => {
-          const { format } = parseShapeName(val.jcObject.shape);
+          const format = val.jcObject?.shapeMetadata?.shapeFormat;
           if (format === JCadWorkerSupportedFormat.BREP) {
             rawPostResult[key] = val;
           } else if (format === JCadWorkerSupportedFormat.GLTF) {
@@ -146,12 +145,14 @@ export class MainViewModel implements IDisposable {
         if (!shape) {
           return;
         }
-        const { format, workerId } = parseShapeName(shape);
+
+        const { shapeFormat, workerId } = res.jcObject?.shapeMetadata ?? {};
         const worker = this._workerRegistry.getWorker(workerId ?? '');
         if (wk !== worker) {
           return;
         }
-        if (wk.shapeFormat === format) {
+
+        if (wk.shapeFormat === shapeFormat) {
           wk.postMessage({
             id,
             action: WorkerAction.POSTPROCESS,

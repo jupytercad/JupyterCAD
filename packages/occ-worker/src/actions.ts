@@ -7,8 +7,7 @@ import {
   WorkerAction
 } from '@jupytercad/schema';
 
-import { ObjectFile, getShapesFactory } from './occapi';
-
+import { getShapesFactory, ObjectFile } from './occapi';
 import { OccParser } from './occparser';
 import { IOperatorArg, IOperatorFuncOutput } from './types';
 
@@ -22,7 +21,7 @@ function buildModel(
   const { objects } = model;
 
   objects.forEach(object => {
-    const { shape, parameters } = object;
+    const { shape, parameters, shapeMetadata } = object;
     if (!shape || !parameters) {
       return;
     }
@@ -34,8 +33,8 @@ function buildModel(
       // Creating occ shape from brep file.
       const type = parameters['Type'] ?? 'brep';
       shapeData = ObjectFile({ content: parameters['Shape'], type }, model);
-    } else if (shape.startsWith('Post::')) {
-      const shapeFormat = (shape.split('::')[1] ??
+    } else if (shape.startsWith('Post::') && shapeMetadata) {
+      const shapeFormat = (shapeMetadata.shapeFormat ??
         JCadWorkerSupportedFormat.BREP) as JCadWorkerSupportedFormat;
 
       switch (shapeFormat) {
@@ -48,7 +47,7 @@ function buildModel(
         }
         case JCadWorkerSupportedFormat.GLTF: {
           shapeData = {
-            occBrep: ''
+            postShape: ''
           };
           break;
         }
@@ -75,7 +74,7 @@ function loadFile(payload: { content: IJCadContent }): IDict | null {
     if (item.jcObject.shape?.startsWith('Post::')) {
       postResult[item.jcObject.name] = {
         jcObject: item.jcObject,
-        occBrep: item.shapeData.occBrep
+        postShape: item.shapeData.postShape
       };
     }
   });

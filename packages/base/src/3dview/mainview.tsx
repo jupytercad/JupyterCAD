@@ -20,6 +20,7 @@ import * as React from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
 import { FloatingAnnotation } from '../annotation';
@@ -49,7 +50,7 @@ import {
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
-import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
+
 interface IProps {
   viewModel: MainViewModel;
 }
@@ -730,7 +731,8 @@ export class MainView extends React.Component<IProps, IStates> {
     if (shapes !== null && shapes !== undefined) {
       this._shapeToMesh(renderData.shapes);
       const options = {
-        binary: true
+        binary: true,
+        onlyVisible: false
       };
 
       if (postResult && this._meshGroup) {
@@ -749,7 +751,7 @@ export class MainView extends React.Component<IProps, IStates> {
           exporter.parse(
             threeShape,
             exported => {
-              pos.occBrep = exported as any;
+              pos.postShape = exported as any;
             },
             options
           );

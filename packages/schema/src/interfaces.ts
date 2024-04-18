@@ -215,7 +215,7 @@ export interface IParsedShape {
 
 export interface IPostOperatorInput {
   jcObject: IJCadObject;
-  occBrep?: string;
+  postShape?: string | ArrayBuffer;
 }
 
 /**
