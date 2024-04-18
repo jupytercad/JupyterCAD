@@ -2,22 +2,22 @@ import { OCC } from '@jupytercad/opencascade';
 import {
   IAny,
   IBox,
+  IChamfer,
   ICone,
   ICut,
   ICylinder,
   IExtrusion,
+  IFillet,
   IFuse,
   IIntersection,
   IJCadContent,
+  IPostOperator,
   IShapeMetadata,
   ISketchObject,
   ISphere,
   ITorus,
-  IPostOperator,
-  WorkerAction,
   IWorkerMessageBase,
-  IChamfer,
-  IFillet
+  WorkerAction
 } from '@jupytercad/schema';
 
 export interface IDict<T = any> {
@@ -45,7 +45,7 @@ export type IWorkerMessage = ILoadFile | IRegister;
 export interface IOperatorFuncOutput {
   occShape?: OCC.TopoDS_Shape;
   metadata?: IShapeMetadata | undefined;
-  occBrep?: string;
+  postShape?: string | ArrayBuffer;
 }
 
 type IOperatorFunc<T> = (

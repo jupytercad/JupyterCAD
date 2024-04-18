@@ -1,6 +1,7 @@
 import { IWorkerMessage } from '@jupytercad/occ-worker';
 import {
   IAnnotation,
+  IDict,
   IDisplayShape,
   IJcadObjectDocChange,
   IJCadWorker,
@@ -8,6 +9,9 @@ import {
   IJupyterCadDoc,
   IJupyterCadModel,
   IMainMessage,
+  IPostOperatorInput,
+  IPostResult,
+  JCadWorkerSupportedFormat,
   MainAction,
   WorkerAction
 } from '@jupytercad/schema';
@@ -31,7 +35,14 @@ export class MainViewModel implements IDisposable {
   get id(): string {
     return this._id;
   }
-  get renderSignal(): ISignal<this, { shapes: any; postShapes: any }> {
+  get renderSignal(): ISignal<
+    this,
+    {
+      shapes: any;
+      postShapes?: IDict<IPostResult> | null;
+      postResult?: IDict<IPostOperatorInput>;
+    }
+  > {
     return this._renderSignal;
   }
   get jcadModel() {
@@ -76,21 +87,37 @@ export class MainViewModel implements IDisposable {
     switch (msg.action) {
       case MainAction.DISPLAY_SHAPE: {
         const { result, postResult } = msg.payload;
+
+        const rawPostResult: IDict<IPostOperatorInput> = {};
+        const threejsPostResult: IDict<IPostOperatorInput> = {};
+
+        Object.entries(postResult).forEach(([key, val]) => {
+          const format = val.jcObject?.shapeMetadata?.shapeFormat;
+          if (format === JCadWorkerSupportedFormat.BREP) {
+            rawPostResult[key] = val;
+          } else if (format === JCadWorkerSupportedFormat.GLTF) {
+            threejsPostResult[key] = val;
+          }
+        });
+
         this._saveMeta(result);
 
         if (this._firstRender) {
-          const postShapes = this._jcadModel.sharedModel.outputs;
-          this._renderSignal.emit({ shapes: result, postShapes });
+          const postShapes = this._jcadModel.sharedModel
+            .outputs as any as IDict<IPostResult>;
+          this._renderSignal.emit({
+            shapes: result,
+            postShapes,
+            postResult: threejsPostResult
+          });
           this._firstRender = false;
         } else {
-          this._renderSignal.emit({ shapes: result, postShapes: null });
-          this._postWorkerId.forEach((wk, id) => {
-            wk.postMessage({
-              id,
-              action: WorkerAction.POSTPROCESS,
-              payload: postResult
-            });
+          this._renderSignal.emit({
+            shapes: result,
+            postShapes: null,
+            postResult: threejsPostResult
           });
+          this.sendRawGeomeryToWorker(rawPostResult);
         }
 
         break;
@@ -111,10 +138,35 @@ export class MainViewModel implements IDisposable {
     }
   };
 
+  sendRawGeomeryToWorker(postResult: IDict<IPostOperatorInput>): void {
+    Object.values(postResult).forEach(res => {
+      this._postWorkerId.forEach((wk, id) => {
+        const shape = res.jcObject.shape;
+        if (!shape) {
+          return;
+        }
+
+        const { shapeFormat, workerId } = res.jcObject?.shapeMetadata ?? {};
+        const worker = this._workerRegistry.getWorker(workerId ?? '');
+        if (wk !== worker) {
+          return;
+        }
+
+        if (wk.shapeFormat === shapeFormat) {
+          wk.postMessage({
+            id,
+            action: WorkerAction.POSTPROCESS,
+            payload: res
+          });
+        }
+      });
+    });
+  }
+
   postProcessWorkerHandler = (msg: IMainMessage): void => {
     switch (msg.action) {
       case MainAction.DISPLAY_POST: {
-        const postShapes: any = {};
+        const postShapes: IDict<IPostResult> = {};
         msg.payload.forEach(element => {
           const { jcObject, postResult } = element;
           this._jcadModel.sharedModel.setOutput(jcObject.name, postResult);
@@ -168,9 +220,14 @@ export class MainViewModel implements IDisposable {
   private _postWorkerId: Map<string, IJCadWorker> = new Map();
   private _firstRender = true;
   private _id: string;
-  private _renderSignal = new Signal<this, { shapes: any; postShapes: any }>(
-    this
-  );
+  private _renderSignal = new Signal<
+    this,
+    {
+      shapes: any;
+      postShapes?: IDict<IPostResult> | null;
+      postResult?: IDict<IPostOperatorInput>;
+    }
+  >(this);
   private _isDisposed = false;
 }
 

@@ -7,10 +7,10 @@ import { getShapesFactory } from './common';
 export function _PostOperator(
   arg: IPostOperator,
   content: IJCadContent
-): { occBrep: string } {
+): { postShape: string } {
   const baseObject = content.objects.filter(obj => obj.name === arg.Object);
   if (baseObject.length === 0) {
-    return { occBrep: '' };
+    return { postShape: '' };
   }
   const shapesFactory = getShapesFactory();
   const baseShape = baseObject[0].shape;
@@ -20,9 +20,9 @@ export function _PostOperator(
       content
     );
     if (base?.occShape) {
-      const occBrep = _writeBrep(base.occShape);
-      return { occBrep };
+      const postShape = _writeBrep(base.occShape);
+      return { postShape };
     }
   }
-  return { occBrep: '' };
+  return { postShape: '' };
 }

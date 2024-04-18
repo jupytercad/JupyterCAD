@@ -3,11 +3,11 @@ import {
   IJCadContent,
   IJCadObject,
   IPostOperatorInput,
+  JCadWorkerSupportedFormat,
   WorkerAction
 } from '@jupytercad/schema';
 
-import { ObjectFile, getShapesFactory } from './occapi';
-
+import { getShapesFactory, ObjectFile } from './occapi';
 import { OccParser } from './occparser';
 import { IOperatorArg, IOperatorFuncOutput } from './types';
 
@@ -21,7 +21,7 @@ function buildModel(
   const { objects } = model;
 
   objects.forEach(object => {
-    const { shape, parameters } = object;
+    const { shape, parameters, shapeMetadata } = object;
     if (!shape || !parameters) {
       return;
     }
@@ -33,11 +33,28 @@ function buildModel(
       // Creating occ shape from brep file.
       const type = parameters['Type'] ?? 'brep';
       shapeData = ObjectFile({ content: parameters['Shape'], type }, model);
-    } else if (shape.startsWith('Post::')) {
-      shapeData = shapeFactory['Post::Operator']?.(
-        parameters as IOperatorArg,
-        model
-      );
+    } else if (shape.startsWith('Post::') && shapeMetadata) {
+      const shapeFormat = (shapeMetadata.shapeFormat ??
+        JCadWorkerSupportedFormat.BREP) as JCadWorkerSupportedFormat;
+
+      switch (shapeFormat) {
+        case JCadWorkerSupportedFormat.BREP: {
+          shapeData = shapeFactory['Post::Operator']?.(
+            parameters as IOperatorArg,
+            model
+          );
+          break;
+        }
+        case JCadWorkerSupportedFormat.GLTF: {
+          shapeData = {
+            postShape: ''
+          };
+          break;
+        }
+
+        default:
+          break;
+      }
     }
     if (shapeData) {
       outputModel.push({ shapeData, jcObject: object });
@@ -57,10 +74,11 @@ function loadFile(payload: { content: IJCadContent }): IDict | null {
     if (item.jcObject.shape?.startsWith('Post::')) {
       postResult[item.jcObject.name] = {
         jcObject: item.jcObject,
-        occBrep: item.shapeData.occBrep
+        postShape: item.shapeData.postShape
       };
     }
   });
+
   return { result, postResult };
 }
 
