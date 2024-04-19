@@ -40,6 +40,22 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 2.0.0a6
+
+([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v2.0.0a5...89eeabcd538f1d1fc8c95ee8e3f1971ac3ac5e73))
+
+### Bugs fixed
+
+- Add await for postShape before sending [#351](https://github.com/jupytercad/jupytercad/pull/351) ([@gjmooney](https://github.com/gjmooney))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2024-04-18&to=2024-04-19&type=c))
+
+[@gjmooney](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agjmooney+updated%3A2024-04-18..2024-04-19&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.0.0a5
 
 ([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v2.0.0a4...c7f4cadccc2ff586d874906ff968652c12ca971e))
@@ -54,8 +70,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2024-04-10&to=2024-04-18&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2024-04-10..2024-04-18&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3AmartinRenou+updated%3A2024-04-10..2024-04-18&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2024-04-10..2024-04-18&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.0.0a4
 

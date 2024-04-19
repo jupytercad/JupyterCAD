@@ -290,14 +290,14 @@ __metadata:
   linkType: hard
 
 "@codemirror/commands@npm:^6.2.3":
-  version: 6.4.0
-  resolution: "@codemirror/commands@npm:6.4.0"
+  version: 6.5.0
+  resolution: "@codemirror/commands@npm:6.5.0"
   dependencies:
     "@codemirror/language": ^6.0.0
     "@codemirror/state": ^6.4.0
     "@codemirror/view": ^6.0.0
     "@lezer/common": ^1.1.0
-  checksum: 92fb4ffe75e177186ce0801fdd1d1dacfd9a005122f8d032211e8d86fd9e81d4dd0440fa2bcf866df720be259dc7c91e7912884d44f5eb7fa8dce683ec820563
+  checksum: 27e49c5e0cb918b95d6a9f741bcc0e72cb76f963b0c829308edfb4491a37d8b12ae6fb96f9f1886b3189a22c82fec4434fbe65547dc3cd3e8dfb5222dfead2e7
   languageName: node
   linkType: hard
 
@@ -910,7 +910,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupytercad/base@^2.0.0-alpha.5, @jupytercad/base@workspace:packages/base":
+"@jupytercad/base@^2.0.0-alpha.6, @jupytercad/base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@jupytercad/base@workspace:packages/base"
   dependencies:
@@ -918,8 +918,8 @@ __metadata:
     "@deathbeds/jupyterlab-rjsf": ^1.1.0
     "@jupyter/docprovider": ^2.0.0
     "@jupyter/ydoc": ^1.0.0
-    "@jupytercad/occ-worker": ^2.0.0-alpha.5
-    "@jupytercad/schema": ^2.0.0-alpha.5
+    "@jupytercad/occ-worker": ^2.0.0-alpha.6
+    "@jupytercad/schema": ^2.0.0-alpha.6
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/coreutils": ^6.0.0
@@ -961,8 +961,8 @@ __metadata:
     "@jupyter/collaboration": ^2.0.0
     "@jupyter/docprovider": ^2.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/base": ^2.0.0-alpha.5
-    "@jupytercad/schema": ^2.0.0-alpha.5
+    "@jupytercad/base": ^2.0.0-alpha.6
+    "@jupytercad/schema": ^2.0.0-alpha.6
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/application-extension": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -1014,14 +1014,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-core@^2.0.0-alpha.5, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
+"@jupytercad/jupytercad-core@^2.0.0-alpha.6, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad_core"
   dependencies:
     "@jupyter/docprovider": ^2.0.0
-    "@jupytercad/base": ^2.0.0-alpha.5
-    "@jupytercad/occ-worker": ^2.0.0-alpha.5
-    "@jupytercad/schema": ^2.0.0-alpha.5
+    "@jupytercad/base": ^2.0.0-alpha.6
+    "@jupytercad/occ-worker": ^2.0.0-alpha.6
+    "@jupytercad/schema": ^2.0.0-alpha.6
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1054,9 +1054,9 @@ __metadata:
   resolution: "@jupytercad/jupytercad-lab@workspace:python/jupytercad_lab"
   dependencies:
     "@jupyter/docprovider": ^2.0.0
-    "@jupytercad/base": ^2.0.0-alpha.5
-    "@jupytercad/jupytercad-core": ^2.0.0-alpha.5
-    "@jupytercad/schema": ^2.0.0-alpha.5
+    "@jupytercad/base": ^2.0.0-alpha.6
+    "@jupytercad/jupytercad-core": ^2.0.0-alpha.6
+    "@jupytercad/schema": ^2.0.0-alpha.6
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1105,12 +1105,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/occ-worker@^2.0.0-alpha.5, @jupytercad/occ-worker@workspace:packages/occ-worker":
+"@jupytercad/occ-worker@^2.0.0-alpha.6, @jupytercad/occ-worker@workspace:packages/occ-worker":
   version: 0.0.0-use.local
   resolution: "@jupytercad/occ-worker@workspace:packages/occ-worker"
   dependencies:
-    "@jupytercad/opencascade": ^2.0.0-alpha.5
-    "@jupytercad/schema": ^2.0.0-alpha.5
+    "@jupytercad/opencascade": ^2.0.0-alpha.6
+    "@jupytercad/schema": ^2.0.0-alpha.6
     "@lumino/coreutils": ^2.0.0
     "@types/node": ^18.15.11
     copy-webpack-plugin: ^10.0.0
@@ -1126,7 +1126,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/opencascade@^2.0.0-alpha.5, @jupytercad/opencascade@workspace:packages/opencascade":
+"@jupytercad/opencascade@^2.0.0-alpha.6, @jupytercad/opencascade@workspace:packages/opencascade":
   version: 0.0.0-use.local
   resolution: "@jupytercad/opencascade@workspace:packages/opencascade"
   dependencies:
@@ -1137,7 +1137,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/schema@^2.0.0-alpha.5, @jupytercad/schema@workspace:packages/schema":
+"@jupytercad/schema@^2.0.0-alpha.6, @jupytercad/schema@workspace:packages/schema":
   version: 0.0.0-use.local
   resolution: "@jupytercad/schema@workspace:packages/schema"
   dependencies:
@@ -2408,13 +2408,13 @@ __metadata:
   linkType: hard
 
 "@lezer/java@npm:^1.0.0":
-  version: 1.1.1
-  resolution: "@lezer/java@npm:1.1.1"
+  version: 1.1.2
+  resolution: "@lezer/java@npm:1.1.2"
   dependencies:
     "@lezer/common": ^1.2.0
     "@lezer/highlight": ^1.0.0
     "@lezer/lr": ^1.0.0
-  checksum: 8a071aca6b5e1ed1d22bffed22bbd29f21b102b7337a7ea5c956eb259e6ff20eee2d6e85b7dadff69859cb6615d6b1a3f0ba109673e87ce5a1f6cabdeee626fd
+  checksum: 752e8c9b99cccf022669a702016e0c3a793d8326e043b1d053159f5de4d222cd188e8e31e1427cbe6a8ed8e53de3977ab551c64cbd5a76a12eb3a1da5e18b6a5
   languageName: node
   linkType: hard
 
@@ -3452,12 +3452,12 @@ __metadata:
   linkType: hard
 
 "@types/eslint@npm:*":
-  version: 8.56.9
-  resolution: "@types/eslint@npm:8.56.9"
+  version: 8.56.10
+  resolution: "@types/eslint@npm:8.56.10"
   dependencies:
     "@types/estree": "*"
     "@types/json-schema": "*"
-  checksum: c0c033fc724774b791bf97465cfe246814eda1f82460aff2daa64dfce1b1a01626c75f4281d2ab10dcd9176446df0b4bf57e8ac542da6476902e28683e89137d
+  checksum: fb7137dd263ce1130b42d14452bdd0266ef81f52cb55ba1a5e9750e65da1f0596dc598c88bffc7e415458b6cb611a876dcc132bcf40ea48701c6d05b40c57be5
   languageName: node
   linkType: hard
 
@@ -5647,9 +5647,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.668":
-  version: 1.4.741
-  resolution: "electron-to-chromium@npm:1.4.741"
-  checksum: 4475477800400befd754e3a173f21eee7f36960ae3868bff443f5f1f30ff494829167d5da46b9738db468f1a8daaf08e2a60f8f56dc122158292ff649686d858
+  version: 1.4.744
+  resolution: "electron-to-chromium@npm:1.4.744"
+  checksum: 917a178500bd8a78ae73c2ad9e71981922ec47e443ca1dfdfbc7a343334e6dfbbaa28e612313710c35b6538b1332dc4d14dd533eb274a587ffad79b3f9908989
   languageName: node
   linkType: hard
 
