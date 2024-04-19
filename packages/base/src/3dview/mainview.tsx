@@ -34,8 +34,6 @@ import {
 import { FollowIndicator } from './followindicator';
 import {
   BasicMesh,
-  buildShape,
-  computeExplodedState,
   DEFAULT_EDGE_COLOR,
   DEFAULT_EDGE_COLOR_CSS,
   DEFAULT_LINEWIDTH,
@@ -43,10 +41,12 @@ import {
   DEFAULT_MESH_COLOR_CSS,
   IPickedResult,
   IPointer,
-  projectVector,
   SELECTED_LINEWIDTH,
   SELECTED_MESH_COLOR,
-  SELECTED_MESH_COLOR_CSS
+  SELECTED_MESH_COLOR_CSS,
+  buildShape,
+  computeExplodedState,
+  projectVector
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
@@ -719,7 +719,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._updateRefLength(true);
   }
 
-  private _requestRender(
+  private async _requestRender(
     sender: MainViewModel,
     renderData: {
       shapes: any;
@@ -728,6 +728,12 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   ) {
     const { shapes, postShapes, postResult } = renderData;
+
+    let resolved;
+    const waitForPos = new Promise(resolve => {
+      resolved = resolve;
+    });
+
     if (shapes !== null && shapes !== undefined) {
       this._shapeToMesh(renderData.shapes);
       const options = {
@@ -752,10 +758,13 @@ export class MainView extends React.Component<IProps, IStates> {
             threeShape,
             exported => {
               pos.postShape = exported as any;
+              resolved();
             },
             options
           );
         });
+
+        await waitForPos;
         this._mainViewModel.sendRawGeomeryToWorker(postResult);
       }
     }
