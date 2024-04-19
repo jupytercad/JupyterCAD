@@ -117,7 +117,7 @@ export class MainViewModel implements IDisposable {
             postShapes: null,
             postResult: threejsPostResult
           });
-          this.sendRawGeomeryToWorker(rawPostResult);
+          this.sendRawGeometryToWorker(rawPostResult);
         }
 
         break;
@@ -138,7 +138,7 @@ export class MainViewModel implements IDisposable {
     }
   };
 
-  sendRawGeomeryToWorker(postResult: IDict<IPostOperatorInput>): void {
+  sendRawGeometryToWorker(postResult: IDict<IPostOperatorInput>): void {
     Object.values(postResult).forEach(res => {
       this._postWorkerId.forEach((wk, id) => {
         const shape = res.jcObject.shape;
