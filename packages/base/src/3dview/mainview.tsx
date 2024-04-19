@@ -729,11 +729,6 @@ export class MainView extends React.Component<IProps, IStates> {
   ) {
     const { shapes, postShapes, postResult } = renderData;
 
-    let resolved;
-    const waitForPos = new Promise(resolve => {
-      resolved = resolve;
-    });
-
     if (shapes !== null && shapes !== undefined) {
       this._shapeToMesh(renderData.shapes);
       const options = {
@@ -743,6 +738,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       if (postResult && this._meshGroup) {
         const exporter = new GLTFExporter();
+        const promises: Promise<void>[] = [];
         Object.values(postResult).forEach(pos => {
           const objName = pos.jcObject.parameters?.['Object'];
           if (!objName) {
@@ -754,18 +750,21 @@ export class MainView extends React.Component<IProps, IStates> {
           if (!threeShape) {
             return;
           }
-          exporter.parse(
-            threeShape,
-            exported => {
-              pos.postShape = exported as any;
-              resolved();
-            },
-            options
-          );
+          const promise = new Promise<void>(resolve => {
+            exporter.parse(
+              threeShape,
+              exported => {
+                pos.postShape = exported as any;
+                resolve();
+              },
+              options
+            );
+          });
+          promises.push(promise);
         });
 
-        await waitForPos;
-        this._mainViewModel.sendRawGeomeryToWorker(postResult);
+        await Promise.all(promises);
+        this._mainViewModel.sendRawGeometryToWorker(postResult);
       }
     }
     if (postShapes !== null && postShapes !== undefined) {
