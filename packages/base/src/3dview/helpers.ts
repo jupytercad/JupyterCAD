@@ -122,18 +122,17 @@ export function buildShape(options: {
   const { faceList, edgeList, jcObject } = data;
 
   const vertices: Array<number> = [];
-  const normals: Array<number> = [];
   const triangles: Array<number> = [];
 
   let vInd = 0;
   if (faceList.length === 0 && edgeList.length === 0) {
     return null;
   }
-  faceList.forEach(face => {
+  for (const face of faceList) {
     // Copy Vertices into three.js Vector3 List
-    vertices.push(...face.vertexCoord);
-    normals.push(...face.normalCoord);
-
+    for (let ii = 0; ii < face.vertexCoord.length; ii++) {
+      vertices.push(face.vertexCoord[ii]);
+    }
     // Sort Triangles into a three.js Face List
     for (let i = 0; i < face.triIndexes.length; i += 3) {
       triangles.push(
@@ -144,7 +143,8 @@ export function buildShape(options: {
     }
 
     vInd += face.vertexCoord.length / 3;
-  });
+  }
+  // faceList.forEach(face => {});
 
   let color = DEFAULT_MESH_COLOR;
   let visible = jcObject.visible;
@@ -167,7 +167,7 @@ export function buildShape(options: {
   // it's too bad Three.js does not easily allow setting uniforms independently per-mesh
   const material = new THREE.MeshPhongMaterial({
     color,
-    side: THREE.DoubleSide,
+    // side: THREE.DoubleSide,
     wireframe: false,
     flatShading: false,
     clippingPlanes,
@@ -175,12 +175,14 @@ export function buildShape(options: {
   });
 
   const geometry = new THREE.BufferGeometry();
+
   geometry.setIndex(triangles);
   geometry.setAttribute(
     'position',
     new THREE.Float32BufferAttribute(vertices, 3)
   );
-  geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+  geometry.computeVertexNormals();
+  // geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
   geometry.computeBoundingBox();
   if (vertices.length > 0) {
     geometry.computeBoundsTree();

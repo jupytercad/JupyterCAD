@@ -50,7 +50,6 @@ import {
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
-
 interface IProps {
   viewModel: MainViewModel;
 }
