@@ -11,7 +11,7 @@ interface IShapeList {
 export class OccParser {
   private _shapeList: IShapeList[];
   private _occ: OCC.OpenCascadeInstance = (self as any).occ;
-  private _showEdge = true;
+  private _showEdge = false;
   constructor(shapeList: IShapeList[]) {
     this._shapeList = shapeList;
   }
@@ -39,7 +39,7 @@ export class OccParser {
         edgeList = this._build_edge_mesh(occShape);
       }
       const wireList = this._build_wire_mesh(occShape, maxDeviation);
-
+      console.log('wrirelist', wireList);
       threejsData[jcObject.name] = {
         jcObject,
         faceList,

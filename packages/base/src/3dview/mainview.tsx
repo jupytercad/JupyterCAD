@@ -50,7 +50,7 @@ import {
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
-
+import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper';
 interface IProps {
   viewModel: MainViewModel;
 }
@@ -639,8 +639,11 @@ export class MainView extends React.Component<IProps, IStates> {
       renderer.clearStencil();
     };
 
+    const helper = new VertexNormalsHelper(this._meshGroup, 5);
+
     this._scene.add(this._clippingPlaneMesh);
     this._scene.add(this._meshGroup);
+    this._scene.add(helper);
 
     this.setState(old => ({ ...old, loading: false }));
   };
