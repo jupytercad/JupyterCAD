@@ -129,7 +129,6 @@ export function buildShape(options: {
     return null;
   }
   for (const face of faceList) {
-    console.log('adding', face);
     // Copy Vertices into three.js Vector3 List
     const vertexCoorLength = face.vertexCoord.length;
     for (let ii = 0; ii < vertexCoorLength; ii++) {
@@ -235,18 +234,18 @@ export function buildShape(options: {
 
   let edgeIdx = 0;
   const edgesMeshes: LineSegments2[] = [];
-  const edgeMaterial = new LineMaterial({
-    linewidth: DEFAULT_LINEWIDTH,
-    // @ts-ignore Missing typing in ThreeJS
-    color: DEFAULT_EDGE_COLOR,
-    clippingPlanes,
-    // Depth offset so that lines are most always on top of faces
-    polygonOffset: true,
-    polygonOffsetFactor: -5,
-    polygonOffsetUnits: -5
-  });
+
   for (const edge of edgeList) {
-    console.log('adding edge', edge);
+    const edgeMaterial = new LineMaterial({
+      linewidth: DEFAULT_LINEWIDTH,
+      // @ts-ignore Missing typing in ThreeJS
+      color: DEFAULT_EDGE_COLOR,
+      clippingPlanes,
+      // Depth offset so that lines are most always on top of faces
+      polygonOffset: true,
+      polygonOffsetFactor: -5,
+      polygonOffsetUnits: -5
+    });
     const edgeGeometry = new LineGeometry();
     edgeGeometry.setPositions(edge.vertexCoord);
     const edgesMesh = new LineSegments2(edgeGeometry, edgeMaterial);

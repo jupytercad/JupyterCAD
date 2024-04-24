@@ -45,6 +45,10 @@ export class MainViewModel implements IDisposable {
   > {
     return this._renderSignal;
   }
+
+  get workerBusy(): ISignal<this, boolean> {
+    return this._workerBusy;
+  }
   get jcadModel() {
     return this._jcadModel;
   }
@@ -87,7 +91,6 @@ export class MainViewModel implements IDisposable {
     switch (msg.action) {
       case MainAction.DISPLAY_SHAPE: {
         const { result, postResult } = msg.payload;
-
         const rawPostResult: IDict<IPostOperatorInput> = {};
         const threejsPostResult: IDict<IPostOperatorInput> = {};
 
@@ -127,7 +130,7 @@ export class MainViewModel implements IDisposable {
           return;
         }
         const content = this._jcadModel.getContent();
-
+        this._workerBusy.emit(true);
         this._postMessage({
           action: WorkerAction.LOAD_FILE,
           payload: {
@@ -204,10 +207,12 @@ export class MainViewModel implements IDisposable {
   ): Promise<void> {
     if (change.objectChange) {
       await this._worker.ready;
+      const content = this._jcadModel.getContent();
+      this._workerBusy.emit(true);
       this._postMessage({
         action: WorkerAction.LOAD_FILE,
         payload: {
-          content: this._jcadModel.getContent()
+          content
         }
       });
     }
@@ -228,6 +233,7 @@ export class MainViewModel implements IDisposable {
       postResult?: IDict<IPostOperatorInput>;
     }
   >(this);
+  private _workerBusy = new Signal<this, boolean>(this);
   private _isDisposed = false;
 }
 
