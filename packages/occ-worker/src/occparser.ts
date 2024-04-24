@@ -39,7 +39,6 @@ export class OccParser {
         edgeList = this._build_edge_mesh(occShape);
       }
       const wireList = this._build_wire_mesh(occShape, maxDeviation);
-      console.log('wrirelist', wireList);
       threejsData[jcObject.name] = {
         jcObject,
         faceList,
@@ -122,11 +121,9 @@ export class OccParser {
       }
       const thisFace: IFace = {
         vertexCoord: [],
-        normalCoord: [],
         triIndexes: [],
         numberOfTriangles: 0
       };
-      const pc = new oc.Poly_Connect_2(myT);
       const triangulation = myT.get();
       const nbNodes = triangulation.NbNodes();
 
@@ -141,17 +138,6 @@ export class OccParser {
       }
 
       const orient = face.Orientation_1();
-
-      // Write normal buffer
-      const myNormal = new oc.TColgp_Array1OfDir_2(1, nbNodes);
-      oc.StdPrs_ToolTriangulatedShape.Normal(face, pc, myNormal);
-      thisFace.normalCoord = new Array(myNormal.Length() * 3);
-      for (let i = 0; i < myNormal.Length(); i++) {
-        const d = myNormal.Value(i + 1).Transformed(aLocation.Transformation());
-        thisFace.normalCoord[i * 3 + 0] = d.X();
-        thisFace.normalCoord[i * 3 + 1] = d.Y();
-        thisFace.normalCoord[i * 3 + 2] = d.Z();
-      }
 
       const nbTriangles = triangulation.NbTriangles();
 

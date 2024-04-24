@@ -196,7 +196,6 @@ export interface IAnnotation {
 
 export interface IFace {
   vertexCoord: Array<number>;
-  normalCoord: Array<number>;
   triIndexes: Array<number>;
   numberOfTriangles: number;
 }
