@@ -727,10 +727,17 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   private _workerBusyHandler(_: MainViewModel, busy: boolean) {
-    this._loadingTimeout = setTimeout(() => {
-      // Do not show loading animation for the first 250
-      this.setState(old => ({ ...old, loading: busy }));
-    }, 250);
+    if (this._loadingTimeout) {
+      clearTimeout(this._loadingTimeout);
+    }
+    if (busy) {
+      this._loadingTimeout = setTimeout(() => {
+        // Do not show loading animation for the first 250
+        this.setState(old => ({ ...old, loading: true }));
+      }, 250);
+    } else {
+      this.setState(old => ({ ...old, loading: false }));
+    }
   }
   private async _requestRender(
     sender: MainViewModel,

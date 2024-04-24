@@ -122,6 +122,7 @@ export class MainViewModel implements IDisposable {
           });
           this.sendRawGeometryToWorker(rawPostResult);
         }
+        this._workerBusy.emit(false);
 
         break;
       }
