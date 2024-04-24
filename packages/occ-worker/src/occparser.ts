@@ -11,7 +11,6 @@ interface IShapeList {
 export class OccParser {
   private _shapeList: IShapeList[];
   private _occ: OCC.OpenCascadeInstance = (self as any).occ;
-  private _showEdge = false;
   constructor(shapeList: IShapeList[]) {
     this._shapeList = shapeList;
   }
@@ -33,12 +32,16 @@ export class OccParser {
         true
       );
       const faceList = this._build_face_mesh(occShape);
-
       let edgeList: IEdge[] = [];
-      if (this._showEdge) {
+      if (this._shouldComputeEdge(jcObject)) {
         edgeList = this._build_edge_mesh(occShape);
       }
-      const wireList = this._build_wire_mesh(occShape, maxDeviation);
+      let wireList: IEdge[] = [];
+      if (this._shouldComputeWire(jcObject)) {
+        //Only compute the wire mesh for 2d geometries
+        wireList = this._build_wire_mesh(occShape, maxDeviation);
+      }
+
       threejsData[jcObject.name] = {
         jcObject,
         faceList,
@@ -50,6 +53,19 @@ export class OccParser {
     return threejsData;
   }
 
+  private _shouldComputeEdge(obj: IJCadObject): boolean {
+    if (obj.shape === 'Part::Any' && obj.parameters?.Type === 'STL') {
+      return false;
+    }
+    return true;
+  }
+
+  private _shouldComputeWire(obj: IJCadObject): boolean {
+    if (obj.shape === 'Sketcher::SketchObject') {
+      return true;
+    }
+    return false;
+  }
   private _build_wire_mesh(
     shape: OCC.TopoDS_Shape,
     maxDeviation: number

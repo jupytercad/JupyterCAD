@@ -728,9 +728,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _workerBusyHandler(_: MainViewModel, busy: boolean) {
     this._loadingTimeout = setTimeout(() => {
-      // Do not show loading animation for the first 500ms
+      // Do not show loading animation for the first 250
       this.setState(old => ({ ...old, loading: busy }));
-    }, 500);
+    }, 250);
   }
   private async _requestRender(
     sender: MainViewModel,
@@ -823,7 +823,9 @@ export class MainView extends React.Component<IProps, IStates> {
   private _updateSelected(selection: { [key: string]: ISelection }) {
     // Reset original color for old selection
     for (const selectedMesh of this._selectedMeshes) {
-      let originalColor = DEFAULT_MESH_COLOR;
+      let originalColor = selectedMesh.name.startsWith('edge-')
+        ? DEFAULT_EDGE_COLOR
+        : DEFAULT_MESH_COLOR;
       const guidata = this._model.sharedModel.getOption('guidata');
       if (
         guidata &&

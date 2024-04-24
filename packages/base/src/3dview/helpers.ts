@@ -168,7 +168,6 @@ export function buildShape(options: {
   // it's too bad Three.js does not easily allow setting uniforms independently per-mesh
   const material = new THREE.MeshPhongMaterial({
     color,
-    // side: THREE.DoubleSide,
     wireframe: false,
     flatShading: false,
     clippingPlanes,
@@ -234,7 +233,6 @@ export function buildShape(options: {
 
   let edgeIdx = 0;
   const edgesMeshes: LineSegments2[] = [];
-
   for (const edge of edgeList) {
     const edgeMaterial = new LineMaterial({
       linewidth: DEFAULT_LINEWIDTH,
