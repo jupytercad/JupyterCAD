@@ -182,7 +182,6 @@ export function buildShape(options: {
     new THREE.Float32BufferAttribute(vertices, 3)
   );
   geometry.computeVertexNormals();
-  // geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
   geometry.computeBoundingBox();
   if (vertices.length > 0) {
     geometry.computeBoundsTree();

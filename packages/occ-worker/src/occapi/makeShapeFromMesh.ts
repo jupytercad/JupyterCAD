@@ -99,7 +99,6 @@ export function makeShapeFromMesh(
     aPnt2VertexMap.add(idx, aV.Vertex());
   }
 
-  // const anEdgeToTEgeMap: Map<string, OCC.TopoDS_Edge> = new Map();
   const anEdgeToTEgeMap = new IndexedDataMap<Edge, OCC.TopoDS_Edge>();
 
   for (let idx = 1; idx <= aNbTriangles; ++idx) {
