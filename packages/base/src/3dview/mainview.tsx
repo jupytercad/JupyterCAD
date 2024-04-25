@@ -50,7 +50,6 @@ import {
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
-
 interface IProps {
   viewModel: MainViewModel;
 }
@@ -92,6 +91,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this
     );
     this._mainViewModel.renderSignal.connect(this._requestRender, this);
+    this._mainViewModel.workerBusy.connect(this._workerBusyHandler, this);
 
     // @ts-ignore Missing ThreeJS typing
     this._raycaster.params.Line2 = {};
@@ -145,6 +145,7 @@ export class MainView extends React.Component<IProps, IStates> {
     );
 
     this._mainViewModel.renderSignal.disconnect(this._requestRender, this);
+    this._mainViewModel.workerBusy.disconnect(this._workerBusyHandler, this);
     this._mainViewModel.dispose();
   }
 
@@ -570,6 +571,9 @@ export class MainView extends React.Component<IProps, IStates> {
     if (this._explodedViewLinesHelperGroup !== null) {
       this._scene.remove(this._explodedViewLinesHelperGroup);
     }
+    if (this._clippingPlaneMesh !== null) {
+      this._scene.remove(this._clippingPlaneMesh);
+    }
 
     const guidata = this._model.sharedModel.getOption('guidata');
     const selectedNames = this._selectedMeshes.map(sel => sel.name);
@@ -641,7 +645,10 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._scene.add(this._clippingPlaneMesh);
     this._scene.add(this._meshGroup);
-
+    if (this._loadingTimeout) {
+      clearTimeout(this._loadingTimeout);
+      this._loadingTimeout = null;
+    }
     this.setState(old => ({ ...old, loading: false }));
   };
 
@@ -719,6 +726,19 @@ export class MainView extends React.Component<IProps, IStates> {
     this._updateRefLength(true);
   }
 
+  private _workerBusyHandler(_: MainViewModel, busy: boolean) {
+    if (this._loadingTimeout) {
+      clearTimeout(this._loadingTimeout);
+    }
+    if (busy) {
+      this._loadingTimeout = setTimeout(() => {
+        // Do not show loading animation for the first 250
+        this.setState(old => ({ ...old, loading: true }));
+      }, 250);
+    } else {
+      this.setState(old => ({ ...old, loading: false }));
+    }
+  }
   private async _requestRender(
     sender: MainViewModel,
     renderData: {
@@ -728,9 +748,8 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   ) {
     const { shapes, postShapes, postResult } = renderData;
-
     if (shapes !== null && shapes !== undefined) {
-      this._shapeToMesh(renderData.shapes);
+      this._shapeToMesh(shapes);
       const options = {
         binary: true,
         onlyVisible: false
@@ -811,7 +830,9 @@ export class MainView extends React.Component<IProps, IStates> {
   private _updateSelected(selection: { [key: string]: ISelection }) {
     // Reset original color for old selection
     for (const selectedMesh of this._selectedMeshes) {
-      let originalColor = DEFAULT_MESH_COLOR;
+      let originalColor = selectedMesh.name.startsWith('edge-')
+        ? DEFAULT_EDGE_COLOR
+        : DEFAULT_MESH_COLOR;
       const guidata = this._model.sharedModel.getOption('guidata');
       if (
         guidata &&
@@ -1309,4 +1330,5 @@ export class MainView extends React.Component<IProps, IStates> {
   private _collaboratorPointers: IDict<IPointer>;
   private _pointerGeometry: THREE.SphereGeometry;
   private _contextMenu: ContextMenu;
+  private _loadingTimeout: ReturnType<typeof setTimeout> | null;
 }

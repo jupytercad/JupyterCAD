@@ -371,6 +371,7 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
   min-height: var(--jp-private-toolbar-height);
   width: 100%;
   height: 29px;
+  display: flex;
 }
 
 .jpcad-sketcher-Sketcher-Statusbar {

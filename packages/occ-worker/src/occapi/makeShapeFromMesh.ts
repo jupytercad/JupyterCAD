@@ -2,6 +2,79 @@ import { OCC } from '@jupytercad/opencascade';
 
 import { getOcc } from './common';
 
+/**
+ * Structure representing mesh edge.
+ *
+ * @class Edge
+ */
+class Edge {
+  constructor(TheIdx1: number, TheIdx2: number) {
+    this._Idx1 = TheIdx1;
+    this._Idx2 = TheIdx2;
+  }
+  get Idx1() {
+    return this._Idx1;
+  }
+  get Idx2() {
+    return this._Idx2;
+  }
+  get hashStr(): string {
+    return `${this.Idx1}@${this.Idx2}`;
+  }
+  equal(other: Edge): boolean {
+    return this.hashStr === other.hashStr;
+  }
+  private _Idx1: number;
+  private _Idx2: number;
+}
+
+/**
+ * Ref. https://dev.opencascade.org/doc/refman/html/class_n_collection___indexed_data_map.html
+ *
+ * @class IndexedDataMap
+ * @template K
+ * @template V
+ */
+class IndexedDataMap<K, V> {
+  constructor() {
+    this._internalMap = new Map();
+    this._currentIdx = 0;
+  }
+
+  add(k: K, v: V): number {
+    const hash = this._hash(k);
+    const current = this._internalMap.get(hash);
+    if (current) {
+      return current.index;
+    } else {
+      this._currentIdx += 1;
+      this._internalMap.set(hash, { index: this._currentIdx, value: v });
+      return this._currentIdx;
+    }
+  }
+
+  findFromKey(k: K): V | undefined {
+    const hash = this._hash(k);
+    return this._internalMap.get(hash)?.value;
+  }
+
+  contains(k: K): boolean {
+    const hash = this._hash(k);
+    return this._internalMap.has(hash);
+  }
+
+  _hash(key: K): string {
+    if (key['hashStr']) {
+      return key['hashStr'];
+    } else if (typeof key === 'number' || typeof key === 'string') {
+      return key + '';
+    }
+    throw new Error('Key type is not supported');
+  }
+  private _internalMap: Map<string, { index: number; value: V }>;
+  private _currentIdx;
+}
+
 export function makeShapeFromMesh(
   myMeshHandle: OCC.Handle_Poly_Triangulation
 ): OCC.TopoDS_Shape | undefined {
@@ -14,18 +87,21 @@ export function makeShapeFromMesh(
   }
   const SMALL = 1e-9;
   const oc = getOcc();
+
   const aNbNodes = myMesh.NbNodes();
   const aNbTriangles = myMesh.NbTriangles();
-  const aPnt2VertexMap: Map<number, OCC.TopoDS_Vertex> = new Map();
-  for (let idx = 1; idx <= aNbNodes; idx++) {
+
+  const aPnt2VertexMap = new IndexedDataMap<number, OCC.TopoDS_Vertex>();
+
+  for (let idx = 1; idx <= aNbNodes; ++idx) {
     const aP = myMesh.Node(idx);
     const aV = new oc.BRepBuilderAPI_MakeVertex(aP);
-    aPnt2VertexMap.set(idx, aV.Vertex());
+    aPnt2VertexMap.add(idx, aV.Vertex());
   }
 
-  const anEdgeToTEgeMap: Map<string, OCC.TopoDS_Edge> = new Map();
+  const anEdgeToTEgeMap = new IndexedDataMap<Edge, OCC.TopoDS_Edge>();
 
-  for (let idx = 1; idx <= aNbTriangles; idx++) {
+  for (let idx = 1; idx <= aNbTriangles; ++idx) {
     const aTriangle = myMesh.Triangle(idx);
     const anIdx: [number, number, number] = [
       aTriangle.Value(1),
@@ -49,24 +125,15 @@ export function makeShapeFromMesh(
     if (aD1 < SMALL || aD2 < SMALL || aD3 < SMALL) {
       continue;
     }
-    const aV1 = aPnt2VertexMap.get(anIdx[0]);
-    const aV2 = aPnt2VertexMap.get(anIdx[1]);
-    const aV3 = aPnt2VertexMap.get(anIdx[2]);
+    const aV1 = aPnt2VertexMap.findFromKey(anIdx[0]);
+    const aV2 = aPnt2VertexMap.findFromKey(anIdx[1]);
+    const aV3 = aPnt2VertexMap.findFromKey(anIdx[2]);
     if (!aV1 || !aV2 || !aV3) {
       return;
     }
-    const aMeshEdge1: [number, number] = [
-      Math.min(anIdx[0], anIdx[1]),
-      Math.max(anIdx[0], anIdx[1])
-    ];
-    const aMeshEdge2: [number, number] = [
-      Math.min(anIdx[1], anIdx[2]),
-      Math.max(anIdx[1], anIdx[2])
-    ];
-    const aMeshEdge3: [number, number] = [
-      Math.min(anIdx[2], anIdx[0]),
-      Math.max(anIdx[2], anIdx[0])
-    ];
+    const aMeshEdge1 = new Edge(anIdx[0], anIdx[1]);
+    const aMeshEdge2 = new Edge(anIdx[1], anIdx[2]);
+    const aMeshEdge3 = new Edge(anIdx[2], anIdx[0]);
 
     const aMaker1 = new oc.BRepBuilderAPI_MakeEdge_2(aV1, aV2);
     const aTE1 = aMaker1.Edge();
@@ -84,9 +151,9 @@ export function makeShapeFromMesh(
     if (anIdx[0] < anIdx[2]) {
       aTE3.Reverse();
     }
-    anEdgeToTEgeMap.set(`${aMeshEdge1[0]}:${aMeshEdge1[1]}`, aTE1);
-    anEdgeToTEgeMap.set(`${aMeshEdge2[0]}:${aMeshEdge2[1]}`, aTE2);
-    anEdgeToTEgeMap.set(`${aMeshEdge3[0]}:${aMeshEdge3[1]}`, aTE3);
+    anEdgeToTEgeMap.add(aMeshEdge1, aTE1);
+    anEdgeToTEgeMap.add(aMeshEdge2, aTE2);
+    anEdgeToTEgeMap.add(aMeshEdge3, aTE3);
   }
   const aResult = new oc.TopoDS_Compound();
   const aBB = new oc.BRep_Builder();
@@ -100,36 +167,25 @@ export function makeShapeFromMesh(
       aTriangle.Value(3)
     ];
 
-    const aMeshEdge1: [number, number] = [
-      Math.min(anIdx[0], anIdx[1]),
-      Math.max(anIdx[0], anIdx[1])
-    ];
-    const aMeshEdge2: [number, number] = [
-      Math.min(anIdx[1], anIdx[2]),
-      Math.max(anIdx[1], anIdx[2])
-    ];
-    const aMeshEdge3: [number, number] = [
-      Math.min(anIdx[2], anIdx[0]),
-      Math.max(anIdx[2], anIdx[0])
-    ];
+    const aMeshEdge1 = new Edge(anIdx[0], anIdx[1]);
+    const aMeshEdge2 = new Edge(anIdx[1], anIdx[2]);
+    const aMeshEdge3 = new Edge(anIdx[2], anIdx[0]);
+
     const isReversed1 = anIdx[1] < anIdx[0];
     const isReversed2 = anIdx[2] < anIdx[1];
     const isReversed3 = anIdx[0] < anIdx[2];
 
-    const aMeshKey1 = `${aMeshEdge1[0]}:${aMeshEdge1[1]}`;
-    const aMeshKey2 = `${aMeshEdge2[0]}:${aMeshEdge2[1]}`;
-    const aMeshKey3 = `${aMeshEdge3[0]}:${aMeshEdge3[1]}`;
     const aHasAllEdges =
-      anEdgeToTEgeMap.has(aMeshKey1) &&
-      anEdgeToTEgeMap.has(aMeshKey2) &&
-      anEdgeToTEgeMap.has(aMeshKey3);
+      anEdgeToTEgeMap.contains(aMeshEdge1) &&
+      anEdgeToTEgeMap.contains(aMeshEdge2) &&
+      anEdgeToTEgeMap.contains(aMeshEdge3);
 
     if (!aHasAllEdges) {
       continue;
     }
-    const aTEdge1 = anEdgeToTEgeMap.get(aMeshKey1);
-    const aTEdge2 = anEdgeToTEgeMap.get(aMeshKey2);
-    const aTEdge3 = anEdgeToTEgeMap.get(aMeshKey3);
+    const aTEdge1 = anEdgeToTEgeMap.findFromKey(aMeshEdge1);
+    const aTEdge2 = anEdgeToTEgeMap.findFromKey(aMeshEdge2);
+    const aTEdge3 = anEdgeToTEgeMap.findFromKey(aMeshEdge3);
     if (!aTEdge1 || !aTEdge2 || !aTEdge3) {
       continue;
     }
@@ -163,6 +219,7 @@ export function makeShapeFromMesh(
     if (aTEdge2.Orientation_1() === oc.TopAbs_Orientation.TopAbs_REVERSED) {
       aN.Reverse();
     }
+
     const aNorm = new oc.gp_Dir_3(aN);
     const aPln = new oc.gp_Pln_3(myMesh.Node(anIdx[0]), aNorm);
     const aFaceMaker = new oc.BRepBuilderAPI_MakeFace_16(aPln, aWire, true);

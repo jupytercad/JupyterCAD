@@ -11,7 +11,6 @@ interface IShapeList {
 export class OccParser {
   private _shapeList: IShapeList[];
   private _occ: OCC.OpenCascadeInstance = (self as any).occ;
-  private _showEdge = true;
   constructor(shapeList: IShapeList[]) {
     this._shapeList = shapeList;
   }
@@ -33,12 +32,15 @@ export class OccParser {
         true
       );
       const faceList = this._build_face_mesh(occShape);
-
       let edgeList: IEdge[] = [];
-      if (this._showEdge) {
+      if (this._shouldComputeEdge(jcObject)) {
         edgeList = this._build_edge_mesh(occShape);
       }
-      const wireList = this._build_wire_mesh(occShape, maxDeviation);
+      let wireList: IEdge[] = [];
+      if (this._shouldComputeWire(jcObject)) {
+        //Only compute the wire mesh for 2d geometries
+        wireList = this._build_wire_mesh(occShape, maxDeviation);
+      }
 
       threejsData[jcObject.name] = {
         jcObject,
@@ -51,6 +53,19 @@ export class OccParser {
     return threejsData;
   }
 
+  private _shouldComputeEdge(obj: IJCadObject): boolean {
+    if (obj.shape === 'Part::Any' && obj.parameters?.Type === 'STL') {
+      return false;
+    }
+    return true;
+  }
+
+  private _shouldComputeWire(obj: IJCadObject): boolean {
+    if (obj.shape === 'Sketcher::SketchObject') {
+      return true;
+    }
+    return false;
+  }
   private _build_wire_mesh(
     shape: OCC.TopoDS_Shape,
     maxDeviation: number
@@ -122,11 +137,9 @@ export class OccParser {
       }
       const thisFace: IFace = {
         vertexCoord: [],
-        normalCoord: [],
         triIndexes: [],
         numberOfTriangles: 0
       };
-      const pc = new oc.Poly_Connect_2(myT);
       const triangulation = myT.get();
       const nbNodes = triangulation.NbNodes();
 
@@ -141,17 +154,6 @@ export class OccParser {
       }
 
       const orient = face.Orientation_1();
-
-      // Write normal buffer
-      const myNormal = new oc.TColgp_Array1OfDir_2(1, nbNodes);
-      oc.StdPrs_ToolTriangulatedShape.Normal(face, pc, myNormal);
-      thisFace.normalCoord = new Array(myNormal.Length() * 3);
-      for (let i = 0; i < myNormal.Length(); i++) {
-        const d = myNormal.Value(i + 1).Transformed(aLocation.Transformation());
-        thisFace.normalCoord[i * 3 + 0] = d.X();
-        thisFace.normalCoord[i * 3 + 1] = d.Y();
-        thisFace.normalCoord[i * 3 + 2] = d.Z();
-      }
 
       const nbTriangles = triangulation.NbTriangles();
 

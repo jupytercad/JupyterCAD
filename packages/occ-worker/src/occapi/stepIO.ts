@@ -7,7 +7,6 @@ export function _loadStepFile(content: string): OCC.TopoDS_Shape | undefined {
   const oc = getOcc();
   const fakeFileName = `${uuid()}.STEP`;
   oc.FS.createDataFile('/', fakeFileName, content, true, true, true);
-
   const reader = new oc.STEPControl_Reader_1();
 
   const readResult = reader.ReadFile(fakeFileName);

@@ -11,8 +11,8 @@ import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
 
 import { getCSSVariableColor } from '../tools';
 
-export const DEFAULT_LINEWIDTH = 4;
-export const SELECTED_LINEWIDTH = 12;
+export const DEFAULT_LINEWIDTH = 2;
+export const SELECTED_LINEWIDTH = 6;
 
 // Apply the BVH extension
 
@@ -122,20 +122,21 @@ export function buildShape(options: {
   const { faceList, edgeList, jcObject } = data;
 
   const vertices: Array<number> = [];
-  const normals: Array<number> = [];
   const triangles: Array<number> = [];
 
   let vInd = 0;
   if (faceList.length === 0 && edgeList.length === 0) {
     return null;
   }
-  faceList.forEach(face => {
+  for (const face of faceList) {
     // Copy Vertices into three.js Vector3 List
-    vertices.push(...face.vertexCoord);
-    normals.push(...face.normalCoord);
-
+    const vertexCoorLength = face.vertexCoord.length;
+    for (let ii = 0; ii < vertexCoorLength; ii++) {
+      vertices.push(face.vertexCoord[ii]);
+    }
     // Sort Triangles into a three.js Face List
-    for (let i = 0; i < face.triIndexes.length; i += 3) {
+    const triIndexesLength = face.triIndexes.length;
+    for (let i = 0; i < triIndexesLength; i += 3) {
       triangles.push(
         face.triIndexes[i + 0] + vInd,
         face.triIndexes[i + 1] + vInd,
@@ -143,8 +144,8 @@ export function buildShape(options: {
       );
     }
 
-    vInd += face.vertexCoord.length / 3;
-  });
+    vInd += vertexCoorLength / 3;
+  }
 
   let color = DEFAULT_MESH_COLOR;
   let visible = jcObject.visible;
@@ -167,7 +168,6 @@ export function buildShape(options: {
   // it's too bad Three.js does not easily allow setting uniforms independently per-mesh
   const material = new THREE.MeshPhongMaterial({
     color,
-    side: THREE.DoubleSide,
     wireframe: false,
     flatShading: false,
     clippingPlanes,
@@ -175,12 +175,13 @@ export function buildShape(options: {
   });
 
   const geometry = new THREE.BufferGeometry();
+
   geometry.setIndex(triangles);
   geometry.setAttribute(
     'position',
     new THREE.Float32BufferAttribute(vertices, 3)
   );
-  geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+  geometry.computeVertexNormals();
   geometry.computeBoundingBox();
   if (vertices.length > 0) {
     geometry.computeBoundsTree();
@@ -231,7 +232,7 @@ export function buildShape(options: {
 
   let edgeIdx = 0;
   const edgesMeshes: LineSegments2[] = [];
-  edgeList.forEach(edge => {
+  for (const edge of edgeList) {
     const edgeMaterial = new LineMaterial({
       linewidth: DEFAULT_LINEWIDTH,
       // @ts-ignore Missing typing in ThreeJS
@@ -242,7 +243,6 @@ export function buildShape(options: {
       polygonOffsetFactor: -5,
       polygonOffsetUnits: -5
     });
-
     const edgeGeometry = new LineGeometry();
     edgeGeometry.setPositions(edge.vertexCoord);
     const edgesMesh = new LineSegments2(edgeGeometry, edgeMaterial);
@@ -254,10 +254,10 @@ export function buildShape(options: {
     };
 
     edgesMeshes.push(edgesMesh);
-
+    meshGroup.add(edgesMesh);
     edgeIdx++;
-  });
-  meshGroup.add(...edgesMeshes);
+  }
+
   meshGroup.add(mainMesh);
 
   return { meshGroup, mainMesh, edgesMeshes };
