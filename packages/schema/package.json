@@ -1,6 +1,6 @@
 {
   "name": "@jupytercad/schema",
-  "version": "2.0.0-alpha.6",
+  "version": "2.0.0-alpha.7",
   "description": "A Jupytercad schema package.",
   "keywords": [
     "jupytercad"
