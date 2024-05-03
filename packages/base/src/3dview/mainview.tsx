@@ -285,7 +285,7 @@ export class MainView extends React.Component<IProps, IStates> {
               rotation: this._camera.rotation.toArray([]),
               up: this._camera.up.toArray([])
             },
-            this.state.id
+            this._mainViewModel.id
           );
         }, 100)
       );
@@ -542,7 +542,7 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       this._updateSelected(newSelection);
-      this._model.syncSelected(newSelection, this.state.id);
+      this._model.syncSelected(newSelection, this._mainViewModel.id);
     }
   }
 
