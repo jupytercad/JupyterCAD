@@ -8,7 +8,7 @@ exclude: '.*\.jcad$'
 repos:
   # Autoformat and linting, misc. details
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: forbid-new-submodules
       - id: end-of-file-fixer
@@ -27,12 +27,12 @@ repos:
 
   # Autoformat: Python code
   - repo: https://github.com/psf/black
-    rev: 24.1.1
+    rev: 24.4.2
     hooks:
       - id: black
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.2.0
+    rev: v0.4.3
     hooks:
       - id: ruff
         args: ['--fix']
@@ -43,7 +43,7 @@ repos:
       - id: prettier
 
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.0.0-alpha.2
+    rev: v9.2.0
     hooks:
       - id: eslint
         files: \.tsx?$
