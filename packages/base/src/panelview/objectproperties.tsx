@@ -207,13 +207,8 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     if (newState) {
       const selection = newState.selected.value;
       const selectedObjectNames = Object.keys(selection || {});
-
       // Only show object properties if ONE object is selected and it's a shape
-      if (
-        selection === undefined ||
-        selectedObjectNames.length !== 1 ||
-        selection[selectedObjectNames[0]].type !== 'shape'
-      ) {
+      if (selection === undefined || selectedObjectNames.length !== 1) {
         this.setState(old => ({
           ...old,
           schema: undefined,
@@ -223,7 +218,14 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
         return;
       }
 
-      const selectedObject = selectedObjectNames[0];
+      let selectedObject = selectedObjectNames[0];
+      if (
+        selection[selectedObject] &&
+        selection[selectedObject].type !== 'shape'
+      ) {
+        selectedObject = selection[selectedObject].parent as string;
+      }
+
       if (selectedObject !== this.state.selectedObject) {
         const objectData = this.props.cpModel.jcadModel?.getAllObject();
         if (objectData) {
