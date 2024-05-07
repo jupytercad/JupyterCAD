@@ -515,7 +515,6 @@ export class MainView extends React.Component<IProps, IStates> {
     const selectedMeshesNames = new Set(
       this._selectedMeshes.map(sel => sel.name)
     );
-
     if (selection) {
       const selectionName = selection.mesh.name;
       if (e.ctrlKey) {
@@ -540,7 +539,6 @@ export class MainView extends React.Component<IProps, IStates> {
         newSelection[name] = this._meshGroup?.getObjectByName(name)
           ?.userData as ISelection;
       }
-
       this._updateSelected(newSelection);
       this._model.syncSelected(newSelection, this._mainViewModel.id);
     }
