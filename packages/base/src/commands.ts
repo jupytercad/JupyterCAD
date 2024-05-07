@@ -593,8 +593,13 @@ const EXPORT_FORM = {
   },
   syncData: (context: DocumentRegistry.IContext<IJupyterCadModel>) => {
     return (props: IDict) => {
+      const endpoint = context.model?.sharedModel?.toJcadEndpoint;
+      if (!endpoint) {
+        showErrorMessage('Error', 'Missing endpoint.');
+        return;
+      }
       const { Name } = props;
-      requestAPI<{ done: boolean }>('jupytercad/export', {
+      requestAPI<{ done: boolean }>(endpoint, {
         method: 'POST',
         body: JSON.stringify({
           path: context.path,
@@ -895,9 +900,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.exportJcad, {
     label: trans.__('Export to .jcad'),
     isEnabled: () => {
-      return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.exportable
-        : false;
+      return Boolean(
+        tracker.currentWidget?.context?.model?.sharedModel?.toJcadEndpoint
+      );
     },
     iconClass: 'fa fa-file-export',
     execute: async () => {

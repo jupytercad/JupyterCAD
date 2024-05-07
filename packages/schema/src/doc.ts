@@ -187,7 +187,6 @@ export class JupyterCadDoc
   }
 
   editable = true;
-  exportable = false;
 
   private _getObjectAsYMapByName(name: string): Y.Map<any> | undefined {
     for (const obj of this._objects) {
