@@ -40,6 +40,26 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 2.0.0a8
+
+([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v2.0.0a7...2fbd72a5a55b0e69aa43de28dd4bf2f084c9884d))
+
+### Enhancements made
+
+- Update jcad exporting mechanism  [#355](https://github.com/jupytercad/jupytercad/pull/355) ([@trungleduc](https://github.com/trungleduc))
+
+### Bugs fixed
+
+- Fix wrong emitter id of select object action [#354](https://github.com/jupytercad/jupytercad/pull/354) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2024-04-29&to=2024-05-07&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2024-04-29..2024-05-07&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2024-04-29..2024-05-07&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.0.0a7
 
 ([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v2.0.0a6...d69c62bdc0896fca158bb3e3fbc49231ab000e31))
@@ -57,8 +77,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/jupytercad/graphs/contributors?from=2024-04-19&to=2024-04-29&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Agithub-actions+updated%3A2024-04-19..2024-04-29&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2Fjupytercad+involves%3Atrungleduc+updated%3A2024-04-19..2024-04-29&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.0.0a6
 
