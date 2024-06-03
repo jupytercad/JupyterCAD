@@ -46,7 +46,7 @@ pip install jupytercad-freecad
 
 ### Enhancements made
 
-- Update jcad exporting mechanism  [#355](https://github.com/jupytercad/jupytercad/pull/355) ([@trungleduc](https://github.com/trungleduc))
+- Update jcad exporting mechanism [#355](https://github.com/jupytercad/jupytercad/pull/355) ([@trungleduc](https://github.com/trungleduc))
 
 ### Bugs fixed
 
