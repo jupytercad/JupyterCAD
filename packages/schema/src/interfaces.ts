@@ -252,11 +252,14 @@ export interface IDisplayShape extends IMainMessageBase {
   };
 }
 
+export interface IDryRunResponsePayload {
+  status: 'ok' | 'error';
+  message?: string;
+}
+
 export interface IDryRunResponse extends IMainMessageBase {
   action: MainAction.DRY_RUN_RESPONSE;
-  payload: {
-    result: boolean;
-  }
+  payload: IDryRunResponsePayload;
 }
 
 export interface IWorkerInitialized extends IMainMessageBase {

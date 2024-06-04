@@ -12,6 +12,7 @@ import {
   IPostOperatorInput,
   IPostResult,
   JCadWorkerSupportedFormat,
+  IDryRunResponsePayload,
   MainAction,
   WorkerAction
 } from '@jupytercad/schema';
@@ -128,7 +129,7 @@ export class MainViewModel implements IDisposable {
         break;
       }
       case MainAction.DRY_RUN_RESPONSE: {
-        this._dryRunResponse.resolve(msg.payload.result);
+        this._dryRunResponse.resolve(msg.payload);
         break;
       }
       case MainAction.INITIALIZED: {
@@ -145,7 +146,7 @@ export class MainViewModel implements IDisposable {
         });
       }
     }
-  };
+  }
 
   sendRawGeometryToWorker(postResult: IDict<IPostOperatorInput>): void {
     Object.values(postResult).forEach(res => {
@@ -177,7 +178,7 @@ export class MainViewModel implements IDisposable {
    *
    * Return true is the payload is valid, false otherwise.
    */
-  async dryRun(): Promise<boolean> {
+  async dryRun(): Promise<IDryRunResponsePayload> {
     await this._worker.ready;
 
     this._dryRunResponse = new PromiseDelegate();
@@ -192,7 +193,7 @@ export class MainViewModel implements IDisposable {
       }
     });
 
-    return true;
+    return await this._dryRunResponse.promise;
   }
 
   postProcessWorkerHandler(msg: IMainMessage): void {
@@ -208,7 +209,7 @@ export class MainViewModel implements IDisposable {
         break;
       }
     }
-  };
+  }
 
   addAnnotation(value: IAnnotation): void {
     this._jcadModel.annotationModel?.addAnnotation(uuid(), value);
@@ -219,7 +220,7 @@ export class MainViewModel implements IDisposable {
       const newMsg = { ...msg, id: this._id };
       this._worker.postMessage(newMsg);
     }
-  };
+  }
 
   private _saveMeta(payload: IDisplayShape['payload']['result']) {
     if (!this._jcadModel) {
@@ -228,7 +229,7 @@ export class MainViewModel implements IDisposable {
     Object.entries(payload).forEach(([objName, data]) => {
       this._jcadModel.sharedModel.setShapeMeta(objName, data.meta);
     });
-  };
+  }
 
   private async _onSharedObjectsChanged(
     _: IJupyterCadDoc,
@@ -247,7 +248,7 @@ export class MainViewModel implements IDisposable {
     }
   }
 
-  private _dryRunResponse: PromiseDelegate<boolean>;
+  private _dryRunResponse: PromiseDelegate<IDryRunResponsePayload>;
   private _jcadModel: IJupyterCadModel;
   private _viewSetting: ObservableMap<JSONValue>;
   private _workerRegistry: IJCadWorkerRegistry;

@@ -621,7 +621,7 @@ export function addCommands(
   formSchemaRegistry: IJCadFormSchemaRegistry,
   workerRegistry: IJCadWorkerRegistry
 ): void {
-  workerRegistry.getWorker
+  workerRegistry.getWorker;
   const trans = translator.load('jupyterlab');
   const { commands } = app;
   Private.updateFormSchema(formSchemaRegistry);
@@ -634,7 +634,7 @@ export function addCommands(
     },
     execute: args => {
       const current = tracker.currentWidget;
-      current?.content.currentViewModel
+      current?.content.currentViewModel;
 
       if (current) {
         return current.context.model.sharedModel.redo();

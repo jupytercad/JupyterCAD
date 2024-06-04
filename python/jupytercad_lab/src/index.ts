@@ -33,7 +33,11 @@ const NAME_SPACE = 'jupytercad';
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:lab:main-menu',
   autoStart: true,
-  requires: [IJupyterCadDocTracker, IJCadFormSchemaRegistryToken, IJCadWorkerRegistryToken],
+  requires: [
+    IJupyterCadDocTracker,
+    IJCadFormSchemaRegistryToken,
+    IJCadWorkerRegistryToken
+  ],
   optional: [IMainMenu, ITranslator],
   activate: (
     app: JupyterFrontEnd,
