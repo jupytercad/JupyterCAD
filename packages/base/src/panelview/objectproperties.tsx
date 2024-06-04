@@ -109,9 +109,9 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       return;
     }
 
-    const currentViewModel = this.props.tracker
+    const currentWidget = this.props.tracker
       .currentWidget as JupyterCadWidget | null;
-    if (!currentViewModel) {
+    if (!currentWidget) {
       return;
     }
 
@@ -133,7 +133,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
 
     // Try a dry run
     const dryRunResult =
-      await currentViewModel.content.currentViewModel.dryRun(updatedContent);
+      await currentWidget.content.currentViewModel.dryRun(updatedContent);
     if (dryRunResult.status === 'error') {
       showErrorMessage(
         'Failed to update the shape',
@@ -142,7 +142,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       return;
     }
 
-    // Dry run was successful, really apply the update now
+    // Dry run was successful, ready to apply the update now
     const obj = model.sharedModel.getObjectByName(objectName);
     if (obj) {
       model.sharedModel.updateObjectByName(objectName, 'parameters', {
