@@ -99,8 +99,7 @@ class CadDocument(CommWidget):
     def remove(self, name: str) -> CadDocument:
         index = self._get_yobject_index_by_name(name)
         if self._objects_array and index != -1:
-            with self.ydoc.transaction() as t:
-                self._objects_array.delete(t, index)
+            self._objects_array.pop(index)
         return self
 
     def add_object(self, new_object: "PythonJcadObject") -> CadDocument:
