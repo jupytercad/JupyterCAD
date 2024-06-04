@@ -178,6 +178,51 @@ function getSelectedEdge(
   }
 }
 
+export async function executeOperator(
+  name: string,
+  objectModel: IJCadObject,
+  current: JupyterCadWidget,
+  transaction: (sharedModel: IJupyterCadDoc) => any,
+  errorOnFailure = 'Unknown error'
+) {
+  const sharedModel = current.context.model.sharedModel;
+
+  if (!sharedModel) {
+    return;
+  }
+
+  if (sharedModel.objectExists(objectModel.name)) {
+    showErrorMessage(
+      'The object already exists',
+      'There is an existing object with the same name.'
+    );
+
+    return;
+  }
+
+  // Try a dry run with the update content to verify its feasibility
+  const currentJcadContent = current.context.model.getContent();
+  const updatedContent: IJCadContent = {
+    ...currentJcadContent,
+    objects: [...currentJcadContent.objects, objectModel]
+  };
+  const dryRunResult =
+    await current.content.currentViewModel.dryRun(updatedContent);
+  if (dryRunResult.status === 'error') {
+    showErrorMessage(
+      `Failed to create the ${name} operation`,
+      dryRunResult.message || errorOnFailure
+    );
+
+    return;
+  }
+
+  // Everything's good, we can apply the change to the shared model
+  sharedModel.transact(() => {
+    transaction(sharedModel);
+  });
+}
+
 const OPERATORS = {
   cut: {
     title: 'Cut parameters',
@@ -196,7 +241,7 @@ const OPERATORS = {
       };
     },
     syncData: (current: JupyterCadWidget) => {
-      return (props: IDict) => {
+      return async (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
           shape: 'Part::Cut',
@@ -204,22 +249,18 @@ const OPERATORS = {
           visible: true,
           name: Name
         };
-        const sharedModel = current.context.model.sharedModel;
-        if (sharedModel) {
-          sharedModel.transact(() => {
+
+        return executeOperator(
+          'Cut',
+          objectModel,
+          current,
+          (sharedModel: IJupyterCadDoc) => {
             setVisible(sharedModel, parameters['Base'], false);
             setVisible(sharedModel, parameters['Tool'], false);
 
-            if (!sharedModel.objectExists(objectModel.name)) {
-              sharedModel.addObject(objectModel);
-            } else {
-              showErrorMessage(
-                'The object already exists',
-                'There is an existing object with the same name.'
-              );
-            }
-          });
-        }
+            sharedModel.addObject(objectModel);
+          }
+        );
       };
     }
   },
@@ -241,7 +282,7 @@ const OPERATORS = {
       };
     },
     syncData: (current: JupyterCadWidget) => {
-      return (props: IDict) => {
+      return async (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
           shape: 'Part::Extrusion',
@@ -249,21 +290,17 @@ const OPERATORS = {
           visible: true,
           name: Name
         };
-        const sharedModel = current.context.model.sharedModel;
-        if (sharedModel) {
-          setVisible(sharedModel, parameters['Base'], false);
 
-          sharedModel.transact(() => {
-            if (!sharedModel.objectExists(objectModel.name)) {
-              sharedModel.addObject(objectModel);
-            } else {
-              showErrorMessage(
-                'The object already exists',
-                'There is an existing object with the same name.'
-              );
-            }
-          });
-        }
+        return executeOperator(
+          'Extrusion',
+          objectModel,
+          current,
+          (sharedModel: IJupyterCadDoc) => {
+            setVisible(sharedModel, parameters['Base'], false);
+
+            sharedModel.addObject(objectModel);
+          }
+        );
       };
     }
   },
@@ -283,7 +320,7 @@ const OPERATORS = {
       };
     },
     syncData: (current: JupyterCadWidget) => {
-      return (props: IDict) => {
+      return async (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
           shape: 'Part::MultiFuse',
@@ -291,23 +328,19 @@ const OPERATORS = {
           visible: true,
           name: Name
         };
-        const sharedModel = current.context.model.sharedModel;
-        if (sharedModel) {
-          sharedModel.transact(() => {
+
+        return executeOperator(
+          'Fuse',
+          objectModel,
+          current,
+          (sharedModel: IJupyterCadDoc) => {
             parameters['Shapes'].map((shape: string) => {
               setVisible(sharedModel, shape, false);
             });
 
-            if (!sharedModel.objectExists(objectModel.name)) {
-              sharedModel.addObject(objectModel);
-            } else {
-              showErrorMessage(
-                'The object already exists',
-                'There is an existing object with the same name.'
-              );
-            }
-          });
-        }
+            sharedModel.addObject(objectModel);
+          }
+        );
       };
     }
   },
@@ -327,7 +360,7 @@ const OPERATORS = {
       };
     },
     syncData: (current: JupyterCadWidget) => {
-      return (props: IDict) => {
+      return async (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
           shape: 'Part::MultiCommon',
@@ -335,23 +368,19 @@ const OPERATORS = {
           visible: true,
           name: Name
         };
-        const sharedModel = current.context.model.sharedModel;
-        if (sharedModel) {
-          sharedModel.transact(() => {
+
+        return executeOperator(
+          'Intersection',
+          objectModel,
+          current,
+          (sharedModel: IJupyterCadDoc) => {
             parameters['Shapes'].map((shape: string) => {
               setVisible(sharedModel, shape, false);
             });
 
-            if (!sharedModel.objectExists(objectModel.name)) {
-              sharedModel.addObject(objectModel);
-            } else {
-              showErrorMessage(
-                'The object already exists',
-                'There is an existing object with the same name.'
-              );
-            }
-          });
-        }
+            sharedModel.addObject(objectModel);
+          }
+        );
       };
     }
   },
@@ -371,12 +400,6 @@ const OPERATORS = {
     },
     syncData: (current: JupyterCadWidget) => {
       return async (props: IDict) => {
-        const sharedModel = current.context.model.sharedModel;
-
-        if (!sharedModel) {
-          return;
-        }
-
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
           shape: 'Part::Chamfer',
@@ -385,38 +408,17 @@ const OPERATORS = {
           name: Name
         };
 
-        if (sharedModel.objectExists(objectModel.name)) {
-          showErrorMessage(
-            'The object already exists',
-            'There is an existing object with the same name.'
-          );
+        return executeOperator(
+          'Chamfer',
+          objectModel,
+          current,
+          (sharedModel: IJupyterCadDoc) => {
+            setVisible(sharedModel, parameters['Base'], false);
 
-          return;
-        }
-
-        // Try a dry run with the update content to verify its feasibility
-        const currentJcadContent = current.context.model.getContent();
-        const updatedContent: IJCadContent = {
-          ...currentJcadContent,
-          objects: [...currentJcadContent.objects, objectModel]
-        };
-        const dryRunResult =
-          await current?.content.currentViewModel.dryRun(updatedContent);
-        if (dryRunResult.status === 'error') {
-          showErrorMessage(
-            'Failed to create the Chamfer',
-            dryRunResult.message || 'Unkown error'
-          );
-
-          return;
-        }
-
-        // Everything's good, we can apply the change to the shared model
-        sharedModel.transact(() => {
-          setVisible(sharedModel, parameters['Base'], false);
-
-          sharedModel.addObject(objectModel);
-        });
+            sharedModel.addObject(objectModel);
+          },
+          'Please check that the Dist parameter makes sense for the Base'
+        );
       };
     }
   },
@@ -435,7 +437,7 @@ const OPERATORS = {
       };
     },
     syncData: (current: JupyterCadWidget) => {
-      return (props: IDict) => {
+      return async (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
           shape: 'Part::Fillet',
@@ -443,21 +445,18 @@ const OPERATORS = {
           visible: true,
           name: Name
         };
-        const sharedModel = current.context.model.sharedModel;
-        if (sharedModel) {
-          sharedModel.transact(() => {
+
+        return executeOperator(
+          'Fillet',
+          objectModel,
+          current,
+          (sharedModel: IJupyterCadDoc) => {
             setVisible(sharedModel, parameters['Base'], false);
 
-            if (!sharedModel.objectExists(objectModel.name)) {
-              sharedModel.addObject(objectModel);
-            } else {
-              showErrorMessage(
-                'The object already exists',
-                'There is an existing object with the same name.'
-              );
-            }
-          });
-        }
+            sharedModel.addObject(objectModel);
+          },
+          'Please check that the Radius parameter makes sense for the Base'
+        );
       };
     }
   }

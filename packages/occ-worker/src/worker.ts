@@ -57,7 +57,7 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
     }
     case WorkerAction.DRY_RUN: {
       try {
-        WorkerHandler[message.action](message.payload);
+        WorkerHandler[WorkerAction.LOAD_FILE](message.payload);
       } catch (e) {
         let msg = '';
 
