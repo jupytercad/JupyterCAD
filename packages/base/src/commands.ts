@@ -182,8 +182,7 @@ export async function executeOperator(
   name: string,
   objectModel: IJCadObject,
   current: JupyterCadWidget,
-  transaction: (sharedModel: IJupyterCadDoc) => any,
-  errorOnFailure = 'Unknown error'
+  transaction: (sharedModel: IJupyterCadDoc) => any
 ) {
   const sharedModel = current.context.model.sharedModel;
 
@@ -211,7 +210,7 @@ export async function executeOperator(
   if (dryRunResult.status === 'error') {
     showErrorMessage(
       `Failed to create the ${name} operation`,
-      dryRunResult.message || errorOnFailure
+      `The ${name} tool was unable to create the desired shape due to invalid parameter values. The values you entered may not be compatible with the dimensions of your piece.`
     );
 
     return;
@@ -416,8 +415,7 @@ const OPERATORS = {
             setVisible(sharedModel, parameters['Base'], false);
 
             sharedModel.addObject(objectModel);
-          },
-          'Please check that the Dist parameter makes sense for the Base'
+          }
         );
       };
     }
@@ -454,8 +452,7 @@ const OPERATORS = {
             setVisible(sharedModel, parameters['Base'], false);
 
             sharedModel.addObject(objectModel);
-          },
-          'Please check that the Radius parameter makes sense for the Base'
+          }
         );
       };
     }
