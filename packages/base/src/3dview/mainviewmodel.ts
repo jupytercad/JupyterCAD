@@ -14,7 +14,8 @@ import {
   JCadWorkerSupportedFormat,
   IDryRunResponsePayload,
   MainAction,
-  WorkerAction
+  WorkerAction,
+  IJCadContent
 } from '@jupytercad/schema';
 import { ObservableMap } from '@jupyterlab/observables';
 import { JSONValue, PromiseDelegate } from '@lumino/coreutils';
@@ -178,14 +179,13 @@ export class MainViewModel implements IDisposable {
    *
    * Return true is the payload is valid, false otherwise.
    */
-  async dryRun(): Promise<IDryRunResponsePayload> {
+  async dryRun(content: IJCadContent): Promise<IDryRunResponsePayload> {
     await this._worker.ready;
 
     this._dryRunResponse = new PromiseDelegate();
 
-    // TODO Allow a dry run without changing the shared model
-    const content = this._jcadModel.getContent();
     this._workerBusy.emit(true);
+
     this._postMessage({
       action: WorkerAction.DRY_RUN,
       payload: {
@@ -193,7 +193,11 @@ export class MainViewModel implements IDisposable {
       }
     });
 
-    return await this._dryRunResponse.promise;
+    const response = await this._dryRunResponse.promise;
+
+    this._workerBusy.emit(false);
+
+    return response;
   }
 
   postProcessWorkerHandler(msg: IMainMessage): void {
