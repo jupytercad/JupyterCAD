@@ -18,7 +18,7 @@ import {
   IJCadContent
 } from '@jupytercad/schema';
 import { ObservableMap } from '@jupyterlab/observables';
-import { JSONValue, PromiseDelegate } from '@lumino/coreutils';
+import { JSONValue, PromiseDelegate, UUID } from '@lumino/coreutils';
 import { IDisposable } from '@lumino/disposable';
 import { ISignal, Signal } from '@lumino/signaling';
 import { v4 as uuid } from 'uuid';
@@ -130,7 +130,7 @@ export class MainViewModel implements IDisposable {
         break;
       }
       case MainAction.DRY_RUN_RESPONSE: {
-        this._dryRunResponse.resolve(msg.payload);
+        this._dryRunResponses[msg.payload.id].resolve(msg.payload);
         break;
       }
       case MainAction.INITIALIZED: {
@@ -182,18 +182,23 @@ export class MainViewModel implements IDisposable {
   async dryRun(content: IJCadContent): Promise<IDryRunResponsePayload> {
     await this._worker.ready;
 
-    this._dryRunResponse = new PromiseDelegate();
+    const id = UUID.uuid4();
+
+    this._dryRunResponses[id] = new PromiseDelegate();
 
     this._workerBusy.emit(true);
 
     this._postMessage({
       action: WorkerAction.DRY_RUN,
       payload: {
+        id,
         content
       }
     });
 
-    const response = await this._dryRunResponse.promise;
+    const response = await this._dryRunResponses[id].promise;
+
+    delete this._dryRunResponses[id];
 
     this._workerBusy.emit(false);
 
@@ -252,7 +257,7 @@ export class MainViewModel implements IDisposable {
     }
   }
 
-  private _dryRunResponse: PromiseDelegate<IDryRunResponsePayload>;
+  private _dryRunResponses: IDict<PromiseDelegate<IDryRunResponsePayload>> = {};
   private _jcadModel: IJupyterCadModel;
   private _viewSetting: ObservableMap<JSONValue>;
   private _workerRegistry: IJCadWorkerRegistry;

@@ -253,6 +253,7 @@ export interface IDisplayShape extends IMainMessageBase {
 }
 
 export interface IDryRunResponsePayload {
+  id: string;
   status: 'ok' | 'error';
   message?: string;
 }

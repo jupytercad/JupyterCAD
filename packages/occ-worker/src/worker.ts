@@ -71,6 +71,7 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
           {
             action: MainAction.DRY_RUN_RESPONSE,
             payload: {
+              id: message.payload.id,
               status: 'error',
               message: msg
             }
@@ -84,6 +85,7 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
         {
           action: MainAction.DRY_RUN_RESPONSE,
           payload: {
+            id: message.payload.id,
             status: 'ok'
           }
         },

@@ -43,6 +43,7 @@ export interface ILoadFile extends IWorkerMessageBase {
 export interface IDryRun extends IWorkerMessageBase {
   action: WorkerAction.DRY_RUN;
   payload: {
+    id: string;
     content: IJCadContent;
   };
 }
