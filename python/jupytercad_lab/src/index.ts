@@ -12,6 +12,8 @@ import {
   IAnnotationToken,
   IJCadFormSchemaRegistry,
   IJCadFormSchemaRegistryToken,
+  IJCadWorkerRegistry,
+  IJCadWorkerRegistryToken,
   IJupyterCadDocTracker,
   IJupyterCadTracker
 } from '@jupytercad/schema';
@@ -31,12 +33,13 @@ const NAME_SPACE = 'jupytercad';
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:lab:main-menu',
   autoStart: true,
-  requires: [IJupyterCadDocTracker, IJCadFormSchemaRegistryToken],
+  requires: [IJupyterCadDocTracker, IJCadFormSchemaRegistryToken, IJCadWorkerRegistryToken],
   optional: [IMainMenu, ITranslator],
   activate: (
     app: JupyterFrontEnd,
     tracker: WidgetTracker<JupyterCadWidget>,
     formSchemaRegistry: IJCadFormSchemaRegistry,
+    workerRegistry: IJCadWorkerRegistry,
     mainMenu?: IMainMenu,
     translator?: ITranslator
   ): void => {
@@ -49,7 +52,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       );
     };
 
-    addCommands(app, tracker, translator, formSchemaRegistry);
+    addCommands(app, tracker, translator, formSchemaRegistry, workerRegistry);
     if (mainMenu) {
       populateMenus(mainMenu, isEnabled);
     }
