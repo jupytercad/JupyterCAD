@@ -1,5 +1,6 @@
 import {
   IDict,
+  IJCadContent,
   IJCadFormSchemaRegistry,
   IJCadObject,
   IJCadWorkerRegistry,
@@ -194,7 +195,7 @@ const OPERATORS = {
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
-    syncData: (model: IJupyterCadModel) => {
+    syncData: (current: JupyterCadWidget) => {
       return (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
@@ -203,7 +204,7 @@ const OPERATORS = {
           visible: true,
           name: Name
         };
-        const sharedModel = model.sharedModel;
+        const sharedModel = current.context.model.sharedModel;
         if (sharedModel) {
           sharedModel.transact(() => {
             setVisible(sharedModel, parameters['Base'], false);
@@ -239,7 +240,7 @@ const OPERATORS = {
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
-    syncData: (model: IJupyterCadModel) => {
+    syncData: (current: JupyterCadWidget) => {
       return (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
@@ -248,7 +249,7 @@ const OPERATORS = {
           visible: true,
           name: Name
         };
-        const sharedModel = model.sharedModel;
+        const sharedModel = current.context.model.sharedModel;
         if (sharedModel) {
           setVisible(sharedModel, parameters['Base'], false);
 
@@ -281,7 +282,7 @@ const OPERATORS = {
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
-    syncData: (model: IJupyterCadModel) => {
+    syncData: (current: JupyterCadWidget) => {
       return (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
@@ -290,7 +291,7 @@ const OPERATORS = {
           visible: true,
           name: Name
         };
-        const sharedModel = model.sharedModel;
+        const sharedModel = current.context.model.sharedModel;
         if (sharedModel) {
           sharedModel.transact(() => {
             parameters['Shapes'].map((shape: string) => {
@@ -325,7 +326,7 @@ const OPERATORS = {
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
-    syncData: (model: IJupyterCadModel) => {
+    syncData: (current: JupyterCadWidget) => {
       return (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
@@ -334,7 +335,7 @@ const OPERATORS = {
           visible: true,
           name: Name
         };
-        const sharedModel = model.sharedModel;
+        const sharedModel = current.context.model.sharedModel;
         if (sharedModel) {
           sharedModel.transact(() => {
             parameters['Shapes'].map((shape: string) => {
@@ -368,8 +369,14 @@ const OPERATORS = {
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
-    syncData: (model: IJupyterCadModel) => {
-      return (props: IDict) => {
+    syncData: (current: JupyterCadWidget) => {
+      return async (props: IDict) => {
+        const sharedModel = current.context.model.sharedModel;
+
+        if (!sharedModel) {
+          return;
+        }
+
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
           shape: 'Part::Chamfer',
@@ -377,21 +384,39 @@ const OPERATORS = {
           visible: true,
           name: Name
         };
-        const sharedModel = model.sharedModel;
-        if (sharedModel) {
-          sharedModel.transact(() => {
-            setVisible(sharedModel, parameters['Base'], false);
 
-            if (!sharedModel.objectExists(objectModel.name)) {
-              sharedModel.addObject(objectModel);
-            } else {
-              showErrorMessage(
-                'The object already exists',
-                'There is an existing object with the same name.'
-              );
-            }
-          });
+        if (sharedModel.objectExists(objectModel.name)) {
+          showErrorMessage(
+            'The object already exists',
+            'There is an existing object with the same name.'
+          );
+
+          return;
         }
+
+        // Try a dry run with the update content to verify its feasibility
+        const currentJcadContent = current.context.model.getContent();
+        const updatedContent: IJCadContent = {
+          ...currentJcadContent,
+          objects: [...currentJcadContent.objects, objectModel]
+        };
+        const dryRunResult =
+          await current?.content.currentViewModel.dryRun(updatedContent);
+        if (dryRunResult.status === 'error') {
+          showErrorMessage(
+            'Failed to create the Chamfer',
+            dryRunResult.message || 'Unkown error'
+          );
+
+          return;
+        }
+
+        // Everything's good, we can apply the change to the shared model
+        sharedModel.transact(() => {
+          setVisible(sharedModel, parameters['Base'], false);
+
+          sharedModel.addObject(objectModel);
+        });
       };
     }
   },
@@ -409,7 +434,7 @@ const OPERATORS = {
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
-    syncData: (model: IJupyterCadModel) => {
+    syncData: (current: JupyterCadWidget) => {
       return (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
@@ -418,7 +443,7 @@ const OPERATORS = {
           visible: true,
           name: Name
         };
-        const sharedModel = model.sharedModel;
+        const sharedModel = current.context.model.sharedModel;
         if (sharedModel) {
           sharedModel.transact(() => {
             setVisible(sharedModel, parameters['Base'], false);
@@ -634,7 +659,6 @@ export function addCommands(
     },
     execute: args => {
       const current = tracker.currentWidget;
-      current?.content.currentViewModel;
 
       if (current) {
         return current.context.model.sharedModel.redo();
@@ -1087,7 +1111,7 @@ namespace Private {
         title: op.title,
         sourceData: op.default(current.context.model),
         schema: form_schema,
-        syncData: op.syncData(current.context.model),
+        syncData: op.syncData(current),
         cancelButton: true
       });
       await dialog.launch();
