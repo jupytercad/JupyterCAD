@@ -92,6 +92,7 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
 
     const rightControlPanel = new RightPanelWidget({
       model: controlModel,
+      tracker,
       formSchemaRegistry
     });
     rightControlPanel.id = 'jupytercad::rightControlPanel';

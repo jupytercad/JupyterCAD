@@ -1,4 +1,8 @@
-import { IJCadFormSchemaRegistry, JupyterCadDoc } from '@jupytercad/schema';
+import {
+  IJCadFormSchemaRegistry,
+  IJupyterCadTracker,
+  JupyterCadDoc
+} from '@jupytercad/schema';
 import { SidePanel } from '@jupyterlab/ui-components';
 
 import { IControlPanelModel } from '../types';
@@ -14,7 +18,8 @@ export class RightPanelWidget extends SidePanel {
     this.header.addWidget(header);
     const properties = new ObjectProperties({
       controlPanelModel: this._model,
-      formSchemaRegistry: options.formSchemaRegistry
+      formSchemaRegistry: options.formSchemaRegistry,
+      tracker: options.tracker
     });
 
     this.addWidget(properties);
@@ -42,6 +47,7 @@ export class RightPanelWidget extends SidePanel {
 export namespace RightPanelWidget {
   export interface IOptions {
     model: IControlPanelModel;
+    tracker: IJupyterCadTracker;
     formSchemaRegistry: IJCadFormSchemaRegistry;
   }
   export interface IProps {
