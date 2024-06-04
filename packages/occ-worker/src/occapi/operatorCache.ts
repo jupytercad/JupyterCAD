@@ -146,6 +146,7 @@ export function shape_meta_data(shape: OCC.TopoDS_Shape): IShapeMetadata {
     ]
   };
 }
+
 export function operatorCache<T>(
   name: Parts | 'ObjectFile',
   ops: (args: T, content: IJCadContent) => OCC.TopoDS_Shape | undefined
@@ -153,9 +154,7 @@ export function operatorCache<T>(
   return (
     args: T,
     content: IJCadContent
-  ):
-    | { occShape: OCC.TopoDS_Shape; metadata?: IShapeMetadata | undefined }
-    | undefined => {
+  ): { occShape: OCC.TopoDS_Shape; metadata?: IShapeMetadata | undefined } => {
     const expandedArgs = expand_operator(name, args, content);
     const hash = `${hashCode(JSON.stringify(expandedArgs))}`;
     if (SHAPE_CACHE.has(hash)) {
@@ -169,6 +168,10 @@ export function operatorCache<T>(
         };
         SHAPE_CACHE.set(hash, cacheData);
         return cacheData;
+      } else {
+        throw new Error(
+          `Unknown error while creating ${name}: ${JSON.stringify(content)}`
+        );
       }
     }
   };

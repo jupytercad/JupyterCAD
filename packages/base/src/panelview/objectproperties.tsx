@@ -5,9 +5,10 @@ import {
   IJcadObjectDocChange,
   IJupyterCadClientState,
   IJupyterCadDoc,
-  IJupyterCadModel
+  IJupyterCadModel,
+  IJupyterCadTracker
 } from '@jupytercad/schema';
-import { ReactWidget } from '@jupyterlab/apputils';
+import { ReactWidget, showErrorMessage } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
 import * as React from 'react';
@@ -20,6 +21,7 @@ import {
 } from '../tools';
 import { IControlPanelModel } from '../types';
 import { ObjectPropertiesForm } from './formbuilder';
+import { JupyterCadWidget } from '../widget';
 
 export class ObjectProperties extends PanelWithToolbar {
   constructor(params: ObjectProperties.IOptions) {
@@ -28,6 +30,7 @@ export class ObjectProperties extends PanelWithToolbar {
     const body = ReactWidget.create(
       <ObjectPropertiesReact
         cpModel={params.controlPanelModel}
+        tracker={params.tracker}
         formSchemaRegistry={params.formSchemaRegistry}
       />
     );
@@ -50,6 +53,7 @@ interface IStates {
 
 interface IProps {
   cpModel: IControlPanelModel;
+  tracker: IJupyterCadTracker;
   formSchemaRegistry: IJCadFormSchemaRegistry;
 }
 
@@ -97,7 +101,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     });
   }
 
-  syncObjectProperties(
+  async syncObjectProperties(
     objectName: string | undefined,
     properties: { [key: string]: any }
   ) {
@@ -105,10 +109,43 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       return;
     }
 
-    const model = this.props.cpModel.jcadModel?.sharedModel;
-    const obj = model?.getObjectByName(objectName);
-    if (model && obj) {
-      model.updateObjectByName(objectName, 'parameters', {
+    const currentWidget = this.props.tracker
+      .currentWidget as JupyterCadWidget | null;
+    if (!currentWidget) {
+      return;
+    }
+
+    const model = this.props.cpModel.jcadModel;
+    if (!model) {
+      return;
+    }
+
+    // getContent already returns a deep copy of the content, we can change it safely here
+    const updatedContent = model.getContent();
+    for (const object of updatedContent.objects) {
+      if (object.name === objectName) {
+        object.parameters = {
+          ...object.parameters,
+          ...properties
+        };
+      }
+    }
+
+    // Try a dry run
+    const dryRunResult =
+      await currentWidget.content.currentViewModel.dryRun(updatedContent);
+    if (dryRunResult.status === 'error') {
+      showErrorMessage(
+        'Failed to update the shape',
+        'The tool was unable to update the desired shape due to invalid parameter values. The values you entered may not be compatible with the dimensions of your piece.'
+      );
+      return;
+    }
+
+    // Dry run was successful, ready to apply the update now
+    const obj = model.sharedModel.getObjectByName(objectName);
+    if (obj) {
+      model.sharedModel.updateObjectByName(objectName, 'parameters', {
         ...obj['parameters'],
         ...properties
       });
@@ -278,5 +315,6 @@ export namespace ObjectProperties {
   export interface IOptions extends Panel.IOptions {
     controlPanelModel: IControlPanelModel;
     formSchemaRegistry: IJCadFormSchemaRegistry;
+    tracker: IJupyterCadTracker;
   }
 }

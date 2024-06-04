@@ -12,11 +12,13 @@ import {
   IPostOperatorInput,
   IPostResult,
   JCadWorkerSupportedFormat,
+  IDryRunResponsePayload,
   MainAction,
-  WorkerAction
+  WorkerAction,
+  IJCadContent
 } from '@jupytercad/schema';
 import { ObservableMap } from '@jupyterlab/observables';
-import { JSONValue } from '@lumino/coreutils';
+import { JSONValue, PromiseDelegate, UUID } from '@lumino/coreutils';
 import { IDisposable } from '@lumino/disposable';
 import { ISignal, Signal } from '@lumino/signaling';
 import { v4 as uuid } from 'uuid';
@@ -74,6 +76,7 @@ export class MainViewModel implements IDisposable {
       this
     );
   }
+
   initWorker(): void {
     this._worker = this._workerRegistry.getDefaultWorker();
     this._id = this._worker.register({
@@ -87,7 +90,7 @@ export class MainViewModel implements IDisposable {
     });
   }
 
-  messageHandler = (msg: IMainMessage): void => {
+  messageHandler(msg: IMainMessage): void {
     switch (msg.action) {
       case MainAction.DISPLAY_SHAPE: {
         const { result, postResult } = msg.payload;
@@ -126,6 +129,10 @@ export class MainViewModel implements IDisposable {
 
         break;
       }
+      case MainAction.DRY_RUN_RESPONSE: {
+        this._dryRunResponses[msg.payload.id].resolve(msg.payload);
+        break;
+      }
       case MainAction.INITIALIZED: {
         if (!this._jcadModel) {
           return;
@@ -140,7 +147,7 @@ export class MainViewModel implements IDisposable {
         });
       }
     }
-  };
+  }
 
   sendRawGeometryToWorker(postResult: IDict<IPostOperatorInput>): void {
     Object.values(postResult).forEach(res => {
@@ -167,7 +174,38 @@ export class MainViewModel implements IDisposable {
     });
   }
 
-  postProcessWorkerHandler = (msg: IMainMessage): void => {
+  /**
+   * Send a payload to the worker to test its feasibility.
+   *
+   * Return true is the payload is valid, false otherwise.
+   */
+  async dryRun(content: IJCadContent): Promise<IDryRunResponsePayload> {
+    await this._worker.ready;
+
+    const id = UUID.uuid4();
+
+    this._dryRunResponses[id] = new PromiseDelegate();
+
+    this._workerBusy.emit(true);
+
+    this._postMessage({
+      action: WorkerAction.DRY_RUN,
+      payload: {
+        id,
+        content
+      }
+    });
+
+    const response = await this._dryRunResponses[id].promise;
+
+    delete this._dryRunResponses[id];
+
+    this._workerBusy.emit(false);
+
+    return response;
+  }
+
+  postProcessWorkerHandler(msg: IMainMessage): void {
     switch (msg.action) {
       case MainAction.DISPLAY_POST: {
         const postShapes: IDict<IPostResult> = {};
@@ -180,27 +218,27 @@ export class MainViewModel implements IDisposable {
         break;
       }
     }
-  };
+  }
 
   addAnnotation(value: IAnnotation): void {
     this._jcadModel.annotationModel?.addAnnotation(uuid(), value);
   }
 
-  private _postMessage = (msg: Omit<IWorkerMessage, 'id'>) => {
+  private _postMessage(msg: Omit<IWorkerMessage, 'id'>) {
     if (this._worker) {
       const newMsg = { ...msg, id: this._id };
       this._worker.postMessage(newMsg);
     }
-  };
+  }
 
-  private _saveMeta = (payload: IDisplayShape['payload']['result']) => {
+  private _saveMeta(payload: IDisplayShape['payload']['result']) {
     if (!this._jcadModel) {
       return;
     }
     Object.entries(payload).forEach(([objName, data]) => {
       this._jcadModel.sharedModel.setShapeMeta(objName, data.meta);
     });
-  };
+  }
 
   private async _onSharedObjectsChanged(
     _: IJupyterCadDoc,
@@ -219,6 +257,7 @@ export class MainViewModel implements IDisposable {
     }
   }
 
+  private _dryRunResponses: IDict<PromiseDelegate<IDryRunResponsePayload>> = {};
   private _jcadModel: IJupyterCadModel;
   private _viewSetting: ObservableMap<JSONValue>;
   private _workerRegistry: IJCadWorkerRegistry;

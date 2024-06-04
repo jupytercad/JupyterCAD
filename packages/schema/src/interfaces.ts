@@ -222,6 +222,7 @@ export interface IPostOperatorInput {
  * Action definitions for worker
  */
 export enum WorkerAction {
+  DRY_RUN = 'DRY_RUN',
   LOAD_FILE = 'LOAD_FILE',
   SAVE_FILE = 'SAVE_FILE',
   REGISTER = 'REGISTER',
@@ -234,7 +235,8 @@ export enum WorkerAction {
 export enum MainAction {
   DISPLAY_SHAPE = 'DISPLAY_SHAPE',
   INITIALIZED = 'INITIALIZED',
-  DISPLAY_POST = 'DISPLAY_POST'
+  DISPLAY_POST = 'DISPLAY_POST',
+  DRY_RUN_RESPONSE = 'DRY_RUN_RESPONSE'
 }
 
 export interface IMainMessageBase {
@@ -249,6 +251,18 @@ export interface IDisplayShape extends IMainMessageBase {
     postResult: IDict<IPostOperatorInput>;
   };
 }
+
+export interface IDryRunResponsePayload {
+  id: string;
+  status: 'ok' | 'error';
+  message?: string;
+}
+
+export interface IDryRunResponse extends IMainMessageBase {
+  action: MainAction.DRY_RUN_RESPONSE;
+  payload: IDryRunResponsePayload;
+}
+
 export interface IWorkerInitialized extends IMainMessageBase {
   action: MainAction.INITIALIZED;
   payload: boolean;
@@ -267,7 +281,11 @@ export interface IDisplayPost extends IMainMessageBase {
   }[];
 }
 
-export type IMainMessage = IDisplayShape | IWorkerInitialized | IDisplayPost;
+export type IMainMessage =
+  | IDisplayShape
+  | IWorkerInitialized
+  | IDisplayPost
+  | IDryRunResponse;
 
 export interface IWorkerMessageBase {
   id: string;

@@ -36,7 +36,7 @@ export class JupyterCadWidget
 
 export class JupyterCadPanel extends ReactWidget {
   /**
-   * Construct a `ExamplePanel`.
+   * Construct a `JupyterCadPanel`.
    *
    * @param context - The documents context.
    */
@@ -71,6 +71,10 @@ export class JupyterCadPanel extends ReactWidget {
     Signal.clearData(this);
     this._mainViewModel.dispose();
     super.dispose();
+  }
+
+  get currentViewModel(): MainViewModel {
+    return this._mainViewModel;
   }
 
   get axes(): AxeHelper | undefined {
@@ -112,6 +116,7 @@ export class JupyterCadPanel extends ReactWidget {
   render(): JSX.Element {
     return <MainView viewModel={this._mainViewModel} />;
   }
+
   private _mainViewModel: MainViewModel;
   private _view: ObservableMap<JSONValue>;
 }

@@ -40,7 +40,15 @@ export interface ILoadFile extends IWorkerMessageBase {
   };
 }
 
-export type IWorkerMessage = ILoadFile | IRegister;
+export interface IDryRun extends IWorkerMessageBase {
+  action: WorkerAction.DRY_RUN;
+  payload: {
+    id: string;
+    content: IJCadContent;
+  };
+}
+
+export type IWorkerMessage = ILoadFile | IRegister | IDryRun;
 
 export interface IOperatorFuncOutput {
   occShape?: OCC.TopoDS_Shape;

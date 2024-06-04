@@ -55,5 +55,43 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
       );
       break;
     }
+    case WorkerAction.DRY_RUN: {
+      try {
+        WorkerHandler[WorkerAction.LOAD_FILE](message.payload);
+      } catch (e) {
+        let msg = '';
+
+        if (typeof e === 'string') {
+          msg = e;
+        } else if (e instanceof Error) {
+          msg = e.message;
+        }
+
+        sendToMain(
+          {
+            action: MainAction.DRY_RUN_RESPONSE,
+            payload: {
+              id: message.payload.id,
+              status: 'error',
+              message: msg
+            }
+          },
+          id
+        );
+        return;
+      }
+
+      sendToMain(
+        {
+          action: MainAction.DRY_RUN_RESPONSE,
+          payload: {
+            id: message.payload.id,
+            status: 'ok'
+          }
+        },
+        id
+      );
+      break;
+    }
   }
 };
