@@ -11,10 +11,12 @@
     },
     "Edge": {
       "type": "number",
+      "minimum": 0,
       "description": "The edge index"
     },
     "Radius": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "The radius for the fillet"
     },
     "Placement": {

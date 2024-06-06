@@ -49,6 +49,7 @@
     },
     "Radius": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "Radius"
     }
   }

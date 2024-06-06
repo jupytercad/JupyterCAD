@@ -7,14 +7,17 @@
   "properties": {
     "Radius": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "Radius of the cylinder"
     },
     "Height": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "Height of the cylinder"
     },
     "Angle": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "Angle of the cylinder"
     },
     "Placement": {

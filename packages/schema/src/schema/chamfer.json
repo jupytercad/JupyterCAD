@@ -11,10 +11,12 @@
     },
     "Edge": {
       "type": "number",
+      "minimum": 0,
       "description": "The edge index"
     },
     "Dist": {
       "type": "number",
+      "minimum": 0,
       "description": "The distance of the symmetric chamfer"
     },
     "Placement": {
