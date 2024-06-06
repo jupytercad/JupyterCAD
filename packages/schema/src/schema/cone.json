@@ -7,18 +7,22 @@
   "properties": {
     "Radius1": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "The bottom radius of the cone"
     },
     "Radius2": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "The top radius of the cone"
     },
     "Height": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "The height of the cone"
     },
     "Angle": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "The angle of the cone"
     },
     "Placement": {

@@ -7,10 +7,12 @@
   "properties": {
     "Radius1": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "The radius of the torus"
     },
     "Radius2": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "The radius of the torus"
     },
     "Angle1": {

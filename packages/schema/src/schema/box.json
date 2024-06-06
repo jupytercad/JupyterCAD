@@ -7,14 +7,17 @@
   "properties": {
     "Length": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "The length of the box"
     },
     "Width": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "The width of the box"
     },
     "Height": {
       "type": "number",
+      "exclusiveMinimum": 0,
       "description": "The height of the box"
     },
     "Placement": {
