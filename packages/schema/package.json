@@ -5,9 +5,9 @@
   "keywords": [
     "jupytercad"
   ],
-  "homepage": "https://github.com/jupytercad/jupyterCAD",
+  "homepage": "https://github.com/jupytercad/JupyterCAD",
   "bugs": {
-    "url": "https://github.com/jupytercad/jupyterCAD/issues"
+    "url": "https://github.com/jupytercad/JupyterCAD/issues"
   },
   "license": "BSD-3-Clause",
   "author": {
@@ -22,7 +22,7 @@
   "style": "style/index.css",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jupytercad/jupyterCAD.git"
+    "url": "https://github.com/jupytercad/JupyterCAD.git"
   },
   "scripts": {
     "build": "jlpm build:schema && jlpm run build:lib",
