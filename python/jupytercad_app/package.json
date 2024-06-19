@@ -7,9 +7,9 @@
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/jupytercad/jupytercad",
+  "homepage": "https://github.com/jupytercad/jupyterCAD",
   "bugs": {
-    "url": "https://github.com/jupytercad/jupytercad/issues"
+    "url": "https://github.com/jupytercad/jupyterCAD/issues"
   },
   "license": "BSD-3-Clause",
   "author": "JupyterCad contributors",
@@ -23,7 +23,7 @@
   "style": "style/index.css",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jupytercad/jupytercad.git"
+    "url": "https://github.com/jupytercad/jupyterCAD.git"
   },
   "scripts": {
     "build": "jlpm clean:all && jlpm build:lib && webpack",

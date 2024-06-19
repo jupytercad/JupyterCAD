@@ -6,9 +6,9 @@
     "jupyter",
     "jupyterlab"
   ],
-  "homepage": "https://github.com/jupytercad/jupytercad",
+  "homepage": "https://github.com/jupytercad/jupyterCAD",
   "bugs": {
-    "url": "https://github.com/jupytercad/jupytercad/issues"
+    "url": "https://github.com/jupytercad/jupyterCAD/issues"
   },
   "license": "BSD-3-Clause",
   "author": {
@@ -25,7 +25,7 @@
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jupytercad/jupytercad.git"
+    "url": "https://github.com/jupytercad/jupyterCAD.git"
   },
   "scripts": {
     "build": "tsc && node build_opencascade_wasm.js",
