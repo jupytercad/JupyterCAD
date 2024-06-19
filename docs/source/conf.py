@@ -3,7 +3,7 @@ import os
 on_rtd = os.environ.get("READTHEDOCS", None) == "True"
 
 html_theme = "pydata_sphinx_theme"
-html_theme_options = {"github_url": "https://github.com/jupytercad/jupytercad"}
+html_theme_options = {"github_url": "https://github.com/jupytercad/JupyterCAD"}
 
 extensions = [
     "sphinx.ext.autodoc",
