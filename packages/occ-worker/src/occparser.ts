@@ -16,7 +16,7 @@ export class OccParser {
     this._shapeList = shapeList;
   }
 
-  execute(raiseOnFailure=false): IDict<IParsedShape> {
+  execute(raiseOnFailure = false): IDict<IParsedShape> {
     const maxDeviation = 0.1;
     const threejsData: IDict<IParsedShape> = {};
     this._shapeList.forEach(data => {
