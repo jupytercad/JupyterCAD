@@ -81,7 +81,32 @@ export class JupyterCadDoc
     return undefined;
   }
 
+  getDependants(name: string): string[] {
+    // Recursively get dependants of a specific object
+    // This may be quite slow with many objects, we should optimize it
+    const dependants: string[] = [];
+    for (const obj of this._objects) {
+      if ((obj.get('dependencies') || []).includes(name)) {
+        dependants.push(obj.get('name'));
+      }
+    }
+    let subDependants: string[] = [];
+    for (const dependant of dependants) {
+      subDependants = subDependants.concat(this.getDependants(dependant));
+    }
+    return dependants.concat(subDependants);
+  }
+
+  removeObjects(names: string[]): void {
+    this.transact(() => {
+      for (const name of names) {
+        this.removeObjectByName(name);
+      }
+    });
+  }
+
   removeObjectByName(name: string): void {
+    // Get object index
     let index = 0;
     for (const obj of this._objects) {
       if (obj.get('name') === name) {
@@ -91,15 +116,13 @@ export class JupyterCadDoc
     }
 
     if (this._objects.length > index) {
-      this.transact(() => {
-        this._objects.delete(index);
-        const guidata = this.getOption('guidata');
-        if (guidata) {
-          delete guidata[name];
-          this.setOption('guidata', guidata);
-        }
-        this.removeOutput(name);
-      });
+      this._objects.delete(index);
+      const guidata = this.getOption('guidata');
+      if (guidata) {
+        delete guidata[name];
+        this.setOption('guidata', guidata);
+      }
+      this.removeOutput(name);
     }
   }
 

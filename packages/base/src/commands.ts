@@ -246,7 +246,8 @@ const OPERATORS = {
           shape: 'Part::Cut',
           parameters,
           visible: true,
-          name: Name
+          name: Name,
+          dependencies: [parameters['Base'], parameters['Tool']]
         };
 
         return executeOperator(
@@ -287,7 +288,8 @@ const OPERATORS = {
           shape: 'Part::Extrusion',
           parameters,
           visible: true,
-          name: Name
+          name: Name,
+          dependencies: [parameters['Base']]
         };
 
         return executeOperator(
@@ -325,7 +327,8 @@ const OPERATORS = {
           shape: 'Part::MultiFuse',
           parameters,
           visible: true,
-          name: Name
+          name: Name,
+          dependencies: parameters['Shapes']
         };
 
         return executeOperator(
@@ -365,7 +368,8 @@ const OPERATORS = {
           shape: 'Part::MultiCommon',
           parameters,
           visible: true,
-          name: Name
+          name: Name,
+          dependencies: parameters['Shapes']
         };
 
         return executeOperator(
@@ -404,7 +408,8 @@ const OPERATORS = {
           shape: 'Part::Chamfer',
           parameters,
           visible: true,
-          name: Name
+          name: Name,
+          dependencies: [parameters['Base']]
         };
 
         return executeOperator(
@@ -441,7 +446,8 @@ const OPERATORS = {
           shape: 'Part::Fillet',
           parameters,
           visible: true,
-          name: Name
+          name: Name,
+          dependencies: [parameters['Base']]
         };
 
         return executeOperator(
