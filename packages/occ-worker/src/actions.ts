@@ -63,7 +63,10 @@ function buildModel(
   return outputModel;
 }
 
-function loadFile(payload: { content: IJCadContent }, load_on_failure=false): IDict | null {
+function loadFile(
+  payload: { content: IJCadContent },
+  load_on_failure = false
+): IDict | null {
   const { content } = payload;
   const outputModel = buildModel(content);
 

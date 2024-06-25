@@ -13,7 +13,7 @@ export class OccParser {
   private _occ: OCC.OpenCascadeInstance = (self as any).occ;
   private raise_on_failure: boolean;
 
-  constructor(shapeList: IShapeList[], raise_on_failure=false) {
+  constructor(shapeList: IShapeList[], raise_on_failure = false) {
     this._shapeList = shapeList;
     this.raise_on_failure = raise_on_failure;
   }
@@ -26,7 +26,7 @@ export class OccParser {
       const { occShape, metadata } = shapeData;
       if (!occShape) {
         if (this.raise_on_failure) {
-          throw Error("Unknown failure");
+          throw Error('Unknown failure');
         } else {
           return;
         }
