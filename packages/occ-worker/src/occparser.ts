@@ -11,21 +11,19 @@ interface IShapeList {
 export class OccParser {
   private _shapeList: IShapeList[];
   private _occ: OCC.OpenCascadeInstance = (self as any).occ;
-  private raiseOnFailure: boolean;
 
-  constructor(shapeList: IShapeList[], raise_on_failure = false) {
+  constructor(shapeList: IShapeList[]) {
     this._shapeList = shapeList;
-    this.raise_on_failure = raise_on_failure;
   }
 
-  execute(): IDict<IParsedShape> {
+  execute(raiseOnFailure=false): IDict<IParsedShape> {
     const maxDeviation = 0.1;
     const threejsData: IDict<IParsedShape> = {};
     this._shapeList.forEach(data => {
       const { shapeData, jcObject } = data;
       const { occShape, metadata } = shapeData;
       if (!occShape) {
-        if (this.raise_on_failure) {
+        if (raiseOnFailure) {
           throw Error('Unknown failure');
         } else {
           return;

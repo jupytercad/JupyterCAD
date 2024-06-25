@@ -70,8 +70,8 @@ function loadFile(
   const { content } = payload;
   const outputModel = buildModel(content);
 
-  const parser = new OccParser(outputModel, raiseOnFailure);
-  const result = parser.execute();
+  const parser = new OccParser(outputModel);
+  const result = parser.execute(raiseOnFailure);
   const postResult: IDict<IPostOperatorInput> = {};
   outputModel.forEach(item => {
     if (item.jcObject.shape?.startsWith('Post::')) {
