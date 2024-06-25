@@ -11,8 +11,11 @@ interface IShapeList {
 export class OccParser {
   private _shapeList: IShapeList[];
   private _occ: OCC.OpenCascadeInstance = (self as any).occ;
-  constructor(shapeList: IShapeList[]) {
+  private raise_on_failure: boolean;
+
+  constructor(shapeList: IShapeList[], raise_on_failure=false) {
     this._shapeList = shapeList;
+    this.raise_on_failure = raise_on_failure;
   }
 
   execute(): IDict<IParsedShape> {
@@ -22,7 +25,11 @@ export class OccParser {
       const { shapeData, jcObject } = data;
       const { occShape, metadata } = shapeData;
       if (!occShape) {
-        return;
+        if (this.raise_on_failure) {
+          throw Error("Unknown failure");
+        } else {
+          return;
+        }
       }
       new this._occ.BRepMesh_IncrementalMesh_2(
         occShape,

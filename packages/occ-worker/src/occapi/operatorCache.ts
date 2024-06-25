@@ -154,7 +154,9 @@ export function operatorCache<T>(
   return (
     args: T,
     content: IJCadContent
-  ): { occShape: OCC.TopoDS_Shape; metadata?: IShapeMetadata | undefined } => {
+  ):
+    | { occShape: OCC.TopoDS_Shape; metadata?: IShapeMetadata | undefined }
+    | undefined => {
     const expandedArgs = expand_operator(name, args, content);
     const hash = `${hashCode(JSON.stringify(expandedArgs))}`;
     if (SHAPE_CACHE.has(hash)) {
@@ -168,10 +170,6 @@ export function operatorCache<T>(
         };
         SHAPE_CACHE.set(hash, cacheData);
         return cacheData;
-      } else {
-        throw new Error(
-          `Unknown error while creating ${name}: ${JSON.stringify(content)}`
-        );
       }
     }
   };
