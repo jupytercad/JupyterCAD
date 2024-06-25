@@ -272,7 +272,7 @@ const OPERATORS = {
       const sel0 = getSelectedMeshName(selected, 0);
       return {
         Name: newName('Extrusion', model),
-        Base: [sel0 || objects[0].name || ''],
+        Base: sel0 || objects[0].name || '',
         Dir: [0, 0, 1],
         LengthFwd: 10,
         LengthRev: 0,
