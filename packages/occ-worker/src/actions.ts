@@ -63,12 +63,15 @@ function buildModel(
   return outputModel;
 }
 
-function loadFile(payload: { content: IJCadContent }): IDict | null {
+function loadFile(
+  payload: { content: IJCadContent },
+  raiseOnFailure = false
+): IDict | null {
   const { content } = payload;
   const outputModel = buildModel(content);
 
   const parser = new OccParser(outputModel);
-  const result = parser.execute();
+  const result = parser.execute(raiseOnFailure);
   const postResult: IDict<IPostOperatorInput> = {};
   outputModel.forEach(item => {
     if (item.jcObject.shape?.startsWith('Post::')) {
@@ -82,9 +85,14 @@ function loadFile(payload: { content: IJCadContent }): IDict | null {
   return { result, postResult };
 }
 
+function dryRun(payload: { content: IJCadContent }) {
+  return loadFile(payload, true);
+}
+
 const WorkerHandler: {
   [key in WorkerAction]: (payload: any) => any;
 } = {} as any;
 WorkerHandler[WorkerAction.LOAD_FILE] = loadFile;
+WorkerHandler[WorkerAction.DRY_RUN] = dryRun;
 
 export default WorkerHandler;
