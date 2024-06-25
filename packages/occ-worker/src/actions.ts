@@ -65,12 +65,12 @@ function buildModel(
 
 function loadFile(
   payload: { content: IJCadContent },
-  load_on_failure = false
+  raiseOnFailure = false
 ): IDict | null {
   const { content } = payload;
   const outputModel = buildModel(content);
 
-  const parser = new OccParser(outputModel, load_on_failure);
+  const parser = new OccParser(outputModel, raiseOnFailure);
   const result = parser.execute();
   const postResult: IDict<IPostOperatorInput> = {};
   outputModel.forEach(item => {

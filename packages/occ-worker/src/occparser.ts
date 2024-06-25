@@ -11,7 +11,7 @@ interface IShapeList {
 export class OccParser {
   private _shapeList: IShapeList[];
   private _occ: OCC.OpenCascadeInstance = (self as any).occ;
-  private raise_on_failure: boolean;
+  private raiseOnFailure: boolean;
 
   constructor(shapeList: IShapeList[], raise_on_failure = false) {
     this._shapeList = shapeList;
