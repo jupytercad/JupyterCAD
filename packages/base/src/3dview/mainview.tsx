@@ -583,6 +583,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._meshGroup = new THREE.Group();
 
+    console.log(payload);
     Object.entries(payload).forEach(([objName, data]) => {
       const selected = selectedNames.includes(objName);
       const output = buildShape({
@@ -737,6 +738,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this.setState(old => ({ ...old, loading: false }));
     }
   }
+
   private async _requestRender(
     sender: MainViewModel,
     renderData: {
@@ -790,6 +792,7 @@ export class MainView extends React.Component<IProps, IStates> {
       });
     }
   }
+
   private _updatePointers(refLength): void {
     this._pointerGeometry = new THREE.SphereGeometry(refLength / 10, 32, 32);
 
