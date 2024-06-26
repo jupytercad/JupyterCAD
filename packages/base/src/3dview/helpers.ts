@@ -112,13 +112,14 @@ export function buildShape(options: {
   data: IParsedShape;
   clippingPlanes: THREE.Plane[];
   selected: boolean;
+  isSolid: boolean;
   guidata?: IDict;
 }): {
   meshGroup: THREE.Group;
   mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>;
   edgesMeshes: LineSegments2[];
 } | null {
-  const { objName, data, guidata, clippingPlanes, selected } = options;
+  const { objName, data, guidata, isSolid, clippingPlanes, selected } = options;
   const { faceList, edgeList, jcObject } = data;
 
   const vertices: Array<number> = [];
@@ -191,34 +192,39 @@ export function buildShape(options: {
   meshGroup.name = `${objName}-group`;
   meshGroup.visible = visible;
 
-  const baseMat = new THREE.MeshBasicMaterial();
-  baseMat.depthWrite = false;
-  baseMat.depthTest = false;
-  baseMat.colorWrite = false;
-  baseMat.stencilWrite = true;
-  baseMat.stencilFunc = THREE.AlwaysStencilFunc;
+  // We only build the stencil logic for solid meshes
+  if (isSolid) {
+    const baseMat = new THREE.MeshBasicMaterial();
+    baseMat.depthWrite = false;
+    baseMat.depthTest = false;
+    baseMat.colorWrite = false;
+    baseMat.stencilWrite = true;
+    baseMat.stencilFunc = THREE.AlwaysStencilFunc;
 
-  // back faces
-  const mat0 = baseMat.clone();
-  mat0.side = THREE.BackSide;
-  mat0.clippingPlanes = clippingPlanes;
-  mat0.stencilFail = THREE.IncrementWrapStencilOp;
-  mat0.stencilZFail = THREE.IncrementWrapStencilOp;
-  mat0.stencilZPass = THREE.IncrementWrapStencilOp;
-  const backFaces = new THREE.Mesh(geometry, mat0);
-  backFaces.name = `${objName}-back`;
-  meshGroup.add(backFaces);
+    // back faces
+    const mat0 = baseMat.clone();
+    mat0.side = THREE.BackSide;
+    mat0.clippingPlanes = clippingPlanes;
+    mat0.stencilFail = THREE.IncrementWrapStencilOp;
+    mat0.stencilZFail = THREE.IncrementWrapStencilOp;
+    mat0.stencilZPass = THREE.IncrementWrapStencilOp;
+    const backFaces = new THREE.Mesh(geometry, mat0);
+    backFaces.name = `${objName}-back`;
+    meshGroup.add(backFaces);
 
-  // front faces
-  const mat1 = baseMat.clone();
-  mat1.side = THREE.FrontSide;
-  mat1.clippingPlanes = clippingPlanes;
-  mat1.stencilFail = THREE.DecrementWrapStencilOp;
-  mat1.stencilZFail = THREE.DecrementWrapStencilOp;
-  mat1.stencilZPass = THREE.DecrementWrapStencilOp;
-  const frontFaces = new THREE.Mesh(geometry, mat1);
-  frontFaces.name = `${objName}-front`;
-  meshGroup.add(frontFaces);
+    // front faces
+    const mat1 = baseMat.clone();
+    mat1.side = THREE.FrontSide;
+    mat1.clippingPlanes = clippingPlanes;
+    mat1.stencilFail = THREE.DecrementWrapStencilOp;
+    mat1.stencilZFail = THREE.DecrementWrapStencilOp;
+    mat1.stencilZPass = THREE.DecrementWrapStencilOp;
+    const frontFaces = new THREE.Mesh(geometry, mat1);
+    frontFaces.name = `${objName}-front`;
+    meshGroup.add(frontFaces);
+  } else {
+    material.side = THREE.DoubleSide;
+  }
 
   const mainMesh = new THREE.Mesh(geometry, material);
   mainMesh.name = objName;

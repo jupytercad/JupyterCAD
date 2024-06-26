@@ -585,11 +585,22 @@ export class MainView extends React.Component<IProps, IStates> {
 
     Object.entries(payload).forEach(([objName, data]) => {
       const selected = selectedNames.includes(objName);
+      const obj = this._model.sharedModel.getObjectByName(objName);
+
+      // TODO Have a more generic way to spot non-solid objects
+      const isSolid = !(
+        obj!.shape === 'Part::Extrusion' &&
+        !(obj!.parameters?.['Solid'])
+      );
+
+      console.log('is solid', isSolid);
+
       const output = buildShape({
         objName,
         data,
         clippingPlanes: this._clippingPlanes,
         selected,
+        isSolid,
         guidata
       });
 
