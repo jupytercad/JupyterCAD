@@ -82,19 +82,35 @@ export class JupyterCadDoc
   }
 
   getDependants(name: string): string[] {
-    // Recursively get dependants of a specific object
-    // This may be quite slow with many objects, we should optimize it
     const dependants: string[] = [];
+    const dependantMap = new Map<string, Set<string>>();
+
     for (const obj of this._objects) {
-      if ((obj.get('dependencies') || []).includes(name)) {
-        dependants.push(obj.get('name'));
-      }
+      const deps: string[] = obj.get("dependencies") || [];
+      const objName = obj.get("name");
+      deps.forEach((dep) => {
+        const currentSet = dependantMap.get(dep);
+        if (currentSet) {
+          currentSet.add(objName);
+        } else {
+          dependantMap.set(dep, new Set([objName]));
+        }
+      });
     }
-    let subDependants: string[] = [];
-    for (const dependant of dependants) {
-      subDependants = subDependants.concat(this.getDependants(dependant));
+    const selectedDeps = dependantMap.get(name);
+    if (!selectedDeps) {
+      return [];
     }
-    return dependants.concat(subDependants);
+    while (selectedDeps.size) {
+      const depsList = [...selectedDeps];
+      depsList.forEach((it) => {
+        dependants.push(it);
+        selectedDeps.delete(it);
+        dependantMap.get(it)?.forEach((newIt) => selectedDeps.add(newIt));
+      });
+    }
+
+    return dependants;
   }
 
   removeObjects(names: string[]): void {
