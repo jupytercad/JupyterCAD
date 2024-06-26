@@ -592,8 +592,6 @@ export class MainView extends React.Component<IProps, IStates> {
         obj!.shape === 'Part::Extrusion' && !obj!.parameters?.['Solid']
       );
 
-      console.log('is solid', isSolid);
-
       const output = buildShape({
         objName,
         data,
