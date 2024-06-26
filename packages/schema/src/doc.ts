@@ -152,7 +152,7 @@ export class JupyterCadDoc
       // Special case for changing parameters, we may need to update dependencies
       console.log('update ', key);
       if (key === 'parameters') {
-        switch(obj.get('shape')) {
+        switch (obj.get('shape')) {
           case 'Part::Cut': {
             obj.set('dependencies', [value['Base'], value['Tool']]);
             break;
