@@ -288,11 +288,35 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   };
 
   render(): React.ReactNode {
+    // Fill form schema with available objects
+    const form_schema = this.state.schema;
+    if (form_schema) {
+      const allObjects = this.props.cpModel.jcadModel?.getAllObject().map(o => o.name);
+      if (allObjects && this.state.selectedObject) {
+        delete allObjects[allObjects.indexOf(this.state.selectedObject)]
+      }
+      for (const prop in form_schema['properties']) {
+        const fcType = form_schema['properties'][prop]['fcType'];
+        if (fcType) {
+          const propDef = form_schema['properties'][prop];
+          switch (fcType) {
+            case 'App::PropertyLink':
+              propDef['enum'] = allObjects;
+              break;
+            case 'App::PropertyLinkList':
+              propDef['items']['enum'] = allObjects;
+              break;
+            default:
+          }
+        }
+      }
+    }
+
     return this.state.schema && this.state.selectedObjectData ? (
       <ObjectPropertiesForm
         parentType="panel"
         filePath={`${this.state.filePath}::panel`}
-        schema={this.state.schema}
+        schema={form_schema}
         sourceData={this.state.selectedObjectData}
         syncData={(properties: { [key: string]: any }) => {
           this.syncObjectProperties(this.state.selectedObject, properties);
