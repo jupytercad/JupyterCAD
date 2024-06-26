@@ -86,9 +86,9 @@ export class JupyterCadDoc
     const dependantMap = new Map<string, Set<string>>();
 
     for (const obj of this._objects) {
-      const deps: string[] = obj.get("dependencies") || [];
-      const objName = obj.get("name");
-      deps.forEach((dep) => {
+      const deps: string[] = obj.get('dependencies') || [];
+      const objName = obj.get('name');
+      deps.forEach(dep => {
         const currentSet = dependantMap.get(dep);
         if (currentSet) {
           currentSet.add(objName);
@@ -103,10 +103,10 @@ export class JupyterCadDoc
     }
     while (selectedDeps.size) {
       const depsList = [...selectedDeps];
-      depsList.forEach((it) => {
+      depsList.forEach(it => {
         dependants.push(it);
         selectedDeps.delete(it);
-        dependantMap.get(it)?.forEach((newIt) => selectedDeps.add(newIt));
+        dependantMap.get(it)?.forEach(newIt => selectedDeps.add(newIt));
       });
     }
 
