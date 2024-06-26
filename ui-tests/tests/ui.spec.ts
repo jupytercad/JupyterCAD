@@ -163,6 +163,10 @@ test.describe('UI Test', () => {
         .nth(1)
         .click();
 
+      if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
+        await page.getByRole('button', { name: 'Ok' }).click();
+      }
+
       await page
         .getByRole('tablist', { name: 'main sidebar' })
         .getByRole('tab', { name: 'JupyterCad Control Panel' })
@@ -172,9 +176,6 @@ test.describe('UI Test', () => {
         .getByRole('tab', { name: 'JupyterCad Control Panel' })
         .click();
 
-      if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
-        await page.getByRole('button', { name: 'Ok' }).click();
-      }
       await page.waitForTimeout(1000);
       expect(errors).toBe(0);
       const main = await page.$('#jp-main-split-panel');
