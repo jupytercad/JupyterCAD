@@ -172,6 +172,9 @@ test.describe('UI Test', () => {
         .getByRole('tab', { name: 'JupyterCad Control Panel' })
         .click();
 
+      if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
+        await page.getByRole('button', { name: 'Ok' }).click();
+      }
       await page.waitForTimeout(1000);
       expect(errors).toBe(0);
       const main = await page.$('#jp-main-split-panel');
