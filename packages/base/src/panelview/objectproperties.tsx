@@ -291,9 +291,11 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     // Fill form schema with available objects
     const form_schema = this.state.schema;
     if (form_schema) {
-      const allObjects = this.props.cpModel.jcadModel?.getAllObject().map(o => o.name);
+      const allObjects = this.props.cpModel.jcadModel
+        ?.getAllObject()
+        .map(o => o.name);
       if (allObjects && this.state.selectedObject) {
-        delete allObjects[allObjects.indexOf(this.state.selectedObject)]
+        delete allObjects[allObjects.indexOf(this.state.selectedObject)];
       }
       for (const prop in form_schema['properties']) {
         const fcType = form_schema['properties'][prop]['fcType'];
