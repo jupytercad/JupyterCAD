@@ -61,7 +61,10 @@ export class OccParser {
 
   private _isSolid(shape: OCC.TopoDS_Shape) {
     console.log('try checking is solid');
-    if (shape.ShapeType() == this._occ.TopAbs_ShapeEnum.TopAbs_SOLID || shape.ShapeType() == this._occ.TopAbs_ShapeEnum.TopAbs_SHELL) {
+    if (
+      shape.ShapeType() == this._occ.TopAbs_ShapeEnum.TopAbs_SOLID ||
+      shape.ShapeType() == this._occ.TopAbs_ShapeEnum.TopAbs_SHELL
+    ) {
       console.log('1');
       try {
         const classifier = new this._occ.BRepClass3d_SolidClassifier();
@@ -76,7 +79,10 @@ export class OccParser {
 
         console.log('5');
         // Check if the point is inside, on the boundary, or outside the solid
-        if (classifier.State() == this._occ.TopAbs_State.TopAbs_IN || classifier.State() == this._occ.TopAbs_State.TopAbs_ON) {
+        if (
+          classifier.State() == this._occ.TopAbs_State.TopAbs_IN ||
+          classifier.State() == this._occ.TopAbs_State.TopAbs_ON
+        ) {
           console.log('6');
           return true; // The solid is closed
         }
