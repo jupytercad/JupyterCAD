@@ -81,7 +81,48 @@ export class JupyterCadDoc
     return undefined;
   }
 
+  getDependants(name: string): string[] {
+    const dependants: string[] = [];
+    const dependantMap = new Map<string, Set<string>>();
+
+    for (const obj of this._objects) {
+      const deps: string[] = obj.get('dependencies') || [];
+      const objName = obj.get('name');
+      deps.forEach(dep => {
+        const currentSet = dependantMap.get(dep);
+        if (currentSet) {
+          currentSet.add(objName);
+        } else {
+          dependantMap.set(dep, new Set([objName]));
+        }
+      });
+    }
+    const selectedDeps = dependantMap.get(name);
+    if (!selectedDeps) {
+      return [];
+    }
+    while (selectedDeps.size) {
+      const depsList = [...selectedDeps];
+      depsList.forEach(it => {
+        dependants.push(it);
+        selectedDeps.delete(it);
+        dependantMap.get(it)?.forEach(newIt => selectedDeps.add(newIt));
+      });
+    }
+
+    return dependants;
+  }
+
+  removeObjects(names: string[]): void {
+    this.transact(() => {
+      for (const name of names) {
+        this.removeObjectByName(name);
+      }
+    });
+  }
+
   removeObjectByName(name: string): void {
+    // Get object index
     let index = 0;
     for (const obj of this._objects) {
       if (obj.get('name') === name) {
@@ -91,15 +132,13 @@ export class JupyterCadDoc
     }
 
     if (this._objects.length > index) {
-      this.transact(() => {
-        this._objects.delete(index);
-        const guidata = this.getOption('guidata');
-        if (guidata) {
-          delete guidata[name];
-          this.setOption('guidata', guidata);
-        }
-        this.removeOutput(name);
-      });
+      this._objects.delete(index);
+      const guidata = this.getOption('guidata');
+      if (guidata) {
+        delete guidata[name];
+        this.setOption('guidata', guidata);
+      }
+      this.removeOutput(name);
     }
   }
 
@@ -124,7 +163,34 @@ export class JupyterCadDoc
     if (!obj) {
       return;
     }
-    this.transact(() => obj.set(key, value));
+
+    this.transact(() => {
+      // Special case for changing parameters, we may need to update dependencies
+      console.log('update ', key);
+      if (key === 'parameters') {
+        switch (obj.get('shape')) {
+          case 'Part::Cut': {
+            obj.set('dependencies', [value['Base'], value['Tool']]);
+            break;
+          }
+          case 'Part::Extrusion':
+          case 'Part::Fillet':
+          case 'Part::Chamfer': {
+            obj.set('dependencies', [value['Base']]);
+            break;
+          }
+          case 'Part::MultiCommon':
+          case 'Part::MultiFuse': {
+            obj.set('dependencies', value['Shapes']);
+            break;
+          }
+          default:
+            break;
+        }
+      }
+
+      obj.set(key, value);
+    });
   }
 
   getOption(key: keyof IJCadOptions): IDict | undefined {

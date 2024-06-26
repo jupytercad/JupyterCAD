@@ -8,7 +8,7 @@ import {
   IJupyterCadModel,
   ISelection
 } from '@jupytercad/schema';
-import { ReactWidget } from '@jupyterlab/apputils';
+import { Dialog, ReactWidget, showDialog } from '@jupyterlab/apputils';
 import {
   closeIcon,
   LabIcon,
@@ -394,9 +394,44 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                         className={'jp-ToolbarButtonComponent'}
                         onClick={() => {
                           const objectId = opts.node.parentId as string;
-                          this.props.cpModel.jcadModel?.sharedModel.removeObjectByName(
-                            objectId
-                          );
+                          const sharedModel =
+                            this.props.cpModel.jcadModel?.sharedModel;
+                          if (!sharedModel) {
+                            return;
+                          }
+
+                          const dependants =
+                            sharedModel.getDependants(objectId);
+
+                          let body: React.JSX.Element;
+                          if (dependants.length) {
+                            body = (
+                              <div>
+                                {
+                                  'Removing this object will also result in removing:'
+                                }
+                                <ul>
+                                  {dependants.map(dependant => (
+                                    <li>{dependant}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            );
+                          } else {
+                            body = <div>Are you sure?</div>;
+                          }
+
+                          showDialog({
+                            title: `Removing ${objectId}`,
+                            body,
+                            buttons: [Dialog.okButton(), Dialog.cancelButton()]
+                          }).then(({ button: { accept } }) => {
+                            if (accept) {
+                              const toRemove = dependants.concat([objectId]);
+                              sharedModel.removeObjects(toRemove);
+                            }
+                          });
+
                           this.props.cpModel.jcadModel?.syncSelected({});
                         }}
                         icon={closeIcon}

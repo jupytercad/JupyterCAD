@@ -91,10 +91,12 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
 
   objectExists(name: string): boolean;
   getObjectByName(name: string): IJCadObject | undefined;
+  removeObjects(names: string[]): void;
   removeObjectByName(name: string): void;
   addObject(value: IJCadObject): void;
   addObjects(value: Array<IJCadObject>): void;
   updateObjectByName(name: string, key: string, value: any): void;
+  getDependants(name: string): string[];
 
   getOption(key: keyof IJCadOptions): IDict | undefined;
   setOption(key: keyof IJCadOptions, value: IDict): void;

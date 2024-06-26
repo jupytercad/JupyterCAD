@@ -163,6 +163,10 @@ test.describe('UI Test', () => {
         .nth(1)
         .click();
 
+      if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
+        await page.getByRole('button', { name: 'Ok' }).click();
+      }
+
       await page
         .getByRole('tablist', { name: 'main sidebar' })
         .getByRole('tab', { name: 'JupyterCad Control Panel' })
