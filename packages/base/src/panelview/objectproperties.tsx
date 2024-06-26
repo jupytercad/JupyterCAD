@@ -293,10 +293,10 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     if (form_schema) {
       const allObjects = this.props.cpModel.jcadModel
         ?.getAllObject()
-        .map(o => o.name);
-      if (allObjects && this.state.selectedObject) {
-        delete allObjects[allObjects.indexOf(this.state.selectedObject)];
-      }
+        .reduce((all, o) => {
+          o.name !== this.state.selectedObject && all.push(o.name);
+          return all;
+        }, []);
       for (const prop in form_schema['properties']) {
         const fcType = form_schema['properties'][prop]['fcType'];
         if (fcType) {
