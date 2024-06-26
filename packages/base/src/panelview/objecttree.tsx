@@ -394,27 +394,31 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                         className={'jp-ToolbarButtonComponent'}
                         onClick={() => {
                           const objectId = opts.node.parentId as string;
-                          const sharedModel = this.props.cpModel.jcadModel?.sharedModel;
+                          const sharedModel =
+                            this.props.cpModel.jcadModel?.sharedModel;
                           if (!sharedModel) {
                             return;
                           }
 
-                          const dependants = sharedModel.getDependants(objectId);
+                          const dependants =
+                            sharedModel.getDependants(objectId);
 
                           let body: React.JSX.Element;
                           if (dependants.length) {
-                             body = (
+                            body = (
                               <div>
-                                {'Removing this object will also result in removing:'}
+                                {
+                                  'Removing this object will also result in removing:'
+                                }
                                 <ul>
-                                  {dependants.map((dependant) => (
+                                  {dependants.map(dependant => (
                                     <li>{dependant}</li>
                                   ))}
                                 </ul>
                               </div>
                             );
                           } else {
-                            body = (<div>Are you sure?</div>);
+                            body = <div>Are you sure?</div>;
                           }
 
                           showDialog({
@@ -426,7 +430,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                               const toRemove = dependants.concat([objectId]);
                               sharedModel.removeObjects(toRemove);
                             }
-                          })
+                          });
 
                           this.props.cpModel.jcadModel?.syncSelected({});
                         }}
