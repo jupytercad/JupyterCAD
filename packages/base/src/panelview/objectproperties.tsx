@@ -293,7 +293,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     if (form_schema) {
       const allObjects = this.props.cpModel.jcadModel
         ?.getAllObject()
-        .reduce((all, o) => {
+        .reduce((all: string[], o) => {
           o.name !== this.state.selectedObject && all.push(o.name);
           return all;
         }, []);
