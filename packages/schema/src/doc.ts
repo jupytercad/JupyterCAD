@@ -147,7 +147,34 @@ export class JupyterCadDoc
     if (!obj) {
       return;
     }
-    this.transact(() => obj.set(key, value));
+
+    this.transact(() => {
+      // Special case for changing parameters, we may need to update dependencies
+      console.log('update ', key);
+      if (key === 'parameters') {
+        switch(obj.get('shape')) {
+          case 'Part::Cut': {
+            obj.set('dependencies', [value['Base'], value['Tool']]);
+            break;
+          }
+          case 'Part::Extrusion':
+          case 'Part::Fillet':
+          case 'Part::Chamfer': {
+            obj.set('dependencies', [value['Base']]);
+            break;
+          }
+          case 'Part::MultiCommon':
+          case 'Part::MultiFuse': {
+            obj.set('dependencies', value['Shapes']);
+            break;
+          }
+          default:
+            break;
+        }
+      }
+
+      obj.set(key, value);
+    });
   }
 
   getOption(key: keyof IJCadOptions): IDict | undefined {
