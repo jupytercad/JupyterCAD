@@ -40,6 +40,23 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 2.0.0rc0
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/v2.0.0a10...5de1ff5bd5c4d0a462aafa951098837399382092))
+
+### Maintenance and upkeep improvements
+
+- Sync jupytercad\_\* version [#375](https://github.com/jupytercad/JupyterCAD/pull/375) ([@trungleduc](https://github.com/trungleduc))
+- Unpin ajv [#374](https://github.com/jupytercad/JupyterCAD/pull/374) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-06-26&to=2024-06-27&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-06-26..2024-06-27&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-06-26..2024-06-27&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-06-26..2024-06-27&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.0.0a10
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@2.0.0-alpha.9...0402dc772b5800a3e7b2b54c77e76f16bcf7205c))
@@ -65,8 +82,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-06-04&to=2024-06-26&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-06-04..2024-06-26&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-06-04..2024-06-26&type=Issues) | [@SylvainCorlay](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3ASylvainCorlay+updated%3A2024-06-04..2024-06-26&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-06-04..2024-06-26&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.0.0a9
 
