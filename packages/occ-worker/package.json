@@ -1,6 +1,6 @@
 {
   "name": "@jupytercad/occ-worker",
-  "version": "2.0.0-rc.0",
+  "version": "2.0.0",
   "description": "Jupytercad opencascade worker package.",
   "keywords": [
     "jupytercad"
@@ -36,8 +36,8 @@
     "watch": "tsc-watch --onSuccess \"webpack --config worker.webpack.config.js --mode=development\""
   },
   "dependencies": {
-    "@jupytercad/opencascade": "^2.0.0-rc.0",
-    "@jupytercad/schema": "^2.0.0-rc.0",
+    "@jupytercad/opencascade": "^2.0.0",
+    "@jupytercad/schema": "^2.0.0",
     "@lumino/coreutils": "^2.0.0",
     "uuid": "^8.3.2"
   },

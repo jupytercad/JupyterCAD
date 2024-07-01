@@ -40,6 +40,34 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 2.0.0 Highlights
+
+([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v1.0.1...v2.0.0))
+
+### Enhancements made
+
+- Edge operators [#340](https://github.com/jupytercad/jupytercad/pull/340) ([@martinRenou](https://github.com/martinRenou))
+- Implement clipping [#333](https://github.com/jupytercad/jupytercad/pull/333) ([@martinRenou](https://github.com/martinRenou))
+- Support JupyterLite [#331](https://github.com/jupytercad/jupytercad/pull/331) ([@trungleduc](https://github.com/trungleduc))
+- Support for opening STL files [#246](https://github.com/jupytercad/jupytercad/pull/246) ([@martinRenou](https://github.com/martinRenou))
+- Step file export to .jcad [#238](https://github.com/jupytercad/jupytercad/pull/238) ([@martinRenou](https://github.com/martinRenou))
+- Improve post-processing system [#350](https://github.com/jupytercad/jupytercad/pull/350) ([@trungleduc](https://github.com/trungleduc))
+- Error handling [#349](https://github.com/jupytercad/jupytercad/pull/349) ([@martinRenou](https://github.com/martinRenou))
+- Add constraints to form schema [#362](https://github.com/jupytercad/JupyterCAD/pull/362) ([@trungleduc](https://github.com/trungleduc))
+- Generate dropdowns for operands on operator properties [#371](https://github.com/jupytercad/JupyterCAD/pull/371) ([@martinRenou](https://github.com/martinRenou))
+- Improve deletion behavior [#369](https://github.com/jupytercad/JupyterCAD/pull/369) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Remove y-py [#329](https://github.com/jupytercad/jupytercad/pull/329) ([@trungleduc](https://github.com/trungleduc))
+- Jupyter Collaboration v2 [#239](https://github.com/jupytercad/jupytercad/pull/239) ([@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- Fix build shape from brep string [#334](https://github.com/jupytercad/jupytercad/pull/334) ([@trungleduc](https://github.com/trungleduc))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.0.0rc0
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/v2.0.0a10...5de1ff5bd5c4d0a462aafa951098837399382092))
@@ -54,8 +82,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-06-26&to=2024-06-27&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-06-26..2024-06-27&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-06-26..2024-06-27&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-06-26..2024-06-27&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.0.0a10
 
