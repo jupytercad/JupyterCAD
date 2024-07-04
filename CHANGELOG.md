@@ -40,6 +40,22 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 2.0.1
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@2.0.0...a115397ef4a459379e19fc7af4c3e5ac2bd2b142))
+
+### Bugs fixed
+
+- Fix rendering stl and step files [#377](https://github.com/jupytercad/JupyterCAD/pull/377) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-07-01&to=2024-07-04&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-07-01..2024-07-04&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-07-01..2024-07-04&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.0.0 Highlights
 
 ([Full Changelog](https://github.com/jupytercad/jupytercad/compare/v1.0.1...v2.0.0))
@@ -65,8 +81,6 @@ pip install jupytercad-freecad
 ### Bugs fixed
 
 - Fix build shape from brep string [#334](https://github.com/jupytercad/jupytercad/pull/334) ([@trungleduc](https://github.com/trungleduc))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.0.0rc0
 
