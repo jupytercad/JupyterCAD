@@ -589,7 +589,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       // TODO Have a more generic way to spot non-solid objects
       const isSolid = !(
-        obj!.shape === 'Part::Extrusion' && !obj!.parameters?.['Solid']
+        obj?.shape === 'Part::Extrusion' && !obj?.parameters?.['Solid']
       );
 
       const output = buildShape({
