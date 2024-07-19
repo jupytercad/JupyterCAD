@@ -40,6 +40,26 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 2.0.2
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@2.0.1...6cc089370159836d407abf9a797f2f119b076768))
+
+### Bugs fixed
+
+- Pin reacttrs [#380](https://github.com/jupytercad/JupyterCAD/pull/380) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Update Contributing Guide for Development Installation [#379](https://github.com/jupytercad/JupyterCAD/pull/379) ([@arjxn-py](https://github.com/arjxn-py))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-07-04&to=2024-07-19&type=c))
+
+[@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2024-07-04..2024-07-19&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-07-04..2024-07-19&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-07-04..2024-07-19&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.0.1
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@2.0.0...a115397ef4a459379e19fc7af4c3e5ac2bd2b142))
@@ -53,8 +73,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-07-01&to=2024-07-04&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-07-01..2024-07-04&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-07-01..2024-07-04&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.0.0 Highlights
 
