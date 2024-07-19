@@ -24,3 +24,4 @@ Table of contents
    extension
    python_api
    collab.rst
+   contributing.rst
