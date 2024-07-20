@@ -9,6 +9,7 @@ import {
   ISelection,
   Parts
 } from '@jupytercad/schema';
+import { CommandRegistry } from '@lumino/commands';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { showErrorMessage, WidgetTracker } from '@jupyterlab/apputils';
 import { ITranslator } from '@jupyterlab/translation';
@@ -33,6 +34,7 @@ import {
   chamferIcon,
   filletIcon
 } from './tools';
+import keybindings from './keybindings.json';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { PathExt } from '@jupyterlab/coreutils';
@@ -638,6 +640,16 @@ const EXPORT_FORM = {
   }
 };
 
+function loadKeybindings(commands: CommandRegistry, keybindings: any[]) {
+  keybindings.forEach(binding => {
+    commands.addKeyBinding({
+      command: binding.command,
+      keys: binding.keys,
+      selector: binding.selector
+    });
+  });
+}
+
 /**
  * Add the FreeCAD commands to the application's command registry.
  */
@@ -661,6 +673,7 @@ export function addCommands(
     },
     execute: args => {
       const current = tracker.currentWidget;
+      console.log('REDO PRESSED')
 
       if (current) {
         return current.context.model.sharedModel.redo();
@@ -678,6 +691,7 @@ export function addCommands(
     },
     execute: args => {
       const current = tracker.currentWidget;
+      console.log('UNDO PRESSED')
 
       if (current) {
         return current.context.model.sharedModel.undo();
@@ -953,6 +967,7 @@ export function addCommands(
       await dialog.launch();
     }
   });
+  loadKeybindings(commands, keybindings);
 }
 
 /**

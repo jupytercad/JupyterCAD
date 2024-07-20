@@ -1,0 +1,12 @@
+[
+    {
+      "command": "jupytercad:undo",
+      "keys": ["Accel Z"],
+      "selector": "body"
+    },
+    {
+      "command": "jupytercad:redo",
+      "keys": ["Accel Y"],
+      "selector": "body"
+    }
+  ]
