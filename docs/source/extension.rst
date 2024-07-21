@@ -11,5 +11,5 @@ This extension allows you to:
 * Create new ``.jcad`` files
 * Edit those files by creating new primitives and applying boolean operators
 
-.. image:: lab_ext.webp
+.. image:: assets/lab_ext.webp
   :alt: JupyterCAD JupyterLab extension
