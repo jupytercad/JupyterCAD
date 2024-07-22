@@ -11,5 +11,5 @@ Starting the dedicated JupyterCAD application is as simple as starting JupyterLa
 
     jupyter cad
 
-.. image:: cad_app.webp
+.. image:: assets/cad_app.webp
   :alt: JupyterCAD Dedicated Application
