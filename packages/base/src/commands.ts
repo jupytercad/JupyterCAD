@@ -673,7 +673,7 @@ export function addCommands(
     },
     execute: args => {
       const current = tracker.currentWidget;
-      console.log('REDO PRESSED')
+      console.log('REDO PRESSED');
 
       if (current) {
         return current.context.model.sharedModel.redo();
@@ -691,7 +691,7 @@ export function addCommands(
     },
     execute: args => {
       const current = tracker.currentWidget;
-      console.log('UNDO PRESSED')
+      console.log('UNDO PRESSED');
 
       if (current) {
         return current.context.model.sharedModel.undo();
