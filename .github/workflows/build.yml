@@ -115,8 +115,6 @@ jobs:
           jupyter labextension list
           jupyter labextension list 2>&1 | grep -ie "jupytercad.*OK"
           jupyter cad --version
-          # jupyterlab.browser_check will fail due to the core extension jupyterlab_pygments.
-          # It does not support lab v4.0.0
           python -m jupyterlab.browser_check --no-chrome-test
 
   integration-tests:
