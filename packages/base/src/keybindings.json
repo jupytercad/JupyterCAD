@@ -2,11 +2,11 @@
   {
     "command": "jupytercad:undo",
     "keys": ["Accel Z"],
-    "selector": "body"
+    "selector": ".jp-jupytercad-panel"
   },
   {
     "command": "jupytercad:redo",
     "keys": ["Accel Y"],
-    "selector": "body"
+    "selector": ".jp-jupytercad-panel"
   }
 ]
