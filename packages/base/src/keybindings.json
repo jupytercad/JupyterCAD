@@ -1,0 +1,7 @@
+[
+  {
+    "command": "jupytercad:removeObject",
+    "keys": ["Accel X"],
+    "selector": ".jp-jupytercad-panel"
+  }
+]
