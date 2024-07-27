@@ -746,6 +746,10 @@ export function addCommands(
       }
 
       const objectId = getSelectedObjectId(current);
+      if (!objectId) {
+        console.warn('No object is selected.');
+        return;
+      }
       const sharedModel = current.context.model.sharedModel;
 
       handleRemoveObject(objectId, sharedModel, () =>
