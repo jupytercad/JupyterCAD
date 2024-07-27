@@ -652,7 +652,8 @@ function loadKeybindings(commands: CommandRegistry, keybindings: any[]) {
 }
 
 function getSelectedObjectId(widget: JupyterCadWidget): string {
-  const selected = widget.context.model.sharedModel.awareness.getLocalState()?.selected;
+  const selected =
+    widget.context.model.sharedModel.awareness.getLocalState()?.selected;
   return selected ? Object.keys(selected.value)[0] : '';
 }
 
@@ -747,10 +748,8 @@ export function addCommands(
       const objectId = getSelectedObjectId(current);
       const sharedModel = current.context.model.sharedModel;
 
-      handleRemoveObject(
-        objectId,
-        sharedModel,
-        () => sharedModel.awareness.setLocalStateField('selected', {})
+      handleRemoveObject(objectId, sharedModel, () =>
+        sharedModel.awareness.setLocalStateField('selected', {})
       );
     }
   });
@@ -1006,7 +1005,7 @@ export namespace CommandIDs {
 
   export const newSketch = 'jupytercad:sketch';
 
-  export const removeObject = 'jupytercad:removeObject'
+  export const removeObject = 'jupytercad:removeObject';
 
   export const newBox = 'jupytercad:newBox';
   export const newCylinder = 'jupytercad:newCylinder';

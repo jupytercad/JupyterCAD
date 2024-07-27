@@ -114,7 +114,7 @@ export const handleRemoveObject = (
       <div>
         {'Removing this object will also result in removing:'}
         <ul>
-          {dependants.map((dependant) => (
+          {dependants.map(dependant => (
             <li key={dependant}>{dependant}</li>
           ))}
         </ul>
@@ -127,7 +127,7 @@ export const handleRemoveObject = (
   showDialog({
     title: `Removing ${objectId}`,
     body,
-    buttons: [Dialog.okButton(), Dialog.cancelButton()],
+    buttons: [Dialog.okButton(), Dialog.cancelButton()]
   }).then(({ button: { accept } }) => {
     if (accept) {
       const toRemove = dependants.concat([objectId]);
