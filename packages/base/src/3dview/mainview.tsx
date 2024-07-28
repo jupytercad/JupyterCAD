@@ -106,18 +106,18 @@ export class MainView extends React.Component<IProps, IStates> {
       loading: true,
       annotations: {},
       firstLoad: true,
-      wireframe: false,
+      wireframe: false
     };
     this.toggleWireframe = this.toggleWireframe.bind(this);
   }
 
   toggleWireframe() {
     this.setState(
-      (prevState) => ({
-        wireframe: !prevState.wireframe,
+      prevState => ({
+        wireframe: !prevState.wireframe
       }),
       () => {
-        this._scene.traverse((child) => {
+        this._scene.traverse(child => {
           if (child instanceof THREE.Mesh) {
             child.material.wireframe = this.state.wireframe;
             child.material.needsUpdate = true;
@@ -326,7 +326,7 @@ export class MainView extends React.Component<IProps, IStates> {
           opacity: 0.2,
           transparent: true,
           side: THREE.DoubleSide,
-          wireframe: this.state.wireframe,
+          wireframe: this.state.wireframe
         })
       );
       this._clippingPlaneMeshControl.visible = false;
@@ -666,7 +666,7 @@ export class MainView extends React.Component<IProps, IStates> {
       stencilZFail: THREE.ReplaceStencilOp,
       stencilZPass: THREE.ReplaceStencilOp,
       side: THREE.DoubleSide,
-      wireframe: this.state.wireframe,
+      wireframe: this.state.wireframe
     });
     this._clippingPlaneMesh = new THREE.Mesh(planeGeom, planeMat);
     this._clippingPlaneMesh.onAfterRender = renderer => {
@@ -853,7 +853,7 @@ export class MainView extends React.Component<IProps, IStates> {
             clientColor.b / 255
           )
         : 'black',
-        wireframe: this.state.wireframe,
+      wireframe: this.state.wireframe
     });
 
     return new THREE.Mesh(this._pointerGeometry, material);
@@ -1283,9 +1283,7 @@ export class MainView extends React.Component<IProps, IStates> {
             : 'unset'
         }}
       >
-        <button onClick={this.toggleWireframe}>
-            Toggle Wireframe
-          </button>
+        <button onClick={this.toggleWireframe}>Toggle Wireframe</button>
         <Spinner loading={this.state.loading} />
         <FollowIndicator remoteUser={this.state.remoteUser} />
         {Object.entries(this.state.annotations).map(([key, annotation]) => {
