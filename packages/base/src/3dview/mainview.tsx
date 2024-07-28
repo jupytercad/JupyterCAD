@@ -106,16 +106,28 @@ export class MainView extends React.Component<IProps, IStates> {
       loading: true,
       annotations: {},
       firstLoad: true,
-      wireframe: true,
+      wireframe: false,
     };
     this.toggleWireframe = this.toggleWireframe.bind(this);
   }
 
   toggleWireframe() {
-    this.setState((prevState) => ({
-      wireframe: !prevState.wireframe,
-    }));
-    console.log(this.state.wireframe)
+    this.setState(
+      (prevState) => ({
+        wireframe: !prevState.wireframe,
+      }),
+      () => {
+        this._scene.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.material.wireframe = this.state.wireframe;
+            child.material.needsUpdate = true;
+          }
+        });
+
+        this._renderer.render(this._scene, this._camera);
+        console.log(this.state.wireframe);
+      }
+    );
   }
 
   componentDidMount(): void {
