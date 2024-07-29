@@ -330,10 +330,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     }
 
     return (
-      <div
-        className="jpcad-treeview-wrapper"
-        tabIndex={0}
-      >
+      <div className="jpcad-treeview-wrapper" tabIndex={0}>
         <ReactTree
           multiSelect={true}
           nodes={data}
