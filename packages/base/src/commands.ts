@@ -217,6 +217,11 @@ export async function executeOperator(
   }
 
   // Everything's good, we can apply the change to the shared model
+
+  const objMeta = dryRunResult.shapeMetadata?.[objectModel.name];
+  if (objMeta) {
+    objectModel.shapeMetadata = objMeta;
+  }
   sharedModel.transact(() => {
     transaction(sharedModel);
   });
@@ -1046,7 +1051,7 @@ namespace Private {
         title: value.title,
         sourceData: value.default(current.context.model),
         schema: FORM_SCHEMA[value.shape],
-        syncData: (props: IDict) => {
+        syncData: async (props: IDict) => {
           const { Name, ...parameters } = props;
           const objectModel: IJCadObject = {
             shape: value.shape as Parts,
@@ -1056,8 +1061,30 @@ namespace Private {
           };
 
           const sharedModel = current.context.model.sharedModel;
+
           if (sharedModel) {
             if (!sharedModel.objectExists(objectModel.name)) {
+              // Try a dry run with the update content to verify its feasibility
+              const currentJcadContent = current.context.model.getContent();
+              const updatedContent: IJCadContent = {
+                ...currentJcadContent,
+                objects: [...currentJcadContent.objects, objectModel]
+              };
+              const dryRunResult =
+                await current.content.currentViewModel.dryRun(updatedContent);
+              if (dryRunResult.status === 'error') {
+                showErrorMessage(
+                  `Failed to create the ${value.shape} shape`,
+                  `The ${value.shape} tool was unable to create the desired shape due to invalid parameter values. The values you entered may not be compatible with the dimensions of your piece.`
+                );
+
+                return;
+              }
+
+              const objMeta = dryRunResult.shapeMetadata?.[objectModel.name];
+              if (objMeta) {
+                objectModel.shapeMetadata = objMeta;
+              }
               sharedModel.addObject(objectModel);
             } else {
               showErrorMessage(

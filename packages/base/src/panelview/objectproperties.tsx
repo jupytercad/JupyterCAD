@@ -143,11 +143,18 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     }
 
     // Dry run was successful, ready to apply the update now
+    const meta: IDict = dryRunResult.shapeMetadata?.[objectName] ?? {};
     const obj = model.sharedModel.getObjectByName(objectName);
     if (obj) {
-      model.sharedModel.updateObjectByName(objectName, 'parameters', {
-        ...obj['parameters'],
-        ...properties
+      model.sharedModel.updateObjectByName(objectName, {
+        data: {
+          key: 'parameters',
+          value: {
+            ...obj['parameters'],
+            ...properties
+          }
+        },
+        meta
       });
     }
   }

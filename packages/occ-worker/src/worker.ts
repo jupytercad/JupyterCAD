@@ -56,8 +56,9 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
       break;
     }
     case WorkerAction.DRY_RUN: {
+      let response: IDict = {};
       try {
-        WorkerHandler[WorkerAction.DRY_RUN](message.payload);
+        response = WorkerHandler[WorkerAction.DRY_RUN](message.payload);
       } catch (e) {
         let msg = '';
 
@@ -80,13 +81,17 @@ self.onmessage = async (event: MessageEvent): Promise<void> => {
         );
         return;
       }
-
+      const shapeMetadata: IDict = {};
+      Object.entries(response.result ?? {}).forEach(([objName, data]) => {
+        shapeMetadata[objName] = (data as any)?.['meta'];
+      });
       sendToMain(
         {
           action: MainAction.DRY_RUN_RESPONSE,
           payload: {
             id: message.payload.id,
-            status: 'ok'
+            status: 'ok',
+            shapeMetadata
           }
         },
         id
