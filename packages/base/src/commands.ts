@@ -702,6 +702,16 @@ export function addCommands(
   const trans = translator.load('jupyterlab');
   const { commands } = app;
   Private.updateFormSchema(formSchemaRegistry);
+
+  commands.addCommand(CommandIDs.executeConsole, {
+    label: trans.__('Execute console'),
+    isEnabled: () => {
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
+    },
+    execute: () => Private.executeConsole(tracker)
+  });
   commands.addCommand(CommandIDs.redo, {
     label: trans.__('Redo'),
     isEnabled: () => {
@@ -1062,6 +1072,8 @@ export namespace CommandIDs {
   export const updateClipView = 'jupytercad:updateClipView';
 
   export const exportJcad = 'jupytercad:exportJcad';
+
+  export const executeConsole = 'jupytercad:executeConsole';
 }
 
 namespace Private {
@@ -1216,5 +1228,17 @@ namespace Private {
       });
       await dialog.launch();
     };
+  }
+
+  export function executeConsole(
+    tracker: WidgetTracker<JupyterCadWidget>
+  ): void {
+    const current = tracker.currentWidget;
+
+    if (!current) {
+      return;
+    }
+    console.log('current widget', current.content);
+    current.content.executeConsole();
   }
 }

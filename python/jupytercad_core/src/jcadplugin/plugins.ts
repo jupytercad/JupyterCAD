@@ -22,8 +22,15 @@ import {
   IThemeManager,
   WidgetTracker
 } from '@jupyterlab/apputils';
+import { IEditorServices } from '@jupyterlab/codeeditor';
+import {
+  ConsolePanel,
+  IConsoleCellExecutor,
+  IConsoleTracker
+} from '@jupyterlab/console';
 import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { ILauncher } from '@jupyterlab/launcher';
+import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { fileIcon } from '@jupyterlab/ui-components';
 
 import { JupyterCadWidgetFactory } from '../factory';
@@ -44,10 +51,16 @@ const activate = (
   browserFactory: IFileBrowserFactory,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
+  contentFactory: ConsolePanel.IContentFactory,
+  editorServices: IEditorServices,
+  rendermime: IRenderMimeRegistry,
+  executor: IConsoleCellExecutor,
+  consoleTracker: IConsoleTracker,
   launcher: ILauncher | null,
   palette: ICommandPalette | null,
   drive: ICollaborativeDrive | null
 ): void => {
+  console.log('xxxxxxxxx', consoleTracker);
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-jcadmodel',
@@ -56,7 +69,13 @@ const activate = (
     tracker,
     commands: app.commands,
     workerRegistry,
-    externalCommandRegistry
+    externalCommandRegistry,
+    manager: app.serviceManager,
+    contentFactory,
+    rendermime,
+    mimeTypeService: editorServices.mimeTypeService,
+    executor,
+    consoleTracker
   });
   // Registering the widget factory
   app.docRegistry.addWidgetFactory(widgetFactory);
@@ -158,7 +177,12 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IAnnotationToken,
     IFileBrowserFactory,
     IJCadWorkerRegistryToken,
-    IJCadExternalCommandRegistryToken
+    IJCadExternalCommandRegistryToken,
+    ConsolePanel.IContentFactory,
+    IEditorServices,
+    IRenderMimeRegistry,
+    IConsoleCellExecutor,
+    IConsoleTracker
   ],
   optional: [ILauncher, ICommandPalette, ICollaborativeDrive],
   autoStart: true,

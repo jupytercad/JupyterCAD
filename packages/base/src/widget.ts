@@ -1,15 +1,18 @@
-import { IJupyterCadModel } from '@jupytercad/schema';
-import { ReactWidget } from '@jupyterlab/apputils';
+import {
+  IJCadWorkerRegistry,
+  IJupyterCadModel,
+  IJupyterCadWidget
+} from '@jupytercad/schema';
 import { DocumentWidget } from '@jupyterlab/docregistry';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { JSONValue } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
-import * as React from 'react';
+import { SplitPanel } from '@lumino/widgets';
 
-import { MainView } from './3dview';
-import { AxeHelper, CameraSettings, ExplodedView, ClipSettings } from './types';
-import { IJCadWorkerRegistry, IJupyterCadWidget } from '@jupytercad/schema';
+import { JupyterCadMainViewPanel } from './3dview';
 import { MainViewModel } from './3dview/mainviewmodel';
+import { AxeHelper, CameraSettings, ClipSettings, ExplodedView } from './types';
+import { ConsoleView } from './console';
 
 export class JupyterCadWidget
   extends DocumentWidget<JupyterCadPanel, IJupyterCadModel>
@@ -34,24 +37,64 @@ export class JupyterCadWidget
   };
 }
 
-export class JupyterCadPanel extends ReactWidget {
-  /**
-   * Construct a `JupyterCadPanel`.
-   *
-   * @param context - The documents context.
-   */
-  constructor(options: {
+export class JupyterCadPanel extends SplitPanel {
+  constructor(options: JupyterCadPanel.IOptions) {
+    super({ orientation: 'vertical', spacing: 0 });
+    const { model, workerRegistry, ...consoleOption } = options;
+    this._initModel({ model, workerRegistry });
+    this._initView(consoleOption);
+  }
+
+  _initModel(options: {
     model: IJupyterCadModel;
     workerRegistry: IJCadWorkerRegistry;
   }) {
-    super();
-    this.addClass('jp-jupytercad-panel');
     this._view = new ObservableMap<JSONValue>();
     this._mainViewModel = new MainViewModel({
       jcadModel: options.model,
       workerRegistry: options.workerRegistry,
       viewSetting: this._view
     });
+  }
+
+  _initView(consoleOption: Partial<ConsoleView.IOptions>) {
+    this._jupyterCadMainViewPanel = new JupyterCadMainViewPanel({
+      mainViewModel: this._mainViewModel
+    });
+    this.addWidget(this._jupyterCadMainViewPanel);
+    SplitPanel.setStretch(this._jupyterCadMainViewPanel, 1);
+
+    const {
+      contentFactory,
+      manager,
+      mimeTypeService,
+      rendermime,
+      executor,
+      consoleTracker
+    } = consoleOption;
+    if (
+      contentFactory &&
+      manager &&
+      mimeTypeService &&
+      rendermime &&
+      executor &&
+      consoleTracker
+    ) {
+      this._consoleView = new ConsoleView({
+        contentFactory,
+        manager,
+        mimeTypeService,
+        rendermime,
+        executor,
+        consoleTracker
+      });
+      this.addWidget(this._consoleView);
+      SplitPanel.setStretch(this._consoleView, 1);
+    }
+  }
+
+  get jupyterCadMainViewPanel(): JupyterCadMainViewPanel {
+    return this._jupyterCadMainViewPanel;
   }
 
   get viewChanged(): ISignal<
@@ -113,10 +156,19 @@ export class JupyterCadPanel extends ReactWidget {
     this._view.delete('axes');
   }
 
-  render(): JSX.Element {
-    return <MainView viewModel={this._mainViewModel} />;
+  executeConsole() {
+    this._consoleView.execute();
   }
 
   private _mainViewModel: MainViewModel;
   private _view: ObservableMap<JSONValue>;
+  private _jupyterCadMainViewPanel: JupyterCadMainViewPanel;
+  private _consoleView: ConsoleView;
+}
+
+export namespace JupyterCadPanel {
+  export interface IOptions extends Partial<ConsoleView.IOptions> {
+    model: IJupyterCadModel;
+    workerRegistry: IJCadWorkerRegistry;
+  }
 }
