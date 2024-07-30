@@ -8,9 +8,10 @@ import { IWidgetTracker } from '@jupyterlab/apputils';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
 import { User } from '@jupyterlab/services';
-import { ReactWidget } from '@jupyterlab/ui-components';
+// import { ReactWidget } from '@jupyterlab/ui-components';
 import { JSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
+import { SplitPanel } from '@lumino/widgets';
 
 import {
   IJCadContent,
@@ -353,7 +354,7 @@ export interface IJCadWorkerRegistry {
   getAllWorkers(): IJCadWorker[];
 }
 
-export type IJupyterCadWidget = IDocumentWidget<ReactWidget, IJupyterCadModel>;
+export type IJupyterCadWidget = IDocumentWidget<SplitPanel, IJupyterCadModel>;
 
 export type IJupyterCadTracker = IWidgetTracker<IJupyterCadWidget>;
 
