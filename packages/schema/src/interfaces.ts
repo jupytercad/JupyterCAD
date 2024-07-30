@@ -95,7 +95,10 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   removeObjectByName(name: string): void;
   addObject(value: IJCadObject): void;
   addObjects(value: Array<IJCadObject>): void;
-  updateObjectByName(name: string, key: string, value: any): void;
+  updateObjectByName(
+    name: string,
+    payload: { data: { key: string; value: any }; meta?: IDict }
+  ): void;
   getDependants(name: string): string[];
 
   getOption(key: keyof IJCadOptions): IDict | undefined;
@@ -258,6 +261,7 @@ export interface IDryRunResponsePayload {
   id: string;
   status: 'ok' | 'error';
   message?: string;
+  shapeMetadata?: IDict;
 }
 
 export interface IDryRunResponse extends IMainMessageBase {

@@ -2,7 +2,6 @@ import { IWorkerMessage } from '@jupytercad/occ-worker';
 import {
   IAnnotation,
   IDict,
-  IDisplayShape,
   IJcadObjectDocChange,
   IJCadWorker,
   IJCadWorkerRegistry,
@@ -105,8 +104,6 @@ export class MainViewModel implements IDisposable {
             threejsPostResult[key] = val;
           }
         });
-
-        this._saveMeta(result);
 
         if (this._firstRender) {
           const postShapes = this._jcadModel.sharedModel
@@ -229,15 +226,6 @@ export class MainViewModel implements IDisposable {
       const newMsg = { ...msg, id: this._id };
       this._worker.postMessage(newMsg);
     }
-  }
-
-  private _saveMeta(payload: IDisplayShape['payload']['result']) {
-    if (!this._jcadModel) {
-      return;
-    }
-    Object.entries(payload).forEach(([objName, data]) => {
-      this._jcadModel.sharedModel.setShapeMeta(objName, data.meta);
-    });
   }
 
   private async _onSharedObjectsChanged(
