@@ -152,6 +152,21 @@
   overflow: hidden;
 }
 
+.jpcad-property-panel .array-item-list {
+  display: flex;
+}
+
+.jpcad-property-panel .jp-SchemaForm .array-item:not(:last-child) {
+  margin-right: var(--jp-ui-font-size1);
+  border-bottom: none;
+  margin-bottom: unset;
+  padding-bottom: unset;
+}
+
+.jpcad-property-panel .jp-SchemaForm .array-item {
+  flex-grow: 1;
+}
+
 .jpcad-hidden-field {
   display: none;
 }

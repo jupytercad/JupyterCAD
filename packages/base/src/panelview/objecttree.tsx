@@ -97,6 +97,47 @@ interface IProps {
   cpModel: IControlPanelModel;
 }
 
+export const handleRemoveObject = (
+  objectId: string,
+  sharedModel: any,
+  syncSelected: () => void
+): void => {
+  if (!sharedModel) {
+    return;
+  }
+
+  const dependants = sharedModel.getDependants(objectId);
+
+  let body: React.JSX.Element;
+  if (dependants.length) {
+    body = (
+      <div>
+        {'Removing this object will also result in removing:'}
+        <ul>
+          {dependants.map(dependant => (
+            <li key={dependant}>{dependant}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  } else {
+    body = <div>Are you sure?</div>;
+  }
+
+  showDialog({
+    title: `Removing ${objectId}`,
+    body,
+    buttons: [Dialog.okButton(), Dialog.cancelButton()]
+  }).then(({ button: { accept } }) => {
+    if (accept) {
+      const toRemove = dependants.concat([objectId]);
+      sharedModel.removeObjects(toRemove);
+    }
+  });
+
+  syncSelected();
+};
+
 class ObjectTreeReact extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
@@ -265,6 +306,17 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     this.setState(old => ({ ...old, options: sender.options }));
   };
 
+  private _handleRemoveObject = (objectId: string): void => {
+    const sharedModel = this.props.cpModel.jcadModel?.sharedModel;
+    if (!sharedModel) {
+      return;
+    }
+
+    handleRemoveObject(objectId, sharedModel, () => {
+      this.props.cpModel.jcadModel?.syncSelected({});
+    });
+  };
+
   render(): React.ReactNode {
     const { selectedNodes, openNodes, options } = this.state;
     const data = this.stateToTree();
@@ -278,7 +330,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     }
 
     return (
-      <div className="jpcad-treeview-wrapper">
+      <div className="jpcad-treeview-wrapper" tabIndex={0}>
         <ReactTree
           multiSelect={true}
           nodes={data}
@@ -394,45 +446,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                         className={'jp-ToolbarButtonComponent'}
                         onClick={() => {
                           const objectId = opts.node.parentId as string;
-                          const sharedModel =
-                            this.props.cpModel.jcadModel?.sharedModel;
-                          if (!sharedModel) {
-                            return;
-                          }
-
-                          const dependants =
-                            sharedModel.getDependants(objectId);
-
-                          let body: React.JSX.Element;
-                          if (dependants.length) {
-                            body = (
-                              <div>
-                                {
-                                  'Removing this object will also result in removing:'
-                                }
-                                <ul>
-                                  {dependants.map(dependant => (
-                                    <li>{dependant}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            );
-                          } else {
-                            body = <div>Are you sure?</div>;
-                          }
-
-                          showDialog({
-                            title: `Removing ${objectId}`,
-                            body,
-                            buttons: [Dialog.okButton(), Dialog.cancelButton()]
-                          }).then(({ button: { accept } }) => {
-                            if (accept) {
-                              const toRemove = dependants.concat([objectId]);
-                              sharedModel.removeObjects(toRemove);
-                            }
-                          });
-
-                          this.props.cpModel.jcadModel?.syncSelected({});
+                          this._handleRemoveObject(objectId);
                         }}
                         icon={closeIcon}
                       />

@@ -297,4 +297,64 @@ test.describe('UI Test', () => {
       }
     });
   });
+
+  test.describe('JCAD creation test', () => {
+    test.describe('Extension activation test', () => {
+      test('should create a new JCAD file', async ({ page, request }) => {
+        await page.goto();
+        await page
+          .getByLabel('notebook content')
+          .getByText('New JCAD File')
+          .click();
+
+        await page.getByTitle('New Box').getByRole('button').click();
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await page.waitForTimeout(1000);
+        await page.getByText('Box 1').click();
+        await page.locator('#tab-key-1-6').click();
+
+        await page.waitForTimeout(1000);
+        const main = await page.locator('#jp-main-dock-panel');
+
+        if (main) {
+          expect(await main.screenshot()).toMatchSnapshot({
+            name: `JCAD-New.png`
+          });
+        }
+        await page.getByLabel('Length*').fill('0.5');
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await page.waitForTimeout(500);
+        await page.getByLabel('Width*').fill('1.5');
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await page.waitForTimeout(500);
+        await page.getByLabel('Height*').fill('2');
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await page.waitForTimeout(500);
+        if (main) {
+          expect(await main.screenshot()).toMatchSnapshot({
+            name: `JCAD-Modified.png`
+          });
+        }
+
+        await page.getByTitle('Undo').getByRole('button').click();
+        await page.getByTitle('Undo').getByRole('button').click();
+        await page.getByTitle('Undo').getByRole('button').click();
+        await page.waitForTimeout(1000);
+        if (main) {
+          expect(await main.screenshot()).toMatchSnapshot({
+            name: `JCAD-Undo.png`
+          });
+        }
+        await page.getByTitle('Redo').getByRole('button').click();
+        await page.getByTitle('Redo').getByRole('button').click();
+        await page.getByTitle('Redo').getByRole('button').click();
+        await page.waitForTimeout(1000);
+        if (main) {
+          expect(await main.screenshot()).toMatchSnapshot({
+            name: `JCAD-Redo.png`
+          });
+        }
+      });
+    });
+  });
 });

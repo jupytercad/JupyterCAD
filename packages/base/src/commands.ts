@@ -1,5 +1,6 @@
 import {
   IDict,
+  IDryRunResponsePayload,
   IJCadContent,
   IJCadFormSchemaRegistry,
   IJCadObject,
@@ -9,6 +10,7 @@ import {
   ISelection,
   Parts
 } from '@jupytercad/schema';
+import { CommandRegistry } from '@lumino/commands';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { showErrorMessage, WidgetTracker } from '@jupyterlab/apputils';
 import { ITranslator } from '@jupyterlab/translation';
@@ -33,9 +35,12 @@ import {
   chamferIcon,
   filletIcon
 } from './tools';
+import keybindings from './keybindings.json';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { PathExt } from '@jupyterlab/coreutils';
+import { MainViewModel } from './3dview/mainviewmodel';
+import { handleRemoveObject } from './panelview';
 
 export function newName(type: string, model: IJupyterCadModel): string {
   const sharedModel = model.sharedModel;
@@ -47,6 +52,23 @@ export function newName(type: string, model: IJupyterCadModel): string {
   }
 
   return name;
+}
+
+export async function dryRunCheck(options: {
+  jcadContent: IJCadContent;
+  mainView: MainViewModel;
+  requestedOperator: string;
+}): Promise<IDryRunResponsePayload | null> {
+  const { jcadContent, mainView, requestedOperator } = options;
+  const dryRunResult = await mainView.dryRun(jcadContent);
+  if (dryRunResult.status === 'error') {
+    showErrorMessage(
+      `Failed to apply ${requestedOperator} operator`,
+      `The ${requestedOperator} tool was unable to create the desired shape due to invalid parameter values. The values you entered may not be compatible with the dimensions of your piece.`
+    );
+    return null;
+  }
+  return dryRunResult;
 }
 
 export function setVisible(
@@ -205,18 +227,21 @@ export async function executeOperator(
     ...currentJcadContent,
     objects: [...currentJcadContent.objects, objectModel]
   };
-  const dryRunResult =
-    await current.content.currentViewModel.dryRun(updatedContent);
-  if (dryRunResult.status === 'error') {
-    showErrorMessage(
-      `Failed to create the ${name} operation`,
-      `The ${name} tool was unable to create the desired shape due to invalid parameter values. The values you entered may not be compatible with the dimensions of your piece.`
-    );
 
+  const dryRunResult = await dryRunCheck({
+    jcadContent: updatedContent,
+    mainView: current.content.currentViewModel,
+    requestedOperator: name
+  });
+  if (!dryRunResult) {
     return;
   }
-
   // Everything's good, we can apply the change to the shared model
+
+  const objMeta = dryRunResult.shapeMetadata?.[objectModel.name];
+  if (objMeta) {
+    objectModel.shapeMetadata = objMeta;
+  }
   sharedModel.transact(() => {
     transaction(sharedModel);
   });
@@ -638,6 +663,22 @@ const EXPORT_FORM = {
   }
 };
 
+function loadKeybindings(commands: CommandRegistry, keybindings: any[]) {
+  keybindings.forEach(binding => {
+    commands.addKeyBinding({
+      command: binding.command,
+      keys: binding.keys,
+      selector: binding.selector
+    });
+  });
+}
+
+function getSelectedObjectId(widget: JupyterCadWidget): string {
+  const selected =
+    widget.context.model.sharedModel.awareness.getLocalState()?.selected;
+  return selected ? Object.keys(selected.value)[0] : '';
+}
+
 /**
  * Add the FreeCAD commands to the application's command registry.
  */
@@ -711,6 +752,31 @@ export function addCommands(
       const dialog = new SketcherDialog(props);
       props.closeCallback.handler = () => dialog.close();
       await dialog.launch();
+    }
+  });
+
+  commands.addCommand(CommandIDs.removeObject, {
+    label: trans.__('Remove Object'),
+    isEnabled: () => {
+      const current = tracker.currentWidget;
+      return current ? current.context.model.sharedModel.editable : false;
+    },
+    execute: () => {
+      const current = tracker.currentWidget;
+      if (!current) {
+        return;
+      }
+
+      const objectId = getSelectedObjectId(current);
+      if (!objectId) {
+        console.warn('No object is selected.');
+        return;
+      }
+      const sharedModel = current.context.model.sharedModel;
+
+      handleRemoveObject(objectId, sharedModel, () =>
+        sharedModel.awareness.setLocalStateField('selected', {})
+      );
     }
   });
 
@@ -953,6 +1019,7 @@ export function addCommands(
       await dialog.launch();
     }
   });
+  loadKeybindings(commands, keybindings);
 }
 
 /**
@@ -963,6 +1030,8 @@ export namespace CommandIDs {
   export const undo = 'jupytercad:undo';
 
   export const newSketch = 'jupytercad:sketch';
+
+  export const removeObject = 'jupytercad:removeObject';
 
   export const newBox = 'jupytercad:newBox';
   export const newCylinder = 'jupytercad:newCylinder';
@@ -1046,7 +1115,7 @@ namespace Private {
         title: value.title,
         sourceData: value.default(current.context.model),
         schema: FORM_SCHEMA[value.shape],
-        syncData: (props: IDict) => {
+        syncData: async (props: IDict) => {
           const { Name, ...parameters } = props;
           const objectModel: IJCadObject = {
             shape: value.shape as Parts,
@@ -1056,8 +1125,28 @@ namespace Private {
           };
 
           const sharedModel = current.context.model.sharedModel;
+
           if (sharedModel) {
             if (!sharedModel.objectExists(objectModel.name)) {
+              // Try a dry run with the update content to verify its feasibility
+              const currentJcadContent = current.context.model.getContent();
+              const updatedContent: IJCadContent = {
+                ...currentJcadContent,
+                objects: [...currentJcadContent.objects, objectModel]
+              };
+
+              const dryRunResult = await dryRunCheck({
+                jcadContent: updatedContent,
+                mainView: current.content.currentViewModel,
+                requestedOperator: value.shape
+              });
+              if (!dryRunResult) {
+                return;
+              }
+              const objMeta = dryRunResult.shapeMetadata?.[objectModel.name];
+              if (objMeta) {
+                objectModel.shapeMetadata = objMeta;
+              }
               sharedModel.addObject(objectModel);
             } else {
               showErrorMessage(
