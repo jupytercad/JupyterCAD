@@ -10,6 +10,7 @@ import {
   ISelection,
   Parts
 } from '@jupytercad/schema';
+import { CommandRegistry } from '@lumino/commands';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { showErrorMessage, WidgetTracker } from '@jupyterlab/apputils';
 import { ITranslator } from '@jupyterlab/translation';
@@ -34,10 +35,13 @@ import {
   chamferIcon,
   filletIcon
 } from './tools';
+import keybindings from './keybindings.json';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
+import { handleRemoveObject } from './panelview';
+
 
 export function newName(type: string, model: IJupyterCadModel): string {
   const sharedModel = model.sharedModel;
@@ -660,6 +664,22 @@ const EXPORT_FORM = {
   }
 };
 
+function loadKeybindings(commands: CommandRegistry, keybindings: any[]) {
+  keybindings.forEach(binding => {
+    commands.addKeyBinding({
+      command: binding.command,
+      keys: binding.keys,
+      selector: binding.selector
+    });
+  });
+}
+
+function getSelectedObjectId(widget: JupyterCadWidget): string {
+  const selected =
+    widget.context.model.sharedModel.awareness.getLocalState()?.selected;
+  return selected ? Object.keys(selected.value)[0] : '';
+}
+
 /**
  * Add the FreeCAD commands to the application's command registry.
  */
@@ -733,6 +753,31 @@ export function addCommands(
       const dialog = new SketcherDialog(props);
       props.closeCallback.handler = () => dialog.close();
       await dialog.launch();
+    }
+  });
+
+  commands.addCommand(CommandIDs.removeObject, {
+    label: trans.__('Remove Object'),
+    isEnabled: () => {
+      const current = tracker.currentWidget;
+      return current ? current.context.model.sharedModel.editable : false;
+    },
+    execute: () => {
+      const current = tracker.currentWidget;
+      if (!current) {
+        return;
+      }
+
+      const objectId = getSelectedObjectId(current);
+      if (!objectId) {
+        console.warn('No object is selected.');
+        return;
+      }
+      const sharedModel = current.context.model.sharedModel;
+
+      handleRemoveObject(objectId, sharedModel, () =>
+        sharedModel.awareness.setLocalStateField('selected', {})
+      );
     }
   });
 
@@ -975,6 +1020,7 @@ export function addCommands(
       await dialog.launch();
     }
   });
+  loadKeybindings(commands, keybindings);
 }
 
 /**
@@ -985,6 +1031,8 @@ export namespace CommandIDs {
   export const undo = 'jupytercad:undo';
 
   export const newSketch = 'jupytercad:sketch';
+
+  export const removeObject = 'jupytercad:removeObject';
 
   export const newBox = 'jupytercad:newBox';
   export const newCylinder = 'jupytercad:newCylinder';
