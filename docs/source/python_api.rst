@@ -62,7 +62,7 @@ You can also make use of the OpenCascade Python API using the ``pythonocc-core``
     doc.add_occ_shape(prism)
     display(doc)
 
-.. image:: python_occ.gif
+.. image:: assets/python_occ.gif
   :alt: JupyterCAD Python OpenCascade API support
 
 ``CadDocument`` API Reference

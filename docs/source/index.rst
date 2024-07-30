@@ -10,7 +10,7 @@ JupyterCAD has support for FreeCAD files, which makes it easy to import and expo
 a range of features for creating and manipulating 3D shapes, including a variety of primitives, transformations,
 and Boolean operations.
 
-.. image:: jupytercad-screenshot.png
+.. image:: assets/jupytercad-screenshot.png
   :alt: JupyterCAD application
 
 Table of contents
@@ -24,3 +24,4 @@ Table of contents
    extension
    python_api
    collab.rst
+   contributing.rst

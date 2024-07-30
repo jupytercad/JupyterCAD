@@ -8,5 +8,15 @@
     "command": "jupytercad:redo",
     "keys": ["Accel Y"],
     "selector": ".jp-jupytercad-panel"
+  },
+  {
+    "command": "jupytercad:removeObject",
+    "keys": ["Delete"],
+    "selector": ".jp-jupytercad-panel"
+  },
+  {
+    "command": "jupytercad:removeObject",
+    "keys": ["Delete"],
+    "selector": ".jpcad-treeview-wrapper"
   }
 ]

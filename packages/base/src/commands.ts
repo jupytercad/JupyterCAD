@@ -38,6 +38,7 @@ import keybindings from './keybindings.json';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { PathExt } from '@jupyterlab/coreutils';
+import { handleRemoveObject } from './panelview';
 
 export function newName(type: string, model: IJupyterCadModel): string {
   const sharedModel = model.sharedModel;
@@ -650,6 +651,12 @@ function loadKeybindings(commands: CommandRegistry, keybindings: any[]) {
   });
 }
 
+function getSelectedObjectId(widget: JupyterCadWidget): string {
+  const selected =
+    widget.context.model.sharedModel.awareness.getLocalState()?.selected;
+  return selected ? Object.keys(selected.value)[0] : '';
+}
+
 /**
  * Add the FreeCAD commands to the application's command registry.
  */
@@ -725,6 +732,31 @@ export function addCommands(
       const dialog = new SketcherDialog(props);
       props.closeCallback.handler = () => dialog.close();
       await dialog.launch();
+    }
+  });
+
+  commands.addCommand(CommandIDs.removeObject, {
+    label: trans.__('Remove Object'),
+    isEnabled: () => {
+      const current = tracker.currentWidget;
+      return current ? current.context.model.sharedModel.editable : false;
+    },
+    execute: () => {
+      const current = tracker.currentWidget;
+      if (!current) {
+        return;
+      }
+
+      const objectId = getSelectedObjectId(current);
+      if (!objectId) {
+        console.warn('No object is selected.');
+        return;
+      }
+      const sharedModel = current.context.model.sharedModel;
+
+      handleRemoveObject(objectId, sharedModel, () =>
+        sharedModel.awareness.setLocalStateField('selected', {})
+      );
     }
   });
 
@@ -978,6 +1010,8 @@ export namespace CommandIDs {
   export const undo = 'jupytercad:undo';
 
   export const newSketch = 'jupytercad:sketch';
+
+  export const removeObject = 'jupytercad:removeObject';
 
   export const newBox = 'jupytercad:newBox';
   export const newCylinder = 'jupytercad:newCylinder';
