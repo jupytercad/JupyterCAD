@@ -2,21 +2,16 @@
   {
     "command": "jupytercad:undo",
     "keys": ["Accel Z"],
-    "selector": ".jp-jupytercad-panel"
+    "selector": "body"
   },
   {
     "command": "jupytercad:redo",
     "keys": ["Accel Y"],
-    "selector": ".jp-jupytercad-panel"
+    "selector": "body"
   },
   {
     "command": "jupytercad:removeObject",
     "keys": ["Delete"],
-    "selector": ".jp-jupytercad-panel"
-  },
-  {
-    "command": "jupytercad:removeObject",
-    "keys": ["Delete"],
-    "selector": ".jpcad-treeview-wrapper"
+    "selector": "body"
   }
 ]
