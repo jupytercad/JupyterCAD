@@ -158,15 +158,18 @@ export class JupyterCadDoc
     });
   }
 
-  updateObjectByName(name: string, key: string, value: any): void {
+  updateObjectByName(
+    name: string,
+    payload: { data: { key: string; value: any }; meta?: IDict }
+  ): void {
     const obj = this._getObjectAsYMapByName(name);
     if (!obj) {
       return;
     }
+    const { key, value } = payload.data;
 
     this.transact(() => {
       // Special case for changing parameters, we may need to update dependencies
-      console.log('update ', key);
       if (key === 'parameters') {
         switch (obj.get('shape')) {
           case 'Part::Cut': {
@@ -190,6 +193,9 @@ export class JupyterCadDoc
       }
 
       obj.set(key, value);
+      if (payload.meta) {
+        obj.set('shapeMetadata', payload.meta);
+      }
     });
   }
 

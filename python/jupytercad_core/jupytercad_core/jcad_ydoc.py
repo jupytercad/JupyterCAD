@@ -31,6 +31,7 @@ class YJCad(YBaseDoc):
         return json.dumps(
             dict(objects=objects, options=options, metadata=meta, outputs=outputs),
             indent=2,
+            sort_keys=True,
         )
 
     def set(self, value: str) -> None:
