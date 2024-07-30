@@ -42,7 +42,6 @@ import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
 
-
 export function newName(type: string, model: IJupyterCadModel): string {
   const sharedModel = model.sharedModel;
 
