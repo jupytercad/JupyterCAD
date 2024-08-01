@@ -676,7 +676,16 @@ function loadKeybindings(commands: CommandRegistry, keybindings: any[]) {
 function getSelectedObjectId(widget: JupyterCadWidget): string {
   const selected =
     widget.context.model.sharedModel.awareness.getLocalState()?.selected;
-  return selected ? Object.keys(selected.value)[0] : '';
+
+  if (selected && selected.value) {
+    const selectedKey = Object.keys(selected.value)[0];
+    const selectedItem = selected.value[selectedKey];
+    if (selectedItem.type === 'edge' && selectedItem.parent) {
+      return selectedItem.parent;
+    }
+    return selectedKey;
+  }
+  return '';
 }
 
 /**
