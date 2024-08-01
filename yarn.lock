@@ -932,6 +932,7 @@ __metadata:
     "@jupytercad/schema": ^2.0.2
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
+    "@jupyterlab/console": ^4.2.4
     "@jupyterlab/coreutils": ^6.0.0
     "@jupyterlab/docregistry": ^4.0.0
     "@jupyterlab/filebrowser": ^4.0.0
@@ -1337,7 +1338,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/cells@npm:^4.0.13":
+"@jupyterlab/cells@npm:^4.0.13, @jupyterlab/cells@npm:^4.2.4":
   version: 4.2.4
   resolution: "@jupyterlab/cells@npm:4.2.4"
   dependencies:
@@ -1527,6 +1528,31 @@ __metadata:
     y-protocols: ^1.0.5
     yjs: ^13.5.40
   checksum: 0f9207ccb0e3a3b1ac72c548ffadf31fe5cc535d4526f95ee9b4081ed509560318d8666027c91a615d4f7c24b3832d11e8587278ebee1a2a64f7e11e1e0f1f0a
+  languageName: node
+  linkType: hard
+
+"@jupyterlab/console@npm:^4.2.4":
+  version: 4.2.4
+  resolution: "@jupyterlab/console@npm:4.2.4"
+  dependencies:
+    "@jupyter/ydoc": ^2.0.1
+    "@jupyterlab/apputils": ^4.3.4
+    "@jupyterlab/cells": ^4.2.4
+    "@jupyterlab/codeeditor": ^4.2.4
+    "@jupyterlab/coreutils": ^6.2.4
+    "@jupyterlab/nbformat": ^4.2.4
+    "@jupyterlab/observables": ^5.2.4
+    "@jupyterlab/rendermime": ^4.2.4
+    "@jupyterlab/services": ^7.2.4
+    "@jupyterlab/translation": ^4.2.4
+    "@jupyterlab/ui-components": ^4.2.4
+    "@lumino/coreutils": ^2.1.2
+    "@lumino/disposable": ^2.1.2
+    "@lumino/dragdrop": ^2.1.4
+    "@lumino/messaging": ^2.0.1
+    "@lumino/signaling": ^2.1.2
+    "@lumino/widgets": ^2.3.2
+  checksum: a5101782e38aea1e21ed533b21af6907c6ac765a8da245f68d501ebb9e0202018af75be1a770a70b1f8e2a16130d7da47505faabdd7b9413017b132ea38b042f
   languageName: node
   linkType: hard
 

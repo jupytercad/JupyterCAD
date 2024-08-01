@@ -13,5 +13,10 @@
     "command": "jupytercad:removeObject",
     "keys": ["Delete"],
     "selector": "body"
+  },
+  {
+    "command": "jupytercad:executeConsole",
+    "keys": ["Shift Enter"],
+    "selector": ".jpcad-console .jp-CodeConsole[data-jp-interaction-mode='notebook'] .jp-CodeConsole-promptCell"
   }
 ]
