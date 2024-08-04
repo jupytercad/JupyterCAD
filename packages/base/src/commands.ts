@@ -895,7 +895,7 @@ export function addCommands(
     },
     execute: async () => {
       const current = tracker.currentWidget?.content;
-      current?.handleToggleWireframe()
+      current?.handleToggleWireframe();
 
       if (!current) {
         return;
