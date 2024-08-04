@@ -888,6 +888,21 @@ export function addCommands(
     execute: Private.executeOperator('intersection', tracker)
   });
 
+  commands.addCommand(CommandIDs.wireframe, {
+    label: 'Toggle Wireframe',
+    isEnabled: () => {
+      return tracker.currentWidget !== null;
+    },
+    execute: async () => {
+      const current = tracker.currentWidget?.content;
+      current?.handleToggleWireframe()
+
+      if (!current) {
+        return;
+      }
+    }
+  });
+
   commands.addCommand(CommandIDs.chamfer, {
     label: trans.__('Make chamfer'),
     isEnabled: () => {
@@ -1052,6 +1067,7 @@ export namespace CommandIDs {
   export const extrusion = 'jupytercad:extrusion';
   export const union = 'jupytercad:union';
   export const intersection = 'jupytercad:intersection';
+  export const wireframe = 'jupytercad:wireframe';
 
   export const chamfer = 'jupytercad:chamfer';
   export const fillet = 'jupytercad:fillet';
