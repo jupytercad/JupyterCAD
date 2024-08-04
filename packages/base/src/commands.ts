@@ -33,7 +33,8 @@ import {
   unionIcon,
   clippingIcon,
   chamferIcon,
-  filletIcon
+  filletIcon,
+  wireframeIcon
 } from './tools';
 import keybindings from './keybindings.json';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
@@ -889,7 +890,7 @@ export function addCommands(
   });
 
   commands.addCommand(CommandIDs.wireframe, {
-    label: 'Toggle Wireframe',
+    label: trans.__('Toggle Wireframe'),
     isEnabled: () => {
       return tracker.currentWidget !== null;
     },
@@ -900,7 +901,8 @@ export function addCommands(
       if (!current) {
         return;
       }
-    }
+    },
+    icon: wireframeIcon
   });
 
   commands.addCommand(CommandIDs.chamfer, {
