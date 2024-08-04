@@ -1268,7 +1268,6 @@ export class MainView extends React.Component<IProps, IStates> {
             : 'unset'
         }}
       >
-        <button onClick={this.toggleWireframe}>Toggle Wireframe</button>
         <Spinner loading={this.state.loading} />
         <FollowIndicator remoteUser={this.state.remoteUser} />
         {Object.entries(this.state.annotations).map(([key, annotation]) => {
@@ -1369,7 +1368,6 @@ export function toggleWireframe(this: MainView) {
     }),
     () => {
       this.setWireframe(this.state.wireframe);
-      console.log(this.state.wireframe);
     }
   );
 }
