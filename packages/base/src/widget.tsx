@@ -40,6 +40,8 @@ export class JupyterCadPanel extends ReactWidget {
    *
    * @param context - The documents context.
    */
+  private mainViewRef: React.RefObject<MainView>;
+
   constructor(options: {
     model: IJupyterCadModel;
     workerRegistry: IJCadWorkerRegistry;
@@ -52,6 +54,7 @@ export class JupyterCadPanel extends ReactWidget {
       workerRegistry: options.workerRegistry,
       viewSetting: this._view
     });
+    this.mainViewRef = React.createRef<MainView>();
   }
 
   get viewChanged(): ISignal<
@@ -113,8 +116,14 @@ export class JupyterCadPanel extends ReactWidget {
     this._view.delete('axes');
   }
 
+  handleToggleWireframe = () => {
+    if (this.mainViewRef.current) {
+      this.mainViewRef.current.toggleWireframe();
+    }
+  };
+
   render(): JSX.Element {
-    return <MainView viewModel={this._mainViewModel} />;
+    return (<MainView ref={this.mainViewRef} viewModel={this._mainViewModel} />);
   }
 
   private _mainViewModel: MainViewModel;
