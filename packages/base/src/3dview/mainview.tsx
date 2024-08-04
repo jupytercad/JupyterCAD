@@ -62,6 +62,7 @@ interface IStates {
   remoteUser?: User.IIdentity | null;
   annotations: IDict<IAnnotation>;
   firstLoad: boolean;
+  wireframe: boolean;
 }
 
 export class MainView extends React.Component<IProps, IStates> {
@@ -104,8 +105,14 @@ export class MainView extends React.Component<IProps, IStates> {
       lightTheme: isLightTheme(),
       loading: true,
       annotations: {},
-      firstLoad: true
+      firstLoad: true,
+      wireframe: false
     };
+    this.toggleWireframe = toggleWireframe.bind(this);
+  }
+
+  toggleWireframe() {
+    this.toggleWireframe();
   }
 
   componentDidMount(): void {
@@ -303,7 +310,8 @@ export class MainView extends React.Component<IProps, IStates> {
           color: 'black',
           opacity: 0.2,
           transparent: true,
-          side: THREE.DoubleSide
+          side: THREE.DoubleSide,
+          wireframe: this.state.wireframe
         })
       );
       this._clippingPlaneMeshControl.visible = false;
@@ -642,7 +650,8 @@ export class MainView extends React.Component<IProps, IStates> {
       stencilFail: THREE.ReplaceStencilOp,
       stencilZFail: THREE.ReplaceStencilOp,
       stencilZPass: THREE.ReplaceStencilOp,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
+      wireframe: this.state.wireframe
     });
     this._clippingPlaneMesh = new THREE.Mesh(planeGeom, planeMat);
     this._clippingPlaneMesh.onAfterRender = renderer => {
@@ -715,7 +724,8 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     const material = new THREE.MeshPhongMaterial({
-      color: DEFAULT_MESH_COLOR
+      color: DEFAULT_MESH_COLOR,
+      wireframe: this.state.wireframe
     });
     const mesh = new THREE.Mesh(obj, material);
 
@@ -827,7 +837,8 @@ export class MainView extends React.Component<IProps, IStates> {
             clientColor.g / 255,
             clientColor.b / 255
           )
-        : 'black'
+        : 'black',
+      wireframe: this.state.wireframe
     });
 
     return new THREE.Mesh(this._pointerGeometry, material);
@@ -1295,6 +1306,17 @@ export class MainView extends React.Component<IProps, IStates> {
     );
   }
 
+  public setWireframe(wireframe: boolean) {
+    this._scene.traverse(child => {
+      if (child instanceof THREE.Mesh) {
+        child.material.wireframe = wireframe;
+        child.material.needsUpdate = true;
+      }
+    });
+
+    this._renderer.render(this._scene, this._camera);
+  }
+
   private divRef = React.createRef<HTMLDivElement>(); // Reference of render div
 
   private _model: IJupyterCadModel;
@@ -1337,4 +1359,15 @@ export class MainView extends React.Component<IProps, IStates> {
   private _pointerGeometry: THREE.SphereGeometry;
   private _contextMenu: ContextMenu;
   private _loadingTimeout: ReturnType<typeof setTimeout> | null;
+}
+
+export function toggleWireframe(this: MainView) {
+  this.setState(
+    prevState => ({
+      wireframe: !prevState.wireframe
+    }),
+    () => {
+      this.setWireframe(this.state.wireframe);
+    }
+  );
 }

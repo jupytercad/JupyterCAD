@@ -131,6 +131,14 @@ export class ToolbarWidget extends Toolbar {
           commands: options.commands
         })
       );
+      this.addItem(
+        'Toggle Wireframe',
+        new CommandToolbarButton({
+          id: CommandIDs.wireframe,
+          label: '',
+          commands: options.commands
+        })
+      );
 
       this.addItem('separator3', new Separator());
 
