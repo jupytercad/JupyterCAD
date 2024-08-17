@@ -1058,7 +1058,7 @@ export class MainView extends React.Component<IProps, IStates> {
             const color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
             obj.material.color = color;
           } else {
-            obj.material.color = DEFAULT_MESH_COLOR;
+            obj.material.color = new THREE.Color(1,2,3);
           }
         }
       }
