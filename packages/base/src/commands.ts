@@ -703,6 +703,15 @@ export function addCommands(
   const { commands } = app;
   Private.updateFormSchema(formSchemaRegistry);
 
+  commands.addCommand(CommandIDs.toggleConsole, {
+    label: trans.__('Toggle console'),
+    isEnabled: () => {
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
+    },
+    execute: () => Private.toggleConsole(tracker)
+  });
   commands.addCommand(CommandIDs.executeConsole, {
     label: trans.__('Execute console'),
     isEnabled: () => {
@@ -712,6 +721,7 @@ export function addCommands(
     },
     execute: () => Private.executeConsole(tracker)
   });
+
   commands.addCommand(CommandIDs.redo, {
     label: trans.__('Redo'),
     isEnabled: () => {
@@ -1073,6 +1083,7 @@ export namespace CommandIDs {
 
   export const exportJcad = 'jupytercad:exportJcad';
 
+  export const toggleConsole = 'jupytercad:toggleConsole';
   export const executeConsole = 'jupytercad:executeConsole';
 }
 
@@ -1240,5 +1251,17 @@ namespace Private {
     }
     console.log('current widget', current.content);
     current.content.executeConsole();
+  }
+
+  export function toggleConsole(
+    tracker: WidgetTracker<JupyterCadWidget>
+  ): void {
+    const current = tracker.currentWidget;
+
+    if (!current) {
+      return;
+    }
+    console.log('current widget', current.content);
+    current.content.toggleConsole();
   }
 }

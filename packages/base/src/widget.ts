@@ -11,8 +11,8 @@ import { SplitPanel } from '@lumino/widgets';
 
 import { JupyterCadMainViewPanel } from './3dview';
 import { MainViewModel } from './3dview/mainviewmodel';
-import { AxeHelper, CameraSettings, ClipSettings, ExplodedView } from './types';
 import { ConsoleView } from './console';
+import { AxeHelper, CameraSettings, ClipSettings, ExplodedView } from './types';
 
 export class JupyterCadWidget
   extends DocumentWidget<JupyterCadPanel, IJupyterCadModel>
@@ -42,7 +42,8 @@ export class JupyterCadPanel extends SplitPanel {
     super({ orientation: 'vertical', spacing: 0 });
     const { model, workerRegistry, ...consoleOption } = options;
     this._initModel({ model, workerRegistry });
-    this._initView(consoleOption);
+    this._initView();
+    this._consoleOption = consoleOption;
   }
 
   _initModel(options: {
@@ -57,40 +58,12 @@ export class JupyterCadPanel extends SplitPanel {
     });
   }
 
-  _initView(consoleOption: Partial<ConsoleView.IOptions>) {
+  _initView() {
     this._jupyterCadMainViewPanel = new JupyterCadMainViewPanel({
       mainViewModel: this._mainViewModel
     });
     this.addWidget(this._jupyterCadMainViewPanel);
     SplitPanel.setStretch(this._jupyterCadMainViewPanel, 1);
-
-    const {
-      contentFactory,
-      manager,
-      mimeTypeService,
-      rendermime,
-      executor,
-      consoleTracker
-    } = consoleOption;
-    if (
-      contentFactory &&
-      manager &&
-      mimeTypeService &&
-      rendermime &&
-      executor &&
-      consoleTracker
-    ) {
-      this._consoleView = new ConsoleView({
-        contentFactory,
-        manager,
-        mimeTypeService,
-        rendermime,
-        executor,
-        consoleTracker
-      });
-      this.addWidget(this._consoleView);
-      SplitPanel.setStretch(this._consoleView, 1);
-    }
   }
 
   get jupyterCadMainViewPanel(): JupyterCadMainViewPanel {
@@ -110,6 +83,9 @@ export class JupyterCadPanel extends SplitPanel {
   dispose(): void {
     if (this.isDisposed) {
       return;
+    }
+    if (this._consoleView) {
+      this._consoleView.dispose();
     }
     Signal.clearData(this);
     this._mainViewModel.dispose();
@@ -157,13 +133,63 @@ export class JupyterCadPanel extends SplitPanel {
   }
 
   executeConsole() {
-    this._consoleView.execute();
+    if (this._consoleView) {
+      this._consoleView.execute();
+    }
+  }
+
+  toggleConsole() {
+    if (!this._consoleView) {
+      const {
+        contentFactory,
+        manager,
+        mimeTypeService,
+        rendermime,
+        executor,
+        consoleTracker
+      } = this._consoleOption;
+      if (
+        contentFactory &&
+        manager &&
+        mimeTypeService &&
+        rendermime &&
+        executor &&
+        consoleTracker
+      ) {
+        this._consoleView = new ConsoleView({
+          contentFactory,
+          manager,
+          mimeTypeService,
+          rendermime,
+          executor,
+          consoleTracker
+        });
+        this.addWidget(this._consoleView);
+        SplitPanel.setStretch(this._consoleView, 1);
+        this._consoleOpened = true;
+      }
+    } else {
+      console.log('ima here');
+      if (this._consoleOpened) {
+        this._consoleOpened = false;
+        this.setRelativeSizes([1, 0]);
+      } else {
+        this._consoleOpened = true;
+        // SplitPanel.setStretch(this._consoleView, 1);
+        this.setRelativeSizes([1, 1]);
+      }
+    }
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 250);
   }
 
   private _mainViewModel: MainViewModel;
   private _view: ObservableMap<JSONValue>;
   private _jupyterCadMainViewPanel: JupyterCadMainViewPanel;
-  private _consoleView: ConsoleView;
+  private _consoleView?: ConsoleView;
+  private _consoleOpened = false;
+  private _consoleOption: Partial<ConsoleView.IOptions>;
 }
 
 export namespace JupyterCadPanel {
