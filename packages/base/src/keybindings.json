@@ -13,5 +13,10 @@
     "command": "jupytercad:removeObject",
     "keys": ["Delete"],
     "selector": "body"
-  }
+  },
+  {
+    "command": "jupytercad:wireframe",
+    "keys": ["Accel Space"],
+    "selector": "body"
+  }  
 ]
