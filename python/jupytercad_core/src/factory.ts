@@ -65,7 +65,8 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
       contentFactory: this.options.contentFactory,
       mimeTypeService: this.options.mimeTypeService,
       rendermime: this.options.rendermime,
-      consoleTracker: this.options.consoleTracker
+      consoleTracker: this.options.consoleTracker,
+      commandRegistry: this.options.commands
     });
     const toolbar = new ToolbarWidget({
       commands: this._commands,

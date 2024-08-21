@@ -722,6 +722,15 @@ export function addCommands(
     },
     execute: () => Private.executeConsole(tracker)
   });
+  commands.addCommand(CommandIDs.removeConsole, {
+    label: trans.__('Remove console'),
+    isEnabled: () => {
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
+    },
+    execute: () => Private.removeConsole(tracker)
+  });
 
   commands.addCommand(CommandIDs.invokeCompleter, {
     label: trans.__('Display the completion helper.'),
@@ -1112,8 +1121,9 @@ export namespace CommandIDs {
   export const exportJcad = 'jupytercad:exportJcad';
 
   export const toggleConsole = 'jupytercad:toggleConsole';
-  export const executeConsole = 'jupytercad:executeConsole';
   export const invokeCompleter = 'jupytercad:invokeConsoleCompleter';
+  export const removeConsole = 'jupytercad:removeConsole';
+  export const executeConsole = 'jupytercad:executeConsole';
   export const selectCompleter = 'jupytercad:selectConsoleCompleter';
 }
 
@@ -1280,6 +1290,17 @@ namespace Private {
       return;
     }
     current.content.executeConsole();
+  }
+
+  export function removeConsole(
+    tracker: WidgetTracker<JupyterCadWidget>
+  ): void {
+    const current = tracker.currentWidget;
+
+    if (!current) {
+      return;
+    }
+    current.content.removeConsole();
   }
 
   export async function toggleConsole(

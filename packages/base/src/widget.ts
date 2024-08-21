@@ -144,22 +144,39 @@ export class JupyterCadPanel extends SplitPanel {
     }
   }
 
+  removeConsole() {
+    if (this._consoleView) {
+      this._consoleView.dispose();
+      this._consoleView = undefined;
+      this._consoleOpened = false;
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 250);
+    }
+  }
   async toggleConsole(jcadPath: string) {
     if (!this._consoleView) {
-      const { contentFactory, manager, mimeTypeService, rendermime } =
-        this._consoleOption;
+      const {
+        contentFactory,
+        manager,
+        mimeTypeService,
+        rendermime,
+        commandRegistry
+      } = this._consoleOption;
       if (
         contentFactory &&
         manager &&
         mimeTypeService &&
         rendermime &&
+        commandRegistry &&
         this._consoleTracker
       ) {
         this._consoleView = new ConsoleView({
           contentFactory,
           manager,
           mimeTypeService,
-          rendermime
+          rendermime,
+          commandRegistry
         });
         const { consolePanel } = this._consoleView;
 
@@ -171,6 +188,11 @@ export class JupyterCadPanel extends SplitPanel {
         this.addWidget(this._consoleView);
         this.setRelativeSizes([2, 1]);
         this._consoleOpened = true;
+        consolePanel.console.sessionContext.kernelChanged.connect((_, arg) => {
+          if (!arg.newValue) {
+            this.removeConsole();
+          }
+        });
       }
     } else {
       if (this._consoleOpened) {
