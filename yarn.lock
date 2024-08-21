@@ -932,6 +932,7 @@ __metadata:
     "@jupytercad/schema": ^2.0.2
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
+    "@jupyterlab/completer": ^4.2.4
     "@jupyterlab/console": ^4.2.4
     "@jupyterlab/coreutils": ^6.0.0
     "@jupyterlab/docregistry": ^4.0.0
@@ -1096,7 +1097,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-root@workspace:."
   dependencies:
-    "@jupyterlab/completer": ^4.2.4
     "@typescript-eslint/eslint-plugin": 5.55.0
     "@typescript-eslint/parser": 5.55.0
     copy-webpack-plugin: ^10.0.0
@@ -12276,7 +12276,7 @@ __metadata:
 
 "typescript@patch:typescript@>=3 < 6#~builtin<compat/typescript>, typescript@patch:typescript@^5#~builtin<compat/typescript>":
   version: 5.5.3
-  resolution: "typescript@patch:typescript@npm%3A5.5.3#~builtin<compat/typescript>::version=5.5.3&hash=85af82"
+  resolution: "typescript@patch:typescript@npm%3A5.5.3#~builtin<compat/typescript>::version=5.5.3&hash=e012d7"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver

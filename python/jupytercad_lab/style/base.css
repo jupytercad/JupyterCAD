@@ -417,3 +417,6 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
 .jpcad-console {
   border-top: var(--jp-border-width) solid var(--jp-toolbar-border-color);
 }
+.jpcad-console .jp-CodeConsole-banner {
+  display: none;
+}
