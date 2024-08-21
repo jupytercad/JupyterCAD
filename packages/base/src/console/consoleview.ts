@@ -4,10 +4,10 @@ import {
   IConsoleTracker
 } from '@jupyterlab/console';
 import { ServiceManager } from '@jupyterlab/services';
-import { BoxPanel } from '@lumino/widgets';
+import { BoxPanel, Widget } from '@lumino/widgets';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { IEditorMimeTypeService } from '@jupyterlab/codeeditor';
-import { Message } from '@lumino/messaging';
+import { debounce } from '../tools';
 
 export class ConsoleView extends BoxPanel {
   constructor(options: ConsoleView.IOptions) {
@@ -25,6 +25,7 @@ export class ConsoleView extends BoxPanel {
     this._consolePanel.console.node.dataset.jpInteractionMode = 'notebook';
     this.addWidget(this._consolePanel);
     BoxPanel.setStretch(this._consolePanel, 1);
+    (options.consoleTracker as any).add(this._consolePanel);
   }
   dispose(): void {
     if (this.isDisposed) {
@@ -36,10 +37,15 @@ export class ConsoleView extends BoxPanel {
   execute() {
     this._consolePanel.console.execute(true);
   }
-  processMessage(msg: Message): void {
-    console.log('received messs', msg);
+
+  protected onResize(msg: Widget.ResizeMessage): void {
+    super.onResize(msg);
+    this._resize();
   }
   private _consolePanel: ConsolePanel;
+  private _resize = debounce(() => {
+    window.dispatchEvent(new Event('resize'));
+  }, 200);
 }
 
 export namespace ConsoleView {

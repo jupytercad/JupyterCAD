@@ -12,7 +12,7 @@ import * as React from 'react';
 
 import { CommandIDs } from '../commands';
 import { UsersItem } from './usertoolbaritem';
-import { ConsoleSwitch } from './consoleswitcher';
+// import { ConsoleSwitch } from './consoleswitcher';
 
 export const TOOLBAR_SEPARATOR_CLASS = 'jcad-Toolbar-Separator';
 
@@ -213,7 +213,7 @@ export class ToolbarWidget extends Toolbar {
         );
       });
       this.addItem('separator6', new Separator());
-      this.addItem('consoleSwitch', ReactWidget.create(<ConsoleSwitch />));
+      // this.addItem('consoleSwitch', ReactWidget.create(<ConsoleSwitch />));
       this.addItem(
         'Toggle console',
         new CommandToolbarButton({
