@@ -15,7 +15,7 @@ import { JupyterFrontEnd } from '@jupyterlab/application';
 import { showErrorMessage, WidgetTracker } from '@jupyterlab/apputils';
 import { ITranslator } from '@jupyterlab/translation';
 import { redoIcon, undoIcon } from '@jupyterlab/ui-components';
-
+import { ICompletionProviderManager } from '@jupyterlab/completer';
 import { FormDialog } from './formdialog';
 import { SketcherDialog } from './sketcher/sketcherdialog';
 import {
@@ -696,7 +696,8 @@ export function addCommands(
   tracker: WidgetTracker<JupyterCadWidget>,
   translator: ITranslator,
   formSchemaRegistry: IJCadFormSchemaRegistry,
-  workerRegistry: IJCadWorkerRegistry
+  workerRegistry: IJCadWorkerRegistry,
+  completionProviderManager: ICompletionProviderManager | undefined
 ): void {
   workerRegistry.getWorker;
   const trans = translator.load('jupyterlab');
@@ -710,7 +711,7 @@ export function addCommands(
         ? tracker.currentWidget.context.model.sharedModel.editable
         : false;
     },
-    execute: () => Private.toggleConsole(tracker)
+    execute: async () => await Private.toggleConsole(tracker)
   });
   commands.addCommand(CommandIDs.executeConsole, {
     label: trans.__('Execute console'),
@@ -722,6 +723,33 @@ export function addCommands(
     execute: () => Private.executeConsole(tracker)
   });
 
+  commands.addCommand(CommandIDs.invokeCompleter, {
+    label: trans.__('Display the completion helper.'),
+    execute: () => {
+      const currentWidget = tracker.currentWidget;
+      if (!currentWidget || !completionProviderManager) {
+        return;
+      }
+      const id = currentWidget.content.consolePanel?.id;
+      if (id) {
+        return completionProviderManager.invoke(id);
+      }
+    }
+  });
+
+  commands.addCommand(CommandIDs.selectCompleter, {
+    label: trans.__('Select the completion suggestion.'),
+    execute: () => {
+      const currentWidget = tracker.currentWidget;
+      if (!currentWidget || !completionProviderManager) {
+        return;
+      }
+      const id = currentWidget.content.consolePanel?.id;
+      if (id) {
+        return completionProviderManager.select(id);
+      }
+    }
+  });
   commands.addCommand(CommandIDs.redo, {
     label: trans.__('Redo'),
     isEnabled: () => {
@@ -1085,6 +1113,8 @@ export namespace CommandIDs {
 
   export const toggleConsole = 'jupytercad:toggleConsole';
   export const executeConsole = 'jupytercad:executeConsole';
+  export const invokeCompleter = 'jupytercad:invokeConsoleCompleter';
+  export const selectCompleter = 'jupytercad:selectConsoleCompleter';
 }
 
 namespace Private {
@@ -1249,19 +1279,24 @@ namespace Private {
     if (!current) {
       return;
     }
-    console.log('current widget', current.content);
     current.content.executeConsole();
   }
 
-  export function toggleConsole(
+  export async function toggleConsole(
     tracker: WidgetTracker<JupyterCadWidget>
-  ): void {
+  ): Promise<void> {
     const current = tracker.currentWidget;
 
     if (!current) {
       return;
     }
-    console.log('current widget', current.content);
-    current.content.toggleConsole();
+    const currentPath = current.context.path.split(':');
+    let realPath = '';
+    if (currentPath.length > 1) {
+      realPath = currentPath[1];
+    } else {
+      realPath = currentPath[0];
+    }
+    await current.content.toggleConsole(realPath);
   }
 }

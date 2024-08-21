@@ -1,8 +1,4 @@
-import {
-  ConsolePanel,
-  IConsoleCellExecutor,
-  IConsoleTracker
-} from '@jupyterlab/console';
+import { ConsolePanel } from '@jupyterlab/console';
 import { ServiceManager } from '@jupyterlab/services';
 import { BoxPanel, Widget } from '@lumino/widgets';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
@@ -25,8 +21,12 @@ export class ConsoleView extends BoxPanel {
     this._consolePanel.console.node.dataset.jpInteractionMode = 'notebook';
     this.addWidget(this._consolePanel);
     BoxPanel.setStretch(this._consolePanel, 1);
-    (options.consoleTracker as any).add(this._consolePanel);
   }
+
+  get consolePanel() {
+    return this._consolePanel;
+  }
+
   dispose(): void {
     if (this.isDisposed) {
       return;
@@ -35,7 +35,7 @@ export class ConsoleView extends BoxPanel {
     super.dispose();
   }
   execute() {
-    this._consolePanel.console.execute(true);
+    this._consolePanel.console.execute(false);
   }
 
   protected onResize(msg: Widget.ResizeMessage): void {
@@ -54,7 +54,5 @@ export namespace ConsoleView {
     contentFactory: ConsolePanel.IContentFactory;
     mimeTypeService: IEditorMimeTypeService;
     rendermime: IRenderMimeRegistry;
-    executor: IConsoleCellExecutor;
-    consoleTracker: IConsoleTracker;
   }
 }

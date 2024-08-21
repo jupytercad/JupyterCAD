@@ -23,11 +23,7 @@ import {
   WidgetTracker
 } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
-import {
-  ConsolePanel,
-  IConsoleCellExecutor,
-  IConsoleTracker
-} from '@jupyterlab/console';
+import { ConsolePanel, IConsoleTracker } from '@jupyterlab/console';
 import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { ILauncher } from '@jupyterlab/launcher';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
@@ -54,13 +50,11 @@ const activate = (
   contentFactory: ConsolePanel.IContentFactory,
   editorServices: IEditorServices,
   rendermime: IRenderMimeRegistry,
-  executor: IConsoleCellExecutor,
   consoleTracker: IConsoleTracker,
   launcher: ILauncher | null,
   palette: ICommandPalette | null,
   drive: ICollaborativeDrive | null
 ): void => {
-  console.log('xxxxxxxxx', consoleTracker);
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-jcadmodel',
@@ -74,7 +68,6 @@ const activate = (
     contentFactory,
     rendermime,
     mimeTypeService: editorServices.mimeTypeService,
-    executor,
     consoleTracker
   });
   // Registering the widget factory
@@ -181,7 +174,6 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     ConsolePanel.IContentFactory,
     IEditorServices,
     IRenderMimeRegistry,
-    IConsoleCellExecutor,
     IConsoleTracker
   ],
   optional: [ILauncher, ICommandPalette, ICollaborativeDrive],

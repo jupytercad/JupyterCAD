@@ -1,8 +1,4 @@
-import {
-  ConsolePanel,
-  IConsoleCellExecutor,
-  IConsoleTracker
-} from '@jupyterlab/console';
+import { ConsolePanel, IConsoleTracker } from '@jupyterlab/console';
 import {
   JupyterCadModel,
   IJupyterCadTracker,
@@ -29,7 +25,6 @@ interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
   contentFactory?: ConsolePanel.IContentFactory;
   mimeTypeService?: IEditorMimeTypeService;
   rendermime?: IRenderMimeRegistry;
-  executor?: IConsoleCellExecutor;
   consoleTracker?: IConsoleTracker;
   backendCheck?: () => boolean;
 }
@@ -70,7 +65,6 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
       contentFactory: this.options.contentFactory,
       mimeTypeService: this.options.mimeTypeService,
       rendermime: this.options.rendermime,
-      executor: this.options.executor,
       consoleTracker: this.options.consoleTracker
     });
     const toolbar = new ToolbarWidget({

@@ -3,6 +3,7 @@ import {
   IJupyterCadModel,
   IJupyterCadWidget
 } from '@jupytercad/schema';
+import { ConsolePanel, IConsoleTracker } from '@jupyterlab/console';
 import { DocumentWidget } from '@jupyterlab/docregistry';
 import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { JSONValue } from '@lumino/coreutils';
@@ -40,10 +41,11 @@ export class JupyterCadWidget
 export class JupyterCadPanel extends SplitPanel {
   constructor(options: JupyterCadPanel.IOptions) {
     super({ orientation: 'vertical', spacing: 0 });
-    const { model, workerRegistry, ...consoleOption } = options;
+    const { model, workerRegistry, consoleTracker, ...consoleOption } = options;
     this._initModel({ model, workerRegistry });
     this._initView();
     this._consoleOption = consoleOption;
+    this._consoleTracker = consoleTracker;
   }
 
   _initModel(options: {
@@ -128,6 +130,10 @@ export class JupyterCadPanel extends SplitPanel {
     this._view.set('clipView', value || null);
   }
 
+  get consolePanel(): ConsolePanel | undefined {
+    return this._consoleView?.consolePanel;
+  }
+
   deleteAxes(): void {
     this._view.delete('axes');
   }
@@ -138,45 +144,41 @@ export class JupyterCadPanel extends SplitPanel {
     }
   }
 
-  toggleConsole() {
+  async toggleConsole(jcadPath: string) {
     if (!this._consoleView) {
-      const {
-        contentFactory,
-        manager,
-        mimeTypeService,
-        rendermime,
-        executor,
-        consoleTracker
-      } = this._consoleOption;
+      const { contentFactory, manager, mimeTypeService, rendermime } =
+        this._consoleOption;
       if (
         contentFactory &&
         manager &&
         mimeTypeService &&
         rendermime &&
-        executor &&
-        consoleTracker
+        this._consoleTracker
       ) {
         this._consoleView = new ConsoleView({
           contentFactory,
           manager,
           mimeTypeService,
-          rendermime,
-          executor,
-          consoleTracker
+          rendermime
         });
+        const { consolePanel } = this._consoleView;
+
+        (this._consoleTracker.widgetAdded as any).emit(consolePanel);
+        await consolePanel.sessionContext.ready;
+        await consolePanel.console.inject(
+          `from jupytercad_lab import CadDocument\ndoc = CadDocument("${jcadPath}")`
+        );
         this.addWidget(this._consoleView);
-        SplitPanel.setStretch(this._consoleView, 1);
+        this.setRelativeSizes([2, 1]);
         this._consoleOpened = true;
       }
     } else {
-      console.log('ima here');
       if (this._consoleOpened) {
         this._consoleOpened = false;
         this.setRelativeSizes([1, 0]);
       } else {
         this._consoleOpened = true;
-        // SplitPanel.setStretch(this._consoleView, 1);
-        this.setRelativeSizes([1, 1]);
+        this.setRelativeSizes([2, 1]);
       }
     }
     setTimeout(() => {
@@ -190,11 +192,13 @@ export class JupyterCadPanel extends SplitPanel {
   private _consoleView?: ConsoleView;
   private _consoleOpened = false;
   private _consoleOption: Partial<ConsoleView.IOptions>;
+  private _consoleTracker: IConsoleTracker | undefined;
 }
 
 export namespace JupyterCadPanel {
   export interface IOptions extends Partial<ConsoleView.IOptions> {
     model: IJupyterCadModel;
     workerRegistry: IJCadWorkerRegistry;
+    consoleTracker?: IConsoleTracker;
   }
 }
