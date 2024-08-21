@@ -702,6 +702,7 @@ export function addCommands(
   workerRegistry.getWorker;
   const trans = translator.load('jupyterlab');
   const { commands } = app;
+  let activeCommand: string | null = null;
   Private.updateFormSchema(formSchemaRegistry);
   commands.addCommand(CommandIDs.redo, {
     label: trans.__('Redo'),
@@ -892,9 +893,10 @@ export function addCommands(
   commands.addCommand(CommandIDs.wireframe, {
     label: trans.__('Toggle Wireframe'),
     isEnabled: () => {
-      return tracker.currentWidget !== null;
+      return tracker.currentWidget !== null && activeCommand !== 'updateClipView';
     },
     execute: async () => {
+      activeCommand = 'wireframe';
       const current = tracker.currentWidget?.content;
       current?.handleToggleWireframe();
 
@@ -998,9 +1000,12 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.updateClipView, {
     label: trans.__('Clipping'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return Boolean(tracker.currentWidget) && (activeCommand !== 'wireframe');
+    },
     icon: clippingIcon,
     execute: async () => {
+      activeCommand = 'updateClipView';
       const current = tracker.currentWidget;
 
       if (!current) {
