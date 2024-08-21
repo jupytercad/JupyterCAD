@@ -25,7 +25,6 @@ export class ConsoleView extends BoxPanel {
       rendermime: clonedRendermime,
       kernelPreference: { name: 'python3', shutdownOnDispose: true }
     });
-    this._consolePanel.console.addBanner;
     this._consolePanel.console.node.dataset.jpInteractionMode = 'notebook';
     this.addWidget(this._consolePanel);
     BoxPanel.setStretch(this._consolePanel, 1);

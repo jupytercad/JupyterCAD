@@ -13,7 +13,6 @@ import * as React from 'react';
 
 import { CommandIDs } from '../commands';
 import { UsersItem } from './usertoolbaritem';
-// import { ConsoleSwitch } from './consoleswitcher';
 
 export const TOOLBAR_SEPARATOR_CLASS = 'jcad-Toolbar-Separator';
 
