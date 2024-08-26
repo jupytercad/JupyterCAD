@@ -15,7 +15,7 @@ import { JupyterFrontEnd } from '@jupyterlab/application';
 import { showErrorMessage, WidgetTracker } from '@jupyterlab/apputils';
 import { ITranslator } from '@jupyterlab/translation';
 import { redoIcon, undoIcon } from '@jupyterlab/ui-components';
-
+import { ICompletionProviderManager } from '@jupyterlab/completer';
 import { FormDialog } from './formdialog';
 import { SketcherDialog } from './sketcher/sketcherdialog';
 import {
@@ -696,12 +696,69 @@ export function addCommands(
   tracker: WidgetTracker<JupyterCadWidget>,
   translator: ITranslator,
   formSchemaRegistry: IJCadFormSchemaRegistry,
-  workerRegistry: IJCadWorkerRegistry
+  workerRegistry: IJCadWorkerRegistry,
+  completionProviderManager: ICompletionProviderManager | undefined
 ): void {
   workerRegistry.getWorker;
   const trans = translator.load('jupyterlab');
   const { commands } = app;
   Private.updateFormSchema(formSchemaRegistry);
+
+  commands.addCommand(CommandIDs.toggleConsole, {
+    label: trans.__('Toggle console'),
+    isEnabled: () => {
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
+    },
+    execute: async () => await Private.toggleConsole(tracker)
+  });
+  commands.addCommand(CommandIDs.executeConsole, {
+    label: trans.__('Execute console'),
+    isEnabled: () => {
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
+    },
+    execute: () => Private.executeConsole(tracker)
+  });
+  commands.addCommand(CommandIDs.removeConsole, {
+    label: trans.__('Remove console'),
+    isEnabled: () => {
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
+    },
+    execute: () => Private.removeConsole(tracker)
+  });
+
+  commands.addCommand(CommandIDs.invokeCompleter, {
+    label: trans.__('Display the completion helper.'),
+    execute: () => {
+      const currentWidget = tracker.currentWidget;
+      if (!currentWidget || !completionProviderManager) {
+        return;
+      }
+      const id = currentWidget.content.consolePanel?.id;
+      if (id) {
+        return completionProviderManager.invoke(id);
+      }
+    }
+  });
+
+  commands.addCommand(CommandIDs.selectCompleter, {
+    label: trans.__('Select the completion suggestion.'),
+    execute: () => {
+      const currentWidget = tracker.currentWidget;
+      if (!currentWidget || !completionProviderManager) {
+        return;
+      }
+      const id = currentWidget.content.consolePanel?.id;
+      if (id) {
+        return completionProviderManager.select(id);
+      }
+    }
+  });
   commands.addCommand(CommandIDs.redo, {
     label: trans.__('Redo'),
     isEnabled: () => {
@@ -1062,6 +1119,12 @@ export namespace CommandIDs {
   export const updateClipView = 'jupytercad:updateClipView';
 
   export const exportJcad = 'jupytercad:exportJcad';
+
+  export const toggleConsole = 'jupytercad:toggleConsole';
+  export const invokeCompleter = 'jupytercad:invokeConsoleCompleter';
+  export const removeConsole = 'jupytercad:removeConsole';
+  export const executeConsole = 'jupytercad:executeConsole';
+  export const selectCompleter = 'jupytercad:selectConsoleCompleter';
 }
 
 namespace Private {
@@ -1216,5 +1279,45 @@ namespace Private {
       });
       await dialog.launch();
     };
+  }
+
+  export function executeConsole(
+    tracker: WidgetTracker<JupyterCadWidget>
+  ): void {
+    const current = tracker.currentWidget;
+
+    if (!current) {
+      return;
+    }
+    current.content.executeConsole();
+  }
+
+  export function removeConsole(
+    tracker: WidgetTracker<JupyterCadWidget>
+  ): void {
+    const current = tracker.currentWidget;
+
+    if (!current) {
+      return;
+    }
+    current.content.removeConsole();
+  }
+
+  export async function toggleConsole(
+    tracker: WidgetTracker<JupyterCadWidget>
+  ): Promise<void> {
+    const current = tracker.currentWidget;
+
+    if (!current) {
+      return;
+    }
+    const currentPath = current.context.path.split(':');
+    let realPath = '';
+    if (currentPath.length > 1) {
+      realPath = currentPath[1];
+    } else {
+      realPath = currentPath[0];
+    }
+    await current.content.toggleConsole(realPath);
   }
 }

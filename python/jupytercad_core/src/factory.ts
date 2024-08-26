@@ -1,3 +1,4 @@
+import { ConsolePanel, IConsoleTracker } from '@jupyterlab/console';
 import {
   JupyterCadModel,
   IJupyterCadTracker,
@@ -6,18 +7,25 @@ import {
 } from '@jupytercad/schema';
 import { ABCWidgetFactory, DocumentRegistry } from '@jupyterlab/docregistry';
 import { CommandRegistry } from '@lumino/commands';
-
+import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
+import { IEditorMimeTypeService } from '@jupyterlab/codeeditor';
 import {
   JupyterCadPanel,
   JupyterCadWidget,
   ToolbarWidget
 } from '@jupytercad/base';
+import { ServiceManager } from '@jupyterlab/services';
 
 interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
   tracker: IJupyterCadTracker;
   commands: CommandRegistry;
   workerRegistry: IJCadWorkerRegistry;
   externalCommandRegistry: IJCadExternalCommandRegistry;
+  manager?: ServiceManager.IManager;
+  contentFactory?: ConsolePanel.IContentFactory;
+  mimeTypeService?: IEditorMimeTypeService;
+  rendermime?: IRenderMimeRegistry;
+  consoleTracker?: IConsoleTracker;
   backendCheck?: () => boolean;
 }
 
@@ -25,7 +33,7 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
   JupyterCadWidget,
   JupyterCadModel
 > {
-  constructor(options: IOptions) {
+  constructor(private options: IOptions) {
     const { backendCheck, externalCommandRegistry, ...rest } = options;
     super(rest);
     this._backendCheck = backendCheck;
@@ -52,7 +60,13 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
     const { model } = context;
     const content = new JupyterCadPanel({
       model,
-      workerRegistry: this._workerRegistry
+      workerRegistry: this._workerRegistry,
+      manager: this.options.manager,
+      contentFactory: this.options.contentFactory,
+      mimeTypeService: this.options.mimeTypeService,
+      rendermime: this.options.rendermime,
+      consoleTracker: this.options.consoleTracker,
+      commandRegistry: this.options.commands
     });
     const toolbar = new ToolbarWidget({
       commands: this._commands,

@@ -22,6 +22,7 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
+import { ICompletionProviderManager } from '@jupyterlab/completer';
 import { WidgetTracker } from '@jupyterlab/apputils';
 import { IMainMenu } from '@jupyterlab/mainmenu';
 import { ITranslator, nullTranslator } from '@jupyterlab/translation';
@@ -38,14 +39,15 @@ const plugin: JupyterFrontEndPlugin<void> = {
     IJCadFormSchemaRegistryToken,
     IJCadWorkerRegistryToken
   ],
-  optional: [IMainMenu, ITranslator],
+  optional: [IMainMenu, ITranslator, ICompletionProviderManager],
   activate: (
     app: JupyterFrontEnd,
     tracker: WidgetTracker<JupyterCadWidget>,
     formSchemaRegistry: IJCadFormSchemaRegistry,
     workerRegistry: IJCadWorkerRegistry,
     mainMenu?: IMainMenu,
-    translator?: ITranslator
+    translator?: ITranslator,
+    completionProviderManager?: ICompletionProviderManager
   ): void => {
     console.log('jupytercad:lab:main-menu is activated!');
     translator = translator ?? nullTranslator;
@@ -56,7 +58,14 @@ const plugin: JupyterFrontEndPlugin<void> = {
       );
     };
 
-    addCommands(app, tracker, translator, formSchemaRegistry, workerRegistry);
+    addCommands(
+      app,
+      tracker,
+      translator,
+      formSchemaRegistry,
+      workerRegistry,
+      completionProviderManager
+    );
     if (mainMenu) {
       populateMenus(mainMenu, isEnabled);
     }
