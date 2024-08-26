@@ -18,5 +18,20 @@
     "command": "jupytercad:wireframe",
     "keys": ["Accel Space"],
     "selector": "body"
+  },
+  {
+    "command": "jupytercad:executeConsole",
+    "keys": ["Shift Enter"],
+    "selector": ".jpcad-console .jp-CodeConsole[data-jp-interaction-mode='notebook'] .jp-CodeConsole-promptCell"
+  },
+  {
+    "command": "jupytercad:invokeConsoleCompleter",
+    "keys": ["Tab"],
+    "selector": ".jpcad-console .jp-CodeConsole-promptCell .jp-mod-completer-enabled"
+  },
+  {
+    "command": "jupytercad:selectConsoleCompleter",
+    "keys": ["Enter"],
+    "selector": ".jpcad-console .jp-ConsolePanel .jp-mod-completer-active"
   }
 ]
