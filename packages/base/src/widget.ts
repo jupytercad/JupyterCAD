@@ -10,6 +10,7 @@ import { JSONValue } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import { SplitPanel } from '@lumino/widgets';
 
+import { MainView } from './3dview';
 import { JupyterCadMainViewPanel } from './3dview';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { ConsoleView } from './console';
@@ -39,6 +40,7 @@ export class JupyterCadWidget
 }
 
 export class JupyterCadPanel extends SplitPanel {
+  private mainViewRef: React.RefObject<MainView>;
   constructor(options: JupyterCadPanel.IOptions) {
     super({ orientation: 'vertical', spacing: 0 });
     const { model, workerRegistry, consoleTracker, ...consoleOption } = options;
@@ -137,6 +139,12 @@ export class JupyterCadPanel extends SplitPanel {
   deleteAxes(): void {
     this._view.delete('axes');
   }
+
+  handleToggleWireframe = () => {
+    if (this.mainViewRef.current) {
+      this.mainViewRef.current.toggleWireframe();
+    }
+  };
 
   executeConsole() {
     if (this._consoleView) {

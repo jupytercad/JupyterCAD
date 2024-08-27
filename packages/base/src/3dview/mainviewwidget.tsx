@@ -10,6 +10,7 @@ export class JupyterCadMainViewPanel extends ReactWidget {
    *
    * @param context - The documents context.
    */
+  private mainViewRef: React.RefObject<MainView>;
   constructor(options: { mainViewModel: MainViewModel }) {
     super();
     this._mainViewModel = options.mainViewModel;
@@ -17,7 +18,7 @@ export class JupyterCadMainViewPanel extends ReactWidget {
   }
 
   render(): JSX.Element {
-    return <MainView viewModel={this._mainViewModel} />;
+    return <MainView ref={this.mainViewRef} viewModel={this._mainViewModel} />;
   }
 
   private _mainViewModel: MainViewModel;
