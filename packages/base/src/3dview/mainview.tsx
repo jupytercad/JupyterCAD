@@ -1308,7 +1308,7 @@ export class MainView extends React.Component<IProps, IStates> {
     );
   }
 
-  public setWireframe(wireframe: boolean) {
+  setWireframe(wireframe: boolean) {
     this._scene.traverse(child => {
       if (child instanceof THREE.Mesh) {
         child.material.wireframe = wireframe;
