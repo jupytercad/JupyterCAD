@@ -949,9 +949,7 @@ export function addCommands(
   commands.addCommand(CommandIDs.wireframe, {
     label: trans.__('Toggle Wireframe'),
     isEnabled: () => {
-      return (
-        tracker.currentWidget !== null
-      );
+      return tracker.currentWidget !== null;
     },
     execute: async () => {
       const current = tracker.currentWidget?.content;
@@ -1058,7 +1056,7 @@ export function addCommands(
   commands.addCommand(CommandIDs.updateClipView, {
     label: trans.__('Clipping'),
     isEnabled: () => {
-      return Boolean(tracker.currentWidget)
+      return Boolean(tracker.currentWidget);
     },
     icon: clippingIcon,
     execute: async () => {
