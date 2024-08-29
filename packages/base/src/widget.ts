@@ -143,7 +143,9 @@ export class JupyterCadPanel extends SplitPanel {
 
   set wireframe(value: boolean) {
     if (this.clipView?.enabled === true) {
-      console.warn('Cannot toggle Wireframe view while Clip Plane is enabled. Please disable the Clip Plane first.');
+      console.warn(
+        'Cannot toggle Wireframe view while Clip Plane is enabled. Please disable the Clip Plane first.'
+      );
       return;
     }
     this._view.set('wireframe', value);
