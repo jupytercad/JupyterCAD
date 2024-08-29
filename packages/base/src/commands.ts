@@ -703,7 +703,6 @@ export function addCommands(
   workerRegistry.getWorker;
   const trans = translator.load('jupyterlab');
   const { commands } = app;
-  let activeCommand: string | null = null;
   Private.updateFormSchema(formSchemaRegistry);
 
   commands.addCommand(CommandIDs.toggleConsole, {
@@ -951,11 +950,10 @@ export function addCommands(
     label: trans.__('Toggle Wireframe'),
     isEnabled: () => {
       return (
-        tracker.currentWidget !== null && activeCommand !== 'updateClipView'
+        tracker.currentWidget !== null
       );
     },
     execute: async () => {
-      activeCommand = 'wireframe';
       const current = tracker.currentWidget?.content;
 
       if (!current) {
@@ -1060,11 +1058,10 @@ export function addCommands(
   commands.addCommand(CommandIDs.updateClipView, {
     label: trans.__('Clipping'),
     isEnabled: () => {
-      return Boolean(tracker.currentWidget) && activeCommand !== 'wireframe';
+      return Boolean(tracker.currentWidget)
     },
     icon: clippingIcon,
     execute: async () => {
-      activeCommand = 'updateClipView';
       const current = tracker.currentWidget;
 
       if (!current) {
