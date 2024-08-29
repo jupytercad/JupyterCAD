@@ -957,11 +957,11 @@ export function addCommands(
     execute: async () => {
       activeCommand = 'wireframe';
       const current = tracker.currentWidget?.content;
-      current?.handleToggleWireframe();
-
+  
       if (!current) {
         return;
       }
+      current.wireframe = !current.wireframe;
     },
     icon: wireframeIcon
   });

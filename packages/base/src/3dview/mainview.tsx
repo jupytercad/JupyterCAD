@@ -108,7 +108,6 @@ export class MainView extends React.Component<IProps, IStates> {
       firstLoad: true,
       wireframe: false
     };
-    // this.toggleWireframe = this.toggleWireframe.bind(this);
   }
 
   componentDidMount(): void {
