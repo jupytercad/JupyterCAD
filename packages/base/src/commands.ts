@@ -957,7 +957,7 @@ export function addCommands(
     execute: async () => {
       activeCommand = 'wireframe';
       const current = tracker.currentWidget?.content;
-  
+
       if (!current) {
         return;
       }
