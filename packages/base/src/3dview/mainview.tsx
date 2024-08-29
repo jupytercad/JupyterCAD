@@ -108,11 +108,7 @@ export class MainView extends React.Component<IProps, IStates> {
       firstLoad: true,
       wireframe: false
     };
-    this.toggleWireframe = toggleWireframe.bind(this);
-  }
-
-  toggleWireframe() {
-    this.toggleWireframe();
+    // this.toggleWireframe = this.toggleWireframe.bind(this);
   }
 
   componentDidMount(): void {
@@ -1121,6 +1117,26 @@ export class MainView extends React.Component<IProps, IStates> {
         this._updateClipping();
       }
     }
+
+    if (change.key === 'wireframe') {
+      const wireframeEnabled = change.newValue as boolean | undefined;
+  
+      if (wireframeEnabled !== undefined) {
+        this.setState(
+          { wireframe: wireframeEnabled },
+          () => {
+            this._scene.traverse((child) => {
+              if (child instanceof THREE.Mesh) {
+                child.material.wireframe = wireframeEnabled;
+                child.material.needsUpdate = true;
+              }
+            });
+  
+            this._renderer.render(this._scene, this._camera);
+          }
+        );
+      }
+    }
   }
 
   private _setupExplodedView() {
@@ -1308,17 +1324,6 @@ export class MainView extends React.Component<IProps, IStates> {
     );
   }
 
-  setWireframe(wireframe: boolean) {
-    this._scene.traverse(child => {
-      if (child instanceof THREE.Mesh) {
-        child.material.wireframe = wireframe;
-        child.material.needsUpdate = true;
-      }
-    });
-
-    this._renderer.render(this._scene, this._camera);
-  }
-
   private divRef = React.createRef<HTMLDivElement>(); // Reference of render div
 
   private _model: IJupyterCadModel;
@@ -1361,15 +1366,4 @@ export class MainView extends React.Component<IProps, IStates> {
   private _pointerGeometry: THREE.SphereGeometry;
   private _contextMenu: ContextMenu;
   private _loadingTimeout: ReturnType<typeof setTimeout> | null;
-}
-
-export function toggleWireframe(this: MainView) {
-  this.setState(
-    prevState => ({
-      wireframe: !prevState.wireframe
-    }),
-    () => {
-      this.setWireframe(this.state.wireframe);
-    }
-  );
 }
