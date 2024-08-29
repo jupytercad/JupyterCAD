@@ -1108,6 +1108,10 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     if (change.key === 'clipView') {
+      if (this.state.wireframe === true) {
+        console.warn('Cannot enable Clip Plane while Wireframe view is active. Please disable Wireframe view first.');
+        return;
+      }
       const clipSettings = change.newValue as ClipSettings | undefined;
 
       if (change.type !== 'remove' && clipSettings) {
