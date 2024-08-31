@@ -307,8 +307,7 @@ export class MainView extends React.Component<IProps, IStates> {
           color: 'black',
           opacity: 0.2,
           transparent: true,
-          side: THREE.DoubleSide,
-          wireframe: this.state.wireframe
+          side: THREE.DoubleSide
         })
       );
       this._clippingPlaneMeshControl.visible = false;
@@ -834,8 +833,7 @@ export class MainView extends React.Component<IProps, IStates> {
             clientColor.g / 255,
             clientColor.b / 255
           )
-        : 'black',
-      wireframe: this.state.wireframe
+        : 'black'
     });
 
     return new THREE.Mesh(this._pointerGeometry, material);
@@ -1108,12 +1106,6 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     if (change.key === 'clipView') {
-      if (this.state.wireframe === true) {
-        console.warn(
-          'Cannot enable Clip Plane while Wireframe view is active. Please disable Wireframe view first.'
-        );
-        return;
-      }
       const clipSettings = change.newValue as ClipSettings | undefined;
 
       if (change.type !== 'remove' && clipSettings) {
