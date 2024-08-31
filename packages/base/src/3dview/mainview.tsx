@@ -1120,7 +1120,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
       if (wireframeEnabled !== undefined) {
         this.setState({ wireframe: wireframeEnabled }, () => {
-          this._scene.traverse(child => {
+          // @ts-ignore
+          this._meshGroup.traverse(child => {
             if (child instanceof THREE.Mesh) {
               child.material.wireframe = wireframeEnabled;
               child.material.needsUpdate = true;
