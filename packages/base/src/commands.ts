@@ -33,7 +33,8 @@ import {
   unionIcon,
   clippingIcon,
   chamferIcon,
-  filletIcon
+  filletIcon,
+  wireframeIcon
 } from './tools';
 import keybindings from './keybindings.json';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
@@ -945,6 +946,22 @@ export function addCommands(
     execute: Private.executeOperator('intersection', tracker)
   });
 
+  commands.addCommand(CommandIDs.wireframe, {
+    label: trans.__('Toggle Wireframe'),
+    isEnabled: () => {
+      return tracker.currentWidget !== null;
+    },
+    execute: async () => {
+      const current = tracker.currentWidget?.content;
+
+      if (!current) {
+        return;
+      }
+      current.wireframe = !current.wireframe;
+    },
+    icon: wireframeIcon
+  });
+
   commands.addCommand(CommandIDs.chamfer, {
     label: trans.__('Make chamfer'),
     isEnabled: () => {
@@ -1038,7 +1055,9 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.updateClipView, {
     label: trans.__('Clipping'),
-    isEnabled: () => Boolean(tracker.currentWidget),
+    isEnabled: () => {
+      return Boolean(tracker.currentWidget);
+    },
     icon: clippingIcon,
     execute: async () => {
       const current = tracker.currentWidget;
@@ -1109,6 +1128,7 @@ export namespace CommandIDs {
   export const extrusion = 'jupytercad:extrusion';
   export const union = 'jupytercad:union';
   export const intersection = 'jupytercad:intersection';
+  export const wireframe = 'jupytercad:wireframe';
 
   export const chamfer = 'jupytercad:chamfer';
   export const fillet = 'jupytercad:fillet';

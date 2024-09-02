@@ -15,6 +15,11 @@
     "selector": "body"
   },
   {
+    "command": "jupytercad:wireframe",
+    "keys": ["Accel Space"],
+    "selector": "body"
+  },
+  {
     "command": "jupytercad:executeConsole",
     "keys": ["Shift Enter"],
     "selector": ".jpcad-console .jp-CodeConsole[data-jp-interaction-mode='notebook'] .jp-CodeConsole-promptCell"

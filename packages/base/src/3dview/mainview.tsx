@@ -62,6 +62,7 @@ interface IStates {
   remoteUser?: User.IIdentity | null;
   annotations: IDict<IAnnotation>;
   firstLoad: boolean;
+  wireframe: boolean;
 }
 
 export class MainView extends React.Component<IProps, IStates> {
@@ -104,7 +105,8 @@ export class MainView extends React.Component<IProps, IStates> {
       lightTheme: isLightTheme(),
       loading: true,
       annotations: {},
-      firstLoad: true
+      firstLoad: true,
+      wireframe: false
     };
   }
 
@@ -644,7 +646,8 @@ export class MainView extends React.Component<IProps, IStates> {
       stencilFail: THREE.ReplaceStencilOp,
       stencilZFail: THREE.ReplaceStencilOp,
       stencilZPass: THREE.ReplaceStencilOp,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
+      wireframe: this.state.wireframe
     });
     this._clippingPlaneMesh = new THREE.Mesh(planeGeom, planeMat);
     this._clippingPlaneMesh.onAfterRender = renderer => {
@@ -717,7 +720,8 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     const material = new THREE.MeshPhongMaterial({
-      color: DEFAULT_MESH_COLOR
+      color: DEFAULT_MESH_COLOR,
+      wireframe: this.state.wireframe
     });
     const mesh = new THREE.Mesh(obj, material);
 
@@ -1108,6 +1112,27 @@ export class MainView extends React.Component<IProps, IStates> {
         this._clipSettings = clipSettings;
 
         this._updateClipping();
+      }
+    }
+
+    if (change.key === 'wireframe') {
+      const wireframeEnabled = change.newValue as boolean | undefined;
+
+      if (wireframeEnabled !== undefined) {
+        this.setState(
+          old => ({ ...old, wireframe: wireframeEnabled }),
+          () => {
+            if (this._meshGroup) {
+              this._meshGroup.traverse(child => {
+                if (child instanceof THREE.Mesh) {
+                  child.material.wireframe = wireframeEnabled;
+                  child.material.needsUpdate = true;
+                }
+              });
+              this._renderer.render(this._scene, this._camera);
+            }
+          }
+        );
       }
     }
   }
