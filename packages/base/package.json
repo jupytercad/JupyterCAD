@@ -42,6 +42,8 @@
     "@jupytercad/schema": "^2.0.2",
     "@jupyterlab/application": "^4.0.0",
     "@jupyterlab/apputils": "^4.0.0",
+    "@jupyterlab/completer": "^4.2.4",
+    "@jupyterlab/console": "^4.2.4",
     "@jupyterlab/coreutils": "^6.0.0",
     "@jupyterlab/docregistry": "^4.0.0",
     "@jupyterlab/filebrowser": "^4.0.0",

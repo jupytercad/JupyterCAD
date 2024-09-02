@@ -357,4 +357,28 @@ test.describe('UI Test', () => {
       });
     });
   });
+
+  test.describe('Console activation test', () => {
+    test('should open console', async ({ page }) => {
+      await page.goto();
+      await page
+        .getByLabel('notebook content')
+        .getByText('New JCAD File')
+        .click();
+      await page.getByRole('button', { name: 'Toggle console' }).click();
+      await page.getByRole('button', { name: 'Remove console' });
+      await page.getByRole('textbox').nth(1).click();
+      await page.getByRole('textbox').nth(1).fill('doc.add_box()');
+      await page.waitForTimeout(1000);
+      await page.keyboard.press('Shift+Enter');
+      await page.waitForTimeout(1000);
+      const main = await page.locator('#jp-main-dock-panel');
+
+      if (main) {
+        expect(await main.screenshot()).toMatchSnapshot({
+          name: `JCAD-Console.png`
+        });
+      }
+    });
+  });
 });
