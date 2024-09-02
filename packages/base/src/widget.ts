@@ -9,7 +9,6 @@ import { IObservableMap, ObservableMap } from '@jupyterlab/observables';
 import { JSONValue } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import { SplitPanel } from '@lumino/widgets';
-
 import { JupyterCadMainViewPanel } from './3dview';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { ConsoleView } from './console';
@@ -136,6 +135,14 @@ export class JupyterCadPanel extends SplitPanel {
 
   deleteAxes(): void {
     this._view.delete('axes');
+  }
+
+  get wireframe(): boolean {
+    return this._view.get('wireframe') as boolean;
+  }
+
+  set wireframe(value: boolean) {
+    this._view.set('wireframe', value);
   }
 
   executeConsole() {
