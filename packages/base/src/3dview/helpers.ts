@@ -120,7 +120,15 @@ export function buildShape(options: {
   mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>;
   edgesMeshes: LineSegments2[];
 } | null {
-  const { objName, data, guidata, isSolid, clippingPlanes, selected, objColor } = options;
+  const {
+    objName,
+    data,
+    guidata,
+    isSolid,
+    clippingPlanes,
+    selected,
+    objColor
+  } = options;
   const { faceList, edgeList, jcObject } = data;
 
   const vertices: Array<number> = [];
@@ -150,7 +158,7 @@ export function buildShape(options: {
   }
 
   let color = objColor || DEFAULT_MESH_COLOR;
-  console.log(color)
+  console.log(color);
   let visible = jcObject.visible;
   if (guidata && guidata[objName]) {
     const objdata = guidata[objName];
