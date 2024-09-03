@@ -590,6 +590,7 @@ export class MainView extends React.Component<IProps, IStates> {
     Object.entries(payload).forEach(([objName, data]) => {
       const selected = selectedNames.includes(objName);
       const obj = this._model.sharedModel.getObjectByName(objName);
+      const objColor = obj?.parameters?.Color;
 
       // TODO Have a more generic way to spot non-solid objects
       const isSolid = !(
@@ -602,7 +603,8 @@ export class MainView extends React.Component<IProps, IStates> {
         clippingPlanes: this._clippingPlanes,
         selected,
         isSolid,
-        guidata
+        guidata,
+        objColor
       });
 
       if (output) {
@@ -1064,7 +1066,7 @@ export class MainView extends React.Component<IProps, IStates> {
             const color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
             obj.material.color = color;
           } else {
-            obj.material.color = new THREE.Color(1, 2, 3);
+            obj.material.color = DEFAULT_MESH_COLOR;
           }
         }
       }

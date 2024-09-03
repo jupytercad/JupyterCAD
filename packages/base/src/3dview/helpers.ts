@@ -114,12 +114,13 @@ export function buildShape(options: {
   selected: boolean;
   isSolid: boolean;
   guidata?: IDict;
+  objColor?: THREE.Color | string | number;
 }): {
   meshGroup: THREE.Group;
   mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>;
   edgesMeshes: LineSegments2[];
 } | null {
-  const { objName, data, guidata, isSolid, clippingPlanes, selected } = options;
+  const { objName, data, guidata, isSolid, clippingPlanes, selected, objColor } = options;
   const { faceList, edgeList, jcObject } = data;
 
   const vertices: Array<number> = [];
@@ -148,7 +149,8 @@ export function buildShape(options: {
     vInd += vertexCoorLength / 3;
   }
 
-  let color = DEFAULT_MESH_COLOR;
+  let color = objColor || DEFAULT_MESH_COLOR;
+  console.log(color)
   let visible = jcObject.visible;
   if (guidata && guidata[objName]) {
     const objdata = guidata[objName];
