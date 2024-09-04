@@ -845,9 +845,9 @@ export class MainView extends React.Component<IProps, IStates> {
     // Reset original color for old selection
     for (const selectedMesh of this._selectedMeshes) {
       let originalColor = selectedMesh.userData.originalColor;
-      console.log(selectedMesh.userData)
-      console.log(originalColor)
-  
+      console.log(selectedMesh.userData);
+      console.log(originalColor);
+
       if (!originalColor) {
         originalColor = selectedMesh.name.startsWith('edge-')
           ? DEFAULT_EDGE_COLOR
@@ -876,7 +876,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
       // Prevents object from going back to DEFAULT_MESH_COLOR
       if (!selectedMesh.userData.originalColor) {
-        selectedMesh.userData.originalColor = selectedMesh.material.color.clone();
+        selectedMesh.userData.originalColor =
+          selectedMesh.material.color.clone();
       }
 
       this._selectedMeshes.push(selectedMesh);
