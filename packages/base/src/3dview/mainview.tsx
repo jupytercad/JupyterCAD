@@ -619,7 +619,7 @@ export class MainView extends React.Component<IProps, IStates> {
           this._edgeMaterials.push(el.material);
           if (selectedNames.includes(el.name)) {
             this._selectedMeshes.push(el as any as BasicMesh);
-            el.material.color = objColor;
+            el.material.color = SELECTED_MESH_COLOR;
             el.material.linewidth = SELECTED_LINEWIDTH;
           }
         });
@@ -1043,6 +1043,7 @@ export class MainView extends React.Component<IProps, IStates> {
         const obj = this._meshGroup?.getObjectByName(objName) as
           | BasicMesh
           | undefined;
+        const objColor = obj?.material.color;
         if (!obj) {
           continue;
         }
@@ -1066,7 +1067,7 @@ export class MainView extends React.Component<IProps, IStates> {
             const color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
             obj.material.color = color;
           } else {
-            obj.material.color = DEFAULT_MESH_COLOR;
+            obj.material.color = objColor || DEFAULT_MESH_COLOR;
           }
         }
       }

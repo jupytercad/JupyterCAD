@@ -164,7 +164,7 @@ export function buildShape(options: {
     const objdata = guidata[objName];
 
     if (Object.prototype.hasOwnProperty.call(objdata, 'color')) {
-      color = new THREE.Color(objColor);
+      color = new THREE.Color(color);
     }
 
     if (Object.prototype.hasOwnProperty.call(objdata, 'visibility')) {
