@@ -158,7 +158,6 @@ export function buildShape(options: {
   }
 
   let color = objColor || DEFAULT_MESH_COLOR;
-  console.log(color);
   let visible = jcObject.visible;
   if (guidata && guidata[objName]) {
     const objdata = guidata[objName];

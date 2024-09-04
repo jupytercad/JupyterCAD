@@ -624,6 +624,10 @@ export class MainView extends React.Component<IProps, IStates> {
           }
         });
         this._meshGroup?.add(meshGroup);
+        // Apply the objColor to the mainMesh
+        if (objColor && mainMesh?.material?.color) {
+          this._handleColorChange(mainMesh.name, objColor);
+        }
       }
     });
 
@@ -841,13 +845,21 @@ export class MainView extends React.Component<IProps, IStates> {
     return new THREE.Mesh(this._pointerGeometry, material);
   }
 
+  private _handleColorChange(meshName: string, newColorHex: string) {
+    const selectedMesh = this._meshGroup?.getObjectByName(meshName) as BasicMesh;
+  
+    if (selectedMesh && selectedMesh.material?.color) {
+      const newColor = new THREE.Color(newColorHex);
+      selectedMesh.material.color = newColor;
+      selectedMesh.userData.originalColor = newColor.clone();
+    }
+  }
+
   private _updateSelected(selection: { [key: string]: ISelection }) {
     // Reset original color for old selection
     for (const selectedMesh of this._selectedMeshes) {
       let originalColor = selectedMesh.userData.originalColor;
-      console.log(selectedMesh.userData);
-      console.log(originalColor);
-
+  
       if (!originalColor) {
         originalColor = selectedMesh.name.startsWith('edge-')
           ? DEFAULT_EDGE_COLOR
