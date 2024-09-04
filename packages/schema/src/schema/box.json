@@ -23,7 +23,6 @@
     "Color": {
       "type": "string",
       "description": "The color of the box",
-      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
       "default": "#808080"
     },
     "Placement": {

@@ -27,6 +27,11 @@
       "type": "number",
       "description": "The angle of the torus"
     },
+    "Color": {
+      "type": "string",
+      "description": "The color of the torus",
+      "default": "#808080"
+    },
     "Placement": {
       "$ref": "./placement.json"
     }

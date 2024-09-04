@@ -20,6 +20,11 @@
       "exclusiveMinimum": 0,
       "description": "Angle of the cylinder"
     },
+    "Color": {
+      "type": "string",
+      "description": "The color of the cylinder",
+      "default": "#808080"
+    },
     "Placement": {
       "$ref": "./placement.json"
     }
