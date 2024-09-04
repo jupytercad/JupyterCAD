@@ -844,17 +844,14 @@ export class MainView extends React.Component<IProps, IStates> {
   private _updateSelected(selection: { [key: string]: ISelection }) {
     // Reset original color for old selection
     for (const selectedMesh of this._selectedMeshes) {
-      let originalColor = selectedMesh.name.startsWith('edge-')
-        ? DEFAULT_EDGE_COLOR
-        : DEFAULT_MESH_COLOR;
-      const guidata = this._model.sharedModel.getOption('guidata');
-      if (
-        guidata &&
-        guidata[selectedMesh.name] &&
-        guidata[selectedMesh.name]['color']
-      ) {
-        const rgba = guidata[selectedMesh.name]['color'] as number[];
-        originalColor = new THREE.Color(rgba[0], rgba[1], rgba[2]);
+      let originalColor = selectedMesh.userData.originalColor;
+      console.log(selectedMesh.userData)
+      console.log(originalColor)
+  
+      if (!originalColor) {
+        originalColor = selectedMesh.name.startsWith('edge-')
+          ? DEFAULT_EDGE_COLOR
+          : DEFAULT_MESH_COLOR;
       }
       if (selectedMesh.material?.color) {
         selectedMesh.material.color = originalColor;
@@ -875,6 +872,11 @@ export class MainView extends React.Component<IProps, IStates> {
 
       if (!selectedMesh) {
         continue;
+      }
+
+      // Prevents object from going back to DEFAULT_MESH_COLOR
+      if (!selectedMesh.userData.originalColor) {
+        selectedMesh.userData.originalColor = selectedMesh.material.color.clone();
       }
 
       this._selectedMeshes.push(selectedMesh);
