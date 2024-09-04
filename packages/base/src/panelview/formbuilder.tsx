@@ -121,6 +121,9 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
         uiSchema[k] = {};
         this.removeArrayButton(v, uiSchema[k]);
       }
+      uiSchema['Color'] = {
+        'ui:widget': 'color'
+      };
     });
   }
 
