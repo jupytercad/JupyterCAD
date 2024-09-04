@@ -35,3 +35,8 @@ before-build-npm = [
 
 [tool.check-wheel-contents]
 ignore = ["W002"]
+
+[tool.ruff]
+extend-exclude = [
+    "*.ipynb",
+]
