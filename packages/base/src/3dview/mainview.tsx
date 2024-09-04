@@ -619,7 +619,7 @@ export class MainView extends React.Component<IProps, IStates> {
           this._edgeMaterials.push(el.material);
           if (selectedNames.includes(el.name)) {
             this._selectedMeshes.push(el as any as BasicMesh);
-            el.material.color = SELECTED_MESH_COLOR;
+            el.material.color = objColor;
             el.material.linewidth = SELECTED_LINEWIDTH;
           }
         });
@@ -722,7 +722,7 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     const material = new THREE.MeshPhongMaterial({
-      color: DEFAULT_MESH_COLOR,
+      color: new THREE.Color(0xff0000),
       wireframe: this.state.wireframe
     });
     const mesh = new THREE.Mesh(obj, material);

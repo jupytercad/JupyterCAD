@@ -164,8 +164,7 @@ export function buildShape(options: {
     const objdata = guidata[objName];
 
     if (Object.prototype.hasOwnProperty.call(objdata, 'color')) {
-      const rgba = objdata['color'] as number[];
-      color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
+      color = new THREE.Color(objColor);
     }
 
     if (Object.prototype.hasOwnProperty.call(objdata, 'visibility')) {
@@ -178,7 +177,7 @@ export function buildShape(options: {
   // We need one material per-mesh because we will set the uniform color independently later
   // it's too bad Three.js does not easily allow setting uniforms independently per-mesh
   const material = new THREE.MeshPhongMaterial({
-    color,
+    color: new THREE.Color(color),
     wireframe: false,
     flatShading: false,
     clippingPlanes,
