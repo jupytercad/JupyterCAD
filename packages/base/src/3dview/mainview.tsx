@@ -846,8 +846,10 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   private _handleColorChange(meshName: string, newColorHex: string) {
-    const selectedMesh = this._meshGroup?.getObjectByName(meshName) as BasicMesh;
-  
+    const selectedMesh = this._meshGroup?.getObjectByName(
+      meshName
+    ) as BasicMesh;
+
     if (selectedMesh && selectedMesh.material?.color) {
       const newColor = new THREE.Color(newColorHex);
       selectedMesh.material.color = newColor;
@@ -859,7 +861,7 @@ export class MainView extends React.Component<IProps, IStates> {
     // Reset original color for old selection
     for (const selectedMesh of this._selectedMeshes) {
       let originalColor = selectedMesh.userData.originalColor;
-  
+
       if (!originalColor) {
         originalColor = selectedMesh.name.startsWith('edge-')
           ? DEFAULT_EDGE_COLOR
