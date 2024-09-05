@@ -19,6 +19,11 @@
       "exclusiveMinimum": 0,
       "description": "The radius for the fillet"
     },
+    "Color": {
+      "type": "string",
+      "description": "The color of the fillet",
+      "default": "#808080"
+    },
     "Placement": {
       "$ref": "./placement.json"
     }
