@@ -726,7 +726,7 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     const material = new THREE.MeshPhongMaterial({
-      color: new THREE.Color(0xff0000),
+      color: DEFAULT_MESH_COLOR,
       wireframe: this.state.wireframe
     });
     const mesh = new THREE.Mesh(obj, material);

@@ -51,11 +51,6 @@
       "type": "number",
       "exclusiveMinimum": 0,
       "description": "Radius"
-    },
-    "Color": {
-      "type": "string",
-      "description": "The color of the geometric circle",
-      "default": "#808080"
     }
   }
 }
