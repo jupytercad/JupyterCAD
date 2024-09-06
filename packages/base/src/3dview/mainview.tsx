@@ -582,7 +582,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._selectedMeshes = [];
 
     this._boundingGroup = new THREE.Box3();
-  
+
     this._edgeMaterials = [];
 
     this._meshGroup = new THREE.Group();

@@ -37,6 +37,7 @@ import {
   wireframeIcon
 } from './tools';
 import keybindings from './keybindings.json';
+import { DEFAULT_MESH_COLOR } from './3dview/helpers';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { PathExt } from '@jupyterlab/coreutils';
@@ -264,7 +265,7 @@ const OPERATORS = {
         Base: baseName,
         Tool: sel1 || objects[1].name || '',
         Refine: false,
-        Color: baseModel?.parameters?.Color,
+        Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
@@ -309,7 +310,7 @@ const OPERATORS = {
         LengthFwd: 10,
         LengthRev: 0,
         Solid: false,
-        Color: baseModel?.parameters?.Color,
+        Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
@@ -351,7 +352,7 @@ const OPERATORS = {
         Name: newName('Union', model),
         Shapes: [baseName, sel1 || objects[1].name || ''],
         Refine: false,
-        Color: baseModel?.parameters?.Color,
+        Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
@@ -395,7 +396,7 @@ const OPERATORS = {
         Name: newName('Intersection', model),
         Shapes: [baseName, sel1 || objects[1].name || ''],
         Refine: false,
-        Color: baseModel?.parameters?.Color,
+        Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
@@ -438,7 +439,7 @@ const OPERATORS = {
         Base: baseName,
         Edge: selectedEdge?.edgeIndex || 0,
         Dist: 0.2,
-        Color: baseModel?.parameters?.Color,
+        Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
@@ -479,7 +480,7 @@ const OPERATORS = {
         Base: baseName,
         Edge: selectedEdge?.edgeIndex || 0,
         Radius: 0.2,
-        Color: baseModel?.parameters?.Color,
+        Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
