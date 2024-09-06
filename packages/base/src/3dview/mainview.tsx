@@ -582,7 +582,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._selectedMeshes = [];
 
     this._boundingGroup = new THREE.Box3();
-
+  
     this._edgeMaterials = [];
 
     this._meshGroup = new THREE.Group();
@@ -621,11 +621,18 @@ export class MainView extends React.Component<IProps, IStates> {
             this._selectedMeshes.push(el as any as BasicMesh);
             el.material.color = SELECTED_MESH_COLOR;
             el.material.linewidth = SELECTED_LINEWIDTH;
+          } else {
+            // Apply objColor for non-selected meshes
+            if (objColor && el.material?.color) {
+              const newColor = new THREE.Color(objColor);
+              el.material.color = newColor;
+              el.userData.originalColor = newColor.clone();
+            }
           }
         });
         this._meshGroup?.add(meshGroup);
         // Apply the objColor to the mainMesh
-        if (objColor && mainMesh?.material?.color) {
+        if (!selected && objColor && mainMesh?.material?.color) {
           const selectedMesh = this._meshGroup?.getObjectByName(
             mainMesh.name
           ) as BasicMesh;
