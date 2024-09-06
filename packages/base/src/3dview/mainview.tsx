@@ -626,7 +626,14 @@ export class MainView extends React.Component<IProps, IStates> {
         this._meshGroup?.add(meshGroup);
         // Apply the objColor to the mainMesh
         if (objColor && mainMesh?.material?.color) {
-          this._handleColorChange(mainMesh.name, objColor);
+          const selectedMesh = this._meshGroup?.getObjectByName(
+            mainMesh.name
+          ) as BasicMesh;
+          if (selectedMesh && selectedMesh.material?.color) {
+            const newColor = new THREE.Color(objColor);
+            selectedMesh.material.color = newColor;
+            selectedMesh.userData.originalColor = newColor.clone();
+          }
         }
       }
     });
@@ -843,18 +850,6 @@ export class MainView extends React.Component<IProps, IStates> {
     });
 
     return new THREE.Mesh(this._pointerGeometry, material);
-  }
-
-  private _handleColorChange(meshName: string, newColorHex: string) {
-    const selectedMesh = this._meshGroup?.getObjectByName(
-      meshName
-    ) as BasicMesh;
-
-    if (selectedMesh && selectedMesh.material?.color) {
-      const newColor = new THREE.Color(newColorHex);
-      selectedMesh.material.color = newColor;
-      selectedMesh.userData.originalColor = newColor.clone();
-    }
   }
 
   private _updateSelected(selection: { [key: string]: ISelection }) {
