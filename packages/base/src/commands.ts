@@ -300,6 +300,8 @@ const OPERATORS = {
       const objects = model.getAllObject();
       const selected = model.localState?.selected.value || {};
       const sel0 = getSelectedMeshName(selected, 0);
+      const baseName = sel0 || objects[0].name || '';
+      const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Extrusion', model),
         Base: sel0 || objects[0].name || '',
@@ -307,6 +309,7 @@ const OPERATORS = {
         LengthFwd: 10,
         LengthRev: 0,
         Solid: false,
+        Color: baseModel?.parameters?.Color,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
@@ -342,10 +345,13 @@ const OPERATORS = {
       const selected = model.localState?.selected.value || {};
       const sel0 = getSelectedMeshName(selected, 0);
       const sel1 = getSelectedMeshName(selected, 1);
+      const baseName = sel0 || objects[0].name || '';
+      const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Union', model),
         Shapes: [sel0 || objects[0].name || '', sel1 || objects[1].name || ''],
         Refine: false,
+        Color: baseModel?.parameters?.Color,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
@@ -383,10 +389,13 @@ const OPERATORS = {
       const selected = model.localState?.selected.value || {};
       const sel0 = getSelectedMeshName(selected, 0);
       const sel1 = getSelectedMeshName(selected, 1);
+      const baseName = sel0 || objects[0].name || '';
+      const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Intersection', model),
         Shapes: [sel0 || objects[0].name || '', sel1 || objects[1].name || ''],
         Refine: false,
+        Color: baseModel?.parameters?.Color,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
