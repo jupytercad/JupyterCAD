@@ -257,11 +257,14 @@ const OPERATORS = {
       const selected = model.localState?.selected.value || {};
       const sel0 = getSelectedMeshName(selected, 0);
       const sel1 = getSelectedMeshName(selected, 1);
+      const baseName = sel0 || objects[0].name || '';
+      const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Cut', model),
         Base: sel0 || objects[0].name || '',
         Tool: sel1 || objects[1].name || '',
         Refine: false,
+        Color: baseModel?.parameters?.Color,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
