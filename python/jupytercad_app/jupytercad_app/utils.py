@@ -36,5 +36,4 @@ def get_page_config(base_url, app_name):
         for x in federated_extensions
         if x["name"] in required_extensions or x["name"].startswith("@jupytercad/")
     ]
-    print("CCCCCCCCCCCC", page_config["federated_extensions"])
     return page_config
