@@ -11,6 +11,7 @@ import '@jupyterlab/application/style/index.js';
 import '@jupyterlab/filebrowser/style/index.js';
 import '@jupyterlab/ui-components/style/index.js';
 import '@jupyterlab/launcher/style/index.js';
+import '@jupyterlab/console/style/index.js';
 import '../style/index.css';
 import './sharedscope';
 
@@ -121,6 +122,12 @@ async function main(): Promise<void> {
     ),
     require('@jupyterlab/docmanager-extension'),
     require('@jupyterlab/launcher-extension'),
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    require('@jupyterlab/console-extension').default.filter(
+      (m: any) =>
+        !['@jupyterlab/console-extension:kernel-status'].includes(m.id)
+    ),
+    require('@jupyterlab/rendermime-extension'),
     require('./app/plugins/paths'),
     require('./app/plugins/mainmenu'),
     require('./app/plugins/browser'),
