@@ -19,6 +19,11 @@
       "type": "boolean",
       "description": "Refine shape"
     },
+    "Color": {
+      "type": "string",
+      "description": "The color of the cut object",
+      "default": "#808080"
+    },
     "Placement": {
       "$ref": "./placement.json"
     }

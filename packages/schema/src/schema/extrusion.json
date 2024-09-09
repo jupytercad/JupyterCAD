@@ -29,6 +29,11 @@
       "type": "boolean",
       "description": "If true, creating a solid"
     },
+    "Color": {
+      "type": "string",
+      "description": "The color of the extrusion",
+      "default": "#808080"
+    },
     "Placement": {
       "$ref": "./placement.json"
     }

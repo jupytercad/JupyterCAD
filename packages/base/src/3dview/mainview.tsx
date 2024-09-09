@@ -590,6 +590,7 @@ export class MainView extends React.Component<IProps, IStates> {
     Object.entries(payload).forEach(([objName, data]) => {
       const selected = selectedNames.includes(objName);
       const obj = this._model.sharedModel.getObjectByName(objName);
+      const objColor = obj?.parameters?.Color;
 
       // TODO Have a more generic way to spot non-solid objects
       const isSolid = !(
@@ -602,7 +603,8 @@ export class MainView extends React.Component<IProps, IStates> {
         clippingPlanes: this._clippingPlanes,
         selected,
         isSolid,
-        guidata
+        guidata,
+        objColor
       });
 
       if (output) {
@@ -619,6 +621,14 @@ export class MainView extends React.Component<IProps, IStates> {
             this._selectedMeshes.push(el as any as BasicMesh);
             el.material.color = SELECTED_MESH_COLOR;
             el.material.linewidth = SELECTED_LINEWIDTH;
+            el.userData.originalColor = new THREE.Color(objColor);
+          } else {
+            // Apply objColor for non-selected meshes
+            if (objColor && el.material?.color) {
+              const newColor = new THREE.Color(objColor);
+              el.material.color = newColor;
+              el.userData.originalColor = newColor.clone();
+            }
           }
         });
         this._meshGroup?.add(meshGroup);
@@ -842,17 +852,12 @@ export class MainView extends React.Component<IProps, IStates> {
   private _updateSelected(selection: { [key: string]: ISelection }) {
     // Reset original color for old selection
     for (const selectedMesh of this._selectedMeshes) {
-      let originalColor = selectedMesh.name.startsWith('edge-')
-        ? DEFAULT_EDGE_COLOR
-        : DEFAULT_MESH_COLOR;
-      const guidata = this._model.sharedModel.getOption('guidata');
-      if (
-        guidata &&
-        guidata[selectedMesh.name] &&
-        guidata[selectedMesh.name]['color']
-      ) {
-        const rgba = guidata[selectedMesh.name]['color'] as number[];
-        originalColor = new THREE.Color(rgba[0], rgba[1], rgba[2]);
+      let originalColor = selectedMesh.userData.originalColor;
+
+      if (!originalColor) {
+        originalColor = selectedMesh.name.startsWith('edge-')
+          ? DEFAULT_EDGE_COLOR
+          : DEFAULT_MESH_COLOR;
       }
       if (selectedMesh.material?.color) {
         selectedMesh.material.color = originalColor;
@@ -873,6 +878,12 @@ export class MainView extends React.Component<IProps, IStates> {
 
       if (!selectedMesh) {
         continue;
+      }
+
+      // Prevents object from going back to DEFAULT_MESH_COLOR
+      if (!selectedMesh.userData.originalColor) {
+        selectedMesh.userData.originalColor =
+          selectedMesh.material.color.clone();
       }
 
       this._selectedMeshes.push(selectedMesh);
@@ -1041,6 +1052,7 @@ export class MainView extends React.Component<IProps, IStates> {
         const obj = this._meshGroup?.getObjectByName(objName) as
           | BasicMesh
           | undefined;
+        const objColor = obj?.material.color;
         if (!obj) {
           continue;
         }
@@ -1064,7 +1076,7 @@ export class MainView extends React.Component<IProps, IStates> {
             const color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
             obj.material.color = color;
           } else {
-            obj.material.color = DEFAULT_MESH_COLOR;
+            obj.material.color = objColor || DEFAULT_MESH_COLOR;
           }
         }
       }

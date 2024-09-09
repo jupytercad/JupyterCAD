@@ -37,6 +37,7 @@ import {
   wireframeIcon
 } from './tools';
 import keybindings from './keybindings.json';
+import { DEFAULT_MESH_COLOR } from './3dview/helpers';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { PathExt } from '@jupyterlab/coreutils';
@@ -257,11 +258,14 @@ const OPERATORS = {
       const selected = model.localState?.selected.value || {};
       const sel0 = getSelectedMeshName(selected, 0);
       const sel1 = getSelectedMeshName(selected, 1);
+      const baseName = sel0 || objects[0].name || '';
+      const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Cut', model),
-        Base: sel0 || objects[0].name || '',
+        Base: baseName,
         Tool: sel1 || objects[1].name || '',
         Refine: false,
+        Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
@@ -297,13 +301,16 @@ const OPERATORS = {
       const objects = model.getAllObject();
       const selected = model.localState?.selected.value || {};
       const sel0 = getSelectedMeshName(selected, 0);
+      const baseName = sel0 || objects[0].name || '';
+      const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Extrusion', model),
-        Base: sel0 || objects[0].name || '',
+        Base: baseName,
         Dir: [0, 0, 1],
         LengthFwd: 10,
         LengthRev: 0,
         Solid: false,
+        Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
@@ -339,10 +346,13 @@ const OPERATORS = {
       const selected = model.localState?.selected.value || {};
       const sel0 = getSelectedMeshName(selected, 0);
       const sel1 = getSelectedMeshName(selected, 1);
+      const baseName = sel0 || objects[0].name || '';
+      const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Union', model),
-        Shapes: [sel0 || objects[0].name || '', sel1 || objects[1].name || ''],
+        Shapes: [baseName, sel1 || objects[1].name || ''],
         Refine: false,
+        Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
@@ -380,10 +390,13 @@ const OPERATORS = {
       const selected = model.localState?.selected.value || {};
       const sel0 = getSelectedMeshName(selected, 0);
       const sel1 = getSelectedMeshName(selected, 1);
+      const baseName = sel0 || objects[0].name || '';
+      const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Intersection', model),
-        Shapes: [sel0 || objects[0].name || '', sel1 || objects[1].name || ''],
+        Shapes: [baseName, sel1 || objects[1].name || ''],
         Refine: false,
+        Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
@@ -419,11 +432,14 @@ const OPERATORS = {
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
       const selectedEdge = getSelectedEdge(model.localState?.selected.value);
+      const baseName = selectedEdge?.shape || objects[0].name || '';
+      const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Chamfer', model),
-        Base: selectedEdge?.shape || objects[0].name || '',
+        Base: baseName,
         Edge: selectedEdge?.edgeIndex || 0,
         Dist: 0.2,
+        Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
@@ -457,11 +473,14 @@ const OPERATORS = {
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
       const selectedEdge = getSelectedEdge(model.localState?.selected.value);
+      const baseName = selectedEdge?.shape || objects[0].name || '';
+      const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Fillet', model),
-        Base: selectedEdge?.shape || objects[0].name || '',
+        Base: baseName,
         Edge: selectedEdge?.edgeIndex || 0,
         Radius: 0.2,
+        Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },

@@ -22,6 +22,11 @@
       "type": "number",
       "description": "The angle of the sphere"
     },
+    "Color": {
+      "type": "string",
+      "description": "The color of the sphere",
+      "default": "#808080"
+    },
     "Placement": {
       "$ref": "./placement.json"
     }

@@ -114,12 +114,21 @@ export function buildShape(options: {
   selected: boolean;
   isSolid: boolean;
   guidata?: IDict;
+  objColor?: THREE.Color | string | number;
 }): {
   meshGroup: THREE.Group;
   mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>;
   edgesMeshes: LineSegments2[];
 } | null {
-  const { objName, data, guidata, isSolid, clippingPlanes, selected } = options;
+  const {
+    objName,
+    data,
+    guidata,
+    isSolid,
+    clippingPlanes,
+    selected,
+    objColor
+  } = options;
   const { faceList, edgeList, jcObject } = data;
 
   const vertices: Array<number> = [];
@@ -148,14 +157,13 @@ export function buildShape(options: {
     vInd += vertexCoorLength / 3;
   }
 
-  let color = DEFAULT_MESH_COLOR;
+  let color = objColor || DEFAULT_MESH_COLOR;
   let visible = jcObject.visible;
   if (guidata && guidata[objName]) {
     const objdata = guidata[objName];
 
     if (Object.prototype.hasOwnProperty.call(objdata, 'color')) {
-      const rgba = objdata['color'] as number[];
-      color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
+      color = new THREE.Color(color);
     }
 
     if (Object.prototype.hasOwnProperty.call(objdata, 'visibility')) {
@@ -168,7 +176,7 @@ export function buildShape(options: {
   // We need one material per-mesh because we will set the uniform color independently later
   // it's too bad Three.js does not easily allow setting uniforms independently per-mesh
   const material = new THREE.MeshPhongMaterial({
-    color,
+    color: new THREE.Color(color),
     wireframe: false,
     flatShading: false,
     clippingPlanes,

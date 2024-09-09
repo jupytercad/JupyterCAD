@@ -20,6 +20,11 @@
       "exclusiveMinimum": 0,
       "description": "The height of the box"
     },
+    "Color": {
+      "type": "string",
+      "description": "The color of the box",
+      "default": "#808080"
+    },
     "Placement": {
       "$ref": "./placement.json"
     }

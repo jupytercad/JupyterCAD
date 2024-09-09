@@ -23,6 +23,11 @@
         ]
       }
     },
+    "Color": {
+      "type": "string",
+      "description": "The color of the sketch object",
+      "default": "#808080"
+    },
     "Placement": {
       "$ref": "./placement.json"
     }
