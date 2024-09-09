@@ -11,12 +11,26 @@ const launcherPlugin: JupyterFrontEndPlugin<void> = {
   autoStart: true,
   activate: (app: JupyterFrontEnd, labShell: ILabShell): void => {
     labShell.layoutModified.connect(() => {
-      const els = document.getElementsByClassName('jp-Launcher-sectionTitle');
-      const length = els.length;
-      for (let idx = 0; idx < length; idx++) {
-        const element = els.item(idx);
-        if (element) {
-          element.innerHTML = 'Create New Project';
+      const launcherSection = document.getElementsByClassName(
+        'jp-Launcher-section'
+      );
+      for (let index = 0; index < launcherSection.length; index++) {
+        const element = launcherSection.item(index) as HTMLDivElement;
+        const label = element
+          ?.getElementsByClassName('jp-LauncherCard-label')
+          ?.item(0);
+        if (!label) {
+          continue;
+        }
+        if (label.innerHTML.includes('New JCAD File')) {
+          const els = element
+            .getElementsByClassName('jp-Launcher-sectionTitle')
+            ?.item(0);
+          if (els) {
+            els.innerHTML = 'Create New Project';
+          }
+        } else {
+          element.style.display = 'none';
         }
       }
     });
