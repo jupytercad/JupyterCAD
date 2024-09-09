@@ -631,17 +631,6 @@ export class MainView extends React.Component<IProps, IStates> {
           }
         });
         this._meshGroup?.add(meshGroup);
-        // Apply the objColor to the mainMesh
-        if (!selected && objColor && mainMesh?.material?.color) {
-          const selectedMesh = this._meshGroup?.getObjectByName(
-            mainMesh.name
-          ) as BasicMesh;
-          if (selectedMesh && selectedMesh.material?.color) {
-            const newColor = new THREE.Color(objColor);
-            selectedMesh.material.color = newColor;
-            selectedMesh.userData.originalColor = newColor.clone();
-          }
-        }
       }
     });
 
