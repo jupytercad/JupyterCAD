@@ -29,15 +29,12 @@ def get_page_config(base_url, app_name):
         page_config,
         gpc(labextensions_path),
     )
-    required_extensions = [
-        "@jupytercad/jupytercad-lab",
-        "@jupytercad/jupytercad-core",
-        "@jupyter/collaboration-extension",
-    ]
+    required_extensions = ["@jupyter/collaboration-extension", "yjs-widgets"]
     federated_extensions: Dict[str, Dict] = page_config["federated_extensions"]
     page_config["federated_extensions"] = [
         x
         for x in federated_extensions
         if x["name"] in required_extensions or x["name"].startswith("@jupytercad/")
     ]
+    print("CCCCCCCCCCCC", page_config["federated_extensions"])
     return page_config
