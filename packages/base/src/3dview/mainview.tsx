@@ -621,7 +621,7 @@ export class MainView extends React.Component<IProps, IStates> {
             this._selectedMeshes.push(el as any as BasicMesh);
             el.material.color = SELECTED_MESH_COLOR;
             el.material.linewidth = SELECTED_LINEWIDTH;
-            el.userData.originalColor = el.material.color.clone();
+            el.userData.originalColor = new THREE.Color(objColor);;
           } else {
             // Apply objColor for non-selected meshes
             if (objColor && el.material?.color) {
