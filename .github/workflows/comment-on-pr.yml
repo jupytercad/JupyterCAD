@@ -1,0 +1,22 @@
+name: Add preview link to PR
+
+on:
+  workflow_run:
+    workflows: ['Build']
+    types:
+      - completed
+
+permissions:
+  pull-requests: write
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    if: >
+      ${{ github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: 'Comment APSS link on workflow'
+        uses: trungleduc/appsharingspace-pr-comment/.github/actions/pr-comment@v1
+        with:
+          index_path: lab/index.html
