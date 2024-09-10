@@ -861,14 +861,6 @@ export class MainView extends React.Component<IProps, IStates> {
           : DEFAULT_MESH_COLOR;
       }
       if (selectedMesh.material?.color) {
-        if (selectedMesh.name.startsWith('edge-')) {
-          const edgeOriginalColor =
-            selectedMesh.userData.originalColor || DEFAULT_EDGE_COLOR;
-          originalColor = edgeOriginalColor.clone().multiplyScalar(0.7);
-        } else {
-          originalColor =
-            selectedMesh.userData.originalColor || DEFAULT_MESH_COLOR;
-        }
         selectedMesh.material.color = originalColor;
       }
       // @ts-ignore
