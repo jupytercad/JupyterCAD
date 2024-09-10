@@ -615,7 +615,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
         // Save original color for the main mesh
         if (mainMesh.material?.color) {
-          const originalMeshColor = new THREE.Color(objColor || DEFAULT_MESH_COLOR);
+          const originalMeshColor = new THREE.Color(
+            objColor || DEFAULT_MESH_COLOR
+          );
           if (!selected) {
             mainMesh.material.color = originalMeshColor;
           }
