@@ -617,7 +617,9 @@ export class MainView extends React.Component<IProps, IStates> {
         }
         edgesMeshes.forEach(el => {
           this._edgeMaterials.push(el.material);
-          const originalEdgeColor = new THREE.Color(objColor).multiplyScalar(0.7);
+          const originalEdgeColor = new THREE.Color(objColor).multiplyScalar(
+            0.7
+          );
           if (selectedNames.includes(el.name)) {
             this._selectedMeshes.push(el as any as BasicMesh);
             el.material.color = SELECTED_MESH_COLOR;
@@ -860,10 +862,12 @@ export class MainView extends React.Component<IProps, IStates> {
       }
       if (selectedMesh.material?.color) {
         if (selectedMesh.name.startsWith('edge-')) {
-          const edgeOriginalColor = selectedMesh.userData.originalColor || DEFAULT_EDGE_COLOR;
+          const edgeOriginalColor =
+            selectedMesh.userData.originalColor || DEFAULT_EDGE_COLOR;
           originalColor = edgeOriginalColor.clone().multiplyScalar(0.7);
         } else {
-          originalColor = selectedMesh.userData.originalColor || DEFAULT_MESH_COLOR;
+          originalColor =
+            selectedMesh.userData.originalColor || DEFAULT_MESH_COLOR;
         }
         selectedMesh.material.color = originalColor;
       }
