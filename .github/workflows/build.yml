@@ -196,7 +196,7 @@ jobs:
 
   build-lite:
     name: Build JupyterLite
-    needs: integration-tests
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -234,13 +234,20 @@ jobs:
           mkdir -p content && cp ../examples/test.jcad ./content
           jupyter lite build --contents content --output-dir dist
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Upload github-pages artifact
+        id: upload-jupyterlite-artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./lite/dist
+          retention-days: 30
+
+      - name: Save artifact data
+        uses: trungleduc/appsharingspace-pr-comment/.github/actions/save-artifact-link@v2
+        with:
+          artifact_link: 'https://github.com/${{ github.repository }}/actions/runs/${{github.run_id}}/artifacts/${{ steps.upload-jupyterlite-artifact.outputs.artifact_id }}'
 
   deploy:
-    needs: build-lite
+    needs: [integration-tests, build-lite]
     if: github.ref == 'refs/heads/main'
     permissions:
       pages: write
