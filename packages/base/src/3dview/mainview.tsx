@@ -612,6 +612,16 @@ export class MainView extends React.Component<IProps, IStates> {
         if (meshGroup.visible) {
           this._boundingGroup.expandByObject(mainMesh);
         }
+
+        // Save original color for the main mesh
+        if (mainMesh.material?.color) {
+          const originalMeshColor = new THREE.Color(objColor || DEFAULT_MESH_COLOR);
+          if (!selected) {
+            mainMesh.material.color = originalMeshColor;
+          }
+          mainMesh.userData.originalColor = originalMeshColor.clone();
+        }
+
         if (selected) {
           this._selectedMeshes.push(mainMesh);
         }
@@ -856,9 +866,8 @@ export class MainView extends React.Component<IProps, IStates> {
       let originalColor = selectedMesh.userData.originalColor;
 
       if (!originalColor) {
-        originalColor = selectedMesh.name.startsWith('edge-')
-          ? DEFAULT_EDGE_COLOR
-          : DEFAULT_MESH_COLOR;
+        originalColor = selectedMesh.material.color.clone();
+        selectedMesh.userData.originalColor = originalColor;
       }
       if (selectedMesh.material?.color) {
         selectedMesh.material.color = originalColor;
