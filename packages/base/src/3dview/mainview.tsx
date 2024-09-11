@@ -633,7 +633,9 @@ export class MainView extends React.Component<IProps, IStates> {
           const luminance = 0.2126 * meshColor.r + 0.7152 * meshColor.g + 0.0722 * meshColor.b;
         
           let originalEdgeColor;
-          if (luminance === 0) {
+
+          // Handling edge color based upon mesh luminance
+          if (luminance >= 0 && luminance <= 0.05) {
             originalEdgeColor = new THREE.Color(0.2, 0.2, 0.2);
           } else if (luminance < 0.1) {
             const scaleFactor = 3 + (0.1 - luminance) * 3;
