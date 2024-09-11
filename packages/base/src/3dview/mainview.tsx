@@ -612,22 +612,35 @@ export class MainView extends React.Component<IProps, IStates> {
         if (meshGroup.visible) {
           this._boundingGroup.expandByObject(mainMesh);
         }
+
+        // Save original color for the main mesh
+        if (mainMesh.material?.color) {
+          const originalMeshColor = new THREE.Color(
+            objColor || DEFAULT_MESH_COLOR
+          );
+          if (!selected) {
+            mainMesh.material.color = originalMeshColor;
+          }
+          mainMesh.userData.originalColor = originalMeshColor.clone();
+        }
+
         if (selected) {
           this._selectedMeshes.push(mainMesh);
         }
         edgesMeshes.forEach(el => {
           this._edgeMaterials.push(el.material);
+          const originalEdgeColor = new THREE.Color(objColor).multiplyScalar(
+            0.7
+          );
           if (selectedNames.includes(el.name)) {
             this._selectedMeshes.push(el as any as BasicMesh);
             el.material.color = SELECTED_MESH_COLOR;
             el.material.linewidth = SELECTED_LINEWIDTH;
-            el.userData.originalColor = new THREE.Color(objColor);
+            el.userData.originalColor = originalEdgeColor.clone();
           } else {
-            // Apply objColor for non-selected meshes
             if (objColor && el.material?.color) {
-              const newColor = new THREE.Color(objColor);
-              el.material.color = newColor;
-              el.userData.originalColor = newColor.clone();
+              el.material.color = originalEdgeColor;
+              el.userData.originalColor = originalEdgeColor.clone();
             }
           }
         });
@@ -855,9 +868,8 @@ export class MainView extends React.Component<IProps, IStates> {
       let originalColor = selectedMesh.userData.originalColor;
 
       if (!originalColor) {
-        originalColor = selectedMesh.name.startsWith('edge-')
-          ? DEFAULT_EDGE_COLOR
-          : DEFAULT_MESH_COLOR;
+        originalColor = selectedMesh.material.color.clone();
+        selectedMesh.userData.originalColor = originalColor;
       }
       if (selectedMesh.material?.color) {
         selectedMesh.material.color = originalColor;
