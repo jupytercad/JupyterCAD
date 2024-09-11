@@ -629,9 +629,17 @@ export class MainView extends React.Component<IProps, IStates> {
         }
         edgesMeshes.forEach(el => {
           this._edgeMaterials.push(el.material);
-          const originalEdgeColor = new THREE.Color(objColor).multiplyScalar(
-            0.7
-          );
+          const meshColor = new THREE.Color(objColor);
+          const luminance = 0.2126 * meshColor.r + 0.7152 * meshColor.g + 0.0722 * meshColor.b;
+        
+          let originalEdgeColor;
+          console.log(luminance)
+          if (luminance < 0.5) {
+            originalEdgeColor = meshColor.clone().multiplyScalar(1.3);
+          } else {
+            originalEdgeColor = meshColor.clone().multiplyScalar(0.7);
+          }
+        
           if (selectedNames.includes(el.name)) {
             this._selectedMeshes.push(el as any as BasicMesh);
             el.material.color = SELECTED_MESH_COLOR;
