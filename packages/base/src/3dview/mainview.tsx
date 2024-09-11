@@ -633,11 +633,14 @@ export class MainView extends React.Component<IProps, IStates> {
           const luminance = 0.2126 * meshColor.r + 0.7152 * meshColor.g + 0.0722 * meshColor.b;
         
           let originalEdgeColor;
-          console.log(luminance)
-          if (luminance < 0.5) {
-            originalEdgeColor = meshColor.clone().multiplyScalar(1.3);
+          if (luminance === 0) {
+            originalEdgeColor = new THREE.Color(0.2, 0.2, 0.2);
+          } else if (luminance < 0.5) {
+            const scaleFactor = 1.3 + (0.5 - luminance) * 1.3;
+            originalEdgeColor = meshColor.clone().multiplyScalar(scaleFactor);
           } else {
-            originalEdgeColor = meshColor.clone().multiplyScalar(0.7);
+            const scaleFactor = 0.7 - (luminance - 0.5) * 0.3;
+            originalEdgeColor = meshColor.clone().multiplyScalar(scaleFactor);
           }
         
           if (selectedNames.includes(el.name)) {
