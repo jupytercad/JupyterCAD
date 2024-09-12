@@ -318,7 +318,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   };
 
   render(): React.ReactNode {
-    const { selectedNodes, openNodes, options } = this.state;
+    const { selectedNodes, openNodes } = this.state;
     const data = this.stateToTree();
 
     const selectedNodeIds: TreeNodeId[] = [];
@@ -375,21 +375,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
             if (jcadObj) {
               visible = jcadObj.visible;
             }
-            if (
-              jcadObj &&
-              options &&
-              options['guidata'] &&
-              Object.prototype.hasOwnProperty.call(
-                options['guidata'],
-                jcadObj.name
-              ) &&
-              Object.prototype.hasOwnProperty.call(
-                options['guidata'][jcadObj.name],
-                'visibility'
-              )
-            ) {
-              visible = options['guidata'][jcadObj.name]['visibility'];
-            }
+
             return (
               <div
                 className={`jpcad-control-panel-tree ${
@@ -421,24 +407,18 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                         className={'jp-ToolbarButtonComponent'}
                         onClick={() => {
                           const objectId = opts.node.parentId as string;
+                          const obj = this.getObjectFromName(objectId);
+                          if (obj) {
+                            obj.visible = !obj.visible;
 
-                          const guidata =
-                            this.props.cpModel.sharedModel?.getOption(
-                              'guidata'
-                            ) || { [objectId]: {} };
+                            const updatedObject = { ...obj, visible: obj.visible };
 
-                          if (guidata) {
-                            if (guidata[objectId]) {
-                              guidata[objectId]['visibility'] = !visible;
-                            } else {
-                              guidata[objectId] = { visibility: !visible };
+                            const sharedModel = this.props.cpModel.jcadModel?.sharedModel;
+                            if (sharedModel) {
+                              sharedModel.removeObjectByName(objectId);
+                              sharedModel.addObject(updatedObject);
                             }
                           }
-
-                          this.props.cpModel.sharedModel?.setOption(
-                            'guidata',
-                            guidata
-                          );
                         }}
                         icon={visible ? visibilityIcon : visibilityOffIcon}
                       />
