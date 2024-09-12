@@ -133,11 +133,6 @@ export class JupyterCadDoc
 
     if (this._objects.length > index) {
       this._objects.delete(index);
-      const guidata = this.getOption('guidata');
-      if (guidata) {
-        delete guidata[name];
-        this.setOption('guidata', guidata);
-      }
       this.removeOutput(name);
     }
   }
