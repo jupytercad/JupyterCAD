@@ -128,8 +128,7 @@
       "type": "object",
       "default": {},
       "additionalProperties": false,
-      "properties": {
-      }
+      "properties": {}
     }
   }
 }
