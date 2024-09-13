@@ -83,7 +83,9 @@ export function setVisible(
   if (object) {
     object.visible = value;
 
-    sharedModel.addObject(object);
+    sharedModel.updateObjectByName(name, {
+      data: { key: 'visible', value: object.visible }
+    });
   }
 }
 
