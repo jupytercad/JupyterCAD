@@ -1083,7 +1083,6 @@ export class MainView extends React.Component<IProps, IStates> {
         }
 
         const isVisible = objData.visible;
-        console.log(isVisible);
 
         const objColor = obj?.material.color;
 
