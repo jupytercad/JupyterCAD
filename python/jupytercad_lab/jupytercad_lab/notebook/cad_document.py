@@ -1,5 +1,4 @@
 from __future__ import annotations
-from copy import deepcopy
 
 import json
 import logging
@@ -178,7 +177,9 @@ class CadDocument(CommWidget):
                 return obj
         return None
 
-    def update_object_by_name(self, transaction, object_name: str, updated_obj: Dict) -> None:
+    def update_object_by_name(
+        self, transaction, object_name: str, updated_obj: Dict
+    ) -> None:
         """
         Update an object by its name within a transaction.
 
@@ -204,13 +205,13 @@ class CadDocument(CommWidget):
         """
         if self.check_exist(object_name):
             obj = self.get_object_by_name(object_name)
-            
+
             if obj:
                 with self.ydoc.transaction() as t:
                     if color is not None:
-                        obj['color'] = color
+                        obj["color"] = color
                     else:
-                        obj.pop('color', None)
+                        obj.pop("color", None)
 
                     self.update_object_by_name(t, object_name, obj)
 
