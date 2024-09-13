@@ -119,14 +119,8 @@ export function buildShape(options: {
   mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>;
   edgesMeshes: LineSegments2[];
 } | null {
-  const {
-    objName,
-    data,
-    isSolid,
-    clippingPlanes,
-    selected,
-    objColor
-  } = options;
+  const { objName, data, isSolid, clippingPlanes, selected, objColor } =
+    options;
   const { faceList, edgeList, jcObject } = data;
 
   const vertices: Array<number> = [];
