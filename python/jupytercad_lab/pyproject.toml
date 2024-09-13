@@ -47,7 +47,7 @@ fields = ["description", "authors", "urls"]
 
 [tool.hatch.build.targets.sdist]
 artifacts = ["jupytercad_lab/labextension", "/jupytercad_lab/notebook/objects/_schema/*.py"]
-exclude = [".github", "binder"]
+exclude = [".github", "binder", "node_modules"]
 
 [tool.hatch.build.targets.wheel]
 artifacts = ["/jupytercad_lab/notebook/objects/_schema/*.py"]
