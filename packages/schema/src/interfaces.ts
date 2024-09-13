@@ -216,7 +216,6 @@ export interface IParsedShape {
   faceList: Array<IFace>;
   edgeList: Array<IEdge>;
   meta?: IDict;
-  guiData?: IDict;
 }
 
 export interface IPostOperatorInput {

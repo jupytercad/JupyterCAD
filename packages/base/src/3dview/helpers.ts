@@ -1,4 +1,4 @@
-import { IDict, IParsedShape } from '@jupytercad/schema';
+import { IParsedShape } from '@jupytercad/schema';
 import * as THREE from 'three';
 import {
   acceleratedRaycast,
@@ -113,7 +113,6 @@ export function buildShape(options: {
   clippingPlanes: THREE.Plane[];
   selected: boolean;
   isSolid: boolean;
-  guidata?: IDict;
   objColor?: THREE.Color | string | number;
 }): {
   meshGroup: THREE.Group;
@@ -123,7 +122,6 @@ export function buildShape(options: {
   const {
     objName,
     data,
-    guidata,
     isSolid,
     clippingPlanes,
     selected,
@@ -157,19 +155,8 @@ export function buildShape(options: {
     vInd += vertexCoorLength / 3;
   }
 
-  let color = objColor || DEFAULT_MESH_COLOR;
-  let visible = jcObject.visible;
-  if (guidata && guidata[objName]) {
-    const objdata = guidata[objName];
-
-    if (Object.prototype.hasOwnProperty.call(objdata, 'color')) {
-      color = new THREE.Color(color);
-    }
-
-    if (Object.prototype.hasOwnProperty.call(objdata, 'visibility')) {
-      visible = guidata[objName]['visibility'];
-    }
-  }
+  const color = objColor || DEFAULT_MESH_COLOR;
+  const visible = jcObject.visible;
 
   // Compile the connected vertices and faces into a model
   // And add to the scene
