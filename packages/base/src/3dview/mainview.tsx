@@ -577,7 +577,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._scene.remove(this._clippingPlaneMesh);
     }
 
-    const guidata = this._model.sharedModel.getOption('guidata');
     const selectedNames = this._selectedMeshes.map(sel => sel.name);
     this._selectedMeshes = [];
 
@@ -603,7 +602,6 @@ export class MainView extends React.Component<IProps, IStates> {
         clippingPlanes: this._clippingPlanes,
         selected,
         isSolid,
-        guidata,
         objColor
       });
 
@@ -665,9 +663,6 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     });
 
-    if (guidata) {
-      this._model.sharedModel?.setOption('guidata', guidata);
-    }
     // Update the reflength
     this._updateRefLength();
     // Set the expoded view if it's enabled

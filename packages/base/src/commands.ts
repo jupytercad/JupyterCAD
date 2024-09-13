@@ -78,15 +78,13 @@ export function setVisible(
   name: string,
   value: boolean
 ) {
-  const guidata = sharedModel.getOption('guidata') || {};
+  const object = sharedModel.getObjectByName(name);
 
-  if (guidata && guidata[name]) {
-    guidata[name]['visibility'] = false;
-  } else {
-    guidata[name] = { visibility: false };
+  if (object) {
+    object.visible = value;
+
+    sharedModel.addObject(object);
   }
-
-  sharedModel.setOption('guidata', guidata);
 }
 
 const PARTS = {
