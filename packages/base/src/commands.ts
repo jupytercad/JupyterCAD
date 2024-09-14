@@ -78,15 +78,9 @@ export function setVisible(
   name: string,
   value: boolean
 ) {
-  const object = sharedModel.getObjectByName(name);
-
-  if (object) {
-    object.visible = value;
-
-    sharedModel.updateObjectByName(name, {
-      data: { key: 'visible', value: object.visible }
-    });
-  }
+  sharedModel.updateObjectByName(name, {
+    data: { key: 'visible', value }
+  });
 }
 
 const PARTS = {
