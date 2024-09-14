@@ -411,16 +411,12 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                           if (obj) {
                             obj.visible = !obj.visible;
 
-                            const updatedObject = {
-                              ...obj,
-                              visible: obj.visible
-                            };
-
                             const sharedModel =
                               this.props.cpModel.jcadModel?.sharedModel;
                             if (sharedModel) {
-                              sharedModel.removeObjectByName(objectId);
-                              sharedModel.addObject(updatedObject);
+                              sharedModel.updateObjectByName(objectId, {
+                                data: { key: 'visible', value: obj.visible }
+                              });
                             }
                           }
                         }}
