@@ -165,37 +165,6 @@ class CadDocument(CommWidget):
             with self.ydoc.transaction() as t:
                 self._metadata.pop(t, annotation_id, None)
 
-    def get_object_by_name(self, object_name: str) -> Optional[Dict]:
-        """
-        Retrieve an object by its name.
-
-        :param object_name: Name of the object.
-        :return: The object if it exists, otherwise None.
-        """
-        for obj in self._options.get("objects", []):
-            if obj["name"] == object_name:
-                return obj
-        return None
-
-    def update_object_by_name(
-        self, transaction, object_name: str, updated_obj: Dict
-    ) -> None:
-        """
-        Update an object by its name within a transaction.
-
-        :param transaction: The YDoc transaction.
-        :param object_name: Name of the object to update.
-        :param updated_obj: The updated object data.
-        """
-        objects = self._options.get("objects", [])
-
-        for i, obj in enumerate(objects):
-            if obj["name"] == object_name:
-                objects[i] = updated_obj
-                break
-
-        self._options.set(transaction, "objects", objects)
-
     def set_color(self, object_name: str, color: Optional[List]) -> None:
         """
         Set object color.
@@ -203,17 +172,24 @@ class CadDocument(CommWidget):
         :param object_name: Object name.
         :param color: Color value, set it to `None` to remove color.
         """
-        if self.check_exist(object_name):
-            obj = self.get_object_by_name(object_name)
+        if self._options and self.check_exist(object_name):
+            current_gui = self._options.get("guidata")
+            new_gui = None
+            if current_gui is not None:
+                new_gui = deepcopy(current_gui)
+                current_data: Dict = new_gui.get(object_name, {})
+                if color is not None:
+                    current_data["color"] = color
+                else:
+                    current_data.pop("color", None)
 
-            if obj:
+                new_gui[object_name] = current_data
+            else:
+                if color is not None:
+                    new_gui = {object_name: {"color": color}}
+            if new_gui is not None:
                 with self.ydoc.transaction() as t:
-                    if color is not None:
-                        obj["color"] = color
-                    else:
-                        obj.pop("color", None)
-
-                    self.update_object_by_name(t, object_name, obj)
+                    self._options.set(t, "guidata", new_gui)
 
     def add_step_file(
         self,
