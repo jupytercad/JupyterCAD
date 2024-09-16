@@ -865,7 +865,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupytercad/base@^3.0.0-alpha.0, @jupytercad/base@workspace:packages/base":
+"@jupytercad/base@^3.0.0-alpha.1, @jupytercad/base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@jupytercad/base@workspace:packages/base"
   dependencies:
@@ -873,8 +873,8 @@ __metadata:
     "@deathbeds/jupyterlab-rjsf": ^1.1.0
     "@jupyter/docprovider": ^2.0.0
     "@jupyter/ydoc": ^1.0.0
-    "@jupytercad/occ-worker": ^3.0.0-alpha.0
-    "@jupytercad/schema": ^3.0.0-alpha.0
+    "@jupytercad/occ-worker": ^3.0.0-alpha.1
+    "@jupytercad/schema": ^3.0.0-alpha.1
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/completer": ^4.2.4
@@ -917,8 +917,8 @@ __metadata:
     "@jupyter/collaboration": ^2.0.0
     "@jupyter/docprovider": ^2.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/base": ^3.0.0-alpha.0
-    "@jupytercad/schema": ^3.0.0-alpha.0
+    "@jupytercad/base": ^3.0.0-alpha.1
+    "@jupytercad/schema": ^3.0.0-alpha.1
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/application-extension": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -977,14 +977,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-core@^3.0.0-alpha.0, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
+"@jupytercad/jupytercad-core@^3.0.0-alpha.1, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad_core"
   dependencies:
     "@jupyter/docprovider": ^2.0.0
-    "@jupytercad/base": ^3.0.0-alpha.0
-    "@jupytercad/occ-worker": ^3.0.0-alpha.0
-    "@jupytercad/schema": ^3.0.0-alpha.0
+    "@jupytercad/base": ^3.0.0-alpha.1
+    "@jupytercad/occ-worker": ^3.0.0-alpha.1
+    "@jupytercad/schema": ^3.0.0-alpha.1
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1017,9 +1017,9 @@ __metadata:
   resolution: "@jupytercad/jupytercad-lab@workspace:python/jupytercad_lab"
   dependencies:
     "@jupyter/docprovider": ^2.0.0
-    "@jupytercad/base": ^3.0.0-alpha.0
-    "@jupytercad/jupytercad-core": ^3.0.0-alpha.0
-    "@jupytercad/schema": ^3.0.0-alpha.0
+    "@jupytercad/base": ^3.0.0-alpha.1
+    "@jupytercad/jupytercad-core": ^3.0.0-alpha.1
+    "@jupytercad/schema": ^3.0.0-alpha.1
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1068,12 +1068,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/occ-worker@^3.0.0-alpha.0, @jupytercad/occ-worker@workspace:packages/occ-worker":
+"@jupytercad/occ-worker@^3.0.0-alpha.1, @jupytercad/occ-worker@workspace:packages/occ-worker":
   version: 0.0.0-use.local
   resolution: "@jupytercad/occ-worker@workspace:packages/occ-worker"
   dependencies:
-    "@jupytercad/opencascade": ^3.0.0-alpha.0
-    "@jupytercad/schema": ^3.0.0-alpha.0
+    "@jupytercad/opencascade": ^3.0.0-alpha.1
+    "@jupytercad/schema": ^3.0.0-alpha.1
     "@lumino/coreutils": ^2.0.0
     "@types/node": ^18.15.11
     copy-webpack-plugin: ^10.0.0
@@ -1089,7 +1089,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/opencascade@^3.0.0-alpha.0, @jupytercad/opencascade@workspace:packages/opencascade":
+"@jupytercad/opencascade@^3.0.0-alpha.1, @jupytercad/opencascade@workspace:packages/opencascade":
   version: 0.0.0-use.local
   resolution: "@jupytercad/opencascade@workspace:packages/opencascade"
   dependencies:
@@ -1100,7 +1100,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/schema@^3.0.0-alpha.0, @jupytercad/schema@workspace:packages/schema":
+"@jupytercad/schema@^3.0.0-alpha.1, @jupytercad/schema@workspace:packages/schema":
   version: 0.0.0-use.local
   resolution: "@jupytercad/schema@workspace:packages/schema"
   dependencies:
@@ -3667,12 +3667,12 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:*, @types/react@npm:^18.0.26":
-  version: 18.3.5
-  resolution: "@types/react@npm:18.3.5"
+  version: 18.3.6
+  resolution: "@types/react@npm:18.3.6"
   dependencies:
     "@types/prop-types": "*"
     csstype: ^3.0.2
-  checksum: 63d2ff473b348c902b68c20be55d2c5124d078c4336c2d1778f316c27789ed596657e8e714022ce14fb24994b0960fc64c913e629bb0bf85815355b0c31eb46b
+  checksum: 66cf1ea408b63c518e2d36c5a8c425e856885c62160d85cfa653c061bbf744f7858b102da04d2bad72bd93a5469e016538e0723f57ef56de512c79712d209add
   languageName: node
   linkType: hard
 
