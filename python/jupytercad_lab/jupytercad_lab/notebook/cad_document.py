@@ -141,18 +141,13 @@ class CadDocument(CommWidget):
             )
         contents = [{"user": user, "value": message}]
         if self._metadata is not None:
-            with self.ydoc.transaction() as t:
-                self._metadata.set(
-                    t,
-                    new_id,
-                    json.dumps(
-                        {
-                            "position": position,
-                            "contents": contents,
-                            "parent": parent,
-                        }
-                    ),
-                )
+            self._metadata[new_id] = json.dumps(
+                {
+                    "position": position,
+                    "contents": contents,
+                    "parent": parent,
+                }
+            )
             return new_id
 
     def remove_annotation(self, annotation_id: str) -> None:
@@ -162,8 +157,7 @@ class CadDocument(CommWidget):
         :param annotation_id: The id of the annotation
         """
         if self._metadata is not None:
-            with self.ydoc.transaction() as t:
-                self._metadata.pop(t, annotation_id, None)
+            del self._metadata[annotation_id]
 
     def add_step_file(
         self,
