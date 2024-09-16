@@ -128,11 +128,7 @@
       "type": "object",
       "default": {},
       "additionalProperties": false,
-      "properties": {
-        "guidata": {
-          "type": "object"
-        }
-      }
+      "properties": {}
     }
   }
 }

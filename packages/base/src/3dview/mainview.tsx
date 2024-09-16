@@ -577,7 +577,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._scene.remove(this._clippingPlaneMesh);
     }
 
-    const guidata = this._model.sharedModel.getOption('guidata');
     const selectedNames = this._selectedMeshes.map(sel => sel.name);
     this._selectedMeshes = [];
 
@@ -603,7 +602,6 @@ export class MainView extends React.Component<IProps, IStates> {
         clippingPlanes: this._clippingPlanes,
         selected,
         isSolid,
-        guidata,
         objColor
       });
 
@@ -665,9 +663,6 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     });
 
-    if (guidata) {
-      this._model.sharedModel?.setOption('guidata', guidata);
-    }
     // Update the reflength
     this._updateRefLength();
     // Set the expoded view if it's enabled
@@ -1074,34 +1069,34 @@ export class MainView extends React.Component<IProps, IStates> {
     sender: IJupyterCadDoc,
     change: MapChange
   ): void {
-    const guidata = sender.getOption('guidata');
+    const objects = sender.objects;
 
-    if (guidata) {
-      for (const objName in guidata) {
+    if (objects) {
+      for (const objData of objects) {
+        const objName = objData.name;
         const obj = this._meshGroup?.getObjectByName(objName) as
           | BasicMesh
           | undefined;
-        const objColor = obj?.material.color;
+
         if (!obj) {
           continue;
         }
-        if (
-          Object.prototype.hasOwnProperty.call(guidata[objName], 'visibility')
-        ) {
-          const explodedLineHelper =
-            this._explodedViewLinesHelperGroup?.getObjectByName(objName);
-          const objGuiData = guidata[objName];
-          if (objGuiData) {
-            obj.parent!.visible = objGuiData['visibility'];
 
-            if (explodedLineHelper) {
-              explodedLineHelper.visible = objGuiData['visibility'];
-            }
-          }
+        const isVisible = objData.visible;
+
+        const objColor = obj?.material.color;
+
+        obj.parent!.visible = isVisible;
+
+        const explodedLineHelper =
+          this._explodedViewLinesHelperGroup?.getObjectByName(objName);
+        if (explodedLineHelper) {
+          explodedLineHelper.visible = isVisible;
         }
+
         if (obj.material.color) {
-          if ('color' in guidata[objName]) {
-            const rgba = guidata[objName]['color'] as number[];
+          if ('color' in objData) {
+            const rgba = objData.color as number[];
             const color = new THREE.Color(rgba[0], rgba[1], rgba[2]);
             obj.material.color = color;
           } else {
