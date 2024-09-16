@@ -1,8 +1,9 @@
-import { WebSocketProvider } from '@jupyter/docprovider';
+import { ICollaborativeDrive } from '@jupyter/docprovider';
 import { JupyterCadPanel } from '@jupytercad/base';
 import {
   IJCadWorkerRegistry,
   IJCadWorkerRegistryToken,
+  IJupyterCadDoc,
   JupyterCadModel
 } from '@jupytercad/schema';
 
@@ -10,9 +11,7 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import { URLExt } from '@jupyterlab/coreutils';
-import { ServerConnection, User } from '@jupyterlab/services';
-import { ITranslator, nullTranslator } from '@jupyterlab/translation';
+import { Contents } from '@jupyterlab/services';
 import { MessageLoop } from '@lumino/messaging';
 import { Panel, Widget } from '@lumino/widgets';
 import * as Y from 'yjs';
@@ -30,7 +29,6 @@ export interface ICommMetadata {
   ymodel_name: string;
 }
 
-const Y_DOCUMENT_PROVIDER_URL = 'api/collaboration/room';
 export const CLASS_NAME = 'jupytercad-notebook-widget';
 
 export class YJupyterCADModel extends JupyterYModel {
@@ -65,51 +63,29 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:yjswidget-plugin',
   autoStart: true,
   requires: [IJCadWorkerRegistryToken],
-  optional: [IJupyterYWidgetManager, ITranslator],
+  optional: [IJupyterYWidgetManager, ICollaborativeDrive],
   activate: (
     app: JupyterFrontEnd,
     workerRegistry: IJCadWorkerRegistry,
     yWidgetManager?: IJupyterYWidgetManager,
-    translator?: ITranslator
+    drive?: ICollaborativeDrive
   ): void => {
     if (!yWidgetManager) {
       console.error('Missing IJupyterYWidgetManager token!');
       return;
     }
-    const labTranslator = translator ?? nullTranslator;
+    if (!drive) {
+      console.error('Missing ICollaborativeDrive token!');
+      return;
+    }
     class YJupyterCADModelFactory extends YJupyterCADModel {
       ydocFactory(commMetadata: ICommMetadata): Y.Doc {
         const { path, format, contentType } = commMetadata;
+        const fileFormat = format as Contents.FileFormat;
 
-        this.jupyterCADModel = new JupyterCadModel({});
-        const user = app.serviceManager.user;
-        if (path && format && contentType) {
-          const server = ServerConnection.makeSettings();
-          const serverUrl = URLExt.join(server.wsUrl, Y_DOCUMENT_PROVIDER_URL);
-          const ywsProvider = new WebSocketProvider({
-            url: serverUrl,
-            path,
-            format,
-            contentType,
-            model: this.jupyterCADModel.sharedModel,
-            user,
-            translator: labTranslator.load('jupyterlab')
-          });
-          this.jupyterCADModel.disposed.connect(() => {
-            ywsProvider.dispose();
-          });
-        } else {
-          const awareness = this.jupyterCADModel.sharedModel.awareness;
-          const _onUserChanged = (user: User.IManager) => {
-            awareness.setLocalStateField('user', user.identity);
-          };
-          user.ready
-            .then(() => {
-              _onUserChanged(user);
-            })
-            .catch(e => console.error(e));
-          user.userChanged.connect(_onUserChanged, this);
-        }
+        const sharedModel = drive!.sharedModelFactory.createNew({ path, format: fileFormat, contentType, collaborative: true })!;
+        const jupyterCadDoc = sharedModel as IJupyterCadDoc;
+        this.jupyterCADModel = new JupyterCadModel({ sharedModel: jupyterCadDoc });
 
         return this.jupyterCADModel.sharedModel.ydoc;
       }
