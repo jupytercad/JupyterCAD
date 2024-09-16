@@ -28,7 +28,7 @@ dependencies = [
   "yjs-widgets>=0.3.5,<0.4",
   "comm>=0.1.2,<0.2.0",
   "pydantic>=2,<3",
-  "jupytercad_core>=2.0.0a0,<3",
+  "jupytercad_core>=3.0.0a0,<4",
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 license = {file = "LICENSE"}
