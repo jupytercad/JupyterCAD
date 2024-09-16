@@ -83,9 +83,16 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
         const { path, format, contentType } = commMetadata;
         const fileFormat = format as Contents.FileFormat;
 
-        const sharedModel = drive!.sharedModelFactory.createNew({ path, format: fileFormat, contentType, collaborative: true })!;
+        const sharedModel = drive!.sharedModelFactory.createNew({
+          path,
+          format: fileFormat,
+          contentType,
+          collaborative: true
+        })!;
         const jupyterCadDoc = sharedModel as IJupyterCadDoc;
-        this.jupyterCADModel = new JupyterCadModel({ sharedModel: jupyterCadDoc });
+        this.jupyterCADModel = new JupyterCadModel({
+          sharedModel: jupyterCadDoc
+        });
 
         return this.jupyterCADModel.sharedModel.ydoc;
       }
