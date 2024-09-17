@@ -3,6 +3,7 @@ import { ServerConnection } from '@jupyterlab/services';
 import { LabIcon } from '@jupyterlab/ui-components';
 import * as d3Color from 'd3-color';
 
+import logoStr from '../style/icon/logo.svg';
 import axesIconStr from '../style/icon/axes.svg';
 import boxIconStr from '../style/icon/box.svg';
 import coneIconStr from '../style/icon/cone.svg';
@@ -19,6 +20,11 @@ import clippingIconStr from '../style/icon/clipping.svg';
 import chamferIconStr from '../style/icon/chamfer.svg';
 import filletIconStr from '../style/icon/fillet.svg';
 import wireframeIconStr from '../style/icon/wireframe.svg';
+
+export const logoIcon = new LabIcon({
+  name: 'jupytercad:logo',
+  svgstr: logoStr
+});
 
 export const jcLightIcon = new LabIcon({
   name: 'jupytercad:control-light',
