@@ -192,7 +192,6 @@ jobs:
           output_name: galata-apss
           artifact_link: 'https://github.com/${{ github.repository }}/actions/runs/${{github.run_id}}/artifacts/${{ steps.upload-galata-artifact.outputs.artifact_id }}'
 
-
   check_links:
     name: Check Links
     runs-on: ubuntu-latest
