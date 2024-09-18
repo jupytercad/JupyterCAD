@@ -21,7 +21,7 @@ classifiers = [
 dependencies = [
   "jupyter_server>=2.0.6,<3",
   "jupyter_ydoc>=2,<3",
-  "jupyter-collaboration>=2.1.0,<3",
+  "jupyter-collaboration>=3.0.0b4,<4",
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 license = {file = "LICENSE"}
