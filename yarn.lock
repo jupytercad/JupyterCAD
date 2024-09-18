@@ -783,9 +783,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyter/collaboration@npm:^3.0.0-beta.4":
-  version: 3.0.0-beta.4
-  resolution: "@jupyter/collaboration@npm:3.0.0-beta.4"
+"@jupyter/collaboration@npm:^3.0.0-beta.6":
+  version: 3.0.0-beta.6
+  resolution: "@jupyter/collaboration@npm:3.0.0-beta.6"
   dependencies:
     "@codemirror/state": ^6.2.0
     "@codemirror/view": ^6.7.0
@@ -801,7 +801,7 @@ __metadata:
     react: ^18.2.0
     y-protocols: ^1.0.5
     yjs: ^13.5.40
-  checksum: ecde97b2c721ba9275ab501c2ddd0064b176aabe841cec9b9ad6ba0350b917cfb78fc6f51014ca9cc464f8cd89fbd88a5af1743e81f111b81328110a3838b406
+  checksum: 7adc5375987639c45dc06f973f4722c7dcba90585707d92d04ac8fcebeadd9b420d1d97970c081a612b0b100b23971b34014c9839a73ff39828961003717193d
   languageName: node
   linkType: hard
 
@@ -936,7 +936,7 @@ __metadata:
   dependencies:
     "@codemirror/state": ^6.2.0
     "@codemirror/view": ^6.9.3
-    "@jupyter/collaboration": ^3.0.0-beta.4
+    "@jupyter/collaboration": ^3.0.0-beta.6
     "@jupyter/docprovider": ^2.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
     "@jupytercad/base": ^3.0.0-alpha.1
