@@ -187,6 +187,7 @@ jobs:
             ui-tests/playwright-report
 
       - name: Save artifact data
+        if: always()
         uses: trungleduc/appsharingspace-pr-comment/.github/actions/save-artifact-link@v2
         with:
           output_name: galata-apss
