@@ -50,6 +50,7 @@ import {
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
+import { ViewportGizmo } from 'three-viewport-gizmo';
 interface IProps {
   viewModel: MainViewModel;
 }
@@ -225,6 +226,66 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.setSize(500, 500, false);
       this.divRef.current.appendChild(this._renderer.domElement); // mount using React ref
 
+      const container = document.querySelector('.jcad-Mainview');
+
+      const options = {
+        container: container as HTMLElement,
+        size: 150,
+        lineWidth: 2,
+        backgroundSphere: {
+          enabled: true,
+          color: new THREE.Color('gray'),
+          opacity: 0.5,
+        },
+        font: {
+          family: 'Arial',
+          weight: 'bold'
+        },
+        resolution: 2,
+        x: {
+          text: 'X',
+          drawCircle: true,
+          drawLine: true,
+          border: true,
+          colors: {
+            main: 'red',
+            hover: 'darkred',
+            text: 'white',
+            hoverText: 'yellow'
+          }
+        },
+        y: {
+          text: 'Y',
+          drawCircle: true,
+          drawLine: true,
+          border: true,
+          colors: {
+            main: 'green',
+            hover: 'darkgreen',
+            text: 'white',
+            hoverText: 'yellow'
+          }
+        },
+        z: {
+          text: 'Z',
+          drawCircle: true,
+          drawLine: true,
+          border: true,
+          colors: {
+            main: 'blue',
+            hover: 'darkblue',
+            text: 'white',
+            hoverText: 'yellow'
+          }
+        },
+        nx: { colors: { main: 'red' } },
+        ny: { colors: { main: 'green' } },
+        nz: { colors: { main: 'blue' } }
+      };
+
+      this._viewportGizmo = new ViewportGizmo(this._camera, this._renderer, options);
+      this._viewportGizmo.update();
+
       this._syncPointer = throttle(
         (position: THREE.Vector3 | undefined, parent: string | undefined) => {
           if (position && parent) {
@@ -372,6 +433,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._renderer.setRenderTarget(null);
     this._renderer.clearDepth();
     this._renderer.render(this._scene, this._camera);
+    this._viewportGizmo.render();
   };
 
   resizeCanvasToDisplaySize = (): void => {
@@ -1393,6 +1455,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _geometry: THREE.BufferGeometry; // Threejs BufferGeometry
   private _refLength: number | null = null; // Length of bounding box of current object
   private _sceneAxe: THREE.Object3D | null; // Array of  X, Y and Z axe
+  private _viewportGizmo: ViewportGizmo; // Viewport gizmo
   private _controls: OrbitControls; // Mouse controls
   private _transformControls: TransformControls; // Mesh position/rotation controls
   private _pointer3D: IPointer | null = null;

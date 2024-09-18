@@ -66,6 +66,7 @@
     "styled-components": "^5.3.6",
     "three": "^0.135.0",
     "three-mesh-bvh": "^0.5.17",
+    "three-viewport-gizmo": "^0.1.5",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

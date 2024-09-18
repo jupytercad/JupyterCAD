@@ -903,6 +903,7 @@ __metadata:
     styled-components: ^5.3.6
     three: ^0.135.0
     three-mesh-bvh: ^0.5.17
+    three-viewport-gizmo: ^0.1.5
     typescript: ^5
     uuid: ^8.3.2
   languageName: unknown
@@ -4738,6 +4739,15 @@ __metadata:
   version: 1.0.1
   resolution: "camelize@npm:1.0.1"
   checksum: 91d8611d09af725e422a23993890d22b2b72b4cabf7239651856950c76b4bf53fe0d0da7c5e4db05180e898e4e647220e78c9fbc976113bd96d603d1fcbfcb99
+  languageName: node
+  linkType: hard
+
+"camera-controls@npm:^2.8.3":
+  version: 2.9.0
+  resolution: "camera-controls@npm:2.9.0"
+  peerDependencies:
+    three: ">=0.126.1"
+  checksum: 47e7150a72bb96310cc00dd82c8719b376e925fda963e58a13e5cc61e94d0d13a9065a423de739ad9f7e084854f891b6edf03990260a974ead869e28590fd109
   languageName: node
   linkType: hard
 
@@ -11932,10 +11942,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"three-viewport-gizmo@npm:^0.1.0, three-viewport-gizmo@npm:^0.1.5":
+  version: 0.1.5
+  resolution: "three-viewport-gizmo@npm:0.1.5"
+  dependencies:
+    camera-controls: ^2.8.3
+    three: ^0.162.0
+    three-viewport-gizmo: ^0.1.0
+  checksum: f00619a6d3ac0cf4bb310ef2f55739747b3f2ce4904802dfd7cda53a5b9e1d71c17cd8b536343143a3ad0d86ce9a4343285461cbc27bfdb00577bd3a190a27d0
+  languageName: node
+  linkType: hard
+
 "three@npm:^0.135.0":
   version: 0.135.0
   resolution: "three@npm:0.135.0"
   checksum: bd7e195932587a5be0c887947adf2b3898c6fa71722800432562aed10beddb2f448d0f237d937824805eebf90e625fc22ed57054618121f47811a8e82b528507
+  languageName: node
+  linkType: hard
+
+"three@npm:^0.162.0":
+  version: 0.162.0
+  resolution: "three@npm:0.162.0"
+  checksum: f3ba4d518f7cb209b6e4f8818177c1230014fc1b3dcd66ab113a9babf8e2b522645a1eb144dfc0900bf194e8890bc5d04f358dd4a7f06ee8aa44db56224f88fc
   languageName: node
   linkType: hard
 
