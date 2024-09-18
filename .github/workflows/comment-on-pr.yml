@@ -10,7 +10,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  comment:
+  comment-preview:
     runs-on: ubuntu-latest
     if: >
       ${{ github.event.workflow_run.event == 'pull_request' &&
@@ -21,3 +21,15 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           index_path: lab/index.html
+  comment-galata:
+    runs-on: ubuntu-latest
+    if: >
+      ${{ github.event.workflow_run.event == 'pull_request'}}
+    steps:
+      - name: 'Comment galata link on workflow'
+        uses: trungleduc/appsharingspace-pr-comment/.github/actions/pr-comment@v2
+        with:
+          comment_prefix: '**Integration tests repot:**'
+          artifact_name: galata-apss
+          github_token: ${{ secrets.github_token }}
+          index_path: playwright-report/index.html

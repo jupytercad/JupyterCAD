@@ -177,6 +177,7 @@ jobs:
           npx playwright test
 
       - name: Upload Playwright Test report
+        id: upload-galata-artifact
         if: always()
         uses: actions/upload-artifact@v3
         with:
@@ -184,6 +185,12 @@ jobs:
           path: |
             ui-tests/test-results
             ui-tests/playwright-report
+
+      - name: Save artifact data
+        uses: trungleduc/appsharingspace-pr-comment/.github/actions/save-artifact-link@v2
+        with:
+          output_name: galata-apss
+          artifact_link: 'https://github.com/${{ github.repository }}/actions/runs/${{github.run_id}}/artifacts/${{ steps.upload-galata-artifact.outputs.artifact_id }}'
 
   check_links:
     name: Check Links
