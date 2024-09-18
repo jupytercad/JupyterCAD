@@ -51,6 +51,7 @@ import {
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
 import { ViewportGizmo } from 'three-viewport-gizmo';
+import { GizmoOptions } from 'three-viewport-gizmo/dist/lib/types';
 interface IProps {
   viewModel: MainViewModel;
 }
@@ -226,61 +227,87 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.setSize(500, 500, false);
       this.divRef.current.appendChild(this._renderer.domElement); // mount using React ref
 
-      const container = document.querySelector('.jcad-Mainview');
-
-      const options = {
-        container: container as HTMLElement,
-        size: 150,
-        lineWidth: 2,
+      const options: Omit<Required<GizmoOptions>, 'container'> = {
+        placement: 'top-right',
+        size: Math.min(window.innerWidth, window.innerHeight) * 0.8,
+        lineWidth: 3,
+        offset: { top: 0, left: 0, right: 0, bottom: 0 },
+        font: {
+          family: 'helvetica',
+          weight: 900,
+        },
+        resolution: 64,
         backgroundSphere: {
           enabled: true,
-          color: new THREE.Color('gray'),
-          opacity: 0.5,
+          color: 0xffffff,
+          opacity: 0.2,
         },
-        font: {
-          family: 'Arial',
-          weight: 'bold'
-        },
-        resolution: 2,
         x: {
           text: 'X',
-          drawCircle: true,
           drawLine: true,
-          border: true,
+          border: false,
           colors: {
-            main: 'red',
-            hover: 'darkred',
-            text: 'white',
-            hoverText: 'yellow'
-          }
+            main: '#ff7f9b',
+            hover: '#ffffff',
+            text: '#000000',
+            hoverText: '#000000',
+          },
         },
         y: {
           text: 'Y',
-          drawCircle: true,
           drawLine: true,
-          border: true,
+          border: false,
           colors: {
-            main: 'green',
-            hover: 'darkgreen',
-            text: 'white',
-            hoverText: 'yellow'
-          }
+            main: '#c2ee00',
+            hover: '#ffffff',
+            text: '#000000',
+            hoverText: '#000000',
+          },
         },
         z: {
           text: 'Z',
-          drawCircle: true,
           drawLine: true,
-          border: true,
+          border: false,
           colors: {
-            main: 'blue',
-            hover: 'darkblue',
-            text: 'white',
-            hoverText: 'yellow'
-          }
+            main: '#73c5ff',
+            hover: '#ffffff',
+            text: '#000000',
+            hoverText: '#000000',
+          },
         },
-        nx: { colors: { main: 'red' } },
-        ny: { colors: { main: 'green' } },
-        nz: { colors: { main: 'blue' } }
+        nx: {
+          text: '-X',
+          drawLine: true,
+          border: false,
+          colors: {
+            main: '#ff7f9b',
+            hover: '#ffffff',
+            text: '#000000',
+            hoverText: '#000000',
+          },
+        },
+        ny: {
+          text: '-Y',
+          drawLine: true,
+          border: false,
+          colors: {
+            main: '#c2ee00',
+            hover: '#ffffff',
+            text: '#000000',
+            hoverText: '#000000',
+          },
+        },
+        nz: {
+          text: '-Z',
+          drawLine: true,
+          border: false,
+          colors: {
+            main: '#73c5ff',
+            hover: '#ffffff',
+            text: '#000000',
+            hoverText: '#000000',
+          },
+        },
       };
 
       this._viewportGizmo = new ViewportGizmo(this._camera, this._renderer, options);
