@@ -234,13 +234,13 @@ export class MainView extends React.Component<IProps, IStates> {
         offset: { top: 0, left: 0, right: 0, bottom: 0 },
         font: {
           family: 'helvetica',
-          weight: 900,
+          weight: 900
         },
         resolution: 64,
         backgroundSphere: {
           enabled: true,
           color: 0xffffff,
-          opacity: 0.2,
+          opacity: 0.2
         },
         x: {
           text: 'X',
@@ -250,8 +250,8 @@ export class MainView extends React.Component<IProps, IStates> {
             main: '#ff7f9b',
             hover: '#ffffff',
             text: '#000000',
-            hoverText: '#000000',
-          },
+            hoverText: '#000000'
+          }
         },
         y: {
           text: 'Y',
@@ -261,8 +261,8 @@ export class MainView extends React.Component<IProps, IStates> {
             main: '#c2ee00',
             hover: '#ffffff',
             text: '#000000',
-            hoverText: '#000000',
-          },
+            hoverText: '#000000'
+          }
         },
         z: {
           text: 'Z',
@@ -272,8 +272,8 @@ export class MainView extends React.Component<IProps, IStates> {
             main: '#73c5ff',
             hover: '#ffffff',
             text: '#000000',
-            hoverText: '#000000',
-          },
+            hoverText: '#000000'
+          }
         },
         nx: {
           text: '-X',
@@ -283,8 +283,8 @@ export class MainView extends React.Component<IProps, IStates> {
             main: '#ff7f9b',
             hover: '#ffffff',
             text: '#000000',
-            hoverText: '#000000',
-          },
+            hoverText: '#000000'
+          }
         },
         ny: {
           text: '-Y',
@@ -294,8 +294,8 @@ export class MainView extends React.Component<IProps, IStates> {
             main: '#c2ee00',
             hover: '#ffffff',
             text: '#000000',
-            hoverText: '#000000',
-          },
+            hoverText: '#000000'
+          }
         },
         nz: {
           text: '-Z',
@@ -305,12 +305,16 @@ export class MainView extends React.Component<IProps, IStates> {
             main: '#73c5ff',
             hover: '#ffffff',
             text: '#000000',
-            hoverText: '#000000',
-          },
-        },
+            hoverText: '#000000'
+          }
+        }
       };
 
-      this._viewportGizmo = new ViewportGizmo(this._camera, this._renderer, options);
+      this._viewportGizmo = new ViewportGizmo(
+        this._camera,
+        this._renderer,
+        options
+      );
       this._viewportGizmo.update();
 
       this._syncPointer = throttle(
