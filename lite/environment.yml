@@ -10,4 +10,5 @@ dependencies:
   - comm
   - pip:
       - ./jupytercad_lab-1.0.0-py3-none-any.whl
-      - jupyter-shared-drive
+      - jupyter-shared-drive-ui
+      - jupyter-shared-docprovider
