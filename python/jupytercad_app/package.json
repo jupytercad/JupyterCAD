@@ -1,6 +1,6 @@
 {
   "name": "@jupytercad/jupytercad-app",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0-alpha.2",
   "description": "A JupyterLab standalone app for 3D modelling.",
   "keywords": [
     "jupyter",
@@ -54,8 +54,8 @@
     "@jupyter/collaboration": "^3.0.0-beta.6",
     "@jupyter/docprovider": "^2.0.0",
     "@jupyter/ydoc": "^0.3.4 || ^1.0.2",
-    "@jupytercad/base": "^3.0.0-alpha.1",
-    "@jupytercad/schema": "^3.0.0-alpha.1",
+    "@jupytercad/base": "^3.0.0-alpha.2",
+    "@jupytercad/schema": "^3.0.0-alpha.2",
     "@jupyterlab/application": "^4.0.0",
     "@jupyterlab/application-extension": "^4.0.0",
     "@jupyterlab/apputils": "^4.0.0",

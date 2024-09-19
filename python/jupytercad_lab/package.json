@@ -1,6 +1,6 @@
 {
   "name": "@jupytercad/jupytercad-lab",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0-alpha.2",
   "description": "JupyterCad Lab extension.",
   "keywords": [
     "jupyter",
@@ -52,9 +52,9 @@
   },
   "dependencies": {
     "@jupyter/docprovider": "^2.0.0",
-    "@jupytercad/base": "^3.0.0-alpha.1",
-    "@jupytercad/jupytercad-core": "^3.0.0-alpha.1",
-    "@jupytercad/schema": "^3.0.0-alpha.1",
+    "@jupytercad/base": "^3.0.0-alpha.2",
+    "@jupytercad/jupytercad-core": "^3.0.0-alpha.2",
+    "@jupytercad/schema": "^3.0.0-alpha.2",
     "@jupyterlab/application": "^4.0.0",
     "@jupyterlab/apputils": "^4.0.0",
     "@jupyterlab/coreutils": "^6.0.0",
