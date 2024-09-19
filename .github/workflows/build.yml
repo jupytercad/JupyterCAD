@@ -219,6 +219,7 @@ jobs:
           create-args: >-
             python=3.10
             pip
+            empack=3
             jupyterlite-core>=0.2.0,<0.3.0
             jupyterlite-xeus>=0.1.2,<0.2
 
@@ -240,6 +241,7 @@ jobs:
         run: |
           set -eux
           mkdir -p content && cp ../examples/test.jcad ./content
+          cp ../jupytercad_lab/dist/jupytercad*.whl jupytercad_lab-1.0.0-py3-none-any.whl
           jupyter lite build --contents content --output-dir dist
 
       - name: Upload github-pages artifact
