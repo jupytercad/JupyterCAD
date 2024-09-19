@@ -29,9 +29,7 @@ test.describe('Sketcher test', () => {
     await page.goto();
 
     const fileName = 'test.jcad';
-    const fullPath = `examples/${fileName}`;
-    await page.notebook.openByPath(fullPath);
-    await page.notebook.activate(fullPath);
+    await page.getByTitle('Create a new JCAD Editor').first().click();
     await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
 
     await page.waitForTimeout(1000);
@@ -56,11 +54,8 @@ test.describe('Sketcher test', () => {
 
   test(`Should draw a circle`, async ({ page }) => {
     await page.goto();
-
     const fileName = 'test.jcad';
-    const fullPath = `examples/${fileName}`;
-    await page.notebook.openByPath(fullPath);
-    await page.notebook.activate(fullPath);
+    await page.getByTitle('Create a new JCAD Editor').first().click();
     await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
 
     await page.waitForTimeout(1000);

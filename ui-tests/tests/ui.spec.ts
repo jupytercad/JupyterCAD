@@ -107,9 +107,7 @@ test.describe('UI Test', () => {
       await page.goto();
 
       const fileName = 'test.jcad';
-      const fullPath = `examples/${fileName}`;
-      await page.notebook.openByPath(fullPath);
-      await page.notebook.activate(fullPath);
+      await page.getByTitle('Create a new JCAD Editor').first().click();
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
 
       await page.waitForTimeout(1000);
@@ -118,7 +116,9 @@ test.describe('UI Test', () => {
       }
 
       await page.getByTitle('New Box').click();
-      page.locator('input[id^="id-jp-schemaform"][label="Name"]').fill('Foo');
+      await page
+        .locator('input[id^="id-jp-schemaform"][label="Name"]')
+        .fill('Foo');
       await page
         .locator('div.jp-Dialog-buttonLabel', {
           hasText: 'Submit'
