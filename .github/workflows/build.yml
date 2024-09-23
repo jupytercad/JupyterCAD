@@ -177,13 +177,21 @@ jobs:
           npx playwright test
 
       - name: Upload Playwright Test report
+        id: upload-galata-artifact
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jupytercad-playwright-tests
           path: |
             ui-tests/test-results
             ui-tests/playwright-report
+
+      - name: Save artifact data
+        if: always()
+        uses: trungleduc/appsharingspace-pr-comment/.github/actions/save-artifact-link@v2
+        with:
+          output_name: galata-apss
+          artifact_link: 'https://github.com/${{ github.repository }}/actions/runs/${{github.run_id}}/artifacts/${{ steps.upload-galata-artifact.outputs.artifact-id }}'
 
   check_links:
     name: Check Links
@@ -211,6 +219,7 @@ jobs:
           create-args: >-
             python=3.10
             pip
+            empack=3
             jupyterlite-core>=0.2.0,<0.3.0
             jupyterlite-xeus>=0.1.2,<0.2
 
@@ -232,6 +241,7 @@ jobs:
         run: |
           set -eux
           mkdir -p content && cp ../examples/test.jcad ./content
+          cp ../jupytercad_lab/dist/jupytercad*.whl jupytercad_lab-1.0.0-py3-none-any.whl
           jupyter lite build --contents content --output-dir dist
 
       - name: Upload github-pages artifact

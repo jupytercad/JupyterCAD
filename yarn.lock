@@ -248,14 +248,14 @@ __metadata:
   linkType: hard
 
 "@codemirror/commands@npm:^6.3.3":
-  version: 6.6.1
-  resolution: "@codemirror/commands@npm:6.6.1"
+  version: 6.6.2
+  resolution: "@codemirror/commands@npm:6.6.2"
   dependencies:
     "@codemirror/language": ^6.0.0
     "@codemirror/state": ^6.4.0
     "@codemirror/view": ^6.27.0
     "@lezer/common": ^1.1.0
-  checksum: 102cb14f1183eb33f6469148121912863264e281ba22b317915c8e883109d9522f0aa932c5315711a1ecf611fa7894552d6f8604688ca76c7af24d0db83df590
+  checksum: 4da317ff4f381c22adcf01574c7792cc7ac17ee82cef2ea3eb8f696a0f921bac05a3b94ea8cab067e2202228aecc7020f766c10d003318ab61e4f387cf4dbdd6
   languageName: node
   linkType: hard
 
@@ -783,6 +783,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jupyter/collaboration@npm:^3.0.0-beta.6":
+  version: 3.0.0-beta.6
+  resolution: "@jupyter/collaboration@npm:3.0.0-beta.6"
+  dependencies:
+    "@codemirror/state": ^6.2.0
+    "@codemirror/view": ^6.7.0
+    "@jupyterlab/apputils": ^4.0.5
+    "@jupyterlab/coreutils": ^6.0.5
+    "@jupyterlab/docregistry": ^4.0.5
+    "@jupyterlab/services": ^7.0.5
+    "@jupyterlab/ui-components": ^4.0.5
+    "@lumino/coreutils": ^2.1.0
+    "@lumino/signaling": ^2.0.0
+    "@lumino/virtualdom": ^2.0.0
+    "@lumino/widgets": ^2.1.0
+    react: ^18.2.0
+    y-protocols: ^1.0.5
+    yjs: ^13.5.40
+  checksum: 7adc5375987639c45dc06f973f4722c7dcba90585707d92d04ac8fcebeadd9b420d1d97970c081a612b0b100b23971b34014c9839a73ff39828961003717193d
+  languageName: node
+  linkType: hard
+
 "@jupyter/docprovider@npm:^2.0.0, @jupyter/docprovider@npm:^2.1.2":
   version: 2.1.2
   resolution: "@jupyter/docprovider@npm:2.1.2"
@@ -865,7 +887,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupytercad/base@^3.0.0-alpha.1, @jupytercad/base@workspace:packages/base":
+"@jupytercad/base@^3.0.0-alpha.2, @jupytercad/base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@jupytercad/base@workspace:packages/base"
   dependencies:
@@ -873,8 +895,8 @@ __metadata:
     "@deathbeds/jupyterlab-rjsf": ^1.1.0
     "@jupyter/docprovider": ^2.0.0
     "@jupyter/ydoc": ^1.0.0
-    "@jupytercad/occ-worker": ^3.0.0-alpha.1
-    "@jupytercad/schema": ^3.0.0-alpha.1
+    "@jupytercad/occ-worker": ^3.0.0-alpha.2
+    "@jupytercad/schema": ^3.0.0-alpha.2
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/completer": ^4.2.4
@@ -915,11 +937,11 @@ __metadata:
   dependencies:
     "@codemirror/state": ^6.2.0
     "@codemirror/view": ^6.9.3
-    "@jupyter/collaboration": ^2.0.0
+    "@jupyter/collaboration": ^3.0.0-beta.6
     "@jupyter/docprovider": ^2.0.0
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
-    "@jupytercad/base": ^3.0.0-alpha.1
-    "@jupytercad/schema": ^3.0.0-alpha.1
+    "@jupytercad/base": ^3.0.0-alpha.2
+    "@jupytercad/schema": ^3.0.0-alpha.2
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/application-extension": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -978,14 +1000,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-core@^3.0.0-alpha.1, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
+"@jupytercad/jupytercad-core@^3.0.0-alpha.2, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad_core"
   dependencies:
     "@jupyter/docprovider": ^2.0.0
-    "@jupytercad/base": ^3.0.0-alpha.1
-    "@jupytercad/occ-worker": ^3.0.0-alpha.1
-    "@jupytercad/schema": ^3.0.0-alpha.1
+    "@jupytercad/base": ^3.0.0-alpha.2
+    "@jupytercad/occ-worker": ^3.0.0-alpha.2
+    "@jupytercad/schema": ^3.0.0-alpha.2
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1018,9 +1040,9 @@ __metadata:
   resolution: "@jupytercad/jupytercad-lab@workspace:python/jupytercad_lab"
   dependencies:
     "@jupyter/docprovider": ^2.0.0
-    "@jupytercad/base": ^3.0.0-alpha.1
-    "@jupytercad/jupytercad-core": ^3.0.0-alpha.1
-    "@jupytercad/schema": ^3.0.0-alpha.1
+    "@jupytercad/base": ^3.0.0-alpha.2
+    "@jupytercad/jupytercad-core": ^3.0.0-alpha.2
+    "@jupytercad/schema": ^3.0.0-alpha.2
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1069,12 +1091,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/occ-worker@^3.0.0-alpha.1, @jupytercad/occ-worker@workspace:packages/occ-worker":
+"@jupytercad/occ-worker@^3.0.0-alpha.2, @jupytercad/occ-worker@workspace:packages/occ-worker":
   version: 0.0.0-use.local
   resolution: "@jupytercad/occ-worker@workspace:packages/occ-worker"
   dependencies:
-    "@jupytercad/opencascade": ^3.0.0-alpha.1
-    "@jupytercad/schema": ^3.0.0-alpha.1
+    "@jupytercad/opencascade": ^3.0.0-alpha.2
+    "@jupytercad/schema": ^3.0.0-alpha.2
     "@lumino/coreutils": ^2.0.0
     "@types/node": ^18.15.11
     copy-webpack-plugin: ^10.0.0
@@ -1090,7 +1112,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/opencascade@^3.0.0-alpha.1, @jupytercad/opencascade@workspace:packages/opencascade":
+"@jupytercad/opencascade@^3.0.0-alpha.2, @jupytercad/opencascade@workspace:packages/opencascade":
   version: 0.0.0-use.local
   resolution: "@jupytercad/opencascade@workspace:packages/opencascade"
   dependencies:
@@ -1101,7 +1123,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/schema@^3.0.0-alpha.1, @jupytercad/schema@workspace:packages/schema":
+"@jupytercad/schema@^3.0.0-alpha.2, @jupytercad/schema@workspace:packages/schema":
   version: 0.0.0-use.local
   resolution: "@jupytercad/schema@workspace:packages/schema"
   dependencies:
@@ -1641,7 +1663,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/docregistry@npm:^4.0.0, @jupyterlab/docregistry@npm:^4.2.5":
+"@jupyterlab/docregistry@npm:^4.0.0, @jupyterlab/docregistry@npm:^4.0.5, @jupyterlab/docregistry@npm:^4.2.5":
   version: 4.2.5
   resolution: "@jupyterlab/docregistry@npm:4.2.5"
   dependencies:
@@ -2552,13 +2574,13 @@ __metadata:
   linkType: hard
 
 "@lezer/javascript@npm:^1.0.0":
-  version: 1.4.17
-  resolution: "@lezer/javascript@npm:1.4.17"
+  version: 1.4.18
+  resolution: "@lezer/javascript@npm:1.4.18"
   dependencies:
     "@lezer/common": ^1.2.0
     "@lezer/highlight": ^1.1.3
     "@lezer/lr": ^1.3.0
-  checksum: dfcc4130af0bc681cd1ff6ec655a58e747fd877d8aadad2deba5f84512fa539177ece602c5389f4354c93555d3064737dedbe3384ca48b03c4968126bfd1b9a9
+  checksum: 3d016cbb02b54b217c608973d8894383fdf6f6c3fce3471431338bf9c7f584baff091e9ccd7c06d99bab1526b3029da8d6797bc0ef4051d772023d8fefe5562d
   languageName: node
   linkType: hard
 
@@ -3567,9 +3589,9 @@ __metadata:
   linkType: hard
 
 "@types/estree@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "@types/estree@npm:1.0.5"
-  checksum: dd8b5bed28e6213b7acd0fb665a84e693554d850b0df423ac8076cc3ad5823a6bc26b0251d080bdc545af83179ede51dd3f6fa78cad2c46ed1f29624ddf3e41a
+  version: 1.0.6
+  resolution: "@types/estree@npm:1.0.6"
+  checksum: 8825d6e729e16445d9a1dd2fb1db2edc5ed400799064cd4d028150701031af012ba30d6d03fe9df40f4d7a437d0de6d2b256020152b7b09bde9f2e420afdffd9
   languageName: node
   linkType: hard
 
@@ -3651,9 +3673,9 @@ __metadata:
   linkType: hard
 
 "@types/prop-types@npm:*":
-  version: 15.7.12
-  resolution: "@types/prop-types@npm:15.7.12"
-  checksum: ac16cc3d0a84431ffa5cfdf89579ad1e2269549f32ce0c769321fdd078f84db4fbe1b461ed5a1a496caf09e637c0e367d600c541435716a55b1d9713f5035dfe
+  version: 15.7.13
+  resolution: "@types/prop-types@npm:15.7.13"
+  checksum: 8935cad87c683c665d09a055919d617fe951cb3b2d5c00544e3a913f861a2bd8d2145b51c9aa6d2457d19f3107ab40784c40205e757232f6a80cc8b1c815513c
   languageName: node
   linkType: hard
 
@@ -3668,12 +3690,12 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:*, @types/react@npm:^18.0.26":
-  version: 18.3.6
-  resolution: "@types/react@npm:18.3.6"
+  version: 18.3.7
+  resolution: "@types/react@npm:18.3.7"
   dependencies:
     "@types/prop-types": "*"
     csstype: ^3.0.2
-  checksum: 66cf1ea408b63c518e2d36c5a8c425e856885c62160d85cfa653c061bbf744f7858b102da04d2bad72bd93a5469e016538e0723f57ef56de512c79712d209add
+  checksum: 027cf84d8309c4d0a9b16ec26f71de0950e2d748293bbc4dac42519f77d0bec099aeb5fb1c0bcb891725973e53085c1aedea5c3a16bca215c2fc2ecf68c7ec6e
   languageName: node
   linkType: hard
 
@@ -4752,9 +4774,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001646":
-  version: 1.0.30001660
-  resolution: "caniuse-lite@npm:1.0.30001660"
-  checksum: 8b2c5de2f5facd31980426afbba68238270984acfe8c1ae925b8b6480448eea2fae292f815674617e9170c730c8a238d7cc0db919f184dc0e3cd9bec18f5e5ad
+  version: 1.0.30001662
+  resolution: "caniuse-lite@npm:1.0.30001662"
+  checksum: 7a6a0c0d9f7c4a1c51de02838eb47f41f36fff57a77b846c8faed35ba9afba17b9399bc00bd637e5c1663cbc132534085d91151de48edca2ad8932a5d87e23af
   languageName: node
   linkType: hard
 
@@ -5729,9 +5751,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.4":
-  version: 1.5.23
-  resolution: "electron-to-chromium@npm:1.5.23"
-  checksum: bc80f540120ffcc762caa199fb79fafb83aad97b2548e89222e61b31e7b7c58b7b10755b495d5ab3a245972a8790b4786ce9c1e2210e49a1231e012c42d44f73
+  version: 1.5.25
+  resolution: "electron-to-chromium@npm:1.5.25"
+  checksum: 3aef974d586815e9b1fd3221be3e2e124d59a9b992dbd59dbce618ac165feddebda9238be8f93b504f3cc067821e94810bf8a877be8a23a125d6c8f401aeb27e
   languageName: node
   linkType: hard
 
@@ -11888,8 +11910,8 @@ __metadata:
   linkType: hard
 
 "terser@npm:^5.26.0":
-  version: 5.32.0
-  resolution: "terser@npm:5.32.0"
+  version: 5.33.0
+  resolution: "terser@npm:5.33.0"
   dependencies:
     "@jridgewell/source-map": ^0.3.3
     acorn: ^8.8.2
@@ -11897,7 +11919,7 @@ __metadata:
     source-map-support: ~0.5.20
   bin:
     terser: bin/terser
-  checksum: 61e7c064ed693222c67413294181713798258ab4326b2f0b14ce889df530fb9683e7f2af2dfd228f1b9aae90c38c44dcbdfd22c0a3e020c56dff2770d1dc4a6d
+  checksum: e0012bffa595470f481a19952dde18e5a58836eafc63305cf86823fc4406b187ba1b4d6856e1662fb0f464a844a21e7bccf68919128fc43343d58b6ad49485f1
   languageName: node
   linkType: hard
 
