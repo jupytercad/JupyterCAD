@@ -1,77 +1,84 @@
 {
+  "metadata": {},
   "objects": [
     {
       "name": "box",
-      "shape": "Part::Box",
       "parameters": {
-        "Height": 19,
+        "Color": "#e68484",
+        "Height": 19.0,
+        "Length": 7.0,
         "Placement": {
+          "Angle": 0.0,
           "Axis": [
-            1,
-            0,
-            0
+            1.0,
+            0.0,
+            0.0
           ],
           "Position": [
-            0,
-            0,
-            0
-          ],
-          "Angle": 0
+            0.0,
+            0.0,
+            0.0
+          ]
         },
-        "Length": 7,
-        "Width": 15
+        "Width": 15.0
       },
-      "visible": true,
+      "shape": "Part::Box",
       "shapeMetadata": {
-        "mass": 1995,
         "centerOfMass": [
           3.5,
           7.5,
           9.499999999999998
         ],
+        "mass": 1995.0,
         "matrixOfInertia": [
           [
-            0,
+            0.0,
             -2.9103830456733704e-11,
             45552.5
           ],
           [
             97422.50000000006,
-            0,
-            0
+            0.0,
+            0.0
           ],
           [
-            0,
+            0.0,
             68162.50000000006,
             -2.9103830456733704e-11
           ]
         ]
-      }
+      },
+      "visible": true
     },
     {
-      "visible": true,
+      "name": "box2",
       "parameters": {
-        "Height": 9,
+        "Color": "#8d8cee",
+        "Height": 9.0,
+        "Length": 10.0,
         "Placement": {
+          "Angle": 2.0,
           "Axis": [
-            1,
-            0,
-            0
+            1.0,
+            0.0,
+            0.0
           ],
           "Position": [
-            0,
-            0,
-            0
-          ],
-          "Angle": 2
+            0.0,
+            0.0,
+            0.0
+          ]
         },
-        "Width": 25,
-        "Length": 10
+        "Width": 25.0
       },
-      "name": "box2",
       "shape": "Part::Box",
       "shapeMetadata": {
-        "mass": 2250,
+        "centerOfMass": [
+          5.0,
+          12.335337602577443,
+          4.933502430367193
+        ],
+        "mass": 2250.0,
         "matrixOfInertia": [
           [
             7.275957614183426e-12,
@@ -80,24 +87,19 @@
           ],
           [
             132374.99999999994,
-            0,
+            0.0,
             7.275957614183426e-12
           ],
           [
-            0,
+            0.0,
             34061.73343674897,
             -3557.5801609503396
           ]
-        ],
-        "centerOfMass": [
-          5,
-          12.335337602577443,
-          4.933502430367193
         ]
-      }
+      },
+      "visible": true
     }
   ],
   "options": {},
-  "metadata": {},
   "outputs": {}
 }

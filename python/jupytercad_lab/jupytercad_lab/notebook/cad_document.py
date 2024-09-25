@@ -1,5 +1,4 @@
 from __future__ import annotations
-from copy import deepcopy
 
 import json
 import logging
@@ -93,7 +92,7 @@ class CadDocument(CommWidget):
 
     def get_object(self, name: str) -> Optional["PythonJcadObject"]:
         if self.check_exist(name):
-            data = json.loads(self._get_yobject_by_name(name).to_py())
+            data = self._get_yobject_by_name(name).to_py()
             return OBJECT_FACTORY.create_object(data, self)
 
     def remove(self, name: str) -> CadDocument:
@@ -104,7 +103,7 @@ class CadDocument(CommWidget):
 
     def add_object(self, new_object: "PythonJcadObject") -> CadDocument:
         if self._objects_array is not None and not self.check_exist(new_object.name):
-            obj_dict = json.loads(new_object.json())
+            obj_dict = json.loads(new_object.model_dump_json())
             obj_dict["visible"] = True
             new_map = Map(obj_dict)
             self._objects_array.append(new_map)
@@ -142,18 +141,13 @@ class CadDocument(CommWidget):
             )
         contents = [{"user": user, "value": message}]
         if self._metadata is not None:
-            with self.ydoc.transaction() as t:
-                self._metadata.set(
-                    t,
-                    new_id,
-                    json.dumps(
-                        {
-                            "position": position,
-                            "contents": contents,
-                            "parent": parent,
-                        }
-                    ),
-                )
+            self._metadata[new_id] = json.dumps(
+                {
+                    "position": position,
+                    "contents": contents,
+                    "parent": parent,
+                }
+            )
             return new_id
 
     def remove_annotation(self, annotation_id: str) -> None:
@@ -163,34 +157,7 @@ class CadDocument(CommWidget):
         :param annotation_id: The id of the annotation
         """
         if self._metadata is not None:
-            with self.ydoc.transaction() as t:
-                self._metadata.pop(t, annotation_id, None)
-
-    def set_color(self, object_name: str, color: Optional[List]) -> None:
-        """
-        Set object color.
-
-        :param object_name: Object name.
-        :param color: Color value, set it to `None` to remove color.
-        """
-        if self._options and self.check_exist(object_name):
-            current_gui = self._options.get("guidata")
-            new_gui = None
-            if current_gui is not None:
-                new_gui = deepcopy(current_gui)
-                current_data: Dict = new_gui.get(object_name, {})
-                if color is not None:
-                    current_data["color"] = color
-                else:
-                    current_data.pop("color", None)
-
-                new_gui[object_name] = current_data
-            else:
-                if color is not None:
-                    new_gui = {object_name: {"color": color}}
-            if new_gui is not None:
-                with self.ydoc.transaction() as t:
-                    self._options.set(t, "guidata", new_gui)
+            del self._metadata[annotation_id]
 
     def add_step_file(
         self,
@@ -791,7 +758,7 @@ class ObjectFactoryManager(metaclass=SingletonMeta):
             Model = self._factories[object_type]
             args = {}
             params = data["parameters"]
-            for field in Model.__fields__:
+            for field in Model.model_fields:
                 args[field] = params.get(field, None)
             obj_params = Model(**args)
             return PythonJcadObject(
