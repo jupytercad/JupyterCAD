@@ -668,6 +668,28 @@ export class MainView extends React.Component<IProps, IStates> {
     // Set the expoded view if it's enabled
     this._setupExplodedView();
 
+    // Clip plane rendering
+    const planeGeom = new THREE.PlaneGeometry(
+      this._refLength! * 10, // *10 is a bit arbitrary and extreme but that does not impact performance or anything
+      this._refLength! * 10
+    );
+    const planeMat = new THREE.MeshPhongMaterial({
+      color: DEFAULT_EDGE_COLOR,
+      stencilWrite: true,
+      stencilRef: 0,
+      stencilFunc: THREE.NotEqualStencilFunc,
+      stencilFail: THREE.ReplaceStencilOp,
+      stencilZFail: THREE.ReplaceStencilOp,
+      stencilZPass: THREE.ReplaceStencilOp,
+      side: THREE.DoubleSide,
+      wireframe: this.state.wireframe
+    });
+    this._clippingPlaneMesh = new THREE.Mesh(planeGeom, planeMat);
+    this._clippingPlaneMesh.onAfterRender = renderer => {
+      renderer.clearStencil();
+    };
+
+    this._scene.add(this._clippingPlaneMesh);
     this._scene.add(this._meshGroup);
     if (this._loadingTimeout) {
       clearTimeout(this._loadingTimeout);
