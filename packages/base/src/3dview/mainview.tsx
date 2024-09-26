@@ -65,6 +65,10 @@ interface IStates {
   wireframe: boolean;
 }
 
+interface ILineIntersection extends THREE.Intersection {
+  pointOnLine?: THREE.Vector3;
+}
+
 export class MainView extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
@@ -94,11 +98,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._mainViewModel.renderSignal.connect(this._requestRender, this);
     this._mainViewModel.workerBusy.connect(this._workerBusyHandler, this);
 
-    // @ts-ignore Missing ThreeJS typing
-    this._raycaster.params.Line2 = {};
-    // Is this threshold in pixels? It looks like it
-    // @ts-ignore Missing ThreeJS typing
-    this._raycaster.params.Line2.threshold = 50;
+    this._raycaster.params.Line = { threshold: 50 };
 
     this.state = {
       id: this._mainViewModel.id,
@@ -479,7 +479,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     if (intersects.length > 0) {
       // Find the first intersection with a visible object
-      for (const intersect of intersects) {
+      for (const intersect of intersects as ILineIntersection[]) {
         // Object is hidden
         if (!intersect.object.visible || !intersect.object.parent?.visible) {
           continue;
@@ -503,11 +503,7 @@ export class MainView extends React.Component<IProps, IStates> {
           : intersect.object;
         return {
           mesh: intersectMesh as BasicMesh,
-          // @ts-ignore Missing threejs typing
-          position: intersect.pointOnLine
-            ? // @ts-ignore Missing threejs typing
-              intersect.pointOnLine
-            : intersect.point
+          position: intersect.pointOnLine ?? intersect.point
         };
       }
     }
@@ -888,10 +884,10 @@ export class MainView extends React.Component<IProps, IStates> {
       if (selectedMesh.material?.color) {
         selectedMesh.material.color = originalColor;
       }
-      // @ts-ignore
-      if (selectedMesh.material?.linewidth) {
-        // @ts-ignore
-        selectedMesh.material.linewidth = DEFAULT_LINEWIDTH;
+
+      const material = selectedMesh.material as THREE.Material & { linewidth?: number };
+      if (material?.linewidth) {
+        material.linewidth = DEFAULT_LINEWIDTH;
       }
     }
 
@@ -916,10 +912,10 @@ export class MainView extends React.Component<IProps, IStates> {
       if (selectedMesh?.material?.color) {
         selectedMesh.material.color = SELECTED_MESH_COLOR;
       }
-      // @ts-ignore
-      if (selectedMesh?.material?.linewidth) {
-        // @ts-ignore
-        selectedMesh.material.linewidth = SELECTED_LINEWIDTH;
+
+      const material = selectedMesh.material as THREE.Material & { linewidth?: number };
+      if (material?.linewidth) {
+        material.linewidth = SELECTED_LINEWIDTH;
       }
     }
   }

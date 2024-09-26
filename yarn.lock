@@ -13151,29 +13151,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yjs-widgets@npm:^0.3.5":
-  version: 0.3.6
-  resolution: "yjs-widgets@npm:0.3.6"
-  dependencies:
-    "@jupyter/collaboration": ^2.0.0
-    "@jupyter/ydoc": ^2.0.0
-    "@jupyterlab/application": ^4.0.0
-    "@jupyterlab/apputils": ^4.0.0
-    "@jupyterlab/console": ^4.2.4
-    "@jupyterlab/coreutils": ^6.0.0
-    "@jupyterlab/notebook": ^4.0.0
-    "@jupyterlab/services": ^7.0.0
-    "@lumino/coreutils": ^2.1.1
-    "@lumino/signaling": ^2.1.1
-    "@lumino/widgets": ^2.1.1
-    lib0: ^0.2.76
-    uuid: ^9.0.0
-    webpack: ^5.77.0
-    webpack-cli: ^5.0.1
-  checksum: 25d058d4c6a88ffd5f84027d972d79058bdf2043e008020034bacc77f30ad584cf5b763eaed2f8be6a052f37d4d444d4818a9b21f742640f565ed0461af5ad80
-  languageName: node
-  linkType: hard
-
 "yjs@npm:^13.5.0, yjs@npm:^13.5.40":
   version: 13.6.19
   resolution: "yjs@npm:13.6.19"
