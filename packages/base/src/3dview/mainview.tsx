@@ -885,7 +885,9 @@ export class MainView extends React.Component<IProps, IStates> {
         selectedMesh.material.color = originalColor;
       }
 
-      const material = selectedMesh.material as THREE.Material & { linewidth?: number };
+      const material = selectedMesh.material as THREE.Material & {
+        linewidth?: number;
+      };
       if (material?.linewidth) {
         material.linewidth = DEFAULT_LINEWIDTH;
       }
@@ -913,7 +915,9 @@ export class MainView extends React.Component<IProps, IStates> {
         selectedMesh.material.color = SELECTED_MESH_COLOR;
       }
 
-      const material = selectedMesh.material as THREE.Material & { linewidth?: number };
+      const material = selectedMesh.material as THREE.Material & {
+        linewidth?: number;
+      };
       if (material?.linewidth) {
         material.linewidth = SELECTED_LINEWIDTH;
       }
