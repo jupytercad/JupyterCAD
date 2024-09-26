@@ -218,7 +218,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._renderer = new THREE.WebGLRenderer({
         alpha: true,
-        antialias: true
+        antialias: true,
+        stencil: true
       });
       // this._renderer.setPixelRatio(window.devicePixelRatio);
       this._renderer.setClearColor(0x000000, 0);
