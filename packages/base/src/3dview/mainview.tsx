@@ -685,6 +685,7 @@ export class MainView extends React.Component<IProps, IStates> {
       wireframe: this.state.wireframe
     });
     this._clippingPlaneMesh = new THREE.Mesh(planeGeom, planeMat);
+    this._clippingPlaneMesh.visible = this._clipSettings.enabled;
     this._clippingPlaneMesh.onAfterRender = renderer => {
       renderer.clearStencil();
     };
@@ -1255,6 +1256,9 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = true;
       this._transformControls.visible = true;
       this._clippingPlaneMeshControl.visible = this._clipSettings.showClipPlane;
+      if (this._clippingPlaneMesh) {
+        this._clippingPlaneMesh.visible = true;
+      }
     } else {
       this._renderer.localClippingEnabled = false;
       this._transformControls.enabled = false;
