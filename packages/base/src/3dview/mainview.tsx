@@ -1264,6 +1264,9 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
       this._clippingPlaneMeshControl.visible = false;
+      if (this._clippingPlaneMesh) {
+        this._clippingPlaneMesh.visible = false;
+      }
     }
   }
 
