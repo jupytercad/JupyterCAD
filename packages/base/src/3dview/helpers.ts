@@ -36,7 +36,7 @@ export const SELECTED_MESH_COLOR = new THREE.Color(
 
 export type BasicMesh = THREE.Mesh<
   THREE.BufferGeometry,
-  THREE.MeshBasicMaterial
+  THREE.MeshBasicMaterial | THREE.MeshPhongMaterial
 >;
 
 /**
