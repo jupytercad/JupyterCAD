@@ -287,7 +287,11 @@ export class MainView extends React.Component<IProps, IStates> {
           this._model.syncCamera(
             {
               position: this._camera.position.toArray([]),
-              rotation: [this._camera.rotation.x, this._camera.rotation.y, this._camera.rotation.z],
+              rotation: [
+                this._camera.rotation.x,
+                this._camera.rotation.y,
+                this._camera.rotation.z
+              ],
               up: this._camera.up.toArray([])
             },
             this._mainViewModel.id
@@ -385,8 +389,7 @@ export class MainView extends React.Component<IProps, IStates> {
       if (this._camera instanceof THREE.PerspectiveCamera) {
         this._camera.aspect =
           this.divRef.current.clientWidth / this.divRef.current.clientHeight;
-      } 
-      else if (this._camera instanceof THREE.OrthographicCamera) {
+      } else if (this._camera instanceof THREE.OrthographicCamera) {
         this._camera.left = this.divRef.current.clientWidth / -2;
         this._camera.right = this.divRef.current.clientWidth / 2;
         this._camera.top = this.divRef.current.clientHeight / 2;
