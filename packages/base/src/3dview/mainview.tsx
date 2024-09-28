@@ -228,7 +228,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this.divRef.current.appendChild(this._renderer.domElement); // mount using React ref
 
       const options: GizmoOptions = {
-        container : this._renderer.domElement.parentElement ?? undefined,
+        container: this._renderer.domElement.parentElement ?? undefined,
         size: Math.min(window.innerWidth, window.innerHeight) * 0.2,
         lineWidth: 3,
         offset: { top: 0, left: 0, right: 0, bottom: 0 },
@@ -242,12 +242,72 @@ export class MainView extends React.Component<IProps, IStates> {
           color: 0x000000,
           opacity: 0.2
         },
-        x: { text: 'X', drawLine: true, border: false, colors: { main: '#ff7f9b', hover: '#ffffff', text: '#000000', hoverText: '#000000' }},
-        y: { text: 'Y', drawLine: true, border: false, colors: { main: '#c2ee00', hover: '#ffffff', text: '#000000', hoverText: '#000000' }},
-        z: { text: 'Z', drawLine: true, border: false, colors: { main: '#73c5ff', hover: '#ffffff', text: '#000000', hoverText: '#000000' }},
-        nx: { text: '-X', drawLine: true, border: false, colors: { main: '#ff7f9b', hover: '#ffffff', text: '#000000', hoverText: '#000000' }},
-        ny: { text: '-Y', drawLine: true, border: false, colors: { main: '#c2ee00', hover: '#ffffff', text: '#000000', hoverText: '#000000' }},
-        nz: { text: '-Z', drawLine: true, border: false, colors: { main: '#73c5ff', hover: '#ffffff', text: '#000000', hoverText: '#000000' }}
+        x: {
+          text: 'X',
+          drawLine: true,
+          border: false,
+          colors: {
+            main: '#ff7f9b',
+            hover: '#ffffff',
+            text: '#000000',
+            hoverText: '#000000'
+          }
+        },
+        y: {
+          text: 'Y',
+          drawLine: true,
+          border: false,
+          colors: {
+            main: '#c2ee00',
+            hover: '#ffffff',
+            text: '#000000',
+            hoverText: '#000000'
+          }
+        },
+        z: {
+          text: 'Z',
+          drawLine: true,
+          border: false,
+          colors: {
+            main: '#73c5ff',
+            hover: '#ffffff',
+            text: '#000000',
+            hoverText: '#000000'
+          }
+        },
+        nx: {
+          text: '-X',
+          drawLine: true,
+          border: false,
+          colors: {
+            main: '#ff7f9b',
+            hover: '#ffffff',
+            text: '#000000',
+            hoverText: '#000000'
+          }
+        },
+        ny: {
+          text: '-Y',
+          drawLine: true,
+          border: false,
+          colors: {
+            main: '#c2ee00',
+            hover: '#ffffff',
+            text: '#000000',
+            hoverText: '#000000'
+          }
+        },
+        nz: {
+          text: '-Z',
+          drawLine: true,
+          border: false,
+          colors: {
+            main: '#73c5ff',
+            hover: '#ffffff',
+            text: '#000000',
+            hoverText: '#000000'
+          }
+        }
       };
 
       this._viewportGizmo = new ViewportGizmo(
@@ -257,7 +317,8 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       this._viewportGizmo.update();
       // @ts-ignore Accessing a private property
-      this._viewportGizmo._container = this._renderer.domElement.parentElement?.parentElement;
+      this._viewportGizmo._container =
+        this._renderer.domElement.parentElement?.parentElement;
       console.log(this._viewportGizmo);
 
       this._syncPointer = throttle(
