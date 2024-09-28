@@ -4,8 +4,7 @@
     "appName": "My JupyterCAD App",
     "disabledExtensions": [
       "@jupyter/collaboration-extension",
-      "@jupyter/docprovider-extension:defaultFileBrowser"
-    ],
-    "signalingServers": ["https://flyio-signaling-server.fly.dev/"]
+      "@jupyter/docprovider-extension"
+    ]
   }
 }
