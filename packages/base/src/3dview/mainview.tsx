@@ -65,6 +65,10 @@ interface IStates {
   wireframe: boolean;
 }
 
+interface ILineIntersection extends THREE.Intersection {
+  pointOnLine?: THREE.Vector3;
+}
+
 export class MainView extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
@@ -94,11 +98,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._mainViewModel.renderSignal.connect(this._requestRender, this);
     this._mainViewModel.workerBusy.connect(this._workerBusyHandler, this);
 
-    // @ts-ignore Missing ThreeJS typing
-    this._raycaster.params.Line2 = {};
-    // Is this threshold in pixels? It looks like it
-    // @ts-ignore Missing ThreeJS typing
-    this._raycaster.params.Line2.threshold = 50;
+    this._raycaster.params.Line = { threshold: 50 };
 
     this.state = {
       id: this._mainViewModel.id,
@@ -218,7 +218,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._renderer = new THREE.WebGLRenderer({
         alpha: true,
-        antialias: true
+        antialias: true,
+        stencil: true
       });
       // this._renderer.setPixelRatio(window.devicePixelRatio);
       this._renderer.setClearColor(0x000000, 0);
@@ -286,7 +287,11 @@ export class MainView extends React.Component<IProps, IStates> {
           this._model.syncCamera(
             {
               position: this._camera.position.toArray([]),
-              rotation: this._camera.rotation.toArray([]),
+              rotation: [
+                this._camera.rotation.x,
+                this._camera.rotation.y,
+                this._camera.rotation.z
+              ],
               up: this._camera.up.toArray([])
             },
             this._mainViewModel.id
@@ -381,10 +386,10 @@ export class MainView extends React.Component<IProps, IStates> {
         this.divRef.current.clientHeight,
         false
       );
-      if (this._camera.type === 'PerspectiveCamera') {
+      if (this._camera instanceof THREE.PerspectiveCamera) {
         this._camera.aspect =
           this.divRef.current.clientWidth / this.divRef.current.clientHeight;
-      } else {
+      } else if (this._camera instanceof THREE.OrthographicCamera) {
         this._camera.left = this.divRef.current.clientWidth / -2;
         this._camera.right = this.divRef.current.clientWidth / 2;
         this._camera.top = this.divRef.current.clientHeight / 2;
@@ -478,7 +483,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     if (intersects.length > 0) {
       // Find the first intersection with a visible object
-      for (const intersect of intersects) {
+      for (const intersect of intersects as ILineIntersection[]) {
         // Object is hidden
         if (!intersect.object.visible || !intersect.object.parent?.visible) {
           continue;
@@ -502,11 +507,7 @@ export class MainView extends React.Component<IProps, IStates> {
           : intersect.object;
         return {
           mesh: intersectMesh as BasicMesh,
-          // @ts-ignore Missing threejs typing
-          position: intersect.pointOnLine
-            ? // @ts-ignore Missing threejs typing
-              intersect.pointOnLine
-            : intersect.point
+          position: intersect.pointOnLine ?? intersect.point
         };
       }
     }
@@ -685,6 +686,7 @@ export class MainView extends React.Component<IProps, IStates> {
       wireframe: this.state.wireframe
     });
     this._clippingPlaneMesh = new THREE.Mesh(planeGeom, planeMat);
+    this._clippingPlaneMesh.visible = this._clipSettings.enabled;
     this._clippingPlaneMesh.onAfterRender = renderer => {
       renderer.clearStencil();
     };
@@ -823,6 +825,9 @@ export class MainView extends React.Component<IProps, IStates> {
                 pos.postShape = exported as any;
                 resolve();
               },
+              () => {
+                // Intentionally empty: no error handling needed for this case
+              }, // Empty function to handle errors
               options
             );
           });
@@ -886,10 +891,12 @@ export class MainView extends React.Component<IProps, IStates> {
       if (selectedMesh.material?.color) {
         selectedMesh.material.color = originalColor;
       }
-      // @ts-ignore
-      if (selectedMesh.material?.linewidth) {
-        // @ts-ignore
-        selectedMesh.material.linewidth = DEFAULT_LINEWIDTH;
+
+      const material = selectedMesh.material as THREE.Material & {
+        linewidth?: number;
+      };
+      if (material?.linewidth) {
+        material.linewidth = DEFAULT_LINEWIDTH;
       }
     }
 
@@ -914,10 +921,12 @@ export class MainView extends React.Component<IProps, IStates> {
       if (selectedMesh?.material?.color) {
         selectedMesh.material.color = SELECTED_MESH_COLOR;
       }
-      // @ts-ignore
-      if (selectedMesh?.material?.linewidth) {
-        // @ts-ignore
-        selectedMesh.material.linewidth = SELECTED_LINEWIDTH;
+
+      const material = selectedMesh.material as THREE.Material & {
+        linewidth?: number;
+      };
+      if (material?.linewidth) {
+        material.linewidth = SELECTED_LINEWIDTH;
       }
     }
   }
@@ -1255,11 +1264,17 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = true;
       this._transformControls.visible = true;
       this._clippingPlaneMeshControl.visible = this._clipSettings.showClipPlane;
+      if (this._clippingPlaneMesh) {
+        this._clippingPlaneMesh.visible = true;
+      }
     } else {
       this._renderer.localClippingEnabled = false;
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
       this._clippingPlaneMeshControl.visible = false;
+      if (this._clippingPlaneMesh) {
+        this._clippingPlaneMesh.visible = false;
+      }
     }
   }
 

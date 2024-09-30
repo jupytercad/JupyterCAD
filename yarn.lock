@@ -918,13 +918,13 @@ __metadata:
     "@rjsf/core": ^4.2.0
     "@types/d3-color": ^3.1.0
     "@types/node": ^18.15.11
-    "@types/three": ^0.135.0
+    "@types/three": ^0.168.0
     d3-color: ^3.1.0
     react: ^18.0.1
     rimraf: ^3.0.2
     styled-components: ^5.3.6
-    three: ^0.135.0
-    three-mesh-bvh: ^0.5.17
+    three: ^0.168.0
+    three-mesh-bvh: ^0.7.8
     typescript: ^5
     uuid: ^8.3.2
   languageName: unknown
@@ -3563,6 +3563,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tweenjs/tween.js@npm:~23.1.3":
+  version: 23.1.3
+  resolution: "@tweenjs/tween.js@npm:23.1.3"
+  checksum: 2f8a908b275bb6729bde4b863c277bf7411d2e0302ceb0455369479077b89eaf8380cd9206b91ff574416418a95c6f06db4e1ddea732a286d0db0ba8e7c093d3
+  languageName: node
+  linkType: hard
+
 "@types/create-react-class@npm:*":
   version: 15.6.8
   resolution: "@types/create-react-class@npm:15.6.8"
@@ -3712,10 +3719,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/three@npm:^0.135.0":
-  version: 0.135.0
-  resolution: "@types/three@npm:0.135.0"
-  checksum: 85977e55cc3d7a14be88816a50bcec4eb0f141876d3cdc6dd7870f72122605af87462d7583e950cd0ee6ab21949b8c1b8304a88174d536648deb8ef97968fa1b
+"@types/stats.js@npm:*":
+  version: 0.17.3
+  resolution: "@types/stats.js@npm:0.17.3"
+  checksum: 4f84a012f630532877f62959b6335d3fa081ccaac15ce3f1f916741db265bda22b9c927d7efc9cc3389ffd60919a370673cb0b4e7221d580c571031e94b689fd
+  languageName: node
+  linkType: hard
+
+"@types/three@npm:^0.168.0":
+  version: 0.168.0
+  resolution: "@types/three@npm:0.168.0"
+  dependencies:
+    "@tweenjs/tween.js": ~23.1.3
+    "@types/stats.js": "*"
+    "@types/webxr": "*"
+    "@webgpu/types": "*"
+    fflate: ~0.8.2
+    meshoptimizer: ~0.18.1
+  checksum: 2f4e36689170617ec8b8b085d20257adc5c69278265c040836e5cf4d336fa055fcec3a91d5e0de760abfb38953aee74e874fd1682bb61e31787514425eaa5182
   languageName: node
   linkType: hard
 
@@ -3727,6 +3748,13 @@ __metadata:
     "@types/source-list-map": "*"
     source-map: ^0.6.1
   checksum: 75342659a9889478969f7bb7360b998aa084ba11ab523c172ded6a807dac43ab2a9e1212078ef8bbf0f33e4fadd2c8a91b75d38184d8030d96a32fe819c9bb57
+  languageName: node
+  linkType: hard
+
+"@types/webxr@npm:*":
+  version: 0.5.20
+  resolution: "@types/webxr@npm:0.5.20"
+  checksum: 8085c291ca8a8adfe03245725384234e62d61cc0f5f7b9985c2a0ba2b2a794cac538861c4904d8fcd28e3e381f0a4ecc5d4514d143dbf3fc0cf3193dc1cc7a54
   languageName: node
   linkType: hard
 
@@ -3999,6 +4027,13 @@ __metadata:
     "@webassemblyjs/ast": 1.12.1
     "@xtuc/long": 4.2.2
   checksum: 2974b5dda8d769145ba0efd886ea94a601e61fb37114c14f9a9a7606afc23456799af652ac3052f284909bd42edc3665a76bc9b50f95f0794c053a8a1757b713
+  languageName: node
+  linkType: hard
+
+"@webgpu/types@npm:*":
+  version: 0.1.46
+  resolution: "@webgpu/types@npm:0.1.46"
+  checksum: 8dd5fb8a5993e83cb910c6d7bd7d47b941f631b47a77f1280740b245556be615cc84a87de65dceea07aa6629e4bd392b4b6c53e238514958f985f3f5e999db1a
   languageName: node
   linkType: hard
 
@@ -6397,6 +6432,13 @@ __metadata:
   dependencies:
     reusify: ^1.0.4
   checksum: a8c5b26788d5a1763f88bae56a8ddeee579f935a831c5fe7a8268cea5b0a91fbfe705f612209e02d639b881d7b48e461a50da4a10cfaa40da5ca7cc9da098d88
+  languageName: node
+  linkType: hard
+
+"fflate@npm:~0.8.2":
+  version: 0.8.2
+  resolution: "fflate@npm:0.8.2"
+  checksum: 29470337b85d3831826758e78f370e15cda3169c5cd4477c9b5eea2402261a74b2975bae816afabe1c15d21d98591e0d30a574f7103aa117bff60756fa3035d4
   languageName: node
   linkType: hard
 
@@ -8812,6 +8854,13 @@ __metadata:
   version: 1.4.1
   resolution: "merge2@npm:1.4.1"
   checksum: 7268db63ed5169466540b6fb947aec313200bcf6d40c5ab722c22e242f651994619bcd85601602972d3c85bd2cc45a358a4c61937e9f11a061919a1da569b0c2
+  languageName: node
+  linkType: hard
+
+"meshoptimizer@npm:~0.18.1":
+  version: 0.18.1
+  resolution: "meshoptimizer@npm:0.18.1"
+  checksum: 101dbed8abd4cf167cdb7a0bc13db90dd0743332c689e43b18cc5254d238f0766750752432401fa63dc7e9e32399ef68daacf48f0d89db1484042c1761c7362d
   languageName: node
   linkType: hard
 
@@ -11945,19 +11994,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three-mesh-bvh@npm:^0.5.17":
-  version: 0.5.24
-  resolution: "three-mesh-bvh@npm:0.5.24"
+"three-mesh-bvh@npm:^0.7.8":
+  version: 0.7.8
+  resolution: "three-mesh-bvh@npm:0.7.8"
   peerDependencies:
-    three: ">= 0.123.0"
-  checksum: 5a5e356111756869cfd00870bca2d881d3019b55e71142b5eee544a2e6bcc3546a340b0defa29c3ebe7ed4cfe99e7ee6addd5671bb89852841107189c0f98157
+    three: ">= 0.151.0"
+  checksum: 3023a7d1ccdf033e08eba5c6437b4c3dd31a6ec83cb54cfadfca2d6aa22c74c7895c5b0d6e943897ac411a64b86d9bf78b3f6c3a902efd8b8bfd3cf0afd9a18e
   languageName: node
   linkType: hard
 
-"three@npm:^0.135.0":
-  version: 0.135.0
-  resolution: "three@npm:0.135.0"
-  checksum: bd7e195932587a5be0c887947adf2b3898c6fa71722800432562aed10beddb2f448d0f237d937824805eebf90e625fc22ed57054618121f47811a8e82b528507
+"three@npm:^0.168.0":
+  version: 0.168.0
+  resolution: "three@npm:0.168.0"
+  checksum: 1f186006ad5c8df348d4a2bcdccc078f0454f196b8ccc450d405cdf8c88436ff773e545725ef1122891b5552b5cf03add8394288b58985a0c3ebe66b588cab2f
   languageName: node
   linkType: hard
 
