@@ -12023,7 +12023,7 @@ __metadata:
   checksum: f00619a6d3ac0cf4bb310ef2f55739747b3f2ce4904802dfd7cda53a5b9e1d71c17cd8b536343143a3ad0d86ce9a4343285461cbc27bfdb00577bd3a190a27d0
   languageName: node
   linkType: hard
- 
+
 "three@npm:^0.168.0":
   version: 0.168.0
   resolution: "three@npm:0.168.0"
