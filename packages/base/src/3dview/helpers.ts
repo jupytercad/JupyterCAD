@@ -36,7 +36,7 @@ export const SELECTED_MESH_COLOR = new THREE.Color(
 
 export type BasicMesh = THREE.Mesh<
   THREE.BufferGeometry,
-  THREE.MeshBasicMaterial
+  THREE.MeshBasicMaterial | THREE.MeshPhongMaterial
 >;
 
 /**
@@ -230,8 +230,7 @@ export function buildShape(options: {
   for (const edge of edgeList) {
     const edgeMaterial = new LineMaterial({
       linewidth: DEFAULT_LINEWIDTH,
-      // @ts-ignore Missing typing in ThreeJS
-      color: DEFAULT_EDGE_COLOR,
+      color: new THREE.Color(DEFAULT_EDGE_COLOR).getHex(),
       clippingPlanes,
       // Depth offset so that lines are most always on top of faces
       polygonOffset: true,
