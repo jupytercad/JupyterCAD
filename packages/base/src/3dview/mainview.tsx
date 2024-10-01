@@ -399,6 +399,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._renderer.setRenderTarget(null);
     this._renderer.clearDepth();
     this._renderer.render(this._scene, this._camera);
+    this._renderer.autoClear = false
     this._viewHelper.render(this._renderer);
   };
 
