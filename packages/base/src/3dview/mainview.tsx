@@ -381,7 +381,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
   animate = (): void => {
     this._requestID = window.requestAnimationFrame(this.animate);
-    this._delta = this._clock.getDelta();
+    const delta = this._clock.getDelta();
 
     for (const material of this._edgeMaterials) {
       material.resolution.set(
@@ -399,7 +399,7 @@ export class MainView extends React.Component<IProps, IStates> {
       );
     }
     if (this._viewHelper.animating) {
-      this._viewHelper.update(this._delta);
+      this._viewHelper.update(delta);
     }
 
     this._controls.update();
@@ -1442,7 +1442,6 @@ export class MainView extends React.Component<IProps, IStates> {
   private _transformControls: TransformControls; // Mesh position/rotation controls
   private _pointer3D: IPointer | null = null;
   private _clock: THREE.Clock;
-  private _delta: number;
   private _viewHelper: ViewHelper;
   private _collaboratorPointers: IDict<IPointer>;
   private _pointerGeometry: THREE.SphereGeometry;
