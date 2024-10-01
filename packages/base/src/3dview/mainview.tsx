@@ -352,11 +352,14 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
-  
+
       // ViewHelper setup
-      this._viewHelper = new ViewHelper(this._camera, this._renderer.domElement);
+      this._viewHelper = new ViewHelper(
+        this._camera,
+        this._renderer.domElement
+      );
       this._viewHelper.center = this._controls.target;
-  
+
       const viewHelperDiv = document.createElement('div');
       viewHelperDiv.id = 'viewHelper';
       viewHelperDiv.style.position = 'absolute';
@@ -364,10 +367,12 @@ export class MainView extends React.Component<IProps, IStates> {
       viewHelperDiv.style.bottom = '0px';
       viewHelperDiv.style.height = '128px';
       viewHelperDiv.style.width = '128px';
-  
+
       this.divRef.current.appendChild(viewHelperDiv);
 
-      viewHelperDiv.addEventListener('pointerup', (event) => this._viewHelper.handleClick(event));
+      viewHelperDiv.addEventListener('pointerup', event =>
+        this._viewHelper.handleClick(event)
+      );
     }
   };
 
