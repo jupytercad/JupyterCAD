@@ -22,6 +22,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
+import { ViewHelper } from 'three/examples/jsm/helpers/ViewHelper';
 
 import { FloatingAnnotation } from '../annotation';
 import { getCSSVariableColor, isLightTheme, throttle } from '../tools';
@@ -351,6 +352,22 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
+  
+      // ViewHelper setup
+      this._viewHelper = new ViewHelper(this._camera, this._renderer.domElement);
+      this._viewHelper.center = this._controls.target;
+  
+      const viewHelperDiv = document.createElement('div');
+      viewHelperDiv.id = 'viewHelper';
+      viewHelperDiv.style.position = 'absolute';
+      viewHelperDiv.style.right = '0px';
+      viewHelperDiv.style.bottom = '0px';
+      viewHelperDiv.style.height = '128px';
+      viewHelperDiv.style.width = '128px';
+  
+      this.divRef.current.appendChild(viewHelperDiv);
+
+      viewHelperDiv.addEventListener('pointerup', (event) => this._viewHelper.handleClick(event));
     }
   };
 
@@ -377,6 +394,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._renderer.setRenderTarget(null);
     this._renderer.clearDepth();
     this._renderer.render(this._scene, this._camera);
+    this._viewHelper.render(this._renderer);
   };
 
   resizeCanvasToDisplaySize = (): void => {
@@ -1411,6 +1429,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _controls: OrbitControls; // Mouse controls
   private _transformControls: TransformControls; // Mesh position/rotation controls
   private _pointer3D: IPointer | null = null;
+  private _viewHelper: ViewHelper;
   private _collaboratorPointers: IDict<IPointer>;
   private _pointerGeometry: THREE.SphereGeometry;
   private _contextMenu: ContextMenu;
