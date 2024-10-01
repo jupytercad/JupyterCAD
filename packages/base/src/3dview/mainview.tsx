@@ -225,6 +225,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._clock = new THREE.Clock();
       // this._renderer.setPixelRatio(window.devicePixelRatio);
+      this._renderer.autoClear = false;
       this._renderer.setClearColor(0x000000, 0);
       this._renderer.setSize(500, 500, false);
       this.divRef.current.appendChild(this._renderer.domElement); // mount using React ref
@@ -403,7 +404,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._controls.update();
     this._renderer.setRenderTarget(null);
-    this._renderer.autoClear = false;
+    this._renderer.clear();
     this._renderer.render(this._scene, this._camera);
     this._viewHelper.render(this._renderer);
   };
