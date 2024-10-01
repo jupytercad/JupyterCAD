@@ -222,6 +222,8 @@ export class MainView extends React.Component<IProps, IStates> {
         antialias: true,
         stencil: true
       });
+
+      this._clock = new THREE.Clock();
       // this._renderer.setPixelRatio(window.devicePixelRatio);
       this._renderer.setClearColor(0x000000, 0);
       this._renderer.setSize(500, 500, false);
@@ -378,6 +380,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
   animate = (): void => {
     this._requestID = window.requestAnimationFrame(this.animate);
+    this._delta = this._clock.getDelta();
 
     for (const material of this._edgeMaterials) {
       material.resolution.set(
@@ -394,12 +397,14 @@ export class MainView extends React.Component<IProps, IStates> {
         this._clippingPlaneMesh.position.z - this._clippingPlane.normal.z
       );
     }
+    if (this._viewHelper.animating){
+      this._viewHelper.update(this._delta);
+    }
 
     this._controls.update();
     this._renderer.setRenderTarget(null);
-    this._renderer.clearDepth();
+    this._renderer.autoClear = false
     this._renderer.render(this._scene, this._camera);
-    this._renderer.autoClear = false;
     this._viewHelper.render(this._renderer);
   };
 
@@ -1435,6 +1440,8 @@ export class MainView extends React.Component<IProps, IStates> {
   private _controls: OrbitControls; // Mouse controls
   private _transformControls: TransformControls; // Mesh position/rotation controls
   private _pointer3D: IPointer | null = null;
+  private _clock: THREE.Clock;
+  private _delta: number;
   private _viewHelper: ViewHelper;
   private _collaboratorPointers: IDict<IPointer>;
   private _pointerGeometry: THREE.SphereGeometry;
