@@ -397,13 +397,13 @@ export class MainView extends React.Component<IProps, IStates> {
         this._clippingPlaneMesh.position.z - this._clippingPlane.normal.z
       );
     }
-    if (this._viewHelper.animating){
+    if (this._viewHelper.animating) {
       this._viewHelper.update(this._delta);
     }
 
     this._controls.update();
     this._renderer.setRenderTarget(null);
-    this._renderer.autoClear = false
+    this._renderer.autoClear = false;
     this._renderer.render(this._scene, this._camera);
     this._viewHelper.render(this._renderer);
   };
