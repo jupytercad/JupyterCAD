@@ -937,6 +937,15 @@ export function addCommands(
         return;
       }
       current.wireframe = !current.wireframe;
+
+      const buttonNode = document.querySelector(`[data-command="${CommandIDs.wireframe}"]`);
+      if (buttonNode) {
+        if (current.wireframe) {
+          buttonNode.classList.add('jpcad-button-enabled');
+        } else {
+          buttonNode.classList.remove('jpcad-button-enabled');
+        }
+      }
     },
     icon: wireframeIcon
   });
