@@ -938,9 +938,10 @@ export function addCommands(
       }
       current.wireframe = !current.wireframe;
 
-      const buttonNode = document.querySelector(
-        `[data-command="${CommandIDs.wireframe}"]`
-      );
+      const buttonContainer =
+        // @ts-ignore
+        tracker.currentWidget?._toolbar.node._slottedItems[25];
+      const buttonNode = buttonContainer?.querySelector('jp-button');
       if (buttonNode) {
         if (current.wireframe) {
           buttonNode.classList.add('jpcad-button-enabled');
@@ -1070,9 +1071,10 @@ export function addCommands(
         showClipPlane: showClipPlane
       };
 
-      const buttonNode = document.querySelector(
-        `[data-command="${CommandIDs.updateClipView}"]`
-      );
+      const buttonContainer =
+        // @ts-ignore
+        tracker.currentWidget?._toolbar.node._slottedItems[22];
+      const buttonNode = buttonContainer?.querySelector('jp-button');
       if (buttonNode) {
         if (panel.clipView.enabled) {
           buttonNode.classList.add('jpcad-button-enabled');
