@@ -938,7 +938,9 @@ export function addCommands(
       }
       current.wireframe = !current.wireframe;
 
-      const buttonNode = document.querySelector(`[data-command="${CommandIDs.wireframe}"]`);
+      const buttonNode = document.querySelector(
+        `[data-command="${CommandIDs.wireframe}"]`
+      );
       if (buttonNode) {
         if (current.wireframe) {
           buttonNode.classList.add('jpcad-button-enabled');
@@ -1055,7 +1057,10 @@ export function addCommands(
       }
 
       const panel = current.content;
-      panel.clipView = panel.clipView || { enabled: false, showClipPlane: true };
+      panel.clipView = panel.clipView || {
+        enabled: false,
+        showClipPlane: true
+      };
 
       panel.clipView.enabled = !panel.clipView.enabled;
 
@@ -1065,7 +1070,9 @@ export function addCommands(
         showClipPlane: showClipPlane
       };
 
-      const buttonNode = document.querySelector(`[data-command="${CommandIDs.updateClipView}"]`);
+      const buttonNode = document.querySelector(
+        `[data-command="${CommandIDs.updateClipView}"]`
+      );
       if (buttonNode) {
         if (panel.clipView.enabled) {
           buttonNode.classList.add('jpcad-button-enabled');
