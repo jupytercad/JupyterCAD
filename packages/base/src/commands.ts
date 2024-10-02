@@ -1055,6 +1055,15 @@ export function addCommands(
         enabled: enabled,
         showClipPlane: showClipPlane
       };
+
+      const buttonNode = document.querySelector(`[data-command="${CommandIDs.updateClipView}"]`);
+      if (buttonNode) {
+        if (panel.clipView.enabled) {
+          buttonNode.classList.add('jpcad-button-enabled');
+        } else {
+          buttonNode.classList.remove('jpcad-button-enabled');
+        }
+      }
     }
   });
 

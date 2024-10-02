@@ -420,3 +420,8 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
 .jpcad-console .jp-CodeConsole-banner {
   display: none;
 }
+
+.jpcad-button-enabled {
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.2);
+}
