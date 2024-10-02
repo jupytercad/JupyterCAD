@@ -938,15 +938,17 @@ export function addCommands(
       }
       current.wireframe = !current.wireframe;
 
-      const buttonContainer =
-        // @ts-ignore
-        tracker.currentWidget?._toolbar.node._slottedItems[25];
-      const buttonNode = buttonContainer?.querySelector('jp-button');
-      if (buttonNode) {
-        if (current.wireframe) {
-          buttonNode.classList.add('jpcad-button-enabled');
-        } else {
-          buttonNode.classList.remove('jpcad-button-enabled');
+      const toolbarNode = tracker.currentWidget?.toolbar.node;
+      const buttonContainer = toolbarNode.querySelector('[data-jp-item-name="Toggle Wireframe"]');
+
+      if (buttonContainer) {
+        const buttonNode = buttonContainer.querySelector('jp-button');
+        if (buttonNode) {
+          if (current.wireframe) {
+            buttonNode.classList.add('jpcad-button-enabled');
+          } else {
+            buttonNode.classList.remove('jpcad-button-enabled');
+          }
         }
       }
     },
@@ -1071,15 +1073,17 @@ export function addCommands(
         showClipPlane: showClipPlane
       };
 
-      const buttonContainer =
-        // @ts-ignore
-        tracker.currentWidget?._toolbar.node._slottedItems[22];
-      const buttonNode = buttonContainer?.querySelector('jp-button');
-      if (buttonNode) {
-        if (panel.clipView.enabled) {
-          buttonNode.classList.add('jpcad-button-enabled');
-        } else {
-          buttonNode.classList.remove('jpcad-button-enabled');
+      const toolbarNode = tracker.currentWidget?.toolbar.node;
+      const buttonContainer = toolbarNode.querySelector('[data-jp-item-name="Clip View"]');
+
+      if (buttonContainer) {
+        const buttonNode = buttonContainer.querySelector('jp-button');
+        if (buttonNode) {
+          if (panel.clipView.enabled) {
+            buttonNode.classList.add('jpcad-button-enabled');
+          } else {
+            buttonNode.classList.remove('jpcad-button-enabled');
+          }
         }
       }
     }
