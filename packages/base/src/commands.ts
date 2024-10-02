@@ -939,7 +939,9 @@ export function addCommands(
       current.wireframe = !current.wireframe;
 
       const toolbarNode = tracker.currentWidget?.toolbar.node;
-      const buttonContainer = toolbarNode.querySelector('[data-jp-item-name="Toggle Wireframe"]');
+      const buttonContainer = toolbarNode.querySelector(
+        '[data-jp-item-name="Toggle Wireframe"]'
+      );
 
       if (buttonContainer) {
         const buttonNode = buttonContainer.querySelector('jp-button');
@@ -1074,7 +1076,9 @@ export function addCommands(
       };
 
       const toolbarNode = tracker.currentWidget?.toolbar.node;
-      const buttonContainer = toolbarNode.querySelector('[data-jp-item-name="Clip View"]');
+      const buttonContainer = toolbarNode.querySelector(
+        '[data-jp-item-name="Clip View"]'
+      );
 
       if (buttonContainer) {
         const buttonNode = buttonContainer.querySelector('jp-button');
