@@ -10,6 +10,8 @@ import {
 import { CommandRegistry } from '@lumino/commands';
 import { Widget } from '@lumino/widgets';
 import * as React from 'react';
+import { LabIcon } from '@jupyterlab/ui-components';
+import { wireframeIcon } from '../tools';
 
 import { CommandIDs } from '../commands';
 import { UsersItem } from './usertoolbaritem';
@@ -26,6 +28,51 @@ export class Separator extends Widget {
   }
 }
 
+export class CommandToggleToolbarButton extends Widget {
+  private _toggled: boolean;
+  private _commands: CommandRegistry;
+  private _id: string;
+
+  constructor(options: {
+    id: string;
+    label?: string;
+    icon?: LabIcon;
+    commands: CommandRegistry;
+    initialToggled?: boolean;
+  }) {
+    super();
+    this._toggled = options.initialToggled ?? false;
+    this._commands = options.commands;
+    this._id = options.id;
+
+    const button = document.createElement('jp-button');
+    button.className = 'jp-ToolbarButtonComponent';
+    button.setAttribute('aria-label', options.label ?? 'Button');
+    button.setAttribute('data-command', options.id);
+    button.setAttribute('appearance', 'stealth');
+
+    if (options.icon) {
+      const iconElement = document.createElement('span');
+      options.icon.element({
+        container: iconElement,
+        stylesheet: 'toolbarButton'
+      });
+      button.prepend(iconElement);
+    }
+
+    if (this._toggled) {
+      button.classList.add('jpcad-button-enabled');
+    }
+
+    button.addEventListener('click', () => {
+      this._toggled = !this._toggled;
+      button.classList.toggle('jpcad-button-enabled', this._toggled);
+      this._commands.execute(this._id);
+    });
+
+    this.node.appendChild(button);
+  }
+}
 export class ToolbarWidget extends Toolbar {
   constructor(options: ToolbarWidget.IOptions) {
     super(options);
@@ -213,10 +260,11 @@ export class ToolbarWidget extends Toolbar {
 
         this.addItem(
           'Toggle Wireframe',
-          new CommandToolbarButton({
+          new CommandToggleToolbarButton({
             id: CommandIDs.wireframe,
             label: '',
-            commands: options.commands
+            commands: options.commands,
+            icon: wireframeIcon
           })
         );
 

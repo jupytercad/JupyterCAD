@@ -937,22 +937,6 @@ export function addCommands(
         return;
       }
       current.wireframe = !current.wireframe;
-
-      const toolbarNode = tracker.currentWidget?.toolbar.node;
-      const buttonContainer = toolbarNode.querySelector(
-        '[data-jp-item-name="Toggle Wireframe"]'
-      );
-
-      if (buttonContainer) {
-        const buttonNode = buttonContainer.querySelector('jp-button');
-        if (buttonNode) {
-          if (current.wireframe) {
-            buttonNode.classList.add('jpcad-button-enabled');
-          } else {
-            buttonNode.classList.remove('jpcad-button-enabled');
-          }
-        }
-      }
     },
     icon: wireframeIcon
   });
