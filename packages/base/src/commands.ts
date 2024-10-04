@@ -602,40 +602,6 @@ const CAMERA_FORM = {
   }
 };
 
-const CLIP_VIEW_FORM = {
-  title: 'Clip View Settings',
-  schema: {
-    type: 'object',
-    required: ['Enabled'],
-    additionalProperties: false,
-    properties: {
-      Enabled: {
-        type: 'boolean',
-        description: 'Whether the clip view is enabled or not'
-      },
-      ShowClipPlane: {
-        type: 'boolean',
-        description: 'Whether the clip plane should be rendered or not'
-      }
-    }
-  },
-  default: (panel: JupyterCadPanel) => {
-    return {
-      Enabled: panel.clipView?.enabled ?? false,
-      ShowClipPlane: panel.clipView?.showClipPlane ?? true
-    };
-  },
-  syncData: (panel: JupyterCadPanel) => {
-    return (props: IDict) => {
-      const { Enabled, ShowClipPlane } = props;
-      panel.clipView = {
-        enabled: Enabled,
-        showClipPlane: ShowClipPlane
-      };
-    };
-  }
-};
-
 const EXPORT_FORM = {
   title: 'Export to .jcad',
   schema: {
@@ -964,6 +930,10 @@ export function addCommands(
     isEnabled: () => {
       return tracker.currentWidget !== null;
     },
+    isToggled: () => {
+      const current = tracker.currentWidget?.content;
+      return current?.wireframe || false;
+    },
     execute: async () => {
       const current = tracker.currentWidget?.content;
 
@@ -971,6 +941,7 @@ export function addCommands(
         return;
       }
       current.wireframe = !current.wireframe;
+      commands.notifyCommandChanged(CommandIDs.wireframe);
     },
     icon: wireframeIcon
   });
@@ -1071,6 +1042,10 @@ export function addCommands(
     isEnabled: () => {
       return Boolean(tracker.currentWidget);
     },
+    isToggled: () => {
+      const current = tracker.currentWidget?.content;
+      return current?.clipView?.enabled || false;
+    },
     icon: clippingIcon,
     execute: async () => {
       const current = tracker.currentWidget;
@@ -1079,15 +1054,20 @@ export function addCommands(
         return;
       }
 
-      const dialog = new FormDialog({
-        context: current.context,
-        title: CLIP_VIEW_FORM.title,
-        schema: CLIP_VIEW_FORM.schema,
-        sourceData: CLIP_VIEW_FORM.default(current.content),
-        syncData: CLIP_VIEW_FORM.syncData(current.content),
-        cancelButton: true
-      });
-      await dialog.launch();
+      const panel = current.content;
+      panel.clipView = panel.clipView || {
+        enabled: false,
+        showClipPlane: true
+      };
+
+      panel.clipView.enabled = !panel.clipView.enabled;
+
+      const { enabled, showClipPlane } = panel.clipView;
+      panel.clipView = {
+        enabled: enabled,
+        showClipPlane: showClipPlane
+      };
+      commands.notifyCommandChanged(CommandIDs.updateClipView);
     }
   });
 
