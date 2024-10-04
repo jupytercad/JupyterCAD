@@ -930,6 +930,10 @@ export function addCommands(
     isEnabled: () => {
       return tracker.currentWidget !== null;
     },
+    isToggled: () => {
+      const current = tracker.currentWidget?.content;
+      return current?.wireframe || false;
+    },
     execute: async () => {
       const current = tracker.currentWidget?.content;
 
@@ -937,6 +941,7 @@ export function addCommands(
         return;
       }
       current.wireframe = !current.wireframe;
+      commands.notifyCommandChanged(CommandIDs.wireframe);
     },
     icon: wireframeIcon
   });
@@ -1037,6 +1042,10 @@ export function addCommands(
     isEnabled: () => {
       return Boolean(tracker.currentWidget);
     },
+    isToggled: () => {
+      const current = tracker.currentWidget?.content;
+      return current?.clipView?.enabled || false;
+    },
     icon: clippingIcon,
     execute: async () => {
       const current = tracker.currentWidget;
@@ -1058,22 +1067,7 @@ export function addCommands(
         enabled: enabled,
         showClipPlane: showClipPlane
       };
-
-      const toolbarNode = tracker.currentWidget?.toolbar.node;
-      const buttonContainer = toolbarNode.querySelector(
-        '[data-jp-item-name="Clip View"]'
-      );
-
-      if (buttonContainer) {
-        const buttonNode = buttonContainer.querySelector('jp-button');
-        if (buttonNode) {
-          if (panel.clipView.enabled) {
-            buttonNode.classList.add('jpcad-button-enabled');
-          } else {
-            buttonNode.classList.remove('jpcad-button-enabled');
-          }
-        }
-      }
+      commands.notifyCommandChanged(CommandIDs.updateClipView);
     }
   });
 
