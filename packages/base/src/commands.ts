@@ -668,6 +668,17 @@ function getSelectedObjectId(widget: JupyterCadWidget): string {
   return '';
 }
 
+function syncEditor(tracker: WidgetTracker<JupyterCadWidget>) {
+  tracker.currentChanged.connect(() => {
+    const currentWidget = tracker.currentWidget;
+    
+    if (currentWidget) {
+      const resizeEvent = new Event('resize');
+      window.dispatchEvent(resizeEvent);
+    }
+  });
+}
+
 /**
  * Add the FreeCAD commands to the application's command registry.
  */
@@ -683,6 +694,7 @@ export function addCommands(
   const trans = translator.load('jupyterlab');
   const { commands } = app;
   Private.updateFormSchema(formSchemaRegistry);
+  syncEditor(tracker);
 
   commands.addCommand(CommandIDs.toggleConsole, {
     label: trans.__('Toggle console'),
