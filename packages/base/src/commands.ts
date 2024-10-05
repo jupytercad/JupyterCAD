@@ -942,6 +942,9 @@ export function addCommands(
       }
       current.wireframe = !current.wireframe;
       commands.notifyCommandChanged(CommandIDs.wireframe);
+      tracker.currentChanged.connect(() => {
+        commands.notifyCommandChanged(CommandIDs.wireframe);
+      });
     },
     icon: wireframeIcon
   });
@@ -1068,6 +1071,9 @@ export function addCommands(
         showClipPlane: showClipPlane
       };
       commands.notifyCommandChanged(CommandIDs.updateClipView);
+      tracker.currentChanged.connect(() => {
+        commands.notifyCommandChanged(CommandIDs.updateClipView);
+      });
     }
   });
 
