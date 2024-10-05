@@ -671,7 +671,7 @@ function getSelectedObjectId(widget: JupyterCadWidget): string {
 function syncEditor(tracker: WidgetTracker<JupyterCadWidget>) {
   tracker.currentChanged.connect(() => {
     const currentWidget = tracker.currentWidget;
-    
+
     if (currentWidget) {
       const resizeEvent = new Event('resize');
       window.dispatchEvent(resizeEvent);
