@@ -2,22 +2,42 @@
   {
     "command": "jupytercad:undo",
     "keys": ["Accel Z"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:undo",
+    "keys": ["Accel Z"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:redo",
     "keys": ["Accel Y"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:redo",
+    "keys": ["Accel Y"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:removeObject",
     "keys": ["Delete"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:removeObject",
+    "keys": ["Delete"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:wireframe",
     "keys": ["Accel Space"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:wireframe",
+    "keys": ["Accel Space"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:executeConsole",
@@ -37,86 +57,171 @@
   {
     "command": "jupytercad:sketch",
     "keys": ["Accel Alt N"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:sketch",
+    "keys": ["Accel Alt N"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:newBox",
     "keys": ["Accel Alt B"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:newBox",
+    "keys": ["Accel Alt B"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:newCylinder",
     "keys": ["Accel Alt C"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:newCylinder",
+    "keys": ["Accel Alt C"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:newSphere",
     "keys": ["Accel Alt S"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:newSphere",
+    "keys": ["Accel Alt S"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:newCone",
     "keys": ["Accel Alt E"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:newCone",
+    "keys": ["Accel Alt E"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:newTorus",
     "keys": ["Accel Alt T"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:newTorus",
+    "keys": ["Accel Alt T"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:cut",
     "keys": ["Accel Alt X"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:cut",
+    "keys": ["Accel Alt X"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:extrusion",
     "keys": ["Accel Alt E"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:extrusion",
+    "keys": ["Accel Alt E"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:union",
     "keys": ["Accel Alt U"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:union",
+    "keys": ["Accel Alt U"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:intersection",
     "keys": ["Accel Alt I"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:intersection",
+    "keys": ["Accel Alt I"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:chamfer",
     "keys": ["Accel Alt H"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:chamfer",
+    "keys": ["Accel Alt H"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:fillet",
     "keys": ["Accel Alt F"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:fillet",
+    "keys": ["Accel Alt F"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:updateAxes",
     "keys": ["Alt A"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:updateAxes",
+    "keys": ["Alt A"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:updateExplodedView",
     "keys": ["Alt E"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:updateExplodedView",
+    "keys": ["Alt E"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:updateCameraSettings",
     "keys": ["Accel Alt K"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:updateCameraSettings",
+    "keys": ["Accel Alt K"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:updateClipView",
     "keys": ["Alt C"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:updateClipView",
+    "keys": ["Alt C"],
+    "selector": ".jpcad-sidepanel-widget"
   },
   {
     "command": "jupytercad:exportJcad",
     "keys": ["Accel Alt X"],
-    "selector": "body"
+    "selector": ".jcad-Mainview"
+  },
+  {
+    "command": "jupytercad:exportJcad",
+    "keys": ["Accel Alt X"],
+    "selector": ".jpcad-sidepanel-widget"
   }
 ]
