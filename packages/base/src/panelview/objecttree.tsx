@@ -239,9 +239,13 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
 
   handleNodeClick = (objectId: string) => {
     const object = this.getObjectFromName(objectId);
-  
-    if (object && this.props.cpModel.jcadModel?.sharedModel) {
-      const objPosition = object?.parameters?.Placement?.Position || { x: 0, y: 0, z: 0 };
+
+    if (object && object.visible === true) {
+      const objPosition = object?.parameters?.Placement?.Position || {
+        x: 0,
+        y: 0,
+        z: 0
+      };
 
       const event = new CustomEvent('nodeClick', {
         detail: {

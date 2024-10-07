@@ -439,15 +439,22 @@ export class MainView extends React.Component<IProps, IStates> {
     this.resizeCanvasToDisplaySize();
   };
 
-  private lookAtPosition(position: { x: number, y: number, z: number }) {
-    const objPosition = new THREE.Vector3(position[0], position[1], position[2]);
+  private lookAtPosition(position: { x: number; y: number; z: number }) {
+    const objPosition = new THREE.Vector3(
+      position[0],
+      position[1],
+      position[2]
+    );
     if (this._camera) {
       this._camera.lookAt(objPosition);
-      const cameraToTargetDistance = this._camera.position.distanceTo(objPosition);
-      
+      const cameraToTargetDistance =
+        this._camera.position.distanceTo(objPosition);
+
       if (cameraToTargetDistance < 1) {
         // Move the camera back slightly to ensure visibility
-        this._camera.position.add(this._camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(-2));
+        this._camera.position.add(
+          this._camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(-2)
+        );
       }
       this._camera.updateProjectionMatrix();
     }
