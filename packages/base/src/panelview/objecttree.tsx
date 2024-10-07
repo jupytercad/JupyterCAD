@@ -25,7 +25,6 @@ import {
 } from '@naisutech/react-tree';
 import * as React from 'react';
 import { v4 as uuid } from 'uuid';
-import { Vector3 } from 'three';
 
 import visibilitySvg from '../../style/icon/visibility.svg';
 import visibilityOffSvg from '../../style/icon/visibilityOff.svg';
@@ -239,19 +238,20 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   };
 
   handleNodeClick = (objectId: string) => {
-    console.log(objectId);
-    
     const object = this.getObjectFromName(objectId);
-    console.log(object);
-    
+  
     if (object && this.props.cpModel.jcadModel?.sharedModel) {
-      const position = object?.parameters?.Placement?.Position || { x: 0, y: 0, z: 0 };
-      console.log(position);
-   
-      const lookAtVector = new Vector3(position.x, position.y, position.z);
-      console.log(lookAtVector);
+      const objPosition = object?.parameters?.Placement?.Position || { x: 0, y: 0, z: 0 };
+
+      const event = new CustomEvent('nodeClick', {
+        detail: {
+          objectId,
+          objPosition
+        }
+      });
+      window.dispatchEvent(event);
     }
-  }
+  };
 
   private _sharedJcadModelChanged = (
     sender: IJupyterCadDoc,

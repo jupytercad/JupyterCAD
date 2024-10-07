@@ -117,6 +117,10 @@ export class MainView extends React.Component<IProps, IStates> {
     this.addContextMenu();
     this._mainViewModel.initWorker();
     this._mainViewModel.initSignal();
+    window.addEventListener('nodeClick', (e: Event) => {
+      const customEvent = e as CustomEvent;
+      this.lookAtPosition(customEvent.detail.objPosition);
+    });
   }
 
   componentDidUpdate(oldProps: IProps, oldState: IStates): void {
@@ -434,6 +438,24 @@ export class MainView extends React.Component<IProps, IStates> {
     this.animate();
     this.resizeCanvasToDisplaySize();
   };
+
+  private lookAtPosition(position: { x: number, y: number, z: number }) {
+    const objPosition = new THREE.Vector3(position[0], position[1], position[2]);
+    if (this._camera) {
+      this._camera.lookAt(objPosition);
+      const cameraToTargetDistance = this._camera.position.distanceTo(objPosition);
+      
+      if (cameraToTargetDistance < 1) {
+        // Move the camera back slightly to ensure visibility
+        this._camera.position.add(this._camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(-2));
+      }
+      this._camera.updateProjectionMatrix();
+    }
+    if (this._controls) {
+      this._controls.target.copy(objPosition);
+      this._controls.update();
+    }
+  }
 
   private _updateAnnotation() {
     Object.keys(this.state.annotations).forEach(key => {
