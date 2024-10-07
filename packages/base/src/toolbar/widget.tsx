@@ -4,6 +4,7 @@ import {
   ReactWidget,
   redoIcon,
   Toolbar,
+  ReactiveToolbar,
   undoIcon,
   terminalIcon
 } from '@jupyterlab/ui-components';
@@ -26,9 +27,9 @@ export class Separator extends Widget {
   }
 }
 
-export class ToolbarWidget extends Toolbar {
+export class ToolbarWidget extends ReactiveToolbar {
   constructor(options: ToolbarWidget.IOptions) {
-    super(options);
+    super();
     this.addClass('jpcad-toolbar-widget');
     setTimeout(() => {
       // Allow the widget tracker to propagate the new widget signal.
@@ -231,7 +232,7 @@ export class ToolbarWidget extends Toolbar {
             })
           );
         });
-        this.addItem('spacer', Toolbar.createSpacerItem());
+        this.addItem('spacer', ReactiveToolbar.createSpacerItem());
 
         // Users
         this.addItem(
