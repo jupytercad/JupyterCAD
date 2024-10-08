@@ -117,7 +117,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this.addContextMenu();
     this._mainViewModel.initWorker();
     this._mainViewModel.initSignal();
-    window.addEventListener('nodeClick', (e: Event) => {
+    window.addEventListener('jupytercadObjectSelection', (e: Event) => {
       const customEvent = e as CustomEvent;
 
       if (customEvent.detail.mainViewModel === this._mainViewModel.id) {

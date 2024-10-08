@@ -247,7 +247,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         z: 0
       };
 
-      const event = new CustomEvent('nodeClick', {
+      const event = new CustomEvent('jupytercadObjectSelection', {
         detail: {
           objectId,
           objPosition,
