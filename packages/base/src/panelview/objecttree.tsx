@@ -250,7 +250,8 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       const event = new CustomEvent('nodeClick', {
         detail: {
           objectId,
-          objPosition
+          objPosition,
+          mainViewModel: this.props.cpModel.mainViewModel
         }
       });
       window.dispatchEvent(event);

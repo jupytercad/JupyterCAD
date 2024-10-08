@@ -119,7 +119,10 @@ export class MainView extends React.Component<IProps, IStates> {
     this._mainViewModel.initSignal();
     window.addEventListener('nodeClick', (e: Event) => {
       const customEvent = e as CustomEvent;
-      this.lookAtPosition(customEvent.detail.objPosition);
+
+      if (customEvent.detail.mainViewModel === this._mainViewModel.id) {
+        this.lookAtPosition(customEvent.detail.objPosition);
+      }
     });
   }
 

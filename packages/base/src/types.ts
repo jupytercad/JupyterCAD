@@ -42,4 +42,5 @@ export interface IControlPanelModel {
   filePath: string | undefined;
   jcadModel: IJupyterCadModel | undefined;
   sharedModel: IJupyterCadDoc | undefined;
+  mainViewModel: string | undefined;
 }
