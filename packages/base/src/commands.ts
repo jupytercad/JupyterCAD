@@ -942,13 +942,14 @@ export function addCommands(
       }
       current.wireframe = !current.wireframe;
       commands.notifyCommandChanged(CommandIDs.wireframe);
-      tracker.currentChanged.connect(() => {
-        commands.notifyCommandChanged(CommandIDs.wireframe);
-      });
     },
     icon: wireframeIcon
   });
 
+  tracker.currentChanged.connect(() => {
+    commands.notifyCommandChanged(CommandIDs.wireframe);
+  });
+  
   commands.addCommand(CommandIDs.chamfer, {
     label: trans.__('Make chamfer'),
     isEnabled: () => {
@@ -1071,12 +1072,13 @@ export function addCommands(
         showClipPlane: showClipPlane
       };
       commands.notifyCommandChanged(CommandIDs.updateClipView);
-      tracker.currentChanged.connect(() => {
-        commands.notifyCommandChanged(CommandIDs.updateClipView);
-      });
     }
   });
 
+  tracker.currentChanged.connect(() => {
+    commands.notifyCommandChanged(CommandIDs.updateClipView);
+  });
+  
   commands.addCommand(CommandIDs.exportJcad, {
     label: trans.__('Export to .jcad'),
     isEnabled: () => {
