@@ -112,7 +112,7 @@ const activate = (
   });
 
   app.commands.addCommand(CommandIDs.createNew, {
-    label: args => 'New JCAD File',
+    label: args => 'CAD File',
     caption: 'Create a new JCAD Editor',
     icon: logoIcon,
     execute: async args => {

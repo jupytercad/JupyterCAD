@@ -300,11 +300,11 @@ test.describe('UI Test', () => {
 
   test.describe('JCAD creation test', () => {
     test.describe('Extension activation test', () => {
-      test('should create a new JCAD file', async ({ page, request }) => {
+      test('should create a CAD File', async ({ page, request }) => {
         await page.goto();
         await page
           .getByLabel('notebook content')
-          .getByText('New JCAD File')
+          .getByText('CAD File')
           .click();
 
         await page.getByTitle('New Box').getByRole('button').click();
@@ -363,7 +363,7 @@ test.describe('UI Test', () => {
       await page.goto();
       await page
         .getByLabel('notebook content')
-        .getByText('New JCAD File')
+        .getByText('CAD File')
         .click();
       await page.getByRole('button', { name: 'Toggle console' }).click();
       await page.getByRole('button', { name: 'Remove console' });
