@@ -949,7 +949,7 @@ export function addCommands(
   tracker.currentChanged.connect(() => {
     commands.notifyCommandChanged(CommandIDs.wireframe);
   });
-  
+
   commands.addCommand(CommandIDs.chamfer, {
     label: trans.__('Make chamfer'),
     isEnabled: () => {
@@ -1078,7 +1078,7 @@ export function addCommands(
   tracker.currentChanged.connect(() => {
     commands.notifyCommandChanged(CommandIDs.updateClipView);
   });
-  
+
   commands.addCommand(CommandIDs.exportJcad, {
     label: trans.__('Export to .jcad'),
     isEnabled: () => {
