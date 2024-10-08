@@ -948,6 +948,10 @@ export function addCommands(
     icon: wireframeIcon
   });
 
+  tracker.currentChanged.connect(() => {
+    commands.notifyCommandChanged(CommandIDs.wireframe);
+  });
+
   commands.addCommand(CommandIDs.chamfer, {
     label: trans.__('Make chamfer'),
     isEnabled: () => {
@@ -1071,6 +1075,10 @@ export function addCommands(
       };
       commands.notifyCommandChanged(CommandIDs.updateClipView);
     }
+  });
+
+  tracker.currentChanged.connect(() => {
+    commands.notifyCommandChanged(CommandIDs.updateClipView);
   });
 
   commands.addCommand(CommandIDs.exportJcad, {
