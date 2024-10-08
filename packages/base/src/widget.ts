@@ -13,6 +13,7 @@ import { JupyterCadMainViewPanel } from './3dview';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { ConsoleView } from './console';
 import { AxeHelper, CameraSettings, ClipSettings, ExplodedView } from './types';
+import { WidgetTracker } from '@jupyterlab/apputils';
 
 export class JupyterCadWidget
   extends DocumentWidget<JupyterCadPanel, IJupyterCadModel>
@@ -35,6 +36,17 @@ export class JupyterCadWidget
   onResize = (msg: any): void => {
     window.dispatchEvent(new Event('resize'));
   };
+}
+
+export function syncEditor(tracker: WidgetTracker<JupyterCadWidget>) {
+  tracker.currentChanged.connect(() => {
+    const currentWidget = tracker.currentWidget;
+
+    if (currentWidget) {
+      const resizeEvent = new Event('resize');
+      window.dispatchEvent(resizeEvent);
+    }
+  });
 }
 
 export class JupyterCadPanel extends SplitPanel {

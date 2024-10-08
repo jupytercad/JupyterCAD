@@ -43,6 +43,7 @@ import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
+import { syncEditor } from './widget';
 
 export function newName(type: string, model: IJupyterCadModel): string {
   const sharedModel = model.sharedModel;
@@ -666,17 +667,6 @@ function getSelectedObjectId(widget: JupyterCadWidget): string {
     return selectedKey;
   }
   return '';
-}
-
-function syncEditor(tracker: WidgetTracker<JupyterCadWidget>) {
-  tracker.currentChanged.connect(() => {
-    const currentWidget = tracker.currentWidget;
-
-    if (currentWidget) {
-      const resizeEvent = new Event('resize');
-      window.dispatchEvent(resizeEvent);
-    }
-  });
 }
 
 /**
