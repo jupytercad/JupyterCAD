@@ -40,6 +40,41 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.0.0a3
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.0.0-alpha.2...36bff8b5e9a8534c073008fea5ce1e61dfd5ee94))
+
+### Enhancements made
+
+- Add icons in filebrowser [#460](https://github.com/jupytercad/JupyterCAD/pull/460) ([@martinRenou](https://github.com/martinRenou))
+- Reactive toolbar w.r.t. width [#455](https://github.com/jupytercad/JupyterCAD/pull/455) ([@arjxn-py](https://github.com/arjxn-py))
+- Improve the UX of the clip-plane and wireframe buttons [#441](https://github.com/jupytercad/JupyterCAD/pull/441) ([@arjxn-py](https://github.com/arjxn-py))
+- Add interactive axes helper [#440](https://github.com/jupytercad/JupyterCAD/pull/440) ([@arjxn-py](https://github.com/arjxn-py))
+- Include Notebook API into lite kernel deployment [#364](https://github.com/jupytercad/JupyterCAD/pull/364) ([@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- Toggle buttons working correctly when multiple editors are open [#447](https://github.com/jupytercad/JupyterCAD/pull/447) ([@arjxn-py](https://github.com/arjxn-py))
+- Update example for colors [#437](https://github.com/jupytercad/JupyterCAD/pull/437) ([@arjxn-py](https://github.com/arjxn-py))
+- Fix lite build [#436](https://github.com/jupytercad/JupyterCAD/pull/436) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Reduce field of view of Camera [#465](https://github.com/jupytercad/JupyterCAD/pull/465) ([@arjxn-py](https://github.com/arjxn-py))
+- Rename launcher button [#461](https://github.com/jupytercad/JupyterCAD/pull/461) ([@martinRenou](https://github.com/martinRenou))
+- Try fixing galata workflow [#439](https://github.com/jupytercad/JupyterCAD/pull/439) ([@arjxn-py](https://github.com/arjxn-py))
+- Lite deployment missing deps [#434](https://github.com/jupytercad/JupyterCAD/pull/434) ([@martinRenou](https://github.com/martinRenou))
+- Lite deployment: Disable docprovider-extension [#433](https://github.com/jupytercad/JupyterCAD/pull/433) ([@martinRenou](https://github.com/martinRenou))
+- Update `ThreeJS` [#418](https://github.com/jupytercad/JupyterCAD/pull/418) ([@arjxn-py](https://github.com/arjxn-py))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-09-19&to=2024-10-09&type=c))
+
+[@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2024-09-19..2024-10-09&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-09-19..2024-10-09&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-09-19..2024-10-09&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2024-09-19..2024-10-09&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-09-19..2024-10-09&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.0.0a2
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/v3.0.0a1...e5acfcf87321b8f14a5c18b208e77ad45388dd3c))
@@ -73,8 +108,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-09-16&to=2024-09-19&type=c))
 
 [@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2024-09-16..2024-09-19&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Adavidbrochart+updated%3A2024-09-16..2024-09-19&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-09-16..2024-09-19&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-09-16..2024-09-19&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-09-16..2024-09-19&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.0.0a1
 
