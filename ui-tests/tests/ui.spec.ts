@@ -365,6 +365,7 @@ test.describe('UI Test', () => {
         .getByLabel('notebook content')
         .getByText('New JCAD File')
         .click();
+      await page.getByRole('button', { name: 'More commands' }).click();
       await page.getByRole('button', { name: 'Toggle console' }).click();
       await page.getByRole('button', { name: 'Remove console' });
       await page.getByRole('textbox').nth(1).click();
