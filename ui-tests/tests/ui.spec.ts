@@ -360,7 +360,7 @@ test.describe('UI Test', () => {
       await page.goto();
       await page
         .getByLabel('notebook content')
-        .getByText('New JCAD File')
+        .getByText('CAD File')
         .click();
       await page.getByRole('button', { name: 'More commands' }).click();
       await page.getByRole('button', { name: 'Toggle console' }).click();
