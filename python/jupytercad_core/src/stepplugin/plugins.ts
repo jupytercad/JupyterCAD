@@ -19,6 +19,7 @@ import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 import { JupyterCadStepModelFactory } from './modelfactory';
 import { JupyterCadWidgetFactory } from '../factory';
 import { JupyterCadStepDoc } from './model';
+import { logoIcon } from '@jupytercad/base';
 
 const FACTORY = 'JupyterCAD STEP Viewer';
 
@@ -53,7 +54,8 @@ const activate = (
     mimeTypes: ['text/json'],
     extensions: ['.step', '.STEP'],
     fileFormat: 'text',
-    contentType: 'step'
+    contentType: 'step',
+    icon: logoIcon
   });
 
   const stepSharedModelFactory: SharedDocumentFactory = () => {
