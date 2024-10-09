@@ -1,7 +1,6 @@
 import { ConsolePanel, IConsoleTracker } from '@jupyterlab/console';
 import {
   JupyterCadModel,
-  IJupyterCadTracker,
   IJCadWorkerRegistry,
   IJCadExternalCommandRegistry
 } from '@jupytercad/schema';
@@ -15,9 +14,10 @@ import {
   ToolbarWidget
 } from '@jupytercad/base';
 import { ServiceManager } from '@jupyterlab/services';
-
+import { WidgetTracker } from '@jupyterlab/apputils';
+import { IJupyterCadWidget } from '@jupytercad/schema';
 interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
-  tracker: IJupyterCadTracker;
+  tracker: WidgetTracker<IJupyterCadWidget>;
   commands: CommandRegistry;
   workerRegistry: IJCadWorkerRegistry;
   externalCommandRegistry: IJCadExternalCommandRegistry;
@@ -66,7 +66,8 @@ export class JupyterCadWidgetFactory extends ABCWidgetFactory<
       mimeTypeService: this.options.mimeTypeService,
       rendermime: this.options.rendermime,
       consoleTracker: this.options.consoleTracker,
-      commandRegistry: this.options.commands
+      commandRegistry: this.options.commands,
+      tracker: this.options.tracker
     });
     const toolbar = new ToolbarWidget({
       commands: this._commands,

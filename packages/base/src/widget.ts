@@ -38,17 +38,6 @@ export class JupyterCadWidget
   };
 }
 
-export function syncEditor(tracker: WidgetTracker<JupyterCadWidget>) {
-  tracker.currentChanged.connect(() => {
-    const currentWidget = tracker.currentWidget;
-
-    if (currentWidget) {
-      const resizeEvent = new Event('resize');
-      window.dispatchEvent(resizeEvent);
-    }
-  });
-}
-
 export class JupyterCadPanel extends SplitPanel {
   constructor(options: JupyterCadPanel.IOptions) {
     super({ orientation: 'vertical', spacing: 0 });
@@ -57,6 +46,7 @@ export class JupyterCadPanel extends SplitPanel {
     this._initView();
     this._consoleOption = consoleOption;
     this._consoleTracker = consoleTracker;
+    this._syncEditor(options.tracker);
   }
 
   _initModel(options: {
@@ -77,6 +67,17 @@ export class JupyterCadPanel extends SplitPanel {
     });
     this.addWidget(this._jupyterCadMainViewPanel);
     SplitPanel.setStretch(this._jupyterCadMainViewPanel, 1);
+  }
+
+  private _syncEditor(tracker: WidgetTracker<IJupyterCadWidget>) {
+    tracker.currentChanged.connect(() => {
+      const currentWidget = tracker.currentWidget;
+
+      if (currentWidget) {
+        const resizeEvent = new Event('resize');
+        window.dispatchEvent(resizeEvent);
+      }
+    });
   }
 
   get jupyterCadMainViewPanel(): JupyterCadMainViewPanel {
@@ -241,5 +242,6 @@ export namespace JupyterCadPanel {
     model: IJupyterCadModel;
     workerRegistry: IJCadWorkerRegistry;
     consoleTracker?: IConsoleTracker;
+    tracker: WidgetTracker<IJupyterCadWidget>;
   }
 }
