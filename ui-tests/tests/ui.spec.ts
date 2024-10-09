@@ -358,10 +358,7 @@ test.describe('UI Test', () => {
   test.describe('Console activation test', () => {
     test('should open console', async ({ page }) => {
       await page.goto();
-      await page
-        .getByLabel('notebook content')
-        .getByText('CAD File')
-        .click();
+      await page.getByLabel('notebook content').getByText('CAD File').click();
       await page.getByRole('button', { name: 'More commands' }).click();
       await page.getByRole('button', { name: 'Toggle console' }).click();
       await page.getByRole('button', { name: 'Remove console' });
