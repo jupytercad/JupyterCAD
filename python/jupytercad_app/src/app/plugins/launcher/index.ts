@@ -22,7 +22,7 @@ const launcherPlugin: JupyterFrontEndPlugin<void> = {
         if (!label) {
           continue;
         }
-        if (label.innerHTML.includes('New JCAD File')) {
+        if (label.innerHTML.includes('CAD File')) {
           const els = element
             .getElementsByClassName('jp-Launcher-sectionTitle')
             ?.item(0);

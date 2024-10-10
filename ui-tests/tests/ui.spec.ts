@@ -300,12 +300,9 @@ test.describe('UI Test', () => {
 
   test.describe('JCAD creation test', () => {
     test.describe('Extension activation test', () => {
-      test('should create a new JCAD file', async ({ page, request }) => {
+      test('should create a CAD File', async ({ page, request }) => {
         await page.goto();
-        await page
-          .getByLabel('notebook content')
-          .getByText('New JCAD File')
-          .click();
+        await page.getByLabel('notebook content').getByText('CAD File').click();
 
         await page.getByTitle('New Box').getByRole('button').click();
         await page.getByRole('button', { name: 'Submit' }).click();
@@ -361,10 +358,8 @@ test.describe('UI Test', () => {
   test.describe('Console activation test', () => {
     test('should open console', async ({ page }) => {
       await page.goto();
-      await page
-        .getByLabel('notebook content')
-        .getByText('New JCAD File')
-        .click();
+      await page.getByLabel('notebook content').getByText('CAD File').click();
+      await page.getByRole('button', { name: 'More commands' }).click();
       await page.getByRole('button', { name: 'Toggle console' }).click();
       await page.getByRole('button', { name: 'Remove console' });
       await page.getByRole('textbox').nth(1).click();
