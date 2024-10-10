@@ -6,7 +6,7 @@
   },
   {
     "command": "jupytercad:redo",
-    "keys": ["Accel Y"],
+    "keys": ["Accel Shift Z"],
     "selector": ".data-jcad-keybinding"
   },
   {
