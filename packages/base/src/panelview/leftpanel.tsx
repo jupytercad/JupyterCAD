@@ -14,6 +14,8 @@ export class LeftPanelWidget extends SidePanel {
   constructor(options: LeftPanelWidget.IOptions) {
     super();
     this.addClass('jpcad-sidepanel-widget');
+    this.addClass('data-jcad-keybinding');
+    this.node.tabIndex = 0;
     this._model = options.model;
     this._annotationModel = options.annotationModel;
     const header = new ControlPanelHeader();

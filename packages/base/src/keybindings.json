@@ -2,22 +2,22 @@
   {
     "command": "jupytercad:undo",
     "keys": ["Accel Z"],
-    "selector": "body"
+    "selector": ".data-jcad-keybinding"
   },
   {
     "command": "jupytercad:redo",
-    "keys": ["Accel Y"],
-    "selector": "body"
+    "keys": ["Accel Shift Z"],
+    "selector": ".data-jcad-keybinding"
   },
   {
     "command": "jupytercad:removeObject",
     "keys": ["Delete"],
-    "selector": "body"
+    "selector": ".data-jcad-keybinding"
   },
   {
     "command": "jupytercad:wireframe",
     "keys": ["Accel Space"],
-    "selector": "body"
+    "selector": ".data-jcad-keybinding"
   },
   {
     "command": "jupytercad:executeConsole",
@@ -33,5 +33,90 @@
     "command": "jupytercad:selectConsoleCompleter",
     "keys": ["Enter"],
     "selector": ".jpcad-console .jp-ConsolePanel .jp-mod-completer-active"
+  },
+  {
+    "command": "jupytercad:sketch",
+    "keys": ["Accel Alt N"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:newBox",
+    "keys": ["Accel Alt B"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:newCylinder",
+    "keys": ["Accel Alt C"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:newSphere",
+    "keys": ["Accel Alt S"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:newCone",
+    "keys": ["Accel Alt E"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:newTorus",
+    "keys": ["Accel Alt T"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:cut",
+    "keys": ["Accel Alt X"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:extrusion",
+    "keys": ["Accel Alt E"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:union",
+    "keys": ["Accel Alt U"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:intersection",
+    "keys": ["Accel Alt I"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:chamfer",
+    "keys": ["Accel Alt H"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:fillet",
+    "keys": ["Accel Alt F"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:updateAxes",
+    "keys": ["Alt A"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:updateExplodedView",
+    "keys": ["Alt E"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:updateCameraSettings",
+    "keys": ["Accel Alt K"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:updateClipView",
+    "keys": ["Alt C"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:exportJcad",
+    "keys": ["Accel Alt X"],
+    "selector": ".data-jcad-keybinding"
   }
 ]
