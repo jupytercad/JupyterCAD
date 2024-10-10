@@ -4,6 +4,7 @@ import { ISignal } from '@lumino/signaling';
 import { IJupyterCadTracker, IJupyterCadWidget } from '@jupytercad/schema';
 import { IControlPanelModel } from '../types';
 import { JupyterCadWidget } from '../widget';
+import { MainViewModel } from '../3dview/mainviewmodel';
 
 export class ControlPanelModel implements IControlPanelModel {
   constructor(options: ControlPanelModel.IOptions) {
@@ -27,9 +28,9 @@ export class ControlPanelModel implements IControlPanelModel {
     return this._tracker.currentWidget?.context.model.sharedModel;
   }
 
-  get mainViewModel(): string | undefined {
+  get mainViewModel(): MainViewModel | undefined {
     return (this._tracker.currentWidget as JupyterCadWidget | null)?.content
-      .currentViewModel.id;
+      .currentViewModel;
   }
 
   disconnect(f: any): void {

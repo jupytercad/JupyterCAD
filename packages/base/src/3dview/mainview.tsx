@@ -120,7 +120,7 @@ export class MainView extends React.Component<IProps, IStates> {
     window.addEventListener('jupytercadObjectSelection', (e: Event) => {
       const customEvent = e as CustomEvent;
 
-      if (customEvent.detail.mainViewModel === this._mainViewModel.id) {
+      if (customEvent.detail.mainViewModelId === this._mainViewModel.id) {
         this.lookAtPosition(customEvent.detail.objPosition);
       }
     });

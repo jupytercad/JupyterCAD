@@ -251,7 +251,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
         detail: {
           objectId,
           objPosition,
-          mainViewModel: this.props.cpModel.mainViewModel
+          mainViewModelId: this.props.cpModel.mainViewModel?.id
         }
       });
       window.dispatchEvent(event);
