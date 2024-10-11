@@ -1390,7 +1390,8 @@ export class MainView extends React.Component<IProps, IStates> {
   render(): JSX.Element {
     return (
       <div
-        className="jcad-Mainview"
+        className="jcad-Mainview data-jcad-keybinding"
+        tabIndex={-2}
         style={{
           border: this.state.remoteUser
             ? `solid 3px ${this.state.remoteUser.color}`

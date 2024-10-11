@@ -13,6 +13,8 @@ export class RightPanelWidget extends SidePanel {
   constructor(options: RightPanelWidget.IOptions) {
     super();
     this.addClass('jpcad-sidepanel-widget');
+    this.addClass('data-jcad-keybinding');
+    this.node.tabIndex = 0;
     this._model = options.model;
     const header = new ControlPanelHeader();
     this.header.addWidget(header);
