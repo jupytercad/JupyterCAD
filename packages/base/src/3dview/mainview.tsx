@@ -117,6 +117,13 @@ export class MainView extends React.Component<IProps, IStates> {
     this.addContextMenu();
     this._mainViewModel.initWorker();
     this._mainViewModel.initSignal();
+    window.addEventListener('jupytercadObjectSelection', (e: Event) => {
+      const customEvent = e as CustomEvent;
+
+      if (customEvent.detail.mainViewModelId === this._mainViewModel.id) {
+        this.lookAtPosition(customEvent.detail.objPosition);
+      }
+    });
   }
 
   componentDidUpdate(oldProps: IProps, oldState: IStates): void {
@@ -203,7 +210,7 @@ export class MainView extends React.Component<IProps, IStates> {
       DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
       SELECTED_MESH_COLOR.set(getCSSVariableColor(SELECTED_MESH_COLOR_CSS));
 
-      this._camera = new THREE.PerspectiveCamera(90, 2, 0.1, 1000);
+      this._camera = new THREE.PerspectiveCamera(50, 2, 0.1, 1000);
       this._camera.position.set(8, 8, 8);
       this._camera.up.set(0, 0, 1);
 
@@ -434,6 +441,31 @@ export class MainView extends React.Component<IProps, IStates> {
     this.animate();
     this.resizeCanvasToDisplaySize();
   };
+
+  private lookAtPosition(position: { x: number; y: number; z: number }) {
+    const objPosition = new THREE.Vector3(
+      position[0],
+      position[1],
+      position[2]
+    );
+    if (this._camera) {
+      this._camera.lookAt(objPosition);
+      const cameraToTargetDistance =
+        this._camera.position.distanceTo(objPosition);
+
+      if (cameraToTargetDistance < 1) {
+        // Move the camera back slightly to ensure visibility
+        this._camera.position.add(
+          this._camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(-2)
+        );
+      }
+      this._camera.updateProjectionMatrix();
+    }
+    if (this._controls) {
+      this._controls.target.copy(objPosition);
+      this._controls.update();
+    }
+  }
 
   private _updateAnnotation() {
     Object.keys(this.state.annotations).forEach(key => {
@@ -1266,7 +1298,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._scene.remove(this._camera);
 
     if (this._cameraSettings.type === 'Perspective') {
-      this._camera = new THREE.PerspectiveCamera(90, 2, 0.1, 1000);
+      this._camera = new THREE.PerspectiveCamera(50, 2, 0.1, 1000);
     } else {
       const width = this.divRef.current?.clientWidth || 0;
       const height = this.divRef.current?.clientHeight || 0;
@@ -1358,7 +1390,8 @@ export class MainView extends React.Component<IProps, IStates> {
   render(): JSX.Element {
     return (
       <div
-        className="jcad-Mainview"
+        className="jcad-Mainview data-jcad-keybinding"
+        tabIndex={-2}
         style={{
           border: this.state.remoteUser
             ? `solid 3px ${this.state.remoteUser.color}`

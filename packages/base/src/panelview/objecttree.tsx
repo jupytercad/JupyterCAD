@@ -237,6 +237,27 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     this.setState(old => ({ ...old, lightTheme }));
   };
 
+  handleNodeClick = (objectId: string) => {
+    const object = this.getObjectFromName(objectId);
+
+    if (object && object.visible === true) {
+      const objPosition = object?.parameters?.Placement?.Position || {
+        x: 0,
+        y: 0,
+        z: 0
+      };
+
+      const event = new CustomEvent('jupytercadObjectSelection', {
+        detail: {
+          objectId,
+          objPosition,
+          mainViewModelId: this.props.cpModel.mainViewModel?.id
+        }
+      });
+      window.dispatchEvent(event);
+    }
+  };
+
   private _sharedJcadModelChanged = (
     sender: IJupyterCadDoc,
     change: IJcadObjectDocChange
@@ -378,9 +399,8 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
 
             return (
               <div
-                className={`jpcad-control-panel-tree ${
-                  opts.selected ? 'selected' : ''
-                }`}
+                className={`jpcad-control-panel-tree ${opts.selected ? 'selected' : ''}`}
+                onClick={() => this.handleNodeClick(opts.node.id as string)}
               >
                 <div
                   style={{

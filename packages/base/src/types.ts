@@ -1,6 +1,7 @@
 import { ISignal } from '@lumino/signaling';
 import { IJupyterCadModel, IJupyterCadDoc, IDict } from '@jupytercad/schema';
 import { IJupyterCadTracker, IJupyterCadWidget } from '@jupytercad/schema';
+import { MainViewModel } from './3dview/mainviewmodel';
 
 export { IDict };
 export type ValueOf<T> = T[keyof T];
@@ -42,4 +43,5 @@ export interface IControlPanelModel {
   filePath: string | undefined;
   jcadModel: IJupyterCadModel | undefined;
   sharedModel: IJupyterCadDoc | undefined;
+  mainViewModel: MainViewModel | undefined;
 }
