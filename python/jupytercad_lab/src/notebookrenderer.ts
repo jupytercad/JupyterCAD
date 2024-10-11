@@ -20,6 +20,7 @@ import {
   IJupyterYWidgetManager,
   JupyterYModel
 } from 'yjs-widgets';
+
 export interface ICommMetadata {
   create_ydoc: boolean;
   path: string;
@@ -77,7 +78,6 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
       console.error('Missing ICollaborativeDrive token!');
       return;
     }
-
     class YJupyterCADModelFactory extends YJupyterCADModel {
       ydocFactory(commMetadata: ICommMetadata): Y.Doc {
         const { path, format, contentType } = commMetadata;

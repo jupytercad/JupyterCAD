@@ -15,6 +15,7 @@ import {
   ToolbarWidget
 } from '@jupytercad/base';
 import { ServiceManager } from '@jupyterlab/services';
+
 interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
   tracker: IJupyterCadTracker;
   commands: CommandRegistry;
