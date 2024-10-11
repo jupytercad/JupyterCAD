@@ -4,7 +4,6 @@ import {
   IJCadWorkerRegistry,
   IJCadWorkerRegistryToken,
   IJupyterCadDoc,
-  IJupyterCadWidget,
   JupyterCadModel
 } from '@jupytercad/schema';
 
@@ -21,7 +20,6 @@ import {
   IJupyterYWidgetManager,
   JupyterYModel
 } from 'yjs-widgets';
-import { WidgetTracker } from '@jupyterlab/apputils';
 export interface ICommMetadata {
   create_ydoc: boolean;
   path: string;
@@ -40,7 +38,6 @@ export class YJupyterCADLuminoWidget extends Panel {
   constructor(options: {
     model: JupyterCadModel;
     workerRegistry: IJCadWorkerRegistry;
-    tracker: WidgetTracker<IJupyterCadWidget>;
   }) {
     super();
 
@@ -81,9 +78,6 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
       return;
     }
 
-    const tracker = new WidgetTracker<IJupyterCadWidget>({
-      namespace: 'jupytercad'
-    });
     class YJupyterCADModelFactory extends YJupyterCADModel {
       ydocFactory(commMetadata: ICommMetadata): Y.Doc {
         const { path, format, contentType } = commMetadata;
@@ -111,8 +105,7 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
 
         const widget = new YJupyterCADLuminoWidget({
           model: yModel.jupyterCADModel,
-          workerRegistry,
-          tracker
+          workerRegistry
         });
         // Widget.attach(widget, node);
 

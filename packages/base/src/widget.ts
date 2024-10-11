@@ -13,7 +13,6 @@ import { JupyterCadMainViewPanel } from './3dview';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { ConsoleView } from './console';
 import { AxeHelper, CameraSettings, ClipSettings, ExplodedView } from './types';
-import { WidgetTracker } from '@jupyterlab/apputils';
 
 export class JupyterCadWidget
   extends DocumentWidget<JupyterCadPanel, IJupyterCadModel>
@@ -46,7 +45,6 @@ export class JupyterCadPanel extends SplitPanel {
     this._initView();
     this._consoleOption = consoleOption;
     this._consoleTracker = consoleTracker;
-    this._syncEditor(options.tracker);
   }
 
   _initModel(options: {
@@ -67,17 +65,6 @@ export class JupyterCadPanel extends SplitPanel {
     });
     this.addWidget(this._jupyterCadMainViewPanel);
     SplitPanel.setStretch(this._jupyterCadMainViewPanel, 1);
-  }
-
-  private _syncEditor(tracker: WidgetTracker<IJupyterCadWidget>) {
-    tracker.currentChanged.connect(() => {
-      const currentWidget = tracker.currentWidget;
-
-      if (currentWidget) {
-        const resizeEvent = new Event('resize');
-        window.dispatchEvent(resizeEvent);
-      }
-    });
   }
 
   get jupyterCadMainViewPanel(): JupyterCadMainViewPanel {
@@ -242,6 +229,5 @@ export namespace JupyterCadPanel {
     model: IJupyterCadModel;
     workerRegistry: IJCadWorkerRegistry;
     consoleTracker?: IConsoleTracker;
-    tracker: WidgetTracker<IJupyterCadWidget>;
   }
 }

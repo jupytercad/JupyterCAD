@@ -39,6 +39,14 @@ export const trackerPlugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
     const tracker = new WidgetTracker<JupyterCadWidget>({
       namespace: NAME_SPACE
     });
+    tracker.currentChanged.connect(() => {
+      const currentWidget = tracker.currentWidget;
+
+      if (currentWidget) {
+        const resizeEvent = new Event('resize');
+        window.dispatchEvent(resizeEvent);
+      }
+    });
     console.log('jupytercad:core:tracker is activated!');
     return tracker;
   }
