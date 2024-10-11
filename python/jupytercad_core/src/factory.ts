@@ -1,9 +1,9 @@
 import { ConsolePanel, IConsoleTracker } from '@jupyterlab/console';
 import {
   JupyterCadModel,
-  IJupyterCadTracker,
   IJCadWorkerRegistry,
-  IJCadExternalCommandRegistry
+  IJCadExternalCommandRegistry,
+  IJupyterCadTracker
 } from '@jupytercad/schema';
 import { ABCWidgetFactory, DocumentRegistry } from '@jupyterlab/docregistry';
 import { CommandRegistry } from '@lumino/commands';
