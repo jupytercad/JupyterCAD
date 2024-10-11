@@ -46,7 +46,7 @@ export const LuminoSchemaForm = (
           Widget.detach(widget);
         }
       } catch (e) {
-        console.warn('Exception while detaching Lumino widget.', e);
+        // The widget is destroyed already by React.
       }
     };
   }, [children]);
