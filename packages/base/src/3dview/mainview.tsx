@@ -960,30 +960,31 @@ export class MainView extends React.Component<IProps, IStates> {
       if (!selectedMesh) {
         continue;
       }
-  
+
       this._selectedMeshes.push(selectedMesh);
-  
+
       // Create and add bounding box
       const geometry = new THREE.BoxGeometry(1, 1, 1);
-      const material = new THREE.LineBasicMaterial({ color: SELECTED_MESH_COLOR,
+      const material = new THREE.LineBasicMaterial({
+        color: SELECTED_MESH_COLOR,
         depthTest: false
-       });
+      });
       const boundingBox = new THREE.LineSegments(
         new THREE.EdgesGeometry(geometry),
         material
       );
       boundingBox.name = 'selectionBoundingBox';
-  
+
       // Set the bounding box size and position
       const bbox = new THREE.Box3().setFromObject(selectedMesh);
       const size = new THREE.Vector3();
       bbox.getSize(size);
       boundingBox.scale.copy(size);
-      
+
       const center = new THREE.Vector3();
       bbox.getCenter(center);
       boundingBox.position.copy(center);
-  
+
       selectedMesh.add(boundingBox);
     }
   }
