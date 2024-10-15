@@ -1,5 +1,5 @@
 import { MapChange, YDocument } from '@jupyter/ydoc';
-import { JSONExt, JSONObject } from '@lumino/coreutils';
+import { JSONExt, JSONObject, JSONValue } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import * as Y from 'yjs';
 
@@ -63,6 +63,42 @@ export class JupyterCadDoc
 
   get optionsChanged(): ISignal<IJupyterCadDoc, MapChange> {
     return this._optionsChanged;
+  }
+
+  getSource(): JSONValue | string {
+    const objects = this._objects.toJSON();
+    const options = this._options.toJSON();
+    const metadata = this._metadata.toJSON();
+    const outputs = this._outputs.toJSON();
+
+    return { objects, options, metadata, outputs };
+  }
+
+  setSource(value: JSONValue): void {
+    if (!value) {
+      return;
+    }
+    this.transact(() => {
+      const objects = value['objects'] ?? [];
+      objects.forEach(obj => {
+        this._objects.push([new Y.Map(Object.entries(obj))]);
+      });
+
+      const options = value['options'] ?? {};
+      Object.entries(options).forEach(([key, val]) =>
+        this._options.set(key, val)
+      );
+
+      const metadata = value['metadata'] ?? {};
+      Object.entries(metadata).forEach(([key, val]) =>
+        this._metadata.set(key, val as string)
+      );
+
+      const outputs = value['outputs'] ?? {};
+      Object.entries(outputs).forEach(([key, val]) =>
+        this._outputs.set(key, val as IPostResult)
+      );
+    });
   }
 
   get metadataChanged(): ISignal<IJupyterCadDoc, MapChange> {

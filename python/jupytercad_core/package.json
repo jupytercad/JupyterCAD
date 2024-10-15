@@ -53,7 +53,7 @@
     "build:worker:prod": "webpack --config worker.webpack.config.js --mode=production"
   },
   "dependencies": {
-    "@jupyter/docprovider": "^2.0.0",
+    "@jupyter/collaborative-drive": "^3.0.0-beta.8",
     "@jupytercad/base": "^3.0.0-alpha.3",
     "@jupytercad/occ-worker": "^3.0.0-alpha.3",
     "@jupytercad/schema": "^3.0.0-alpha.3",
@@ -115,7 +115,7 @@
         "singleton": true,
         "bundled": true
       },
-      "@jupyter/docprovider": {
+      "@jupyter/collaborative-drive": {
         "singleton": true,
         "bundled": false
       }
