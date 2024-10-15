@@ -45,6 +45,7 @@ import {
   SELECTED_LINEWIDTH,
   SELECTED_MESH_COLOR,
   SELECTED_MESH_COLOR_CSS,
+  SELECTION_BOUNDING_BOX,
   buildShape,
   computeExplodedState,
   projectVector
@@ -549,7 +550,7 @@ export class MainView extends React.Component<IProps, IStates> {
         // Object is hidden or a bounding box
         if (!intersect.object.visible || 
           !intersect.object.parent?.visible || 
-          intersect.object.name === 'selectionBoundingBox') {
+          intersect.object.name === SELECTION_BOUNDING_BOX) {
         continue;
       }
 
@@ -946,7 +947,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _updateSelected(selection: { [key: string]: ISelection }) {
     // Reset original color for old selection
     for (const selectedMesh of this._selectedMeshes) {
-      const boundingBox = selectedMesh.getObjectByName('selectionBoundingBox');
+      const boundingBox = selectedMesh.getObjectByName(SELECTION_BOUNDING_BOX);
       if (boundingBox) {
         selectedMesh.remove(boundingBox);
       }
@@ -975,7 +976,7 @@ export class MainView extends React.Component<IProps, IStates> {
         new THREE.EdgesGeometry(geometry),
         material
       );
-      boundingBox.name = 'selectionBoundingBox';
+      boundingBox.name = SELECTION_BOUNDING_BOX;
 
       // Set the bounding box size and position
       const bbox = new THREE.Box3().setFromObject(selectedMesh);

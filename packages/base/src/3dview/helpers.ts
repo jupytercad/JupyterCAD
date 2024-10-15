@@ -23,6 +23,7 @@ THREE.Mesh.prototype.raycast = acceleratedRaycast;
 export const DEFAULT_MESH_COLOR_CSS = '--jp-inverse-layout-color4';
 export const DEFAULT_EDGE_COLOR_CSS = '--jp-inverse-layout-color2';
 export const SELECTED_MESH_COLOR_CSS = '--jp-brand-color0';
+export const SELECTION_BOUNDING_BOX = 'selectionBoundingBox';
 
 export const DEFAULT_MESH_COLOR = new THREE.Color(
   getCSSVariableColor(DEFAULT_MESH_COLOR_CSS)
