@@ -546,10 +546,12 @@ export class MainView extends React.Component<IProps, IStates> {
     if (intersects.length > 0) {
       // Find the first intersection with a visible object
       for (const intersect of intersects as ILineIntersection[]) {
-        // Object is hidden
-        if (!intersect.object.visible || !intersect.object.parent?.visible) {
-          continue;
-        }
+        // Object is hidden or a bounding box
+        if (!intersect.object.visible || 
+          !intersect.object.parent?.visible || 
+          intersect.object.name === 'selectionBoundingBox') {
+        continue;
+      }
 
         // Object is clipped
         const planePoint = new THREE.Vector3();
