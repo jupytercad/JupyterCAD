@@ -944,21 +944,9 @@ export class MainView extends React.Component<IProps, IStates> {
   private _updateSelected(selection: { [key: string]: ISelection }) {
     // Reset original color for old selection
     for (const selectedMesh of this._selectedMeshes) {
-      let originalColor = selectedMesh.userData.originalColor;
-
-      if (!originalColor) {
-        originalColor = selectedMesh.material.color.clone();
-        selectedMesh.userData.originalColor = originalColor;
-      }
-      if (selectedMesh.material?.color) {
-        selectedMesh.material.color = originalColor;
-      }
-
-      const material = selectedMesh.material as THREE.Material & {
-        linewidth?: number;
-      };
-      if (material?.linewidth) {
-        material.linewidth = DEFAULT_LINEWIDTH;
+      const boundingBox = selectedMesh.getObjectByName('selectionBoundingBox');
+      if (boundingBox) {
+        selectedMesh.remove(boundingBox);
       }
     }
 
@@ -972,24 +960,29 @@ export class MainView extends React.Component<IProps, IStates> {
       if (!selectedMesh) {
         continue;
       }
-
-      // Prevents object from going back to DEFAULT_MESH_COLOR
-      if (!selectedMesh.userData.originalColor) {
-        selectedMesh.userData.originalColor =
-          selectedMesh.material.color.clone();
-      }
-
+  
       this._selectedMeshes.push(selectedMesh);
-      if (selectedMesh?.material?.color) {
-        selectedMesh.material.color = SELECTED_MESH_COLOR;
-      }
-
-      const material = selectedMesh.material as THREE.Material & {
-        linewidth?: number;
-      };
-      if (material?.linewidth) {
-        material.linewidth = SELECTED_LINEWIDTH;
-      }
+  
+      // Create and add bounding box
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const material = new THREE.LineBasicMaterial({ color: SELECTED_MESH_COLOR });
+      const boundingBox = new THREE.LineSegments(
+        new THREE.EdgesGeometry(geometry),
+        material
+      );
+      boundingBox.name = 'selectionBoundingBox';
+  
+      // Set the bounding box size and position
+      const bbox = new THREE.Box3().setFromObject(selectedMesh);
+      const size = new THREE.Vector3();
+      bbox.getSize(size);
+      boundingBox.scale.copy(size);
+      
+      const center = new THREE.Vector3();
+      bbox.getCenter(center);
+      boundingBox.position.copy(center);
+  
+      selectedMesh.add(boundingBox);
     }
   }
 
