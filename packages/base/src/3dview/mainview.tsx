@@ -958,6 +958,16 @@ export class MainView extends React.Component<IProps, IStates> {
   private _updateSelected(selection: { [key: string]: ISelection }) {
     // Reset original color for old selection
     for (const selectedMesh of this._selectedMeshes) {
+      let originalColor = selectedMesh.userData.originalColor;
+
+      if (!originalColor) {
+        originalColor = selectedMesh.material.color.clone();
+        selectedMesh.userData.originalColor = originalColor;
+      }
+      if (selectedMesh.material?.color) {
+        selectedMesh.material.color = originalColor;
+      }
+
       const boundingBox = selectedMesh.getObjectByName(SELECTION_BOUNDING_BOX);
       if (boundingBox) {
         selectedMesh.remove(boundingBox);
