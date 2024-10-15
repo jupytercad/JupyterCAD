@@ -37,7 +37,7 @@
   "dependencies": {
     "@deathbeds/jupyterlab-rjsf": "^1.1.0",
     "@jupyter/collaborative-drive": "^3.0.0-beta.8",
-    "@jupyter/ydoc": "^1.0.0",
+    "@jupyter/ydoc": "^3.0.0-a9",
     "@jupytercad/occ-worker": "^3.0.0-alpha.3",
     "@jupytercad/schema": "^3.0.0-alpha.3",
     "@jupyterlab/application": "^4.0.0",
