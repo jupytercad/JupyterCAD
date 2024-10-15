@@ -367,6 +367,15 @@ export class MainView extends React.Component<IProps, IStates> {
   };
 
   private _createViewHelper() {
+    // Remove the existing ViewHelperDiv if it already exists
+    if (
+      this._viewHelperDiv &&
+      this.divRef.current?.contains(this._viewHelperDiv)
+    ) {
+      this.divRef.current.removeChild(this._viewHelperDiv);
+    }
+
+    // Create new ViewHelper
     this._viewHelper = new ViewHelper(this._camera, this._renderer.domElement);
     this._viewHelper.center = this._controls.target;
 
