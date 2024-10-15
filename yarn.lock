@@ -104,13 +104,13 @@ __metadata:
   linkType: hard
 
 "@babel/parser@npm:^7.25.7":
-  version: 7.25.7
-  resolution: "@babel/parser@npm:7.25.7"
+  version: 7.25.8
+  resolution: "@babel/parser@npm:7.25.8"
   dependencies:
-    "@babel/types": ^7.25.7
+    "@babel/types": ^7.25.8
   bin:
     parser: ./bin/babel-parser.js
-  checksum: 7c40c2881e92415f5f2a88ac1078a8fea7f2b10097e76116ce40bfe01443d3a842c704bdb64d7b54c9e9dbbf49a60a0e1cf79ff35bcd02c52ff424179acd4259
+  checksum: c33f6d26542f156927c5dbe131265c791177d271e582338e960f803903086ec5c152bf25deae5f4c061b7bee14dc0b5fd2882ccb5a21c16ee0738d24fcc0406e
   languageName: node
   linkType: hard
 
@@ -160,14 +160,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/types@npm:^7.25.7":
-  version: 7.25.7
-  resolution: "@babel/types@npm:7.25.7"
+"@babel/types@npm:^7.25.7, @babel/types@npm:^7.25.8":
+  version: 7.25.8
+  resolution: "@babel/types@npm:7.25.8"
   dependencies:
     "@babel/helper-string-parser": ^7.25.7
     "@babel/helper-validator-identifier": ^7.25.7
     to-fast-properties: ^2.0.0
-  checksum: a63a3ecdac5eb2fa10a75d50ec23d1560beed6c4037ccf478a430cc221ba9b8b3a55cfbaaefb6e997051728f3c02b44dcddb06de9a0132f164a0a597dd825731
+  checksum: 93d84858e820dbfa0fc4882b3ba6a421544d224ee61455a58eed0af9fc3518b30dc2166b8ba48cdd2e91083c5885ed773c36acf46d177b7b1fad9c35b6eb7639
   languageName: node
   linkType: hard
 
@@ -763,12 +763,12 @@ __metadata:
   linkType: hard
 
 "@jupyter/collaboration@npm:^2.0.0":
-  version: 2.1.2
-  resolution: "@jupyter/collaboration@npm:2.1.2"
+  version: 2.1.3
+  resolution: "@jupyter/collaboration@npm:2.1.3"
   dependencies:
     "@codemirror/state": ^6.2.0
     "@codemirror/view": ^6.7.0
-    "@jupyter/docprovider": ^2.1.2
+    "@jupyter/docprovider": ^2.1.3
     "@jupyterlab/apputils": ^4.0.5
     "@jupyterlab/coreutils": ^6.0.5
     "@jupyterlab/services": ^7.0.5
@@ -779,13 +779,13 @@ __metadata:
     react: ^18.2.0
     y-protocols: ^1.0.5
     yjs: ^13.5.40
-  checksum: 6c3b7a809eb7a57467e4fc6da96fe6e781972cb2608ccd509f9509e1d3329923fd88c320f0ebb219fd3a5bf5afcd8fd67205d326d74c0565b2938628e9a58e8e
+  checksum: 7239bb4e0b3e30c32a07aecc073882a56392c6a848c086630db392a4876d8bcb2fc658ef444892b73f58e1126a899fa704e41ddea649b4665c422412024ec76a
   languageName: node
   linkType: hard
 
-"@jupyter/collaboration@npm:^3.0.0-beta.6":
-  version: 3.0.0-beta.6
-  resolution: "@jupyter/collaboration@npm:3.0.0-beta.6"
+"@jupyter/collaboration@npm:^3.0.0-beta.8":
+  version: 3.0.0-beta.8
+  resolution: "@jupyter/collaboration@npm:3.0.0-beta.8"
   dependencies:
     "@codemirror/state": ^6.2.0
     "@codemirror/view": ^6.7.0
@@ -801,13 +801,25 @@ __metadata:
     react: ^18.2.0
     y-protocols: ^1.0.5
     yjs: ^13.5.40
-  checksum: 7adc5375987639c45dc06f973f4722c7dcba90585707d92d04ac8fcebeadd9b420d1d97970c081a612b0b100b23971b34014c9839a73ff39828961003717193d
+  checksum: 3ac006698c756a10e52e30961ba10095338660f8c5a8a9cfb3645495a03506193f5df66487f9741344e4d610bc1ebf0a918143876b66901a5933eb73b17c3bec
   languageName: node
   linkType: hard
 
-"@jupyter/docprovider@npm:^2.0.0, @jupyter/docprovider@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "@jupyter/docprovider@npm:2.1.2"
+"@jupyter/collaborative-drive@npm:^3.0.0-beta.8":
+  version: 3.0.0-beta.8
+  resolution: "@jupyter/collaborative-drive@npm:3.0.0-beta.8"
+  dependencies:
+    "@jupyter/ydoc": ^2.0.0 || ^3.0.0-a3
+    "@jupyterlab/services": ^7.2.0
+    "@lumino/coreutils": ^2.1.0
+    "@lumino/disposable": ^2.1.0
+  checksum: a4ecf6778a6ff02e2ee6849ba7d8661cf83daf846fc8a01d7e7fb7bf5c0693cf345df8fc5bcd40d26714df7770e93674772c0ffdc620dfc94911f84c3cc6ddcb
+  languageName: node
+  linkType: hard
+
+"@jupyter/docprovider@npm:^2.1.3":
+  version: 2.1.3
+  resolution: "@jupyter/docprovider@npm:2.1.3"
   dependencies:
     "@jupyter/ydoc": ^1.1.0-a0
     "@jupyterlab/coreutils": ^6.0.5
@@ -818,7 +830,7 @@ __metadata:
     y-protocols: ^1.0.5
     y-websocket: ^1.3.15
     yjs: ^13.5.40
-  checksum: 51f049baa33f870e079518b7f0790ef5fb121f921763a0ba7caca34d3731e3bb98cbb03e2250746a8fd002c25d1f989353f09340cf7886cd08f745cdb4e3f4c4
+  checksum: e263f463eb4363b773d53ec47c50786143328321ab20c0c92f01f8a89349c8eec799063dbefb9b707c22d76c27e38e5f52f916881bb63c58ccc24d797a4e3f30
   languageName: node
   linkType: hard
 
@@ -859,9 +871,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyter/ydoc@npm:^2.0.0, @jupyter/ydoc@npm:^2.0.1":
-  version: 2.1.1
-  resolution: "@jupyter/ydoc@npm:2.1.1"
+"@jupyter/ydoc@npm:^2.0.0 || ^3.0.0-a3":
+  version: 3.0.0-a9
+  resolution: "@jupyter/ydoc@npm:3.0.0-a9"
   dependencies:
     "@jupyterlab/nbformat": ^3.0.0 || ^4.0.0-alpha.21 || ^4.0.0
     "@lumino/coreutils": ^1.11.0 || ^2.0.0
@@ -869,7 +881,21 @@ __metadata:
     "@lumino/signaling": ^1.10.0 || ^2.0.0
     y-protocols: ^1.0.5
     yjs: ^13.5.40
-  checksum: f10268d4d990f454279e3908a172755ed5885fa81bb70c31bdf66923598b283d26491741bece137d1c348619861e9b7f8354296773fe5352b1915e69101a9fb0
+  checksum: e821e2df4c5b9dd96cc4e283cad96be02ff5bcf45ae3d2d48605dc9083dc80de80b81158162438161fb4fe69f7062104b4e74dc07cf25af1f6e7f6af20727131
+  languageName: node
+  linkType: hard
+
+"@jupyter/ydoc@npm:^2.0.0, @jupyter/ydoc@npm:^2.0.1":
+  version: 2.1.2
+  resolution: "@jupyter/ydoc@npm:2.1.2"
+  dependencies:
+    "@jupyterlab/nbformat": ^3.0.0 || ^4.0.0-alpha.21 || ^4.0.0
+    "@lumino/coreutils": ^1.11.0 || ^2.0.0
+    "@lumino/disposable": ^1.10.0 || ^2.0.0
+    "@lumino/signaling": ^1.10.0 || ^2.0.0
+    y-protocols: ^1.0.5
+    yjs: ^13.5.40
+  checksum: 4e4840120d5c93fffc62668c3867c25ef9d72f70c7cf2beefe2caaab47c4d3d08b1b2092806a9ae2a24852256584d3e2aa0b066295c2696147cd41e10f14e5b0
   languageName: node
   linkType: hard
 
@@ -893,7 +919,7 @@ __metadata:
   dependencies:
     "@apidevtools/json-schema-ref-parser": ^9.0.9
     "@deathbeds/jupyterlab-rjsf": ^1.1.0
-    "@jupyter/docprovider": ^2.0.0
+    "@jupyter/collaborative-drive": ^3.0.0-beta.8
     "@jupyter/ydoc": ^1.0.0
     "@jupytercad/occ-worker": ^3.0.0-alpha.3
     "@jupytercad/schema": ^3.0.0-alpha.3
@@ -936,8 +962,8 @@ __metadata:
   dependencies:
     "@codemirror/state": ^6.2.0
     "@codemirror/view": ^6.9.3
-    "@jupyter/collaboration": ^3.0.0-beta.6
-    "@jupyter/docprovider": ^2.0.0
+    "@jupyter/collaboration": ^3.0.0-beta.8
+    "@jupyter/collaborative-drive": ^3.0.0-beta.8
     "@jupyter/ydoc": ^0.3.4 || ^1.0.2
     "@jupytercad/base": ^3.0.0-alpha.3
     "@jupytercad/schema": ^3.0.0-alpha.3
@@ -1003,7 +1029,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad_core"
   dependencies:
-    "@jupyter/docprovider": ^2.0.0
+    "@jupyter/collaborative-drive": ^3.0.0-beta.8
     "@jupytercad/base": ^3.0.0-alpha.3
     "@jupytercad/occ-worker": ^3.0.0-alpha.3
     "@jupytercad/schema": ^3.0.0-alpha.3
@@ -1038,7 +1064,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-lab@workspace:python/jupytercad_lab"
   dependencies:
-    "@jupyter/docprovider": ^2.0.0
+    "@jupyter/collaborative-drive": ^3.0.0-beta.8
     "@jupytercad/base": ^3.0.0-alpha.3
     "@jupytercad/jupytercad-core": ^3.0.0-alpha.3
     "@jupytercad/schema": ^3.0.0-alpha.3
@@ -4799,9 +4825,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001663":
-  version: 1.0.30001667
-  resolution: "caniuse-lite@npm:1.0.30001667"
-  checksum: f3c6a40c3e4115c6e5fb46c47884d903191285d29ec8a8b092546efbc9cdedcbd7183cce72dd3cab7dfc16c4d5b2745892876b3d6dda75d4cba49f9389239aa9
+  version: 1.0.30001668
+  resolution: "caniuse-lite@npm:1.0.30001668"
+  checksum: ce6996901b5883454a8ddb3040f82342277b6a6275876dfefcdecb11f7e472e29877f34cae47c2b674f08f2e71971dd4a2acb9bc01adfe8421b7148a7e9e8297
   languageName: node
   linkType: hard
 
@@ -5776,9 +5802,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.28":
-  version: 1.5.35
-  resolution: "electron-to-chromium@npm:1.5.35"
-  checksum: 7eca311ebce5ca5bbef7854becc7c84ea213edc8d0d02dedf998cd695e32e5bffb9803846a9a1801f29ce8f31d6b165c9d319e76923f93c2855fae80846f7610
+  version: 1.5.38
+  resolution: "electron-to-chromium@npm:1.5.38"
+  checksum: 8279317608f24f95366b679703c7e4196beb0702384fca211a5db4a53e6c960067d0f5de487883fe807b04eaba3939137a39958d6c5209b4d1e5a693efdd6f6a
   languageName: node
   linkType: hard
 
@@ -6592,13 +6618,13 @@ __metadata:
   linkType: hard
 
 "form-data@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "form-data@npm:4.0.0"
+  version: 4.0.1
+  resolution: "form-data@npm:4.0.1"
   dependencies:
     asynckit: ^0.4.0
     combined-stream: ^1.0.8
     mime-types: ^2.1.12
-  checksum: 01135bf8675f9d5c61ff18e2e2932f719ca4de964e3be90ef4c36aacfc7b9cb2fceb5eca0b7e0190e3383fe51c5b37f4cb80b62ca06a99aaabfcfd6ac7c9328c
+  checksum: ccee458cd5baf234d6b57f349fe9cc5f9a2ea8fd1af5ecda501a18fd1572a6dd3bf08a49f00568afd995b6a65af34cb8dec083cf9d582c4e621836499498dd84
   languageName: node
   linkType: hard
 
@@ -8390,7 +8416,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lib0@npm:^0.2.31, lib0@npm:^0.2.42, lib0@npm:^0.2.52, lib0@npm:^0.2.76, lib0@npm:^0.2.85, lib0@npm:^0.2.86":
+"lib0@npm:^0.2.31, lib0@npm:^0.2.42, lib0@npm:^0.2.52, lib0@npm:^0.2.76, lib0@npm:^0.2.85, lib0@npm:^0.2.98":
   version: 0.2.98
   resolution: "lib0@npm:0.2.98"
   dependencies:
@@ -13201,11 +13227,11 @@ __metadata:
   linkType: hard
 
 "yjs@npm:^13.5.0, yjs@npm:^13.5.40":
-  version: 13.6.19
-  resolution: "yjs@npm:13.6.19"
+  version: 13.6.20
+  resolution: "yjs@npm:13.6.20"
   dependencies:
-    lib0: ^0.2.86
-  checksum: 1b6e1454128aa85d720dec41deab1a88f903e8a486532813dba1895752a3fbef468df0bd5549928d77eab232a25113501f794f7347e4e60e3b5efe8382f513a4
+    lib0: ^0.2.98
+  checksum: a87295efe7df58ae8b5cf09b7cdbbcc3cbfba2b7fb72bb424513eb25587eff8dc8304f41e3bcd3926c02c86a0f7ce2185285e4b9d71aca5ff50cefe1ecb6657c
   languageName: node
   linkType: hard
 
