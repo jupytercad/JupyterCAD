@@ -965,7 +965,9 @@ export class MainView extends React.Component<IProps, IStates> {
   
       // Create and add bounding box
       const geometry = new THREE.BoxGeometry(1, 1, 1);
-      const material = new THREE.LineBasicMaterial({ color: SELECTED_MESH_COLOR });
+      const material = new THREE.LineBasicMaterial({ color: SELECTED_MESH_COLOR,
+        depthTest: false
+       });
       const boundingBox = new THREE.LineSegments(
         new THREE.EdgesGeometry(geometry),
         material
