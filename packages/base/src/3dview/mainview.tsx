@@ -363,29 +363,38 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
-
-      // ViewHelper setup
-      this._viewHelper = new ViewHelper(
-        this._camera,
-        this._renderer.domElement
-      );
-      this._viewHelper.center = this._controls.target;
-
-      const viewHelperDiv = document.createElement('div');
-      viewHelperDiv.id = 'viewHelper';
-      viewHelperDiv.style.position = 'absolute';
-      viewHelperDiv.style.right = '0px';
-      viewHelperDiv.style.bottom = '0px';
-      viewHelperDiv.style.height = '128px';
-      viewHelperDiv.style.width = '128px';
-
-      this.divRef.current.appendChild(viewHelperDiv);
-
-      viewHelperDiv.addEventListener('pointerup', event =>
-        this._viewHelper.handleClick(event)
-      );
+      this._createViewHelper();
     }
   };
+
+  private _createViewHelper() {
+    // Remove the existing ViewHelperDiv if it already exists
+    if (
+      this._viewHelperDiv &&
+      this.divRef.current?.contains(this._viewHelperDiv)
+    ) {
+      this.divRef.current.removeChild(this._viewHelperDiv);
+    }
+
+    // Create new ViewHelper
+    this._viewHelper = new ViewHelper(this._camera, this._renderer.domElement);
+    this._viewHelper.center = this._controls.target;
+
+    const viewHelperDiv = document.createElement('div');
+    viewHelperDiv.style.position = 'absolute';
+    viewHelperDiv.style.right = '0px';
+    viewHelperDiv.style.bottom = '0px';
+    viewHelperDiv.style.height = '128px';
+    viewHelperDiv.style.width = '128px';
+
+    this._viewHelperDiv = viewHelperDiv;
+
+    this.divRef.current?.appendChild(this._viewHelperDiv);
+
+    this._viewHelperDiv.addEventListener('pointerup', event =>
+      this._viewHelper.handleClick(event)
+    );
+  }
 
   animate = (): void => {
     this._requestID = window.requestAnimationFrame(this.animate);
@@ -1313,6 +1322,7 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     this._camera.add(this._cameraLight);
+    this._createViewHelper();
 
     this._scene.add(this._camera);
     this._controls.object = this._camera;
@@ -1477,6 +1487,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _pointer3D: IPointer | null = null;
   private _clock: THREE.Clock;
   private _viewHelper: ViewHelper;
+  private _viewHelperDiv: HTMLDivElement | null = null;
   private _collaboratorPointers: IDict<IPointer>;
   private _pointerGeometry: THREE.SphereGeometry;
   private _contextMenu: ContextMenu;
