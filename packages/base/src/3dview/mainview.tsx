@@ -1339,6 +1339,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._camera.position.copy(position);
     this._camera.up.copy(up);
+
+    const resizeEvent = new Event('resize');
+    window.dispatchEvent(resizeEvent);
   }
 
   private _updateClipping() {
