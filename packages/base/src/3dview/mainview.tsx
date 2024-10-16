@@ -43,8 +43,9 @@ import {
   IPickedResult,
   IPointer,
   SELECTED_LINEWIDTH,
-  SELECTED_MESH_COLOR,
-  SELECTED_MESH_COLOR_CSS,
+  BOUNDING_BOX_COLOR,
+  BOUNDING_BOX_COLOR_CSS,
+  SELECTION_BOUNDING_BOX,
   buildShape,
   computeExplodedState,
   projectVector
@@ -208,7 +209,7 @@ export class MainView extends React.Component<IProps, IStates> {
     if (this.divRef.current !== null) {
       DEFAULT_MESH_COLOR.set(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
       DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
-      SELECTED_MESH_COLOR.set(getCSSVariableColor(SELECTED_MESH_COLOR_CSS));
+      BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
 
       this._camera = new THREE.PerspectiveCamera(50, 2, 0.1, 1000);
       this._camera.position.set(8, 8, 8);
@@ -555,8 +556,12 @@ export class MainView extends React.Component<IProps, IStates> {
     if (intersects.length > 0) {
       // Find the first intersection with a visible object
       for (const intersect of intersects as ILineIntersection[]) {
-        // Object is hidden
-        if (!intersect.object.visible || !intersect.object.parent?.visible) {
+        // Object is hidden or a bounding box
+        if (
+          !intersect.object.visible ||
+          !intersect.object.parent?.visible ||
+          intersect.object.name === SELECTION_BOUNDING_BOX
+        ) {
           continue;
         }
 
@@ -721,7 +726,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
           if (selectedNames.includes(el.name)) {
             this._selectedMeshes.push(el as any as BasicMesh);
-            el.material.color = SELECTED_MESH_COLOR;
+            el.material.color = originalEdgeColor;
             el.material.linewidth = SELECTED_LINEWIDTH;
             el.userData.originalColor = originalEdgeColor.clone();
           } else {
@@ -963,11 +968,9 @@ export class MainView extends React.Component<IProps, IStates> {
         selectedMesh.material.color = originalColor;
       }
 
-      const material = selectedMesh.material as THREE.Material & {
-        linewidth?: number;
-      };
-      if (material?.linewidth) {
-        material.linewidth = DEFAULT_LINEWIDTH;
+      const boundingBox = selectedMesh.getObjectByName(SELECTION_BOUNDING_BOX);
+      if (boundingBox) {
+        selectedMesh.remove(boundingBox);
       }
     }
 
@@ -982,23 +985,31 @@ export class MainView extends React.Component<IProps, IStates> {
         continue;
       }
 
-      // Prevents object from going back to DEFAULT_MESH_COLOR
-      if (!selectedMesh.userData.originalColor) {
-        selectedMesh.userData.originalColor =
-          selectedMesh.material.color.clone();
-      }
-
       this._selectedMeshes.push(selectedMesh);
-      if (selectedMesh?.material?.color) {
-        selectedMesh.material.color = SELECTED_MESH_COLOR;
-      }
 
-      const material = selectedMesh.material as THREE.Material & {
-        linewidth?: number;
-      };
-      if (material?.linewidth) {
-        material.linewidth = SELECTED_LINEWIDTH;
-      }
+      // Create and add bounding box
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const material = new THREE.LineBasicMaterial({
+        color: BOUNDING_BOX_COLOR,
+        depthTest: false
+      });
+      const boundingBox = new THREE.LineSegments(
+        new THREE.EdgesGeometry(geometry),
+        material
+      );
+      boundingBox.name = SELECTION_BOUNDING_BOX;
+
+      // Set the bounding box size and position
+      const bbox = new THREE.Box3().setFromObject(selectedMesh);
+      const size = new THREE.Vector3();
+      bbox.getSize(size);
+      boundingBox.scale.copy(size);
+
+      const center = new THREE.Vector3();
+      bbox.getCenter(center);
+      boundingBox.position.copy(center);
+
+      selectedMesh.add(boundingBox);
     }
   }
 
@@ -1358,7 +1369,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     DEFAULT_MESH_COLOR.set(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
     DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
-    SELECTED_MESH_COLOR.set(getCSSVariableColor(SELECTED_MESH_COLOR_CSS));
+    BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
 
     this.setState(old => ({ ...old, lightTheme }));
   };

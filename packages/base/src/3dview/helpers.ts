@@ -22,7 +22,8 @@ THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
 export const DEFAULT_MESH_COLOR_CSS = '--jp-inverse-layout-color4';
 export const DEFAULT_EDGE_COLOR_CSS = '--jp-inverse-layout-color2';
-export const SELECTED_MESH_COLOR_CSS = '--jp-brand-color0';
+export const BOUNDING_BOX_COLOR_CSS = '--jp-brand-color0';
+export const SELECTION_BOUNDING_BOX = 'selectionBoundingBox';
 
 export const DEFAULT_MESH_COLOR = new THREE.Color(
   getCSSVariableColor(DEFAULT_MESH_COLOR_CSS)
@@ -30,8 +31,8 @@ export const DEFAULT_MESH_COLOR = new THREE.Color(
 export const DEFAULT_EDGE_COLOR = new THREE.Color(
   getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS)
 );
-export const SELECTED_MESH_COLOR = new THREE.Color(
-  getCSSVariableColor(SELECTED_MESH_COLOR_CSS)
+export const BOUNDING_BOX_COLOR = new THREE.Color(
+  getCSSVariableColor(BOUNDING_BOX_COLOR_CSS)
 );
 
 export type BasicMesh = THREE.Mesh<
@@ -119,8 +120,7 @@ export function buildShape(options: {
   mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>;
   edgesMeshes: LineSegments2[];
 } | null {
-  const { objName, data, isSolid, clippingPlanes, selected, objColor } =
-    options;
+  const { objName, data, isSolid, clippingPlanes, objColor } = options;
   const { faceList, edgeList, jcObject } = data;
 
   const vertices: Array<number> = [];
@@ -220,10 +220,6 @@ export function buildShape(options: {
   mainMesh.userData = {
     type: 'shape'
   };
-
-  if (selected) {
-    mainMesh.material.color = SELECTED_MESH_COLOR;
-  }
 
   let edgeIdx = 0;
   const edgesMeshes: LineSegments2[] = [];
