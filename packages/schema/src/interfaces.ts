@@ -215,6 +215,7 @@ export interface IParsedShape {
   jcObject: IJCadObject;
   faceList: Array<IFace>;
   edgeList: Array<IEdge>;
+  isSolid: boolean;
   meta?: IDict;
 }
 
