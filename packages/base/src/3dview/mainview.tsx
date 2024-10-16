@@ -43,8 +43,8 @@ import {
   IPickedResult,
   IPointer,
   SELECTED_LINEWIDTH,
-  SELECTED_MESH_COLOR,
-  SELECTED_MESH_COLOR_CSS,
+  BOUNDING_BOX_COLOR,
+  BOUNDING_BOX_COLOR_CSS,
   SELECTION_BOUNDING_BOX,
   buildShape,
   computeExplodedState,
@@ -209,7 +209,7 @@ export class MainView extends React.Component<IProps, IStates> {
     if (this.divRef.current !== null) {
       DEFAULT_MESH_COLOR.set(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
       DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
-      SELECTED_MESH_COLOR.set(getCSSVariableColor(SELECTED_MESH_COLOR_CSS));
+      BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
 
       this._camera = new THREE.PerspectiveCamera(50, 2, 0.1, 1000);
       this._camera.position.set(8, 8, 8);
@@ -726,7 +726,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
           if (selectedNames.includes(el.name)) {
             this._selectedMeshes.push(el as any as BasicMesh);
-            el.material.color = SELECTED_MESH_COLOR;
+            el.material.color = originalEdgeColor;
             el.material.linewidth = SELECTED_LINEWIDTH;
             el.userData.originalColor = originalEdgeColor.clone();
           } else {
@@ -990,7 +990,7 @@ export class MainView extends React.Component<IProps, IStates> {
       // Create and add bounding box
       const geometry = new THREE.BoxGeometry(1, 1, 1);
       const material = new THREE.LineBasicMaterial({
-        color: SELECTED_MESH_COLOR,
+        color: BOUNDING_BOX_COLOR,
         depthTest: false
       });
       const boundingBox = new THREE.LineSegments(
@@ -1366,7 +1366,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     DEFAULT_MESH_COLOR.set(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
     DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
-    SELECTED_MESH_COLOR.set(getCSSVariableColor(SELECTED_MESH_COLOR_CSS));
+    BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
 
     this.setState(old => ({ ...old, lightTheme }));
   };
