@@ -747,8 +747,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
     // Clip plane rendering
     const planeGeom = new THREE.PlaneGeometry(
-      this._refLength! * 10, // *10 is a bit arbitrary and extreme but that does not impact performance or anything
-      this._refLength! * 10
+      this._refLength! * 1000, // *1000 is a bit arbitrary and extreme but that does not impact performance or anything
+      this._refLength! * 1000
     );
     const planeMat = new THREE.MeshPhongMaterial({
       color: DEFAULT_EDGE_COLOR,
