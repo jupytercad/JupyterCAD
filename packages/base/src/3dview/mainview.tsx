@@ -228,7 +228,8 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer = new THREE.WebGLRenderer({
         alpha: true,
         antialias: true,
-        stencil: true
+        stencil: true,
+        logarithmicDepthBuffer: true
       });
 
       this._clock = new THREE.Clock();
@@ -1319,7 +1320,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._scene.remove(this._camera);
 
     if (this._cameraSettings.type === 'Perspective') {
-      this._camera = new THREE.PerspectiveCamera(50, 2, 0.1, 1000);
+      this._camera = new THREE.PerspectiveCamera(50, 2, 1e-6, 1e27);
     } else {
       const width = this.divRef.current?.clientWidth || 0;
       const height = this.divRef.current?.clientHeight || 0;
