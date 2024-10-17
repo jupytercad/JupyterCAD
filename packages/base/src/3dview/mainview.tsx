@@ -1313,6 +1313,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _updateCamera() {
     const position = new THREE.Vector3().copy(this._camera.position);
     const up = new THREE.Vector3().copy(this._camera.up);
+    const target = this._controls.target.clone();
 
     this._camera.remove(this._cameraLight);
     this._scene.remove(this._camera);
@@ -1323,12 +1324,17 @@ export class MainView extends React.Component<IProps, IStates> {
       const width = this.divRef.current?.clientWidth || 0;
       const height = this.divRef.current?.clientHeight || 0;
 
+      const distance = position.distanceTo(target);
+      const zoomFactor = 1000 / distance;
+  
       this._camera = new THREE.OrthographicCamera(
         width / -2,
         width / 2,
         height / 2,
         height / -2
       );
+      this._camera.zoom = zoomFactor;
+      this._camera.updateProjectionMatrix();
     }
 
     this._camera.add(this._cameraLight);
