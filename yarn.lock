@@ -833,7 +833,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyter/ydoc@npm:^2.0.0, @jupyter/ydoc@npm:^2.0.1":
+"@jupyter/ydoc@npm:^2.0.1":
   version: 2.1.2
   resolution: "@jupyter/ydoc@npm:2.1.2"
   dependencies:
@@ -969,7 +969,7 @@ __metadata:
     typescript: ^5
     webpack: ^5.76.3
     yjs: ^13.5.40
-    yjs-widgets: ^0.3.4
+    yjs-widgets: ^0.3.7
   languageName: unknown
   linkType: soft
 
@@ -1036,7 +1036,7 @@ __metadata:
     rimraf: ^3.0.2
     typescript: ^5
     yjs: ^13.5.0
-    yjs-widgets: ^0.3.5
+    yjs-widgets: ^0.3.7
   languageName: unknown
   linkType: soft
 
@@ -12892,12 +12892,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yjs-widgets@npm:^0.3.4, yjs-widgets@npm:^0.3.5":
-  version: 0.3.6
-  resolution: "yjs-widgets@npm:0.3.6"
+"yjs-widgets@npm:^0.3.7":
+  version: 0.3.7
+  resolution: "yjs-widgets@npm:0.3.7"
   dependencies:
-    "@jupyter/collaboration": ^2.0.0
-    "@jupyter/ydoc": ^2.0.0
+    "@jupyter/ydoc": ^2.0.0 || ^3.0.0-a3
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/console": ^4.2.4
@@ -12911,7 +12910,7 @@ __metadata:
     uuid: ^9.0.0
     webpack: ^5.77.0
     webpack-cli: ^5.0.1
-  checksum: 25d058d4c6a88ffd5f84027d972d79058bdf2043e008020034bacc77f30ad584cf5b763eaed2f8be6a052f37d4d444d4818a9b21f742640f565ed0461af5ad80
+  checksum: 3e1336aa1b454e714da44fa071a12b0f0d2a76791fe659eed66dfe17c2015b0b92837cf5b88a077d9f2cd4fda7629e4aeb5954dc973820c28ae1d7eee7ee052e
   languageName: node
   linkType: hard
 
