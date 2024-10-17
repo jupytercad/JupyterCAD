@@ -211,7 +211,7 @@ export class MainView extends React.Component<IProps, IStates> {
       DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
       BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
 
-      this._camera = new THREE.PerspectiveCamera(50, 2, 1e-6, 1e27)
+      this._camera = new THREE.PerspectiveCamera(50, 2, 1e-6, 1e27);
       this._camera.position.set(8, 8, 8);
       this._camera.up.set(0, 0, 1);
 
