@@ -980,7 +980,7 @@ export class MainView extends React.Component<IProps, IStates> {
       if (boundingBox) {
         selectedMesh.remove(boundingBox);
       }
-  
+
       const material = selectedMesh.material as THREE.Material & {
         linewidth?: number;
       };
@@ -1003,14 +1003,15 @@ export class MainView extends React.Component<IProps, IStates> {
       if (selectedMesh.name.startsWith('edge')) {
         // Highlight edges using the old method
         if (!selectedMesh.userData.originalColor) {
-          selectedMesh.userData.originalColor = selectedMesh.material.color.clone();
+          selectedMesh.userData.originalColor =
+            selectedMesh.material.color.clone();
         }
-  
+
         this._selectedMeshes.push(selectedMesh);
         if (selectedMesh?.material?.color) {
           selectedMesh.material.color = BOUNDING_BOX_COLOR;
         }
-  
+
         const material = selectedMesh.material as THREE.Material & {
           linewidth?: number;
         };
@@ -1020,7 +1021,7 @@ export class MainView extends React.Component<IProps, IStates> {
       } else {
         // Highlight non-edges using a bounding box
         this._selectedMeshes.push(selectedMesh);
-  
+
         // Create and add bounding box
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.LineBasicMaterial({
@@ -1032,17 +1033,17 @@ export class MainView extends React.Component<IProps, IStates> {
           material
         );
         boundingBox.name = SELECTION_BOUNDING_BOX;
-  
+
         // Set the bounding box size and position
         const bbox = new THREE.Box3().setFromObject(selectedMesh);
         const size = new THREE.Vector3();
         bbox.getSize(size);
         boundingBox.scale.copy(size);
-  
+
         const center = new THREE.Vector3();
         bbox.getCenter(center);
         boundingBox.position.copy(center);
-  
+
         selectedMesh.add(boundingBox);
       }
     }
