@@ -749,8 +749,10 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     });
 
-    // Update the reflength
-    this._updateRefLength();
+    // Update the reflength. We will update the camera position accordingly if there is a single object.
+    this._updateRefLength(
+      this._meshGroup.children.length === 1 || this._refLength === null
+    );
     // Set the expoded view if it's enabled
     this._setupExplodedView();
 
@@ -785,18 +787,16 @@ export class MainView extends React.Component<IProps, IStates> {
     this.setState(old => ({ ...old, loading: false }));
   };
 
-  private _updateRefLength(force = false): void {
-    if (this._meshGroup) {
-      if (
-        force ||
-        (this._refLength === null && this._meshGroup.children.length)
-      ) {
-        const boxSizeVec = new THREE.Vector3();
-        this._boundingGroup.getSize(boxSizeVec);
+  private _updateRefLength(updateCamera = false): void {
+    if (this._meshGroup && this._meshGroup.children.length) {
+      const boxSizeVec = new THREE.Vector3();
+      this._boundingGroup.getSize(boxSizeVec);
 
-        this._refLength =
-          Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
-        this._updatePointers(this._refLength);
+      this._refLength =
+        Math.max(boxSizeVec.x, boxSizeVec.y, boxSizeVec.z) / 5 || 1;
+      this._updatePointersScale(this._refLength);
+
+      if (updateCamera) {
         this._camera.lookAt(this._scene.position);
 
         this._camera.position.set(
@@ -804,16 +804,15 @@ export class MainView extends React.Component<IProps, IStates> {
           10 * this._refLength,
           10 * this._refLength
         );
+      }
 
-        // Update clip plane size
-        this._clippingPlaneMeshControl.geometry = new THREE.PlaneGeometry(
-          this._refLength * 10,
-          this._refLength * 10
-        );
-      }
-      if (!this._meshGroup.children.length) {
-        this._refLength = null;
-      }
+      // Update clip plane size
+      this._clippingPlaneMeshControl.geometry = new THREE.PlaneGeometry(
+        this._refLength * 10,
+        this._refLength * 10
+      );
+    } else {
+      this._refLength = null;
     }
   }
 
@@ -928,12 +927,20 @@ export class MainView extends React.Component<IProps, IStates> {
       });
     }
   }
-  private _updatePointers(refLength): void {
-    this._pointerGeometry = new THREE.SphereGeometry(refLength / 10, 32, 32);
+
+  private _updatePointersScale(refLength): void {
+    this._pointer3D?.mesh.scale.set(
+      refLength / 10,
+      refLength / 10,
+      refLength / 10
+    );
 
     for (const clientId in this._collaboratorPointers) {
-      this._collaboratorPointers[clientId].mesh.geometry =
-        this._pointerGeometry;
+      this._collaboratorPointers[clientId].mesh.scale.set(
+        refLength / 10,
+        refLength / 10,
+        refLength / 10
+      );
     }
   }
 
@@ -950,6 +957,8 @@ export class MainView extends React.Component<IProps, IStates> {
       clientColor = Color.color(user?.color ?? 'steelblue') as Color.RGBColor;
     }
 
+    const geometry = new THREE.SphereGeometry(1, 32, 32);
+
     const material = new THREE.MeshBasicMaterial({
       color: clientColor
         ? new THREE.Color(
@@ -960,7 +969,15 @@ export class MainView extends React.Component<IProps, IStates> {
         : 'black'
     });
 
-    return new THREE.Mesh(this._pointerGeometry, material);
+    const mesh = new THREE.Mesh(geometry, material);
+    if (this._refLength) {
+      mesh.scale.set(
+        this._refLength / 10,
+        this._refLength / 10,
+        this._refLength / 10
+      );
+    }
+    return mesh;
   }
 
   private _updateSelected(selection: { [key: string]: ISelection }) {
@@ -1521,7 +1538,6 @@ export class MainView extends React.Component<IProps, IStates> {
   private _viewHelper: ViewHelper;
   private _viewHelperDiv: HTMLDivElement | null = null;
   private _collaboratorPointers: IDict<IPointer>;
-  private _pointerGeometry: THREE.SphereGeometry;
   private _contextMenu: ContextMenu;
   private _loadingTimeout: ReturnType<typeof setTimeout> | null;
 }
