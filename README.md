@@ -27,7 +27,9 @@ Or using pip:
 pip install jupytercad
 ```
 
-Once you have installed the extension, you should be able to open and edit `.fcstd` files in JupyterLab.
+Once you have installed the extension, you should be able to open the CAD viewer in JupyterLab and create 3D shapes!
+
+Additionally, you can install `jupytercad-freecad` and edit `.FCStd` files in JupyterLab.
 
 ## Documentation
 
