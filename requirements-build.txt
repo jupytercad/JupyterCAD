@@ -1,4 +1,4 @@
 # minimum needed to build jupytercad.
 datamodel-code-generator>=0.23.0
 hatchling>=1.5.0,<2
-pydantic==2.4.2
+pydantic==2.9.2
