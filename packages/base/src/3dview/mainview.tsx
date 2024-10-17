@@ -1326,7 +1326,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       const distance = position.distanceTo(target);
       const zoomFactor = 1000 / distance;
-  
+
       this._camera = new THREE.OrthographicCamera(
         width / -2,
         width / 2,
