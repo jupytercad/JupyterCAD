@@ -796,7 +796,6 @@ export class MainView extends React.Component<IProps, IStates> {
           10 * this._refLength,
           10 * this._refLength
         );
-        this._camera.far = 200 * this._refLength;
 
         // Update clip plane size
         this._clippingPlaneMeshControl.geometry = new THREE.PlaneGeometry(
