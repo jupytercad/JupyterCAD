@@ -56,6 +56,9 @@ interface IProps {
   viewModel: MainViewModel;
 }
 
+const CAMERA_NEAR = 1e-6;
+const CAMERA_FAR = 1e27;
+
 interface IStates {
   id: string; // ID of the component, it is used to identify which component
   //is the source of awareness updates.
@@ -211,7 +214,12 @@ export class MainView extends React.Component<IProps, IStates> {
       DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
       BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
 
-      this._camera = new THREE.PerspectiveCamera(50, 2, 0.1, 1000);
+      this._camera = new THREE.PerspectiveCamera(
+        50,
+        2,
+        CAMERA_NEAR,
+        CAMERA_FAR
+      );
       this._camera.position.set(8, 8, 8);
       this._camera.up.set(0, 0, 1);
 
@@ -228,7 +236,8 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer = new THREE.WebGLRenderer({
         alpha: true,
         antialias: true,
-        stencil: true
+        stencil: true,
+        logarithmicDepthBuffer: true
       });
 
       this._clock = new THREE.Clock();
@@ -795,7 +804,6 @@ export class MainView extends React.Component<IProps, IStates> {
           10 * this._refLength,
           10 * this._refLength
         );
-        this._camera.far = 200 * this._refLength;
 
         // Update clip plane size
         this._clippingPlaneMeshControl.geometry = new THREE.PlaneGeometry(
@@ -1319,7 +1327,12 @@ export class MainView extends React.Component<IProps, IStates> {
     this._scene.remove(this._camera);
 
     if (this._cameraSettings.type === 'Perspective') {
-      this._camera = new THREE.PerspectiveCamera(50, 2, 0.1, 1000);
+      this._camera = new THREE.PerspectiveCamera(
+        50,
+        2,
+        CAMERA_NEAR,
+        CAMERA_FAR
+      );
     } else {
       const width = this.divRef.current?.clientWidth || 0;
       const height = this.divRef.current?.clientHeight || 0;
