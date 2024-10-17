@@ -214,7 +214,12 @@ export class MainView extends React.Component<IProps, IStates> {
       DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
       BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
 
-      this._camera = new THREE.PerspectiveCamera(50, 2, CAMERA_NEAR, CAMERA_FAR);
+      this._camera = new THREE.PerspectiveCamera(
+        50,
+        2,
+        CAMERA_NEAR,
+        CAMERA_FAR
+      );
       this._camera.position.set(8, 8, 8);
       this._camera.up.set(0, 0, 1);
 
@@ -1322,7 +1327,12 @@ export class MainView extends React.Component<IProps, IStates> {
     this._scene.remove(this._camera);
 
     if (this._cameraSettings.type === 'Perspective') {
-      this._camera = new THREE.PerspectiveCamera(50, 2, CAMERA_NEAR, CAMERA_FAR);
+      this._camera = new THREE.PerspectiveCamera(
+        50,
+        2,
+        CAMERA_NEAR,
+        CAMERA_FAR
+      );
     } else {
       const width = this.divRef.current?.clientWidth || 0;
       const height = this.divRef.current?.clientHeight || 0;
