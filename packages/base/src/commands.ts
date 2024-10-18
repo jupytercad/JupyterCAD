@@ -116,7 +116,7 @@ const PARTS = {
     default: (model: IJupyterCadModel) => {
       return {
         Name: newName('Sphere', model),
-        Radius: 5,
+        Radius: 1,
         Angle1: -90,
         Angle2: 90,
         Angle3: 360,
@@ -144,8 +144,8 @@ const PARTS = {
     default: (model: IJupyterCadModel) => {
       return {
         Name: newName('Torus', model),
-        Radius1: 10,
-        Radius2: 2,
+        Radius1: 1,
+        Radius2: 0.5,
         Angle1: -180,
         Angle2: 180,
         Angle3: 360,
