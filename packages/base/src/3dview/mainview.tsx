@@ -56,8 +56,8 @@ interface IProps {
   viewModel: MainViewModel;
 }
 
-const CAMERA_NEAR = 1e-6;
-const CAMERA_FAR = 1e27;
+const CAMERA_NEAR = 0.0001;
+const CAMERA_FAR = 10000;
 
 interface IStates {
   id: string; // ID of the component, it is used to identify which component
@@ -237,7 +237,7 @@ export class MainView extends React.Component<IProps, IStates> {
         alpha: true,
         antialias: true,
         stencil: true,
-        logarithmicDepthBuffer: true
+        // logarithmicDepthBuffer: true
       });
 
       this._clock = new THREE.Clock();
@@ -330,10 +330,13 @@ export class MainView extends React.Component<IProps, IStates> {
       this._clippingPlaneMeshControl = new THREE.Mesh(
         new THREE.PlaneGeometry(1, 1),
         new THREE.MeshBasicMaterial({
-          color: 'black',
+          color: DEFAULT_MESH_COLOR_CSS,
           opacity: 0.2,
           transparent: true,
-          side: THREE.DoubleSide
+          side: THREE.DoubleSide,
+          polygonOffset: true,
+          polygonOffsetFactor: -500,
+          polygonOffsetUnits: 1
         })
       );
       this._clippingPlaneMeshControl.visible = false;
