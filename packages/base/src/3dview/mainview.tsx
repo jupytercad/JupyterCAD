@@ -236,7 +236,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer = new THREE.WebGLRenderer({
         alpha: true,
         antialias: true,
-        stencil: true,
+        stencil: true
         // logarithmicDepthBuffer: true
       });
 
