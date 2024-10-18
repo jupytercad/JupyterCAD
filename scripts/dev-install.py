@@ -1,12 +1,16 @@
+import os
 import subprocess
 from pathlib import Path
+import sys
 
 
-def execute(cmd: str, cwd=None):
-    subprocess.run(cmd.split(" "), check=True, cwd=cwd)
+def execute(cmd: str, cwd=None, env={}):
+    env_copy = os.environ.copy()
+
+    subprocess.run(cmd.split(" "), check=True, cwd=cwd, env=dict(**env_copy, **env))
 
 
-def install_dev():
+def install_dev(no_occ_build=False):
     root_path = Path(__file__).parents[1]
     requirements_build_path = root_path / "requirements-build.txt"
     install_build_deps = f"python -m pip install -r {requirements_build_path}"
@@ -18,7 +22,10 @@ def install_dev():
 
     execute(install_build_deps)
     execute(install_js_deps)
-    execute(build_js)
+    env = {}
+    if no_occ_build:
+        env["NO_OCC_BUILD"] = "1"
+    execute(build_js, env=env)
     for py_package in python_packages:
         execute(f"pip uninstall {py_package} -y")
         execute("jlpm clean:all", cwd=root_path / "python" / py_package)
@@ -34,4 +41,6 @@ def install_dev():
 
 
 if __name__ == "__main__":
-    install_dev()
+    argv = sys.argv
+    no_occ_build = len(argv) >= 2 and argv[1] == "--no-occ-build"
+    install_dev(no_occ_build)
