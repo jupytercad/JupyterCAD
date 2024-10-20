@@ -433,6 +433,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._renderer.clear();
     this._renderer.render(this._scene, this._camera);
     this._viewHelper.render(this._renderer);
+    this.updateCameraRotation();
   };
 
   resizeCanvasToDisplaySize = (): void => {
@@ -461,27 +462,27 @@ export class MainView extends React.Component<IProps, IStates> {
     this.resizeCanvasToDisplaySize();
   };
 
-  private lookAtPosition(position: { x: number; y: number; z: number }) {
-    const objPosition = new THREE.Vector3(
+  private lookAtPosition(
+    position: { x: number; y: number; z: number } | [number, number, number]
+  ) {
+    this._targetPosition = new THREE.Vector3(
       position[0],
       position[1],
       position[2]
     );
-    if (this._camera) {
-      this._camera.lookAt(objPosition);
-      const cameraToTargetDistance =
-        this._camera.position.distanceTo(objPosition);
+  }
 
-      if (cameraToTargetDistance < 1) {
-        // Move the camera back slightly to ensure visibility
-        this._camera.position.add(
-          this._camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(-2)
-        );
+  private updateCameraRotation() {
+    if (this._targetPosition && this._camera && this._controls) {
+      const currentTarget = this._controls.target.clone();
+      const rotationSpeed = 0.1;
+      currentTarget.lerp(this._targetPosition, rotationSpeed);
+      this._controls.target.copy(currentTarget);
+
+      if (currentTarget.distanceTo(this._targetPosition) < 0.01) {
+        this._targetPosition = null;
       }
-      this._camera.updateProjectionMatrix();
-    }
-    if (this._controls) {
-      this._controls.target.copy(objPosition);
+
       this._controls.update();
     }
   }
@@ -1563,6 +1564,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _transformControls: TransformControls; // Mesh position/rotation controls
   private _pointer3D: IPointer | null = null;
   private _clock: THREE.Clock;
+  private _targetPosition: THREE.Vector3 | null = null;
   private _viewHelper: ViewHelper;
   private _viewHelperDiv: HTMLDivElement | null = null;
   private _collaboratorPointers: IDict<IPointer>;
