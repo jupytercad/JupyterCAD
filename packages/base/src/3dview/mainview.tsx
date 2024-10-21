@@ -227,7 +227,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._scene.add(new THREE.AmbientLight(0xffffff, 0.5)); // soft white light
 
-      this._cameraLight = new THREE.PointLight(0xffffff, 1);
+      this._cameraLight = new THREE.PointLight(0xffffff, 100);
+      this._cameraLight.decay = 5;
 
       this._camera.add(this._cameraLight);
 
