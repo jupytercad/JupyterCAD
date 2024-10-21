@@ -37,7 +37,7 @@ export const BOUNDING_BOX_COLOR = new THREE.Color(
 
 export type BasicMesh = THREE.Mesh<
   THREE.BufferGeometry,
-  THREE.MeshBasicMaterial | THREE.MeshPhongMaterial
+  THREE.MeshBasicMaterial | THREE.MeshStandardMaterial
 >;
 
 /**
@@ -117,7 +117,7 @@ export function buildShape(options: {
   objColor?: THREE.Color | string | number;
 }): {
   meshGroup: THREE.Group;
-  mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>;
+  mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
   edgesMeshes: LineSegments2[];
 } | null {
   const { objName, data, isSolid, clippingPlanes, objColor } = options;
@@ -156,12 +156,14 @@ export function buildShape(options: {
   // And add to the scene
   // We need one material per-mesh because we will set the uniform color independently later
   // it's too bad Three.js does not easily allow setting uniforms independently per-mesh
-  const material = new THREE.MeshPhongMaterial({
+  const material = new THREE.MeshStandardMaterial({
     color: new THREE.Color(color),
     wireframe: false,
     flatShading: false,
     clippingPlanes,
-    shininess: 0
+    // shininess: 0,
+    metalness: 0.5,
+    roughness: 0.5
   });
 
   const geometry = new THREE.BufferGeometry();
