@@ -16,10 +16,12 @@ cd JupyterCAD
 # Install JupyterLab for jlpm
 pip install jupyterlab
 # Install package in development mode
-python scripts/dev-install.py
+jlpm dev
 # Rebuild extension Typescript source after making changes
 jlpm run build
 ```
+
+**Note:** You need to have docker installed to build `@jupytercad/opencascade` package, you can skip this step and download a prebuilt version by calling `jlpm dev --no-occ-build` instead of `jlpm dev`.
 
 You can watch the source directory and run JupyterLab at the same time in different terminals to watch for changes in the extension's source and automatically rebuild the extension.
 
