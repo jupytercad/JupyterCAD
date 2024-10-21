@@ -330,7 +330,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._clippingPlaneMeshControl = new THREE.Mesh(
         new THREE.PlaneGeometry(1, 1),
         new THREE.MeshBasicMaterial({
-          color: 'black',
+          color: DEFAULT_MESH_COLOR_CSS,
           opacity: 0.2,
           transparent: true,
           side: THREE.DoubleSide
@@ -1435,6 +1435,8 @@ export class MainView extends React.Component<IProps, IStates> {
     DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
     BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
 
+    this._clippingPlaneMeshControl.material.color = DEFAULT_EDGE_COLOR;
+
     this.setState(old => ({ ...old, lightTheme }));
   };
 
@@ -1544,7 +1546,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
   private _cameraSettings: CameraSettings = { type: 'Perspective' };
   private _clipSettings: ClipSettings = { enabled: false, showClipPlane: true };
-  private _clippingPlaneMeshControl: THREE.Mesh; // Plane mesh using for controlling the clip plane in the UI
+  private _clippingPlaneMeshControl: BasicMesh; // Plane mesh using for controlling the clip plane in the UI
   private _clippingPlaneMesh: THREE.Mesh | null = null; // Plane mesh used for "filling the gaps"
   private _clippingPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0); // Mathematical object for clipping computation
   private _clippingPlanes = [this._clippingPlane];
