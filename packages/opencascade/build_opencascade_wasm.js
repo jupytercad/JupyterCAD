@@ -5,16 +5,23 @@ const {
   readFileSync,
   writeFileSync,
   mkdirSync,
-  copyFileSync
+  copyFileSync,
+  createWriteStream,
+  rmSync
 } = require('fs');
 const yaml = require('js-yaml');
 const path = require('path');
+const { Readable } = require('stream');
+const { finished } = require('stream/promises');
+const tar = require('tar');
 
 const IMAGE_NAME = 'donalffons/opencascade.js:2.0.0-beta.b5ff984';
 const OPEN_CASCADE_DIR = 'lib';
 const VERSION_FILE_NAME = 'jupytercad.opencascade.version';
 const VERSION_FILE_PATH = path.join(OPEN_CASCADE_DIR, VERSION_FILE_NAME);
 const BUILD_FILE_NAME = 'build.yml';
+const NO_BUILD = process.env.NO_OCC_BUILD;
+const PACKAGE_JSON = require('./package.json');
 
 function computeHash(filePath) {
   const hashSum = crypto.createHash('sha256');
@@ -59,6 +66,27 @@ function build() {
   );
 }
 
+async function download_prebuilt() {
+  const version = PACKAGE_JSON.version;
+  const url = `https://registry.npmjs.org/@jupytercad%2Fopencascade/-/opencascade-${version}.tgz`;
+
+  const tarballFile = path.join(OPEN_CASCADE_DIR, 'package.tgz');
+  if (existsSync(tarballFile)) {
+    rmSync(tarballFile);
+  }
+  const fileStream = createWriteStream(tarballFile);
+  const { body } = await fetch(url);
+  await finished(Readable.fromWeb(body).pipe(fileStream));
+
+  await tar.extract({
+    file: tarballFile,
+    cwd: OPEN_CASCADE_DIR,
+    filter: p => p.startsWith('package/lib'),
+    strip: 2
+  });
+  rmSync(tarballFile);
+}
+
 /**
  * Add new symbols to the config file, filter duplications
  * and sort symbol name
@@ -95,8 +123,12 @@ if (require.main === module) {
   }
 
   if (newSymbol.length > 0 || checkNeedsRebuild()) {
-    updateBuildConfig(newSymbol);
-    build();
+    if (NO_BUILD) {
+      download_prebuilt();
+    } else {
+      updateBuildConfig(newSymbol);
+      build();
+    }
     writeFileSync(VERSION_FILE_PATH, computeHash(BUILD_FILE_NAME));
   }
 }
