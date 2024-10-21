@@ -161,7 +161,6 @@ export function buildShape(options: {
     wireframe: false,
     flatShading: false,
     clippingPlanes,
-    // shininess: 0,
     metalness: 0.5,
     roughness: 0.5
   });
