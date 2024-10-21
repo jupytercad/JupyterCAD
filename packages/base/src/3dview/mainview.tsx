@@ -330,7 +330,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._clippingPlaneMeshControl = new THREE.Mesh(
         new THREE.PlaneGeometry(1, 1),
         new THREE.MeshBasicMaterial({
-          color: DEFAULT_MESH_COLOR_CSS,
+          color: DEFAULT_MESH_COLOR,
           opacity: 0.2,
           transparent: true,
           side: THREE.DoubleSide
@@ -1438,7 +1438,7 @@ export class MainView extends React.Component<IProps, IStates> {
     DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
     BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
 
-    this._clippingPlaneMeshControl.material.color = DEFAULT_EDGE_COLOR;
+    this._clippingPlaneMeshControl.material.color = DEFAULT_MESH_COLOR;
 
     this.setState(old => ({ ...old, lightTheme }));
   };
