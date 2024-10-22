@@ -1,6 +1,6 @@
 import {
   ControlPanelModel,
-  jcLightIcon,
+  logoIcon,
   JupyterCadWidget,
   LeftPanelWidget,
   RightPanelWidget,
@@ -97,7 +97,7 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     });
     leftControlPanel.id = 'jupytercad::leftControlPanel';
     leftControlPanel.title.caption = 'JupyterCad Control Panel';
-    leftControlPanel.title.icon = jcLightIcon;
+    leftControlPanel.title.icon = logoIcon;
 
     const rightControlPanel = new RightPanelWidget({
       model: controlModel,
@@ -106,7 +106,7 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     });
     rightControlPanel.id = 'jupytercad::rightControlPanel';
     rightControlPanel.title.caption = 'JupyterCad Control Panel';
-    rightControlPanel.title.icon = jcLightIcon;
+    rightControlPanel.title.icon = logoIcon;
 
     if (restorer) {
       restorer.add(leftControlPanel, NAME_SPACE);
