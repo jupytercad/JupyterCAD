@@ -63,6 +63,9 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
     tracker.currentChanged.connect(() => {
       const context = docManager.contextForWidget(tracker.currentWidget!);
+
+      console.log('context ???', context);
+      console.log('contentsModel ???', context?.contentsModel);
       console.log('is writable ???', context?.contentsModel?.writable);
     })
 
