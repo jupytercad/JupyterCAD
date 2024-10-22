@@ -67,7 +67,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       console.log('context ???', context);
       console.log('contentsModel ???', context?.contentsModel);
       console.log('is writable ???', context?.contentsModel?.writable);
-    })
+    });
 
     addCommands(
       app,
