@@ -169,25 +169,9 @@ export class ToolbarWidget extends ReactiveToolbar {
 
         // View helpers
         this.addItem(
-          'Axes Helper',
-          new CommandToolbarButton({
-            id: CommandIDs.updateAxes,
-            label: '',
-            commands: options.commands
-          })
-        );
-        this.addItem(
           'Exploded View',
           new CommandToolbarButton({
             id: CommandIDs.updateExplodedView,
-            label: '',
-            commands: options.commands
-          })
-        );
-        this.addItem(
-          'Camera Settings',
-          new CommandToolbarButton({
-            id: CommandIDs.updateCameraSettings,
             label: '',
             commands: options.commands
           })
@@ -200,8 +184,34 @@ export class ToolbarWidget extends ReactiveToolbar {
             commands: options.commands
           })
         );
-
+        this.addItem(
+          'Toggle Wireframe',
+          new CommandToolbarButton({
+            id: CommandIDs.wireframe,
+            label: '',
+            commands: options.commands
+          })
+        );
         this.addItem('separator6', new Separator());
+
+        this.addItem(
+          'Axes Helper',
+          new CommandToolbarButton({
+            id: CommandIDs.updateAxes,
+            label: '',
+            commands: options.commands
+          })
+        );
+        this.addItem(
+          'Camera Settings',
+          new CommandToolbarButton({
+            id: CommandIDs.updateCameraSettings,
+            label: '',
+            commands: options.commands
+          })
+        );
+        this.addItem('separator7', new Separator());
+
         this.addItem(
           'Toggle console',
           new CommandToolbarButton({
@@ -212,16 +222,7 @@ export class ToolbarWidget extends ReactiveToolbar {
           })
         );
 
-        this.addItem(
-          'Toggle Wireframe',
-          new CommandToolbarButton({
-            id: CommandIDs.wireframe,
-            label: '',
-            commands: options.commands
-          })
-        );
-
-        this.addItem('separator7', new Separator());
+        this.addItem('separator8', new Separator());
         (options.externalCommands ?? []).forEach(cmd => {
           this.addItem(
             cmd.name,
