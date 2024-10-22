@@ -62,7 +62,6 @@ export class JupyterCadModel implements IJupyterCadModel {
     this,
     IChangedArgs<string, string | null, string>
   > {
-    window.dispatchEvent(new Event('resize'));
     return this._themeChanged;
   }
 
