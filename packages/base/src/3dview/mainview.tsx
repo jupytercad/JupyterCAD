@@ -1000,6 +1000,13 @@ export class MainView extends React.Component<IProps, IStates> {
         selectedMesh.remove(boundingBox);
       }
 
+    const groupBoundingBox = this._meshGroup?.getObjectByName(
+      boundingBox?.name ?? SELECTION_BOUNDING_BOX
+    );
+    if (groupBoundingBox) {
+      this._meshGroup?.remove(groupBoundingBox);
+    }
+
       const material = selectedMesh.material as THREE.Material & {
         linewidth?: number;
       };
@@ -1064,6 +1071,7 @@ export class MainView extends React.Component<IProps, IStates> {
         boundingBox.position.copy(center);
 
         selectedMesh.add(boundingBox);
+        this._meshGroup?.add(boundingBox);
       }
     }
   }
