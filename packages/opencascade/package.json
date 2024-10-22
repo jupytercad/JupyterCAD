@@ -1,6 +1,6 @@
 {
   "name": "@jupytercad/opencascade",
-  "version": "3.0.0-alpha.3",
+  "version": "3.0.0-alpha.4",
   "description": "The custom OpenCascade build for JupyterCAD.",
   "keywords": [
     "jupyter",
@@ -36,6 +36,7 @@
     "copyfiles": "^2.4.1",
     "js-yaml": "^4.1.0",
     "rimraf": "^3.0.2",
+    "tar": "^7.4.3",
     "typescript": "^5"
   },
   "publishConfig": {

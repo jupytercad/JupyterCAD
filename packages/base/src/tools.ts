@@ -11,7 +11,6 @@ import cutIconStr from '../style/icon/cut.svg';
 import cylinderIconStr from '../style/icon/cylinder.svg';
 import extrusionIconStr from '../style/icon/extrusion.svg';
 import intersectionIconStr from '../style/icon/intersection.svg';
-import jvControlLight from '../style/icon/jvcontrol.svg';
 import explodedIconStr from '../style/icon/exploded.svg';
 import minimizeIconStr from '../style/icon/minimize.svg';
 import sphereIconStr from '../style/icon/sphere.svg';
@@ -25,11 +24,6 @@ import wireframeIconStr from '../style/icon/wireframe.svg';
 export const logoIcon = new LabIcon({
   name: 'jupytercad:logo',
   svgstr: logoStr
-});
-
-export const jcLightIcon = new LabIcon({
-  name: 'jupytercad:control-light',
-  svgstr: jvControlLight
 });
 
 export const minimizeIcon = new LabIcon({

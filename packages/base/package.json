@@ -1,6 +1,6 @@
 {
   "name": "@jupytercad/base",
-  "version": "3.0.0-alpha.3",
+  "version": "3.0.0-alpha.4",
   "description": "A JupyterLab extension for 3D modelling.",
   "keywords": [
     "jupyter",
@@ -36,10 +36,10 @@
   },
   "dependencies": {
     "@deathbeds/jupyterlab-rjsf": "^1.1.0",
-    "@jupyter/collaborative-drive": "^3.0.0-beta.8",
-    "@jupyter/ydoc": "^3.0.0-a9",
-    "@jupytercad/occ-worker": "^3.0.0-alpha.3",
-    "@jupytercad/schema": "^3.0.0-alpha.3",
+    "@jupyter/collaborative-drive": "^3.0.0-rc.0",
+    "@jupyter/ydoc": "^3.0.0-b0",
+    "@jupytercad/occ-worker": "^3.0.0-alpha.4",
+    "@jupytercad/schema": "^3.0.0-alpha.4",
     "@jupyterlab/application": "^4.0.0",
     "@jupyterlab/apputils": "^4.0.0",
     "@jupyterlab/completer": "^4.2.4",

@@ -44,7 +44,7 @@ class CadApp(LabServerApp):
     app_name = "JupyterCAD"
     static_dir = os.path.join(HERE, "static")
     templates_dir = os.path.join(HERE, "templates")
-    app_version = __version__
+    version = __version__
     app_settings_dir = os.path.join(HERE, "static", "application_settings")
     schemas_dir = os.path.join(HERE, "schemas")
     themes_dir = os.path.join(HERE, "themes")

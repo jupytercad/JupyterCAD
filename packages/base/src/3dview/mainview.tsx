@@ -228,6 +228,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._scene.add(new THREE.AmbientLight(0xffffff, 0.5)); // soft white light
 
       this._cameraLight = new THREE.PointLight(0xffffff, 1);
+      this._cameraLight.decay = 0;
 
       this._camera.add(this._cameraLight);
 
@@ -330,7 +331,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._clippingPlaneMeshControl = new THREE.Mesh(
         new THREE.PlaneGeometry(1, 1),
         new THREE.MeshBasicMaterial({
-          color: 'black',
+          color: DEFAULT_MESH_COLOR,
           opacity: 0.2,
           transparent: true,
           side: THREE.DoubleSide
@@ -433,6 +434,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._renderer.clear();
     this._renderer.render(this._scene, this._camera);
     this._viewHelper.render(this._renderer);
+    this.updateCameraRotation();
   };
 
   resizeCanvasToDisplaySize = (): void => {
@@ -461,27 +463,27 @@ export class MainView extends React.Component<IProps, IStates> {
     this.resizeCanvasToDisplaySize();
   };
 
-  private lookAtPosition(position: { x: number; y: number; z: number }) {
-    const objPosition = new THREE.Vector3(
+  private lookAtPosition(
+    position: { x: number; y: number; z: number } | [number, number, number]
+  ) {
+    this._targetPosition = new THREE.Vector3(
       position[0],
       position[1],
       position[2]
     );
-    if (this._camera) {
-      this._camera.lookAt(objPosition);
-      const cameraToTargetDistance =
-        this._camera.position.distanceTo(objPosition);
+  }
 
-      if (cameraToTargetDistance < 1) {
-        // Move the camera back slightly to ensure visibility
-        this._camera.position.add(
-          this._camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(-2)
-        );
+  private updateCameraRotation() {
+    if (this._targetPosition && this._camera && this._controls) {
+      const currentTarget = this._controls.target.clone();
+      const rotationSpeed = 0.1;
+      currentTarget.lerp(this._targetPosition, rotationSpeed);
+      this._controls.target.copy(currentTarget);
+
+      if (currentTarget.distanceTo(this._targetPosition) < 0.01) {
+        this._targetPosition = null;
       }
-      this._camera.updateProjectionMatrix();
-    }
-    if (this._controls) {
-      this._controls.target.copy(objPosition);
+
       this._controls.update();
     }
   }
@@ -993,9 +995,11 @@ export class MainView extends React.Component<IProps, IStates> {
         selectedMesh.material.color = originalColor;
       }
 
-      const boundingBox = selectedMesh.getObjectByName(SELECTION_BOUNDING_BOX);
-      if (boundingBox) {
-        selectedMesh.remove(boundingBox);
+      const groupBoundingBox = this._meshGroup?.getObjectByName(
+        SELECTION_BOUNDING_BOX
+      );
+      if (groupBoundingBox) {
+        this._meshGroup?.remove(groupBoundingBox);
       }
 
       const material = selectedMesh.material as THREE.Material & {
@@ -1061,7 +1065,7 @@ export class MainView extends React.Component<IProps, IStates> {
         bbox.getCenter(center);
         boundingBox.position.copy(center);
 
-        selectedMesh.add(boundingBox);
+        this._meshGroup?.add(boundingBox);
       }
     }
   }
@@ -1389,7 +1393,9 @@ export class MainView extends React.Component<IProps, IStates> {
         width / -2,
         width / 2,
         height / 2,
-        height / -2
+        height / -2,
+        CAMERA_NEAR,
+        CAMERA_FAR
       );
       this._camera.zoom = zoomFactor;
       this._camera.updateProjectionMatrix();
@@ -1543,7 +1549,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
   private _cameraSettings: CameraSettings = { type: 'Perspective' };
   private _clipSettings: ClipSettings = { enabled: false, showClipPlane: true };
-  private _clippingPlaneMeshControl: THREE.Mesh; // Plane mesh using for controlling the clip plane in the UI
+  private _clippingPlaneMeshControl: BasicMesh; // Plane mesh using for controlling the clip plane in the UI
   private _clippingPlaneMesh: THREE.Mesh | null = null; // Plane mesh used for "filling the gaps"
   private _clippingPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0); // Mathematical object for clipping computation
   private _clippingPlanes = [this._clippingPlane];
@@ -1562,6 +1568,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _transformControls: TransformControls; // Mesh position/rotation controls
   private _pointer3D: IPointer | null = null;
   private _clock: THREE.Clock;
+  private _targetPosition: THREE.Vector3 | null = null;
   private _viewHelper: ViewHelper;
   private _viewHelperDiv: HTMLDivElement | null = null;
   private _collaboratorPointers: IDict<IPointer>;
