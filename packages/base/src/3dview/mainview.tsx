@@ -995,10 +995,8 @@ export class MainView extends React.Component<IProps, IStates> {
         selectedMesh.material.color = originalColor;
       }
 
-      const boundingBox = selectedMesh.getObjectByName(SELECTION_BOUNDING_BOX);
-
       const groupBoundingBox = this._meshGroup?.getObjectByName(
-        boundingBox?.name ?? SELECTION_BOUNDING_BOX
+        SELECTION_BOUNDING_BOX
       );
       if (groupBoundingBox) {
         this._meshGroup?.remove(groupBoundingBox);
