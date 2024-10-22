@@ -995,9 +995,11 @@ export class MainView extends React.Component<IProps, IStates> {
         selectedMesh.material.color = originalColor;
       }
 
-      const boundingBox = selectedMesh.getObjectByName(SELECTION_BOUNDING_BOX);
-      if (boundingBox) {
-        selectedMesh.remove(boundingBox);
+      const groupBoundingBox = this._meshGroup?.getObjectByName(
+        SELECTION_BOUNDING_BOX
+      );
+      if (groupBoundingBox) {
+        this._meshGroup?.remove(groupBoundingBox);
       }
 
       const material = selectedMesh.material as THREE.Material & {
@@ -1063,7 +1065,7 @@ export class MainView extends React.Component<IProps, IStates> {
         bbox.getCenter(center);
         boundingBox.position.copy(center);
 
-        selectedMesh.add(boundingBox);
+        this._meshGroup?.add(boundingBox);
       }
     }
   }
