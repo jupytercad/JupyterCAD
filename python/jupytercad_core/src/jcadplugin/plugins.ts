@@ -128,6 +128,7 @@ const activate = (
         type: 'file',
         ext: '.jcad'
       });
+      console.log('model', model);
 
       model = await app.serviceManager.contents.save(model.path, {
         ...model,
@@ -136,6 +137,8 @@ const activate = (
         content:
           '{\n\t"objects": [],\n\t"options": {},\n\t"metadata": {},\n\t"outputs": {}}'
       });
+
+      console.log('saved model', app.serviceManager.contents.get(model.path));
 
       // Open the newly created file with the 'Editor'
       return app.commands.execute('docmanager:open', {
