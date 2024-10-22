@@ -1438,6 +1438,8 @@ export class MainView extends React.Component<IProps, IStates> {
     DEFAULT_MESH_COLOR.set(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
     DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
     BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
+
+    this._clippingPlaneMeshControl.material.color = DEFAULT_MESH_COLOR;
   };
 
   private _handleWindowResize = (): void => {
