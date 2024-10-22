@@ -526,6 +526,5 @@ export class SketcherReactWidget extends React.Component<IProps, IState> {
   private _divRef = React.createRef<HTMLDivElement>();
   private _canvasRef = React.createRef<HTMLCanvasElement>();
   private _panZoom: PanZoom;
-  // private _lightTheme =
   //   document.body.getAttribute('data-jp-theme-light') === 'true';
 }

@@ -85,7 +85,6 @@ interface IStates {
   filePath?: string;
   jcadObject?: IJCadModel;
   options?: JSONObject;
-  lightTheme: boolean;
   selectedNodes: string[];
   clientId: number | null; // ID of the yjs client
   id: string; // ID of the component, it is used to identify which component
@@ -142,13 +141,9 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
 
-    const lightTheme =
-      document.body.getAttribute('data-jp-theme-light') === 'true';
-
     this.state = {
       filePath: this.props.cpModel.filePath,
       jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
-      lightTheme,
       selectedNodes: [],
       clientId: null,
       id: uuid(),
@@ -160,13 +155,11 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     this.props.cpModel.documentChanged.connect((_, document) => {
       if (document) {
         this.props.cpModel.disconnect(this._sharedJcadModelChanged);
-        this.props.cpModel.disconnect(this._handleThemeChange);
         this.props.cpModel.disconnect(this._onClientSharedStateChanged);
 
         document.context.model.sharedObjectsChanged.connect(
           this._sharedJcadModelChanged
         );
-        document.context.model.themeChanged.connect(this._handleThemeChange);
         document.context.model.clientStateChanged.connect(
           this._onClientSharedStateChanged
         );
@@ -230,12 +223,6 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
       }
     }
   }
-
-  private _handleThemeChange = (): void => {
-    const lightTheme =
-      document.body.getAttribute('data-jp-theme-light') === 'true';
-    this.setState(old => ({ ...old, lightTheme }));
-  };
 
   handleNodeClick = (objectId: string) => {
     const object = this.getObjectFromName(objectId);

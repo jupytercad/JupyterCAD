@@ -25,7 +25,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { ViewHelper } from 'three/examples/jsm/helpers/ViewHelper';
 
 import { FloatingAnnotation } from '../annotation';
-import { getCSSVariableColor, isLightTheme, throttle } from '../tools';
+import { getCSSVariableColor, throttle } from '../tools';
 import {
   AxeHelper,
   CameraSettings,
@@ -63,7 +63,6 @@ interface IStates {
   id: string; // ID of the component, it is used to identify which component
   //is the source of awareness updates.
   loading: boolean;
-  lightTheme: boolean;
   remoteUser?: User.IIdentity | null;
   annotations: IDict<IAnnotation>;
   firstLoad: boolean;
@@ -107,7 +106,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this.state = {
       id: this._mainViewModel.id,
-      lightTheme: isLightTheme(),
       loading: true,
       annotations: {},
       firstLoad: true,
@@ -1435,15 +1433,11 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   private _handleThemeChange = (): void => {
-    const lightTheme = isLightTheme();
-
     DEFAULT_MESH_COLOR.set(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
     DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
     BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
 
     this._clippingPlaneMeshControl.material.color = DEFAULT_MESH_COLOR;
-
-    this.setState(old => ({ ...old, lightTheme }));
   };
 
   private _handleWindowResize = (): void => {
