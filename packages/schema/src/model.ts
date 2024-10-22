@@ -40,8 +40,6 @@ export class JupyterCadModel implements IJupyterCadModel {
     }
   };
 
-  readonly collaborative = true;
-
   get sharedModel(): IJupyterCadDoc {
     return this._sharedModel;
   }

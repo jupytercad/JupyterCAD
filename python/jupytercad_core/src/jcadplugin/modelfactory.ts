@@ -17,11 +17,6 @@ export class JupyterCadJcadModelFactory
   }
 
   /**
-   * Whether the model is collaborative or not.
-   */
-  readonly collaborative = true;
-
-  /**
    * The name of the model.
    *
    * @returns The name
