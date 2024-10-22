@@ -41,7 +41,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   };
 
   readonly collaborative =
-    document.querySelectorAll('[data-jupyter-lite-root]')[0] !== undefined;
+    document.querySelectorAll('[data-jupyter-lite-root]')[0] === undefined;
 
   get sharedModel(): IJupyterCadDoc {
     return this._sharedModel;
