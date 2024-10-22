@@ -248,6 +248,10 @@ export class JupyterCadModel implements IJupyterCadModel {
     });
   };
 
+  get writable(): boolean {
+    return true;
+  }
+
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
   readonly annotationModel?: IAnnotationModel;
