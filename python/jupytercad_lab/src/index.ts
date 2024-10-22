@@ -26,6 +26,7 @@ import { ICompletionProviderManager } from '@jupyterlab/completer';
 import { WidgetTracker } from '@jupyterlab/apputils';
 import { IMainMenu } from '@jupyterlab/mainmenu';
 import { ITranslator, nullTranslator } from '@jupyterlab/translation';
+import { IDocumentManager } from '@jupyterlab/docmanager';
 
 import { notebookRenderePlugin } from './notebookrenderer';
 
@@ -37,7 +38,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
   requires: [
     IJupyterCadDocTracker,
     IJCadFormSchemaRegistryToken,
-    IJCadWorkerRegistryToken
+    IJCadWorkerRegistryToken,
+    IDocumentManager
   ],
   optional: [IMainMenu, ITranslator, ICompletionProviderManager],
   activate: (
@@ -45,6 +47,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     tracker: WidgetTracker<JupyterCadWidget>,
     formSchemaRegistry: IJCadFormSchemaRegistry,
     workerRegistry: IJCadWorkerRegistry,
+    docManager: IDocumentManager,
     mainMenu?: IMainMenu,
     translator?: ITranslator,
     completionProviderManager?: ICompletionProviderManager
@@ -57,6 +60,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
         tracker.currentWidget === app.shell.currentWidget
       );
     };
+
+    tracker.currentChanged.connect(() => {
+      const context = docManager.contextForWidget(tracker.currentWidget!);
+      console.log('is writable ???', context?.contentsModel?.writable);
+    })
 
     addCommands(
       app,
