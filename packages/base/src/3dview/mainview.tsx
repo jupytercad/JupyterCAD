@@ -1070,7 +1070,6 @@ export class MainView extends React.Component<IProps, IStates> {
         bbox.getCenter(center);
         boundingBox.position.copy(center);
 
-        selectedMesh.add(boundingBox);
         this._meshGroup?.add(boundingBox);
       }
     }
