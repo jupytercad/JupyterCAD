@@ -136,6 +136,7 @@ async function main(): Promise<void> {
       ].includes(m.id)
     ),
     require('@jupyterlab/rendermime-extension'),
+    require('@jupyterlab/statusbar-extension'),
     require('./app/plugins/paths'),
     require('./app/plugins/mainmenu'),
     require('./app/plugins/browser'),
