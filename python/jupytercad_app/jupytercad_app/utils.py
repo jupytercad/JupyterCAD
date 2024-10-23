@@ -10,11 +10,6 @@ from jupyter_server.config_manager import recursive_update
 from jupyter_core.paths import jupyter_path
 
 
-def get_x(x):
-    print('CAD loading', x)
-    return x
-
-
 def get_page_config(base_url, app_name):
     page_config = {
         "appVersion": __version__,
@@ -41,7 +36,7 @@ def get_page_config(base_url, app_name):
     ]
     federated_extensions: Dict[str, Dict] = page_config["federated_extensions"]
     page_config["federated_extensions"] = [
-        get_x(x)
+        x
         for x in federated_extensions
         if x["name"] in required_extensions or x["name"].startswith("@jupytercad/")
     ]
