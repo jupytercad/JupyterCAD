@@ -37,7 +37,7 @@ export class JupyterCadJcadModelFactory
    * @returns The content type
    */
   get contentType(): Contents.ContentType {
-    return 'jcad';
+    return 'JupyterCAD';
   }
 
   /**
