@@ -1,6 +1,18 @@
 import { IJupyterCadDoc, JupyterCadModel } from '@jupytercad/schema';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { Contents } from '@jupyterlab/services';
+import { JupyterCadStepDoc } from './model';
+
+class JupyterCadStepModel extends JupyterCadModel {
+  fromString(data: string): void {
+    (this.sharedModel as JupyterCadStepDoc).source = data;
+    this.dirty = true;
+  }
+
+  protected createSharedModel(): IJupyterCadDoc {
+    return JupyterCadStepDoc.create();
+  }
+}
 
 /**
  * A Model factory to create new instances of JupyterCadModel.
@@ -68,14 +80,14 @@ export class JupyterCadStepModelFactory
   }
 
   /**
-   * Create a new instance of JupyterCadModel.
+   * Create a new instance of JupyterCadStepModel.
    *
    * @returns The model
    */
   createNew(
     options: DocumentRegistry.IModelOptions<IJupyterCadDoc>
-  ): JupyterCadModel {
-    const model = new JupyterCadModel({
+  ): JupyterCadStepModel {
+    const model = new JupyterCadStepModel({
       sharedModel: options.sharedModel,
       languagePreference: options.languagePreference
     });

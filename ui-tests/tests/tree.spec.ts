@@ -9,6 +9,7 @@ test.describe('Tree UI test', () => {
     page.setViewportSize({ width: 1920, height: 1080 });
     page.on('console', message => {
       if (message.type() === 'error') {
+        console.log('ERROR MSG', message.text());
         errors += 1;
       }
     });

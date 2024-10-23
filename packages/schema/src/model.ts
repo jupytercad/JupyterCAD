@@ -26,11 +26,15 @@ export class JupyterCadModel implements IJupyterCadModel {
     if (sharedModel) {
       this._sharedModel = sharedModel;
     } else {
-      this._sharedModel = JupyterCadDoc.create();
+      this._sharedModel = this.createSharedModel();
       this._sharedModel.changed.connect(this._onSharedModelChanged);
     }
     this.sharedModel.awareness.on('change', this._onClientStateChanged);
     this.annotationModel = annotationModel;
+  }
+
+  protected createSharedModel(): IJupyterCadDoc {
+    return JupyterCadDoc.create();
   }
 
   private _onSharedModelChanged = (sender: any, changes: any): void => {

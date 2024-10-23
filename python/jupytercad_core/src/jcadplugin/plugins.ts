@@ -34,6 +34,7 @@ import { JupyterCadJcadModelFactory } from './modelfactory';
 import { MimeDocumentFactory } from '@jupyterlab/docregistry';
 
 const FACTORY = 'JupyterCAD';
+const CONTENT_TYPE = 'jcad';
 const PALETTE_CATEGORY = 'JupyterCAD';
 
 namespace CommandIDs {
@@ -59,8 +60,8 @@ const activate = (
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-jcadmodel',
-    fileTypes: [FACTORY],
-    defaultFor: [FACTORY],
+    fileTypes: [CONTENT_TYPE],
+    defaultFor: [CONTENT_TYPE],
     tracker,
     commands: app.commands,
     workerRegistry,
@@ -81,7 +82,7 @@ const activate = (
     modelName: 'jupytercad-jcadmodel',
     name: 'JSON Editor',
     primaryFileType: app.docRegistry.getFileType('json'),
-    fileTypes: [FACTORY]
+    fileTypes: [CONTENT_TYPE]
   });
   app.docRegistry.addWidgetFactory(factory);
 
@@ -92,12 +93,12 @@ const activate = (
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype
   app.docRegistry.addFileType({
-    name: FACTORY,
-    displayName: FACTORY,
+    name: CONTENT_TYPE,
+    displayName: 'JCAD',
     mimeTypes: ['text/json'],
     extensions: ['.jcad', '.JCAD'],
     fileFormat: 'text',
-    contentType: FACTORY,
+    contentType: CONTENT_TYPE,
     icon: logoIcon
   });
 
@@ -106,7 +107,7 @@ const activate = (
   };
   if (drive) {
     drive.sharedModelFactory.registerDocumentFactory(
-      FACTORY,
+      CONTENT_TYPE,
       jcadSharedModelFactory
     );
   }

@@ -1,12 +1,24 @@
 import { IJupyterCadDoc, JupyterCadModel } from '@jupytercad/schema';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { Contents } from '@jupyterlab/services';
+import { JupyterCadStlDoc } from './model';
+
+class JupyterCadStlModel extends JupyterCadModel {
+  fromString(data: string): void {
+    (this.sharedModel as JupyterCadStlDoc).source = data;
+    this.dirty = true;
+  }
+
+  protected createSharedModel(): IJupyterCadDoc {
+    return JupyterCadStlDoc.create();
+  }
+}
 
 /**
- * A Model factory to create new instances of JupyterCadModel.
+ * A Model factory to create new instances of JupyterCadSTLModel.
  */
 export class JupyterCadStlModelFactory
-  implements DocumentRegistry.IModelFactory<JupyterCadModel>
+  implements DocumentRegistry.IModelFactory<JupyterCadStlModel>
 {
   /**
    * Whether the model is collaborative or not.
@@ -68,14 +80,14 @@ export class JupyterCadStlModelFactory
   }
 
   /**
-   * Create a new instance of JupyterCadModel.
+   * Create a new instance of JupyterCadSTLModel.
    *
    * @returns The model
    */
   createNew(
     options: DocumentRegistry.IModelOptions<IJupyterCadDoc>
-  ): JupyterCadModel {
-    const model = new JupyterCadModel({
+  ): JupyterCadStlModel {
+    const model = new JupyterCadStlModel({
       sharedModel: options.sharedModel,
       languagePreference: options.languagePreference
     });
