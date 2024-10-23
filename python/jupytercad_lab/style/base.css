@@ -420,3 +420,7 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
 .jpcad-console .jp-CodeConsole-banner {
   display: none;
 }
+
+.lm-TabBar-tabIcon .jcad-main-logo[fill] {
+  fill: var(--jp-inverse-layout-color3);
+}
