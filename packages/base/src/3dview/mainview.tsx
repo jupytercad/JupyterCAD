@@ -1068,11 +1068,14 @@ export class MainView extends React.Component<IProps, IStates> {
 
         this._meshGroup?.add(boundingBox);
 
-        this._transformControls.attach(
-          this._meshGroup?.children[0] as BasicMesh
-        );
-        this._transformControls.visible = true;
-        this._transformControls.enabled = true;
+        const matchingChild = this._meshGroup?.children.find(child => child.name.startsWith(selectedMesh.name));
+        console.log(matchingChild);
+        
+        if (matchingChild) {
+          this._transformControls.attach(matchingChild as BasicMesh);
+          this._transformControls.visible = true;
+          this._transformControls.enabled = true;
+        }
       }
     }
   }
