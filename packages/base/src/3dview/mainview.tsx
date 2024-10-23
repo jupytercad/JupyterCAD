@@ -1006,7 +1006,7 @@ export class MainView extends React.Component<IProps, IStates> {
       if (material?.linewidth) {
         material.linewidth = DEFAULT_LINEWIDTH;
       }
-  
+
       // Detach TransformControls from the previous selection
       this._transformControls.detach();
     }
@@ -1067,8 +1067,10 @@ export class MainView extends React.Component<IProps, IStates> {
         boundingBox.position.copy(center);
 
         this._meshGroup?.add(boundingBox);
-        
-        this._transformControls.attach(this._meshGroup?.children[0] as BasicMesh);
+
+        this._transformControls.attach(
+          this._meshGroup?.children[0] as BasicMesh
+        );
         this._transformControls.visible = true;
         this._transformControls.enabled = true;
       }
