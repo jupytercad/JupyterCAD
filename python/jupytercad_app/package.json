@@ -75,6 +75,7 @@
     "@jupyterlab/filebrowser": "^4.0.0",
     "@jupyterlab/filebrowser-extension": "^4.0.0",
     "@jupyterlab/fileeditor": "^4.2.0",
+    "@jupyterlab/json-extension": "^4.0.0",
     "@jupyterlab/launcher": "^4.0.0",
     "@jupyterlab/launcher-extension": "^4.0.0",
     "@jupyterlab/logconsole": "^4.0.0",

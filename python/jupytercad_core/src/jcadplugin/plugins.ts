@@ -81,7 +81,7 @@ const activate = (
     modelName: 'jupytercad-jcadmodel',
     name: 'JSON Editor',
     primaryFileType: app.docRegistry.getFileType('json'),
-    fileTypes: [FACTORY],
+    fileTypes: [FACTORY]
   });
   app.docRegistry.addWidgetFactory(factory);
 
