@@ -372,6 +372,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
       this._createViewHelper();
+      this._initializeTransformControls();
     }
   };
 
@@ -1112,6 +1113,23 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   }
 
+  private _initializeTransformControls() {
+    this._transformControls.addEventListener('mouseUp', () => {
+      if (this._transformControls.object) {
+        const updatedObject = this._transformControls.object as BasicMesh;
+        const updatedPosition = updatedObject.position;
+  
+        // this.setStateByKey('Placement.Position', {
+        //   x: updatedPosition.x,
+        //   y: updatedPosition.y,
+        //   z: updatedPosition.z
+        // });
+  
+        console.log('Updated Placement.Position:', updatedPosition);
+      }
+    });
+  }
+  
   private _onSharedMetadataChanged = (
     _: IJupyterCadDoc,
     changes: MapChange

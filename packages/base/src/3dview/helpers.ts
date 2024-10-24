@@ -186,7 +186,6 @@ export function buildShape(options: {
   const center = new THREE.Vector3();
   geometry.boundingBox?.getCenter(center);
   geometry.center();
-  console.log('center', center);
 
   if (vertices.length > 0) {
     geometry.computeBoundsTree();
