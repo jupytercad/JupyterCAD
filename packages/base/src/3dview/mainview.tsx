@@ -780,6 +780,15 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._scene.add(this._clippingPlaneMesh);
     this._scene.add(this._meshGroup);
+
+    // if (this._selectedMeshes.length === 1) {
+    //   const selectedMesh = this._selectedMeshes[0];
+      
+    //   const bbox = new THREE.Box3().setFromObject(selectedMesh);
+    //   const center = new THREE.Vector3();
+    //   bbox.getCenter(center);
+    // }
+  
     if (this._loadingTimeout) {
       clearTimeout(this._loadingTimeout);
       this._loadingTimeout = null;
@@ -980,7 +989,15 @@ export class MainView extends React.Component<IProps, IStates> {
     return mesh;
   }
 
+  private _previousSelection: { [key: string]: ISelection } | null = null;
   private _updateSelected(selection: { [key: string]: ISelection }) {
+    const selectionChanged = JSON.stringify(selection) !== JSON.stringify(this._previousSelection);
+    
+    if (!selectionChanged) {
+        return;
+    }
+    this._previousSelection = { ...selection };
+    
     // Reset original color and remove bounding boxes for old selection
     for (const selectedMesh of this._selectedMeshes) {
       let originalColor = selectedMesh.userData.originalColor;
@@ -1069,13 +1086,41 @@ export class MainView extends React.Component<IProps, IStates> {
         this._meshGroup?.add(boundingBox);
 
         const matchingChild = this._meshGroup?.children.find(child => child.name.startsWith(selectedMesh.name));
-        console.log(matchingChild);
         
         if (matchingChild) {
           this._transformControls.attach(matchingChild as BasicMesh);
+
+          // --------- To set center from matchingchild ---------------
+
+          // const bbox = new THREE.Box3().setFromObject(matchingChild);
+          // const size = new THREE.Vector3();
+          // bbox.getSize(size);
+          // boundingBox.scale.copy(size);
+
+          // const center = new THREE.Vector3();
+          // bbox.getCenter(center);
+          
+          // ----------------------------------------------------------
+          
+          this._transformControls.position.copy(center);
+          console.log(matchingChild.position);
+          
+          console.log(this._transformControls.position);
+          
+          
           this._transformControls.visible = true;
           this._transformControls.enabled = true;
         }
+        // if (this._selectedMeshes.length === 1) {
+        //   const selectedMesh = this._selectedMeshes[0];
+          
+        //   const bbox = new THREE.Box3().setFromObject(selectedMesh);
+        //   const center = new THREE.Vector3();
+        //   bbox.getCenter(center);
+        //   console.log(center);
+          
+        //   // this._transformControls.position.copy(center);
+        // }
       }
     }
   }
