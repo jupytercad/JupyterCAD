@@ -182,6 +182,15 @@ export function buildShape(options: {
   meshGroup.name = `${objName}-group`;
   meshGroup.visible = visible;
 
+  // Get the old center of the object and center its vertices to the scene
+  const center = new THREE.Vector3();
+  geometry.boundingBox?.getCenter(center);
+  geometry.center();
+
+  if (vertices.length > 0) {
+    geometry.computeBoundsTree();
+  }
+
   // We only build the stencil logic for solid meshes
   if (isSolid) {
     const baseMat = new THREE.MeshBasicMaterial();
@@ -250,6 +259,7 @@ export function buildShape(options: {
   }
 
   meshGroup.add(mainMesh);
+  mainMesh.position.copy(center);
 
   return { meshGroup, mainMesh, edgesMeshes };
 }

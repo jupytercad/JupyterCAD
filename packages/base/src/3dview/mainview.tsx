@@ -372,6 +372,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
       this._createViewHelper();
+      this._initializeTransformControls();
     }
   };
 
@@ -780,6 +781,15 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._scene.add(this._clippingPlaneMesh);
     this._scene.add(this._meshGroup);
+
+    // if (this._selectedMeshes.length === 1) {
+    //   const selectedMesh = this._selectedMeshes[0];
+
+    //   const bbox = new THREE.Box3().setFromObject(selectedMesh);
+    //   const center = new THREE.Vector3();
+    //   bbox.getCenter(center);
+    // }
+
     if (this._loadingTimeout) {
       clearTimeout(this._loadingTimeout);
       this._loadingTimeout = null;
@@ -980,7 +990,16 @@ export class MainView extends React.Component<IProps, IStates> {
     return mesh;
   }
 
+  private _previousSelection: { [key: string]: ISelection } | null = null;
   private _updateSelected(selection: { [key: string]: ISelection }) {
+    const selectionChanged =
+      JSON.stringify(selection) !== JSON.stringify(this._previousSelection);
+
+    if (!selectionChanged) {
+      return;
+    }
+    this._previousSelection = { ...selection };
+
     // Reset original color and remove bounding boxes for old selection
     for (const selectedMesh of this._selectedMeshes) {
       let originalColor = selectedMesh.userData.originalColor;
@@ -1006,6 +1025,9 @@ export class MainView extends React.Component<IProps, IStates> {
       if (material?.linewidth) {
         material.linewidth = DEFAULT_LINEWIDTH;
       }
+
+      // Detach TransformControls from the previous selection
+      this._transformControls.detach();
     }
 
     // Set new selection
@@ -1064,8 +1086,48 @@ export class MainView extends React.Component<IProps, IStates> {
         boundingBox.position.copy(center);
 
         this._meshGroup?.add(boundingBox);
+
+        const matchingChild = this._meshGroup?.children.find(child =>
+          child.name.startsWith(selectedMesh.name)
+        );
+
+        if (matchingChild) {
+          this._transformControls.attach(matchingChild as BasicMesh);
+
+          this._transformControls.position.copy(selectedMesh.position);
+
+          this._transformControls.visible = true;
+          this._transformControls.enabled = true;
+        }
+        // if (this._selectedMeshes.length === 1) {
+        //   const selectedMesh = this._selectedMeshes[0];
+
+        //   const bbox = new THREE.Box3().setFromObject(selectedMesh);
+        //   const center = new THREE.Vector3();
+        //   bbox.getCenter(center);
+        //   console.log(center);
+
+        //   // this._transformControls.position.copy(center);
+        // }
       }
     }
+  }
+
+  private _initializeTransformControls() {
+    this._transformControls.addEventListener('mouseUp', () => {
+      if (this._transformControls.object) {
+        const updatedObject = this._transformControls.object as BasicMesh;
+        const updatedPosition = updatedObject.position;
+
+        // this.setStateByKey('Placement.Position', {
+        //   x: updatedPosition.x,
+        //   y: updatedPosition.y,
+        //   z: updatedPosition.z
+        // });
+
+        console.log('Updated Placement.Position:', updatedPosition);
+      }
+    });
   }
 
   private _onSharedMetadataChanged = (
