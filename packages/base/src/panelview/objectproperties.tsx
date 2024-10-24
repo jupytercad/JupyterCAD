@@ -83,7 +83,10 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
           this._onClientSharedStateChanged
         );
         this.setState(old => ({
-          ...old,
+          jcadOption: undefined,
+          selectedObjectData: undefined,
+          selectedObject: undefined,
+          schema: undefined,
           filePath: changed.context.localPath,
           jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
           clientId: changed.context.model.getClientId()
