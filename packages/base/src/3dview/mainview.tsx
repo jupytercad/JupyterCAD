@@ -1118,18 +1118,18 @@ export class MainView extends React.Component<IProps, IStates> {
       if (this._transformControls.object) {
         const updatedObject = this._transformControls.object as BasicMesh;
         const updatedPosition = updatedObject.position;
-  
+
         // this.setStateByKey('Placement.Position', {
         //   x: updatedPosition.x,
         //   y: updatedPosition.y,
         //   z: updatedPosition.z
         // });
-  
+
         console.log('Updated Placement.Position:', updatedPosition);
       }
     });
   }
-  
+
   private _onSharedMetadataChanged = (
     _: IJupyterCadDoc,
     changes: MapChange
