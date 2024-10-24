@@ -1,4 +1,5 @@
 import {
+  createRendermimePlugins,
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
@@ -6,6 +7,7 @@ import {
 import { PageConfig } from '@jupyterlab/coreutils';
 
 import { IShell, Shell } from './shell';
+import { IRenderMime } from '@jupyterlab/rendermime';
 
 /**
  * App is the main application class. It is instantiated once and shared.
@@ -16,10 +18,16 @@ export class App extends JupyterFrontEnd<IShell> {
    *
    * @param options The instantiation options for an application.
    */
-  constructor(options: App.IOptions = { shell: new Shell() }) {
+  constructor(options: App.IOptions) {
     super({
-      shell: options.shell
+      ...options,
+      shell: options.shell ?? new Shell()
     });
+    if (options.mimeExtensions) {
+      for (const plugin of createRendermimePlugins(options.mimeExtensions)) {
+        this.registerPlugin(plugin);
+      }
+    }
   }
 
   /**
@@ -112,7 +120,21 @@ export namespace App {
   /**
    * The instantiation options for an App application.
    */
-  export type IOptions = JupyterFrontEnd.IOptions<IShell>;
+  export interface IOptions
+    extends JupyterFrontEnd.IOptions<IShell>,
+      Partial<IInfo> {
+    paths?: Partial<JupyterFrontEnd.IPaths>;
+  }
+
+  /**
+   * The information about a application.
+   */
+  export interface IInfo {
+    /**
+     * The mime renderer extensions.
+     */
+    readonly mimeExtensions: IRenderMime.IExtensionModule[];
+  }
 
   /**
    * The interface for a module that exports a plugin or plugins as

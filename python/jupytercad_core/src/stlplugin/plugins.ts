@@ -51,7 +51,7 @@ const activate = (
   app.docRegistry.addFileType({
     name: 'stl',
     displayName: 'STL',
-    mimeTypes: ['text/json'],
+    mimeTypes: ['text/plain'],
     extensions: ['.stl', '.STL'],
     fileFormat: 'text',
     contentType: 'stl',

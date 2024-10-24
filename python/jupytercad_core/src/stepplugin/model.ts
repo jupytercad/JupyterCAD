@@ -17,6 +17,10 @@ export class JupyterCadStepDoc extends JupyterCadDoc {
     this._source.observeDeep(this._sourceObserver);
   }
 
+  set source(value: string) {
+    this._source.insert(0, value);
+  }
+
   get version(): string {
     return '0.1.0';
   }

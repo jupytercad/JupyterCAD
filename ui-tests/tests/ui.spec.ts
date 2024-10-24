@@ -14,6 +14,7 @@ test.describe('UI Test', () => {
       const logs: string[] = [];
 
       page.on('console', message => {
+        console.log('CONSOLE MSG', message.text());
         logs.push(message.text());
       });
 
@@ -38,6 +39,7 @@ test.describe('UI Test', () => {
       page.setViewportSize({ width: 1920, height: 1080 });
       page.on('console', message => {
         if (message.type() === 'error') {
+          console.log('ERROR MSG', message.text());
           errors += 1;
         }
       });
@@ -87,6 +89,7 @@ test.describe('UI Test', () => {
       page.setViewportSize({ width: 1920, height: 1080 });
       page.on('console', message => {
         if (message.type() === 'error') {
+          console.log('ERROR MSG', message.text());
           errors += 1;
         }
       });
