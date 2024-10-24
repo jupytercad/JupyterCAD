@@ -1089,23 +1089,8 @@ export class MainView extends React.Component<IProps, IStates> {
         
         if (matchingChild) {
           this._transformControls.attach(matchingChild as BasicMesh);
-
-          // --------- To set center from matchingchild ---------------
-
-          // const bbox = new THREE.Box3().setFromObject(matchingChild);
-          // const size = new THREE.Vector3();
-          // bbox.getSize(size);
-          // boundingBox.scale.copy(size);
-
-          // const center = new THREE.Vector3();
-          // bbox.getCenter(center);
           
-          // ----------------------------------------------------------
-          
-          this._transformControls.position.copy(center);
-          console.log(matchingChild.position);
-          
-          console.log(this._transformControls.position);
+          this._transformControls.position.copy(selectedMesh.position);
           
           
           this._transformControls.visible = true;
