@@ -137,7 +137,7 @@ export const handleRemoveObject = (
           setVisible(sharedModel, dependency, true);
         });
         sharedModel.removeObjects(toRemove);
-      })
+      });
     }
   });
 
