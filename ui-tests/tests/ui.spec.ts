@@ -203,10 +203,6 @@ test.describe('UI Test', () => {
         .locator('[data-test-id="react-tree-root"]')
         .getByText('box2')
         .click();
-      await page
-        .locator('[data-test-id="react-tree-root"]')
-        .getByText('Shape')
-        .click();
       await page.getByLabel('Height*').click();
       await page.getByLabel('Height*').fill('32');
       await page.getByRole('button', { name: 'Submit' }).click();
@@ -310,7 +306,6 @@ test.describe('UI Test', () => {
         await page.getByTitle('New Box').getByRole('button').click();
         await page.getByRole('button', { name: 'Submit' }).click();
         await page.waitForTimeout(1000);
-        await page.getByText('Box 1').click();
         await page.locator('#tab-key-1-6').click();
 
         await page.waitForTimeout(1000);

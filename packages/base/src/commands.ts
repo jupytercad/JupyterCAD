@@ -241,6 +241,12 @@ export async function executeOperator(
   sharedModel.transact(() => {
     transaction(sharedModel);
   });
+  setTimeout(() => {
+    current.context.model.syncSelected(
+      { [objectModel.name]: { type: 'shape' } },
+      uuid()
+    );
+  }, 0); // doing the selection at the next tick
 }
 
 const OPERATORS = {
