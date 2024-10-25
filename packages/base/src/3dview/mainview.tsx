@@ -373,7 +373,11 @@ export class MainView extends React.Component<IProps, IStates> {
           normal,
           this._clippingPlaneMeshControl.position
         );
-        this._clippingPlane.translate(normal.multiply(new THREE.Vector3(translation, translation, translation)))
+        this._clippingPlane.translate(
+          normal.multiply(
+            new THREE.Vector3(translation, translation, translation)
+          )
+        );
       });
       this._transformControls.attach(this._clippingPlaneMeshControl);
       this._scene.add(this._transformControls);
