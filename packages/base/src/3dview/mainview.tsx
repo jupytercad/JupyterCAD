@@ -266,7 +266,11 @@ export class MainView extends React.Component<IProps, IStates> {
         this._onPointerMove.bind(this)
       );
       this._renderer.domElement.addEventListener('mouseup', e => {
-        this._onClick.bind(this)(e);
+        if (!this._disabledNextClick) {
+          this._onClick(e);
+        }
+
+        this._disabledNextClick = false;
       });
 
       this._renderer.domElement.addEventListener('contextmenu', e => {
@@ -276,24 +280,35 @@ export class MainView extends React.Component<IProps, IStates> {
       });
 
       document.addEventListener('keydown', e => {
-        this._onKeyDown.bind(this)(e);
+        this._onKeyDown(e);
       });
 
-      const controls = new OrbitControls(
+      this._controls = new OrbitControls(
         this._camera,
         this._renderer.domElement
       );
 
-      controls.target.set(
+      this._controls.target.set(
         this._scene.position.x,
         this._scene.position.y,
         this._scene.position.z
       );
-      this._controls = controls;
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.15;
+      this._controls.enableDamping = true;
+      this._controls.dampingFactor = 0.15;
 
+      this._controls.addEventListener('start', () => {
+        this._hasOrbited = false;
+      });
+      this._controls.addEventListener('end', () => {
+        // This "change" event here happens before the "mouseup" event on the renderer,
+        // we need to disable that next "mouseup" event that's coming to not deselect
+        // any currently selected mesh un-intentionally
+        if (this._hasOrbited) {
+          this._disabledNextClick = true;
+        }
+      });
       this._controls.addEventListener('change', () => {
+        this._hasOrbited = true;
         this._updateAnnotation();
       });
       this._controls.addEventListener(
@@ -644,6 +659,9 @@ export class MainView extends React.Component<IProps, IStates> {
       }
       this._updateSelected(newSelection);
       this._model.syncSelected(newSelection, this._mainViewModel.id);
+    } else {
+      this._updateSelected({});
+      this._model.syncSelected({}, this._mainViewModel.id);
     }
   }
 
@@ -1575,6 +1593,8 @@ export class MainView extends React.Component<IProps, IStates> {
   private _refLength: number | null = null; // Length of bounding box of current object
   private _sceneAxe: THREE.Object3D | null; // Array of  X, Y and Z axe
   private _controls: OrbitControls; // Mouse controls
+  private _hasOrbited = false; // Whether the last orbit control run has actually orbited
+  private _disabledNextClick = false; // We set this when we stop orbiting, to prevent the next click event
   private _transformControls: TransformControls; // Mesh position/rotation controls
   private _pointer3D: IPointer | null = null;
   private _clock: THREE.Clock;
