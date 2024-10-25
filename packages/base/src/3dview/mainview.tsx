@@ -957,6 +957,12 @@ export class MainView extends React.Component<IProps, IStates> {
         this._objToMesh(objName, postResult as any);
       });
     }
+
+    const localState = this._model.localState;
+
+    if (localState?.selected?.value) {
+      this._updateSelected(localState.selected.value);
+    }
   }
 
   private _updatePointersScale(refLength): void {
