@@ -359,11 +359,24 @@ export class MainView extends React.Component<IProps, IStates> {
 
       // Update the clipping plane whenever the transform UI move
       this._transformControls.addEventListener('change', () => {
-        const normal = new THREE.Vector3(0, 0, 1);
+        let normal = new THREE.Vector3(0, 0, 1);
+        normal = normal.applyEuler(this._clippingPlaneMeshControl.rotation);
+
+        // This is to prevent z-fighting
+        // We can't use the WebGL polygonOffset because of the logarithmic depth buffer
+        // Long term, when using the new WebGPURenderer, we could update the formula of the
+        // logarithmic depth computation to emulate the polygonOffset in the shaders directly
+        // refLength divided by 1000 looks like it's working fine to emulate a polygonOffset for now
+        const translation = this._refLength ? 0.001 * this._refLength : 0;
 
         this._clippingPlane.setFromNormalAndCoplanarPoint(
-          normal.applyEuler(this._clippingPlaneMeshControl.rotation),
+          normal,
           this._clippingPlaneMeshControl.position
+        );
+        this._clippingPlane.translate(
+          normal.multiply(
+            new THREE.Vector3(translation, translation, translation)
+          )
         );
       });
       this._transformControls.attach(this._clippingPlaneMeshControl);
