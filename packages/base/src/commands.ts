@@ -43,7 +43,7 @@ import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
-
+import { v4 as uuid } from 'uuid';
 export function newName(type: string, model: IJupyterCadModel): string {
   const sharedModel = model.sharedModel;
 
@@ -1217,9 +1217,10 @@ namespace Private {
             name: Name
           };
 
-          const sharedModel = current.context.model.sharedModel;
+          const jcadModel = current.context.model;
 
-          if (sharedModel) {
+          if (jcadModel) {
+            const sharedModel = jcadModel.sharedModel;
             if (!sharedModel.objectExists(objectModel.name)) {
               // Try a dry run with the update content to verify its feasibility
               const currentJcadContent = current.context.model.getContent();
@@ -1241,6 +1242,12 @@ namespace Private {
                 objectModel.shapeMetadata = objMeta;
               }
               sharedModel.addObject(objectModel);
+              setTimeout(() => {
+                jcadModel.syncSelected(
+                  { [objectModel.name]: { type: 'shape' } },
+                  uuid()
+                );
+              }, 0); // doing the selection at the next tick
             } else {
               showErrorMessage(
                 'The object already exists',
