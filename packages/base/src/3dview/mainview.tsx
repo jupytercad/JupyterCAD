@@ -1406,6 +1406,8 @@ export class MainView extends React.Component<IProps, IStates> {
     this._camera.position.copy(position);
     this._camera.up.copy(up);
 
+    this._transformControls.camera = this._camera;
+
     const resizeEvent = new Event('resize');
     window.dispatchEvent(resizeEvent);
   }
