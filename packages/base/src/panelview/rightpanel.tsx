@@ -37,7 +37,7 @@ export class RightPanelWidget extends SidePanel {
         return;
       }
 
-      let selection: {[key: string]: ISelection } = {};
+      let selection: { [key: string]: ISelection } = {};
       if (localState.remoteUser) {
         // We are in following mode.
         // Sync selections from a remote user
@@ -54,14 +54,14 @@ export class RightPanelWidget extends SidePanel {
       if (selectionNames.length === 1) {
         const selected = selectionNames[0];
         if (selected.startsWith('edge-') && selection[selected].parent) {
-          header.title.label = selection[selected].parent
+          header.title.label = selection[selected].parent;
         } else {
           header.title.label = selected;
         }
       } else {
         header.title.label = 'No selection';
       }
-    }
+    };
 
     let currentModel: IJupyterCadModel | undefined = undefined;
     this.addWidget(properties);
