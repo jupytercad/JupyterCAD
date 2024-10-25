@@ -32,7 +32,6 @@ export class RightPanelWidget extends SidePanel {
       clients: Map<number, IJupyterCadClientState>
     ) => {
       const localState = sender.localState;
-
       if (!localState) {
         return;
       }
@@ -49,7 +48,6 @@ export class RightPanelWidget extends SidePanel {
       } else if (localState.selected?.value) {
         selection = localState.selected.value;
       }
-
       const selectionNames = Object.keys(selection);
       if (selectionNames.length === 1) {
         const selected = selectionNames[0];
@@ -73,6 +71,11 @@ export class RightPanelWidget extends SidePanel {
 
         if (changed.context.model.sharedModel.editable) {
           currentModel = changed.context.model;
+          const clients = currentModel.sharedModel.awareness.getStates() as Map<
+            number,
+            IJupyterCadClientState
+          >;
+          updateTitle(currentModel, clients);
           currentModel.clientStateChanged.connect(updateTitle);
 
           properties.show();
