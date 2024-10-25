@@ -1,6 +1,9 @@
 import {
   IJCadFormSchemaRegistry,
+  IJupyterCadClientState,
+  IJupyterCadModel,
   IJupyterCadTracker,
+  ISelection,
   JupyterCadDoc
 } from '@jupytercad/schema';
 import { SidePanel } from '@jupyterlab/ui-components';
@@ -24,11 +27,54 @@ export class RightPanelWidget extends SidePanel {
       tracker: options.tracker
     });
 
+    const updateTitle = (
+      sender: IJupyterCadModel,
+      clients: Map<number, IJupyterCadClientState>
+    ) => {
+      const localState = sender.localState;
+
+      if (!localState) {
+        return;
+      }
+
+      let selection: {[key: string]: ISelection } = {};
+      if (localState.remoteUser) {
+        // We are in following mode.
+        // Sync selections from a remote user
+        const remoteState = clients.get(localState.remoteUser);
+
+        if (remoteState?.selected?.value) {
+          selection = remoteState?.selected?.value;
+        }
+      } else if (localState.selected?.value) {
+        selection = localState.selected.value;
+      }
+
+      const selectionNames = Object.keys(selection);
+      if (selectionNames.length === 1) {
+        const selected = selectionNames[0];
+        if (selected.startsWith('edge-') && selection[selected].parent) {
+          header.title.label = selection[selected].parent
+        } else {
+          header.title.label = selected;
+        }
+      } else {
+        header.title.label = 'No selection';
+      }
+    }
+
+    let currentModel: IJupyterCadModel | undefined = undefined;
     this.addWidget(properties);
     this._model.documentChanged.connect((_, changed) => {
       if (changed) {
+        if (currentModel) {
+          currentModel.clientStateChanged.disconnect(updateTitle);
+        }
+
         if (changed.context.model.sharedModel.editable) {
-          header.title.label = changed.context.localPath;
+          currentModel = changed.context.model;
+          currentModel.clientStateChanged.connect(updateTitle);
+
           properties.show();
         } else {
           header.title.label = `${changed.context.localPath} - Read Only`;
