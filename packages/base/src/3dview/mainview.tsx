@@ -298,7 +298,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._controls.addEventListener('start', () => {
         this._hasOrbited = false;
-      })
+      });
       this._controls.addEventListener('end', () => {
         // This "change" event here happens before the "mouseup" event on the renderer,
         // we need to disable that next "mouseup" event that's coming to not deselect
@@ -306,7 +306,7 @@ export class MainView extends React.Component<IProps, IStates> {
         if (this._hasOrbited) {
           this._disabledNextClick = true;
         }
-      })
+      });
       this._controls.addEventListener('change', () => {
         this._hasOrbited = true;
         this._updateAnnotation();
