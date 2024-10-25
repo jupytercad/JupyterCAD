@@ -372,7 +372,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
       this._createViewHelper();
-      this._initializeTransformControls();
+      this._updateTransformControls();
     }
   };
 
@@ -1113,21 +1113,34 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   }
 
-  private _initializeTransformControls() {
+  private _updateTransformControls() {
     this._transformControls.addEventListener('mouseUp', () => {
-      if (this._transformControls.object) {
-        const updatedObject = this._transformControls.object as BasicMesh;
-        const updatedPosition = updatedObject.position;
+      const updatedObject = this._selectedMeshes[0];
+      const objectName = updatedObject.name;
 
-        // this.setStateByKey('Placement.Position', {
-        //   x: updatedPosition.x,
-        //   y: updatedPosition.y,
-        //   z: updatedPosition.z
-        // });
+      const updatedPosition = new THREE.Vector3();
+      updatedObject.getWorldPosition(updatedPosition);
+  
+      const obj = this._model.sharedModel.getObjectByName(objectName);
 
-        console.log('Updated Placement.Position:', updatedPosition);
+      if (obj && obj.parameters && obj.parameters.Placement) {
+        const newPosition = [updatedPosition.x, updatedPosition.y, updatedPosition.z];
+
+        this._model.sharedModel.updateObjectByName(objectName, {
+          data: {
+            key: 'parameters',
+            value: {
+              ...obj.parameters,
+              Placement: {
+                ...obj.parameters.Placement,
+                Position: newPosition
+              }
+            }
+          }
+        });
       }
-    });
+    }
+   );
   }
 
   private _onSharedMetadataChanged = (
