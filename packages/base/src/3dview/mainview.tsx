@@ -707,6 +707,7 @@ export class MainView extends React.Component<IProps, IStates> {
       const selected = selectedNames.includes(objName);
       const obj = this._model.sharedModel.getObjectByName(objName);
       const objColor = obj?.parameters?.Color;
+      const isWireframe = this.state.wireframe;
 
       // TODO Have a more generic way to spot non-solid objects
       const isSolid = !(
@@ -719,6 +720,7 @@ export class MainView extends React.Component<IProps, IStates> {
         clippingPlanes: this._clippingPlanes,
         selected,
         isSolid,
+        isWireframe,
         objColor
       });
 
