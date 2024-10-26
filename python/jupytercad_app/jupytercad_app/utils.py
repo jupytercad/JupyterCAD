@@ -29,7 +29,11 @@ def get_page_config(base_url, app_name):
         page_config,
         gpc(labextensions_path),
     )
-    required_extensions = ["@jupyter/collaboration-extension", "yjs-widgets"]
+    required_extensions = [
+        "@jupyter/collaboration-extension",
+        "@jupyter/docprovider-extension",
+        "yjs-widgets",
+    ]
     federated_extensions: Dict[str, Dict] = page_config["federated_extensions"]
     page_config["federated_extensions"] = [
         x

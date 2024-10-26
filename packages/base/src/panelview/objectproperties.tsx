@@ -75,19 +75,30 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       if (changed) {
         this.props.cpModel.disconnect(this._sharedJcadModelChanged);
         this.props.cpModel.disconnect(this._onClientSharedStateChanged);
+        const currentModel = changed.context.model;
+        currentModel.sharedObjectsChanged.connect(this._sharedJcadModelChanged);
+        const clients = currentModel.sharedModel.awareness.getStates() as Map<
+          number,
+          IJupyterCadClientState
+        >;
 
-        changed.context.model.sharedObjectsChanged.connect(
-          this._sharedJcadModelChanged
+        this.setState(
+          old => ({
+            jcadOption: undefined,
+            selectedObjectData: undefined,
+            selectedObject: undefined,
+            schema: undefined,
+            filePath: changed.context.localPath,
+            jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
+            clientId: currentModel.getClientId()
+          }),
+          () => {
+            this._onClientSharedStateChanged(currentModel, clients);
+            currentModel.clientStateChanged.connect(
+              this._onClientSharedStateChanged
+            );
+          }
         );
-        changed.context.model.clientStateChanged.connect(
-          this._onClientSharedStateChanged
-        );
-        this.setState(old => ({
-          ...old,
-          filePath: changed.context.localPath,
-          jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
-          clientId: changed.context.model.getClientId()
-        }));
       } else {
         this.setState({
           jcadOption: undefined,
@@ -248,6 +259,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
         newState = localState;
       }
     }
+
     if (newState) {
       const selection = newState.selected.value;
       const selectedObjectNames = Object.keys(selection || {});
@@ -291,6 +303,13 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
           }));
         }
       }
+    } else {
+      this.setState(old => ({
+        ...old,
+        schema: undefined,
+        selectedObject: '',
+        selectedObjectData: undefined
+      }));
     }
   };
 

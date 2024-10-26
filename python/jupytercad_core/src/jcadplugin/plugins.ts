@@ -31,8 +31,10 @@ import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 
 import { JupyterCadWidgetFactory } from '../factory';
 import { JupyterCadJcadModelFactory } from './modelfactory';
+import { MimeDocumentFactory } from '@jupyterlab/docregistry';
 
-const FACTORY = 'JupyterCAD .jcad Viewer';
+const FACTORY = 'JupyterCAD';
+const CONTENT_TYPE = 'jcad';
 const PALETTE_CATEGORY = 'JupyterCAD';
 
 namespace CommandIDs {
@@ -58,8 +60,8 @@ const activate = (
   const widgetFactory = new JupyterCadWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-jcadmodel',
-    fileTypes: ['jcad'],
-    defaultFor: ['jcad'],
+    fileTypes: [CONTENT_TYPE],
+    defaultFor: [CONTENT_TYPE],
     tracker,
     commands: app.commands,
     workerRegistry,
@@ -70,8 +72,19 @@ const activate = (
     mimeTypeService: editorServices.mimeTypeService,
     consoleTracker
   });
+
   // Registering the widget factory
   app.docRegistry.addWidgetFactory(widgetFactory);
+
+  const factory = new MimeDocumentFactory({
+    dataType: 'json',
+    rendermime,
+    modelName: 'jupytercad-jcadmodel',
+    name: 'JSON Editor',
+    primaryFileType: app.docRegistry.getFileType('json'),
+    fileTypes: [CONTENT_TYPE]
+  });
+  app.docRegistry.addWidgetFactory(factory);
 
   // Creating and registering the model factory for our custom DocumentModel
   const modelFactory = new JupyterCadJcadModelFactory({
@@ -80,12 +93,12 @@ const activate = (
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype
   app.docRegistry.addFileType({
-    name: 'jcad',
+    name: CONTENT_TYPE,
     displayName: 'JCAD',
     mimeTypes: ['text/json'],
     extensions: ['.jcad', '.JCAD'],
     fileFormat: 'text',
-    contentType: 'jcad',
+    contentType: CONTENT_TYPE,
     icon: logoIcon
   });
 
@@ -94,7 +107,7 @@ const activate = (
   };
   if (drive) {
     drive.sharedModelFactory.registerDocumentFactory(
-      'jcad',
+      CONTENT_TYPE,
       jcadSharedModelFactory
     );
   }

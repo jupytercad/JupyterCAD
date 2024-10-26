@@ -121,7 +121,7 @@ dmypy.json
 **/ui-tests/test-results/
 **/ui-tests/playwright-report/
 
-examples/Untitled*.ipynb
+**/*ntitled*
 # Hatchling
 jupytercad/_version.py
 

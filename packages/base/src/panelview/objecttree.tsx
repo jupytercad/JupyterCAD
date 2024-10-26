@@ -29,6 +29,7 @@ import { v4 as uuid } from 'uuid';
 import visibilitySvg from '../../style/icon/visibility.svg';
 import visibilityOffSvg from '../../style/icon/visibilityOff.svg';
 import { IControlPanelModel } from '../types';
+import { setVisible } from '../commands';
 
 const visibilityIcon = new LabIcon({
   name: 'jupytercad:visibilityIcon',
@@ -98,7 +99,7 @@ interface IProps {
 
 export const handleRemoveObject = (
   objectId: string,
-  sharedModel: any,
+  sharedModel: IJupyterCadDoc,
   syncSelected: () => void
 ): void => {
   if (!sharedModel) {
@@ -130,7 +131,13 @@ export const handleRemoveObject = (
   }).then(({ button: { accept } }) => {
     if (accept) {
       const toRemove = dependants.concat([objectId]);
-      sharedModel.removeObjects(toRemove);
+      const objetToRemove = sharedModel.getObjectByName(objectId);
+      sharedModel.transact(() => {
+        objetToRemove?.dependencies?.forEach((dependency: string) => {
+          setVisible(sharedModel, dependency, true);
+        });
+        sharedModel.removeObjects(toRemove);
+      });
     }
   });
 

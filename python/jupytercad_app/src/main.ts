@@ -15,6 +15,7 @@ import '@jupyterlab/console/style/index.js';
 import '@jupyterlab/completer/style/index.js';
 import '../style/index.css';
 import './sharedscope';
+import { Shell } from './app/shell';
 
 function loadScript(url: string) {
   return new Promise((resolve, reject) => {
@@ -61,7 +62,6 @@ async function createModule(scope: string, module: string) {
 async function main(): Promise<void> {
   // Inject some packages in the shared scope
 
-  const app = new App();
   // populate the list of disabled extensions
   const disabled: any[] = [
     'jupytercad:serverInfoPlugin',
@@ -136,13 +136,16 @@ async function main(): Promise<void> {
       ].includes(m.id)
     ),
     require('@jupyterlab/rendermime-extension'),
+    require('@jupyterlab/statusbar-extension'),
     require('./app/plugins/paths'),
     require('./app/plugins/mainmenu'),
     require('./app/plugins/browser'),
     require('./app/plugins/launcher')
   ];
+  const mimeExtensions = [require('@jupyterlab/json-extension')];
 
   const federatedExtensionPromises: Promise<any>[] = [];
+  const federatedMimeExtensionPromises: Promise<any>[] = [];
   const federatedStylePromises: Promise<any>[] = [];
 
   const extension_data = JSON.parse(
@@ -175,8 +178,9 @@ async function main(): Promise<void> {
       federatedExtensionPromises.push(createModule(data.name, data.extension));
     }
     if (data.mimeExtension) {
-      // TODO Do we need mime extensions?
-      return;
+      federatedMimeExtensionPromises.push(
+        createModule(data.name, data.mimeExtension)
+      );
     }
     if (data.style && !PageConfig.Extension.isDisabled(data.name)) {
       federatedStylePromises.push(createModule(data.name, data.style));
@@ -199,6 +203,20 @@ async function main(): Promise<void> {
     }
   });
 
+  // Add the federated mime extensions.
+  const federatedMimeExtensions = await Promise.allSettled(
+    federatedMimeExtensionPromises
+  );
+  federatedMimeExtensions.forEach(p => {
+    if (p.status === 'fulfilled') {
+      for (const plugin of activePlugins(p.value)) {
+        mimeExtensions.push(plugin);
+      }
+    } else {
+      console.error(p.reason);
+    }
+  });
+
   // Load all federated component styles and log errors for any that do not
   (await Promise.allSettled(federatedStylePromises))
     .filter(({ status }) => status === 'rejected')
@@ -206,6 +224,7 @@ async function main(): Promise<void> {
       console.error((e as any).reason);
     });
 
+  const app = new App({ mimeExtensions, shell: new Shell() });
   app.registerPluginModules(mods);
 
   await app.start();

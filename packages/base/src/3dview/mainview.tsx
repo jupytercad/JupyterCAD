@@ -266,7 +266,11 @@ export class MainView extends React.Component<IProps, IStates> {
         this._onPointerMove.bind(this)
       );
       this._renderer.domElement.addEventListener('mouseup', e => {
-        this._onClick.bind(this)(e);
+        if (!this._disabledNextClick) {
+          this._onClick(e);
+        }
+
+        this._disabledNextClick = false;
       });
 
       this._renderer.domElement.addEventListener('contextmenu', e => {
@@ -276,24 +280,35 @@ export class MainView extends React.Component<IProps, IStates> {
       });
 
       document.addEventListener('keydown', e => {
-        this._onKeyDown.bind(this)(e);
+        this._onKeyDown(e);
       });
 
-      const controls = new OrbitControls(
+      this._controls = new OrbitControls(
         this._camera,
         this._renderer.domElement
       );
 
-      controls.target.set(
+      this._controls.target.set(
         this._scene.position.x,
         this._scene.position.y,
         this._scene.position.z
       );
-      this._controls = controls;
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.15;
+      this._controls.enableDamping = true;
+      this._controls.dampingFactor = 0.15;
 
+      this._controls.addEventListener('start', () => {
+        this._hasOrbited = false;
+      });
+      this._controls.addEventListener('end', () => {
+        // This "change" event here happens before the "mouseup" event on the renderer,
+        // we need to disable that next "mouseup" event that's coming to not deselect
+        // any currently selected mesh un-intentionally
+        if (this._hasOrbited) {
+          this._disabledNextClick = true;
+        }
+      });
       this._controls.addEventListener('change', () => {
+        this._hasOrbited = true;
         this._updateAnnotation();
       });
       this._controls.addEventListener(
@@ -359,11 +374,24 @@ export class MainView extends React.Component<IProps, IStates> {
 
       // Update the clipping plane whenever the transform UI move
       this._transformControls.addEventListener('change', () => {
-        const normal = new THREE.Vector3(0, 0, 1);
+        let normal = new THREE.Vector3(0, 0, 1);
+        normal = normal.applyEuler(this._clippingPlaneMeshControl.rotation);
+
+        // This is to prevent z-fighting
+        // We can't use the WebGL polygonOffset because of the logarithmic depth buffer
+        // Long term, when using the new WebGPURenderer, we could update the formula of the
+        // logarithmic depth computation to emulate the polygonOffset in the shaders directly
+        // refLength divided by 1000 looks like it's working fine to emulate a polygonOffset for now
+        const translation = this._refLength ? 0.001 * this._refLength : 0;
 
         this._clippingPlane.setFromNormalAndCoplanarPoint(
-          normal.applyEuler(this._clippingPlaneMeshControl.rotation),
+          normal,
           this._clippingPlaneMeshControl.position
+        );
+        this._clippingPlane.translate(
+          normal.multiply(
+            new THREE.Vector3(translation, translation, translation)
+          )
         );
       });
       this._transformControls.attach(this._clippingPlaneMeshControl);
@@ -632,6 +660,9 @@ export class MainView extends React.Component<IProps, IStates> {
       }
       this._updateSelected(newSelection);
       this._model.syncSelected(newSelection, this._mainViewModel.id);
+    } else {
+      this._updateSelected({});
+      this._model.syncSelected({}, this._mainViewModel.id);
     }
   }
 
@@ -1469,9 +1500,7 @@ export class MainView extends React.Component<IProps, IStates> {
         width / -2,
         width / 2,
         height / 2,
-        height / -2,
-        CAMERA_NEAR,
-        CAMERA_FAR
+        height / -2
       );
       this._camera.zoom = zoomFactor;
       this._camera.updateProjectionMatrix();
@@ -1485,6 +1514,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._camera.position.copy(position);
     this._camera.up.copy(up);
+
+    this._transformControls.camera = this._camera;
 
     const resizeEvent = new Event('resize');
     window.dispatchEvent(resizeEvent);
@@ -1640,6 +1671,8 @@ export class MainView extends React.Component<IProps, IStates> {
   private _refLength: number | null = null; // Length of bounding box of current object
   private _sceneAxe: THREE.Object3D | null; // Array of  X, Y and Z axe
   private _controls: OrbitControls; // Mouse controls
+  private _hasOrbited = false; // Whether the last orbit control run has actually orbited
+  private _disabledNextClick = false; // We set this when we stop orbiting, to prevent the next click event
   private _transformControls: TransformControls; // Mesh position/rotation controls
   private _pointer3D: IPointer | null = null;
   private _clock: THREE.Clock;
