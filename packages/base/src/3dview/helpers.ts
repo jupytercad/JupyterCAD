@@ -114,13 +114,15 @@ export function buildShape(options: {
   clippingPlanes: THREE.Plane[];
   selected: boolean;
   isSolid: boolean;
+  isWireframe: boolean;
   objColor?: THREE.Color | string | number;
 }): {
   meshGroup: THREE.Group;
   mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
   edgesMeshes: LineSegments2[];
 } | null {
-  const { objName, data, isSolid, clippingPlanes, objColor } = options;
+  const { objName, data, isSolid, isWireframe, clippingPlanes, objColor } =
+    options;
   const { faceList, edgeList, jcObject } = data;
 
   const vertices: Array<number> = [];
@@ -158,7 +160,7 @@ export function buildShape(options: {
   // it's too bad Three.js does not easily allow setting uniforms independently per-mesh
   const material = new THREE.MeshStandardMaterial({
     color: new THREE.Color(color),
-    wireframe: false,
+    wireframe: isWireframe,
     flatShading: false,
     clippingPlanes,
     metalness: 0.5,
