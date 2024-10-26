@@ -1120,11 +1120,15 @@ export class MainView extends React.Component<IProps, IStates> {
 
       const updatedPosition = new THREE.Vector3();
       updatedObject.getWorldPosition(updatedPosition);
-  
+
       const obj = this._model.sharedModel.getObjectByName(objectName);
 
       if (obj && obj.parameters && obj.parameters.Placement) {
-        const newPosition = [updatedPosition.x, updatedPosition.y, updatedPosition.z];
+        const newPosition = [
+          updatedPosition.x,
+          updatedPosition.y,
+          updatedPosition.z
+        ];
 
         this._model.sharedModel.updateObjectByName(objectName, {
           data: {
@@ -1139,8 +1143,7 @@ export class MainView extends React.Component<IProps, IStates> {
           }
         });
       }
-    }
-   );
+    });
   }
 
   private _onSharedMetadataChanged = (
