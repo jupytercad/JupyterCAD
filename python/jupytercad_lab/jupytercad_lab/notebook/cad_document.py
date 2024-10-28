@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Optional, Union
 from pycrdt import Array, Doc, Map
 from pydantic import BaseModel
 from ypywidgets.comm import CommWidget
+from copy import deepcopy
 
 from .objects._schema.any import IAny
 from uuid import uuid4
@@ -726,6 +727,15 @@ class CadDocument(CommWidget):
             raise RuntimeError(f"No object named {name}")
 
         obj["visible"] = value
+
+    def set_color(self, name: str, value: str):
+        obj: Optional[Map] = self._get_yobject_by_name(name)
+
+        if obj is None:
+            raise RuntimeError(f"No object named {name}")
+        parameters = obj.get("parameters")
+        parameters["Color"] = value
+        obj["parameters"] = parameters
 
     def check_exist(self, name: str) -> bool:
         if self.objects:
