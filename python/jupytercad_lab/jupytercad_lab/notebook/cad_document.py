@@ -725,7 +725,7 @@ class CadDocument(CommWidget):
         if obj is None:
             raise RuntimeError(f"No object named {name}")
 
-        obj["visible"] = False
+        obj["visible"] = value
 
     def check_exist(self, name: str) -> bool:
         if self.objects:
