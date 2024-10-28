@@ -9,7 +9,6 @@ from typing import Any, Dict, List, Optional, Union
 from pycrdt import Array, Doc, Map
 from pydantic import BaseModel
 from ypywidgets.comm import CommWidget
-from copy import deepcopy
 
 from .objects._schema.any import IAny
 from uuid import uuid4
