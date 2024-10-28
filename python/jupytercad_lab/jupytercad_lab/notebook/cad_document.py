@@ -94,7 +94,7 @@ class CadDocument(CommWidget):
         if self.check_exist(name):
             data = self._get_yobject_by_name(name).to_py()
             return OBJECT_FACTORY.create_object(data, self)
-        
+
     def _get_color(self, shape_id: str | int) -> str:
         """
         Retrieve the color of a shape by its name or index.
@@ -103,13 +103,12 @@ class CadDocument(CommWidget):
         :return: The color of the shape in hex format.
         """
         shape = self.get_object(shape_id)
-        if hasattr(shape, 'parameters') and hasattr(shape.parameters, 'Color'):
+        if hasattr(shape, "parameters") and hasattr(shape.parameters, "Color"):
             color = shape.parameters.Color
             print(color)
             return color
         else:
             return "#808080"
-
 
     def remove(self, name: str) -> CadDocument:
         index = self._get_yobject_index_by_name(name)
@@ -502,9 +501,9 @@ class CadDocument(CommWidget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """ # noqa E501
+        """  # noqa E501
         base, tool = self._get_boolean_operands(base, tool)
- 
+
         # Use specified color or fall back to the base object's color
         if color is None:
             color = self._get_color(base)
@@ -523,7 +522,6 @@ class CadDocument(CommWidget):
         self.set_visible(base, False)
         self.set_visible(tool, False)
         return self.add_object(OBJECT_FACTORY.create_object(data, self))
-
 
     def fuse(
         self,
