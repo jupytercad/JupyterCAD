@@ -105,7 +105,6 @@ class CadDocument(CommWidget):
         shape = self.get_object(shape_id)
         if hasattr(shape, "parameters") and hasattr(shape.parameters, "Color"):
             color = shape.parameters.Color
-            print(color)
             return color
         else:
             return "#808080"
