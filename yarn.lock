@@ -854,7 +854,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupytercad/base@^3.0.0-alpha.4, @jupytercad/base@workspace:packages/base":
+"@jupytercad/base@^3.0.0-alpha.5, @jupytercad/base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@jupytercad/base@workspace:packages/base"
   dependencies:
@@ -862,8 +862,8 @@ __metadata:
     "@deathbeds/jupyterlab-rjsf": ^1.1.0
     "@jupyter/collaborative-drive": ^3.0.0
     "@jupyter/ydoc": ^3.0.0
-    "@jupytercad/occ-worker": ^3.0.0-alpha.4
-    "@jupytercad/schema": ^3.0.0-alpha.4
+    "@jupytercad/occ-worker": ^3.0.0-alpha.5
+    "@jupytercad/schema": ^3.0.0-alpha.5
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/completer": ^4.2.4
@@ -907,8 +907,8 @@ __metadata:
     "@jupyter/collaborative-drive": ^3.0.0
     "@jupyter/docprovider": ^3.0.0
     "@jupyter/ydoc": ^3.0.0
-    "@jupytercad/base": ^3.0.0-alpha.4
-    "@jupytercad/schema": ^3.0.0-alpha.4
+    "@jupytercad/base": ^3.0.0-alpha.5
+    "@jupytercad/schema": ^3.0.0-alpha.5
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/application-extension": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -970,14 +970,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-core@^3.0.0-alpha.4, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
+"@jupytercad/jupytercad-core@^3.0.0-alpha.5, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad_core"
   dependencies:
     "@jupyter/collaborative-drive": ^3.0.0
-    "@jupytercad/base": ^3.0.0-alpha.4
-    "@jupytercad/occ-worker": ^3.0.0-alpha.4
-    "@jupytercad/schema": ^3.0.0-alpha.4
+    "@jupytercad/base": ^3.0.0-alpha.5
+    "@jupytercad/occ-worker": ^3.0.0-alpha.5
+    "@jupytercad/schema": ^3.0.0-alpha.5
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1010,9 +1010,9 @@ __metadata:
   resolution: "@jupytercad/jupytercad-lab@workspace:python/jupytercad_lab"
   dependencies:
     "@jupyter/collaborative-drive": ^3.0.0
-    "@jupytercad/base": ^3.0.0-alpha.4
-    "@jupytercad/jupytercad-core": ^3.0.0-alpha.4
-    "@jupytercad/schema": ^3.0.0-alpha.4
+    "@jupytercad/base": ^3.0.0-alpha.5
+    "@jupytercad/jupytercad-core": ^3.0.0-alpha.5
+    "@jupytercad/schema": ^3.0.0-alpha.5
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -1061,12 +1061,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/occ-worker@^3.0.0-alpha.4, @jupytercad/occ-worker@workspace:packages/occ-worker":
+"@jupytercad/occ-worker@^3.0.0-alpha.5, @jupytercad/occ-worker@workspace:packages/occ-worker":
   version: 0.0.0-use.local
   resolution: "@jupytercad/occ-worker@workspace:packages/occ-worker"
   dependencies:
-    "@jupytercad/opencascade": ^3.0.0-alpha.4
-    "@jupytercad/schema": ^3.0.0-alpha.4
+    "@jupytercad/opencascade": ^3.0.0-alpha.5
+    "@jupytercad/schema": ^3.0.0-alpha.5
     "@lumino/coreutils": ^2.0.0
     "@types/node": ^18.15.11
     copy-webpack-plugin: ^10.0.0
@@ -1082,7 +1082,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/opencascade@^3.0.0-alpha.4, @jupytercad/opencascade@workspace:packages/opencascade":
+"@jupytercad/opencascade@^3.0.0-alpha.5, @jupytercad/opencascade@workspace:packages/opencascade":
   version: 0.0.0-use.local
   resolution: "@jupytercad/opencascade@workspace:packages/opencascade"
   dependencies:
@@ -1094,7 +1094,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/schema@^3.0.0-alpha.4, @jupytercad/schema@workspace:packages/schema":
+"@jupytercad/schema@^3.0.0-alpha.5, @jupytercad/schema@workspace:packages/schema":
   version: 0.0.0-use.local
   resolution: "@jupytercad/schema@workspace:packages/schema"
   dependencies:
@@ -8851,9 +8851,9 @@ __metadata:
   linkType: hard
 
 "memoize-one@npm:^4.0.0":
-  version: 4.0.3
-  resolution: "memoize-one@npm:4.0.3"
-  checksum: addd18c046542f57440ba70bf8ebd48663d17626cade681f777522ef70900a87ec72c5041bed8ece4f6d40a2cb58803bae388b50a4b740d64f36bcda20c147b7
+  version: 4.1.0
+  resolution: "memoize-one@npm:4.1.0"
+  checksum: 5a0c5a0795c4af01649797dc7a417d441edda6e5933510aebd47b57a1ea84d31c42092aee03b0d1d969c102b57d45ba673b593228cd507c82e577a69847dfbae
   languageName: node
   linkType: hard
 
@@ -12499,7 +12499,7 @@ __metadata:
 
 "typescript@patch:typescript@>=3 < 6#~builtin<compat/typescript>, typescript@patch:typescript@^5#~builtin<compat/typescript>":
   version: 5.6.3
-  resolution: "typescript@patch:typescript@npm%3A5.6.3#~builtin<compat/typescript>::version=5.6.3&hash=e012d7"
+  resolution: "typescript@patch:typescript@npm%3A5.6.3#~builtin<compat/typescript>::version=5.6.3&hash=85af82"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
