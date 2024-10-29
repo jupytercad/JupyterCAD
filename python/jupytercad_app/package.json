@@ -54,7 +54,7 @@
     "@jupyter/collaboration": "^3.0.0-rc.1",
     "@jupyter/collaborative-drive": "^3.0.0-rc.1",
     "@jupyter/docprovider": "^3.0.0-rc.1",
-    "@jupyter/ydoc": "^3.0.0-b0",
+    "@jupyter/ydoc": "^3.0.0",
     "@jupytercad/base": "^3.0.0-alpha.4",
     "@jupytercad/schema": "^3.0.0-alpha.4",
     "@jupyterlab/application": "^4.0.0",
