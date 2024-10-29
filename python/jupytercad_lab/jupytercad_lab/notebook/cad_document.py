@@ -732,7 +732,7 @@ class CadDocument(CommWidget):
 
         if obj is None:
             raise RuntimeError(f"No object named {name}")
-        parameters = obj.get("parameters")
+        parameters = obj.get("parameters", {})
         parameters["Color"] = value
         obj["parameters"] = parameters
 
