@@ -1032,11 +1032,14 @@ export class MainView extends React.Component<IProps, IStates> {
         selectedMesh.material.color = originalColor;
       }
 
-      const groupBoundingBox = this._meshGroup?.getObjectByName(
+      const parentGroup = this._meshGroup?.getObjectByName(
+        selectedMesh.name
+      )?.parent;
+      const boundingBox = parentGroup?.getObjectByName(
         SELECTION_BOUNDING_BOX
-      );
-      if (groupBoundingBox) {
-        this._meshGroup?.remove(groupBoundingBox);
+      ) as THREE.Mesh;
+      if (boundingBox) {
+        boundingBox.visible = false;
       }
 
       const material = selectedMesh.material as THREE.Material & {
@@ -1055,6 +1058,10 @@ export class MainView extends React.Component<IProps, IStates> {
       ) as BasicMesh;
 
       if (!selectedMesh) {
+        continue;
+      }
+
+      if (!selectedMesh.visible) {
         continue;
       }
 
@@ -1080,29 +1087,16 @@ export class MainView extends React.Component<IProps, IStates> {
         // Highlight non-edges using a bounding box
         this._selectedMeshes.push(selectedMesh);
 
-        // Create and add bounding box
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.LineBasicMaterial({
-          color: BOUNDING_BOX_COLOR,
-          depthTest: false
-        });
-        const boundingBox = new THREE.LineSegments(
-          new THREE.EdgesGeometry(geometry),
-          material
-        );
-        boundingBox.name = SELECTION_BOUNDING_BOX;
+        const parentGroup = this._meshGroup?.getObjectByName(
+          selectedMesh.name
+        )?.parent;
+        const boundingBox = parentGroup?.getObjectByName(
+          SELECTION_BOUNDING_BOX
+        ) as THREE.Mesh;
 
-        // Set the bounding box size and position
-        const bbox = new THREE.Box3().setFromObject(selectedMesh);
-        const size = new THREE.Vector3();
-        bbox.getSize(size);
-        boundingBox.scale.copy(size);
-
-        const center = new THREE.Vector3();
-        bbox.getCenter(center);
-        boundingBox.position.copy(center);
-
-        this._meshGroup?.add(boundingBox);
+        if (boundingBox) {
+          boundingBox.visible = true;
+        }
       }
     }
   }

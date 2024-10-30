@@ -251,6 +251,21 @@ export function buildShape(options: {
     edgeIdx++;
   }
 
+  const bbox = new THREE.Box3().setFromObject(mainMesh);
+  const size = new THREE.Vector3();
+  bbox.getSize(size);
+  const center = new THREE.Vector3();
+  bbox.getCenter(center);
+
+  const boundingBox = new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.BoxGeometry(size.x, size.y, size.z)),
+    new THREE.LineBasicMaterial({ color: BOUNDING_BOX_COLOR, depthTest: false })
+  );
+  boundingBox.position.copy(center);
+  boundingBox.visible = false;
+  boundingBox.name = SELECTION_BOUNDING_BOX;
+  meshGroup.add(boundingBox);
+
   meshGroup.add(mainMesh);
 
   return { meshGroup, mainMesh, edgesMeshes };
