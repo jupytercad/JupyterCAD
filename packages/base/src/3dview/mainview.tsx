@@ -1062,7 +1062,6 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       if (!selectedMesh.visible) {
-        // Skip bounding box creation if the mesh is not visible
         continue;
       }
 
