@@ -1,16 +1,15 @@
 import {
-  IJCadFormSchemaRegistry,
-  IJupyterCadClientState,
-  IJupyterCadModel,
+  IAnnotationModel,
   IJupyterCadTracker,
-  ISelection,
   JupyterCadDoc
 } from '@jupytercad/schema';
 import { SidePanel } from '@jupyterlab/ui-components';
 
 import { IControlPanelModel } from '../types';
+import { Annotations } from './annotations';
 import { ControlPanelHeader } from './header';
-import { ObjectProperties } from './objectproperties';
+import { SuggestionPanel } from '../suggestion/suggestionpanel';
+import { SuggestionModel } from '../suggestion/model';
 
 export class RightPanelWidget extends SidePanel {
   constructor(options: RightPanelWidget.IOptions) {
@@ -19,72 +18,38 @@ export class RightPanelWidget extends SidePanel {
     this.addClass('data-jcad-keybinding');
     this.node.tabIndex = 0;
     this._model = options.model;
+    this._annotationModel = options.annotationModel;
+
     const header = new ControlPanelHeader();
     this.header.addWidget(header);
-    const properties = new ObjectProperties({
-      controlPanelModel: this._model,
-      formSchemaRegistry: options.formSchemaRegistry,
+
+    const annotations = new Annotations({ model: this._annotationModel });
+    this.addWidget(annotations);
+
+    const suggestionModel = new SuggestionModel({
+      sharedModel: this._model?.sharedModel,
+      title: '',
       tracker: options.tracker
     });
+    const suggestion = new SuggestionPanel({ model: suggestionModel });
+    this.addWidget(suggestion);
 
-    const updateTitle = (
-      sender: IJupyterCadModel,
-      clients: Map<number, IJupyterCadClientState>
-    ) => {
-      const localState = sender.localState;
-      if (!localState) {
-        return;
-      }
-
-      let selection: { [key: string]: ISelection } = {};
-      if (localState.remoteUser) {
-        // We are in following mode.
-        // Sync selections from a remote user
-        const remoteState = clients.get(localState.remoteUser);
-
-        if (remoteState?.selected?.value) {
-          selection = remoteState?.selected?.value;
-        }
-      } else if (localState.selected?.value) {
-        selection = localState.selected.value;
-      }
-      const selectionNames = Object.keys(selection);
-      if (selectionNames.length === 1) {
-        const selected = selectionNames[0];
-        if (selected.startsWith('edge-') && selection[selected].parent) {
-          header.title.label = selection[selected].parent;
-        } else {
-          header.title.label = selected;
-        }
-      } else {
-        header.title.label = 'No selection';
-      }
-    };
-
-    let currentModel: IJupyterCadModel | undefined = undefined;
-    this.addWidget(properties);
-    this._model.documentChanged.connect((_, changed) => {
+    options.tracker.currentChanged.connect((_, changed) => {
       if (changed) {
-        if (currentModel) {
-          currentModel.clientStateChanged.disconnect(updateTitle);
-        }
-
-        if (changed.context.model.sharedModel.editable) {
-          currentModel = changed.context.model;
-          const clients = currentModel.sharedModel.awareness.getStates() as Map<
-            number,
-            IJupyterCadClientState
-          >;
-          updateTitle(currentModel, clients);
-          currentModel.clientStateChanged.connect(updateTitle);
-
-          properties.show();
-        } else {
-          header.title.label = `${changed.context.localPath} - Read Only`;
-          properties.hide();
-        }
+        header.title.label = changed.context.localPath;
+        this._annotationModel.context =
+          options.tracker.currentWidget?.context || undefined;
+        suggestionModel.switchContext({
+          title: changed.context.localPath,
+          sharedModel: changed.context?.model?.sharedModel
+        });
       } else {
         header.title.label = '-';
+        suggestionModel.switchContext({
+          title: '',
+          sharedModel: undefined
+        });
+        this._annotationModel.context = undefined;
       }
     });
   }
@@ -93,13 +58,14 @@ export class RightPanelWidget extends SidePanel {
     super.dispose();
   }
   private _model: IControlPanelModel;
+  private _annotationModel: IAnnotationModel;
 }
 
 export namespace RightPanelWidget {
   export interface IOptions {
     model: IControlPanelModel;
     tracker: IJupyterCadTracker;
-    formSchemaRegistry: IJCadFormSchemaRegistry;
+    annotationModel: IAnnotationModel;
   }
   export interface IProps {
     filePath?: string;

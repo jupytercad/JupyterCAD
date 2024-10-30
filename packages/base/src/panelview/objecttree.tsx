@@ -40,7 +40,7 @@ const visibilityOffIcon = new LabIcon({
   svgstr: visibilityOffSvg
 });
 
-const TREE_THEMES: ThemeSettings = {
+export const TREE_THEMES: ThemeSettings = {
   labTheme: {
     text: {
       fontSize: '14px',
