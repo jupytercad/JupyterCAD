@@ -8,8 +8,6 @@ import { SidePanel } from '@jupyterlab/ui-components';
 import { IControlPanelModel } from '../types';
 import { Annotations } from './annotations';
 import { ControlPanelHeader } from './header';
-import { SuggestionPanel } from '../suggestion/suggestionpanel';
-import { SuggestionModel } from '../suggestion/model';
 
 export class RightPanelWidget extends SidePanel {
   constructor(options: RightPanelWidget.IOptions) {
@@ -26,32 +24,20 @@ export class RightPanelWidget extends SidePanel {
     const annotations = new Annotations({ model: this._annotationModel });
     this.addWidget(annotations);
 
-    const suggestionModel = new SuggestionModel({
-      sharedModel: this._model?.sharedModel,
-      title: '',
-      tracker: options.tracker
-    });
-    const suggestion = new SuggestionPanel({ model: suggestionModel });
-    this.addWidget(suggestion);
-
     options.tracker.currentChanged.connect((_, changed) => {
       if (changed) {
         header.title.label = changed.context.localPath;
         this._annotationModel.context =
           options.tracker.currentWidget?.context || undefined;
-        suggestionModel.switchContext({
-          title: changed.context.localPath,
-          sharedModel: changed.context?.model?.sharedModel
-        });
       } else {
         header.title.label = '-';
-        suggestionModel.switchContext({
-          title: '',
-          sharedModel: undefined
-        });
         this._annotationModel.context = undefined;
       }
     });
+  }
+
+  get model(): IControlPanelModel {
+    return this._model;
   }
 
   dispose(): void {
