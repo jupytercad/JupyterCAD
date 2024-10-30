@@ -345,7 +345,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     }
 
     return (
-      <div className="jpcad-treeview-wrapper" tabIndex={0}>
+      <div className="jpcad-treeview-wrapper jp-scrollbar-tiny" tabIndex={0}>
         <ReactTree
           multiSelect={true}
           nodes={data}
@@ -393,7 +393,9 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
 
             return (
               <div
-                className={`jpcad-control-panel-tree ${opts.selected ? 'selected' : ''}`}
+                className={`jpcad-control-panel-tree ${
+                  opts.selected ? 'selected' : ''
+                }`}
                 onClick={() => this.handleNodeClick(opts.node.id as string)}
               >
                 <div

@@ -89,11 +89,11 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     formSchemaRegistry: IJCadFormSchemaRegistry
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
-
+    console.log('annotationModel', annotationModel);
     const leftControlPanel = new LeftPanelWidget({
       model: controlModel,
-      annotationModel,
-      tracker
+      tracker,
+      formSchemaRegistry
     });
     leftControlPanel.id = 'jupytercad::leftControlPanel';
     leftControlPanel.title.caption = 'JupyterCad Control Panel';
@@ -113,7 +113,7 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
       restorer.add(rightControlPanel, NAME_SPACE);
     }
     app.shell.add(leftControlPanel, 'left', { rank: 2000 });
-    app.shell.add(rightControlPanel, 'right', { rank: 2000 });
+    app.shell.add(rightControlPanel, 'right', { rank: 2000, activate: false });
   }
 };
 

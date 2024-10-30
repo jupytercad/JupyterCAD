@@ -1,14 +1,17 @@
 import {
-  IAnnotationModel,
   JupyterCadDoc,
-  IJupyterCadTracker
+  IJupyterCadTracker,
+  IJCadFormSchemaRegistry
+  // IJupyterCadModel,
+  // IJupyterCadClientState
 } from '@jupytercad/schema';
 import { SidePanel } from '@jupyterlab/ui-components';
 
 import { IControlPanelModel } from '../types';
-import { Annotations } from './annotations';
 import { ControlPanelHeader } from './header';
 import { ObjectTree } from './objecttree';
+import { ObjectProperties } from './objectproperties';
+import { AccordionPanel } from '@lumino/widgets';
 
 export class LeftPanelWidget extends SidePanel {
   constructor(options: LeftPanelWidget.IOptions) {
@@ -17,26 +20,59 @@ export class LeftPanelWidget extends SidePanel {
     this.addClass('data-jcad-keybinding');
     this.node.tabIndex = 0;
     this._model = options.model;
-    this._annotationModel = options.annotationModel;
     const header = new ControlPanelHeader();
     this.header.addWidget(header);
 
     const tree = new ObjectTree({ controlPanelModel: this._model });
     this.addWidget(tree);
 
-    const annotations = new Annotations({ model: this._annotationModel });
-    this.addWidget(annotations);
+    const properties = new ObjectProperties({
+      controlPanelModel: this._model,
+      formSchemaRegistry: options.formSchemaRegistry,
+      tracker: options.tracker
+    });
+    this.addWidget(properties);
+
+    // const updateTitle = (
+    //   sender: IJupyterCadModel,
+    //   clients: Map<number, IJupyterCadClientState>
+    // ) => {
+    //   /* */
+    // };
+    // let currentModel: IJupyterCadModel | undefined = undefined;
+    // this._model.documentChanged.connect((_, changed) => {
+    //   if (changed) {
+    //     if (currentModel) {
+    //       currentModel.clientStateChanged.disconnect(updateTitle);
+    //     }
+
+    //     if (changed.context.model.sharedModel.editable) {
+    //       currentModel = changed.context.model;
+    //       const clients = currentModel.sharedModel.awareness.getStates() as Map<
+    //         number,
+    //         IJupyterCadClientState
+    //       >;
+    //       updateTitle(currentModel, clients);
+    //       currentModel.clientStateChanged.connect(updateTitle);
+
+    //       properties.show();
+    //     } else {
+    //       // header.title.label = `${changed.context.localPath} - Read Only`;
+    //       properties.hide();
+    //     }
+    //   } else {
+    //     // header.title.label = '-';
+    //   }
+    // });
 
     options.tracker.currentChanged.connect((_, changed) => {
       if (changed) {
         header.title.label = changed.context.localPath;
-        this._annotationModel.context =
-          options.tracker.currentWidget?.context || undefined;
       } else {
         header.title.label = '-';
-        this._annotationModel.context = undefined;
       }
     });
+    (this.content as AccordionPanel).setRelativeSizes([4, 6]);
   }
 
   dispose(): void {
@@ -44,14 +80,13 @@ export class LeftPanelWidget extends SidePanel {
   }
 
   private _model: IControlPanelModel;
-  private _annotationModel: IAnnotationModel;
 }
 
 export namespace LeftPanelWidget {
   export interface IOptions {
     model: IControlPanelModel;
-    annotationModel: IAnnotationModel;
     tracker: IJupyterCadTracker;
+    formSchemaRegistry: IJCadFormSchemaRegistry;
   }
 
   export interface IProps {

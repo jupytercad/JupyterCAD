@@ -6,7 +6,8 @@ import {
   IJupyterCadClientState,
   IJupyterCadDoc,
   IJupyterCadModel,
-  IJupyterCadTracker
+  IJupyterCadTracker,
+  ISelection
 } from '@jupytercad/schema';
 import { ReactWidget, showErrorMessage } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
@@ -26,16 +27,77 @@ import { JupyterCadWidget } from '../widget';
 export class ObjectProperties extends PanelWithToolbar {
   constructor(params: ObjectProperties.IOptions) {
     super(params);
+    const { controlPanelModel, formSchemaRegistry, tracker } = params;
     this.title.label = 'Objects Properties';
     const body = ReactWidget.create(
       <ObjectPropertiesReact
-        cpModel={params.controlPanelModel}
-        tracker={params.tracker}
-        formSchemaRegistry={params.formSchemaRegistry}
+        cpModel={controlPanelModel}
+        tracker={tracker}
+        formSchemaRegistry={formSchemaRegistry}
       />
     );
     this.addWidget(body);
     this.addClass('jpcad-sidebar-propertiespanel');
+
+    const updateTitle = (
+      sender: IJupyterCadModel,
+      clients: Map<number, IJupyterCadClientState>
+    ) => {
+      const localState = sender.localState;
+      if (!localState) {
+        return;
+      }
+
+      let selection: { [key: string]: ISelection } = {};
+      if (localState.remoteUser) {
+        // We are in following mode.
+        // Sync selections from a remote user
+        const remoteState = clients.get(localState.remoteUser);
+
+        if (remoteState?.selected?.value) {
+          selection = remoteState?.selected?.value;
+        }
+      } else if (localState.selected?.value) {
+        selection = localState.selected.value;
+      }
+      const selectionNames = Object.keys(selection);
+      if (selectionNames.length === 1) {
+        const selected = selectionNames[0];
+        if (selected.startsWith('edge-') && selection[selected].parent) {
+          this.title.label = selection[selected].parent;
+        } else {
+          this.title.label = selected;
+        }
+      } else {
+        this.title.label = 'No selection';
+      }
+    };
+
+    let currentModel: IJupyterCadModel | undefined = undefined;
+    controlPanelModel.documentChanged.connect((_, changed) => {
+      if (changed) {
+        if (currentModel) {
+          currentModel.clientStateChanged.disconnect(updateTitle);
+        }
+
+        if (changed.context.model.sharedModel.editable) {
+          currentModel = changed.context.model;
+          const clients = currentModel.sharedModel.awareness.getStates() as Map<
+            number,
+            IJupyterCadClientState
+          >;
+          updateTitle(currentModel, clients);
+          currentModel.clientStateChanged.connect(updateTitle);
+
+          body.show();
+        } else {
+          this.title.label = 'Read Only File';
+          body.hide();
+        }
+      } else {
+        this.title.label = '-';
+      }
+    });
   }
 }
 
