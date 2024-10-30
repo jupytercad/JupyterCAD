@@ -1,6 +1,6 @@
 {
   "name": "@jupytercad/jupytercad-root",
-  "version": "3.0.0-alpha.4",
+  "version": "3.0.0-alpha.5",
   "private": true,
   "homepage": "https://github.com/jupytercad/JupyterCAD",
   "repository": {
@@ -52,8 +52,8 @@
     "build:app": "lerna run --ignore @jupytercad/jupytercad-lab build"
   },
   "resolutions": {
-    "@jupyter/collaboration": "^3.0.0-rc.1",
-    "@jupyter/ydoc": "^3.0.0-b0",
+    "@jupyter/collaboration": "^3.0.0",
+    "@jupyter/ydoc": "^3.0.0",
     "@jupyterlab/apputils": "^4.0.0",
     "@lumino/coreutils": "^2.0.0",
     "@jupyterlab/notebook": "^4.0.0",
