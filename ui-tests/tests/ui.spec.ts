@@ -59,17 +59,13 @@ test.describe('UI Test', () => {
         await page.notebook.activate(fullPath);
         await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
         await page.waitForTimeout(1000);
+
         if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
           await page.getByRole('button', { name: 'Ok' }).click();
         }
-        await page
-          .getByRole('tablist', { name: 'main sidebar' })
-          .getByRole('tab', { name: 'JupyterCad Control Panel' })
-          .click();
-        await page
-          .getByRole('tablist', { name: 'alternate sidebar' })
-          .getByRole('tab', { name: 'JupyterCad Control Panel' })
-          .click();
+
+        await page.sidebar.close('left');
+        await page.sidebar.close('right');
         await page.waitForTimeout(1000);
         const main = await page.$('#jp-main-split-panel');
         expect(errors).toBe(0);
@@ -128,14 +124,8 @@ test.describe('UI Test', () => {
         })
         .click();
 
-      await page
-        .getByRole('tablist', { name: 'main sidebar' })
-        .getByRole('tab', { name: 'JupyterCad Control Panel' })
-        .click();
-      await page
-        .getByRole('tablist', { name: 'alternate sidebar' })
-        .getByRole('tab', { name: 'JupyterCad Control Panel' })
-        .click();
+      await page.sidebar.close('left');
+      await page.sidebar.close('right');
 
       await page.waitForTimeout(1000);
       expect(errors).toBe(0);
@@ -170,14 +160,8 @@ test.describe('UI Test', () => {
         await page.getByRole('button', { name: 'Ok' }).click();
       }
 
-      await page
-        .getByRole('tablist', { name: 'main sidebar' })
-        .getByRole('tab', { name: 'JupyterCad Control Panel' })
-        .click();
-      await page
-        .getByRole('tablist', { name: 'alternate sidebar' })
-        .getByRole('tab', { name: 'JupyterCad Control Panel' })
-        .click();
+      await page.sidebar.close('left');
+      await page.sidebar.close('right');
 
       await page.waitForTimeout(1000);
       expect(errors).toBe(0);
@@ -214,14 +198,8 @@ test.describe('UI Test', () => {
         .click();
 
       // Hide side bars for the screenshot
-      await page
-        .getByRole('tablist', { name: 'main sidebar' })
-        .getByRole('tab', { name: 'JupyterCad Control Panel' })
-        .click();
-      await page
-        .getByRole('tablist', { name: 'alternate sidebar' })
-        .getByRole('tab', { name: 'JupyterCad Control Panel' })
-        .click();
+      await page.sidebar.close('left');
+      await page.sidebar.close('right');
 
       await page.waitForTimeout(1000);
       expect(errors).toBe(0);
@@ -242,7 +220,7 @@ test.describe('UI Test', () => {
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
-
+      await page.sidebar.close('right');
       // Create a cone
       await page.getByTitle('New Cone').click();
       await page.getByLabel('Radius1').click();
@@ -356,8 +334,9 @@ test.describe('UI Test', () => {
   test.describe('Console activation test', () => {
     test('should open console', async ({ page }) => {
       await page.goto();
+      await page.sidebar.close('right');
+      await page.sidebar.close('left');
       await page.getByLabel('notebook content').getByText('CAD File').click();
-      await page.getByRole('button', { name: 'More commands' }).click();
       await page.getByRole('button', { name: 'Toggle console' }).click();
       await page.getByRole('button', { name: 'Remove console' });
       await page.getByRole('textbox').nth(1).click();
