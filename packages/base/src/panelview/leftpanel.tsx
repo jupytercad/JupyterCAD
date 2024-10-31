@@ -2,8 +2,6 @@ import {
   JupyterCadDoc,
   IJupyterCadTracker,
   IJCadFormSchemaRegistry
-  // IJupyterCadModel,
-  // IJupyterCadClientState
 } from '@jupytercad/schema';
 import { SidePanel } from '@jupyterlab/ui-components';
 
@@ -32,38 +30,6 @@ export class LeftPanelWidget extends SidePanel {
       tracker: options.tracker
     });
     this.addWidget(properties);
-
-    // const updateTitle = (
-    //   sender: IJupyterCadModel,
-    //   clients: Map<number, IJupyterCadClientState>
-    // ) => {
-    //   /* */
-    // };
-    // let currentModel: IJupyterCadModel | undefined = undefined;
-    // this._model.documentChanged.connect((_, changed) => {
-    //   if (changed) {
-    //     if (currentModel) {
-    //       currentModel.clientStateChanged.disconnect(updateTitle);
-    //     }
-
-    //     if (changed.context.model.sharedModel.editable) {
-    //       currentModel = changed.context.model;
-    //       const clients = currentModel.sharedModel.awareness.getStates() as Map<
-    //         number,
-    //         IJupyterCadClientState
-    //       >;
-    //       updateTitle(currentModel, clients);
-    //       currentModel.clientStateChanged.connect(updateTitle);
-
-    //       properties.show();
-    //     } else {
-    //       // header.title.label = `${changed.context.localPath} - Read Only`;
-    //       properties.hide();
-    //     }
-    //   } else {
-    //     // header.title.label = '-';
-    //   }
-    // });
 
     options.tracker.currentChanged.connect((_, changed) => {
       if (changed) {
