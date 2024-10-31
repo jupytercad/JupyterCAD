@@ -122,7 +122,6 @@ const activate = (
     );
     tracker.add(widget);
     app.shell.activateById('jupytercad::leftControlPanel');
-    app.shell.activateById('jupytercad::rightControlPanel');
   });
 
   app.commands.addCommand(CommandIDs.createNew, {
