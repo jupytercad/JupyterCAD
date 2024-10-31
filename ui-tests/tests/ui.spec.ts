@@ -294,6 +294,8 @@ test.describe('UI Test', () => {
             name: `JCAD-New.png`
           });
         }
+        await page.sidebar.open('left');
+        await page.waitForTimeout(500);
         await page.getByLabel('Length*').fill('0.5');
         await page.getByRole('button', { name: 'Submit' }).click();
         await page.waitForTimeout(500);
@@ -302,6 +304,7 @@ test.describe('UI Test', () => {
         await page.waitForTimeout(500);
         await page.getByLabel('Height*').fill('2');
         await page.getByRole('button', { name: 'Submit' }).click();
+        await page.sidebar.close('left');
         await page.waitForTimeout(500);
         if (main) {
           expect(await main.screenshot()).toMatchSnapshot({
