@@ -89,7 +89,6 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     formSchemaRegistry: IJCadFormSchemaRegistry
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
-    console.log('annotationModel', annotationModel);
     const leftControlPanel = new LeftPanelWidget({
       model: controlModel,
       tracker,
