@@ -708,6 +708,7 @@ export class MainView extends React.Component<IProps, IStates> {
       const selected = selectedNames.includes(objName);
       const obj = this._model.sharedModel.getObjectByName(objName);
       const objColor = obj?.parameters?.Color;
+      const isWireframe = this.state.wireframe;
 
       // TODO Have a more generic way to spot non-solid objects
       const isSolid = !(
@@ -720,6 +721,7 @@ export class MainView extends React.Component<IProps, IStates> {
         clippingPlanes: this._clippingPlanes,
         selected,
         isSolid,
+        isWireframe,
         objColor
       });
 
@@ -967,6 +969,12 @@ export class MainView extends React.Component<IProps, IStates> {
         this._objToMesh(objName, postResult as any);
       });
     }
+
+    const localState = this._model.localState;
+
+    if (localState?.selected?.value) {
+      this._updateSelected(localState.selected.value);
+    }
   }
 
   private _updatePointersScale(refLength): void {
@@ -1043,11 +1051,14 @@ export class MainView extends React.Component<IProps, IStates> {
         selectedMesh.material.color = originalColor;
       }
 
-      const groupBoundingBox = this._meshGroup?.getObjectByName(
+      const parentGroup = this._meshGroup?.getObjectByName(
+        selectedMesh.name
+      )?.parent;
+      const boundingBox = parentGroup?.getObjectByName(
         SELECTION_BOUNDING_BOX
-      );
-      if (groupBoundingBox) {
-        this._meshGroup?.remove(groupBoundingBox);
+      ) as THREE.Mesh;
+      if (boundingBox) {
+        boundingBox.visible = false;
       }
 
       const material = selectedMesh.material as THREE.Material & {
@@ -1069,6 +1080,10 @@ export class MainView extends React.Component<IProps, IStates> {
       ) as BasicMesh;
 
       if (!selectedMesh) {
+        continue;
+      }
+
+      if (!selectedMesh.visible) {
         continue;
       }
 
@@ -1094,52 +1109,16 @@ export class MainView extends React.Component<IProps, IStates> {
         // Highlight non-edges using a bounding box
         this._selectedMeshes.push(selectedMesh);
 
-        // Create and add bounding box
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.LineBasicMaterial({
-          color: BOUNDING_BOX_COLOR,
-          depthTest: false
-        });
-        const boundingBox = new THREE.LineSegments(
-          new THREE.EdgesGeometry(geometry),
-          material
-        );
-        boundingBox.name = SELECTION_BOUNDING_BOX;
+        const parentGroup = this._meshGroup?.getObjectByName(
+          selectedMesh.name
+        )?.parent;
+        const boundingBox = parentGroup?.getObjectByName(
+          SELECTION_BOUNDING_BOX
+        ) as THREE.Mesh;
 
-        // Set the bounding box size and position
-        const bbox = new THREE.Box3().setFromObject(selectedMesh);
-        const size = new THREE.Vector3();
-        bbox.getSize(size);
-        boundingBox.scale.copy(size);
-
-        const center = new THREE.Vector3();
-        bbox.getCenter(center);
-        boundingBox.position.copy(center);
-
-        this._meshGroup?.add(boundingBox);
-
-        const matchingChild = this._meshGroup?.children.find(child =>
-          child.name.startsWith(selectedMesh.name)
-        );
-
-        if (matchingChild) {
-          this._transformControls.attach(matchingChild as BasicMesh);
-
-          this._transformControls.position.copy(selectedMesh.position);
-
-          this._transformControls.visible = true;
-          this._transformControls.enabled = true;
+        if (boundingBox) {
+          boundingBox.visible = true;
         }
-        // if (this._selectedMeshes.length === 1) {
-        //   const selectedMesh = this._selectedMeshes[0];
-
-        //   const bbox = new THREE.Box3().setFromObject(selectedMesh);
-        //   const center = new THREE.Vector3();
-        //   bbox.getCenter(center);
-        //   console.log(center);
-
-        //   // this._transformControls.position.copy(center);
-        // }
       }
     }
   }

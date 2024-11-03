@@ -114,13 +114,15 @@ export function buildShape(options: {
   clippingPlanes: THREE.Plane[];
   selected: boolean;
   isSolid: boolean;
+  isWireframe: boolean;
   objColor?: THREE.Color | string | number;
 }): {
   meshGroup: THREE.Group;
   mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
   edgesMeshes: LineSegments2[];
 } | null {
-  const { objName, data, isSolid, clippingPlanes, objColor } = options;
+  const { objName, data, isSolid, isWireframe, clippingPlanes, objColor } =
+    options;
   const { faceList, edgeList, jcObject } = data;
 
   const vertices: Array<number> = [];
@@ -158,7 +160,7 @@ export function buildShape(options: {
   // it's too bad Three.js does not easily allow setting uniforms independently per-mesh
   const material = new THREE.MeshStandardMaterial({
     color: new THREE.Color(color),
-    wireframe: false,
+    wireframe: isWireframe,
     flatShading: false,
     clippingPlanes,
     metalness: 0.5,
@@ -257,6 +259,21 @@ export function buildShape(options: {
     meshGroup.add(edgesMesh);
     edgeIdx++;
   }
+
+  const bbox = new THREE.Box3().setFromObject(mainMesh);
+  const size = new THREE.Vector3();
+  bbox.getSize(size);
+  const center = new THREE.Vector3();
+  bbox.getCenter(center);
+
+  const boundingBox = new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.BoxGeometry(size.x, size.y, size.z)),
+    new THREE.LineBasicMaterial({ color: BOUNDING_BOX_COLOR, depthTest: false })
+  );
+  boundingBox.position.copy(center);
+  boundingBox.visible = false;
+  boundingBox.name = SELECTION_BOUNDING_BOX;
+  meshGroup.add(boundingBox);
 
   meshGroup.add(mainMesh);
   mainMesh.position.copy(center);

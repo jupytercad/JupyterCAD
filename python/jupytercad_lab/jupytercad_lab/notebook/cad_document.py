@@ -95,6 +95,20 @@ class CadDocument(CommWidget):
             data = self._get_yobject_by_name(name).to_py()
             return OBJECT_FACTORY.create_object(data, self)
 
+    def _get_color(self, shape_id: str | int) -> str:
+        """
+        Retrieve the color of a shape by its name or index.
+
+        :param shape_id: The name or index of the shape.
+        :return: The color of the shape in hex format.
+        """
+        shape = self.get_object(shape_id)
+        if hasattr(shape, "parameters") and hasattr(shape.parameters, "Color"):
+            color = shape.parameters.Color
+            return color
+        else:
+            return "#808080"
+
     def remove(self, name: str) -> CadDocument:
         index = self._get_yobject_index_by_name(name)
         if self._objects_array and index != -1:
@@ -252,6 +266,7 @@ class CadDocument(CommWidget):
         length: float = 1,
         width: float = 1,
         height: float = 1,
+        color: str = "#808080",
         position: List[float] = [0, 0, 0],
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
@@ -263,6 +278,7 @@ class CadDocument(CommWidget):
         :param length: The length of the box.
         :param width: The width of the box.
         :param height: The height of the box.
+        :param color: The color of the box in hex format (e.g., "#FF5733") or RGB float list.
         :param position: The shape 3D position.
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
@@ -275,6 +291,7 @@ class CadDocument(CommWidget):
                 "Length": length,
                 "Width": width,
                 "Height": height,
+                "Color": color,
                 "Placement": {
                     "Position": position,
                     "Axis": rotation_axis,
@@ -291,6 +308,7 @@ class CadDocument(CommWidget):
         radius2: float = 0.5,
         height: float = 1,
         angle: float = 360,
+        color: str = "#808080",
         position: List[float] = [0, 0, 0],
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
@@ -303,6 +321,7 @@ class CadDocument(CommWidget):
         :param radius2: The top radius of the cone.
         :param height: The height of the cone.
         :param angle: The revolution angle of the cone (0: no cone, 180: half cone, 360: full cone).
+        :param color: The color of the cone in hex format (e.g., "#FF5733") or RGB float list.
         :param position: The shape 3D position.
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
@@ -316,6 +335,7 @@ class CadDocument(CommWidget):
                 "Radius2": radius2,
                 "Height": height,
                 "Angle": angle,
+                "Color": color,
                 "Placement": {
                     "Position": position,
                     "Axis": rotation_axis,
@@ -331,6 +351,7 @@ class CadDocument(CommWidget):
         radius: float = 1,
         height: float = 1,
         angle: float = 360,
+        color: str = "#808080",
         position: List[float] = [0, 0, 0],
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
@@ -342,6 +363,7 @@ class CadDocument(CommWidget):
         :param radius: The radius of the cylinder.
         :param height: The height of the cylinder.
         :param angle: The revolution angle of the cylinder (0: no cylinder, 180: half cylinder, 360: full cylinder).
+        :param color: The color of the cylinder in hex format (e.g., "#FF5733") or RGB float list.
         :param position: The shape 3D position.
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
@@ -354,6 +376,7 @@ class CadDocument(CommWidget):
                 "Radius": radius,
                 "Height": height,
                 "Angle": angle,
+                "Color": color,
                 "Placement": {
                     "Position": position,
                     "Axis": rotation_axis,
@@ -370,6 +393,7 @@ class CadDocument(CommWidget):
         angle1: float = -90,
         angle2: float = 90,
         angle3: float = 360,
+        color: str = "#808080",
         position: List[float] = [0, 0, 0],
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
@@ -382,6 +406,7 @@ class CadDocument(CommWidget):
         :param angle1: The revolution angle of the sphere on the X axis (0: no sphere, 180: half sphere, 360: full sphere).
         :param angle2: The revolution angle of the sphere on the Y axis (0: no sphere, 180: half sphere, 360: full sphere).
         :param angle3: The revolution angle of the sphere on the Z axis (0: no sphere, 180: half sphere, 360: full sphere).
+        :param color: The color of the sphere in hex format (e.g., "#FF5733") or RGB float list.
         :param position: The shape 3D position.
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
@@ -395,6 +420,7 @@ class CadDocument(CommWidget):
                 "Angle1": angle1,
                 "Angle2": angle2,
                 "Angle3": angle3,
+                "Color": color,
                 "Placement": {
                     "Position": position,
                     "Axis": rotation_axis,
@@ -412,6 +438,7 @@ class CadDocument(CommWidget):
         angle1: float = -180,
         angle2: float = 180,
         angle3: float = 360,
+        color: str = "#808080",
         position: List[float] = [0, 0, 0],
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
@@ -425,6 +452,7 @@ class CadDocument(CommWidget):
         :param angle1: The revolution angle of the torus on the X axis (0: no torus, 180: half torus, 360: full torus).
         :param angle2: The revolution angle of the torus on the Y axis (0: no torus, 180: half torus, 360: full torus).
         :param angle3: The revolution angle of the torus on the Z axis (0: no torus, 180: half torus, 360: full torus).
+        :param color: The color of the torus in hex format (e.g., "#FF5733") or RGB float list.
         :param position: The shape 3D position.
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
@@ -439,6 +467,7 @@ class CadDocument(CommWidget):
                 "Angle1": angle1,
                 "Angle2": angle2,
                 "Angle3": angle3,
+                "Color": color,
                 "Placement": {
                     "Position": position,
                     "Axis": rotation_axis,
@@ -454,6 +483,7 @@ class CadDocument(CommWidget):
         base: str | int = None,
         tool: str | int = None,
         refine: bool = False,
+        color: Optional[str] = None,
         position: List[float] = [0, 0, 0],
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
@@ -465,12 +495,17 @@ class CadDocument(CommWidget):
         :param base: The base object that will be used for the cut. Can be the name of the object or its index in the objects list.
         :param tool: The tool object that will be used for the cut. Can be the name of the object or its index in the objects list.
         :param refine: Whether or not to refine the mesh during the cut computation.
+        :param color: The color in hex format (e.g., "#FF5733") or RGB float list. Defaults to the base object's color if None.
         :param position: The shape 3D position.
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
         """  # noqa E501
         base, tool = self._get_boolean_operands(base, tool)
+
+        # Use specified color or fall back to the base object's color
+        if color is None:
+            color = self._get_color(base)
 
         data = {
             "shape": Parts.Part__Cut.value,
@@ -479,6 +514,7 @@ class CadDocument(CommWidget):
                 "Base": base,
                 "Tool": tool,
                 "Refine": refine,
+                "Color": color,
                 "Placement": {"Position": [0, 0, 0], "Axis": [0, 0, 1], "Angle": 0},
             },
         }
@@ -492,6 +528,7 @@ class CadDocument(CommWidget):
         shape1: str | int = None,
         shape2: str | int = None,
         refine: bool = False,
+        color: Optional[str] = None,
         position: List[float] = [0, 0, 0],
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
@@ -503,12 +540,17 @@ class CadDocument(CommWidget):
         :param shape1: The first object used for the union. Can be the name of the object or its index in the objects list.
         :param shape2: The first object used for the union. Can be the name of the object or its index in the objects list.
         :param refine: Whether or not to refine the mesh during the union computation.
+        :param color: The color in hex format (e.g., "#FF5733") or RGB float list. Defaults to the base object's color if None.
         :param position: The shape 3D position.
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
         """  # noqa E501
         shape1, shape2 = self._get_boolean_operands(shape1, shape2)
+
+        # Use specified color or fall back to the base object's color
+        if color is None:
+            color = self._get_color(shape1)
 
         data = {
             "shape": Parts.Part__MultiFuse.value,
@@ -529,6 +571,7 @@ class CadDocument(CommWidget):
         shape1: str | int = None,
         shape2: str | int = None,
         refine: bool = False,
+        color: Optional[str] = None,
         position: List[float] = [0, 0, 0],
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
@@ -541,12 +584,17 @@ class CadDocument(CommWidget):
         :param shape1: The first object used for the intersection. Can be the name of the object or its index in the objects list.
         :param shape2: The first object used for the intersection. Can be the name of the object or its index in the objects list.
         :param refine: Whether or not to refine the mesh during the intersection computation.
+        :param color: The color in hex format (e.g., "#FF5733") or RGB float list. Defaults to the base object's color if None.
         :param position: The shape 3D position.
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
         """  # noqa E501
         shape1, shape2 = self._get_boolean_operands(shape1, shape2)
+
+        # Use specified color or fall back to the base object's color
+        if color is None:
+            color = self._get_color(shape1)
 
         data = {
             "shape": Parts.Part__MultiCommon.value,
@@ -567,6 +615,7 @@ class CadDocument(CommWidget):
         shape: str | int = None,
         edge: int = 0,
         dist: float = 0.1,
+        color: Optional[str] = None,
         position: List[float] = [0, 0, 0],
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
@@ -579,12 +628,17 @@ class CadDocument(CommWidget):
         :param shape: The input object used for the chamfer. Can be the name of the object or its index in the objects list.
         :param edge: The edge index where to apply chamfer.
         :param dist: The distance of the chamfer.
+        :param color: The color in hex format (e.g., "#FF5733") or RGB float list. Defaults to the base object's color if None.
         :param position: The shape 3D position.
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
         """  # noqa E501
         shape = self._get_operand(shape)
+
+        # Use specified color or fall back to the base object's color
+        if color is None:
+            color = self._get_color(shape)
 
         data = {
             "shape": Parts.Part__Chamfer.value,
@@ -605,6 +659,7 @@ class CadDocument(CommWidget):
         shape: str | int = None,
         edge: int = 0,
         radius: float = 0.1,
+        color: Optional[str] = None,
         position: List[float] = [0, 0, 0],
         rotation_axis: List[float] = [0, 0, 1],
         rotation_angle: float = 0,
@@ -617,12 +672,17 @@ class CadDocument(CommWidget):
         :param shape: The input object used for the fillet. Can be the name of the object or its index in the objects list.
         :param edge: The edge index where to apply fillet.
         :param radius: The radius of the fillet.
+        :param color: The color in hex format (e.g., "#FF5733") or RGB float list. Defaults to the base object's color if None.
         :param position: The shape 3D position.
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
         """  # noqa E501
         shape = self._get_operand(shape)
+
+        # Use specified color or fall back to the base object's color
+        if color is None:
+            color = self._get_color(shape)
 
         data = {
             "shape": Parts.Part__Fillet.value,
@@ -665,7 +725,16 @@ class CadDocument(CommWidget):
         if obj is None:
             raise RuntimeError(f"No object named {name}")
 
-        obj["visible"] = False
+        obj["visible"] = value
+
+    def set_color(self, name: str, value: str):
+        obj: Optional[Map] = self._get_yobject_by_name(name)
+
+        if obj is None:
+            raise RuntimeError(f"No object named {name}")
+        parameters = obj.get("parameters", {})
+        parameters["Color"] = value
+        obj["parameters"] = parameters
 
     def check_exist(self, name: str) -> bool:
         if self.objects:

@@ -21,6 +21,18 @@ import chamferIconStr from '../style/icon/chamfer.svg';
 import filletIconStr from '../style/icon/fillet.svg';
 import wireframeIconStr from '../style/icon/wireframe.svg';
 
+import visibilitySvg from '../style/icon/visibility.svg';
+import visibilityOffSvg from '../style/icon/visibilityOff.svg';
+
+export const visibilityIcon = new LabIcon({
+  name: 'jupytercad:visibilityIcon',
+  svgstr: visibilitySvg
+});
+export const visibilityOffIcon = new LabIcon({
+  name: 'jupytercad:visibilityOffIcon',
+  svgstr: visibilityOffSvg
+});
+
 export const logoIcon = new LabIcon({
   name: 'jupytercad:logo',
   svgstr: logoStr
