@@ -263,8 +263,6 @@ export function buildShape(options: {
   const bbox = new THREE.Box3().setFromObject(mainMesh);
   const size = new THREE.Vector3();
   bbox.getSize(size);
-  const center = new THREE.Vector3();
-  bbox.getCenter(center);
 
   const boundingBox = new THREE.LineSegments(
     new THREE.EdgesGeometry(new THREE.BoxGeometry(size.x, size.y, size.z)),
