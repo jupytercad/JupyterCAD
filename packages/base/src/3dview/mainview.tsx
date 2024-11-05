@@ -1531,7 +1531,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.visible = true;
       this._transformControls.attach(this._clippingPlaneMeshControl);
       this._transformControls.position.copy(
-        this._clippingPlaneMeshControl.position
+        new THREE.Vector3(0,0,0)
       );
       this._clippingPlaneMeshControl.visible = this._clipSettings.showClipPlane;
       if (this._clippingPlaneMesh) {
