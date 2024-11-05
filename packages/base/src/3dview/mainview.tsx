@@ -400,7 +400,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
       this._createViewHelper();
-        this._updateTransformControls();
+      this._updateTransformControls();
     }
   };
 
@@ -1062,7 +1062,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
       // Detach TransformControls from the previous selection
       if (!this._clipSettings.enabled) {
-        {this._transformControls.detach();}
+        {
+          this._transformControls.detach();
+        }
       }
     }
 
@@ -1528,7 +1530,9 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = true;
       this._transformControls.visible = true;
       this._transformControls.attach(this._clippingPlaneMeshControl);
-      this._transformControls.position.copy(this._clippingPlaneMeshControl.position);
+      this._transformControls.position.copy(
+        this._clippingPlaneMeshControl.position
+      );
       this._clippingPlaneMeshControl.visible = this._clipSettings.showClipPlane;
       if (this._clippingPlaneMesh) {
         this._clippingPlaneMesh.visible = true;
