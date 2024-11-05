@@ -400,7 +400,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
       this._createViewHelper();
-      this._updateTransformControls();
+        this._updateTransformControls();
     }
   };
 
@@ -1061,7 +1061,9 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       // Detach TransformControls from the previous selection
-      this._transformControls.detach();
+      if (!this._clipSettings.enabled) {
+        {this._transformControls.detach();}
+      }
     }
 
     // Set new selection
@@ -1114,7 +1116,7 @@ export class MainView extends React.Component<IProps, IStates> {
         const matchingChild = this._meshGroup?.children.find(child =>
           child.name.startsWith(selectedMesh.name)
         );
-        if (matchingChild) {
+        if (matchingChild && !this._clipSettings.enabled) {
           this._transformControls.attach(matchingChild as BasicMesh);
 
           const obj = this._model.sharedModel.getObjectByName(
@@ -1141,6 +1143,9 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _updateTransformControls() {
     this._transformControls.addEventListener('mouseUp', () => {
+      if (this._clipSettings.enabled) {
+        return;
+      }
       const updatedObject = this._selectedMeshes[0];
       const objectName = updatedObject.name;
 
@@ -1522,6 +1527,8 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.localClippingEnabled = true;
       this._transformControls.enabled = true;
       this._transformControls.visible = true;
+      this._transformControls.attach(this._clippingPlaneMeshControl);
+      this._transformControls.position.copy(this._clippingPlaneMeshControl.position);
       this._clippingPlaneMeshControl.visible = this._clipSettings.showClipPlane;
       if (this._clippingPlaneMesh) {
         this._clippingPlaneMesh.visible = true;
