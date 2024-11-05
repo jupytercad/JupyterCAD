@@ -1124,7 +1124,19 @@ export class MainView extends React.Component<IProps, IStates> {
         );
         if (matchingChild) {
           this._transformControls.attach(matchingChild as BasicMesh);
-          this._transformControls.position.copy(selectedMesh.position);
+
+          const obj = this._model.sharedModel.getObjectByName(selectedMesh.name);
+
+          const positionArray = obj?.parameters?.Placement?.Position;
+          if (positionArray && positionArray.length === 3) {
+            const positionVector = new THREE.Vector3(
+              positionArray[0],
+              positionArray[1],
+              positionArray[2]
+            );
+
+            this._transformControls.position.copy(positionVector);
+          }
           this._transformControls.visible = true;
           this._transformControls.enabled = true;
         }
@@ -1143,10 +1155,11 @@ export class MainView extends React.Component<IProps, IStates> {
       const obj = this._model.sharedModel.getObjectByName(objectName);
 
       if (obj && obj.parameters && obj.parameters.Placement) {
+        const positionArray = obj?.parameters?.Placement?.Position;
         const newPosition = [
-          updatedPosition.x,
-          updatedPosition.y,
-          updatedPosition.z
+          positionArray[0] + updatedPosition.x,
+          positionArray[1] + updatedPosition.y,
+          positionArray[2] + updatedPosition.z
         ];
 
         this._model.sharedModel.updateObjectByName(objectName, {
