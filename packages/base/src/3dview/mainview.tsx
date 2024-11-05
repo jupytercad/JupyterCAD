@@ -1125,7 +1125,9 @@ export class MainView extends React.Component<IProps, IStates> {
         if (matchingChild) {
           this._transformControls.attach(matchingChild as BasicMesh);
 
-          const obj = this._model.sharedModel.getObjectByName(selectedMesh.name);
+          const obj = this._model.sharedModel.getObjectByName(
+            selectedMesh.name
+          );
 
           const positionArray = obj?.parameters?.Placement?.Position;
           if (positionArray && positionArray.length === 3) {
