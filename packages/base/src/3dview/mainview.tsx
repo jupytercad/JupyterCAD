@@ -782,10 +782,8 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     });
 
-    // Update the reflength. We will update the camera position accordingly if there is a single object.
-    this._updateRefLength(
-      this._meshGroup.children.length === 1 || this._refLength === null
-    );
+    // Update the reflength.
+    this._updateRefLength(this._refLength === null);
     // Set the expoded view if it's enabled
     this._setupExplodedView();
 
