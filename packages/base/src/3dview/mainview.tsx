@@ -815,14 +815,6 @@ export class MainView extends React.Component<IProps, IStates> {
     this._scene.add(this._clippingPlaneMesh);
     this._scene.add(this._meshGroup);
 
-    // if (this._selectedMeshes.length === 1) {
-    //   const selectedMesh = this._selectedMeshes[0];
-
-    //   const bbox = new THREE.Box3().setFromObject(selectedMesh);
-    //   const center = new THREE.Vector3();
-    //   bbox.getCenter(center);
-    // }
-
     if (this._loadingTimeout) {
       clearTimeout(this._loadingTimeout);
       this._loadingTimeout = null;

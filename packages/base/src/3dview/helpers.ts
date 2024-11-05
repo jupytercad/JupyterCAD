@@ -267,7 +267,6 @@ export function buildShape(options: {
   meshGroup.add(boundingBox);
 
   meshGroup.add(mainMesh);
-  // mainMesh.position.copy(center);
 
   return { meshGroup, mainMesh, edgesMeshes };
 }
