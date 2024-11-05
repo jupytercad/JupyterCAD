@@ -1131,6 +1131,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
             this._transformControls.position.copy(positionVector);
           }
+          this._transformControls.setMode('translate');
           this._transformControls.visible = true;
           this._transformControls.enabled = true;
         }
