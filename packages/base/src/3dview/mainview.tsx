@@ -325,7 +325,7 @@ export class MainView extends React.Component<IProps, IStates> {
         endMousePosition.set(e.clientX, e.clientY);
         const distance = endMousePosition.distanceTo(startMousePosition);
 
-        if ( distance <= clickThreshold) {
+        if (distance !== 0 && distance <= clickThreshold) {
           this._onClick(e);
         } else if (this._disabledNextClick) {
           this._disabledNextClick = false;
