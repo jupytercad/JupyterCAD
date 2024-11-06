@@ -317,11 +317,11 @@ export class MainView extends React.Component<IProps, IStates> {
         this._updateAnnotation();
       });
 
-      this._renderer.domElement.addEventListener('mousedown', (e) => {
+      this._renderer.domElement.addEventListener('mousedown', e => {
         startMousePosition.set(e.clientX, e.clientY);
       });
 
-      this._renderer.domElement.addEventListener('mouseup', (e) => {
+      this._renderer.domElement.addEventListener('mouseup', e => {
         endMousePosition.set(e.clientX, e.clientY);
         const distance = endMousePosition.distanceTo(startMousePosition);
 
