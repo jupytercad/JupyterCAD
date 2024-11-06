@@ -355,8 +355,8 @@ export class MainView extends React.Component<IProps, IStates> {
         }, 100)
       );
 
-      // Setting up the transform controls
-      this._transformControls = new TransformControls(
+      // Setting up the clip plane transform controls
+      this._clipPlaneTransformControls = new TransformControls(
         this._camera,
         this._renderer.domElement
       );
@@ -389,12 +389,12 @@ export class MainView extends React.Component<IProps, IStates> {
       this._scene.add(this._clippingPlaneMeshControl);
 
       // Disable the orbit control whenever we do transformation
-      this._transformControls.addEventListener('dragging-changed', event => {
+      this._clipPlaneTransformControls.addEventListener('dragging-changed', event => {
         this._controls.enabled = !event.value;
       });
 
       // Update the clipping plane whenever the transform UI move
-      this._transformControls.addEventListener('change', () => {
+      this._clipPlaneTransformControls.addEventListener('change', () => {
         let normal = new THREE.Vector3(0, 0, 1);
         normal = normal.applyEuler(this._clippingPlaneMeshControl.rotation);
 
@@ -415,13 +415,59 @@ export class MainView extends React.Component<IProps, IStates> {
           )
         );
       });
-      this._transformControls.attach(this._clippingPlaneMeshControl);
-      this._scene.add(this._transformControls);
 
+      this._clipPlaneTransformControls.attach(this._clippingPlaneMeshControl);
+      this._scene.add(this._clipPlaneTransformControls);
+
+      this._clipPlaneTransformControls.enabled = false;
+      this._clipPlaneTransformControls.visible = false;
+
+      this._transformControls = new TransformControls(
+        this._camera,
+        this._renderer.domElement
+      );
+      // Disable the orbit control whenever we do transformation
+      this._transformControls.addEventListener('dragging-changed', event => {
+        this._controls.enabled = !event.value;
+      });
+      // Update the currently transformed object in the shared model once finished moving
+      this._transformControls.addEventListener('mouseUp', () => {
+        const updatedObject = this._selectedMeshes[0];
+        const objectName = updatedObject.name;
+
+        const updatedPosition = new THREE.Vector3();
+        updatedObject.getWorldPosition(updatedPosition);
+
+        const obj = this._model.sharedModel.getObjectByName(objectName);
+
+        if (obj && obj.parameters && obj.parameters.Placement) {
+          const positionArray = obj?.parameters?.Placement?.Position;
+          const newPosition = [
+            positionArray[0] + updatedPosition.x,
+            positionArray[1] + updatedPosition.y,
+            positionArray[2] + updatedPosition.z
+          ];
+
+          this._model.sharedModel.updateObjectByName(objectName, {
+            data: {
+              key: 'parameters',
+              value: {
+                ...obj.parameters,
+                Placement: {
+                  ...obj.parameters.Placement,
+                  Position: newPosition
+                }
+              }
+            }
+          });
+        }
+      });
+      this._scene.add(this._transformControls);
+      this._transformControls.setMode('translate');
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
+
       this._createViewHelper();
-      this._updateTransformControls();
     }
   };
 
@@ -701,10 +747,10 @@ export class MainView extends React.Component<IProps, IStates> {
           event.preventDefault();
           event.stopPropagation();
 
-          if (this._transformControls.mode === 'rotate') {
-            this._transformControls.setMode('translate');
+          if (this._clipPlaneTransformControls.mode === 'rotate') {
+            this._clipPlaneTransformControls.setMode('translate');
           } else {
-            this._transformControls.setMode('rotate');
+            this._clipPlaneTransformControls.setMode('rotate');
           }
           break;
       }
@@ -1086,11 +1132,7 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       // Detach TransformControls from the previous selection
-      if (!this._clipSettings.enabled) {
-        {
-          this._transformControls.detach();
-        }
-      }
+      this._transformControls.detach();
     }
 
     // Set new selection
@@ -1141,7 +1183,7 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     }
 
-    if (selectedNames.length === 1 && !this._clipSettings.enabled) {
+    if (selectedNames.length === 1) {
       const selectedMeshName = selectedNames[0];
       const matchingChild = this._meshGroup?.children.find(child =>
         child.name.startsWith(selectedMeshName)
@@ -1162,48 +1204,10 @@ export class MainView extends React.Component<IProps, IStates> {
           this._transformControls.position.copy(positionVector);
         }
 
-        this._transformControls.setMode('translate');
         this._transformControls.visible = true;
         this._transformControls.enabled = true;
       }
     }
-  }
-
-  private _updateTransformControls() {
-    this._transformControls.addEventListener('mouseUp', () => {
-      if (this._clipSettings.enabled) {
-        return;
-      }
-      const updatedObject = this._selectedMeshes[0];
-      const objectName = updatedObject.name;
-
-      const updatedPosition = new THREE.Vector3();
-      updatedObject.getWorldPosition(updatedPosition);
-
-      const obj = this._model.sharedModel.getObjectByName(objectName);
-
-      if (obj && obj.parameters && obj.parameters.Placement) {
-        const positionArray = obj?.parameters?.Placement?.Position;
-        const newPosition = [
-          positionArray[0] + updatedPosition.x,
-          positionArray[1] + updatedPosition.y,
-          positionArray[2] + updatedPosition.z
-        ];
-
-        this._model.sharedModel.updateObjectByName(objectName, {
-          data: {
-            key: 'parameters',
-            value: {
-              ...obj.parameters,
-              Placement: {
-                ...obj.parameters.Placement,
-                Position: newPosition
-              }
-            }
-          }
-        });
-      }
-    });
   }
 
   private _onSharedMetadataChanged = (
@@ -1545,6 +1549,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._camera.up.copy(up);
 
     this._transformControls.camera = this._camera;
+    this._clipPlaneTransformControls.camera = this._camera;
 
     const resizeEvent = new Event('resize');
     window.dispatchEvent(resizeEvent);
@@ -1553,18 +1558,18 @@ export class MainView extends React.Component<IProps, IStates> {
   private _updateClipping() {
     if (this._clipSettings.enabled) {
       this._renderer.localClippingEnabled = true;
-      this._transformControls.enabled = true;
-      this._transformControls.visible = true;
-      this._transformControls.attach(this._clippingPlaneMeshControl);
-      this._transformControls.position.copy(new THREE.Vector3(0, 0, 0));
+      this._clipPlaneTransformControls.enabled = true;
+      this._clipPlaneTransformControls.visible = true;
+      this._clipPlaneTransformControls.attach(this._clippingPlaneMeshControl);
+      this._clipPlaneTransformControls.position.copy(new THREE.Vector3(0, 0, 0));
       this._clippingPlaneMeshControl.visible = this._clipSettings.showClipPlane;
       if (this._clippingPlaneMesh) {
         this._clippingPlaneMesh.visible = true;
       }
     } else {
       this._renderer.localClippingEnabled = false;
-      this._transformControls.enabled = false;
-      this._transformControls.visible = false;
+      this._clipPlaneTransformControls.enabled = false;
+      this._clipPlaneTransformControls.visible = false;
       this._clippingPlaneMeshControl.visible = false;
       if (this._clippingPlaneMesh) {
         this._clippingPlaneMesh.visible = false;
@@ -1704,7 +1709,8 @@ export class MainView extends React.Component<IProps, IStates> {
   private _controls: OrbitControls; // Mouse controls
   private _hasOrbited = false; // Whether the last orbit control run has actually orbited
   private _disabledNextClick = false; // We set this when we stop orbiting, to prevent the next click event
-  private _transformControls: TransformControls; // Mesh position/rotation controls
+  private _clipPlaneTransformControls: TransformControls; // Clip plane position/rotation controls
+  private _transformControls: TransformControls; // Mesh position controls
   private _pointer3D: IPointer | null = null;
   private _clock: THREE.Clock;
   private _targetPosition: THREE.Vector3 | null = null;
