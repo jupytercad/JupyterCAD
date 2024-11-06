@@ -421,6 +421,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
       this._createViewHelper();
+      this._updateTransformControls();
     }
   };
 
@@ -832,6 +833,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._scene.add(this._clippingPlaneMesh);
     this._scene.add(this._meshGroup);
+
     if (this._loadingTimeout) {
       clearTimeout(this._loadingTimeout);
       this._loadingTimeout = null;
@@ -1038,7 +1040,16 @@ export class MainView extends React.Component<IProps, IStates> {
     return mesh;
   }
 
+  private _previousSelection: { [key: string]: ISelection } | null = null;
   private _updateSelected(selection: { [key: string]: ISelection }) {
+    const selectionChanged =
+      JSON.stringify(selection) !== JSON.stringify(this._previousSelection);
+
+    if (!selectionChanged) {
+      return;
+    }
+    this._previousSelection = { ...selection };
+
     // Reset original color and remove bounding boxes for old selection
     for (const selectedMesh of this._selectedMeshes) {
       let originalColor = selectedMesh.userData.originalColor;
@@ -1067,20 +1078,25 @@ export class MainView extends React.Component<IProps, IStates> {
       if (material?.linewidth) {
         material.linewidth = DEFAULT_LINEWIDTH;
       }
+
+      // Detach TransformControls from the previous selection
+      if (!this._clipSettings.enabled) {
+        {
+          this._transformControls.detach();
+        }
+      }
     }
 
     // Set new selection
     this._selectedMeshes = [];
-    for (const selectionName in selection) {
+    const selectedNames = Object.keys(selection);
+
+    for (const selectionName of selectedNames) {
       const selectedMesh = this._meshGroup?.getObjectByName(
         selectionName
       ) as BasicMesh;
 
-      if (!selectedMesh) {
-        continue;
-      }
-
-      if (!selectedMesh.visible) {
+      if (!selectedMesh || !selectedMesh.visible) {
         continue;
       }
 
@@ -1118,6 +1134,70 @@ export class MainView extends React.Component<IProps, IStates> {
         }
       }
     }
+
+    if (selectedNames.length === 1 && !this._clipSettings.enabled) {
+      const selectedMeshName = selectedNames[0];
+      const matchingChild = this._meshGroup?.children.find(child =>
+        child.name.startsWith(selectedMeshName)
+      );
+
+      if (matchingChild) {
+        this._transformControls.attach(matchingChild as BasicMesh);
+
+        const obj = this._model.sharedModel.getObjectByName(selectedMeshName);
+        const positionArray = obj?.parameters?.Placement?.Position;
+
+        if (positionArray && positionArray.length === 3) {
+          const positionVector = new THREE.Vector3(
+            positionArray[0],
+            positionArray[1],
+            positionArray[2]
+          );
+          this._transformControls.position.copy(positionVector);
+        }
+
+        this._transformControls.setMode('translate');
+        this._transformControls.visible = true;
+        this._transformControls.enabled = true;
+      }
+    }
+  }
+
+  private _updateTransformControls() {
+    this._transformControls.addEventListener('mouseUp', () => {
+      if (this._clipSettings.enabled) {
+        return;
+      }
+      const updatedObject = this._selectedMeshes[0];
+      const objectName = updatedObject.name;
+
+      const updatedPosition = new THREE.Vector3();
+      updatedObject.getWorldPosition(updatedPosition);
+
+      const obj = this._model.sharedModel.getObjectByName(objectName);
+
+      if (obj && obj.parameters && obj.parameters.Placement) {
+        const positionArray = obj?.parameters?.Placement?.Position;
+        const newPosition = [
+          positionArray[0] + updatedPosition.x,
+          positionArray[1] + updatedPosition.y,
+          positionArray[2] + updatedPosition.z
+        ];
+
+        this._model.sharedModel.updateObjectByName(objectName, {
+          data: {
+            key: 'parameters',
+            value: {
+              ...obj.parameters,
+              Placement: {
+                ...obj.parameters.Placement,
+                Position: newPosition
+              }
+            }
+          }
+        });
+      }
+    });
   }
 
   private _onSharedMetadataChanged = (
@@ -1469,6 +1549,8 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.localClippingEnabled = true;
       this._transformControls.enabled = true;
       this._transformControls.visible = true;
+      this._transformControls.attach(this._clippingPlaneMeshControl);
+      this._transformControls.position.copy(new THREE.Vector3(0, 0, 0));
       this._clippingPlaneMeshControl.visible = this._clipSettings.showClipPlane;
       if (this._clippingPlaneMesh) {
         this._clippingPlaneMesh.visible = true;
