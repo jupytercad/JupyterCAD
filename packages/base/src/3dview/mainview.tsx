@@ -296,6 +296,10 @@ export class MainView extends React.Component<IProps, IStates> {
       this._controls.enableDamping = true;
       this._controls.dampingFactor = 0.15;
 
+      const startMousePosition = new THREE.Vector2();
+      const endMousePosition = new THREE.Vector2();
+      const clickThreshold = 5;
+
       this._controls.addEventListener('start', () => {
         this._hasOrbited = false;
       });
@@ -307,10 +311,27 @@ export class MainView extends React.Component<IProps, IStates> {
           this._disabledNextClick = true;
         }
       });
+
       this._controls.addEventListener('change', () => {
         this._hasOrbited = true;
         this._updateAnnotation();
       });
+
+      this._renderer.domElement.addEventListener('mousedown', e => {
+        startMousePosition.set(e.clientX, e.clientY);
+      });
+
+      this._renderer.domElement.addEventListener('mouseup', e => {
+        endMousePosition.set(e.clientX, e.clientY);
+        const distance = endMousePosition.distanceTo(startMousePosition);
+
+        if (distance !== 0 && distance <= clickThreshold) {
+          this._onClick(e);
+        } else if (this._disabledNextClick) {
+          this._disabledNextClick = false;
+        }
+      });
+
       this._controls.addEventListener(
         'change',
         throttle(() => {
