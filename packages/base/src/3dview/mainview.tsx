@@ -1070,16 +1070,14 @@ export class MainView extends React.Component<IProps, IStates> {
 
     // Set new selection
     this._selectedMeshes = [];
-    for (const selectionName in selection) {
+    const selectedNames = Object.keys(selection);
+  
+    for (const selectionName of selectedNames) {
       const selectedMesh = this._meshGroup?.getObjectByName(
         selectionName
       ) as BasicMesh;
-
-      if (!selectedMesh) {
-        continue;
-      }
-
-      if (!selectedMesh.visible) {
+  
+      if (!selectedMesh || !selectedMesh.visible) {
         continue;
       }
 
@@ -1115,30 +1113,33 @@ export class MainView extends React.Component<IProps, IStates> {
         if (boundingBox) {
           boundingBox.visible = true;
         }
-        const matchingChild = this._meshGroup?.children.find(child =>
-          child.name.startsWith(selectedMesh.name)
-        );
-        if (matchingChild && !this._clipSettings.enabled) {
-          this._transformControls.attach(matchingChild as BasicMesh);
+      }
+    }
 
-          const obj = this._model.sharedModel.getObjectByName(
-            selectedMesh.name
+    if (selectedNames.length === 1 && !this._clipSettings.enabled) {
+      const selectedMeshName = selectedNames[0];
+      const matchingChild = this._meshGroup?.children.find(child =>
+        child.name.startsWith(selectedMeshName)
+      );
+
+      if (matchingChild) {
+        this._transformControls.attach(matchingChild as BasicMesh);
+  
+        const obj = this._model.sharedModel.getObjectByName(selectedMeshName);
+        const positionArray = obj?.parameters?.Placement?.Position;
+
+        if (positionArray && positionArray.length === 3) {
+          const positionVector = new THREE.Vector3(
+            positionArray[0],
+            positionArray[1],
+            positionArray[2]
           );
-
-          const positionArray = obj?.parameters?.Placement?.Position;
-          if (positionArray && positionArray.length === 3) {
-            const positionVector = new THREE.Vector3(
-              positionArray[0],
-              positionArray[1],
-              positionArray[2]
-            );
-
-            this._transformControls.position.copy(positionVector);
-          }
-          this._transformControls.setMode('translate');
-          this._transformControls.visible = true;
-          this._transformControls.enabled = true;
+          this._transformControls.position.copy(positionVector);
         }
+
+        this._transformControls.setMode('translate');
+        this._transformControls.visible = true;
+        this._transformControls.enabled = true;
       }
     }
   }
@@ -1530,7 +1531,9 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = true;
       this._transformControls.visible = true;
       this._transformControls.attach(this._clippingPlaneMeshControl);
-      this._transformControls.position.copy(new THREE.Vector3(0, 0, 0));
+      this._transformControls.position.copy(
+        new THREE.Vector3(0,0,0)
+      );
       this._clippingPlaneMeshControl.visible = this._clipSettings.showClipPlane;
       if (this._clippingPlaneMesh) {
         this._clippingPlaneMesh.visible = true;
