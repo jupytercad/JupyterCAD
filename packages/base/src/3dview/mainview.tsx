@@ -795,7 +795,6 @@ export class MainView extends React.Component<IProps, IStates> {
         objName,
         data,
         clippingPlanes: this._clippingPlanes,
-        selected,
         isSolid,
         isWireframe,
         objColor
@@ -845,12 +844,13 @@ export class MainView extends React.Component<IProps, IStates> {
 
           if (selectedNames.includes(el.name)) {
             this._selectedMeshes.push(el as any as BasicMesh);
-            el.material.color = originalEdgeColor;
+            el.material.color = BOUNDING_BOX_COLOR;
             el.material.linewidth = SELECTED_LINEWIDTH;
             el.userData.originalColor = originalEdgeColor.clone();
           } else {
             if (objColor && el.material?.color) {
               el.material.color = originalEdgeColor;
+              el.material.linewidth = DEFAULT_LINEWIDTH;
               el.userData.originalColor = originalEdgeColor.clone();
             }
           }
@@ -1095,7 +1095,6 @@ export class MainView extends React.Component<IProps, IStates> {
     return mesh;
   }
 
-  private _previousSelection: { [key: string]: ISelection } | null = null;
   private _updateSelected(selection: { [key: string]: ISelection }) {
     const selectionChanged =
       JSON.stringify(selection) !== JSON.stringify(this._previousSelection);
@@ -1701,6 +1700,8 @@ export class MainView extends React.Component<IProps, IStates> {
   private _clippingPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0); // Mathematical object for clipping computation
   private _clippingPlanes = [this._clippingPlane];
   private _edgeMaterials: any[] = [];
+
+  private _previousSelection: { [key: string]: ISelection } | null = null;
 
   private _scene: THREE.Scene; // Threejs scene
   private _camera: THREE.PerspectiveCamera | THREE.OrthographicCamera; // Threejs camera

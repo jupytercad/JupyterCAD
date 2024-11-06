@@ -112,7 +112,6 @@ export function buildShape(options: {
   objName: string;
   data: IParsedShape;
   clippingPlanes: THREE.Plane[];
-  selected: boolean;
   isSolid: boolean;
   isWireframe: boolean;
   objColor?: THREE.Color | string | number;
