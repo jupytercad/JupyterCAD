@@ -389,9 +389,12 @@ export class MainView extends React.Component<IProps, IStates> {
       this._scene.add(this._clippingPlaneMeshControl);
 
       // Disable the orbit control whenever we do transformation
-      this._clipPlaneTransformControls.addEventListener('dragging-changed', event => {
-        this._controls.enabled = !event.value;
-      });
+      this._clipPlaneTransformControls.addEventListener(
+        'dragging-changed',
+        event => {
+          this._controls.enabled = !event.value;
+        }
+      );
 
       // Update the clipping plane whenever the transform UI move
       this._clipPlaneTransformControls.addEventListener('change', () => {
@@ -1561,7 +1564,9 @@ export class MainView extends React.Component<IProps, IStates> {
       this._clipPlaneTransformControls.enabled = true;
       this._clipPlaneTransformControls.visible = true;
       this._clipPlaneTransformControls.attach(this._clippingPlaneMeshControl);
-      this._clipPlaneTransformControls.position.copy(new THREE.Vector3(0, 0, 0));
+      this._clipPlaneTransformControls.position.copy(
+        new THREE.Vector3(0, 0, 0)
+      );
       this._clippingPlaneMeshControl.visible = this._clipSettings.showClipPlane;
       if (this._clippingPlaneMesh) {
         this._clippingPlaneMesh.visible = true;
