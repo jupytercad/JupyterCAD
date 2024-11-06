@@ -614,11 +614,17 @@ export class MainView extends React.Component<IProps, IStates> {
         ) {
           continue;
         }
-        const intersectMesh = intersect.object.name.includes('-front')
-          ? intersect.object.parent.getObjectByName(
-              intersect.object.name.replace('-front', '')
-            )
-          : intersect.object;
+        let intersectMesh = intersect.object;
+        if (intersect.object.name.includes('-front')) {
+          intersectMesh = intersect.object.parent.getObjectByName(
+            intersect.object.name.replace('-front', '')
+          )!;
+        }
+        if (intersect.object.name.includes('-back')) {
+          intersectMesh = intersect.object.parent.getObjectByName(
+            intersect.object.name.replace('-back', '')
+          )!;
+        }
         return {
           mesh: intersectMesh as BasicMesh,
           position: intersect.pointOnLine ?? intersect.point
