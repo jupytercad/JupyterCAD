@@ -848,7 +848,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this._meshGroup?.add(meshGroup);
       }
 
-      this._maybeAttachTransformControlToSelection(selectedNames);
+      this._updateTransformControls(selectedNames);
     });
 
     // Update the reflength.
@@ -1174,10 +1174,13 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     }
 
-    this._maybeAttachTransformControlToSelection(selectedNames);
+    this._updateTransformControls(selectedNames);
   }
 
-  private _maybeAttachTransformControlToSelection(selection: string[]) {
+  /*
+   * Attach the transform controls to the current selection, or detach it
+   */
+  private _updateTransformControls(selection: string[]) {
     if (selection.length === 1) {
       const selectedMeshName = selection[0];
       const matchingChild = this._meshGroup?.children.find(child =>
