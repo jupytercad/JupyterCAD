@@ -422,6 +422,7 @@ export class MainView extends React.Component<IProps, IStates> {
         const obj = this._model.sharedModel.getObjectByName(objectName);
 
         if (obj && obj.parameters && obj.parameters.Placement) {
+          if (this._transformControls.mode==='translate') {
           const positionArray = obj?.parameters?.Placement?.Position;
           const newPosition = [
             positionArray[0] + updatedPosition.x,
@@ -441,6 +442,34 @@ export class MainView extends React.Component<IProps, IStates> {
               }
             }
           });
+        }
+          else if (this._transformControls.mode==='rotate' && this._pivot) {
+            // Convert pivot rotation to Quaternion
+            const quaternion = new THREE.Quaternion().setFromEuler(this._pivot.rotation);
+      
+            // Extract axis and angle from Quaternion
+            const axis = new THREE.Vector3();
+            const angle = quaternion.angleTo(new THREE.Quaternion()); // Radians
+            const angleDeg = THREE.MathUtils.radToDeg(angle);
+      
+            quaternion.normalize();
+            axis.set(quaternion.x, quaternion.y, quaternion.z).normalize();
+      
+            // Update the shared model with new position, axis, and angle
+            this._model.sharedModel.updateObjectByName(objectName, {
+              data: {
+                key: 'parameters',
+                value: {
+                  ...obj.parameters,
+                  Placement: {
+                    ...obj.parameters.Placement,
+                    Axis: [axis.x, axis.y, axis.z],
+                    Angle: angleDeg,
+                  }
+                }
+              }
+            });
+          }
         }
       });
       this._scene.add(this._transformControls);
@@ -722,18 +751,21 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _onKeyDown(event: KeyboardEvent) {
     // TODO Make these Lumino commands? Or not?
-    if (this._clipSettings.enabled) {
-      switch (event.key) {
-        case 'r':
-          event.preventDefault();
-          event.stopPropagation();
-
-          if (this._clipPlaneTransformControls.mode === 'rotate') {
-            this._clipPlaneTransformControls.setMode('translate');
-          } else {
-            this._clipPlaneTransformControls.setMode('rotate');
-          }
-          break;
+    if (this._clipSettings.enabled || this._transformControls.enabled) {
+      const toggleMode = (control: any) => {
+        control.setMode(control.mode === 'rotate' ? 'translate' : 'rotate');
+      };
+  
+      if (event.key === 'r' && this._clipSettings.enabled) {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleMode(this._clipPlaneTransformControls);
+      }
+  
+      if (event.key === 't' && this._transformControls.enabled) {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleMode(this._transformControls);
       }
     }
   }
@@ -1194,14 +1226,21 @@ export class MainView extends React.Component<IProps, IStates> {
             positionArray[1],
             positionArray[2]
           );
+          if(this._transformControls.mode === 'rotate') {
+          this._pivot = new THREE.Object3D();
+          this._pivot.position.copy(positionVector);
+          // Add pivot to the scene
+          this._scene.add(this._pivot);
+          this._transformControls.attach(this._pivot);
+          } else if (this._transformControls.mode === 'translate') {
           this._transformControls.position.copy(positionVector);
-        }
-
-        this._transformControls.visible = true;
-        this._transformControls.enabled = true;
-
+          }
+          this._transformControls.visible = true;
+          this._transformControls.enabled = true;
         return;
+        }
       }
+      
     }
 
     // Detach TransformControls from the previous selection
@@ -1726,4 +1765,5 @@ export class MainView extends React.Component<IProps, IStates> {
   private _collaboratorPointers: IDict<IPointer>;
   private _contextMenu: ContextMenu;
   private _loadingTimeout: ReturnType<typeof setTimeout> | null;
+  private _pivot: THREE.Object3D | null = null;
 }
