@@ -470,6 +470,7 @@ export class MainView extends React.Component<IProps, IStates> {
                 }
               }
             });
+            this._scene.remove(this._pivot);
           }
         }
       });
@@ -1227,10 +1228,14 @@ export class MainView extends React.Component<IProps, IStates> {
             positionArray[1],
             positionArray[2]
           );
+      
           if (this._transformControls.mode === 'rotate') {
             this._pivot = new THREE.Object3D();
             this._pivot.position.copy(positionVector);
-            // Add pivot to the scene
+
+            const pivotHelper = new THREE.AxesHelper(0.5);
+            this._pivot.add(pivotHelper);
+
             this._scene.add(this._pivot);
             this._transformControls.attach(this._pivot);
           } else if (this._transformControls.mode === 'translate') {
