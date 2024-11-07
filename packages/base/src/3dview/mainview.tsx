@@ -442,7 +442,11 @@ export class MainView extends React.Component<IProps, IStates> {
                 }
               }
             });
-          } else if (this._transformControls.mode === 'rotate' && this._pivot && this._matchingChild) {
+          } else if (
+            this._transformControls.mode === 'rotate' &&
+            this._pivot &&
+            this._matchingChild
+          ) {
             // Retrieve Euler rotations for pivot and matching child
             const pivotEuler = this._pivot.rotation;
             const matchingChildEuler = this._matchingChild.rotation;
@@ -455,11 +459,19 @@ export class MainView extends React.Component<IProps, IStates> {
               pivotEuler.order // Ensure we use the same rotation order
             );
 
-            const combinedQuaternion = new THREE.Quaternion().setFromEuler(combinedEuler);
+            const combinedQuaternion = new THREE.Quaternion().setFromEuler(
+              combinedEuler
+            );
 
             const axis = new THREE.Vector3();
             combinedQuaternion.normalize();
-            axis.set(combinedQuaternion.x, combinedQuaternion.y, combinedQuaternion.z).normalize();
+            axis
+              .set(
+                combinedQuaternion.x,
+                combinedQuaternion.y,
+                combinedQuaternion.z
+              )
+              .normalize();
 
             const angle = 2 * Math.acos(combinedQuaternion.w); // Angle in radians
             const angleDeg = THREE.MathUtils.radToDeg(angle);
