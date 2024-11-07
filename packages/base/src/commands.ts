@@ -240,13 +240,11 @@ export async function executeOperator(
   }
   sharedModel.transact(() => {
     transaction(sharedModel);
-  });
-  setTimeout(() => {
     current.context.model.syncSelected(
       { [objectModel.name]: { type: 'shape' } },
       uuid()
     );
-  }, 0); // doing the selection at the next tick
+  });
 }
 
 const OPERATORS = {
@@ -1248,12 +1246,10 @@ namespace Private {
                 objectModel.shapeMetadata = objMeta;
               }
               sharedModel.addObject(objectModel);
-              setTimeout(() => {
-                jcadModel.syncSelected(
-                  { [objectModel.name]: { type: 'shape' } },
-                  uuid()
-                );
-              }, 0); // doing the selection at the next tick
+              jcadModel.syncSelected(
+                { [objectModel.name]: { type: 'shape' } },
+                uuid()
+              );
             } else {
               showErrorMessage(
                 'The object already exists',
