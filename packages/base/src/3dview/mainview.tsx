@@ -1238,6 +1238,14 @@ export class MainView extends React.Component<IProps, IStates> {
 
             this._scene.add(this._pivot);
             this._transformControls.attach(this._pivot);
+      
+            // Listen for changes on TransformControls to update matchingChild
+            this._transformControls.addEventListener('objectChange', () => {
+              if (this._pivot){
+              matchingChild.rotation.copy(this._pivot.rotation);
+
+              matchingChild.position.copy(this._pivot.position);}
+            });
           } else if (this._transformControls.mode === 'translate') {
             this._transformControls.position.copy(positionVector);
           }
