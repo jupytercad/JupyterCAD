@@ -1205,7 +1205,7 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     }
 
-      // Detach TransformControls from the previous selection
+    // Detach TransformControls from the previous selection
     this._transformControls.detach();
 
     this._transformControls.visible = false;
