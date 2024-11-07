@@ -302,11 +302,9 @@ export class MainView extends React.Component<IProps, IStates> {
           this._startMousePosition
         );
 
-        if (!this._disabledNextClick && distance <= CLICK_THRESHOLD) {
+        if (distance <= CLICK_THRESHOLD) {
           this._onClick(e);
         }
-
-        this._disabledNextClick = false;
       });
 
       this._controls.addEventListener('change', () => {
@@ -373,7 +371,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._clipPlaneTransformControls.addEventListener(
         'dragging-changed',
         event => {
-          this._disabledNextClick = true;
           this._controls.enabled = !event.value;
         }
       );
@@ -413,7 +410,6 @@ export class MainView extends React.Component<IProps, IStates> {
       );
       // Disable the orbit control whenever we do transformation
       this._transformControls.addEventListener('dragging-changed', event => {
-        this._disabledNextClick = true;
         this._controls.enabled = !event.value;
       });
       // Update the currently transformed object in the shared model once finished moving
@@ -1204,14 +1200,16 @@ export class MainView extends React.Component<IProps, IStates> {
 
         this._transformControls.visible = true;
         this._transformControls.enabled = true;
-      }
-    } else {
-      // Detach TransformControls from the previous selection
-      this._transformControls.detach();
 
-      this._transformControls.visible = false;
-      this._transformControls.enabled = false;
+        return;
+      }
     }
+
+      // Detach TransformControls from the previous selection
+    this._transformControls.detach();
+
+    this._transformControls.visible = false;
+    this._transformControls.enabled = false;
   }
 
   private _onSharedMetadataChanged = (
@@ -1717,7 +1715,6 @@ export class MainView extends React.Component<IProps, IStates> {
   private _controls: OrbitControls; // Camera controls
   private _startMousePosition = new THREE.Vector2(); // Start mouse position when dragging the camera controls
   private _endMousePosition = new THREE.Vector2(); // End mouse position when dragging the camera controls
-  private _disabledNextClick = false; // We set this when we transform objects to prevent the next click event
   private _clipPlaneTransformControls: TransformControls; // Clip plane position/rotation controls
   private _transformControls: TransformControls; // Mesh position controls
   private _pointer3D: IPointer | null = null;
