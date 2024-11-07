@@ -442,19 +442,29 @@ export class MainView extends React.Component<IProps, IStates> {
                 }
               }
             });
-          } else if (this._transformControls.mode === 'rotate' && this._pivot) {
-            // Convert pivot rotation to Quaternion
-            const quaternion = new THREE.Quaternion().setFromEuler(
-              this._pivot.rotation
+          } else if (this._transformControls.mode === 'rotate' && this._pivot && this._matchingChild) {
+            // Retrieve Euler rotations for pivot and matching child
+            const pivotEuler = this._pivot.rotation;
+            const matchingChildEuler = this._matchingChild.rotation;
+
+            // Create a new Euler by adding rotations component-wise
+            const combinedEuler = new THREE.Euler(
+              pivotEuler.x * matchingChildEuler.x,
+              pivotEuler.y * matchingChildEuler.y,
+              pivotEuler.z * matchingChildEuler.z,
+              pivotEuler.order // Ensure we use the same rotation order
             );
 
-            // Extract axis and angle from Quaternion
+            const combinedQuaternion = new THREE.Quaternion().setFromEuler(combinedEuler);
+
             const axis = new THREE.Vector3();
-            const angle = quaternion.angleTo(new THREE.Quaternion()); // Radians
+            combinedQuaternion.normalize();
+            axis.set(combinedQuaternion.x, combinedQuaternion.y, combinedQuaternion.z).normalize();
+
+            const angle = 2 * Math.acos(combinedQuaternion.w); // Angle in radians
             const angleDeg = THREE.MathUtils.radToDeg(angle);
 
-            quaternion.normalize();
-            axis.set(quaternion.x, quaternion.y, quaternion.z).normalize();
+            console.log(axis, angleDeg);
 
             // Update the shared model with new position, axis, and angle
             this._model.sharedModel.updateObjectByName(objectName, {
@@ -1212,12 +1222,12 @@ export class MainView extends React.Component<IProps, IStates> {
   private _updateTransformControls(selection: string[]) {
     if (selection.length === 1) {
       const selectedMeshName = selection[0];
-      const matchingChild = this._meshGroup?.children.find(child =>
+      this._matchingChild = this._meshGroup?.children.find(child =>
         child.name.startsWith(selectedMeshName)
       );
 
-      if (matchingChild) {
-        this._transformControls.attach(matchingChild as BasicMesh);
+      if (this._matchingChild) {
+        this._transformControls.attach(this._matchingChild as BasicMesh);
 
         const obj = this._model.sharedModel.getObjectByName(selectedMeshName);
         const positionArray = obj?.parameters?.Placement?.Position;
@@ -1239,12 +1249,12 @@ export class MainView extends React.Component<IProps, IStates> {
             this._scene.add(this._pivot);
             this._transformControls.attach(this._pivot);
 
-            // Listen for changes on TransformControls to update matchingChild
+            // Listen for changes on TransformControls to update this._matchingChild
             this._transformControls.addEventListener('objectChange', () => {
-              if (this._pivot) {
-                matchingChild.rotation.copy(this._pivot.rotation);
+              if (this._matchingChild && this._pivot) {
+                this._matchingChild.rotation.copy(this._pivot.rotation);
 
-                matchingChild.position.copy(this._pivot.position);
+                this._matchingChild.position.copy(this._pivot.position);
               }
             });
           } else if (this._transformControls.mode === 'translate') {
@@ -1780,4 +1790,5 @@ export class MainView extends React.Component<IProps, IStates> {
   private _contextMenu: ContextMenu;
   private _loadingTimeout: ReturnType<typeof setTimeout> | null;
   private _pivot: THREE.Object3D | null = null;
+  private _matchingChild: THREE.Object3D<THREE.Object3DEventMap> | undefined;
 }
