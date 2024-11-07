@@ -59,6 +59,9 @@ interface IProps {
 const CAMERA_NEAR = 1e-6;
 const CAMERA_FAR = 1e27;
 
+// The amount of pixels a mouse move can do until we stop considering it's a click
+const CLICK_THRESHOLD = 5;
+
 interface IStates {
   id: string; // ID of the component, it is used to identify which component
   //is the source of awareness updates.
@@ -265,13 +268,6 @@ export class MainView extends React.Component<IProps, IStates> {
         'pointermove',
         this._onPointerMove.bind(this)
       );
-      this._renderer.domElement.addEventListener('mouseup', e => {
-        if (!this._disabledNextClick) {
-          this._onClick(e);
-        }
-
-        this._disabledNextClick = false;
-      });
 
       this._renderer.domElement.addEventListener('contextmenu', e => {
         e.preventDefault();
@@ -296,40 +292,23 @@ export class MainView extends React.Component<IProps, IStates> {
       this._controls.enableDamping = true;
       this._controls.dampingFactor = 0.15;
 
-      const startMousePosition = new THREE.Vector2();
-      const endMousePosition = new THREE.Vector2();
-      const clickThreshold = 5;
-
-      this._controls.addEventListener('start', () => {
-        this._hasOrbited = false;
+      this._renderer.domElement.addEventListener('mousedown', e => {
+        this._startMousePosition.set(e.clientX, e.clientY);
       });
-      this._controls.addEventListener('end', () => {
-        // This "change" event here happens before the "mouseup" event on the renderer,
-        // we need to disable that next "mouseup" event that's coming to not deselect
-        // any currently selected mesh un-intentionally
-        if (this._hasOrbited) {
-          this._disabledNextClick = true;
+
+      this._renderer.domElement.addEventListener('mouseup', e => {
+        this._endMousePosition.set(e.clientX, e.clientY);
+        const distance = this._endMousePosition.distanceTo(
+          this._startMousePosition
+        );
+
+        if (distance <= CLICK_THRESHOLD) {
+          this._onClick(e);
         }
       });
 
       this._controls.addEventListener('change', () => {
-        this._hasOrbited = true;
         this._updateAnnotation();
-      });
-
-      this._renderer.domElement.addEventListener('mousedown', e => {
-        startMousePosition.set(e.clientX, e.clientY);
-      });
-
-      this._renderer.domElement.addEventListener('mouseup', e => {
-        endMousePosition.set(e.clientX, e.clientY);
-        const distance = endMousePosition.distanceTo(startMousePosition);
-
-        if (distance !== 0 && distance <= clickThreshold) {
-          this._onClick(e);
-        } else if (this._disabledNextClick) {
-          this._disabledNextClick = false;
-        }
       });
 
       this._controls.addEventListener(
@@ -818,6 +797,13 @@ export class MainView extends React.Component<IProps, IStates> {
         }
 
         if (selected) {
+          const boundingBox = meshGroup?.getObjectByName(
+            SELECTION_BOUNDING_BOX
+          ) as THREE.Mesh;
+          if (boundingBox) {
+            boundingBox.visible = true;
+          }
+
           this._selectedMeshes.push(mainMesh);
         }
         edgesMeshes.forEach(el => {
@@ -857,6 +843,8 @@ export class MainView extends React.Component<IProps, IStates> {
         });
         this._meshGroup?.add(meshGroup);
       }
+
+      this._updateTransformControls(selectedNames);
     });
 
     // Update the reflength.
@@ -1132,9 +1120,6 @@ export class MainView extends React.Component<IProps, IStates> {
       if (material?.linewidth) {
         material.linewidth = DEFAULT_LINEWIDTH;
       }
-
-      // Detach TransformControls from the previous selection
-      this._transformControls.detach();
     }
 
     // Set new selection
@@ -1185,8 +1170,15 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     }
 
-    if (selectedNames.length === 1) {
-      const selectedMeshName = selectedNames[0];
+    this._updateTransformControls(selectedNames);
+  }
+
+  /*
+   * Attach the transform controls to the current selection, or detach it
+   */
+  private _updateTransformControls(selection: string[]) {
+    if (selection.length === 1) {
+      const selectedMeshName = selection[0];
       const matchingChild = this._meshGroup?.children.find(child =>
         child.name.startsWith(selectedMeshName)
       );
@@ -1208,8 +1200,16 @@ export class MainView extends React.Component<IProps, IStates> {
 
         this._transformControls.visible = true;
         this._transformControls.enabled = true;
+
+        return;
       }
     }
+
+    // Detach TransformControls from the previous selection
+    this._transformControls.detach();
+
+    this._transformControls.visible = false;
+    this._transformControls.enabled = false;
   }
 
   private _onSharedMetadataChanged = (
@@ -1712,9 +1712,9 @@ export class MainView extends React.Component<IProps, IStates> {
   private _geometry: THREE.BufferGeometry; // Threejs BufferGeometry
   private _refLength: number | null = null; // Length of bounding box of current object
   private _sceneAxe: THREE.Object3D | null; // Array of  X, Y and Z axe
-  private _controls: OrbitControls; // Mouse controls
-  private _hasOrbited = false; // Whether the last orbit control run has actually orbited
-  private _disabledNextClick = false; // We set this when we stop orbiting, to prevent the next click event
+  private _controls: OrbitControls; // Camera controls
+  private _startMousePosition = new THREE.Vector2(); // Start mouse position when dragging the camera controls
+  private _endMousePosition = new THREE.Vector2(); // End mouse position when dragging the camera controls
   private _clipPlaneTransformControls: TransformControls; // Clip plane position/rotation controls
   private _transformControls: TransformControls; // Mesh position controls
   private _pointer3D: IPointer | null = null;
