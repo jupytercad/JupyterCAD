@@ -56,6 +56,14 @@ export interface IPickedResult {
   position: THREE.Vector3;
 }
 
+/**
+ * The interface defining a mouse drag by its start and end position in pixels.
+ */
+export interface IMouseDrag {
+  start: THREE.Vector2;
+  end: THREE.Vector2;
+}
+
 export function projectVector(options: {
   vector: THREE.Vector3;
   camera: THREE.Camera;

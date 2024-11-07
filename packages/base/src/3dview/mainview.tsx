@@ -48,7 +48,8 @@ import {
   SELECTION_BOUNDING_BOX,
   buildShape,
   computeExplodedState,
-  projectVector
+  projectVector,
+  IMouseDrag
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
@@ -293,14 +294,12 @@ export class MainView extends React.Component<IProps, IStates> {
       this._controls.dampingFactor = 0.15;
 
       this._renderer.domElement.addEventListener('mousedown', e => {
-        this._startMousePosition.set(e.clientX, e.clientY);
+        this._mouseDrag.start.set(e.clientX, e.clientY);
       });
 
       this._renderer.domElement.addEventListener('mouseup', e => {
-        this._endMousePosition.set(e.clientX, e.clientY);
-        const distance = this._endMousePosition.distanceTo(
-          this._startMousePosition
-        );
+        this._mouseDrag.end.set(e.clientX, e.clientY);
+        const distance = this._mouseDrag.end.distanceTo(this._mouseDrag.start);
 
         if (distance <= CLICK_THRESHOLD) {
           this._onClick(e);
@@ -1713,8 +1712,10 @@ export class MainView extends React.Component<IProps, IStates> {
   private _refLength: number | null = null; // Length of bounding box of current object
   private _sceneAxe: THREE.Object3D | null; // Array of  X, Y and Z axe
   private _controls: OrbitControls; // Camera controls
-  private _startMousePosition = new THREE.Vector2(); // Start mouse position when dragging the camera controls
-  private _endMousePosition = new THREE.Vector2(); // End mouse position when dragging the camera controls
+  private _mouseDrag: IMouseDrag = {
+    start: new THREE.Vector2(),
+    end: new THREE.Vector2()
+  }; // Current mouse drag
   private _clipPlaneTransformControls: TransformControls; // Clip plane position/rotation controls
   private _transformControls: TransformControls; // Mesh position controls
   private _pointer3D: IPointer | null = null;
