@@ -174,13 +174,27 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
           this._onClientSharedOptionsChanged
         );
 
-        this.setState(old => ({
-          ...old,
-          filePath: document.context.localPath,
-          jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
-          options: this.props.cpModel.sharedModel?.options,
-          clientId: document.context.model.getClientId()
-        }));
+        const currentSelection = this._getCurrentSelection();
+
+        if (!currentSelection) {
+          this.setState(old => ({
+            ...old,
+            filePath: document.context.localPath,
+            jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
+            options: this.props.cpModel.sharedModel?.options,
+            clientId: document.context.model.getClientId()
+          }));
+        } else {
+          this.setState(old => ({
+            ...old,
+            selectedNodes: currentSelection.newSelectedNodes,
+            openNodes: currentSelection.newOpenNodes,
+            filePath: document.context.localPath,
+            jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
+            options: this.props.cpModel.sharedModel?.options,
+            clientId: document.context.model.getClientId()
+          }));
+        }
       } else {
         this.setState({
           filePath: undefined,
@@ -257,11 +271,23 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     change: IJcadObjectDocChange
   ): void => {
     if (change.objectChange) {
-      this.setState(old => ({
-        ...old,
-        jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
-        options: this.props.cpModel.sharedModel?.options
-      }));
+      const currentSelection = this._getCurrentSelection();
+
+      if (!currentSelection) {
+        this.setState(old => ({
+          ...old,
+          jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
+          options: this.props.cpModel.sharedModel?.options
+        }));
+      } else {
+        this.setState(old => ({
+          ...old,
+          selectedNodes: currentSelection.newSelectedNodes,
+          openNodes: currentSelection.newOpenNodes,
+          jcadObject: this.props.cpModel.jcadModel?.getAllObject(),
+          options: this.props.cpModel.sharedModel?.options
+        }));
+      }
     }
   };
 
@@ -284,35 +310,59 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
     sender: IJupyterCadModel,
     clients: Map<number, IJupyterCadClientState>
   ): void => {
+    const currentSelection = this._getCurrentSelection(clients);
+
+    if (!currentSelection) {
+      return;
+    }
+
+    const { newSelectedNodes, newOpenNodes } = currentSelection;
+    const { selectedNodes, openNodes } = this.state;
+    if (
+      JSON.stringify(selectedNodes) !== JSON.stringify(newSelectedNodes) ||
+      JSON.stringify(openNodes) !== JSON.stringify(newOpenNodes)
+    ) {
+      this.setState(old => ({
+        ...old,
+        openNodes: newOpenNodes,
+        selectedNodes: newSelectedNodes
+      }));
+    }
+  };
+
+  private _getCurrentSelection(
+    clients?: Map<number, IJupyterCadClientState>
+  ):
+    | { newSelectedNodes: string[]; newOpenNodes: (string | number)[] }
+    | undefined {
     const localState = this.props.cpModel.jcadModel?.localState;
 
     if (!localState) {
       return;
     }
 
-    let selectedNodes: string[] = [];
-    if (localState.remoteUser) {
+    let newSelectedNodes: string[] = [];
+    if (clients && localState.remoteUser) {
       // We are in following mode.
       // Sync selections from a remote user
       const remoteState = clients.get(localState.remoteUser);
 
       if (remoteState?.selected?.value) {
-        selectedNodes = this._selectedNodes(remoteState.selected.value);
+        newSelectedNodes = this._selectedNodes(remoteState.selected.value);
       }
     } else if (localState.selected?.value) {
-      selectedNodes = this._selectedNodes(localState.selected.value);
+      newSelectedNodes = this._selectedNodes(localState.selected.value);
     }
 
-    const openNodes = [...this.state.openNodes];
-
-    for (const selectedNode of selectedNodes) {
-      if (selectedNode && openNodes.indexOf(selectedNode) === -1) {
-        openNodes.push(selectedNode);
+    const newOpenNodes = [...this.state.openNodes];
+    for (const selectedNode of newSelectedNodes) {
+      if (selectedNode && newOpenNodes.indexOf(selectedNode) === -1) {
+        newOpenNodes.push(selectedNode);
       }
     }
 
-    this.setState(old => ({ ...old, openNodes, selectedNodes }));
-  };
+    return { newSelectedNodes, newOpenNodes };
+  }
 
   private _onClientSharedOptionsChanged = (
     sender: IJupyterCadDoc,
