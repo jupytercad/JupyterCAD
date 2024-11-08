@@ -435,25 +435,33 @@ export class MainView extends React.Component<IProps, IStates> {
         const obj = this._model.sharedModel.getObjectByName(objectName);
 
         if (obj && obj.parameters && obj.parameters.Placement) {
-            const newPosition = [
-              updatedPosition.x,
-              updatedPosition.y,
-              updatedPosition.z
-            ];
+          const newPosition = [
+            updatedPosition.x,
+            updatedPosition.y,
+            updatedPosition.z
+          ];
 
-            const newAxis = updatedAngle === 0 ? [0, 0, 1] : [updatedAxis.x, updatedAxis.y, updatedAxis.z];
+          const newAxis =
+            updatedAngle === 0
+              ? [0, 0, 1]
+              : [updatedAxis.x, updatedAxis.y, updatedAxis.z];
 
-            console.log('update position', newPosition, newAxis, THREE.MathUtils.radToDeg(updatedAngle));
+          console.log(
+            'update position',
+            newPosition,
+            newAxis,
+            THREE.MathUtils.radToDeg(updatedAngle)
+          );
 
-            this._mainViewModel.maybeUpdateObjectParameters(objectName, {
-              ...obj.parameters,
-              Placement: {
-                ...obj.parameters.Placement,
-                Position: newPosition,
-                Axis: newAxis,
-                Angle: THREE.MathUtils.radToDeg(updatedAngle)
-              }
-            });
+          this._mainViewModel.maybeUpdateObjectParameters(objectName, {
+            ...obj.parameters,
+            Placement: {
+              ...obj.parameters.Placement,
+              Position: newPosition,
+              Axis: newAxis,
+              Angle: THREE.MathUtils.radToDeg(updatedAngle)
+            }
+          });
         }
       });
       this._scene.add(this._transformControls);
