@@ -466,7 +466,7 @@ export class MainView extends React.Component<IProps, IStates> {
       });
       this._scene.add(this._transformControls);
       this._transformControls.setMode('translate');
-      this._transformControls.space = 'local';
+      this._transformControls.setSpace('local');
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
       const pivotHelper = new THREE.AxesHelper(10);
@@ -1601,6 +1601,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.localClippingEnabled = true;
       this._clipPlaneTransformControls.enabled = true;
       this._clipPlaneTransformControls.visible = true;
+      this._clipPlaneTransformControls.setSpace('local');
       this._clipPlaneTransformControls.attach(this._clippingPlaneMeshControl);
       this._clipPlaneTransformControls.position.copy(
         new THREE.Vector3(0, 0, 0)
