@@ -1231,7 +1231,7 @@ export class MainView extends React.Component<IProps, IStates> {
             axis[0],
             axis[1],
             axis[2]
-          ).multiplyScalar(THREE.MathUtils.degToRad(angle));
+          ).normalize().multiplyScalar(THREE.MathUtils.degToRad(angle));
 
           // this._transformControls.position.copy(position);
           // this._transformControls.rotation.setFromVector3(rotation);
