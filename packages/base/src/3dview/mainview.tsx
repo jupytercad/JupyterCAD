@@ -442,58 +442,61 @@ export class MainView extends React.Component<IProps, IStates> {
                 }
               }
             });
-          } else if (
-            this._transformControls.mode === 'rotate' &&
-            this._pivot &&
-            this._matchingChild
-          ) {
-            // Retrieve Euler rotations for pivot and matching child
+        } else if (this._transformControls.mode === 'rotate' && this._pivot) {
+            // Retrieve the existing rotation from the shared model
+            const existingRotationArray = obj?.parameters?.Placement?.Axis;
+            const existingRotation = new THREE.Euler(
+                THREE.MathUtils.degToRad(existingRotationArray[0]),
+                THREE.MathUtils.degToRad(existingRotationArray[1]),
+                THREE.MathUtils.degToRad(existingRotationArray[2]),
+                'XYZ' // or the rotation order used in your model
+            );
+            console.log(existingRotation);
+            
+        
+            // Get the pivot rotation as a delta rotation
             const pivotEuler = this._pivot.rotation;
-            const matchingChildEuler = this._matchingChild.rotation;
-
-            // Create a new Euler by adding rotations component-wise
-            const combinedEuler = new THREE.Euler(
-              pivotEuler.x * matchingChildEuler.x,
-              pivotEuler.y * matchingChildEuler.y,
-              pivotEuler.z * matchingChildEuler.z,
-              pivotEuler.order // Ensure we use the same rotation order
+        
+            // Add the pivot rotation to the existing rotation
+            const finalRotation = new THREE.Euler(
+                existingRotation.x + pivotEuler.x,
+                existingRotation.y + pivotEuler.y,
+                existingRotation.z + pivotEuler.z,
+                existingRotation.order
             );
-
-            const combinedQuaternion = new THREE.Quaternion().setFromEuler(
-              combinedEuler
-            );
-
+        
+            // Convert the final rotation to a quaternion to extract axis and angle
+            const finalQuaternion = new THREE.Quaternion().setFromEuler(finalRotation);
             const axis = new THREE.Vector3();
-            combinedQuaternion.normalize();
-            axis
-              .set(
-                combinedQuaternion.x,
-                combinedQuaternion.y,
-                combinedQuaternion.z
-              )
-              .normalize();
-
-            const angle = 2 * Math.acos(combinedQuaternion.w); // Angle in radians
-            const angleDeg = THREE.MathUtils.radToDeg(angle);
-
+            // finalQuaternion.normalize();
+            axis.set(finalQuaternion.x, finalQuaternion.y, finalQuaternion.z)
+        
+            const angle = 2 * Math.acos(finalQuaternion.w); // Angle in radians
+            const existingAngle = obj?.parameters?.Placement?.Angle;
+            const angleDeg = THREE.MathUtils.radToDeg(angle) + existingAngle;
+            console.log(this._pivot.position);
+            
             console.log(axis, angleDeg);
-
-            // Update the shared model with new position, axis, and angle
+        
+            // Update the shared model with the new axis and angle
             this._model.sharedModel.updateObjectByName(objectName, {
-              data: {
-                key: 'parameters',
-                value: {
-                  ...obj.parameters,
-                  Placement: {
-                    ...obj.parameters.Placement,
-                    Axis: [axis.x, axis.y, axis.z],
-                    Angle: angleDeg
-                  }
+                data: {
+                    key: 'parameters',
+                    value: {
+                        ...obj.parameters,
+                        Placement: {
+                            ...obj.parameters.Placement,
+                            Axis: [axis.x, axis.y, axis.z],
+                            Angle: angleDeg
+                        }
+                    }
                 }
-              }
             });
-            this._scene.remove(this._pivot);
-          }
+            
+            // Optionally remove the pivot from the scene
+            // this._scene.remove(this._pivot);
+        }
+        
         }
       });
       this._scene.add(this._transformControls);
@@ -1253,14 +1256,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
           if (this._transformControls.mode === 'rotate') {
             this._pivot = new THREE.Object3D();
-
-            const boundingBox = new THREE.Box3().setFromObject(
-              this._matchingChild
-            );
-            const center = new THREE.Vector3();
-            boundingBox.getCenter(center);
-
-            this._pivot.position.copy(center);
+            this._pivot.position.copy(positionVector);
 
             const pivotHelper = new THREE.AxesHelper(0.5);
             this._pivot.add(pivotHelper);
@@ -1271,7 +1267,7 @@ export class MainView extends React.Component<IProps, IStates> {
             // Listen for changes on TransformControls to update this._matchingChild
             this._transformControls.addEventListener('objectChange', () => {
               if (this._matchingChild && this._pivot) {
-                this._matchingChild.rotation.copy(this._pivot.rotation);
+                // this._matchingChild.rotation.copy(this._pivot.rotation);
               }
             });
           } else if (this._transformControls.mode === 'translate') {
