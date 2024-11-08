@@ -16,6 +16,7 @@ import {
   WorkerAction,
   IJCadContent
 } from '@jupytercad/schema';
+import { showErrorMessage } from '@jupyterlab/apputils';
 import { ObservableMap } from '@jupyterlab/observables';
 import { JSONValue, PromiseDelegate, UUID } from '@lumino/coreutils';
 import { IDisposable } from '@lumino/disposable';
@@ -169,6 +170,51 @@ export class MainViewModel implements IDisposable {
         }
       });
     });
+  }
+
+  /**
+   * Try to update an object, performing a dry run first to make sure it's feasible.
+   */
+  async maybeUpdateObjectParameters(
+    name: string,
+    properties: { [key: string]: any }
+  ): Promise<void> {
+    // getContent already returns a deep copy of the content, we can change it safely here
+    const updatedContent = this.jcadModel.getContent();
+    for (const object of updatedContent.objects) {
+      if (object.name === name) {
+        object.parameters = {
+          ...object.parameters,
+          ...properties
+        };
+      }
+    }
+
+    // Try a dry run
+    const dryRunResult = await this.dryRun(updatedContent);
+    if (dryRunResult.status === 'error') {
+      showErrorMessage(
+        'Failed to update the desired shape',
+        'The tool was unable to update the desired shape due to invalid parameter values. The values you entered may not be compatible with the dimensions of your piece.'
+      );
+      return;
+    }
+
+    // Dry run was successful, ready to apply the update now
+    const meta: IDict = dryRunResult.shapeMetadata?.[name] ?? {};
+    const obj = this.jcadModel.sharedModel.getObjectByName(name);
+    if (obj) {
+      this.jcadModel.sharedModel.updateObjectByName(name, {
+        data: {
+          key: 'parameters',
+          value: {
+            ...obj.parameters,
+            ...properties
+          }
+        },
+        meta
+      });
+    }
   }
 
   /**
