@@ -1229,8 +1229,6 @@ export class MainView extends React.Component<IProps, IStates> {
       );
 
       if (this._matchingChild) {
-        this._transformControls.attach(this._matchingChild as BasicMesh);
-
         const obj = this._model.sharedModel.getObjectByName(selectedMeshName);
         const positionArray = obj?.parameters?.Placement?.Position;
 
@@ -1258,6 +1256,7 @@ export class MainView extends React.Component<IProps, IStates> {
               }
             });
           } else if (this._transformControls.mode === 'translate') {
+            this._transformControls.attach(this._matchingChild as BasicMesh);
             this._transformControls.position.copy(positionVector);
           }
           this._transformControls.visible = true;
