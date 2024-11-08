@@ -437,60 +437,61 @@ export class MainView extends React.Component<IProps, IStates> {
                 Position: newPosition
               }
             });
-        } else if (this._transformControls.mode === 'rotate' && this._pivot) {
+          } else if (this._transformControls.mode === 'rotate' && this._pivot) {
             // Retrieve the existing rotation from the shared model
             const existingRotationArray = obj?.parameters?.Placement?.Axis;
             const existingRotation = new THREE.Euler(
-                THREE.MathUtils.degToRad(existingRotationArray[0]),
-                THREE.MathUtils.degToRad(existingRotationArray[1]),
-                THREE.MathUtils.degToRad(existingRotationArray[2]),
-                'XYZ' // or the rotation order used in your model
+              THREE.MathUtils.degToRad(existingRotationArray[0]),
+              THREE.MathUtils.degToRad(existingRotationArray[1]),
+              THREE.MathUtils.degToRad(existingRotationArray[2]),
+              'XYZ' // or the rotation order used in your model
             );
             console.log(existingRotation);
-            
-        
+
             // Get the pivot rotation as a delta rotation
             const pivotEuler = this._pivot.rotation;
-        
+
             // Add the pivot rotation to the existing rotation
             const finalRotation = new THREE.Euler(
-                existingRotation.x + pivotEuler.x,
-                existingRotation.y + pivotEuler.y,
-                existingRotation.z + pivotEuler.z,
-                existingRotation.order
+              existingRotation.x + pivotEuler.x,
+              existingRotation.y + pivotEuler.y,
+              existingRotation.z + pivotEuler.z,
+              existingRotation.order
             );
-        
+
             // Convert the final rotation to a quaternion to extract axis and angle
-            const finalQuaternion = new THREE.Quaternion().setFromEuler(finalRotation);
+            const finalQuaternion = new THREE.Quaternion().setFromEuler(
+              finalRotation
+            );
             const axis = new THREE.Vector3();
             // finalQuaternion.normalize();
-            axis.set(finalQuaternion.x, finalQuaternion.y, finalQuaternion.z)
-        
+            axis.set(finalQuaternion.x, finalQuaternion.y, finalQuaternion.z);
+
             const angle = 2 * Math.acos(finalQuaternion.w); // Angle in radians
             const existingAngle = obj?.parameters?.Placement?.Angle;
             const angleDeg = THREE.MathUtils.radToDeg(angle) + existingAngle;
             console.log(this._pivot.position);
-            
+
             console.log(axis, angleDeg);
-        
+
             // Update the shared model with the new axis and angle
             this._model.sharedModel.updateObjectByName(objectName, {
-                data: {
-                    key: 'parameters',
-                    value: {
-                        ...obj.parameters,
-                        Placement: {
-                            ...obj.parameters.Placement,
-                            Axis: [axis.x, axis.y, axis.z],
-                            Angle: angleDeg
-                        }
-                    }
+              data: {
+                key: 'parameters',
+                value: {
+                  ...obj.parameters,
+                  Placement: {
+                    ...obj.parameters.Placement,
+                    Axis: [axis.x, axis.y, axis.z],
+                    Angle: angleDeg
+                  }
                 }
+              }
             });
-            
+
             // Optionally remove the pivot from the scene
             // this._scene.remove(this._pivot);
-        }
+          }
         }
       });
       this._scene.add(this._transformControls);
