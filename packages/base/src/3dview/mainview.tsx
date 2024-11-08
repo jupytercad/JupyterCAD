@@ -1254,7 +1254,9 @@ export class MainView extends React.Component<IProps, IStates> {
           if (this._transformControls.mode === 'rotate') {
             this._pivot = new THREE.Object3D();
 
-            const boundingBox = new THREE.Box3().setFromObject(this._matchingChild);
+            const boundingBox = new THREE.Box3().setFromObject(
+              this._matchingChild
+            );
             const center = new THREE.Vector3();
             boundingBox.getCenter(center);
 
@@ -1268,12 +1270,11 @@ export class MainView extends React.Component<IProps, IStates> {
 
             // Listen for changes on TransformControls to update this._matchingChild
             this._transformControls.addEventListener('objectChange', () => {
-                if (this._matchingChild && this._pivot) {
-                    this._matchingChild.rotation.copy(this._pivot.rotation);
-                }
+              if (this._matchingChild && this._pivot) {
+                this._matchingChild.rotation.copy(this._pivot.rotation);
+              }
             });
-        }
-        else if (this._transformControls.mode === 'translate') {
+          } else if (this._transformControls.mode === 'translate') {
             this._transformControls.position.copy(positionVector);
           }
           this._transformControls.visible = true;
