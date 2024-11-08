@@ -413,78 +413,57 @@ export class MainView extends React.Component<IProps, IStates> {
       });
       // Update the currently transformed object in the shared model once finished moving
       this._transformControls.addEventListener('mouseUp', () => {
-        const updatedObject = this._selectedMeshes[0];
-        const objectName = updatedObject.name;
+        if (!this._currentTransformed) {
+          return;
+        }
+
+        const objectName = this._currentTransformed.name.replace('-group', '');
 
         const updatedPosition = new THREE.Vector3();
-        updatedObject.getWorldPosition(updatedPosition);
+        this._pivot.getWorldPosition(updatedPosition);
+        const updatedAxis = new THREE.Vector3(
+          this._pivot.rotation.x,
+          this._pivot.rotation.y,
+          this._pivot.rotation.z
+        ).normalize();
+        const updatedAngle = new THREE.Vector3(
+          this._pivot.rotation.x,
+          this._pivot.rotation.y,
+          this._pivot.rotation.z
+        ).length();
 
         const obj = this._model.sharedModel.getObjectByName(objectName);
 
         if (obj && obj.parameters && obj.parameters.Placement) {
-          if (this._transformControls.mode === 'translate') {
-            const positionArray = obj?.parameters?.Placement?.Position;
             const newPosition = [
-              positionArray[0] + updatedPosition.x,
-              positionArray[1] + updatedPosition.y,
-              positionArray[2] + updatedPosition.z
+              updatedPosition.x,
+              updatedPosition.y,
+              updatedPosition.z
             ];
 
+            const newAxis = updatedAngle === 0 ? [0, 0, 1] : [updatedAxis.x, updatedAxis.y, updatedAxis.z];
+
+            console.log('update position', newPosition, newAxis, THREE.MathUtils.radToDeg(updatedAngle));
+
             this._mainViewModel.maybeUpdateObjectParameters(objectName, {
               ...obj.parameters,
               Placement: {
                 ...obj.parameters.Placement,
-                Position: newPosition
+                Position: newPosition,
+                Axis: newAxis,
+                Angle: THREE.MathUtils.radToDeg(updatedAngle)
               }
             });
-          } else if (this._transformControls.mode === 'rotate' && this._pivot) {
-            // Retrieve the existing rotation from the shared model
-            const existingRotationArray = obj?.parameters?.Placement?.Axis;
-            const existingAngleDeg = obj?.parameters?.Placement?.Angle;
-            const existingAngleRad = THREE.MathUtils.degToRad(existingAngleDeg);
-            const existingAxis = new THREE.Vector3(
-              existingRotationArray[0],
-              existingRotationArray[1],
-              existingRotationArray[2]
-            ).normalize();
-            const existingQuaternion = new THREE.Quaternion().setFromAxisAngle(
-              existingAxis,
-              existingAngleRad
-            );
-
-            // Get the pivot rotation as a quaternion
-            const pivotQuaternion = new THREE.Quaternion().setFromEuler(
-              this._pivot.rotation
-            );
-
-            // Combine the existing and pivot rotations
-            const finalQuaternion =
-              existingQuaternion.multiply(pivotQuaternion);
-
-            const angle = 2 * Math.acos(finalQuaternion.w);
-            const angleDeg = THREE.MathUtils.radToDeg(angle);
-            const axis = new THREE.Vector3();
-            axis.set(finalQuaternion.x, finalQuaternion.y, finalQuaternion.z);
-
-            // Update the shared model with the new axis and angle
-            this._mainViewModel.maybeUpdateObjectParameters(objectName, {
-              ...obj.parameters,
-              Placement: {
-                ...obj.parameters.Placement,
-                Axis: [axis.x, axis.y, axis.z],
-                Angle: angleDeg
-              }
-            });
-
-            // Optionally remove the pivot from the scene
-            // this._scene.remove(this._pivot);
-          }
         }
       });
       this._scene.add(this._transformControls);
       this._transformControls.setMode('translate');
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
+      const pivotHelper = new THREE.AxesHelper(10);
+      this._scene.add(this._pivot);
+      this._pivot.add(pivotHelper);
+      this._transformControls.attach(this._pivot);
 
       this._createViewHelper();
     }
@@ -1213,6 +1192,8 @@ export class MainView extends React.Component<IProps, IStates> {
     this._updateTransformControls(selectedNames);
   }
 
+  private _pivot = new THREE.Object3D();
+
   /*
    * Attach the transform controls to the current selection, or detach it
    */
@@ -1222,38 +1203,33 @@ export class MainView extends React.Component<IProps, IStates> {
       this._matchingChild = this._meshGroup?.children.find(child =>
         child.name.startsWith(selectedMeshName)
       );
+      this._currentTransformed = this._matchingChild;
 
-      if (this._matchingChild) {
+      if (this._currentTransformed) {
+        // this._transformControls.attach(this._currentTransformed as BasicMesh);
+
         const obj = this._model.sharedModel.getObjectByName(selectedMeshName);
         const positionArray = obj?.parameters?.Placement?.Position;
+        const angle = obj?.parameters?.Placement?.Angle;
+        const axis = obj?.parameters?.Placement?.Axis;
 
         if (positionArray && positionArray.length === 3) {
-          const positionVector = new THREE.Vector3(
+          const position = new THREE.Vector3(
             positionArray[0],
             positionArray[1],
             positionArray[2]
           );
+          const rotation = new THREE.Vector3(
+            axis[0],
+            axis[1],
+            axis[2]
+          ).multiplyScalar(THREE.MathUtils.degToRad(angle));
 
-          if (this._transformControls.mode === 'rotate') {
-            this._pivot = new THREE.Object3D();
-            this._pivot.position.copy(positionVector);
+          // this._transformControls.position.copy(position);
+          // this._transformControls.rotation.setFromVector3(rotation);
+          this._pivot.rotation.setFromVector3(rotation);
+          this._pivot.position.copy(position);
 
-            const pivotHelper = new THREE.AxesHelper(0.5);
-            this._pivot.add(pivotHelper);
-
-            this._scene.add(this._pivot);
-            this._transformControls.attach(this._pivot);
-
-            // Listen for changes on TransformControls to update this._matchingChild
-            this._transformControls.addEventListener('objectChange', () => {
-              if (this._matchingChild && this._pivot) {
-                // this._matchingChild.rotation.copy(this._pivot.rotation);
-              }
-            });
-          } else if (this._transformControls.mode === 'translate') {
-            this._transformControls.attach(this._matchingChild as BasicMesh);
-            this._transformControls.position.copy(positionVector);
-          }
           this._transformControls.visible = true;
           this._transformControls.enabled = true;
           return;
@@ -1262,7 +1238,7 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     // Detach TransformControls from the previous selection
-    this._transformControls.detach();
+    // this._transformControls.detach();
 
     this._transformControls.visible = false;
     this._transformControls.enabled = false;
@@ -1759,6 +1735,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _previousSelection: { [key: string]: ISelection } | null = null;
 
+  private _currentTransformed: THREE.Object3D | undefined = undefined;
+
   private _scene: THREE.Scene; // Threejs scene
   private _camera: THREE.PerspectiveCamera | THREE.OrthographicCamera; // Threejs camera
   private _cameraLight: THREE.PointLight;
@@ -1783,6 +1761,5 @@ export class MainView extends React.Component<IProps, IStates> {
   private _collaboratorPointers: IDict<IPointer>;
   private _contextMenu: ContextMenu;
   private _loadingTimeout: ReturnType<typeof setTimeout> | null;
-  private _pivot: THREE.Object3D | null = null;
   private _matchingChild: THREE.Object3D<THREE.Object3DEventMap> | undefined;
 }
