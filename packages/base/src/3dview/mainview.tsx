@@ -443,29 +443,28 @@ export class MainView extends React.Component<IProps, IStates> {
             const existingAngleDeg = obj?.parameters?.Placement?.Angle;
             const existingAngleRad = THREE.MathUtils.degToRad(existingAngleDeg);
             const existingAxis = new THREE.Vector3(
-                existingRotationArray[0],
-                existingRotationArray[1],
-                existingRotationArray[2]
+              existingRotationArray[0],
+              existingRotationArray[1],
+              existingRotationArray[2]
             ).normalize();
             const existingQuaternion = new THREE.Quaternion().setFromAxisAngle(
-                existingAxis,
-                existingAngleRad
+              existingAxis,
+              existingAngleRad
             );
-        
+
             // Get the pivot rotation as a quaternion
-            const pivotQuaternion = new THREE.Quaternion().setFromEuler(this._pivot.rotation);
-        
+            const pivotQuaternion = new THREE.Quaternion().setFromEuler(
+              this._pivot.rotation
+            );
+
             // Combine the existing and pivot rotations
-            const finalQuaternion = existingQuaternion.multiply(pivotQuaternion);
+            const finalQuaternion =
+              existingQuaternion.multiply(pivotQuaternion);
 
             const angle = 2 * Math.acos(finalQuaternion.w);
             const angleDeg = THREE.MathUtils.radToDeg(angle);
             const axis = new THREE.Vector3();
-            axis.set(
-                finalQuaternion.x,
-                finalQuaternion.y,
-                finalQuaternion.z
-            );
+            axis.set(finalQuaternion.x, finalQuaternion.y, finalQuaternion.z);
 
             // Update the shared model with the new axis and angle
             this._model.sharedModel.updateObjectByName(objectName, {
@@ -481,10 +480,10 @@ export class MainView extends React.Component<IProps, IStates> {
                 }
               }
             });
-        
+
             // Optionally remove the pivot from the scene
             // this._scene.remove(this._pivot);
-        }
+          }
         }
       });
       this._scene.add(this._transformControls);
