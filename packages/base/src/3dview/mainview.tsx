@@ -468,11 +468,11 @@ export class MainView extends React.Component<IProps, IStates> {
 
             // Update the shared model with the new axis and angle
             this._mainViewModel.maybeUpdateObjectParameters(objectName, {
-                  ...obj.parameters,
-                  Placement: {
-                    ...obj.parameters.Placement,
-                    Axis: [axis.x, axis.y, axis.z],
-                    Angle: angleDeg
+              ...obj.parameters,
+              Placement: {
+                ...obj.parameters.Placement,
+                Axis: [axis.x, axis.y, axis.z],
+                Angle: angleDeg
               }
             });
 
