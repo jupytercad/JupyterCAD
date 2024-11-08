@@ -467,7 +467,7 @@ export class MainView extends React.Component<IProps, IStates> {
             axis.set(finalQuaternion.x, finalQuaternion.y, finalQuaternion.z);
 
             // Update the shared model with the new axis and angle
-            this._model.sharedModel.updateObjectByName(objectName, {
+            this._mainViewModel.maybeUpdateObjectParameters(objectName, {
               data: {
                 key: 'parameters',
                 value: {
