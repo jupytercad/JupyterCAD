@@ -1253,7 +1253,12 @@ export class MainView extends React.Component<IProps, IStates> {
 
           if (this._transformControls.mode === 'rotate') {
             this._pivot = new THREE.Object3D();
-            this._pivot.position.copy(positionVector);
+
+            const boundingBox = new THREE.Box3().setFromObject(this._matchingChild);
+            const center = new THREE.Vector3();
+            boundingBox.getCenter(center);
+
+            this._pivot.position.copy(center);
 
             const pivotHelper = new THREE.AxesHelper(0.5);
             this._pivot.add(pivotHelper);
@@ -1263,13 +1268,12 @@ export class MainView extends React.Component<IProps, IStates> {
 
             // Listen for changes on TransformControls to update this._matchingChild
             this._transformControls.addEventListener('objectChange', () => {
-              if (this._matchingChild && this._pivot) {
-                this._matchingChild.rotation.copy(this._pivot.rotation);
-
-                this._matchingChild.position.copy(this._pivot.position);
-              }
+                if (this._matchingChild && this._pivot) {
+                    this._matchingChild.rotation.copy(this._pivot.rotation);
+                }
             });
-          } else if (this._transformControls.mode === 'translate') {
+        }
+        else if (this._transformControls.mode === 'translate') {
             this._transformControls.position.copy(positionVector);
           }
           this._transformControls.visible = true;
