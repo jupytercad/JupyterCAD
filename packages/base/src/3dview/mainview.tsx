@@ -430,16 +430,11 @@ export class MainView extends React.Component<IProps, IStates> {
               positionArray[2] + updatedPosition.z
             ];
 
-            this._model.sharedModel.updateObjectByName(objectName, {
-              data: {
-                key: 'parameters',
-                value: {
-                  ...obj.parameters,
-                  Placement: {
-                    ...obj.parameters.Placement,
-                    Position: newPosition
-                  }
-                }
+            this._mainViewModel.maybeUpdateObjectParameters(objectName, {
+              ...obj.parameters,
+              Placement: {
+                ...obj.parameters.Placement,
+                Position: newPosition
               }
             });
         } else if (this._transformControls.mode === 'rotate' && this._pivot) {
@@ -496,7 +491,6 @@ export class MainView extends React.Component<IProps, IStates> {
             // Optionally remove the pivot from the scene
             // this._scene.remove(this._pivot);
         }
-        
         }
       });
       this._scene.add(this._transformControls);

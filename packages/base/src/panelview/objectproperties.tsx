@@ -9,7 +9,7 @@ import {
   IJupyterCadTracker,
   ISelection
 } from '@jupytercad/schema';
-import { ReactWidget, showErrorMessage } from '@jupyterlab/apputils';
+import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
 import { Panel } from '@lumino/widgets';
 import * as React from 'react';
@@ -193,43 +193,10 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       return;
     }
 
-    // getContent already returns a deep copy of the content, we can change it safely here
-    const updatedContent = model.getContent();
-    for (const object of updatedContent.objects) {
-      if (object.name === objectName) {
-        object.parameters = {
-          ...object.parameters,
-          ...properties
-        };
-      }
-    }
-
-    // Try a dry run
-    const dryRunResult =
-      await currentWidget.content.currentViewModel.dryRun(updatedContent);
-    if (dryRunResult.status === 'error') {
-      showErrorMessage(
-        'Failed to update the shape',
-        'The tool was unable to update the desired shape due to invalid parameter values. The values you entered may not be compatible with the dimensions of your piece.'
-      );
-      return;
-    }
-
-    // Dry run was successful, ready to apply the update now
-    const meta: IDict = dryRunResult.shapeMetadata?.[objectName] ?? {};
-    const obj = model.sharedModel.getObjectByName(objectName);
-    if (obj) {
-      model.sharedModel.updateObjectByName(objectName, {
-        data: {
-          key: 'parameters',
-          value: {
-            ...obj['parameters'],
-            ...properties
-          }
-        },
-        meta
-      });
-    }
+    currentWidget.content.currentViewModel.maybeUpdateObjectParameters(
+      objectName,
+      properties
+    );
   }
 
   syncSelectedField = (
