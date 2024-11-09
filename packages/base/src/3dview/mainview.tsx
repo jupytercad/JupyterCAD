@@ -412,7 +412,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this._controls.enabled = !event.value;
       });
       // Update the currently transformed object in the shared model once finished moving
-      this._transformControls.addEventListener('objectChange', () => {
+      this._transformControls.addEventListener('mouseUp', () => {
         if (!this._currentTransformed) {
           return;
         }
