@@ -427,13 +427,16 @@ export class MainView extends React.Component<IProps, IStates> {
         this._pivot.getWorldQuaternion(q);
 
         let updatedAngle = [[0, 0, 0], 0];
-        if ((1 - (q.w * q.w)) > 0.001) {
+        if (1 - q.w * q.w > 0.001) {
           const s = Math.sqrt(1 - q.w * q.w);
-          updatedAngle = [[
-            parseFloat((q.x / s).toFixed(2)), 
-            parseFloat((q.y / s).toFixed(2)),
-            parseFloat((q.z / s).toFixed(2))
-          ], parseFloat((2 * Math.acos(q.w) * 57.2958).toFixed(2))];
+          updatedAngle = [
+            [
+              parseFloat((q.x / s).toFixed(2)),
+              parseFloat((q.y / s).toFixed(2)),
+              parseFloat((q.z / s).toFixed(2))
+            ],
+            parseFloat((2 * Math.acos(q.w) * 57.2958).toFixed(2))
+          ];
         } else {
           updatedAngle = [[0, 0, 1], 0];
         }
@@ -446,7 +449,7 @@ export class MainView extends React.Component<IProps, IStates> {
             updatedPosition.y,
             updatedPosition.z
           ];
-        const newAxis = updatedAngle[0];
+          const newAxis = updatedAngle[0];
 
           this._mainViewModel.maybeUpdateObjectParameters(objectName, {
             ...obj.parameters,
@@ -454,10 +457,10 @@ export class MainView extends React.Component<IProps, IStates> {
               ...obj.parameters.Placement,
               Position: newPosition,
               Axis: newAxis,
-            Angle: updatedAngle[1]
-          }
-        });
-      }
+              Angle: updatedAngle[1]
+            }
+          });
+        }
       });
       this._scene.add(this._transformControls);
       this._transformControls.setMode('translate');
