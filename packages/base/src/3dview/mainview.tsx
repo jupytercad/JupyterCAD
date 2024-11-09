@@ -412,7 +412,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this._controls.enabled = !event.value;
       });
       // Update the currently transformed object in the shared model once finished moving
-      this._transformControls.addEventListener('mouseUp', () => {
+      this._transformControls.addEventListener('objectChange', () => {
         if (!this._currentTransformed) {
           return;
         }
@@ -421,16 +421,22 @@ export class MainView extends React.Component<IProps, IStates> {
 
         const updatedPosition = new THREE.Vector3();
         this._pivot.getWorldPosition(updatedPosition);
-        const updatedAxis = new THREE.Vector3(
-          this._pivot.rotation.x,
-          this._pivot.rotation.y,
-          this._pivot.rotation.z
-        ).normalize();
-        const updatedAngle = new THREE.Vector3(
-          this._pivot.rotation.x,
-          this._pivot.rotation.y,
-          this._pivot.rotation.z
-        ).length();
+
+        // Get the global rotation quaternion
+        const q = new THREE.Quaternion();
+        this._pivot.getWorldQuaternion(q);
+
+        let updatedAngle = [[0, 0, 0], 0];
+        if ((1 - (q.w * q.w)) > 0.001) {
+          const s = Math.sqrt(1 - q.w * q.w);
+          updatedAngle = [[
+            parseFloat((q.x / s).toFixed(2)), 
+            parseFloat((q.y / s).toFixed(2)),
+            parseFloat((q.z / s).toFixed(2))
+          ], parseFloat((2 * Math.acos(q.w) * 57.2958).toFixed(2))];
+        } else {
+          updatedAngle = [[0, 0, 1], 0];
+        }
 
         const obj = this._model.sharedModel.getObjectByName(objectName);
 
@@ -440,18 +446,7 @@ export class MainView extends React.Component<IProps, IStates> {
             updatedPosition.y,
             updatedPosition.z
           ];
-
-          const newAxis =
-            updatedAngle === 0
-              ? [0, 0, 1]
-              : [updatedAxis.x, updatedAxis.y, updatedAxis.z];
-
-          console.log(
-            'update position',
-            newPosition,
-            newAxis,
-            THREE.MathUtils.radToDeg(updatedAngle)
-          );
+        const newAxis = updatedAngle[0];
 
           this._mainViewModel.maybeUpdateObjectParameters(objectName, {
             ...obj.parameters,
@@ -459,10 +454,10 @@ export class MainView extends React.Component<IProps, IStates> {
               ...obj.parameters.Placement,
               Position: newPosition,
               Axis: newAxis,
-              Angle: THREE.MathUtils.radToDeg(updatedAngle)
-            }
-          });
-        }
+            Angle: updatedAngle[1]
+          }
+        });
+      }
       });
       this._scene.add(this._transformControls);
       this._transformControls.setMode('translate');
