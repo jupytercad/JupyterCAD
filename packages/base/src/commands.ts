@@ -969,7 +969,7 @@ export function addCommands(
       if (!current) {
         return;
       }
-      
+
       current.transform = !current.transform;
       commands.notifyCommandChanged(CommandIDs.transform);
     },

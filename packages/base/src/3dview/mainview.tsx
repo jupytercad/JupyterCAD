@@ -1460,13 +1460,13 @@ export class MainView extends React.Component<IProps, IStates> {
 
     if (change.key === 'transform') {
       const transformEnabled = change.newValue as boolean | undefined;
-    
+
       if (transformEnabled !== undefined) {
         this.setState(
           old => ({ ...old, transform: transformEnabled }),
           () => {
-              this._updateSelected({});
-              this._renderer.render(this._scene, this._camera);
+            this._updateSelected({});
+            this._renderer.render(this._scene, this._camera);
           }
         );
       }
