@@ -71,6 +71,7 @@ interface IStates {
   annotations: IDict<IAnnotation>;
   firstLoad: boolean;
   wireframe: boolean;
+  transform: boolean;
 }
 
 interface ILineIntersection extends THREE.Intersection {
@@ -113,7 +114,8 @@ export class MainView extends React.Component<IProps, IStates> {
       loading: true,
       annotations: {},
       firstLoad: true,
-      wireframe: false
+      wireframe: false,
+      transform: false
     };
   }
 
@@ -1192,8 +1194,8 @@ export class MainView extends React.Component<IProps, IStates> {
           this._transformControls.position.copy(positionVector);
         }
 
-        this._transformControls.visible = true;
-        this._transformControls.enabled = true;
+        this._transformControls.visible = this.state.transform;
+        this._transformControls.enabled = this.state.transform;
 
         return;
       }
@@ -1451,6 +1453,20 @@ export class MainView extends React.Component<IProps, IStates> {
               });
               this._renderer.render(this._scene, this._camera);
             }
+          }
+        );
+      }
+    }
+
+    if (change.key === 'transform') {
+      const transformEnabled = change.newValue as boolean | undefined;
+    
+      if (transformEnabled !== undefined) {
+        this.setState(
+          old => ({ ...old, transform: transformEnabled }),
+          () => {
+              this._updateSelected({});
+              this._renderer.render(this._scene, this._camera);
           }
         );
       }

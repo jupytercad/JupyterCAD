@@ -192,6 +192,14 @@ export class ToolbarWidget extends ReactiveToolbar {
             commands: options.commands
           })
         );
+        this.addItem(
+          'Toggle Transform Controls',
+          new CommandToolbarButton({
+            id: CommandIDs.transform,
+            label: '',
+            commands: options.commands
+          })
+        );
         this.addItem('separator6', new Separator());
 
         this.addItem(
