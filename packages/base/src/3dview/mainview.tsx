@@ -411,8 +411,45 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.addEventListener('dragging-changed', event => {
         this._controls.enabled = !event.value;
       });
-      // Update the currently transformed object in the shared model once finished moving
-      this._transformControls.addEventListener('objectChange', () => {
+
+      const initialQuaternion = new THREE.Quaternion();
+      let sharedQuaternion = new THREE.Quaternion();
+      this._transformControls.addEventListener('mouseDown', () => {
+        if (!this._currentTransformed) {
+          return;
+        }
+      
+        const objectName = this._currentTransformed.name.replace('-group', '');
+        const obj = this._model.sharedModel.getObjectByName(objectName);
+
+        const sharedAxis = obj?.parameters?.Placement?.Axis;
+        const sharedAngle = obj?.parameters?.Placement?.Angle;
+        
+        if (sharedAxis && sharedAngle) {
+          const angleRad = (sharedAngle / 57.2958);
+
+          const halfAngle = angleRad / 2;
+          const sinHalfAngle = Math.sin(halfAngle);
+          
+          sharedQuaternion = new THREE.Quaternion(
+            sharedAxis[0] * sinHalfAngle,
+            sharedAxis[1] * sinHalfAngle,
+            sharedAxis[2] * sinHalfAngle,
+            Math.cos(halfAngle)
+          );
+        }
+
+        this._pivot.getWorldQuaternion(initialQuaternion);
+        console.log('Initial Quaternion from pivot:', initialQuaternion);
+        
+        console.log('Initial Quaternion from Axis-Angle:', sharedQuaternion);
+        if(initialQuaternion.equals(sharedQuaternion)) {
+          console.log('Quaternions are equal');
+          
+        }
+      });
+
+      this._transformControls.addEventListener('mouseUp', () => {
         if (!this._currentTransformed) {
           return;
         }
@@ -422,20 +459,26 @@ export class MainView extends React.Component<IProps, IStates> {
         const updatedPosition = new THREE.Vector3();
         this._pivot.getWorldPosition(updatedPosition);
 
-        // Get the global rotation quaternion
-        const q = new THREE.Quaternion();
-        this._pivot.getWorldQuaternion(q);
+        const currentQuaternion = new THREE.Quaternion();
+        
+        this._pivot.getWorldQuaternion(currentQuaternion);
+        console.log(sharedQuaternion);
+
+        const deltaQuaternion = initialQuaternion.clone().invert().multiply(currentQuaternion);
+
+        const finalQuaternion = sharedQuaternion.clone().multiply(deltaQuaternion);
+        console.log(finalQuaternion);
 
         let updatedAngle = [[0, 0, 0], 0];
-        if (1 - q.w * q.w > 0.001) {
-          const s = Math.sqrt(1 - q.w * q.w);
+        if (1 - finalQuaternion.w * finalQuaternion.w > 0.001) {
+          const s = Math.sqrt(1 - finalQuaternion.w * finalQuaternion.w);
           updatedAngle = [
             [
-              parseFloat((q.x / s).toFixed(2)),
-              parseFloat((q.y / s).toFixed(2)),
-              parseFloat((q.z / s).toFixed(2))
+              parseFloat((finalQuaternion.x / s).toFixed(2)),
+              parseFloat((finalQuaternion.y / s).toFixed(2)),
+              parseFloat((finalQuaternion.z / s).toFixed(2))
             ],
-            parseFloat((2 * Math.acos(q.w) * 57.2958).toFixed(2))
+            parseFloat((2 * Math.acos(finalQuaternion.w) * 57.2958).toFixed(2))
           ];
         } else {
           updatedAngle = [[0, 0, 1], 0];
