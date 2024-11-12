@@ -419,12 +419,13 @@ export class MainView extends React.Component<IProps, IStates> {
           return;
         }
 
-
-
         this._pivot.getWorldQuaternion(initialQuaternion);
         console.log('Initial Quaternion from pivot:', initialQuaternion);
 
-        console.log('Initial Quaternion from Axis-Angle:', this._sharedQuaternion);
+        console.log(
+          'Initial Quaternion from Axis-Angle:',
+          this._sharedQuaternion
+        );
         if (initialQuaternion.equals(this._sharedQuaternion)) {
           console.log('Quaternions are equal');
         }
