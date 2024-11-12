@@ -413,37 +413,19 @@ export class MainView extends React.Component<IProps, IStates> {
       });
 
       const initialQuaternion = new THREE.Quaternion();
-      let sharedQuaternion = new THREE.Quaternion();
+      // let sharedQuaternion = new THREE.Quaternion();
       this._transformControls.addEventListener('mouseDown', () => {
         if (!this._currentTransformed) {
           return;
         }
 
-        const objectName = this._currentTransformed.name.replace('-group', '');
-        const obj = this._model.sharedModel.getObjectByName(objectName);
 
-        const sharedAxis = obj?.parameters?.Placement?.Axis;
-        const sharedAngle = obj?.parameters?.Placement?.Angle;
-
-        if (sharedAxis && sharedAngle) {
-          const angleRad = sharedAngle / 57.2958;
-
-          const halfAngle = angleRad / 2;
-          const sinHalfAngle = Math.sin(halfAngle);
-
-          sharedQuaternion = new THREE.Quaternion(
-            sharedAxis[0] * sinHalfAngle,
-            sharedAxis[1] * sinHalfAngle,
-            sharedAxis[2] * sinHalfAngle,
-            Math.cos(halfAngle)
-          );
-        }
 
         this._pivot.getWorldQuaternion(initialQuaternion);
         console.log('Initial Quaternion from pivot:', initialQuaternion);
 
-        console.log('Initial Quaternion from Axis-Angle:', sharedQuaternion);
-        if (initialQuaternion.equals(sharedQuaternion)) {
+        console.log('Initial Quaternion from Axis-Angle:', this._sharedQuaternion);
+        if (initialQuaternion.equals(this._sharedQuaternion)) {
           console.log('Quaternions are equal');
         }
       });
@@ -461,14 +443,14 @@ export class MainView extends React.Component<IProps, IStates> {
         const currentQuaternion = new THREE.Quaternion();
 
         this._pivot.getWorldQuaternion(currentQuaternion);
-        console.log(sharedQuaternion);
+        console.log(this._sharedQuaternion);
 
         const deltaQuaternion = initialQuaternion
           .clone()
           .invert()
           .multiply(currentQuaternion);
 
-        const finalQuaternion = sharedQuaternion
+        const finalQuaternion = this._sharedQuaternion
           .clone()
           .multiply(deltaQuaternion);
         console.log(finalQuaternion);
@@ -1267,6 +1249,18 @@ export class MainView extends React.Component<IProps, IStates> {
         const angle = obj?.parameters?.Placement?.Angle;
         const axis = obj?.parameters?.Placement?.Axis;
 
+        const angleRad = angle / 57.2958;
+
+        const halfAngle = angleRad / 2;
+        const sinHalfAngle = Math.sin(halfAngle);
+
+        this._sharedQuaternion = new THREE.Quaternion(
+          axis[0] * sinHalfAngle,
+          axis[1] * sinHalfAngle,
+          axis[2] * sinHalfAngle,
+          Math.cos(halfAngle)
+        );
+
         if (positionArray && positionArray.length === 3) {
           const position = new THREE.Vector3(
             positionArray[0],
@@ -1815,4 +1809,5 @@ export class MainView extends React.Component<IProps, IStates> {
   private _contextMenu: ContextMenu;
   private _loadingTimeout: ReturnType<typeof setTimeout> | null;
   private _matchingChild: THREE.Object3D<THREE.Object3DEventMap> | undefined;
+  private _sharedQuaternion: THREE.Quaternion;
 }
