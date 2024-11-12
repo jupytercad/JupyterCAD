@@ -1268,13 +1268,13 @@ export class MainView extends React.Component<IProps, IStates> {
             positionArray[1],
             positionArray[2]
           );
-          const rotation = new THREE.Vector3(axis[0], axis[1], axis[2])
-            .normalize()
-            .multiplyScalar(THREE.MathUtils.degToRad(angle));
+          // const rotation = new THREE.Vector3(axis[0], axis[1], axis[2])
+          //   .normalize()
+          //   .multiplyScalar(THREE.MathUtils.degToRad(angle));
 
           // this._transformControls.position.copy(position);
           // this._transformControls.rotation.setFromVector3(rotation);
-          this._pivot.rotation.setFromVector3(rotation);
+          this._pivot.rotation.setFromQuaternion(this._sharedQuaternion);
           this._pivot.position.copy(position);
 
           this._transformControls.visible = true;
