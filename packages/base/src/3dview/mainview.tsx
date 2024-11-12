@@ -418,19 +418,19 @@ export class MainView extends React.Component<IProps, IStates> {
         if (!this._currentTransformed) {
           return;
         }
-      
+
         const objectName = this._currentTransformed.name.replace('-group', '');
         const obj = this._model.sharedModel.getObjectByName(objectName);
 
         const sharedAxis = obj?.parameters?.Placement?.Axis;
         const sharedAngle = obj?.parameters?.Placement?.Angle;
-        
+
         if (sharedAxis && sharedAngle) {
-          const angleRad = (sharedAngle / 57.2958);
+          const angleRad = sharedAngle / 57.2958;
 
           const halfAngle = angleRad / 2;
           const sinHalfAngle = Math.sin(halfAngle);
-          
+
           sharedQuaternion = new THREE.Quaternion(
             sharedAxis[0] * sinHalfAngle,
             sharedAxis[1] * sinHalfAngle,
@@ -441,11 +441,10 @@ export class MainView extends React.Component<IProps, IStates> {
 
         this._pivot.getWorldQuaternion(initialQuaternion);
         console.log('Initial Quaternion from pivot:', initialQuaternion);
-        
+
         console.log('Initial Quaternion from Axis-Angle:', sharedQuaternion);
-        if(initialQuaternion.equals(sharedQuaternion)) {
+        if (initialQuaternion.equals(sharedQuaternion)) {
           console.log('Quaternions are equal');
-          
         }
       });
 
@@ -460,13 +459,18 @@ export class MainView extends React.Component<IProps, IStates> {
         this._pivot.getWorldPosition(updatedPosition);
 
         const currentQuaternion = new THREE.Quaternion();
-        
+
         this._pivot.getWorldQuaternion(currentQuaternion);
         console.log(sharedQuaternion);
 
-        const deltaQuaternion = initialQuaternion.clone().invert().multiply(currentQuaternion);
+        const deltaQuaternion = initialQuaternion
+          .clone()
+          .invert()
+          .multiply(currentQuaternion);
 
-        const finalQuaternion = sharedQuaternion.clone().multiply(deltaQuaternion);
+        const finalQuaternion = sharedQuaternion
+          .clone()
+          .multiply(deltaQuaternion);
         console.log(finalQuaternion);
 
         let updatedAngle = [[0, 0, 0], 0];
