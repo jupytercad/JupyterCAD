@@ -644,7 +644,8 @@ export class MainView extends React.Component<IProps, IStates> {
           !intersect.object.visible ||
           !intersect.object.parent?.visible ||
           intersect.object.name === SELECTION_BOUNDING_BOX ||
-          (this._transformControls.enabled && intersect.object.name.startsWith('edge'))
+          (this._transformControls.enabled &&
+            intersect.object.name.startsWith('edge'))
         ) {
           continue;
         }
