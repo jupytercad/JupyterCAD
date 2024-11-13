@@ -1474,7 +1474,7 @@ export class MainView extends React.Component<IProps, IStates> {
               this._transformControls.detach();
               this._transformControls.visible = false;
             }
-    
+
             // Render the updated scene
             this._renderer.render(this._scene, this._camera);
           }
