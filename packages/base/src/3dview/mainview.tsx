@@ -1465,7 +1465,17 @@ export class MainView extends React.Component<IProps, IStates> {
         this.setState(
           old => ({ ...old, transform: transformEnabled }),
           () => {
-            this._updateSelected({});
+            const selection = this._pick();
+            if (transformEnabled) {
+              this._transformControls.attach(selection?.mesh as BasicMesh);
+              this._transformControls.visible = true;
+              this._transformControls.enabled = true;
+            } else {
+              this._transformControls.detach();
+              this._transformControls.visible = false;
+            }
+    
+            // Render the updated scene
             this._renderer.render(this._scene, this._camera);
           }
         );
