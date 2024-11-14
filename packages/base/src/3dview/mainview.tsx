@@ -72,6 +72,7 @@ interface IStates {
   firstLoad: boolean;
   wireframe: boolean;
   transform: boolean;
+  clipEnabled: boolean;
 }
 
 interface ILineIntersection extends THREE.Intersection {
@@ -115,7 +116,8 @@ export class MainView extends React.Component<IProps, IStates> {
       annotations: {},
       firstLoad: true,
       wireframe: false,
-      transform: false
+      transform: false,
+      clipEnabled: true
     };
   }
 
@@ -1433,9 +1435,15 @@ export class MainView extends React.Component<IProps, IStates> {
       const clipSettings = change.newValue as ClipSettings | undefined;
 
       if (change.type !== 'remove' && clipSettings) {
-        this._clipSettings = clipSettings;
+        this.setState(
+          oldState => ({ ...oldState, clipEnabled: clipSettings.enabled }),
+          () => {
+            this._clipSettings = clipSettings;
+            this._updateClipping();
 
-        this._updateClipping();
+            this._renderer.render(this._scene, this._camera);
+          }
+        );
       }
     }
 
@@ -1475,6 +1483,7 @@ export class MainView extends React.Component<IProps, IStates> {
             } else {
               this._transformControls.detach();
               this._transformControls.visible = false;
+              this._transformControls.enabled = false;
             }
 
             // Render the updated scene
@@ -1649,6 +1658,7 @@ export class MainView extends React.Component<IProps, IStates> {
     return screenPosition;
   }
   render(): JSX.Element {
+    const isTransformOrClipEnabled = this.state.transform || this._clipSettings.enabled;
     return (
       <div
         className="jcad-Mainview data-jcad-keybinding"
@@ -1693,6 +1703,22 @@ export class MainView extends React.Component<IProps, IStates> {
             height: 'calc(100%)'
           }}
         />
+        {isTransformOrClipEnabled && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '10px',
+            left: '10px',
+            padding: '8px',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            color: 'white',
+            borderRadius: '4px',
+            fontSize: '12px',
+          }}
+        >
+          Press R to switch mode
+        </div>
+      )}
       </div>
     );
   }
