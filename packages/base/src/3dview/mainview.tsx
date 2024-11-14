@@ -1440,8 +1440,6 @@ export class MainView extends React.Component<IProps, IStates> {
           () => {
             this._clipSettings = clipSettings;
             this._updateClipping();
-
-            this._renderer.render(this._scene, this._camera);
           }
         );
       }
@@ -1461,7 +1459,6 @@ export class MainView extends React.Component<IProps, IStates> {
                   child.material.needsUpdate = true;
                 }
               });
-              this._renderer.render(this._scene, this._camera);
             }
           }
         );
