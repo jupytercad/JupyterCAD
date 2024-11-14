@@ -1658,7 +1658,8 @@ export class MainView extends React.Component<IProps, IStates> {
     return screenPosition;
   }
   render(): JSX.Element {
-    const isTransformOrClipEnabled = this.state.transform || this._clipSettings.enabled;
+    const isTransformOrClipEnabled =
+      this.state.transform || this._clipSettings.enabled;
     return (
       <div
         className="jcad-Mainview data-jcad-keybinding"
@@ -1704,21 +1705,21 @@ export class MainView extends React.Component<IProps, IStates> {
           }}
         />
         {isTransformOrClipEnabled && (
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '10px',
-            left: '10px',
-            padding: '8px',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            color: 'white',
-            borderRadius: '4px',
-            fontSize: '12px',
-          }}
-        >
-          Press R to switch mode
-        </div>
-      )}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '10px',
+              left: '10px',
+              padding: '8px',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              color: 'white',
+              borderRadius: '4px',
+              fontSize: '12px'
+            }}
+          >
+            Press R to switch mode
+          </div>
+        )}
       </div>
     );
   }
