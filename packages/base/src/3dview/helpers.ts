@@ -134,18 +134,42 @@ export function buildShape(options: {
 
   const vertices: Array<number> = [];
   const triangles: Array<number> = [];
+  const placement = data?.jcObject?.parameters?.Placement
+  const objPosition = placement.Position;
+  
+  const angle = placement.Angle;
+  const axis = placement.Axis;
+
+  const angleRad = angle / 57.2958;
+
+  const halfAngle = angleRad / 2;
+  const sinHalfAngle = Math.sin(halfAngle);
+
+  const objQuaternion = new THREE.Quaternion(
+    axis[0] * sinHalfAngle,
+    axis[1] * sinHalfAngle,
+    axis[2] * sinHalfAngle,
+    Math.cos(halfAngle)
+  );
+  const inverseQuaternion = objQuaternion.clone().invert();
 
   let vInd = 0;
   if (faceList.length === 0 && edgeList.length === 0) {
     return null;
   }
   for (const face of faceList) {
-    // Copy Vertices into three.js Vector3 List
     const vertexCoorLength = face.vertexCoord.length;
-    for (let ii = 0; ii < vertexCoorLength; ii++) {
-      vertices.push(face.vertexCoord[ii]);
+    for (let ii = 0; ii < vertexCoorLength; ii += 3) {
+      const vertex = new THREE.Vector3(
+        face.vertexCoord[ii],
+        face.vertexCoord[ii + 1],
+        face.vertexCoord[ii + 2]
+      );
+      vertex.applyQuaternion(inverseQuaternion);
+
+      vertices.push(vertex.x, vertex.y, vertex.z);
     }
-    // Sort Triangles into a three.js Face List
+
     const triIndexesLength = face.triIndexes.length;
     for (let i = 0; i < triIndexesLength; i += 3) {
       triangles.push(
@@ -190,6 +214,7 @@ export function buildShape(options: {
   const meshGroup = new THREE.Group();
   meshGroup.name = `${objName}-group`;
   meshGroup.visible = visible;
+  geometry.translate(-objPosition[0], -objPosition[1], -objPosition[2]);
 
   // We only build the stencil logic for solid meshes
   if (isSolid) {
@@ -232,31 +257,47 @@ export function buildShape(options: {
   };
 
   let edgeIdx = 0;
-  const edgesMeshes: LineSegments2[] = [];
-  for (const edge of edgeList) {
-    const edgeMaterial = new LineMaterial({
-      linewidth: DEFAULT_LINEWIDTH,
-      color: new THREE.Color(DEFAULT_EDGE_COLOR).getHex(),
-      clippingPlanes,
-      // Depth offset so that lines are most always on top of faces
-      polygonOffset: true,
-      polygonOffsetFactor: -5,
-      polygonOffsetUnits: -5
-    });
-    const edgeGeometry = new LineGeometry();
-    edgeGeometry.setPositions(edge.vertexCoord);
-    const edgesMesh = new LineSegments2(edgeGeometry, edgeMaterial);
-    edgesMesh.name = `edge-${objName}-${edgeIdx}`;
-    edgesMesh.userData = {
-      type: 'edge',
-      edgeIndex: edgeIdx,
-      parent: objName
-    };
+const edgesMeshes: LineSegments2[] = [];
+for (const edge of edgeList) {
+  const edgeMaterial = new LineMaterial({
+    linewidth: DEFAULT_LINEWIDTH,
+    color: new THREE.Color(DEFAULT_EDGE_COLOR).getHex(),
+    clippingPlanes,
+    // Depth offset so that lines are most always on top of faces
+    polygonOffset: true,
+    polygonOffsetFactor: -5,
+    polygonOffsetUnits: -5
+  });
 
-    edgesMeshes.push(edgesMesh);
-    meshGroup.add(edgesMesh);
-    edgeIdx++;
+  const transformedVertices: number[] = [];
+  for (let i = 0; i < edge.vertexCoord.length; i += 3) {
+    const vertex = new THREE.Vector3(
+      edge.vertexCoord[i],
+      edge.vertexCoord[i + 1],
+      edge.vertexCoord[i + 2]
+    );
+
+    vertex.applyQuaternion(inverseQuaternion);
+
+    vertex.sub(new THREE.Vector3(objPosition[0], objPosition[1], objPosition[2]));
+
+    transformedVertices.push(vertex.x, vertex.y, vertex.z);
   }
+
+  const edgeGeometry = new LineGeometry();
+  edgeGeometry.setPositions(transformedVertices);
+  const edgesMesh = new LineSegments2(edgeGeometry, edgeMaterial);
+  edgesMesh.name = `edge-${objName}-${edgeIdx}`;
+  edgesMesh.userData = {
+    type: 'edge',
+    edgeIndex: edgeIdx,
+    parent: objName
+  };
+
+  edgesMeshes.push(edgesMesh);
+  meshGroup.add(edgesMesh);
+  edgeIdx++;
+}
 
   const bbox = new THREE.Box3().setFromObject(mainMesh);
   const size = new THREE.Vector3();
@@ -274,6 +315,9 @@ export function buildShape(options: {
   meshGroup.add(boundingBox);
 
   meshGroup.add(mainMesh);
+  
+  meshGroup.position.copy(new THREE.Vector3(objPosition[0], objPosition[1], objPosition[2]));
+  meshGroup.applyQuaternion(objQuaternion);
 
   return { meshGroup, mainMesh, edgesMeshes };
 }

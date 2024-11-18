@@ -1496,9 +1496,9 @@ export class MainView extends React.Component<IProps, IStates> {
       this._scene.add(this._explodedViewLinesHelperGroup);
     } else {
       // Exploded view is disabled, we reset the initial positions
-      for (const mesh of this._meshGroup?.children as BasicMesh[]) {
-        mesh.position.set(0, 0, 0);
-      }
+      // for (const mesh of this._meshGroup?.children as BasicMesh[]) {
+      //   mesh.position.set(0, 0, 0);
+      // }
       this._explodedViewLinesHelperGroup?.removeFromParent();
     }
   }
