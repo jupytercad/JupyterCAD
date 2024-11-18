@@ -1479,8 +1479,6 @@ export class MainView extends React.Component<IProps, IStates> {
               this._transformControls.visible = false;
               this._transformControls.enabled = false;
             }
-
-            this._renderer.render(this._scene, this._camera);
           }
         );
       }
