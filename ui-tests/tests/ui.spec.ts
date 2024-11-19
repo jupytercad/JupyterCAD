@@ -238,7 +238,7 @@ test.describe('UI Test', () => {
       // Select cone
       await page
         .locator('[data-test-id="react-tree-root"]')
-        .getByText('Cone')
+        .getByText('Cone 1')
         .click();
 
       // Select other shape with ctrl key pressed
