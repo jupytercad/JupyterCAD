@@ -165,6 +165,7 @@ export function buildShape(options: {
         face.vertexCoord[ii + 1],
         face.vertexCoord[ii + 2]
       );
+      // Undo placement from the vertices, we want the placement done on the THREE.Object3D (Mesh), not the geometry
       vertex.sub(
         new THREE.Vector3(objPosition[0], objPosition[1], objPosition[2])
       );
@@ -278,6 +279,7 @@ export function buildShape(options: {
         edge.vertexCoord[i + 1],
         edge.vertexCoord[i + 2]
       );
+      // Undo placement from the vertices, we want the placement done on the THREE.Object3D (Mesh), not the geometry
       vertex.sub(
         new THREE.Vector3(objPosition[0], objPosition[1], objPosition[2])
       );
