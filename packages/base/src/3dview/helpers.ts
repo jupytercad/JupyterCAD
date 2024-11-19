@@ -140,7 +140,7 @@ export function buildShape(options: {
   const angle = placement.Angle;
   const axis = placement.Axis;
 
-  const angleRad = angle / 57.2958;
+  const angleRad = (angle * Math.PI) / 180;
 
   const halfAngle = angleRad / 2;
   const sinHalfAngle = Math.sin(halfAngle);
