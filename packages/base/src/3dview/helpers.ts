@@ -165,6 +165,9 @@ export function buildShape(options: {
         face.vertexCoord[ii + 1],
         face.vertexCoord[ii + 2]
       );
+      vertex.sub(
+        new THREE.Vector3(objPosition[0], objPosition[1], objPosition[2])
+      );
       vertex.applyQuaternion(inverseQuaternion);
 
       vertices.push(vertex.x, vertex.y, vertex.z);
@@ -214,7 +217,6 @@ export function buildShape(options: {
   const meshGroup = new THREE.Group();
   meshGroup.name = `${objName}-group`;
   meshGroup.visible = visible;
-  geometry.translate(-objPosition[0], -objPosition[1], -objPosition[2]);
 
   // We only build the stencil logic for solid meshes
   if (isSolid) {
@@ -276,12 +278,10 @@ export function buildShape(options: {
         edge.vertexCoord[i + 1],
         edge.vertexCoord[i + 2]
       );
-
-      vertex.applyQuaternion(inverseQuaternion);
-
       vertex.sub(
         new THREE.Vector3(objPosition[0], objPosition[1], objPosition[2])
       );
+      vertex.applyQuaternion(inverseQuaternion);
 
       transformedVertices.push(vertex.x, vertex.y, vertex.z);
     }
@@ -318,10 +318,10 @@ export function buildShape(options: {
 
   meshGroup.add(mainMesh);
 
+  meshGroup.applyQuaternion(objQuaternion);
   meshGroup.position.copy(
     new THREE.Vector3(objPosition[0], objPosition[1], objPosition[2])
   );
-  meshGroup.applyQuaternion(objQuaternion);
 
   return { meshGroup, mainMesh, edgesMeshes };
 }
