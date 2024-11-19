@@ -1180,8 +1180,6 @@ export class MainView extends React.Component<IProps, IStates> {
       if (matchingChild) {
         this._transformControls.attach(matchingChild as BasicMesh);
 
-
-
         this._transformControls.visible = true;
         this._transformControls.enabled = true;
 
