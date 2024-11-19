@@ -954,6 +954,32 @@ export function addCommands(
     commands.notifyCommandChanged(CommandIDs.wireframe);
   });
 
+  commands.addCommand(CommandIDs.transform, {
+    label: trans.__('Toggle Transform Controls'),
+    isEnabled: () => {
+      return tracker.currentWidget !== null;
+    },
+    isToggled: () => {
+      const current = tracker.currentWidget?.content;
+      return current?.transform || false;
+    },
+    execute: async () => {
+      const current = tracker.currentWidget?.content;
+
+      if (!current) {
+        return;
+      }
+
+      current.transform = !current.transform;
+      commands.notifyCommandChanged(CommandIDs.transform);
+    },
+    icon: axesIcon
+  });
+
+  tracker.currentChanged.connect(() => {
+    commands.notifyCommandChanged(CommandIDs.transform);
+  });
+
   commands.addCommand(CommandIDs.chamfer, {
     label: trans.__('Make chamfer'),
     isEnabled: () => {
@@ -1134,6 +1160,7 @@ export namespace CommandIDs {
   export const union = 'jupytercad:union';
   export const intersection = 'jupytercad:intersection';
   export const wireframe = 'jupytercad:wireframe';
+  export const transform = 'jupytercad:transform';
 
   export const chamfer = 'jupytercad:chamfer';
   export const fillet = 'jupytercad:fillet';

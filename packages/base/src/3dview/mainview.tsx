@@ -71,6 +71,8 @@ interface IStates {
   annotations: IDict<IAnnotation>;
   firstLoad: boolean;
   wireframe: boolean;
+  transform: boolean;
+  clipEnabled: boolean;
 }
 
 interface ILineIntersection extends THREE.Intersection {
@@ -113,7 +115,9 @@ export class MainView extends React.Component<IProps, IStates> {
       loading: true,
       annotations: {},
       firstLoad: true,
-      wireframe: false
+      wireframe: false,
+      transform: false,
+      clipEnabled: true
     };
   }
 
@@ -641,7 +645,9 @@ export class MainView extends React.Component<IProps, IStates> {
         if (
           !intersect.object.visible ||
           !intersect.object.parent?.visible ||
-          intersect.object.name === SELECTION_BOUNDING_BOX
+          intersect.object.name === SELECTION_BOUNDING_BOX ||
+          (this._transformControls.enabled &&
+            intersect.object.name.startsWith('edge'))
         ) {
           continue;
         }
@@ -1417,9 +1423,13 @@ export class MainView extends React.Component<IProps, IStates> {
       const clipSettings = change.newValue as ClipSettings | undefined;
 
       if (change.type !== 'remove' && clipSettings) {
-        this._clipSettings = clipSettings;
-
-        this._updateClipping();
+        this.setState(
+          oldState => ({ ...oldState, clipEnabled: clipSettings.enabled }),
+          () => {
+            this._clipSettings = clipSettings;
+            this._updateClipping();
+          }
+        );
       }
     }
 
@@ -1437,8 +1447,21 @@ export class MainView extends React.Component<IProps, IStates> {
                   child.material.needsUpdate = true;
                 }
               });
-              this._renderer.render(this._scene, this._camera);
             }
+          }
+        );
+      }
+    }
+
+    if (change.key === 'transform') {
+      const transformEnabled = change.newValue as boolean | undefined;
+
+      if (transformEnabled !== undefined) {
+        this.setState(
+          old => ({ ...old, transform: transformEnabled }),
+          () => {
+            this._transformControls.visible = transformEnabled;
+            this._transformControls.enabled = transformEnabled;
           }
         );
       }
@@ -1609,6 +1632,8 @@ export class MainView extends React.Component<IProps, IStates> {
     return screenPosition;
   }
   render(): JSX.Element {
+    const isTransformOrClipEnabled =
+      this.state.transform || this._clipSettings.enabled;
     return (
       <div
         className="jcad-Mainview data-jcad-keybinding"
@@ -1653,6 +1678,22 @@ export class MainView extends React.Component<IProps, IStates> {
             height: 'calc(100%)'
           }}
         />
+        {isTransformOrClipEnabled && (
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '10px',
+              left: '10px',
+              padding: '8px',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              color: 'white',
+              borderRadius: '4px',
+              fontSize: '12px'
+            }}
+          >
+            Press R to switch mode
+          </div>
+        )}
       </div>
     );
   }
