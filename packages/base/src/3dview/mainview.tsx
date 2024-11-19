@@ -1180,17 +1180,7 @@ export class MainView extends React.Component<IProps, IStates> {
       if (matchingChild) {
         this._transformControls.attach(matchingChild as BasicMesh);
 
-        // const obj = this._model.sharedModel.getObjectByName(selectedMeshName);
-        // const positionArray = obj?.parameters?.Placement?.Position;
 
-        // if (positionArray && positionArray.length === 3) {
-        //   const positionVector = new THREE.Vector3(
-        //     positionArray[0],
-        //     positionArray[1],
-        //     positionArray[2]
-        //   );
-        //   this._transformControls.position.copy(positionVector);
-        // }
 
         this._transformControls.visible = true;
         this._transformControls.enabled = true;
