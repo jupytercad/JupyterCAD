@@ -1472,13 +1472,8 @@ export class MainView extends React.Component<IProps, IStates> {
         this.setState(
           old => ({ ...old, transform: transformEnabled }),
           () => {
-            if (transformEnabled) {
-              this._transformControls.visible = true;
-              this._transformControls.enabled = true;
-            } else {
-              this._transformControls.visible = false;
-              this._transformControls.enabled = false;
-            }
+            this._transformControls.visible = transformEnabled;
+            this._transformControls.enabled = transformEnabled;
           }
         );
       }
