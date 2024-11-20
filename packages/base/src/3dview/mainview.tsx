@@ -1480,7 +1480,7 @@ export class MainView extends React.Component<IProps, IStates> {
         if (!group.userData.originalPosition) {
           group.userData.originalPosition = group.position.clone();
         }
-  
+
         const explodedState = computeExplodedState({
           mesh: group.getObjectByName(
             group.name.replace('-group', '')
