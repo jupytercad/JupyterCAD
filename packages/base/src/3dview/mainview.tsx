@@ -1477,6 +1477,10 @@ export class MainView extends React.Component<IProps, IStates> {
       this._explodedViewLinesHelperGroup = new THREE.Group();
 
       for (const group of this._meshGroup?.children as THREE.Group[]) {
+        if (!group.userData.originalPosition) {
+          group.userData.originalPosition = group.position.clone();
+        }
+  
         const explodedState = computeExplodedState({
           mesh: group.getObjectByName(
             group.name.replace('-group', '')
@@ -1485,7 +1489,7 @@ export class MainView extends React.Component<IProps, IStates> {
           factor: this._explodedView.factor
         });
 
-        group.position.set(0, 0, 0);
+        group.position.copy(group.userData.originalPosition);
         group.translateOnAxis(explodedState.vector, explodedState.distance);
 
         // Draw lines
@@ -1494,8 +1498,8 @@ export class MainView extends React.Component<IProps, IStates> {
           linewidth: DEFAULT_LINEWIDTH
         });
         const geometry = new THREE.BufferGeometry().setFromPoints([
-          explodedState.oldGeometryCenter,
-          explodedState.newGeometryCenter
+          group.userData.originalPosition.clone(),
+          group.position.clone()
         ]);
         const line = new THREE.Line(geometry, material);
         line.name = group.name;
@@ -1506,10 +1510,13 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._scene.add(this._explodedViewLinesHelperGroup);
     } else {
-      // Exploded view is disabled, we reset the initial positions
-      // for (const mesh of this._meshGroup?.children as BasicMesh[]) {
-      //   mesh.position.set(0, 0, 0);
-      // }
+      // Reset objects to their original positions
+      for (const group of this._meshGroup?.children as THREE.Group[]) {
+        if (group.userData.originalPosition) {
+          group.position.copy(group.userData.originalPosition);
+        }
+      }
+
       this._explodedViewLinesHelperGroup?.removeFromParent();
     }
   }
