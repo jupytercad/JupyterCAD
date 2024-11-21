@@ -64,6 +64,12 @@ export interface IMouseDrag {
   end: THREE.Vector2;
 }
 
+export interface IMeshGroupMetadata {
+  type: string;
+  originalPosition?: THREE.Vector3;
+  [key: string]: any;
+}
+
 export function projectVector(options: {
   vector: THREE.Vector3;
   camera: THREE.Camera;
@@ -317,6 +323,15 @@ export function buildShape(options: {
   boundingBox.visible = false;
   boundingBox.name = SELECTION_BOUNDING_BOX;
   meshGroup.add(boundingBox);
+  const initialPosition = new THREE.Vector3(
+    objPosition[0],
+    objPosition[1],
+    objPosition[2]
+  );
+  meshGroup.userData = {
+    type: 'shape',
+    originalPosition: initialPosition
+  } as IMeshGroupMetadata;
 
   meshGroup.add(mainMesh);
 

@@ -49,7 +49,8 @@ import {
   buildShape,
   computeExplodedState,
   projectVector,
-  IMouseDrag
+  IMouseDrag,
+  IMeshGroupMetadata
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
@@ -1477,8 +1478,12 @@ export class MainView extends React.Component<IProps, IStates> {
       this._explodedViewLinesHelperGroup = new THREE.Group();
 
       for (const group of this._meshGroup?.children as THREE.Group[]) {
-        if (!group.userData.originalPosition) {
-          group.userData.originalPosition = group.position.clone();
+        const groupMetadata = group.userData as IMeshGroupMetadata;
+        if (!groupMetadata.originalPosition) {
+          console.warn(
+            `Group ${group.name} is missing originalPosition metadata. Preventing exploded view.`
+          );
+          continue;
         }
 
         const explodedState = computeExplodedState({
@@ -1489,7 +1494,7 @@ export class MainView extends React.Component<IProps, IStates> {
           factor: this._explodedView.factor
         });
 
-        group.position.copy(group.userData.originalPosition);
+        group.position.copy(groupMetadata.originalPosition);
         group.translateOnAxis(explodedState.vector, explodedState.distance);
 
         // Draw lines
@@ -1498,7 +1503,7 @@ export class MainView extends React.Component<IProps, IStates> {
           linewidth: DEFAULT_LINEWIDTH
         });
         const geometry = new THREE.BufferGeometry().setFromPoints([
-          group.userData.originalPosition.clone(),
+          groupMetadata.originalPosition.clone(),
           group.position.clone()
         ]);
         const line = new THREE.Line(geometry, material);
@@ -1512,8 +1517,9 @@ export class MainView extends React.Component<IProps, IStates> {
     } else {
       // Reset objects to their original positions
       for (const group of this._meshGroup?.children as THREE.Group[]) {
-        if (group.userData.originalPosition) {
-          group.position.copy(group.userData.originalPosition);
+        const groupMetadata = group.userData as IMeshGroupMetadata;
+        if (groupMetadata.originalPosition) {
+          group.position.copy(groupMetadata.originalPosition);
         }
       }
 
