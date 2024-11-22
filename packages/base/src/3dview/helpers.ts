@@ -102,7 +102,6 @@ export function computeExplodedState(options: {
   meshBoundingBox.getCenter(oldGeometryCenter);
   oldGeometryCenter = oldGeometryCenter.add(parent.position);
   console.log('oldGeometryCenter', oldGeometryCenter);
-  
 
   const centerToMesh = new THREE.Vector3()
     .subVectors(oldGeometryCenter, center)
