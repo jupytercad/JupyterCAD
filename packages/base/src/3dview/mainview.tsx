@@ -781,7 +781,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       if (output) {
         const { meshGroup, mainMesh, edgesMeshes } = output;
-        if (meshGroup.userData.visible) {
+        if (meshGroup.userData.jcObject.visible) {
           this._boundingGroup.expandByObject(mainMesh);
         }
 
@@ -804,7 +804,7 @@ export class MainView extends React.Component<IProps, IStates> {
             boundingBox.visible = true;
           }
 
-          if (!meshGroup.userData.visible) {
+          if (!meshGroup.userData.jcObject.visible) {
             meshGroup.visible = true;
             mainMesh.material.opacity = 0.5;
             mainMesh.material.transparent = true;
@@ -1120,7 +1120,7 @@ export class MainView extends React.Component<IProps, IStates> {
         boundingBox.visible = false;
       }
 
-      if (!parentGroup.userData.visible) {
+      if (!parentGroup.userData.jcObject.visible) {
         parentGroup.visible = false;
         selectedMesh.material.opacity = 1;
         selectedMesh.material.transparent = false;
@@ -1172,7 +1172,7 @@ export class MainView extends React.Component<IProps, IStates> {
           selectedMesh.name
         )?.parent as THREE.Group;
 
-        if (!parentGroup.userData.visible) {
+        if (!parentGroup.userData.jcObject.visible) {
           parentGroup.visible = true;
           selectedMesh.material.opacity = 0.5;
           selectedMesh.material.transparent = true;

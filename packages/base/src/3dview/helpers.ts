@@ -191,7 +191,7 @@ export function buildShape(options: {
   meshGroup.name = `${objName}-group`;
   meshGroup.visible = visible;
   meshGroup.userData = {
-    visible
+    jcObject
   };
 
   // We only build the stencil logic for solid meshes
