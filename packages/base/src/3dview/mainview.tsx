@@ -781,7 +781,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       if (output) {
         const { meshGroup, mainMesh, edgesMeshes } = output;
-        if (meshGroup.visible) {
+        if (meshGroup.userData.visible) {
           this._boundingGroup.expandByObject(mainMesh);
         }
 
@@ -842,6 +842,11 @@ export class MainView extends React.Component<IProps, IStates> {
           }
         });
         this._meshGroup?.add(meshGroup);
+      }
+
+      const localState = this._model.localState;
+      if (localState?.selected?.value) {
+        this._updateSelected(localState.selected.value);
       }
 
       this._updateTransformControls(selectedNames);
@@ -947,7 +952,6 @@ export class MainView extends React.Component<IProps, IStates> {
     const wireframe = new THREE.LineSegments(lineGeo, mat);
     mesh.add(wireframe);
     mesh.name = name;
-    mesh.visible = true;
     if (this._meshGroup) {
       this._meshGroup.add(mesh);
       this._boundingGroup?.expandByObject(mesh);
@@ -1106,12 +1110,19 @@ export class MainView extends React.Component<IProps, IStates> {
 
       const parentGroup = this._meshGroup?.getObjectByName(
         selectedMesh.name
-      )?.parent;
+      )?.parent as THREE.Group;
       const boundingBox = parentGroup?.getObjectByName(
         SELECTION_BOUNDING_BOX
       ) as THREE.Mesh;
+
       if (boundingBox) {
         boundingBox.visible = false;
+      }
+
+      if (!parentGroup.userData.visible) {
+        parentGroup.visible = false;
+        selectedMesh.material.opacity = 1;
+        selectedMesh.material.transparent = false;
       }
 
       const material = selectedMesh.material as THREE.Material & {
@@ -1131,9 +1142,11 @@ export class MainView extends React.Component<IProps, IStates> {
         selectionName
       ) as BasicMesh;
 
-      if (!selectedMesh || !selectedMesh.visible) {
+      if (!selectedMesh) {
         continue;
       }
+
+      this._selectedMeshes.push(selectedMesh);
 
       if (selectedMesh.name.startsWith('edge')) {
         // Highlight edges using the old method
@@ -1142,7 +1155,6 @@ export class MainView extends React.Component<IProps, IStates> {
             selectedMesh.material.color.clone();
         }
 
-        this._selectedMeshes.push(selectedMesh);
         if (selectedMesh?.material?.color) {
           selectedMesh.material.color = BOUNDING_BOX_COLOR;
         }
@@ -1155,11 +1167,16 @@ export class MainView extends React.Component<IProps, IStates> {
         }
       } else {
         // Highlight non-edges using a bounding box
-        this._selectedMeshes.push(selectedMesh);
-
         const parentGroup = this._meshGroup?.getObjectByName(
           selectedMesh.name
-        )?.parent;
+        )?.parent as THREE.Group;
+
+        if (!parentGroup.userData.visible) {
+          parentGroup.visible = true;
+          selectedMesh.material.opacity = 0.5;
+          selectedMesh.material.transparent = true;
+        }
+
         const boundingBox = parentGroup?.getObjectByName(
           SELECTION_BOUNDING_BOX
         ) as THREE.Mesh;
@@ -1377,6 +1394,7 @@ export class MainView extends React.Component<IProps, IStates> {
         const objColor = obj?.material.color;
 
         obj.parent!.visible = isVisible;
+        obj.parent!.userData.visible = isVisible;
 
         const explodedLineHelper =
           this._explodedViewLinesHelperGroup?.getObjectByName(objName);
