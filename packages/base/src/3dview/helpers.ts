@@ -190,6 +190,9 @@ export function buildShape(options: {
   const meshGroup = new THREE.Group();
   meshGroup.name = `${objName}-group`;
   meshGroup.visible = visible;
+  meshGroup.userData = {
+    jcObject
+  };
 
   // We only build the stencil logic for solid meshes
   if (isSolid) {
