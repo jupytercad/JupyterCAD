@@ -804,6 +804,12 @@ export class MainView extends React.Component<IProps, IStates> {
             boundingBox.visible = true;
           }
 
+          if (!meshGroup.userData.visible) {
+            meshGroup.visible = true;
+            mainMesh.material.opacity = 0.5;
+            mainMesh.material.transparent = true;
+          }
+
           this._selectedMeshes.push(mainMesh);
         }
         edgesMeshes.forEach(el => {
@@ -842,11 +848,6 @@ export class MainView extends React.Component<IProps, IStates> {
           }
         });
         this._meshGroup?.add(meshGroup);
-      }
-
-      const localState = this._model.localState;
-      if (localState?.selected?.value) {
-        this._updateSelected(localState.selected.value);
       }
 
       this._updateTransformControls(selectedNames);
