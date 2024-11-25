@@ -1109,9 +1109,8 @@ export class MainView extends React.Component<IProps, IStates> {
         selectedMesh.material.color = originalColor;
       }
 
-      const parentGroup = this._meshGroup?.getObjectByName(
-        selectedMesh.name
-      )?.parent as THREE.Group;
+      const parentGroup = this._meshGroup?.getObjectByName(selectedMesh.name)
+        ?.parent as THREE.Group;
       const boundingBox = parentGroup?.getObjectByName(
         SELECTION_BOUNDING_BOX
       ) as THREE.Mesh;
@@ -1168,9 +1167,8 @@ export class MainView extends React.Component<IProps, IStates> {
         }
       } else {
         // Highlight non-edges using a bounding box
-        const parentGroup = this._meshGroup?.getObjectByName(
-          selectedMesh.name
-        )?.parent as THREE.Group;
+        const parentGroup = this._meshGroup?.getObjectByName(selectedMesh.name)
+          ?.parent as THREE.Group;
 
         if (!parentGroup.userData.jcObject.visible) {
           parentGroup.visible = true;
