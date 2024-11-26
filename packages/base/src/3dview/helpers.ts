@@ -97,28 +97,33 @@ export function computeExplodedState(options: {
   const parent = mesh.parent as THREE.Object3D;
   boundingGroup.getCenter(center);
 
-  const meshBoundingBox = new THREE.Box3().setFromObject(mesh);
-  let oldGeometryCenter = new THREE.Vector3();
-  meshBoundingBox.getCenter(oldGeometryCenter);
-  oldGeometryCenter = oldGeometryCenter.add(parent.position);
-  console.log('oldGeometryCenter', oldGeometryCenter);
+  const oldGeometryCenter = new THREE.Vector3();
+  mesh.getWorldPosition(oldGeometryCenter);
+  oldGeometryCenter.add(parent.position);
+  const meshCenter = new THREE.Vector3();
+  mesh.geometry.boundingBox?.getCenter(meshCenter);
+  meshCenter.add(parent.position);
 
-  const centerToMesh = new THREE.Vector3()
-    .subVectors(oldGeometryCenter, center)
-    .normalize();
+  const centerToMesh = new THREE.Vector3(
+    meshCenter.x - center.x,
+    meshCenter.y - center.y,
+    meshCenter.z - center.z
+  );
+  
+  const distance = centerToMesh.length() * factor;
+  centerToMesh.normalize();
 
-  const distance = centerToMesh.multiplyScalar(factor);
-
-  const newGeometryCenter = new THREE.Vector3().addVectors(
-    oldGeometryCenter,
-    distance
+  const newGeometryCenter = new THREE.Vector3(
+    oldGeometryCenter.x + distance * centerToMesh.x,
+    oldGeometryCenter.y + distance * centerToMesh.y,
+    oldGeometryCenter.z + distance * centerToMesh.z
   );
 
   return {
     oldGeometryCenter,
     newGeometryCenter,
     vector: centerToMesh,
-    distance: distance.length()
+    distance: distance
   };
 }
 
