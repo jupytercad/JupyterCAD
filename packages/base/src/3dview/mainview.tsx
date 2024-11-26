@@ -783,7 +783,7 @@ export class MainView extends React.Component<IProps, IStates> {
       if (output) {
         const { meshGroup, mainMesh, edgesMeshes } = output;
         if (meshGroup.visible) {
-          this._boundingGroup.expandByObject(mainMesh);
+          this._boundingGroup.expandByObject(meshGroup);
         }
 
         // Save original color for the main mesh
@@ -1473,6 +1473,8 @@ export class MainView extends React.Component<IProps, IStates> {
     if (this._explodedView.enabled) {
       const center = new THREE.Vector3();
       this._boundingGroup.getCenter(center);
+      console.log('hi', center);
+      
 
       this._explodedViewLinesHelperGroup?.removeFromParent();
       this._explodedViewLinesHelperGroup = new THREE.Group();
