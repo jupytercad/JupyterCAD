@@ -109,7 +109,7 @@ export function computeExplodedState(options: {
     meshCenter.y - center.y,
     meshCenter.z - center.z
   );
-  
+
   const distance = centerToMesh.length() * factor;
   centerToMesh.normalize();
 
