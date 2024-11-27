@@ -783,7 +783,7 @@ export class MainView extends React.Component<IProps, IStates> {
       if (output) {
         const { meshGroup, mainMesh, edgesMeshes } = output;
         if (meshGroup.userData.jcObject.visible) {
-          this._boundingGroup.expandByObject(mainMesh);
+          this._boundingGroup.expandByObject(meshGroup);
         }
 
         // Save original color for the main mesh

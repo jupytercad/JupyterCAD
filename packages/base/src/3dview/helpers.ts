@@ -67,6 +67,7 @@ export interface IMouseDrag {
 
 export interface IMeshGroupMetadata {
   type: string;
+  jcObject: IJCadObject;
   [key: string]: any;
 }
 
