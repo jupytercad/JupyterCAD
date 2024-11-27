@@ -8,6 +8,7 @@ import {
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
+import { IJCadObject } from '@jupytercad/schema';
 
 import { getCSSVariableColor } from '../tools';
 
@@ -87,6 +88,27 @@ export function projectVector(options: {
   );
 }
 
+export function getQuaternion(jcObject: IJCadObject): THREE.Quaternion {
+  const placement = jcObject?.parameters?.Placement;
+  if (!placement || !placement.Angle || !placement.Axis) {
+    return new THREE.Quaternion();
+  }
+
+  const angle = placement.Angle;
+  const axis = placement.Axis;
+
+  const angleRad = (angle * Math.PI) / 180;
+  const halfAngle = angleRad / 2;
+  const sinHalfAngle = Math.sin(halfAngle);
+
+  return new THREE.Quaternion(
+    axis[0] * sinHalfAngle,
+    axis[1] * sinHalfAngle,
+    axis[2] * sinHalfAngle,
+    Math.cos(halfAngle)
+  );
+}
+
 export function computeExplodedState(options: {
   mesh: BasicMesh;
   boundingGroup: THREE.Box3;
@@ -100,13 +122,16 @@ export function computeExplodedState(options: {
   const oldGeometryCenter = new THREE.Vector3();
   mesh.geometry.boundingBox?.getCenter(oldGeometryCenter);
   
-  oldGeometryCenter.add(parent.position);
+
+  // oldGeometryCenter.applyQuaternion(parent.quaternion);
+  oldGeometryCenter.applyQuaternion(parent.quaternion).add(parent.position);
 
   const centerToMesh = new THREE.Vector3(
     oldGeometryCenter.x - center.x,
     oldGeometryCenter.y - center.y,
     oldGeometryCenter.z - center.z
   );
+  // centerToMesh.applyQuaternion(parent.quaternion);
 
   const distance = centerToMesh.length() * factor;
   centerToMesh.normalize();
@@ -116,6 +141,8 @@ export function computeExplodedState(options: {
     oldGeometryCenter.y + distance * centerToMesh.y,
     oldGeometryCenter.z + distance * centerToMesh.z
   );
+
+  // newGeometryCenter.applyQuaternion(parent.quaternion);
 
   return {
     oldGeometryCenter,
@@ -146,20 +173,7 @@ export function buildShape(options: {
   const placement = data?.jcObject?.parameters?.Placement;
   const objPosition = placement.Position;
 
-  const angle = placement.Angle;
-  const axis = placement.Axis;
-
-  const angleRad = (angle * Math.PI) / 180;
-
-  const halfAngle = angleRad / 2;
-  const sinHalfAngle = Math.sin(halfAngle);
-
-  const objQuaternion = new THREE.Quaternion(
-    axis[0] * sinHalfAngle,
-    axis[1] * sinHalfAngle,
-    axis[2] * sinHalfAngle,
-    Math.cos(halfAngle)
-  );
+  const objQuaternion = getQuaternion(jcObject);
   const inverseQuaternion = objQuaternion.clone().invert();
 
   let vInd = 0;
