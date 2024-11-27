@@ -1473,7 +1473,6 @@ export class MainView extends React.Component<IProps, IStates> {
     if (this._explodedView.enabled) {
       const center = new THREE.Vector3();
       this._boundingGroup.getCenter(center);
-      console.log('hi', center);
       
 
       this._explodedViewLinesHelperGroup?.removeFromParent();

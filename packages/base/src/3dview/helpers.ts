@@ -98,16 +98,14 @@ export function computeExplodedState(options: {
   boundingGroup.getCenter(center);
 
   const oldGeometryCenter = new THREE.Vector3();
-  mesh.getWorldPosition(oldGeometryCenter);
+  mesh.geometry.boundingBox?.getCenter(oldGeometryCenter);
+  
   oldGeometryCenter.add(parent.position);
-  const meshCenter = new THREE.Vector3();
-  mesh.geometry.boundingBox?.getCenter(meshCenter);
-  meshCenter.add(parent.position);
 
   const centerToMesh = new THREE.Vector3(
-    meshCenter.x - center.x,
-    meshCenter.y - center.y,
-    meshCenter.z - center.z
+    oldGeometryCenter.x - center.x,
+    oldGeometryCenter.y - center.y,
+    oldGeometryCenter.z - center.z
   );
 
   const distance = centerToMesh.length() * factor;
