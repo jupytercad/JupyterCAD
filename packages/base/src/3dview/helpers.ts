@@ -67,7 +67,6 @@ export interface IMouseDrag {
 
 export interface IMeshGroupMetadata {
   type: string;
-  originalPosition?: THREE.Vector3;
   [key: string]: any;
 }
 
@@ -121,7 +120,13 @@ export function computeExplodedState(options: {
 
   // oldGeometryCenter.applyQuaternion(parent.quaternion);
   const meshGroupQuaternion = getQuaternion(meshGroup.userData.jcObject);
-  oldGeometryCenter.applyQuaternion(meshGroupQuaternion).add(meshGroup.userData.originalPosition);
+  const meshGroupPositionArray = meshGroup.userData.jcObject.parameters?.Placement.Position;
+  const meshGroupPosition = new THREE.Vector3(
+    meshGroupPositionArray[0],
+    meshGroupPositionArray[1],
+    meshGroupPositionArray[2]
+  )
+  oldGeometryCenter.applyQuaternion(meshGroupQuaternion).add(meshGroupPosition);
 
   const centerToMesh = new THREE.Vector3(
     oldGeometryCenter.x - center.x,
@@ -340,15 +345,9 @@ export function buildShape(options: {
   boundingBox.visible = false;
   boundingBox.name = SELECTION_BOUNDING_BOX;
   meshGroup.add(boundingBox);
-  const initialPosition = new THREE.Vector3(
-    objPosition[0],
-    objPosition[1],
-    objPosition[2]
-  );
   meshGroup.userData = {
     ...meshGroup.userData,
     type: 'shape',
-    originalPosition: initialPosition
   } as IMeshGroupMetadata;
 
   meshGroup.add(mainMesh);
