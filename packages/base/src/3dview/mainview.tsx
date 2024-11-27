@@ -1508,12 +1508,11 @@ export class MainView extends React.Component<IProps, IStates> {
 
         group.position.copy(
           new THREE.Vector3(
-            positionArray[0],
-            positionArray[1],
-            positionArray[2]
+            positionArray[0] + explodedState.vector.x * explodedState.distance,
+            positionArray[1] + explodedState.vector.y * explodedState.distance,
+            positionArray[2] + explodedState.vector.z * explodedState.distance          
           )
         );
-        group.translateOnAxis(explodedState.vector, explodedState.distance);
 
         // Draw lines
         const material = new THREE.LineBasicMaterial({
