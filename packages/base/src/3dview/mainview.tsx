@@ -1490,7 +1490,6 @@ export class MainView extends React.Component<IProps, IStates> {
     if (this._explodedView.enabled) {
       const center = new THREE.Vector3();
       this._boundingGroup.getCenter(center);
-      
 
       this._explodedViewLinesHelperGroup?.removeFromParent();
       this._explodedViewLinesHelperGroup = new THREE.Group();
@@ -1506,7 +1505,9 @@ export class MainView extends React.Component<IProps, IStates> {
           factor: this._explodedView.factor
         });
 
-        group.position.copy(groupMetadata.originalPosition as THREE.Vector3Like);
+        group.position.copy(
+          groupMetadata.originalPosition as THREE.Vector3Like
+        );
         group.translateOnAxis(explodedState.vector, explodedState.distance);
 
         // Draw lines

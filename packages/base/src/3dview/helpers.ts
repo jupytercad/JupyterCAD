@@ -118,7 +118,6 @@ export function computeExplodedState(options: {
 
   const oldGeometryCenter = new THREE.Vector3();
   mesh.geometry.boundingBox?.getCenter(oldGeometryCenter);
-  
 
   // oldGeometryCenter.applyQuaternion(parent.quaternion);
   oldGeometryCenter.applyQuaternion(parent.quaternion).add(parent.position);
