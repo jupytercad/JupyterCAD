@@ -1510,7 +1510,7 @@ export class MainView extends React.Component<IProps, IStates> {
           new THREE.Vector3(
             positionArray[0] + explodedState.vector.x * explodedState.distance,
             positionArray[1] + explodedState.vector.y * explodedState.distance,
-            positionArray[2] + explodedState.vector.z * explodedState.distance          
+            positionArray[2] + explodedState.vector.z * explodedState.distance
           )
         );
 
