@@ -90,9 +90,6 @@ export function projectVector(options: {
 
 export function getQuaternion(jcObject: IJCadObject): THREE.Quaternion {
   const placement = jcObject?.parameters?.Placement;
-  if (!placement || !placement.Angle || !placement.Axis) {
-    return new THREE.Quaternion();
-  }
 
   const angle = placement.Angle;
   const axis = placement.Axis;
