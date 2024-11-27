@@ -345,6 +345,7 @@ export function buildShape(options: {
     objPosition[2]
   );
   meshGroup.userData = {
+    ...meshGroup.userData,
     type: 'shape',
     originalPosition: initialPosition
   } as IMeshGroupMetadata;
