@@ -1480,12 +1480,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
       for (const group of this._meshGroup?.children as THREE.Group[]) {
         const groupMetadata = group.userData as IMeshGroupMetadata;
-        if (!groupMetadata.originalPosition) {
-          console.warn(
-            `Group ${group.name} is missing originalPosition metadata. Preventing exploded view.`
-          );
-          continue;
-        }
 
         const explodedState = computeExplodedState({
           mesh: group.getObjectByName(
@@ -1495,7 +1489,7 @@ export class MainView extends React.Component<IProps, IStates> {
           factor: this._explodedView.factor
         });
 
-        group.position.copy(groupMetadata.originalPosition);
+        group.position.copy(groupMetadata.originalPosition as THREE.Vector3Like);
         group.translateOnAxis(explodedState.vector, explodedState.distance);
 
         // Draw lines
@@ -1504,8 +1498,8 @@ export class MainView extends React.Component<IProps, IStates> {
           linewidth: DEFAULT_LINEWIDTH
         });
         const geometry = new THREE.BufferGeometry().setFromPoints([
-          groupMetadata.originalPosition.clone(),
-          group.position.clone()
+          explodedState.oldGeometryCenter,
+          explodedState.newGeometryCenter
         ]);
         const line = new THREE.Line(geometry, material);
         line.name = group.name;
