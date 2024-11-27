@@ -1496,7 +1496,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
       for (const group of this._meshGroup?.children as THREE.Group[]) {
         const groupMetadata = group.userData as IMeshGroupMetadata;
-        const positionArray = groupMetadata.jcObject.parameters?.Placement.Position;
+        const positionArray =
+          groupMetadata.jcObject.parameters?.Placement.Position;
         const explodedState = computeExplodedState({
           mesh: group.getObjectByName(
             group.name.replace('-group', '')
@@ -1505,11 +1506,12 @@ export class MainView extends React.Component<IProps, IStates> {
           factor: this._explodedView.factor
         });
 
-        group.position.copy( new THREE.Vector3(
-          positionArray[0],
-          positionArray[1],
-          positionArray[2]
-        )
+        group.position.copy(
+          new THREE.Vector3(
+            positionArray[0],
+            positionArray[1],
+            positionArray[2]
+          )
         );
         group.translateOnAxis(explodedState.vector, explodedState.distance);
 
@@ -1534,12 +1536,14 @@ export class MainView extends React.Component<IProps, IStates> {
       // Reset objects to their original positions
       for (const group of this._meshGroup?.children as THREE.Group[]) {
         const groupMetadata = group.userData as IMeshGroupMetadata;
-        const positionArray = groupMetadata.jcObject.parameters?.Placement.Position;
-        group.position.copy( new THREE.Vector3(
-          positionArray[0],
-          positionArray[1],
-          positionArray[2]
-        )
+        const positionArray =
+          groupMetadata.jcObject.parameters?.Placement.Position;
+        group.position.copy(
+          new THREE.Vector3(
+            positionArray[0],
+            positionArray[1],
+            positionArray[2]
+          )
         );
       }
 

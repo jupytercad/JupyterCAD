@@ -120,12 +120,13 @@ export function computeExplodedState(options: {
 
   // oldGeometryCenter.applyQuaternion(parent.quaternion);
   const meshGroupQuaternion = getQuaternion(meshGroup.userData.jcObject);
-  const meshGroupPositionArray = meshGroup.userData.jcObject.parameters?.Placement.Position;
+  const meshGroupPositionArray =
+    meshGroup.userData.jcObject.parameters?.Placement.Position;
   const meshGroupPosition = new THREE.Vector3(
     meshGroupPositionArray[0],
     meshGroupPositionArray[1],
     meshGroupPositionArray[2]
-  )
+  );
   oldGeometryCenter.applyQuaternion(meshGroupQuaternion).add(meshGroupPosition);
 
   const centerToMesh = new THREE.Vector3(
@@ -347,7 +348,7 @@ export function buildShape(options: {
   meshGroup.add(boundingBox);
   meshGroup.userData = {
     ...meshGroup.userData,
-    type: 'shape',
+    type: 'shape'
   } as IMeshGroupMetadata;
 
   meshGroup.add(mainMesh);
