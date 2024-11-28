@@ -427,14 +427,16 @@ export class MainView extends React.Component<IProps, IStates> {
         updatedObject.getWorldQuaternion(updatedQuaternion);
 
         const s = Math.sqrt(1 - updatedQuaternion.w * updatedQuaternion.w);
-          const updatedRotation = [
-            [
-              parseFloat((updatedQuaternion.x / s).toFixed(10)),
-              parseFloat((updatedQuaternion.y / s).toFixed(10)),
-              parseFloat((updatedQuaternion.z / s).toFixed(10))
-            ],
-            parseFloat((2 * Math.acos(updatedQuaternion.w) * (180 / Math.PI)).toFixed(10))
-          ];
+        const updatedRotation = [
+          [
+            parseFloat((updatedQuaternion.x / s).toFixed(10)),
+            parseFloat((updatedQuaternion.y / s).toFixed(10)),
+            parseFloat((updatedQuaternion.z / s).toFixed(10))
+          ],
+          parseFloat(
+            (2 * Math.acos(updatedQuaternion.w) * (180 / Math.PI)).toFixed(10)
+          )
+        ];
 
         const obj = this._model.sharedModel.getObjectByName(objectName);
 
