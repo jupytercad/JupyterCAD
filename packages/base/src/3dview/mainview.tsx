@@ -751,7 +751,7 @@ export class MainView extends React.Component<IProps, IStates> {
         toggleMode(this._clipPlaneTransformControls);
       }
 
-      if (event.key === 't' && this._transformControls.enabled) {
+      if (event.key === 'r' && this._transformControls.enabled) {
         event.preventDefault();
         event.stopPropagation();
         toggleMode(this._transformControls);
