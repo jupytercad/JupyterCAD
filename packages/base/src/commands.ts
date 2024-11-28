@@ -34,7 +34,8 @@ import {
   clippingIcon,
   chamferIcon,
   filletIcon,
-  wireframeIcon
+  wireframeIcon,
+  transformIcon
 } from './tools';
 import keybindings from './keybindings.json';
 import { DEFAULT_MESH_COLOR } from './3dview/helpers';
@@ -957,7 +958,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.transform, {
     label: trans.__('Toggle Transform Controls'),
     isEnabled: () => {
-      return tracker.currentWidget !== null;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     isToggled: () => {
       const current = tracker.currentWidget?.content;
@@ -973,7 +976,7 @@ export function addCommands(
       current.transform = !current.transform;
       commands.notifyCommandChanged(CommandIDs.transform);
     },
-    icon: axesIcon
+    icon: transformIcon
   });
 
   tracker.currentChanged.connect(() => {

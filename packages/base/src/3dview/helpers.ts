@@ -93,17 +93,19 @@ export function getQuaternion(jcObject: IJCadObject): THREE.Quaternion {
 
   const angle = placement.Angle;
   const axis = placement.Axis;
+  const axisVector = new THREE.Vector3(axis[0], axis[1], axis[2]);
+  axisVector.normalize();
 
   const angleRad = (angle * Math.PI) / 180;
   const halfAngle = angleRad / 2;
   const sinHalfAngle = Math.sin(halfAngle);
 
   return new THREE.Quaternion(
-    axis[0] * sinHalfAngle,
-    axis[1] * sinHalfAngle,
-    axis[2] * sinHalfAngle,
+    axisVector.x * sinHalfAngle,
+    axisVector.y * sinHalfAngle,
+    axisVector.z * sinHalfAngle,
     Math.cos(halfAngle)
-  );
+  ).normalize();
 }
 
 export function computeExplodedState(options: {
@@ -119,8 +121,6 @@ export function computeExplodedState(options: {
   const oldGeometryCenter = new THREE.Vector3();
   mesh.geometry.boundingBox?.getCenter(oldGeometryCenter);
 
-  // oldGeometryCenter.applyQuaternion(meshGroup.quaternion);
-  // oldGeometryCenter.add(meshGroup.position);
   const meshGroupQuaternion = getQuaternion(meshGroup.userData.jcObject);
   const meshGroupPositionArray =
     meshGroup.userData.jcObject.parameters?.Placement.Position;
@@ -136,7 +136,6 @@ export function computeExplodedState(options: {
     oldGeometryCenter.y - center.y,
     oldGeometryCenter.z - center.z
   );
-  // centerToMesh.applyQuaternion(meshGroup.quaternion);
 
   const distance = centerToMesh.length() * factor;
   centerToMesh.normalize();
@@ -332,7 +331,7 @@ export function buildShape(options: {
     edgeIdx++;
   }
 
-  const bbox = new THREE.Box3().setFromObject(mainMesh);
+  const bbox = new THREE.Box3().setFromObject(meshGroup);
   const size = new THREE.Vector3();
   bbox.getSize(size);
   const center = new THREE.Vector3();
@@ -346,10 +345,7 @@ export function buildShape(options: {
   boundingBox.visible = false;
   boundingBox.name = SELECTION_BOUNDING_BOX;
   meshGroup.add(boundingBox);
-  meshGroup.userData = {
-    ...meshGroup.userData,
-    type: 'shape'
-  } as IMeshGroupMetadata;
+  meshGroup.userData.type = 'shape';
 
   meshGroup.add(mainMesh);
 
