@@ -444,6 +444,7 @@ export class MainView extends React.Component<IProps, IStates> {
       });
       this._scene.add(this._transformControls);
       this._transformControls.setMode('translate');
+      this._transformControls.setSpace('local');
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
 

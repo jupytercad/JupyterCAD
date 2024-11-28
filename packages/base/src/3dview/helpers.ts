@@ -331,7 +331,7 @@ export function buildShape(options: {
     edgeIdx++;
   }
 
-  const bbox = new THREE.Box3().setFromObject(mainMesh);
+  const bbox = new THREE.Box3().setFromObject(meshGroup);
   const size = new THREE.Vector3();
   bbox.getSize(size);
   const center = new THREE.Vector3();
