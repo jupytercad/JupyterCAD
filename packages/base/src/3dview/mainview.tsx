@@ -49,7 +49,8 @@ import {
   buildShape,
   computeExplodedState,
   projectVector,
-  IMouseDrag
+  IMouseDrag,
+  IMeshGroupMetadata
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
@@ -426,11 +427,10 @@ export class MainView extends React.Component<IProps, IStates> {
         const obj = this._model.sharedModel.getObjectByName(objectName);
 
         if (obj && obj.parameters && obj.parameters.Placement) {
-          const positionArray = obj?.parameters?.Placement?.Position;
           const newPosition = [
-            positionArray[0] + updatedPosition.x,
-            positionArray[1] + updatedPosition.y,
-            positionArray[2] + updatedPosition.z
+            updatedPosition.x,
+            updatedPosition.y,
+            updatedPosition.z
           ];
 
           this._mainViewModel.maybeUpdateObjectParameters(objectName, {
@@ -444,6 +444,7 @@ export class MainView extends React.Component<IProps, IStates> {
       });
       this._scene.add(this._transformControls);
       this._transformControls.setMode('translate');
+      this._transformControls.setSpace('local');
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
 
@@ -782,7 +783,7 @@ export class MainView extends React.Component<IProps, IStates> {
       if (output) {
         const { meshGroup, mainMesh, edgesMeshes } = output;
         if (meshGroup.userData.jcObject.visible) {
-          this._boundingGroup.expandByObject(mainMesh);
+          this._boundingGroup.expandByObject(meshGroup);
         }
 
         // Save original color for the main mesh
@@ -1202,18 +1203,6 @@ export class MainView extends React.Component<IProps, IStates> {
       if (matchingChild) {
         this._transformControls.attach(matchingChild as BasicMesh);
 
-        const obj = this._model.sharedModel.getObjectByName(selectedMeshName);
-        const positionArray = obj?.parameters?.Placement?.Position;
-
-        if (positionArray && positionArray.length === 3) {
-          const positionVector = new THREE.Vector3(
-            positionArray[0],
-            positionArray[1],
-            positionArray[2]
-          );
-          this._transformControls.position.copy(positionVector);
-        }
-
         this._transformControls.visible = this.state.transform;
         this._transformControls.enabled = this.state.transform;
 
@@ -1506,6 +1495,9 @@ export class MainView extends React.Component<IProps, IStates> {
       this._explodedViewLinesHelperGroup = new THREE.Group();
 
       for (const group of this._meshGroup?.children as THREE.Group[]) {
+        const groupMetadata = group.userData as IMeshGroupMetadata;
+        const positionArray =
+          groupMetadata.jcObject.parameters?.Placement.Position;
         const explodedState = computeExplodedState({
           mesh: group.getObjectByName(
             group.name.replace('-group', '')
@@ -1514,8 +1506,13 @@ export class MainView extends React.Component<IProps, IStates> {
           factor: this._explodedView.factor
         });
 
-        group.position.set(0, 0, 0);
-        group.translateOnAxis(explodedState.vector, explodedState.distance);
+        group.position.copy(
+          new THREE.Vector3(
+            positionArray[0] + explodedState.vector.x * explodedState.distance,
+            positionArray[1] + explodedState.vector.y * explodedState.distance,
+            positionArray[2] + explodedState.vector.z * explodedState.distance
+          )
+        );
 
         // Draw lines
         const material = new THREE.LineBasicMaterial({
@@ -1535,10 +1532,20 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._scene.add(this._explodedViewLinesHelperGroup);
     } else {
-      // Exploded view is disabled, we reset the initial positions
-      for (const mesh of this._meshGroup?.children as BasicMesh[]) {
-        mesh.position.set(0, 0, 0);
+      // Reset objects to their original positions
+      for (const group of this._meshGroup?.children as THREE.Group[]) {
+        const groupMetadata = group.userData as IMeshGroupMetadata;
+        const positionArray =
+          groupMetadata.jcObject.parameters?.Placement.Position;
+        group.position.copy(
+          new THREE.Vector3(
+            positionArray[0],
+            positionArray[1],
+            positionArray[2]
+          )
+        );
       }
+
       this._explodedViewLinesHelperGroup?.removeFromParent();
     }
   }

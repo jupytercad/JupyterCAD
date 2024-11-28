@@ -8,6 +8,7 @@ import {
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
+import { IJCadObject } from '@jupytercad/schema';
 
 import { getCSSVariableColor } from '../tools';
 
@@ -64,6 +65,12 @@ export interface IMouseDrag {
   end: THREE.Vector2;
 }
 
+export interface IMeshGroupMetadata {
+  type: string;
+  jcObject: IJCadObject;
+  [key: string]: any;
+}
+
 export function projectVector(options: {
   vector: THREE.Vector3;
   camera: THREE.Camera;
@@ -81,6 +88,26 @@ export function projectVector(options: {
   );
 }
 
+export function getQuaternion(jcObject: IJCadObject): THREE.Quaternion {
+  const placement = jcObject?.parameters?.Placement;
+
+  const angle = placement.Angle;
+  const axis = placement.Axis;
+  const axisVector = new THREE.Vector3(axis[0], axis[1], axis[2]);
+  axisVector.normalize();
+
+  const angleRad = (angle * Math.PI) / 180;
+  const halfAngle = angleRad / 2;
+  const sinHalfAngle = Math.sin(halfAngle);
+
+  return new THREE.Quaternion(
+    axisVector.x * sinHalfAngle,
+    axisVector.y * sinHalfAngle,
+    axisVector.z * sinHalfAngle,
+    Math.cos(halfAngle)
+  ).normalize();
+}
+
 export function computeExplodedState(options: {
   mesh: BasicMesh;
   boundingGroup: THREE.Box3;
@@ -88,18 +115,29 @@ export function computeExplodedState(options: {
 }) {
   const { mesh, boundingGroup, factor } = options;
   const center = new THREE.Vector3();
+  const meshGroup = mesh.parent as THREE.Object3D;
   boundingGroup.getCenter(center);
 
   const oldGeometryCenter = new THREE.Vector3();
   mesh.geometry.boundingBox?.getCenter(oldGeometryCenter);
+
+  const meshGroupQuaternion = getQuaternion(meshGroup.userData.jcObject);
+  const meshGroupPositionArray =
+    meshGroup.userData.jcObject.parameters?.Placement.Position;
+  const meshGroupPosition = new THREE.Vector3(
+    meshGroupPositionArray[0],
+    meshGroupPositionArray[1],
+    meshGroupPositionArray[2]
+  );
+  oldGeometryCenter.applyQuaternion(meshGroupQuaternion).add(meshGroupPosition);
 
   const centerToMesh = new THREE.Vector3(
     oldGeometryCenter.x - center.x,
     oldGeometryCenter.y - center.y,
     oldGeometryCenter.z - center.z
   );
-  const distance = centerToMesh.length() * factor;
 
+  const distance = centerToMesh.length() * factor;
   centerToMesh.normalize();
 
   const newGeometryCenter = new THREE.Vector3(
@@ -112,7 +150,7 @@ export function computeExplodedState(options: {
     oldGeometryCenter,
     newGeometryCenter,
     vector: centerToMesh,
-    distance
+    distance: distance
   };
 }
 
@@ -134,18 +172,33 @@ export function buildShape(options: {
 
   const vertices: Array<number> = [];
   const triangles: Array<number> = [];
+  const placement = data?.jcObject?.parameters?.Placement;
+  const objPosition = placement.Position;
+
+  const objQuaternion = getQuaternion(jcObject);
+  const inverseQuaternion = objQuaternion.clone().invert();
 
   let vInd = 0;
   if (faceList.length === 0 && edgeList.length === 0) {
     return null;
   }
   for (const face of faceList) {
-    // Copy Vertices into three.js Vector3 List
     const vertexCoorLength = face.vertexCoord.length;
-    for (let ii = 0; ii < vertexCoorLength; ii++) {
-      vertices.push(face.vertexCoord[ii]);
+    for (let ii = 0; ii < vertexCoorLength; ii += 3) {
+      const vertex = new THREE.Vector3(
+        face.vertexCoord[ii],
+        face.vertexCoord[ii + 1],
+        face.vertexCoord[ii + 2]
+      );
+      // Undo placement from the vertices, we want the placement done on the THREE.Object3D (Mesh), not the geometry
+      vertex.sub(
+        new THREE.Vector3(objPosition[0], objPosition[1], objPosition[2])
+      );
+      vertex.applyQuaternion(inverseQuaternion);
+
+      vertices.push(vertex.x, vertex.y, vertex.z);
     }
-    // Sort Triangles into a three.js Face List
+
     const triIndexesLength = face.triIndexes.length;
     for (let i = 0; i < triIndexesLength; i += 3) {
       triangles.push(
@@ -246,8 +299,25 @@ export function buildShape(options: {
       polygonOffsetFactor: -5,
       polygonOffsetUnits: -5
     });
+
+    const transformedVertices: number[] = [];
+    for (let i = 0; i < edge.vertexCoord.length; i += 3) {
+      const vertex = new THREE.Vector3(
+        edge.vertexCoord[i],
+        edge.vertexCoord[i + 1],
+        edge.vertexCoord[i + 2]
+      );
+      // Undo placement from the vertices, we want the placement done on the THREE.Object3D (Mesh), not the geometry
+      vertex.sub(
+        new THREE.Vector3(objPosition[0], objPosition[1], objPosition[2])
+      );
+      vertex.applyQuaternion(inverseQuaternion);
+
+      transformedVertices.push(vertex.x, vertex.y, vertex.z);
+    }
+
     const edgeGeometry = new LineGeometry();
-    edgeGeometry.setPositions(edge.vertexCoord);
+    edgeGeometry.setPositions(transformedVertices);
     const edgesMesh = new LineSegments2(edgeGeometry, edgeMaterial);
     edgesMesh.name = `edge-${objName}-${edgeIdx}`;
     edgesMesh.userData = {
@@ -261,7 +331,7 @@ export function buildShape(options: {
     edgeIdx++;
   }
 
-  const bbox = new THREE.Box3().setFromObject(mainMesh);
+  const bbox = new THREE.Box3().setFromObject(meshGroup);
   const size = new THREE.Vector3();
   bbox.getSize(size);
   const center = new THREE.Vector3();
@@ -275,8 +345,14 @@ export function buildShape(options: {
   boundingBox.visible = false;
   boundingBox.name = SELECTION_BOUNDING_BOX;
   meshGroup.add(boundingBox);
+  meshGroup.userData.type = 'shape';
 
   meshGroup.add(mainMesh);
+
+  meshGroup.applyQuaternion(objQuaternion);
+  meshGroup.position.copy(
+    new THREE.Vector3(objPosition[0], objPosition[1], objPosition[2])
+  );
 
   return { meshGroup, mainMesh, edgesMeshes };
 }
