@@ -2,7 +2,7 @@ import {
   ICollaborativeDrive,
   SharedDocumentFactory
 } from '@jupyter/collaborative-drive';
-import { logoIcon } from '@jupytercad/base';
+import { logoIcon, CommandIDs as BaseCommandIDs } from '@jupytercad/base';
 import {
   IAnnotationModel,
   IAnnotationToken,
@@ -172,6 +172,13 @@ const activate = (
       command: CommandIDs.createNew,
       category: PALETTE_CATEGORY
     });
+
+    for (const command in BaseCommandIDs) {
+      palette.addItem({
+        command: BaseCommandIDs[command],
+        category: PALETTE_CATEGORY
+      });
+    }
   }
 };
 
