@@ -60,6 +60,7 @@ export class JupyterCadStlDoc extends JupyterCadDoc {
   }
 
   editable = false;
+  toJcadEndpoint = 'jupytercad/export';
 
   private _sourceObserver = (events: Y.YEvent<any>[]): void => {
     const changes: Array<{
