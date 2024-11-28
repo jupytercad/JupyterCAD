@@ -957,7 +957,9 @@ export function addCommands(
   commands.addCommand(CommandIDs.transform, {
     label: trans.__('Toggle Transform Controls'),
     isEnabled: () => {
-      return tracker.currentWidget !== null;
+      return tracker.currentWidget
+        ? tracker.currentWidget.context.model.sharedModel.editable
+        : false;
     },
     isToggled: () => {
       const current = tracker.currentWidget?.content;
