@@ -19,7 +19,7 @@ import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 import { JupyterCadStlModelFactory } from './modelfactory';
 import { JupyterCadWidgetFactory } from '../factory';
 import { JupyterCadStlDoc } from './model';
-import { logoIcon } from '@jupytercad/base';
+import { stlIcon } from '@jupytercad/base';
 
 const FACTORY = 'JupyterCAD STL Viewer';
 
@@ -55,7 +55,7 @@ const activate = (
     extensions: ['.stl', '.STL'],
     fileFormat: 'text',
     contentType: 'stl',
-    icon: logoIcon
+    icon: stlIcon
   });
 
   const stlSharedModelFactory: SharedDocumentFactory = () => {
