@@ -6,21 +6,21 @@
   "properties": {
     "Position": {
       "type": "array",
-      "description": "Position of the Placement",
+      "description": "Position",
       "items": {
         "type": "number"
       }
     },
     "Axis": {
       "type": "array",
-      "description": "Axis of the Placement",
+      "description": "Rotation Axis",
       "items": {
         "type": "number"
       }
     },
     "Angle": {
       "type": "number",
-      "description": "Angle of the Placement"
+      "description": "Rotation Angle (degrees)"
     }
   }
 }
