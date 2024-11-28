@@ -427,7 +427,6 @@ export class MainView extends React.Component<IProps, IStates> {
         const obj = this._model.sharedModel.getObjectByName(objectName);
 
         if (obj && obj.parameters && obj.parameters.Placement) {
-          // const positionArray = obj?.parameters?.Placement?.Position;
           const newPosition = [
             updatedPosition.x,
             updatedPosition.y,

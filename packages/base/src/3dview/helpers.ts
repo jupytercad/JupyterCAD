@@ -121,8 +121,6 @@ export function computeExplodedState(options: {
   const oldGeometryCenter = new THREE.Vector3();
   mesh.geometry.boundingBox?.getCenter(oldGeometryCenter);
 
-  // oldGeometryCenter.applyQuaternion(meshGroup.quaternion);
-  // oldGeometryCenter.add(meshGroup.position);
   const meshGroupQuaternion = getQuaternion(meshGroup.userData.jcObject);
   const meshGroupPositionArray =
     meshGroup.userData.jcObject.parameters?.Placement.Position;
@@ -138,7 +136,6 @@ export function computeExplodedState(options: {
     oldGeometryCenter.y - center.y,
     oldGeometryCenter.z - center.z
   );
-  // centerToMesh.applyQuaternion(meshGroup.quaternion);
 
   const distance = centerToMesh.length() * factor;
   centerToMesh.normalize();
@@ -348,10 +345,7 @@ export function buildShape(options: {
   boundingBox.visible = false;
   boundingBox.name = SELECTION_BOUNDING_BOX;
   meshGroup.add(boundingBox);
-  meshGroup.userData = {
-    ...meshGroup.userData,
-    type: 'shape'
-  } as IMeshGroupMetadata;
+  meshGroup.userData.type = 'shape';
 
   meshGroup.add(mainMesh);
 
