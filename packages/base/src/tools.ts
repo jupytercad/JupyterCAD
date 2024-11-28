@@ -7,6 +7,7 @@ import logoStr from '../style/icon/logo.svg';
 import stlStr from '../style/icon/stl.svg';
 import stpStr from '../style/icon/stp.svg';
 import axesIconStr from '../style/icon/axes.svg';
+import transformIconStr from '../style/icon/transform.svg';
 import boxIconStr from '../style/icon/box.svg';
 import coneIconStr from '../style/icon/cone.svg';
 import cutIconStr from '../style/icon/cut.svg';
@@ -103,6 +104,11 @@ export const extrusionIcon = new LabIcon({
 export const axesIcon = new LabIcon({
   name: 'jupytercad:axes-icon',
   svgstr: axesIconStr
+});
+
+export const transformIcon = new LabIcon({
+  name: 'jupytercad:transform-icon',
+  svgstr: transformIconStr
 });
 
 export const explodedViewIcon = new LabIcon({
