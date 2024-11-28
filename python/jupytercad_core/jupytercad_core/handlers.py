@@ -28,13 +28,10 @@ class JCadExportHandler(APIHandler):
                     visible=True,
                     shape="Part::Any",
                     parameters=dict(
-                        Content=file_content, Type=str(Path(Path(file_name).suffix[1:])),
+                        Content=file_content,
+                        Type=str(Path(Path(file_name).suffix[1:])),
                         Color="#808080",
-                        Placement=dict(
-                            Position=[0, 0, 0],
-                            Axis=[0, 0, 1],
-                            Angle=0
-                        )
+                        Placement=dict(Position=[0, 0, 0], Axis=[0, 0, 1], Angle=0),
                     ),
                 )
             ],
