@@ -93,17 +93,19 @@ export function getQuaternion(jcObject: IJCadObject): THREE.Quaternion {
 
   const angle = placement.Angle;
   const axis = placement.Axis;
+  const axisVector = new THREE.Vector3(axis[0], axis[1], axis[2]);
+  axisVector.normalize();
 
   const angleRad = (angle * Math.PI) / 180;
   const halfAngle = angleRad / 2;
   const sinHalfAngle = Math.sin(halfAngle);
 
   return new THREE.Quaternion(
-    axis[0] * sinHalfAngle,
-    axis[1] * sinHalfAngle,
-    axis[2] * sinHalfAngle,
+    axisVector.x * sinHalfAngle,
+    axisVector.y * sinHalfAngle,
+    axisVector.z * sinHalfAngle,
     Math.cos(halfAngle)
-  );
+  ).normalize();
 }
 
 export function computeExplodedState(options: {
