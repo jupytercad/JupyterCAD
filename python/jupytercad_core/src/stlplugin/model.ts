@@ -43,7 +43,21 @@ export class JupyterCadStlDoc extends JupyterCadDoc {
         shape: 'Part::Any',
         parameters: {
           Content: this._source.toJSON(),
-          Type: 'STL'
+          Type: 'STL',
+          Color: '#808080',
+          Placement: {
+          Angle: 0.0,
+          Axis: [
+            0.0,
+            0.0,
+            1.0
+          ],
+          Position: [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
         }
       }
     ];
