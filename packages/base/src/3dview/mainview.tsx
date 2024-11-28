@@ -417,7 +417,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this._controls.enabled = !event.value;
       });
       // Update the currently transformed object in the shared model once finished moving
-      this._transformControls.addEventListener('mouseUp', () => {
+      this._transformControls.addEventListener('mouseUp', async () => {
         const updatedObject = this._selectedMeshes[0];
         const objectName = updatedObject.name;
 
@@ -451,7 +451,7 @@ export class MainView extends React.Component<IProps, IStates> {
             updatedPosition.z
           ];
 
-          this._mainViewModel.maybeUpdateObjectParameters(objectName, {
+          const done = await this._mainViewModel.maybeUpdateObjectParameters(objectName, {
             ...obj.parameters,
             Placement: {
               ...obj.parameters.Placement,
@@ -460,6 +460,10 @@ export class MainView extends React.Component<IProps, IStates> {
               Angle: updatedRotation[1]
             }
           });
+          console.log('done?', done);
+          if (!done) {
+            // TODO: Reset original position and rotation of the object upon failure
+          }
         }
       });
       this._scene.add(this._transformControls);
