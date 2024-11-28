@@ -436,13 +436,10 @@ export class MainView extends React.Component<IProps, IStates> {
               updatedQuaternion.y / s,
               updatedQuaternion.z / s
             ],
-            (2 * Math.acos(updatedQuaternion.w) * (180 / Math.PI))
+            2 * Math.acos(updatedQuaternion.w) * (180 / Math.PI)
           ];
         } else {
-          updatedRotation = [
-            [0, 0, 1],
-            0
-          ];
+          updatedRotation = [[0, 0, 1], 0];
         }
 
         const obj = this._model.sharedModel.getObjectByName(objectName);
