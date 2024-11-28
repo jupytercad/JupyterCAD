@@ -1,9 +1,9 @@
-import { SchemaForm } from '@deathbeds/jupyterlab-rjsf';
 import { MessageLoop } from '@lumino/messaging';
 import { Widget } from '@lumino/widgets';
 import { ISubmitEvent } from '@rjsf/core';
 import * as React from 'react';
-
+import { FormComponent } from '@jupyterlab/ui-components';
+import validatorAjv8 from '@rjsf/validator-ajv8';
 import { IDict } from '../types';
 
 interface IStates {
@@ -24,15 +24,20 @@ interface IProps {
   cancel?: () => void;
 }
 
+// Wrap FormComponent to ensure validator integration
+const WrappedFormComponent = (props: any): JSX.Element => {
+  return <FormComponent {...props} validator={validatorAjv8} />;
+};
+
 // Reusing the datalayer/jupyter-react component:
 // https://github.com/datalayer/jupyter-react/blob/main/packages/react/src/jupyter/lumino/Lumino.tsx
-export const LuminoSchemaForm = (
+export const LuminoForm = (
   props: React.PropsWithChildren<any>
 ): JSX.Element => {
   const ref = React.useRef<HTMLDivElement>(null);
   const { children } = props;
   React.useEffect(() => {
-    const widget = children as SchemaForm;
+    const widget = children as Widget;
     try {
       MessageLoop.sendMessage(widget, Widget.Msg.BeforeAttach);
       ref.current!.insertBefore(widget.node, null);
@@ -76,65 +81,43 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
     );
   };
 
-  componentDidUpdate(prevProps: IProps, prevState: IStates): void {
+  componentDidUpdate(prevProps: IProps): void {
     if (prevProps.sourceData !== this.props.sourceData) {
       this.setState(old => ({ ...old, internalData: this.props.sourceData }));
     }
   }
 
-  buildForm(): JSX.Element[] {
-    if (!this.props.sourceData || !this.state.internalData) {
-      return [];
-    }
-    const inputs: JSX.Element[] = [];
-
-    for (const [key, value] of Object.entries(this.props.sourceData)) {
-      let input: JSX.Element;
-      if (typeof value === 'string' || typeof value === 'number') {
-        input = (
-          <div key={key}>
-            <label htmlFor="">{key}</label>
-            <input
-              type="number"
-              value={this.state.internalData[key]}
-              onChange={e => this.setStateByKey(key, e.target.value)}
-            />
-          </div>
-        );
-        inputs.push(input);
-      }
-    }
-    return inputs;
-  }
-
-  removeArrayButton(schema: IDict, uiSchema: IDict): void {
-    Object.entries(schema['properties'] as IDict).forEach(([k, v]) => {
-      if (v['type'] === 'array') {
-        uiSchema[k] = {
-          'ui:options': {
-            orderable: false,
-            removable: false,
-            addable: false
-          }
-        };
-      } else if (v['type'] === 'object') {
-        uiSchema[k] = {};
-        this.removeArrayButton(v, uiSchema[k]);
-      }
-      uiSchema['Color'] = {
-        'ui:widget': 'color'
-      };
-    });
-  }
-
   generateUiSchema(schema: IDict): IDict {
-    const uiSchema = {
+    const uiSchema: IDict = {
       additionalProperties: {
         'ui:label': false,
         classNames: 'jpcad-hidden-field'
       }
     };
-    this.removeArrayButton(schema, uiSchema);
+
+    const processSchema = (currentSchema: IDict, ui: IDict): void => {
+      Object.entries(currentSchema['properties'] || {}).forEach(
+        ([key, value]) => {
+          if (typeof value === 'object' && value !== null && 'type' in value) {
+            const property = value as { type: string };
+            if (property.type === 'array') {
+              ui[key] = {
+                'ui:options': {
+                  orderable: false,
+                  removable: false,
+                  addable: false
+                }
+              };
+            } else if (property.type === 'object') {
+              ui[key] = {};
+              processSchema(property, ui[key]); 
+            }
+          }
+        }
+      );
+    };
+
+    processSchema(schema, uiSchema);
     return uiSchema;
   }
 
@@ -154,59 +137,44 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   };
 
   render(): React.ReactNode {
-    if (this.props.schema) {
-      const schema = { ...this.props.schema, additionalProperties: true };
+    const { schema, internalData } = this.state;
+    const uiSchema = this.generateUiSchema(this.props.schema || {});
 
-      const submitRef = React.createRef<HTMLButtonElement>();
-
-      const formSchema = new SchemaForm(schema ?? {}, {
-        liveValidate: true,
-        formData: this.state.internalData,
-        onSubmit: this.onFormSubmit,
-        onFocus: (id, value) => {
-          this.props.syncSelectedField
-            ? this.props.syncSelectedField(id, value, this.props.parentType)
-            : null;
-        },
-        onBlur: (id, value) => {
-          this.props.syncSelectedField
-            ? this.props.syncSelectedField(null, value, this.props.parentType)
-            : null;
-        },
-        uiSchema: this.generateUiSchema(this.props.schema),
-        children: (
-          <button ref={submitRef} type="submit" style={{ display: 'none' }} />
-        )
-      });
-      return (
-        <div
-          className="jpcad-property-panel"
-          data-path={this.props.filePath ?? ''}
-        >
-          <div className="jpcad-property-outer jp-scrollbar-tiny">
-            <LuminoSchemaForm>{formSchema}</LuminoSchemaForm>
-          </div>
-          <div className="jpcad-property-buttons">
-            {this.props.cancel ? (
-              <button
-                className="jp-Dialog-button jp-mod-reject jp-mod-styled"
-                onClick={this.props.cancel}
-              >
-                <div className="jp-Dialog-buttonLabel">Cancel</div>
-              </button>
-            ) : null}
-
-            <button
-              className="jp-Dialog-button jp-mod-accept jp-mod-styled"
-              onClick={() => submitRef.current?.click()}
-            >
-              <div className="jp-Dialog-buttonLabel">Submit</div>
-            </button>
-          </div>
-        </div>
-      );
-    } else {
-      return <div>{this.buildForm()}</div>;
+    if (!schema) {
+      return <div>No Schema Available</div>;
     }
+
+    return (
+      <div
+        className="jpcad-property-panel"
+        data-path={this.props.filePath ?? ''}
+      >
+        <WrappedFormComponent
+          schema={schema}
+          uiSchema={uiSchema}
+          formData={internalData}
+          onChange={(e: ISubmitEvent<any>) => this.props.syncData(e.formData)}
+          onSubmit={this.onFormSubmit}
+          liveValidate
+        />
+        <div className="jpcad-property-buttons">
+          {this.props.cancel ? (
+            <button
+              className="jp-Dialog-button jp-mod-reject jp-mod-styled"
+              onClick={this.props.cancel}
+            >
+              <div className="jp-Dialog-buttonLabel">Cancel</div>
+            </button>
+          ) : null}
+
+          <button
+            className="jp-Dialog-button jp-mod-accept jp-mod-styled"
+            type="submit"
+          >
+            <div className="jp-Dialog-buttonLabel">Submit</div>
+          </button>
+        </div>
+      </div>
+    );
   }
 }
