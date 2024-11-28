@@ -8,6 +8,7 @@ import {
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
+import { IJCadObject } from '@jupytercad/schema';
 
 import { getCSSVariableColor } from '../tools';
 
@@ -66,7 +67,7 @@ export interface IMouseDrag {
 
 export interface IMeshGroupMetadata {
   type: string;
-  originalPosition?: THREE.Vector3;
+  jcObject: IJCadObject;
   [key: string]: any;
 }
 
@@ -87,6 +88,24 @@ export function projectVector(options: {
   );
 }
 
+export function getQuaternion(jcObject: IJCadObject): THREE.Quaternion {
+  const placement = jcObject?.parameters?.Placement;
+
+  const angle = placement.Angle;
+  const axis = placement.Axis;
+
+  const angleRad = (angle * Math.PI) / 180;
+  const halfAngle = angleRad / 2;
+  const sinHalfAngle = Math.sin(halfAngle);
+
+  return new THREE.Quaternion(
+    axis[0] * sinHalfAngle,
+    axis[1] * sinHalfAngle,
+    axis[2] * sinHalfAngle,
+    Math.cos(halfAngle)
+  );
+}
+
 export function computeExplodedState(options: {
   mesh: BasicMesh;
   boundingGroup: THREE.Box3;
@@ -94,18 +113,32 @@ export function computeExplodedState(options: {
 }) {
   const { mesh, boundingGroup, factor } = options;
   const center = new THREE.Vector3();
+  const meshGroup = mesh.parent as THREE.Object3D;
   boundingGroup.getCenter(center);
 
   const oldGeometryCenter = new THREE.Vector3();
   mesh.geometry.boundingBox?.getCenter(oldGeometryCenter);
+
+  // oldGeometryCenter.applyQuaternion(meshGroup.quaternion);
+  // oldGeometryCenter.add(meshGroup.position);
+  const meshGroupQuaternion = getQuaternion(meshGroup.userData.jcObject);
+  const meshGroupPositionArray =
+    meshGroup.userData.jcObject.parameters?.Placement.Position;
+  const meshGroupPosition = new THREE.Vector3(
+    meshGroupPositionArray[0],
+    meshGroupPositionArray[1],
+    meshGroupPositionArray[2]
+  );
+  oldGeometryCenter.applyQuaternion(meshGroupQuaternion).add(meshGroupPosition);
 
   const centerToMesh = new THREE.Vector3(
     oldGeometryCenter.x - center.x,
     oldGeometryCenter.y - center.y,
     oldGeometryCenter.z - center.z
   );
-  const distance = centerToMesh.length() * factor;
+  // centerToMesh.applyQuaternion(meshGroup.quaternion);
 
+  const distance = centerToMesh.length() * factor;
   centerToMesh.normalize();
 
   const newGeometryCenter = new THREE.Vector3(
@@ -118,7 +151,7 @@ export function computeExplodedState(options: {
     oldGeometryCenter,
     newGeometryCenter,
     vector: centerToMesh,
-    distance
+    distance: distance
   };
 }
 
@@ -143,20 +176,7 @@ export function buildShape(options: {
   const placement = data?.jcObject?.parameters?.Placement;
   const objPosition = placement.Position;
 
-  const angle = placement.Angle;
-  const axis = placement.Axis;
-
-  const angleRad = (angle * Math.PI) / 180;
-
-  const halfAngle = angleRad / 2;
-  const sinHalfAngle = Math.sin(halfAngle);
-
-  const objQuaternion = new THREE.Quaternion(
-    axis[0] * sinHalfAngle,
-    axis[1] * sinHalfAngle,
-    axis[2] * sinHalfAngle,
-    Math.cos(halfAngle)
-  );
+  const objQuaternion = getQuaternion(jcObject);
   const inverseQuaternion = objQuaternion.clone().invert();
 
   let vInd = 0;
@@ -224,6 +244,9 @@ export function buildShape(options: {
   const meshGroup = new THREE.Group();
   meshGroup.name = `${objName}-group`;
   meshGroup.visible = visible;
+  meshGroup.userData = {
+    jcObject
+  };
 
   // We only build the stencil logic for solid meshes
   if (isSolid) {
@@ -323,14 +346,9 @@ export function buildShape(options: {
   boundingBox.visible = false;
   boundingBox.name = SELECTION_BOUNDING_BOX;
   meshGroup.add(boundingBox);
-  const initialPosition = new THREE.Vector3(
-    objPosition[0],
-    objPosition[1],
-    objPosition[2]
-  );
   meshGroup.userData = {
-    type: 'shape',
-    originalPosition: initialPosition
+    ...meshGroup.userData,
+    type: 'shape'
   } as IMeshGroupMetadata;
 
   meshGroup.add(mainMesh);

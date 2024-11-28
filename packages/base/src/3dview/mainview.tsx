@@ -799,8 +799,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
       if (output) {
         const { meshGroup, mainMesh, edgesMeshes } = output;
-        if (meshGroup.visible) {
-          this._boundingGroup.expandByObject(mainMesh);
+        if (meshGroup.userData.jcObject.visible) {
+          this._boundingGroup.expandByObject(meshGroup);
         }
 
         // Save original color for the main mesh
@@ -820,6 +820,12 @@ export class MainView extends React.Component<IProps, IStates> {
           ) as THREE.Mesh;
           if (boundingBox) {
             boundingBox.visible = true;
+          }
+
+          if (!meshGroup.userData.jcObject.visible) {
+            meshGroup.visible = true;
+            mainMesh.material.opacity = 0.5;
+            mainMesh.material.transparent = true;
           }
 
           this._selectedMeshes.push(mainMesh);
@@ -965,7 +971,6 @@ export class MainView extends React.Component<IProps, IStates> {
     const wireframe = new THREE.LineSegments(lineGeo, mat);
     mesh.add(wireframe);
     mesh.name = name;
-    mesh.visible = true;
     if (this._meshGroup) {
       this._meshGroup.add(mesh);
       this._boundingGroup?.expandByObject(mesh);
@@ -1122,14 +1127,20 @@ export class MainView extends React.Component<IProps, IStates> {
         selectedMesh.material.color = originalColor;
       }
 
-      const parentGroup = this._meshGroup?.getObjectByName(
-        selectedMesh.name
-      )?.parent;
+      const parentGroup = this._meshGroup?.getObjectByName(selectedMesh.name)
+        ?.parent as THREE.Group;
       const boundingBox = parentGroup?.getObjectByName(
         SELECTION_BOUNDING_BOX
       ) as THREE.Mesh;
+
       if (boundingBox) {
         boundingBox.visible = false;
+      }
+
+      if (!parentGroup.userData.jcObject.visible) {
+        parentGroup.visible = false;
+        selectedMesh.material.opacity = 1;
+        selectedMesh.material.transparent = false;
       }
 
       const material = selectedMesh.material as THREE.Material & {
@@ -1149,9 +1160,11 @@ export class MainView extends React.Component<IProps, IStates> {
         selectionName
       ) as BasicMesh;
 
-      if (!selectedMesh || !selectedMesh.visible) {
+      if (!selectedMesh) {
         continue;
       }
+
+      this._selectedMeshes.push(selectedMesh);
 
       if (selectedMesh.name.startsWith('edge')) {
         // Highlight edges using the old method
@@ -1160,7 +1173,6 @@ export class MainView extends React.Component<IProps, IStates> {
             selectedMesh.material.color.clone();
         }
 
-        this._selectedMeshes.push(selectedMesh);
         if (selectedMesh?.material?.color) {
           selectedMesh.material.color = BOUNDING_BOX_COLOR;
         }
@@ -1173,11 +1185,15 @@ export class MainView extends React.Component<IProps, IStates> {
         }
       } else {
         // Highlight non-edges using a bounding box
-        this._selectedMeshes.push(selectedMesh);
+        const parentGroup = this._meshGroup?.getObjectByName(selectedMesh.name)
+          ?.parent as THREE.Group;
 
-        const parentGroup = this._meshGroup?.getObjectByName(
-          selectedMesh.name
-        )?.parent;
+        if (!parentGroup.userData.jcObject.visible) {
+          parentGroup.visible = true;
+          selectedMesh.material.opacity = 0.5;
+          selectedMesh.material.transparent = true;
+        }
+
         const boundingBox = parentGroup?.getObjectByName(
           SELECTION_BOUNDING_BOX
         ) as THREE.Mesh;
@@ -1204,8 +1220,8 @@ export class MainView extends React.Component<IProps, IStates> {
       if (matchingChild) {
         this._transformControls.attach(matchingChild as BasicMesh);
 
-        this._transformControls.visible = true;
-        this._transformControls.enabled = true;
+        this._transformControls.visible = this.state.transform;
+        this._transformControls.enabled = this.state.transform;
 
         return;
       }
@@ -1383,6 +1399,7 @@ export class MainView extends React.Component<IProps, IStates> {
         const objColor = obj?.material.color;
 
         obj.parent!.visible = isVisible;
+        obj.parent!.userData.visible = isVisible;
 
         const explodedLineHelper =
           this._explodedViewLinesHelperGroup?.getObjectByName(objName);
@@ -1496,13 +1513,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
       for (const group of this._meshGroup?.children as THREE.Group[]) {
         const groupMetadata = group.userData as IMeshGroupMetadata;
-        if (!groupMetadata.originalPosition) {
-          console.warn(
-            `Group ${group.name} is missing originalPosition metadata. Preventing exploded view.`
-          );
-          continue;
-        }
-
+        const positionArray =
+          groupMetadata.jcObject.parameters?.Placement.Position;
         const explodedState = computeExplodedState({
           mesh: group.getObjectByName(
             group.name.replace('-group', '')
@@ -1511,8 +1523,13 @@ export class MainView extends React.Component<IProps, IStates> {
           factor: this._explodedView.factor
         });
 
-        group.position.copy(groupMetadata.originalPosition);
-        group.translateOnAxis(explodedState.vector, explodedState.distance);
+        group.position.copy(
+          new THREE.Vector3(
+            positionArray[0] + explodedState.vector.x * explodedState.distance,
+            positionArray[1] + explodedState.vector.y * explodedState.distance,
+            positionArray[2] + explodedState.vector.z * explodedState.distance
+          )
+        );
 
         // Draw lines
         const material = new THREE.LineBasicMaterial({
@@ -1520,8 +1537,8 @@ export class MainView extends React.Component<IProps, IStates> {
           linewidth: DEFAULT_LINEWIDTH
         });
         const geometry = new THREE.BufferGeometry().setFromPoints([
-          groupMetadata.originalPosition.clone(),
-          group.position.clone()
+          explodedState.oldGeometryCenter,
+          explodedState.newGeometryCenter
         ]);
         const line = new THREE.Line(geometry, material);
         line.name = group.name;
@@ -1535,9 +1552,15 @@ export class MainView extends React.Component<IProps, IStates> {
       // Reset objects to their original positions
       for (const group of this._meshGroup?.children as THREE.Group[]) {
         const groupMetadata = group.userData as IMeshGroupMetadata;
-        if (groupMetadata.originalPosition) {
-          group.position.copy(groupMetadata.originalPosition);
-        }
+        const positionArray =
+          groupMetadata.jcObject.parameters?.Placement.Position;
+        group.position.copy(
+          new THREE.Vector3(
+            positionArray[0],
+            positionArray[1],
+            positionArray[2]
+          )
+        );
       }
 
       this._explodedViewLinesHelperGroup?.removeFromParent();
