@@ -238,7 +238,7 @@ test.describe('UI Test', () => {
       // Select cone
       await page
         .locator('[data-test-id="react-tree-root"]')
-        .getByText('Cone')
+        .getByText('Cone 1')
         .click();
 
       // Select other shape with ctrl key pressed
@@ -270,6 +270,34 @@ test.describe('UI Test', () => {
       if (main) {
         expect(await main.screenshot()).toMatchSnapshot({
           name: `MultiSelect-Cut-${fileName}.png`
+        });
+      }
+    });
+
+    test(`Test exploded view`, async ({ page }) => {
+      await page.goto();
+
+      const fileName = 'test.jcad';
+      const fullPath = `examples/${fileName}`;
+      await page.notebook.openByPath(fullPath);
+      await page.notebook.activate(fullPath);
+      await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
+      await page.sidebar.close('right');
+      // Apply Exploded view
+      await page.getByTitle('Exploded View').click();
+      await page.getByLabel('Enabled').click();
+      await page.getByLabel('Factor').click();
+      await page.getByLabel('Factor').fill('3.5');
+      await page
+        .locator('div.jp-Dialog-buttonLabel', {
+          hasText: 'Submit'
+        })
+        .click();
+
+      let main = await page.$('#jp-main-split-panel');
+      if (main) {
+        expect(await main.screenshot()).toMatchSnapshot({
+          name: `Exploded-${fileName}.png`
         });
       }
     });

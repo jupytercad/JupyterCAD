@@ -14,6 +14,7 @@ class YJCad(YBaseDoc):
         self._ydoc["options"] = self._yoptions = Map()
         self._ydoc["metadata"] = self._ymetadata = Map()
         self._ydoc["outputs"] = self._youtputs = Map()
+        self.undo_manager.expand_scope(self._yobjects)
 
     def version(self) -> str:
         return "0.1.0"

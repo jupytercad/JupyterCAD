@@ -145,6 +145,14 @@ export class JupyterCadPanel extends SplitPanel {
     this._view.set('wireframe', value);
   }
 
+  get transform(): boolean {
+    return this._view.get('transform') as boolean;
+  }
+
+  set transform(value: boolean) {
+    this._view.set('transform', value);
+  }
+
   executeConsole() {
     if (this._consoleView) {
       this._consoleView.execute();

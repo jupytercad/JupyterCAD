@@ -49,7 +49,8 @@ import {
   buildShape,
   computeExplodedState,
   projectVector,
-  IMouseDrag
+  IMouseDrag,
+  IMeshGroupMetadata
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
@@ -71,6 +72,8 @@ interface IStates {
   annotations: IDict<IAnnotation>;
   firstLoad: boolean;
   wireframe: boolean;
+  transform: boolean;
+  clipEnabled: boolean;
 }
 
 interface ILineIntersection extends THREE.Intersection {
@@ -113,7 +116,9 @@ export class MainView extends React.Component<IProps, IStates> {
       loading: true,
       annotations: {},
       firstLoad: true,
-      wireframe: false
+      wireframe: false,
+      transform: false,
+      clipEnabled: true
     };
   }
 
@@ -700,7 +705,9 @@ export class MainView extends React.Component<IProps, IStates> {
         if (
           !intersect.object.visible ||
           !intersect.object.parent?.visible ||
-          intersect.object.name === SELECTION_BOUNDING_BOX
+          intersect.object.name === SELECTION_BOUNDING_BOX ||
+          (this._transformControls.enabled &&
+            intersect.object.name.startsWith('edge'))
         ) {
           continue;
         }
@@ -837,8 +844,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
       if (output) {
         const { meshGroup, mainMesh, edgesMeshes } = output;
-        if (meshGroup.visible) {
-          this._boundingGroup.expandByObject(mainMesh);
+        if (meshGroup.userData.jcObject.visible) {
+          this._boundingGroup.expandByObject(meshGroup);
         }
 
         // Save original color for the main mesh
@@ -858,6 +865,12 @@ export class MainView extends React.Component<IProps, IStates> {
           ) as THREE.Mesh;
           if (boundingBox) {
             boundingBox.visible = true;
+          }
+
+          if (!meshGroup.userData.jcObject.visible) {
+            meshGroup.visible = true;
+            mainMesh.material.opacity = 0.5;
+            mainMesh.material.transparent = true;
           }
 
           this._selectedMeshes.push(mainMesh);
@@ -1003,7 +1016,6 @@ export class MainView extends React.Component<IProps, IStates> {
     const wireframe = new THREE.LineSegments(lineGeo, mat);
     mesh.add(wireframe);
     mesh.name = name;
-    mesh.visible = true;
     if (this._meshGroup) {
       this._meshGroup.add(mesh);
       this._boundingGroup?.expandByObject(mesh);
@@ -1160,14 +1172,20 @@ export class MainView extends React.Component<IProps, IStates> {
         selectedMesh.material.color = originalColor;
       }
 
-      const parentGroup = this._meshGroup?.getObjectByName(
-        selectedMesh.name
-      )?.parent;
+      const parentGroup = this._meshGroup?.getObjectByName(selectedMesh.name)
+        ?.parent as THREE.Group;
       const boundingBox = parentGroup?.getObjectByName(
         SELECTION_BOUNDING_BOX
       ) as THREE.Mesh;
+
       if (boundingBox) {
         boundingBox.visible = false;
+      }
+
+      if (!parentGroup.userData.jcObject.visible) {
+        parentGroup.visible = false;
+        selectedMesh.material.opacity = 1;
+        selectedMesh.material.transparent = false;
       }
 
       const material = selectedMesh.material as THREE.Material & {
@@ -1187,9 +1205,11 @@ export class MainView extends React.Component<IProps, IStates> {
         selectionName
       ) as BasicMesh;
 
-      if (!selectedMesh || !selectedMesh.visible) {
+      if (!selectedMesh) {
         continue;
       }
+
+      this._selectedMeshes.push(selectedMesh);
 
       if (selectedMesh.name.startsWith('edge')) {
         // Highlight edges using the old method
@@ -1198,7 +1218,6 @@ export class MainView extends React.Component<IProps, IStates> {
             selectedMesh.material.color.clone();
         }
 
-        this._selectedMeshes.push(selectedMesh);
         if (selectedMesh?.material?.color) {
           selectedMesh.material.color = BOUNDING_BOX_COLOR;
         }
@@ -1211,11 +1230,15 @@ export class MainView extends React.Component<IProps, IStates> {
         }
       } else {
         // Highlight non-edges using a bounding box
-        this._selectedMeshes.push(selectedMesh);
+        const parentGroup = this._meshGroup?.getObjectByName(selectedMesh.name)
+          ?.parent as THREE.Group;
 
-        const parentGroup = this._meshGroup?.getObjectByName(
-          selectedMesh.name
-        )?.parent;
+        if (!parentGroup.userData.jcObject.visible) {
+          parentGroup.visible = true;
+          selectedMesh.material.opacity = 0.5;
+          selectedMesh.material.transparent = true;
+        }
+
         const boundingBox = parentGroup?.getObjectByName(
           SELECTION_BOUNDING_BOX
         ) as THREE.Mesh;
@@ -1245,37 +1268,8 @@ export class MainView extends React.Component<IProps, IStates> {
       if (this._currentTransformed) {
         // this._transformControls.attach(this._currentTransformed as BasicMesh);
 
-        const obj = this._model.sharedModel.getObjectByName(selectedMeshName);
-        const positionArray = obj?.parameters?.Placement?.Position;
-        const angle = obj?.parameters?.Placement?.Angle;
-        const axis = obj?.parameters?.Placement?.Axis;
-
-        const angleRad = angle / 57.2958;
-
-        const halfAngle = angleRad / 2;
-        const sinHalfAngle = Math.sin(halfAngle);
-
-        this._sharedQuaternion = new THREE.Quaternion(
-          axis[0] * sinHalfAngle,
-          axis[1] * sinHalfAngle,
-          axis[2] * sinHalfAngle,
-          Math.cos(halfAngle)
-        );
-
-        if (positionArray && positionArray.length === 3) {
-          const position = new THREE.Vector3(
-            positionArray[0],
-            positionArray[1],
-            positionArray[2]
-          );
-          // const rotation = new THREE.Vector3(axis[0], axis[1], axis[2])
-          //   .normalize()
-          //   .multiplyScalar(THREE.MathUtils.degToRad(angle));
-
-          // this._transformControls.position.copy(position);
-          // this._transformControls.rotation.setFromVector3(rotation);
-          this._pivot.rotation.setFromQuaternion(this._sharedQuaternion);
-          this._pivot.position.copy(position);
+          this._transformControls.visible = this.state.transform;
+          this._transformControls.enabled = this.state.transform;
 
           this._transformControls.visible = true;
           this._transformControls.enabled = true;
@@ -1456,6 +1450,7 @@ export class MainView extends React.Component<IProps, IStates> {
         const objColor = obj?.material.color;
 
         obj.parent!.visible = isVisible;
+        obj.parent!.userData.visible = isVisible;
 
         const explodedLineHelper =
           this._explodedViewLinesHelperGroup?.getObjectByName(objName);
@@ -1514,9 +1509,13 @@ export class MainView extends React.Component<IProps, IStates> {
       const clipSettings = change.newValue as ClipSettings | undefined;
 
       if (change.type !== 'remove' && clipSettings) {
-        this._clipSettings = clipSettings;
-
-        this._updateClipping();
+        this.setState(
+          oldState => ({ ...oldState, clipEnabled: clipSettings.enabled }),
+          () => {
+            this._clipSettings = clipSettings;
+            this._updateClipping();
+          }
+        );
       }
     }
 
@@ -1534,8 +1533,21 @@ export class MainView extends React.Component<IProps, IStates> {
                   child.material.needsUpdate = true;
                 }
               });
-              this._renderer.render(this._scene, this._camera);
             }
+          }
+        );
+      }
+    }
+
+    if (change.key === 'transform') {
+      const transformEnabled = change.newValue as boolean | undefined;
+
+      if (transformEnabled !== undefined) {
+        this.setState(
+          old => ({ ...old, transform: transformEnabled }),
+          () => {
+            this._transformControls.visible = transformEnabled;
+            this._transformControls.enabled = transformEnabled;
           }
         );
       }
@@ -1551,6 +1563,9 @@ export class MainView extends React.Component<IProps, IStates> {
       this._explodedViewLinesHelperGroup = new THREE.Group();
 
       for (const group of this._meshGroup?.children as THREE.Group[]) {
+        const groupMetadata = group.userData as IMeshGroupMetadata;
+        const positionArray =
+          groupMetadata.jcObject.parameters?.Placement.Position;
         const explodedState = computeExplodedState({
           mesh: group.getObjectByName(
             group.name.replace('-group', '')
@@ -1559,8 +1574,13 @@ export class MainView extends React.Component<IProps, IStates> {
           factor: this._explodedView.factor
         });
 
-        group.position.set(0, 0, 0);
-        group.translateOnAxis(explodedState.vector, explodedState.distance);
+        group.position.copy(
+          new THREE.Vector3(
+            positionArray[0] + explodedState.vector.x * explodedState.distance,
+            positionArray[1] + explodedState.vector.y * explodedState.distance,
+            positionArray[2] + explodedState.vector.z * explodedState.distance
+          )
+        );
 
         // Draw lines
         const material = new THREE.LineBasicMaterial({
@@ -1580,10 +1600,20 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._scene.add(this._explodedViewLinesHelperGroup);
     } else {
-      // Exploded view is disabled, we reset the initial positions
-      for (const mesh of this._meshGroup?.children as BasicMesh[]) {
-        mesh.position.set(0, 0, 0);
+      // Reset objects to their original positions
+      for (const group of this._meshGroup?.children as THREE.Group[]) {
+        const groupMetadata = group.userData as IMeshGroupMetadata;
+        const positionArray =
+          groupMetadata.jcObject.parameters?.Placement.Position;
+        group.position.copy(
+          new THREE.Vector3(
+            positionArray[0],
+            positionArray[1],
+            positionArray[2]
+          )
+        );
       }
+
       this._explodedViewLinesHelperGroup?.removeFromParent();
     }
   }
@@ -1707,6 +1737,8 @@ export class MainView extends React.Component<IProps, IStates> {
     return screenPosition;
   }
   render(): JSX.Element {
+    const isTransformOrClipEnabled =
+      this.state.transform || this._clipSettings.enabled;
     return (
       <div
         className="jcad-Mainview data-jcad-keybinding"
@@ -1751,6 +1783,22 @@ export class MainView extends React.Component<IProps, IStates> {
             height: 'calc(100%)'
           }}
         />
+        {isTransformOrClipEnabled && (
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '10px',
+              left: '10px',
+              padding: '8px',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              color: 'white',
+              borderRadius: '4px',
+              fontSize: '12px'
+            }}
+          >
+            Press R to switch mode
+          </div>
+        )}
       </div>
     );
   }

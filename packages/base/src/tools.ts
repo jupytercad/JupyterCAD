@@ -4,7 +4,10 @@ import { LabIcon } from '@jupyterlab/ui-components';
 import * as d3Color from 'd3-color';
 
 import logoStr from '../style/icon/logo.svg';
+import stlStr from '../style/icon/stl.svg';
+import stpStr from '../style/icon/stp.svg';
 import axesIconStr from '../style/icon/axes.svg';
+import transformIconStr from '../style/icon/transform.svg';
 import boxIconStr from '../style/icon/box.svg';
 import coneIconStr from '../style/icon/cone.svg';
 import cutIconStr from '../style/icon/cut.svg';
@@ -36,6 +39,16 @@ export const visibilityOffIcon = new LabIcon({
 export const logoIcon = new LabIcon({
   name: 'jupytercad:logo',
   svgstr: logoStr
+});
+
+export const stlIcon = new LabIcon({
+  name: 'jupytercad:stl',
+  svgstr: stlStr
+});
+
+export const stpIcon = new LabIcon({
+  name: 'jupytercad:stp',
+  svgstr: stpStr
 });
 
 export const minimizeIcon = new LabIcon({
@@ -91,6 +104,11 @@ export const extrusionIcon = new LabIcon({
 export const axesIcon = new LabIcon({
   name: 'jupytercad:axes-icon',
   svgstr: axesIconStr
+});
+
+export const transformIcon = new LabIcon({
+  name: 'jupytercad:transform-icon',
+  svgstr: transformIconStr
 });
 
 export const explodedViewIcon = new LabIcon({
