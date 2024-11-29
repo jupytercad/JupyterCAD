@@ -896,9 +896,9 @@ export class MainView extends React.Component<IProps, IStates> {
         });
         this._meshGroup?.add(meshGroup);
       }
-
-      this._updateTransformControls(selectedNames);
     });
+
+    this._updateTransformControls(selectedNames);
 
     // Update the reflength.
     this._updateRefLength(this._refLength === null);
@@ -1143,6 +1143,7 @@ export class MainView extends React.Component<IProps, IStates> {
       return;
     }
     this._currentSelection = { ...selection };
+    const selectedNames = Object.keys(selection);
 
     // Reset original color and remove bounding boxes for old selection
     for (const selectedMesh of this._selectedMeshes) {
@@ -1182,7 +1183,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
     // Set new selection
     this._selectedMeshes = [];
-    const selectedNames = Object.keys(selection);
 
     for (const selectionName of selectedNames) {
       const selectedMesh = this._meshGroup?.getObjectByName(
