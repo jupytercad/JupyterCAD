@@ -453,15 +453,18 @@ export class MainView extends React.Component<IProps, IStates> {
             updatedPosition.z
           ];
 
-          const done = await this._mainViewModel.maybeUpdateObjectParameters(objectName, {
-            ...obj.parameters,
-            Placement: {
-              ...obj.parameters.Placement,
-              Position: newPosition,
-              Axis: updatedRotation[0],
-              Angle: updatedRotation[1]
+          const done = await this._mainViewModel.maybeUpdateObjectParameters(
+            objectName,
+            {
+              ...obj.parameters,
+              Placement: {
+                ...obj.parameters.Placement,
+                Position: newPosition,
+                Axis: updatedRotation[0],
+                Angle: updatedRotation[1]
+              }
             }
-          });
+          );
           // If the dry run failed, we bring back the object to its original position
           if (!done && updatedObject.parent) {
             const origPosition = obj.parameters.Placement.Position;
@@ -472,7 +475,13 @@ export class MainView extends React.Component<IProps, IStates> {
 
             // Redo original positioning
             updatedObject.parent.applyQuaternion(getQuaternion(obj));
-            updatedObject.parent.position.copy(new THREE.Vector3(origPosition[0], origPosition[1], origPosition[2]));
+            updatedObject.parent.position.copy(
+              new THREE.Vector3(
+                origPosition[0],
+                origPosition[1],
+                origPosition[2]
+              )
+            );
           }
         }
       });
