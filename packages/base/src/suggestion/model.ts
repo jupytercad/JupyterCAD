@@ -1,112 +1,249 @@
 import {
   IJupyterCadDoc,
-  IJupyterCadDocChange,
-  IJupyterCadTracker
+  IJupyterCadModel,
+  IJupyterCadTracker,
+  IUserData
 } from '@jupytercad/schema';
 import { ISignal, Signal } from '@lumino/signaling';
+import {
+  IAllForksResponse,
+  IForkChangedEvent,
+  IForkCreationResponse,
+  IForkManager,
+  IForkProvider,
+  ISessionModel,
+  requestDocSession
+} from '@jupyter/docprovider';
+import { ICollaborativeDrive } from '@jupyter/collaborative-drive';
 
 export class SuggestionModel {
   constructor(options: SuggestionModel.IOptions) {
-    this.sharedModel = options.sharedModel;
-    this._title = options.title;
-    this._tracker = options.tracker;
-    console.log(this._tracker);
+    const {
+      tracker,
+      forkManager,
+      filePath,
+      jupytercadModel,
+      collaborativeDrive
+    } = options;
+    this._tracker = tracker;
+    this._forkManager = forkManager;
+    this._drive = collaborativeDrive;
+    this.switchContext({
+      filePath,
+      jupytercadModel
+    });
+    this._forkManager.forkAdded.connect(this._handleForkAdded, this);
+    this._forkManager.forkDeleted.connect(this._handleForkDeleted, this);
+  }
+
+  get currentForkId(): string | undefined {
+    return this._currentForkId;
   }
 
   get title(): string {
-    return this._title ?? '';
+    const pathComponents = this._filePath?.split(':') ?? [];
+    return pathComponents.length > 1 ? pathComponents[1] : pathComponents[0];
   }
 
-  set title(newTitle: string) {
-    this._title = newTitle;
-  }
-  set sharedModel(newSharedModel: IJupyterCadDoc | undefined) {
-    this._sharedModel?.changed.disconnect(this._onStateChanged, this);
-    this._sharedModel = newSharedModel;
-    this._sharedModel?.changed.connect(this._onStateChanged.bind(this), this);
-  }
-  get sharedModel(): IJupyterCadDoc | undefined {
-    return this._sharedModel;
-  }
-
-  get allForks(): string[] {
+  get allForks(): IAllForksResponse {
     return this._allForks;
   }
 
   get forksUpdated(): ISignal<SuggestionModel, void> {
     return this._forksUpdated;
   }
-  get forkSwitched(): ISignal<SuggestionModel, string> {
+  get forkSwitched(): ISignal<SuggestionModel, string | undefined> {
     return this._forkSwitched;
   }
   get contextChanged(): ISignal<SuggestionModel, void> {
     return this._contextChanged;
   }
 
-  switchContext(context: {
-    title: string;
-    sharedModel: IJupyterCadDoc | undefined;
-  }): void {
-    this._title = context.title;
-    this.sharedModel = context.sharedModel;
+  get currentUser(): IUserData | undefined {
+    return this._currentUser;
+  }
+  async switchContext(context: {
+    filePath: string;
+    jupytercadModel: IJupyterCadModel | undefined;
+  }): Promise<void> {
+    this._filePath = context.filePath;
+    this._jupytercadModel = context.jupytercadModel;
+    if (!this._jupytercadModel) {
+      this._allForks = {};
+    }
+    if (this._filePath && this._filePath.length > 0) {
+      const session = (this._currentSession = await requestDocSession(
+        'text',
+        'jcad',
+        this._filePath
+      ));
+      this._forkProvider = this._forkManager.getProvider({
+        documentPath: this._filePath,
+        format: session.format!,
+        type: session.type
+      });
+      this._rootDocId = `${session.format}:${session.type}:${session.fileId}`;
+      this._allForks = await this._forkManager.getAllForks(this._rootDocId);
+      this._currentForkId = undefined;
+      this._forkSwitched.emit(undefined);
+    }
+
+    if (this._jupytercadModel?.currentUserId) {
+      const matched = (this._jupytercadModel?.users ?? []).filter(
+        it => it.userId === this._jupytercadModel!.currentUserId
+      );
+      if (matched[0]) {
+        this._currentUser = matched[0];
+      }
+    }
+
     this._contextChanged.emit();
   }
 
   async mergeFork(forkId: string): Promise<void> {
-    /** */
+    await this._forkManager.deleteFork({ forkId, merge: true });
+    await this._forkProvider?.reconnect();
+    this._toggleSplitScreen(false);
+    this._currentForkId = undefined;
+    this._forkSwitched.emit(undefined);
   }
-  async createFork(): Promise<string | undefined> {
-    console.log('create new fork');
-    const id = '';
-    return id;
+  async deleteFork(forkId: string): Promise<void> {
+    await this._forkManager.deleteFork({
+      forkId,
+      merge: false
+    });
   }
-
-  async backToRoot(): Promise<void> {
-    /** */
-  }
-
-  async checkoutFork(forkId: string, split = false): Promise<void> {
-    /** */
-  }
-
-  private _onStateChanged(
-    sender: IJupyterCadDoc,
-    changes: IJupyterCadDocChange
-  ) {
-    let forkUpdated = false;
-    if (changes.stateChange) {
-      const forkPrefix = 'fork_';
-      changes.stateChange.forEach(value => {
-        if (value.name === 'merge') {
-          // TODO
-        } else if (value.name.startsWith(forkPrefix)) {
-          const forkId = value.name.slice(forkPrefix.length);
-          if (value.newValue === 'new') {
-            this._allForks.push(forkId);
-            forkUpdated = true;
-          } else if (value.newValue === undefined) {
-            // TODO
-          }
+  async createFork(title?: string): Promise<IForkCreationResponse | undefined> {
+    if (this._rootDocId) {
+      const now = new Date(Date.now());
+      const meta = {
+        timestamp: now.toLocaleString(),
+        author: this._currentUser?.userData
+      };
+      try {
+        const res = await this._forkManager.createFork({
+          rootId: this._rootDocId,
+          synchronize: false,
+          title,
+          description: JSON.stringify(meta)
+        });
+        if (res) {
+          this.checkoutFork(res.fork_roomid);
         }
-      });
+        return res;
+      } catch (e) {
+        console.error(e);
+      }
     }
-    if (forkUpdated) {
+  }
+
+  async backToRoot(removeSplitView = false): Promise<void> {
+    if (!this._currentForkId) {
+      return;
+    }
+    this._jupytercadModel?.sharedModel.dispose();
+    if (this._drive && this._currentSession && this._filePath) {
+      const currentSharedModel = this._drive.sharedModelFactory.createNew({
+        path: this._filePath,
+        format: this._currentSession.format,
+        contentType: this._currentSession.type,
+        collaborative: true
+      });
+
+      if (currentSharedModel) {
+        this._jupytercadModel?.swapSharedModel(
+          currentSharedModel as IJupyterCadDoc
+        );
+      }
+      this._forkProvider = this._forkManager.getProvider({
+        documentPath: this._filePath,
+        format: this._currentSession.format!,
+        type: this._currentSession.type
+      });
+      await (this._forkProvider as any).ready;
+      if (removeSplitView) {
+        this._toggleSplitScreen(false);
+      }
+      this._currentForkId = undefined;
+      this._forkSwitched.emit(undefined);
+    }
+  }
+
+  async checkoutFork(forkId: string): Promise<void> {
+    let enableSplitView = true;
+    if (this._currentForkId === forkId) {
+      return;
+    }
+
+    if (this._currentSession) {
+      if (this._currentForkId) {
+        enableSplitView = false;
+        await this.backToRoot();
+      }
+      await this._forkProvider?.connectToForkDoc(
+        forkId,
+        this._currentSession.sessionId
+      );
+      if (enableSplitView) {
+        this._toggleSplitScreen(true);
+      }
+      this._currentForkId = forkId;
+      this._forkSwitched.emit(forkId);
+    }
+  }
+  private _toggleSplitScreen(enabled: boolean): void {
+    const current = this._tracker.currentWidget as any;
+
+    if (!current) {
+      return;
+    }
+    if (current.content.splitScreen) {
+      current.content.splitScreen = {
+        enabled
+      };
+    }
+  }
+
+  private async _handleForkDeleted(
+    _: IForkManager,
+    changes: IForkChangedEvent
+  ) {
+    if (this._rootDocId && changes.fork_info.root_roomid === this._rootDocId) {
+      this._allForks = await this._forkManager.getAllForks(this._rootDocId);
+      this._forksUpdated.emit();
+      if (this._currentForkId && changes.fork_roomid === this._currentForkId) {
+        this.backToRoot(true);
+      }
+    }
+  }
+  private async _handleForkAdded(_: IForkManager, changes: IForkChangedEvent) {
+    if (this._rootDocId && changes.fork_info.root_roomid === this._rootDocId) {
+      this._allForks = await this._forkManager.getAllForks(this._rootDocId);
       this._forksUpdated.emit();
     }
   }
-  private _sharedModel: IJupyterCadDoc | undefined;
-  private _allForks: string[] = [];
+  private _jupytercadModel: IJupyterCadModel | undefined;
+  private _allForks: IAllForksResponse = {};
   private _forksUpdated: Signal<this, void> = new Signal(this);
-  private _forkSwitched: Signal<this, string> = new Signal(this);
+  private _forkSwitched: Signal<this, string | undefined> = new Signal(this);
   private _contextChanged: Signal<this, void> = new Signal(this);
-  private _title: string | undefined;
+  private _filePath: string | undefined;
+  private _rootDocId: string | undefined;
   private _tracker: IJupyterCadTracker;
+  private _forkManager: IForkManager;
+  private _forkProvider?: IForkProvider;
+  private _currentSession?: ISessionModel;
+  private _drive?: ICollaborativeDrive;
+  private _currentForkId: string | undefined;
+  private _currentUser?: IUserData;
 }
 
 namespace SuggestionModel {
   export interface IOptions {
-    sharedModel: IJupyterCadDoc | undefined;
-    title: string;
+    jupytercadModel: IJupyterCadModel | undefined;
+    filePath: string;
     tracker: IJupyterCadTracker;
+    forkManager: IForkManager;
+    collaborativeDrive?: ICollaborativeDrive;
   }
 }

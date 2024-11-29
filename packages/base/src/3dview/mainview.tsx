@@ -4,7 +4,6 @@ import {
   IDict,
   IDisplayShape,
   IJupyterCadClientState,
-  IJupyterCadDoc,
   IJupyterCadModel,
   IPostOperatorInput,
   IPostResult,
@@ -30,7 +29,8 @@ import {
   AxeHelper,
   CameraSettings,
   ClipSettings,
-  ExplodedView
+  ExplodedView,
+  SplitScreenSettings
 } from '../types';
 import { FollowIndicator } from './followindicator';
 import {
@@ -51,7 +51,9 @@ import {
   projectVector,
   IMouseDrag,
   IMeshGroupMetadata,
-  getQuaternion
+  getQuaternion,
+  SPLITVIEW_BACKGROUND_COLOR,
+  SPLITVIEW_BACKGROUND_COLOR_CSS
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
@@ -217,11 +219,13 @@ export class MainView extends React.Component<IProps, IStates> {
   };
 
   sceneSetup = (): void => {
-    if (this.divRef.current !== null) {
+    if (this._divRef.current !== null) {
       DEFAULT_MESH_COLOR.set(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
       DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
       BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
-
+      SPLITVIEW_BACKGROUND_COLOR.set(
+        getCSSVariableColor(SPLITVIEW_BACKGROUND_COLOR_CSS)
+      );
       this._camera = new THREE.PerspectiveCamera(
         50,
         2,
@@ -254,7 +258,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.autoClear = false;
       this._renderer.setClearColor(0x000000, 0);
       this._renderer.setSize(500, 500, false);
-      this.divRef.current.appendChild(this._renderer.domElement); // mount using React ref
+      this._divRef.current.appendChild(this._renderer.domElement); // mount using React ref
 
       this._syncPointer = throttle(
         (position: THREE.Vector3 | undefined, parent: string | undefined) => {
@@ -499,9 +503,9 @@ export class MainView extends React.Component<IProps, IStates> {
     // Remove the existing ViewHelperDiv if it already exists
     if (
       this._viewHelperDiv &&
-      this.divRef.current?.contains(this._viewHelperDiv)
+      this._divRef.current?.contains(this._viewHelperDiv)
     ) {
-      this.divRef.current.removeChild(this._viewHelperDiv);
+      this._divRef.current.removeChild(this._viewHelperDiv);
     }
 
     // Create new ViewHelper
@@ -517,7 +521,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._viewHelperDiv = viewHelperDiv;
 
-    this.divRef.current?.appendChild(this._viewHelperDiv);
+    this._divRef.current?.appendChild(this._viewHelperDiv);
 
     this._viewHelperDiv.addEventListener('pointerup', event =>
       this._viewHelper.handleClick(event)
@@ -550,26 +554,46 @@ export class MainView extends React.Component<IProps, IStates> {
     this._controls.update();
     this._renderer.setRenderTarget(null);
     this._renderer.clear();
-    this._renderer.render(this._scene, this._camera);
+
+    if (this._sceneL) {
+      this._renderer.setScissor(
+        0,
+        0,
+        this._sliderPos,
+        this._divRef.current?.clientHeight || 0
+      );
+      this._renderer.render(this._sceneL, this._camera);
+
+      this._renderer.setScissor(
+        this._sliderPos,
+        0,
+        this._divRef.current?.clientWidth || 0,
+        this._divRef.current?.clientHeight || 0
+      );
+      this._renderer.render(this._scene, this._camera);
+    } else {
+      this._renderer.render(this._scene, this._camera);
+    }
+
     this._viewHelper.render(this._renderer);
     this.updateCameraRotation();
   };
 
   resizeCanvasToDisplaySize = (): void => {
-    if (this.divRef.current !== null) {
+    if (this._divRef.current !== null) {
       this._renderer.setSize(
-        this.divRef.current.clientWidth,
-        this.divRef.current.clientHeight,
+        this._divRef.current.clientWidth,
+        this._divRef.current.clientHeight,
         false
       );
       if (this._camera instanceof THREE.PerspectiveCamera) {
         this._camera.aspect =
-          this.divRef.current.clientWidth / this.divRef.current.clientHeight;
+          this._divRef.current.clientWidth / this._divRef.current.clientHeight;
       } else if (this._camera instanceof THREE.OrthographicCamera) {
-        this._camera.left = this.divRef.current.clientWidth / -2;
-        this._camera.right = this.divRef.current.clientWidth / 2;
-        this._camera.top = this.divRef.current.clientHeight / 2;
-        this._camera.bottom = this.divRef.current.clientHeight / -2;
+        this._camera.left = this._divRef.current.clientWidth / -2;
+        this._camera.right = this._divRef.current.clientWidth / 2;
+        this._camera.top = this._divRef.current.clientHeight / 2;
+        this._camera.bottom = this._divRef.current.clientHeight / -2;
       }
       this._camera.updateProjectionMatrix();
     }
@@ -1264,7 +1288,7 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   private _onSharedMetadataChanged = (
-    _: IJupyterCadDoc,
+    _: IJupyterCadModel,
     changes: MapChange
   ) => {
     const newState = { ...this.state.annotations };
@@ -1407,10 +1431,10 @@ export class MainView extends React.Component<IProps, IStates> {
   };
 
   private _onSharedOptionsChanged(
-    sender: IJupyterCadDoc,
+    sender: IJupyterCadModel,
     change: MapChange
   ): void {
-    const objects = sender.objects;
+    const objects = sender.sharedModel.objects;
 
     if (objects) {
       for (const objData of objects) {
@@ -1497,6 +1521,10 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     }
 
+    if (change.key === 'splitScreen') {
+      const splitSettings = change.newValue as SplitScreenSettings | undefined;
+      this._updateSplit(!!splitSettings?.enabled);
+    }
     if (change.key === 'wireframe') {
       const wireframeEnabled = change.newValue as boolean | undefined;
 
@@ -1615,8 +1643,8 @@ export class MainView extends React.Component<IProps, IStates> {
         CAMERA_FAR
       );
     } else {
-      const width = this.divRef.current?.clientWidth || 0;
-      const height = this.divRef.current?.clientHeight || 0;
+      const width = this._divRef.current?.clientWidth || 0;
+      const height = this._divRef.current?.clientHeight || 0;
 
       const distance = position.distanceTo(target);
       const zoomFactor = 1000 / distance;
@@ -1647,6 +1675,97 @@ export class MainView extends React.Component<IProps, IStates> {
     window.dispatchEvent(resizeEvent);
   }
 
+  private _updateSplit(enabled: boolean) {
+    if (enabled) {
+      if (!this._meshGroup) {
+        return;
+      }
+      this._renderer.setScissorTest(true);
+
+      this._sliderPos = (this._divRef.current?.clientWidth ?? 0) / 2;
+      this._sceneL = new THREE.Scene();
+      // const color =
+      //   document.body.getAttribute('data-jp-theme-light') === 'true'
+      //     ? 0xedf4f8
+      //     : 0x120b07;
+      this._sceneL.background = SPLITVIEW_BACKGROUND_COLOR;
+      this._sceneL.add(new THREE.AmbientLight(0xffffff, 0.5)); // soft white light
+      const light = new THREE.HemisphereLight(0xffffff, 0x444444, 0.5);
+      this._sceneL.add(light);
+      this._sceneL.add(this._meshGroup.clone(true));
+      this.initSlider(true);
+    } else {
+      this._renderer.setScissorTest(false);
+      this._sceneL?.clear();
+      this._sceneL = undefined;
+      this.initSlider(false);
+    }
+  }
+
+  initSlider(display: boolean) {
+    if (!this._mainViewRef.current) {
+      return;
+    }
+    const slider = this._mainViewRef.current.querySelector(
+      '.jpcad-SplitSlider'
+    ) as HTMLDivElement;
+    const sliderLabelLeft = this._mainViewRef.current.querySelector(
+      '#split-label-left'
+    ) as HTMLDivElement;
+    const sliderLabelRight = this._mainViewRef.current.querySelector(
+      '#split-label-right'
+    ) as HTMLDivElement;
+
+    if (display) {
+      slider.style.display = 'unset';
+      sliderLabelLeft.style.display = 'unset';
+      sliderLabelRight.style.display = 'unset';
+      slider.style.left = this._sliderPos - slider.offsetWidth / 2 + 'px';
+    } else {
+      slider.style.display = 'none';
+      sliderLabelLeft.style.display = 'none';
+      sliderLabelRight.style.display = 'none';
+    }
+    if (!this._slideInit) {
+      this._slideInit = true;
+      let currentX = 0;
+      let currentPost = 0;
+
+      const onPointerDown = (e: PointerEvent) => {
+        e.preventDefault();
+
+        this._controls.enabled = false;
+        currentX = e.clientX;
+        currentPost = this._sliderPos;
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+      };
+
+      const onPointerUp = e => {
+        e.preventDefault();
+        this._controls.enabled = true;
+        currentX = 0;
+        currentPost = 0;
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', onPointerUp);
+      };
+
+      const onPointerMove = (e: PointerEvent) => {
+        e.preventDefault();
+        if (!this._divRef.current || !slider) {
+          return;
+        }
+
+        this._sliderPos = currentPost + e.clientX - currentX;
+
+        slider.style.left = this._sliderPos - slider.offsetWidth / 2 + 'px';
+      };
+
+      slider.style.touchAction = 'none'; // disable touch scroll
+      slider.addEventListener('pointerdown', onPointerDown);
+    }
+  }
+
   private _updateClipping() {
     if (this._clipSettings.enabled) {
       this._renderer.localClippingEnabled = true;
@@ -1675,6 +1794,9 @@ export class MainView extends React.Component<IProps, IStates> {
     DEFAULT_MESH_COLOR.set(getCSSVariableColor(DEFAULT_MESH_COLOR_CSS));
     DEFAULT_EDGE_COLOR.set(getCSSVariableColor(DEFAULT_EDGE_COLOR_CSS));
     BOUNDING_BOX_COLOR.set(getCSSVariableColor(BOUNDING_BOX_COLOR_CSS));
+    SPLITVIEW_BACKGROUND_COLOR.set(
+      getCSSVariableColor(SPLITVIEW_BACKGROUND_COLOR_CSS)
+    );
 
     this._clippingPlaneMeshControl.material.color = DEFAULT_MESH_COLOR;
   };
@@ -1728,6 +1850,7 @@ export class MainView extends React.Component<IProps, IStates> {
             ? `solid 3px ${this.state.remoteUser.color}`
             : 'unset'
         }}
+        ref={this._mainViewRef}
       >
         <Spinner loading={this.state.loading} />
         <FollowIndicator remoteUser={this.state.remoteUser} />
@@ -1755,9 +1878,9 @@ export class MainView extends React.Component<IProps, IStates> {
             </div>
           );
         })}
-
+        <div className="jpcad-SplitSlider" style={{ display: 'none' }}></div>
         <div
-          ref={this.divRef}
+          ref={this._divRef}
           style={{
             width: '100%',
             height: 'calc(100%)'
@@ -1779,11 +1902,34 @@ export class MainView extends React.Component<IProps, IStates> {
             Press R to switch mode
           </div>
         )}
+        <div
+          id={'split-label-left'}
+          style={{
+            position: 'absolute',
+            top: '10px',
+            left: '10px',
+            display: 'none'
+          }}
+        >
+          Original document
+        </div>
+        <div
+          id={'split-label-right'}
+          style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            display: 'none'
+          }}
+        >
+          Suggested document
+        </div>
       </div>
     );
   }
 
-  private divRef = React.createRef<HTMLDivElement>(); // Reference of render div
+  private _divRef = React.createRef<HTMLDivElement>(); // Reference of render div
+  private _mainViewRef = React.createRef<HTMLDivElement>(); // Reference of the main view element
 
   private _model: IJupyterCadModel;
   private _mainViewModel: MainViewModel;
@@ -1835,4 +1981,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _collaboratorPointers: IDict<IPointer>;
   private _contextMenu: ContextMenu;
   private _loadingTimeout: ReturnType<typeof setTimeout> | null;
+  private _sliderPos = 0;
+  private _slideInit = false;
+  private _sceneL: THREE.Scene | undefined = undefined;
 }

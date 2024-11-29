@@ -12,7 +12,13 @@ import { SplitPanel } from '@lumino/widgets';
 import { JupyterCadMainViewPanel } from './3dview';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { ConsoleView } from './console';
-import { AxeHelper, CameraSettings, ClipSettings, ExplodedView } from './types';
+import {
+  AxeHelper,
+  CameraSettings,
+  ClipSettings,
+  ExplodedView,
+  SplitScreenSettings
+} from './types';
 
 export class JupyterCadWidget
   extends DocumentWidget<JupyterCadPanel, IJupyterCadModel>
@@ -131,6 +137,16 @@ export class JupyterCadPanel extends SplitPanel {
 
   get consolePanel(): ConsolePanel | undefined {
     return this._consoleView?.consolePanel;
+  }
+
+  get splitScreen(): SplitScreenSettings | undefined {
+    return (this._view.get('splitScreen') ?? {
+      enabled: false
+    }) as SplitScreenSettings;
+  }
+
+  set splitScreen(value: SplitScreenSettings | undefined) {
+    this._view.set('splitScreen', value || null);
   }
 
   deleteAxes(): void {

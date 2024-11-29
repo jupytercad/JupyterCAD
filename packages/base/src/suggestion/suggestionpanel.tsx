@@ -1,4 +1,4 @@
-import { ReactWidget } from '@jupyterlab/apputils';
+import { Dialog, ReactWidget, showDialog } from '@jupyterlab/apputils';
 import {
   PanelWithToolbar,
   ToolbarButton,
@@ -9,6 +9,7 @@ import { Panel } from '@lumino/widgets';
 import * as React from 'react';
 import { SuggestionModel } from './model';
 import { Suggestion } from './view';
+import { NewForkDialog } from './newForkDialog';
 
 export class SuggestionPanel extends PanelWithToolbar {
   constructor(params: SuggestionPanel.IOptions) {
@@ -24,7 +25,7 @@ export class SuggestionPanel extends PanelWithToolbar {
       new ToolbarButton({
         icon: homeIcon,
         onClick: async () => {
-          await this._model.backToRoot();
+          await this._model.backToRoot(true);
         },
         tooltip: 'Return to root document'
       })
@@ -40,7 +41,21 @@ export class SuggestionPanel extends PanelWithToolbar {
   }
 
   async createFork() {
-    await this._model.createFork();
+    const state: { forkLabel?: string } = { forkLabel: 'New suggestion' };
+    const setForkLabel = value => (state.forkLabel = value);
+    const body = ReactWidget.create(
+      <NewForkDialog setForkLabel={setForkLabel} />
+    );
+    const res = await showDialog({
+      title: 'Create new suggestion',
+      body,
+      buttons: [Dialog.cancelButton(), Dialog.okButton()],
+      hasClose: true
+    });
+    if (res.button.accept) {
+      const label = state.forkLabel === '' ? undefined : state.forkLabel;
+      await this._model.createFork(label);
+    }
   }
   private _model: SuggestionModel;
 }

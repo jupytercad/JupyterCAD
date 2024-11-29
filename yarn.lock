@@ -1046,6 +1046,7 @@ __metadata:
     eslint: 8.36.0
     eslint-config-prettier: 8.7.0
     eslint-plugin-prettier: 5.0.1
+    eslint-plugin-react-hooks: ^4.6.2
     lerna: ^7.0.0
     npm-run-all: ^4.1.5
     prettier: ^3.0.0
@@ -6160,6 +6161,15 @@ __metadata:
     eslint-config-prettier:
       optional: true
   checksum: c2261033b97bafe99ccb7cc47c2fac6fa85b8bbc8b128042e52631f906b69e12afed2cdd9d7e3021cc892ee8dd4204a3574e1f32a0b718b4bb3b440944b6983b
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-react-hooks@npm:^4.6.2":
+  version: 4.6.2
+  resolution: "eslint-plugin-react-hooks@npm:4.6.2"
+  peerDependencies:
+    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
+  checksum: 395c433610f59577cfcf3f2e42bcb130436c8a0b3777ac64f441d88c5275f4fcfc89094cedab270f2822daf29af1079151a7a6579a8e9ea8cee66540ba0384c4
   languageName: node
   linkType: hard
 

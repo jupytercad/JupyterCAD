@@ -4,7 +4,6 @@ import {
   IJCadModel,
   IJcadObjectDocChange,
   IJupyterCadClientState,
-  IJupyterCadDoc,
   IJupyterCadModel,
   IJupyterCadTracker,
   ISelection
@@ -133,12 +132,20 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     this.props.cpModel.jcadModel?.sharedObjectsChanged.connect(
       this._sharedJcadModelChanged
     );
+    this.props.cpModel.jcadModel?.sharedModelSwapped.connect(
+      this._sharedModelSwappedHandler,
+      this
+    );
     this.props.cpModel.documentChanged.connect((_, changed) => {
       if (changed) {
         this.props.cpModel.disconnect(this._sharedJcadModelChanged);
         this.props.cpModel.disconnect(this._onClientSharedStateChanged);
         const currentModel = changed.context.model;
         currentModel.sharedObjectsChanged.connect(this._sharedJcadModelChanged);
+        currentModel.sharedModelSwapped.connect(
+          this._sharedModelSwappedHandler,
+          this
+        );
         const clients = currentModel.sharedModel.awareness.getStates() as Map<
           number,
           IJupyterCadClientState
@@ -217,7 +224,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
   };
 
   private _sharedJcadModelChanged = (
-    _: IJupyterCadDoc,
+    _: IJupyterCadModel,
     changed: IJcadObjectDocChange
   ): void => {
     this.setState(old => {
@@ -245,7 +252,10 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
       }
     });
   };
-
+  private _sharedModelSwappedHandler(sender: IJupyterCadModel) {
+    const clientId = sender.getClientId();
+    this.setState(old => ({ ...old, clientId }));
+  }
   private _onClientSharedStateChanged = (
     sender: IJupyterCadModel,
     clients: Map<number, IJupyterCadClientState>
@@ -288,7 +298,6 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
         newState = localState;
       }
     }
-
     if (newState) {
       const selection = newState.selected.value;
       const selectedObjectNames = Object.keys(selection || {});
@@ -302,7 +311,6 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
         }));
         return;
       }
-
       let selectedObject = selectedObjectNames[0];
       if (
         selection[selectedObject] &&

@@ -23,6 +23,7 @@ import clippingIconStr from '../style/icon/clipPlane.svg';
 import chamferIconStr from '../style/icon/chamfer.svg';
 import filletIconStr from '../style/icon/fillet.svg';
 import wireframeIconStr from '../style/icon/wireframe.svg';
+import chevronRightStr from '../style/icon/chevron-right.svg';
 
 import visibilitySvg from '../style/icon/visibility.svg';
 import visibilityOffSvg from '../style/icon/visibilityOff.svg';
@@ -134,6 +135,10 @@ export const filletIcon = new LabIcon({
 export const wireframeIcon = new LabIcon({
   name: 'jupytercad:wireframe-icon',
   svgstr: wireframeIconStr
+});
+export const chevronRightIcon = new LabIcon({
+  name: 'jupytercad:chevron-right-icon',
+  svgstr: chevronRightStr
 });
 
 export const debounce = (

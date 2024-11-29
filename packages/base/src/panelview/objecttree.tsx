@@ -267,7 +267,7 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   };
 
   private _sharedJcadModelChanged = (
-    sender: IJupyterCadDoc,
+    sender: IJupyterCadModel,
     change: IJcadObjectDocChange
   ): void => {
     if (change.objectChange) {
@@ -365,10 +365,10 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
   }
 
   private _onClientSharedOptionsChanged = (
-    sender: IJupyterCadDoc,
+    sender: IJupyterCadModel,
     clients: any
   ): void => {
-    this.setState(old => ({ ...old, options: sender.options }));
+    this.setState(old => ({ ...old, options: sender.sharedModel.options }));
   };
 
   private _handleRemoveObject = (objectId: string): void => {

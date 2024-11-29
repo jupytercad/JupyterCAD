@@ -24,6 +24,7 @@ THREE.Mesh.prototype.raycast = acceleratedRaycast;
 export const DEFAULT_MESH_COLOR_CSS = '--jp-inverse-layout-color4';
 export const DEFAULT_EDGE_COLOR_CSS = '--jp-inverse-layout-color2';
 export const BOUNDING_BOX_COLOR_CSS = '--jp-brand-color0';
+export const SPLITVIEW_BACKGROUND_COLOR_CSS = '--jcad-splitview-background';
 export const SELECTION_BOUNDING_BOX = 'selectionBoundingBox';
 
 export const DEFAULT_MESH_COLOR = new THREE.Color(
@@ -34,6 +35,10 @@ export const DEFAULT_EDGE_COLOR = new THREE.Color(
 );
 export const BOUNDING_BOX_COLOR = new THREE.Color(
   getCSSVariableColor(BOUNDING_BOX_COLOR_CSS)
+);
+
+export const SPLITVIEW_BACKGROUND_COLOR = new THREE.Color(
+  getCSSVariableColor(SPLITVIEW_BACKGROUND_COLOR_CSS)
 );
 
 export type BasicMesh = THREE.Mesh<

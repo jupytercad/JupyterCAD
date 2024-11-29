@@ -5,7 +5,6 @@ import {
   IJcadObjectDocChange,
   IJCadWorker,
   IJCadWorkerRegistry,
-  IJupyterCadDoc,
   IJupyterCadModel,
   IMainMessage,
   IPostOperatorInput,
@@ -291,7 +290,7 @@ export class MainViewModel implements IDisposable {
   }
 
   private async _onSharedObjectsChanged(
-    _: IJupyterCadDoc,
+    _: IJupyterCadModel,
     change: IJcadObjectDocChange
   ): Promise<void> {
     if (change.objectChange) {

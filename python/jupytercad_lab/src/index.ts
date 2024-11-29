@@ -28,6 +28,8 @@ import { IMainMenu } from '@jupyterlab/mainmenu';
 import { ITranslator, nullTranslator } from '@jupyterlab/translation';
 
 import { notebookRenderePlugin } from './notebookrenderer';
+import { IForkManagerToken, IForkManager } from '@jupyter/docprovider';
+import { ICollaborativeDrive } from '@jupyter/collaborative-drive';
 
 const NAME_SPACE = 'jupytercad';
 
@@ -79,14 +81,18 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     ILayoutRestorer,
     IJupyterCadDocTracker,
     IAnnotationToken,
-    IJCadFormSchemaRegistryToken
+    IJCadFormSchemaRegistryToken,
+    IForkManagerToken
   ],
+  optional: [ICollaborativeDrive],
   activate: (
     app: JupyterFrontEnd,
     restorer: ILayoutRestorer,
     tracker: IJupyterCadTracker,
     annotationModel: IAnnotationModel,
-    formSchemaRegistry: IJCadFormSchemaRegistry
+    formSchemaRegistry: IJCadFormSchemaRegistry,
+    forkManager: IForkManager,
+    collaborativeDrive?: ICollaborativeDrive
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
     const leftControlPanel = new LeftPanelWidget({
@@ -97,11 +103,12 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     leftControlPanel.id = 'jupytercad::leftControlPanel';
     leftControlPanel.title.caption = 'JupyterCad Control Panel';
     leftControlPanel.title.icon = logoIcon;
-
     const rightControlPanel = new RightPanelWidget({
       model: controlModel,
       tracker,
-      annotationModel
+      annotationModel,
+      forkManager,
+      collaborativeDrive
     });
     rightControlPanel.id = 'jupytercad::rightControlPanel';
     rightControlPanel.title.caption = 'JupyterCad Control Panel';

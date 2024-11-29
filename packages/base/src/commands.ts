@@ -14,7 +14,7 @@ import { CommandRegistry } from '@lumino/commands';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { showErrorMessage, WidgetTracker } from '@jupyterlab/apputils';
 import { ITranslator } from '@jupyterlab/translation';
-import { redoIcon, undoIcon } from '@jupyterlab/ui-components';
+import { filterIcon, redoIcon, undoIcon } from '@jupyterlab/ui-components';
 import { ICompletionProviderManager } from '@jupyterlab/completer';
 import { FormDialog } from './formdialog';
 import { SketcherDialog } from './sketcher/sketcherdialog';
@@ -1137,6 +1137,24 @@ export function addCommands(
     commands.notifyCommandChanged(CommandIDs.updateClipView);
   });
 
+  commands.addCommand(CommandIDs.splitScreen, {
+    label: trans.__('Split screen'),
+    isEnabled: () => Boolean(tracker.currentWidget),
+    icon: filterIcon,
+    execute: async () => {
+      const current = tracker.currentWidget;
+
+      if (!current) {
+        return;
+      }
+      if (current.content.splitScreen) {
+        current.content.splitScreen = {
+          enabled: !current.content.splitScreen.enabled
+        };
+      }
+    }
+  });
+
   commands.addCommand(CommandIDs.exportJcad, {
     label: trans.__('Export to .jcad'),
     isEnabled: () => {
@@ -1198,6 +1216,7 @@ export namespace CommandIDs {
   export const updateCameraSettings = 'jupytercad:updateCameraSettings';
   export const updateClipView = 'jupytercad:updateClipView';
 
+  export const splitScreen = 'jupytercad:splitScreen';
   export const exportJcad = 'jupytercad:exportJcad';
 
   export const toggleConsole = 'jupytercad:toggleConsole';

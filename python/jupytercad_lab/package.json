@@ -117,6 +117,10 @@
         "singleton": true,
         "bundled": false
       },
+      "@jupyter/docprovider": {
+        "singleton": true,
+        "bundled": false
+      },
       "yjs-widgets": {
         "singleton": true,
         "bundled": false

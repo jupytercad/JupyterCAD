@@ -8,7 +8,10 @@ import { SidePanel } from '@jupyterlab/ui-components';
 import { IControlPanelModel } from '../types';
 import { Annotations } from './annotations';
 import { ControlPanelHeader } from './header';
-
+import { SuggestionPanel } from '../suggestion/suggestionpanel';
+import { SuggestionModel } from '../suggestion/model';
+import { IForkManager } from '@jupyter/docprovider';
+import { ICollaborativeDrive } from '@jupyter/collaborative-drive';
 export class RightPanelWidget extends SidePanel {
   constructor(options: RightPanelWidget.IOptions) {
     super();
@@ -24,20 +27,36 @@ export class RightPanelWidget extends SidePanel {
     const annotations = new Annotations({ model: this._annotationModel });
     this.addWidget(annotations);
 
-    options.tracker.currentChanged.connect((_, changed) => {
+    const suggestionModel = new SuggestionModel({
+      jupytercadModel: this._model?.jcadModel,
+      filePath: '',
+      tracker: options.tracker,
+      forkManager: options.forkManager,
+      collaborativeDrive: options.collaborativeDrive
+    });
+    const suggestion = new SuggestionPanel({ model: suggestionModel });
+    this.addWidget(suggestion);
+
+    options.tracker.currentChanged.connect(async (_, changed) => {
       if (changed) {
         header.title.label = changed.context.localPath;
         this._annotationModel.context =
           options.tracker.currentWidget?.context || undefined;
+        await changed.context.ready;
+
+        suggestionModel.switchContext({
+          filePath: changed.context.localPath,
+          jupytercadModel: changed.context?.model
+        });
       } else {
         header.title.label = '-';
         this._annotationModel.context = undefined;
+        suggestionModel.switchContext({
+          filePath: '',
+          jupytercadModel: undefined
+        });
       }
     });
-  }
-
-  get model(): IControlPanelModel {
-    return this._model;
   }
 
   dispose(): void {
@@ -52,6 +71,8 @@ export namespace RightPanelWidget {
     model: IControlPanelModel;
     tracker: IJupyterCadTracker;
     annotationModel: IAnnotationModel;
+    forkManager: IForkManager;
+    collaborativeDrive?: ICollaborativeDrive;
   }
   export interface IProps {
     filePath?: string;
