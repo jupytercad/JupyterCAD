@@ -7,7 +7,6 @@ import { SidePanel } from '@jupyterlab/ui-components';
 
 import { IControlPanelModel } from '../types';
 import { Annotations } from './annotations';
-import { ControlPanelHeader } from './header';
 
 export class RightPanelWidget extends SidePanel {
   constructor(options: RightPanelWidget.IOptions) {
@@ -18,22 +17,8 @@ export class RightPanelWidget extends SidePanel {
     this._model = options.model;
     this._annotationModel = options.annotationModel;
 
-    const header = new ControlPanelHeader();
-    this.header.addWidget(header);
-
     const annotations = new Annotations({ model: this._annotationModel });
     this.addWidget(annotations);
-
-    options.tracker.currentChanged.connect((_, changed) => {
-      if (changed) {
-        header.title.label = changed.context.localPath;
-        this._annotationModel.context =
-          options.tracker.currentWidget?.context || undefined;
-      } else {
-        header.title.label = '-';
-        this._annotationModel.context = undefined;
-      }
-    });
   }
 
   get model(): IControlPanelModel {

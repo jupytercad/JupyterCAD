@@ -6,7 +6,6 @@ import {
 import { SidePanel } from '@jupyterlab/ui-components';
 
 import { IControlPanelModel } from '../types';
-import { ControlPanelHeader } from './header';
 import { ObjectTree } from './objecttree';
 import { ObjectProperties } from './objectproperties';
 import { AccordionPanel } from '@lumino/widgets';
@@ -18,8 +17,6 @@ export class LeftPanelWidget extends SidePanel {
     this.addClass('data-jcad-keybinding');
     this.node.tabIndex = 0;
     this._model = options.model;
-    const header = new ControlPanelHeader();
-    this.header.addWidget(header);
 
     const tree = new ObjectTree({ controlPanelModel: this._model });
     this.addWidget(tree);
@@ -31,13 +28,6 @@ export class LeftPanelWidget extends SidePanel {
     });
     this.addWidget(properties);
 
-    options.tracker.currentChanged.connect((_, changed) => {
-      if (changed) {
-        header.title.label = changed.context.localPath;
-      } else {
-        header.title.label = '-';
-      }
-    });
     (this.content as AccordionPanel).setRelativeSizes([4, 6]);
   }
 
