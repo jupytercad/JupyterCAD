@@ -797,7 +797,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._scene.remove(this._clippingPlaneMesh);
     }
 
-    const selectedNames = this._selectedMeshes.map(sel => sel.name);
+    const selectedNames = Object.keys(this._currentSelection || {});
     this._selectedMeshes = [];
 
     this._boundingGroup = new THREE.Box3();
@@ -896,9 +896,9 @@ export class MainView extends React.Component<IProps, IStates> {
         });
         this._meshGroup?.add(meshGroup);
       }
-
-      this._updateTransformControls(selectedNames);
     });
+
+    this._updateTransformControls(selectedNames);
 
     // Update the reflength.
     this._updateRefLength(this._refLength === null);
@@ -1137,12 +1137,13 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _updateSelected(selection: { [key: string]: ISelection }) {
     const selectionChanged =
-      JSON.stringify(selection) !== JSON.stringify(this._previousSelection);
+      JSON.stringify(selection) !== JSON.stringify(this._currentSelection);
 
     if (!selectionChanged) {
       return;
     }
-    this._previousSelection = { ...selection };
+    this._currentSelection = { ...selection };
+    const selectedNames = Object.keys(selection);
 
     // Reset original color and remove bounding boxes for old selection
     for (const selectedMesh of this._selectedMeshes) {
@@ -1182,7 +1183,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
     // Set new selection
     this._selectedMeshes = [];
-    const selectedNames = Object.keys(selection);
 
     for (const selectionName of selectedNames) {
       const selectedMesh = this._meshGroup?.getObjectByName(
@@ -1806,7 +1806,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _clippingPlanes = [this._clippingPlane];
   private _edgeMaterials: any[] = [];
 
-  private _previousSelection: { [key: string]: ISelection } | null = null;
+  private _currentSelection: { [key: string]: ISelection } | null = null;
 
   private _scene: THREE.Scene; // Threejs scene
   private _camera: THREE.PerspectiveCamera | THREE.OrthographicCamera; // Threejs camera
