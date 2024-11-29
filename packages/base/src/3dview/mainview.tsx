@@ -423,6 +423,24 @@ export class MainView extends React.Component<IProps, IStates> {
 
         const updatedPosition = new THREE.Vector3();
         updatedObject.getWorldPosition(updatedPosition);
+        const updatedQuaternion = new THREE.Quaternion();
+        updatedObject.getWorldQuaternion(updatedQuaternion);
+
+        const s = Math.sqrt(1 - updatedQuaternion.w * updatedQuaternion.w);
+
+        let updatedRotation;
+        if (s > 1e-6) {
+          updatedRotation = [
+            [
+              updatedQuaternion.x / s,
+              updatedQuaternion.y / s,
+              updatedQuaternion.z / s
+            ],
+            2 * Math.acos(updatedQuaternion.w) * (180 / Math.PI)
+          ];
+        } else {
+          updatedRotation = [[0, 0, 1], 0];
+        }
 
         const obj = this._model.sharedModel.getObjectByName(objectName);
 
@@ -437,7 +455,9 @@ export class MainView extends React.Component<IProps, IStates> {
             ...obj.parameters,
             Placement: {
               ...obj.parameters.Placement,
-              Position: newPosition
+              Position: newPosition,
+              Axis: updatedRotation[0],
+              Angle: updatedRotation[1]
             }
           });
         }
@@ -724,18 +744,21 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _onKeyDown(event: KeyboardEvent) {
     // TODO Make these Lumino commands? Or not?
-    if (this._clipSettings.enabled) {
-      switch (event.key) {
-        case 'r':
-          event.preventDefault();
-          event.stopPropagation();
+    if (this._clipSettings.enabled || this._transformControls.enabled) {
+      const toggleMode = (control: any) => {
+        control.setMode(control.mode === 'rotate' ? 'translate' : 'rotate');
+      };
 
-          if (this._clipPlaneTransformControls.mode === 'rotate') {
-            this._clipPlaneTransformControls.setMode('translate');
-          } else {
-            this._clipPlaneTransformControls.setMode('rotate');
-          }
-          break;
+      if (event.key === 'r' && this._clipSettings.enabled) {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleMode(this._clipPlaneTransformControls);
+      }
+
+      if (event.key === 'r' && this._transformControls.enabled) {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleMode(this._transformControls);
       }
     }
   }
