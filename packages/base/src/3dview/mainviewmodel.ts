@@ -178,7 +178,7 @@ export class MainViewModel implements IDisposable {
   async maybeUpdateObjectParameters(
     name: string,
     properties: { [key: string]: any }
-  ): Promise<void> {
+  ): Promise<boolean> {
     // getContent already returns a deep copy of the content, we can change it safely here
     const updatedContent = this.jcadModel.getContent();
     for (const object of updatedContent.objects) {
@@ -197,7 +197,7 @@ export class MainViewModel implements IDisposable {
         'Failed to update the desired shape',
         'The tool was unable to update the desired shape due to invalid parameter values. The values you entered may not be compatible with the dimensions of your piece.'
       );
-      return;
+      return false;
     }
 
     // Dry run was successful, ready to apply the update now
@@ -215,6 +215,8 @@ export class MainViewModel implements IDisposable {
         meta
       });
     }
+
+    return true;
   }
 
   /**
