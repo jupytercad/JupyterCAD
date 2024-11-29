@@ -40,6 +40,57 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.0.0a7
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.0.0-alpha.6...19efde6a4957f149984ac9b99ef41b1ddfc6e580))
+
+### Enhancements made
+
+- Rotation Controls [#603](https://github.com/jupytercad/JupyterCAD/pull/603) ([@arjxn-py](https://github.com/arjxn-py))
+- Improve placement info + missing "degrees" info [#602](https://github.com/jupytercad/JupyterCAD/pull/602) ([@martinRenou](https://github.com/martinRenou))
+- Add commands to command palette [#598](https://github.com/jupytercad/JupyterCAD/pull/598) ([@martinRenou](https://github.com/martinRenou))
+- Disable transform control for readonly files [#594](https://github.com/jupytercad/JupyterCAD/pull/594) ([@martinRenou](https://github.com/martinRenou))
+- Add transform icon [#593](https://github.com/jupytercad/JupyterCAD/pull/593) ([@IsabelParedes](https://github.com/IsabelParedes))
+- Add stl and stp icons [#591](https://github.com/jupytercad/JupyterCAD/pull/591) ([@IsabelParedes](https://github.com/IsabelParedes))
+- Show selection in transparency for non-visible objects [#587](https://github.com/jupytercad/JupyterCAD/pull/587) ([@martinRenou](https://github.com/martinRenou))
+- Enable toggling transform controls [#578](https://github.com/jupytercad/JupyterCAD/pull/578) ([@arjxn-py](https://github.com/arjxn-py))
+- Perform a dry run for transforms [#575](https://github.com/jupytercad/JupyterCAD/pull/575) ([@martinRenou](https://github.com/martinRenou))
+- Allow transforming objects when clipping is enabled [#565](https://github.com/jupytercad/JupyterCAD/pull/565) ([@martinRenou](https://github.com/martinRenou))
+- Add Translation Controls [#529](https://github.com/jupytercad/JupyterCAD/pull/529) ([@arjxn-py](https://github.com/arjxn-py))
+
+### Bugs fixed
+
+- No transform controls when exploded view is enabled [#616](https://github.com/jupytercad/JupyterCAD/pull/616) ([@martinRenou](https://github.com/martinRenou))
+- Do not show the transform if there is no current selection [#615](https://github.com/jupytercad/JupyterCAD/pull/615) ([@martinRenou](https://github.com/martinRenou))
+- Fix selection of newly created objects in the 3D view [#614](https://github.com/jupytercad/JupyterCAD/pull/614) ([@martinRenou](https://github.com/martinRenou))
+- Transform controls: undo positioning upon failure [#610](https://github.com/jupytercad/JupyterCAD/pull/610) ([@martinRenou](https://github.com/martinRenou))
+- Allow exporting .stl to .jcad [#604](https://github.com/jupytercad/JupyterCAD/pull/604) ([@martinRenou](https://github.com/martinRenou))
+- Fix missing placement for STL & STEP Files [#600](https://github.com/jupytercad/JupyterCAD/pull/600) ([@arjxn-py](https://github.com/arjxn-py))
+- Expand undo_manager scope [#581](https://github.com/jupytercad/JupyterCAD/pull/581) ([@trungleduc](https://github.com/trungleduc))
+- Add a min-height to the toolbar separator [#577](https://github.com/jupytercad/JupyterCAD/pull/577) ([@brichet](https://github.com/brichet))
+- Bug fix: Prevent tree from wrongly updating the selection [#571](https://github.com/jupytercad/JupyterCAD/pull/571) ([@martinRenou](https://github.com/martinRenou))
+- Fix selection logic [#569](https://github.com/jupytercad/JupyterCAD/pull/569) ([@martinRenou](https://github.com/martinRenou))
+- Fix initial selected edges color [#566](https://github.com/jupytercad/JupyterCAD/pull/566) ([@martinRenou](https://github.com/martinRenou))
+- Fix selection through clip plane [#564](https://github.com/jupytercad/JupyterCAD/pull/564) ([@martinRenou](https://github.com/martinRenou))
+- Make selection logic smoother [#563](https://github.com/jupytercad/JupyterCAD/pull/563) ([@arjxn-py](https://github.com/arjxn-py))
+- Do not update the camera position automatically for single object scene [#559](https://github.com/jupytercad/JupyterCAD/pull/559) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Update UI-tests snapshots [#589](https://github.com/jupytercad/JupyterCAD/pull/589) ([@martinRenou](https://github.com/martinRenou))
+- Add test for exploded view [#584](https://github.com/jupytercad/JupyterCAD/pull/584) ([@arjxn-py](https://github.com/arjxn-py))
+- Add test for rotated shape [#583](https://github.com/jupytercad/JupyterCAD/pull/583) ([@arjxn-py](https://github.com/arjxn-py))
+- Undo opencascade positioning and rotation [#580](https://github.com/jupytercad/JupyterCAD/pull/580) ([@arjxn-py](https://github.com/arjxn-py))
+- Introduce IMouseDrag interface [#570](https://github.com/jupytercad/JupyterCAD/pull/570) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-11-04&to=2024-11-29&type=c))
+
+[@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2024-11-04..2024-11-29&type=Issues) | [@brichet](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Abrichet+updated%3A2024-11-04..2024-11-29&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-11-04..2024-11-29&type=Issues) | [@IsabelParedes](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AIsabelParedes+updated%3A2024-11-04..2024-11-29&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-11-04..2024-11-29&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2024-11-04..2024-11-29&type=Issues) | [@SylvainCorlay](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3ASylvainCorlay+updated%3A2024-11-04..2024-11-29&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-11-04..2024-11-29&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.0.0a6
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/v3.0.0a5...2d78f0bfd9f20854af1f6db5d60a75f3f5756bf4))
@@ -61,8 +112,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-10-29&to=2024-11-04&type=c))
 
 [@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2024-10-29..2024-11-04&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-10-29..2024-11-04&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-10-29..2024-11-04&type=Issues) | [@tshakah](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atshakah+updated%3A2024-10-29..2024-11-04&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.0.0a5
 
