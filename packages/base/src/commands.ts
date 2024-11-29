@@ -962,12 +962,18 @@ export function addCommands(
     isEnabled: () => {
       const current = tracker.currentWidget;
 
-      if (!current || !tracker.currentWidget.context.model.sharedModel.editable) {
+      if (
+        !current ||
+        !tracker.currentWidget.context.model.sharedModel.editable
+      ) {
         return false;
       }
 
-      const viewSettings = tracker.currentWidget.content.currentViewModel.viewSettings as JSONObject;
-      return viewSettings.explodedView ? !(viewSettings.explodedView as ExplodedView).enabled : true;
+      const viewSettings = tracker.currentWidget.content.currentViewModel
+        .viewSettings as JSONObject;
+      return viewSettings.explodedView
+        ? !(viewSettings.explodedView as ExplodedView).enabled
+        : true;
     },
     isToggled: () => {
       const current = tracker.currentWidget?.content;
@@ -1040,8 +1046,11 @@ export function addCommands(
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: explodedViewIcon,
     isToggled: () => {
-      const viewSettings = tracker.currentWidget?.content.currentViewModel.viewSettings as JSONObject;
-      return viewSettings?.explodedView ? (viewSettings.explodedView as ExplodedView).enabled : false;
+      const viewSettings = tracker.currentWidget?.content.currentViewModel
+        .viewSettings as JSONObject;
+      return viewSettings?.explodedView
+        ? (viewSettings.explodedView as ExplodedView).enabled
+        : false;
     },
     execute: async () => {
       const current = tracker.currentWidget;

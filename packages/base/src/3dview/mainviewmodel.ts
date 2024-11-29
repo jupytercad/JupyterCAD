@@ -18,7 +18,12 @@ import {
 } from '@jupytercad/schema';
 import { showErrorMessage } from '@jupyterlab/apputils';
 import { ObservableMap } from '@jupyterlab/observables';
-import { JSONObject, JSONValue, PromiseDelegate, UUID } from '@lumino/coreutils';
+import {
+  JSONObject,
+  JSONValue,
+  PromiseDelegate,
+  UUID
+} from '@lumino/coreutils';
 import { IDisposable } from '@lumino/disposable';
 import { ISignal, Signal } from '@lumino/signaling';
 import { v4 as uuid } from 'uuid';
