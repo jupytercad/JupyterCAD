@@ -71,7 +71,7 @@ export interface IMeshGroupMetadata {
   [key: string]: any;
 }
 
-export interface MeshGroup extends THREE.Group {
+export interface IMeshGroup extends THREE.Group {
   userData: IMeshGroupMetadata;
 }
 
@@ -166,7 +166,7 @@ export function buildShape(options: {
   isWireframe: boolean;
   objColor?: THREE.Color | string | number;
 }): {
-  meshGroup: MeshGroup;
+  meshGroup: IMeshGroup;
   mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
   edgesMeshes: LineSegments2[];
 } | null {
@@ -244,7 +244,7 @@ export function buildShape(options: {
     geometry.computeBoundsTree();
   }
 
-  const meshGroup = new THREE.Group() as MeshGroup;
+  const meshGroup = new THREE.Group() as IMeshGroup;
   meshGroup.name = `${objName}-group`;
   meshGroup.visible = visible;
   meshGroup.userData = {
