@@ -18,7 +18,12 @@ import {
 } from '@jupytercad/schema';
 import { showErrorMessage } from '@jupyterlab/apputils';
 import { ObservableMap } from '@jupyterlab/observables';
-import { JSONValue, PromiseDelegate, UUID } from '@lumino/coreutils';
+import {
+  JSONObject,
+  JSONValue,
+  PromiseDelegate,
+  UUID
+} from '@lumino/coreutils';
 import { IDisposable } from '@lumino/disposable';
 import { ISignal, Signal } from '@lumino/signaling';
 import { v4 as uuid } from 'uuid';
@@ -51,12 +56,21 @@ export class MainViewModel implements IDisposable {
   get workerBusy(): ISignal<this, boolean> {
     return this._workerBusy;
   }
+
   get jcadModel() {
     return this._jcadModel;
   }
 
   get viewSettingChanged() {
     return this._viewSetting.changed;
+  }
+
+  get viewSettings(): JSONObject {
+    const settings: JSONObject = {};
+    for (const key of this._viewSetting.keys()) {
+      settings[key] = this._viewSetting.get(key) || null;
+    }
+    return settings;
   }
 
   dispose(): void {

@@ -45,6 +45,8 @@ import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
 import { v4 as uuid } from 'uuid';
+import { ExplodedView } from './types';
+import { JSONObject } from '@lumino/coreutils';
 export function newName(type: string, model: IJupyterCadModel): string {
   const sharedModel = model.sharedModel;
 
@@ -958,9 +960,20 @@ export function addCommands(
   commands.addCommand(CommandIDs.transform, {
     label: trans.__('Toggle Transform Controls'),
     isEnabled: () => {
-      return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
-        : false;
+      const current = tracker.currentWidget;
+
+      if (
+        !current ||
+        !tracker.currentWidget.context.model.sharedModel.editable
+      ) {
+        return false;
+      }
+
+      const viewSettings = tracker.currentWidget.content.currentViewModel
+        .viewSettings as JSONObject;
+      return viewSettings.explodedView
+        ? !(viewSettings.explodedView as ExplodedView).enabled
+        : true;
     },
     isToggled: () => {
       const current = tracker.currentWidget?.content;
@@ -1032,6 +1045,13 @@ export function addCommands(
     label: trans.__('Exploded View'),
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: explodedViewIcon,
+    isToggled: () => {
+      const viewSettings = tracker.currentWidget?.content.currentViewModel
+        .viewSettings as JSONObject;
+      return viewSettings?.explodedView
+        ? (viewSettings.explodedView as ExplodedView).enabled
+        : false;
+    },
     execute: async () => {
       const current = tracker.currentWidget;
 
@@ -1048,6 +1068,11 @@ export function addCommands(
         cancelButton: true
       });
       await dialog.launch();
+
+      commands.notifyCommandChanged(CommandIDs.updateExplodedView);
+
+      // Notify change so that toggle button for transform disables if needed
+      commands.notifyCommandChanged(CommandIDs.transform);
     }
   });
 

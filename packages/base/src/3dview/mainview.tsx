@@ -1240,7 +1240,7 @@ export class MainView extends React.Component<IProps, IStates> {
    * Attach the transform controls to the current selection, or detach it
    */
   private _updateTransformControls(selection: string[]) {
-    if (selection.length === 1) {
+    if (selection.length === 1 && !this._explodedView.enabled) {
       const selectedMeshName = selection[0];
       const matchingChild = this._meshGroup?.children.find(child =>
         child.name.startsWith(selectedMeshName)
@@ -1595,6 +1595,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._explodedViewLinesHelperGroup?.removeFromParent();
     }
+
+    this._updateTransformControls(Object.keys(this._currentSelection || {}));
   }
 
   private _updateCamera() {
