@@ -50,7 +50,8 @@ import {
   computeExplodedState,
   projectVector,
   IMouseDrag,
-  IMeshGroupMetadata
+  IMeshGroupMetadata,
+  getQuaternion
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
 import { Spinner } from './spinner';
@@ -419,6 +420,7 @@ export class MainView extends React.Component<IProps, IStates> {
       // Update the currently transformed object in the shared model once finished moving
       this._transformControls.addEventListener('mouseUp', async () => {
         const updatedObject = this._selectedMeshes[0];
+
         const objectName = updatedObject.name;
 
         const updatedPosition = new THREE.Vector3();
@@ -460,9 +462,17 @@ export class MainView extends React.Component<IProps, IStates> {
               Angle: updatedRotation[1]
             }
           });
-          console.log('done?', done);
-          if (!done) {
-            // TODO: Reset original position and rotation of the object upon failure
+          // If the dry run failed, we bring back the object to its original position
+          if (!done && updatedObject.parent) {
+            const origPosition = obj.parameters.Placement.Position;
+
+            // Undo positioning
+            updatedObject.parent.position.copy(new THREE.Vector3(0, 0, 0));
+            updatedObject.parent.applyQuaternion(updatedQuaternion.invert());
+
+            // Redo original positioning
+            updatedObject.parent.applyQuaternion(getQuaternion(obj));
+            updatedObject.parent.position.copy(new THREE.Vector3(origPosition[0], origPosition[1], origPosition[2]));
           }
         }
       });

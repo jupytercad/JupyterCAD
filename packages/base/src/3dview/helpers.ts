@@ -71,6 +71,10 @@ export interface IMeshGroupMetadata {
   [key: string]: any;
 }
 
+export interface MeshGroup extends THREE.Group {
+  userData: IMeshGroupMetadata;
+}
+
 export function projectVector(options: {
   vector: THREE.Vector3;
   camera: THREE.Camera;
@@ -162,7 +166,7 @@ export function buildShape(options: {
   isWireframe: boolean;
   objColor?: THREE.Color | string | number;
 }): {
-  meshGroup: THREE.Group;
+  meshGroup: MeshGroup;
   mainMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
   edgesMeshes: LineSegments2[];
 } | null {
@@ -240,11 +244,12 @@ export function buildShape(options: {
     geometry.computeBoundsTree();
   }
 
-  const meshGroup = new THREE.Group();
+  const meshGroup = new THREE.Group() as MeshGroup;
   meshGroup.name = `${objName}-group`;
   meshGroup.visible = visible;
   meshGroup.userData = {
-    jcObject
+    jcObject,
+    type: 'shape'
   };
 
   // We only build the stencil logic for solid meshes
@@ -345,7 +350,6 @@ export function buildShape(options: {
   boundingBox.visible = false;
   boundingBox.name = SELECTION_BOUNDING_BOX;
   meshGroup.add(boundingBox);
-  meshGroup.userData.type = 'shape';
 
   meshGroup.add(mainMesh);
 
