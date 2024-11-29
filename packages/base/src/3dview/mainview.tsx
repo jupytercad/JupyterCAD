@@ -1524,8 +1524,9 @@ export class MainView extends React.Component<IProps, IStates> {
         this.setState(
           old => ({ ...old, transform: transformEnabled }),
           () => {
-            this._transformControls.visible = transformEnabled;
-            this._transformControls.enabled = transformEnabled;
+            this._updateTransformControls(
+              Object.keys(this._currentSelection || {})
+            );
           }
         );
       }
