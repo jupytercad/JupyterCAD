@@ -165,15 +165,6 @@ export class ToolbarWidget extends ReactiveToolbar {
           })
         );
 
-        this.addItem(
-          'Split Screen',
-          new CommandToolbarButton({
-            id: CommandIDs.splitScreen,
-            label: '',
-            commands: options.commands
-          })
-        );
-
         this.addItem('separator5', new Separator());
 
         // View helpers

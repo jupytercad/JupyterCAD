@@ -1684,10 +1684,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._sliderPos = (this._divRef.current?.clientWidth ?? 0) / 2;
       this._sceneL = new THREE.Scene();
-      // const color =
-      //   document.body.getAttribute('data-jp-theme-light') === 'true'
-      //     ? 0xedf4f8
-      //     : 0x120b07;
       this._sceneL.background = SPLITVIEW_BACKGROUND_COLOR;
       this._sceneL.add(new THREE.AmbientLight(0xffffff, 0.5)); // soft white light
       const light = new THREE.HemisphereLight(0xffffff, 0x444444, 0.5);

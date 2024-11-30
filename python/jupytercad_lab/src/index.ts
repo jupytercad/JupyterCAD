@@ -81,18 +81,17 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     ILayoutRestorer,
     IJupyterCadDocTracker,
     IAnnotationToken,
-    IJCadFormSchemaRegistryToken,
-    IForkManagerToken
+    IJCadFormSchemaRegistryToken
   ],
-  optional: [ICollaborativeDrive],
+  optional: [ICollaborativeDrive, IForkManagerToken],
   activate: (
     app: JupyterFrontEnd,
     restorer: ILayoutRestorer,
     tracker: IJupyterCadTracker,
     annotationModel: IAnnotationModel,
     formSchemaRegistry: IJCadFormSchemaRegistry,
-    forkManager: IForkManager,
-    collaborativeDrive?: ICollaborativeDrive
+    collaborativeDrive?: ICollaborativeDrive,
+    forkManager?: IForkManager
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
     const leftControlPanel = new LeftPanelWidget({
