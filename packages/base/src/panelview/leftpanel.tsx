@@ -1,7 +1,8 @@
 import {
   JupyterCadDoc,
   IJupyterCadTracker,
-  IJCadFormSchemaRegistry
+  IJCadFormSchemaRegistry,
+  IJupyterCadModel
 } from '@jupytercad/schema';
 import { SidePanel } from '@jupyterlab/ui-components';
 
@@ -10,6 +11,7 @@ import { ControlPanelHeader } from './header';
 import { ObjectTree } from './objecttree';
 import { ObjectProperties } from './objectproperties';
 import { AccordionPanel } from '@lumino/widgets';
+import { DocumentRegistry } from '@jupyterlab/docregistry';
 
 export class LeftPanelWidget extends SidePanel {
   constructor(options: LeftPanelWidget.IOptions) {
@@ -31,11 +33,21 @@ export class LeftPanelWidget extends SidePanel {
     });
     this.addWidget(properties);
 
+    this._handleFileChange = () => {
+      header.title.label = this._currentContext?.localPath || '-';
+    };
+
     options.tracker.currentChanged.connect((_, changed) => {
       if (changed) {
+        if (this._currentContext) {
+          this._currentContext.pathChanged.disconnect(this._handleFileChange);
+        }
+        this._currentContext = changed.context;
         header.title.label = changed.context.localPath;
+        this._currentContext.pathChanged.connect(this._handleFileChange);
       } else {
         header.title.label = '-';
+        this._currentContext = null;
       }
     });
     (this.content as AccordionPanel).setRelativeSizes([4, 6]);
@@ -45,6 +57,8 @@ export class LeftPanelWidget extends SidePanel {
     super.dispose();
   }
 
+  private _currentContext: DocumentRegistry.IContext<IJupyterCadModel> | null;
+  private _handleFileChange: () => void;
   private _model: IControlPanelModel;
 }
 

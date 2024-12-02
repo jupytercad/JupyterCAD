@@ -18,3 +18,4 @@ export * from './interfaces';
 export * from './model';
 export * from './doc';
 export * from './token';
+export * from './index';

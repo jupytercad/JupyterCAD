@@ -4,6 +4,10 @@
   "required": ["objects"],
   "additionalProperties": false,
   "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "default": "3.0.0"
+    },
     "objects": {
       "$ref": "#/definitions/jcadModel"
     },

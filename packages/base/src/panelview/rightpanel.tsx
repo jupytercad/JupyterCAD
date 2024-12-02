@@ -1,5 +1,6 @@
 import {
   IAnnotationModel,
+  IJupyterCadModel,
   IJupyterCadTracker,
   JupyterCadDoc
 } from '@jupytercad/schema';
@@ -12,6 +13,8 @@ import { SuggestionPanel } from '../suggestion/suggestionpanel';
 import { SuggestionModel } from '../suggestion/model';
 import { IForkManager } from '@jupyter/docprovider';
 import { ICollaborativeDrive } from '@jupyter/collaborative-drive';
+import { DocumentRegistry } from '@jupyterlab/docregistry';
+
 export class RightPanelWidget extends SidePanel {
   constructor(options: RightPanelWidget.IOptions) {
     super();
@@ -41,9 +44,18 @@ export class RightPanelWidget extends SidePanel {
       this.addWidget(suggestion);
     }
 
+    this._handleFileChange = () => {
+      header.title.label = this._currentContext?.localPath || '-';
+    };
+
     options.tracker.currentChanged.connect(async (_, changed) => {
       if (changed) {
-        header.title.label = changed.context.localPath;
+        if (this._currentContext) {
+          this._currentContext.pathChanged.disconnect(this._handleFileChange);
+        }
+        this._currentContext = changed.context;
+        header.title.label = this._currentContext.localPath;
+        this._currentContext.pathChanged.connect(this._handleFileChange);
         this._annotationModel.context =
           options.tracker.currentWidget?.context || undefined;
         await changed.context.ready;
@@ -54,6 +66,7 @@ export class RightPanelWidget extends SidePanel {
         });
       } else {
         header.title.label = '-';
+        this._currentContext = null;
         this._annotationModel.context = undefined;
         suggestionModel?.switchContext({
           filePath: '',
@@ -66,6 +79,9 @@ export class RightPanelWidget extends SidePanel {
   dispose(): void {
     super.dispose();
   }
+
+  private _currentContext: DocumentRegistry.IContext<IJupyterCadModel> | null;
+  private _handleFileChange: () => void;
   private _model: IControlPanelModel;
   private _annotationModel: IAnnotationModel;
 }
