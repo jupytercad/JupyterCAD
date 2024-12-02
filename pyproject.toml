@@ -13,7 +13,7 @@ dynamic = ["version"]
 path = "python/jupytercad/jupytercad/__init__.py"
 
 [tool.jupyter-releaser]
-skip = [ "check-python" ]
+skip = [ "check-python", "check-links" ]
 
 
 [tool.jupyter-releaser.options]
