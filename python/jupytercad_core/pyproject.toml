@@ -41,8 +41,11 @@ source = "nodejs"
 fields = ["description", "authors", "urls"]
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["jupytercad_core/labextension"]
+artifacts = ["jupytercad_core/labextension", "/jupytercad_core/schema/**/*.py"]
 exclude = [".github", "binder", "node_modules"]
+
+[tool.hatch.build.targets.wheel]
+artifacts = ["/jupytercad_core/schema/**/*.py"]
 
 [tool.hatch.build.targets.wheel.shared-data]
 "install.json" = "share/jupyter/labextensions/@jupytercad/jupytercad-core/install.json"
@@ -58,6 +61,7 @@ dependencies = ["hatch-jupyter-builder>=0.5"]
 ensured-targets = [
   "jupytercad_core/labextension/static/style.js",
   "jupytercad_core/labextension/package.json",
+  "jupytercad_core/schema/interfaces/box.py",
 ]
 skip-if-exists = ["jupytercad_core/labextension/static/style.js"]
 

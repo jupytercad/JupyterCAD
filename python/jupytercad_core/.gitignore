@@ -1,2 +1,3 @@
 jupytercad_core/labextension
 jupytercad_core/_version.py
+jupytercad_core/schema/interfaces

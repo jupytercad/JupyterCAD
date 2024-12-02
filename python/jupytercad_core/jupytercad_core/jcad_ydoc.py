@@ -7,7 +7,7 @@ from packaging.version import Version
 from pycrdt import Array, Map, Text
 from jupyter_ydoc.ybasedoc import YBaseDoc
 
-from .constants import CURRENT_SCHEMA_VERSION
+from .schema import SCHEMA_VERSION
 
 
 class YJCad(YBaseDoc):
@@ -21,7 +21,7 @@ class YJCad(YBaseDoc):
         self.undo_manager.expand_scope(self._yobjects)
 
     def version(self) -> str:
-        return CURRENT_SCHEMA_VERSION
+        return SCHEMA_VERSION
 
     def get(self) -> str:
         """
@@ -35,7 +35,7 @@ class YJCad(YBaseDoc):
         outputs = self._youtputs.to_py()
         return json.dumps(
             dict(
-                schemaVersion=CURRENT_SCHEMA_VERSION,
+                schemaVersion=SCHEMA_VERSION,
                 objects=objects,
                 options=options,
                 metadata=meta,
@@ -59,7 +59,7 @@ class YJCad(YBaseDoc):
             if "schemaVersion" in valueDict
             else Version("3.0.0")
         )
-        if file_version > Version(CURRENT_SCHEMA_VERSION):
+        if file_version > Version(SCHEMA_VERSION):
             raise ValueError(f"Cannot load file version {file_version}")
 
         newObj = []

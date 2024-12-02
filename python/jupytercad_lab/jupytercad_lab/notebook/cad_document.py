@@ -10,10 +10,9 @@ from pycrdt import Array, Doc, Map
 from pydantic import BaseModel
 from ypywidgets.comm import CommWidget
 
-from .objects._schema.any import IAny
 from uuid import uuid4
 
-from .objects import (
+from jupytercad_core.schema import (
     IBox,
     ICone,
     ICut,
@@ -27,6 +26,7 @@ from .objects import (
     ITorus,
     Parts,
     ShapeMetadata,
+    IAny
 )
 from .utils import normalize_path
 

@@ -1,5 +1,5 @@
 import {
-  CURRENT_SCHEMA_VERSION,
+  SCHEMA_VERSION,
   IJCadObject,
   IJcadObjectDocChange,
   IJupyterCadDoc,
@@ -23,7 +23,7 @@ export class JupyterCadStepDoc extends JupyterCadDoc {
   }
 
   get version(): string {
-    return CURRENT_SCHEMA_VERSION;
+    return SCHEMA_VERSION;
   }
 
   get objectsChanged(): ISignal<IJupyterCadDoc, IJcadObjectDocChange> {

@@ -5,7 +5,7 @@ from functools import partial
 from pycrdt import Text
 from jupyter_ydoc.ybasedoc import YBaseDoc
 
-from .constants import CURRENT_SCHEMA_VERSION
+from .schema import SCHEMA_VERSION
 
 
 class YSTEP(YBaseDoc):
@@ -14,7 +14,7 @@ class YSTEP(YBaseDoc):
         self._ydoc["source"] = self._ysource = Text()
 
     def version(self) -> str:
-        return CURRENT_SCHEMA_VERSION
+        return SCHEMA_VERSION
 
     def get(self) -> str:
         """
