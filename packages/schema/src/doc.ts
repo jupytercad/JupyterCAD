@@ -4,7 +4,6 @@ import { ISignal, Signal } from '@lumino/signaling';
 import * as Y from 'yjs';
 
 import { IJCadObject, IJCadOptions } from './_interface/jcad';
-export { SCHEMA_VERSION } from './_interface/version';
 import { SCHEMA_VERSION } from './_interface/version';
 import {
   IDict,
