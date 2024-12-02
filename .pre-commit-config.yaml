@@ -32,7 +32,7 @@ repos:
       - id: black
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.7.2
+    rev: v0.8.1
     hooks:
       - id: ruff
         args: ['--fix']
@@ -44,7 +44,7 @@ repos:
         entry: prettier --no-error-on-unmatched-pattern --write --ignore-unknown
 
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.14.0
+    rev: v9.16.0
     hooks:
       - id: eslint
         files: \.tsx?$
