@@ -151,5 +151,6 @@
     }
   ],
   "options": {},
-  "outputs": {}
+  "outputs": {},
+  "schemaVersion": "3.0.0"
 }
