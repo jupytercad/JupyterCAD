@@ -5,7 +5,7 @@ from jupyter_server.base.handlers import APIHandler
 from jupyter_server.utils import url_path_join, ApiPath, to_os_path
 import tornado
 
-from .constants import SCHEMA_VERSION
+from .schema import SCHEMA_VERSION
 
 
 class JCadExportHandler(APIHandler):
