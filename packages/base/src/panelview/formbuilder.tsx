@@ -1,5 +1,3 @@
-import { MessageLoop } from '@lumino/messaging';
-import { Widget } from '@lumino/widgets';
 import { ISubmitEvent } from '@rjsf/core';
 import * as React from 'react';
 import { FormComponent } from '@jupyterlab/ui-components';
@@ -23,6 +21,7 @@ interface IProps {
   schema?: IDict;
   cancel?: () => void;
 }
+
 const CustomArrayField = (props: any) => {
   const { formData, name, required, onChange, schema, errorSchema, onBlur } =
     props;
@@ -78,35 +77,6 @@ const WrappedFormComponent = (props: any): JSX.Element => {
       onSubmit={onSubmit}
     />
   );
-};
-
-// Reusing the datalayer/jupyter-react component:
-// https://github.com/datalayer/jupyter-react/blob/main/packages/react/src/jupyter/lumino/Lumino.tsx
-export const LuminoForm = (
-  props: React.PropsWithChildren<any>
-): JSX.Element => {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const { children } = props;
-  React.useEffect(() => {
-    const widget = children as Widget;
-    try {
-      MessageLoop.sendMessage(widget, Widget.Msg.BeforeAttach);
-      ref.current!.insertBefore(widget.node, null);
-      MessageLoop.sendMessage(widget, Widget.Msg.AfterAttach);
-    } catch (e) {
-      console.warn('Exception while attaching Lumino widget.', e);
-    }
-    return () => {
-      try {
-        if (widget.isAttached || widget.node.isConnected) {
-          Widget.detach(widget);
-        }
-      } catch (e) {
-        // The widget is destroyed already by React.
-      }
-    };
-  }, [children]);
-  return <div ref={ref} />;
 };
 
 export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
