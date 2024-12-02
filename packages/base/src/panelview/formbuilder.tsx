@@ -24,38 +24,49 @@ interface IProps {
   cancel?: () => void;
 }
 const CustomArrayField = (props: any) => {
-  const { formData, name, required, onChange, schema } = props;
-
-  const updateItem = (index: number, value: number) => {
-    const newData = [...formData];
-    newData[index] = value;
-    onChange(newData);
-  };
+  const { formData, name, required, onChange, schema, errorSchema, onBlur } =
+    props;
+  const data = formData || [];
 
   return (
     <fieldset>
       <legend>
         {name}
-        {required ? <span className="required">*</span> : ''}
+        {required && <span className="required">*</span>}
       </legend>
       <p className="field-description">{schema.description}</p>
       <div className="custom-array-wrapper">
-        {formData &&
-          formData.map((value: number, index: number) => (
-            <div key={index} className="array-item">
-              <input
-                type="number"
-                value={value}
-                onChange={e => updateItem(index, parseFloat(e.target.value))}
-              />
-            </div>
-          ))}
+        {data.map((value: number | null, index: number) => (
+          <div key={index} className="array-item">
+            <input
+              type="number"
+              value={value === null ? '' : value}
+              required={required}
+              onChange={e => {
+                const updatedValue = [...data];
+                updatedValue[index] =
+                  e.target.value === '' ? null : parseFloat(e.target.value);
+                onChange(updatedValue);
+              }}
+              onBlur={() => onBlur(name, value)}
+            />
+          </div>
+        ))}
       </div>
+
+      {errorSchema?.__errors?.length > 0 && (
+        <div className="validationErrors" style={{ color: 'red' }}>
+          {errorSchema.__errors.map((error: string, idx: number) => (
+            <p key={idx}>{error}</p>
+          ))}
+        </div>
+      )}
     </fieldset>
   );
 };
+
 const WrappedFormComponent = (props: any): JSX.Element => {
-  const { fields, ...rest } = props;
+  const { fields, onSubmit, ...rest } = props;
   return (
     <FormComponent
       {...rest}
@@ -64,6 +75,7 @@ const WrappedFormComponent = (props: any): JSX.Element => {
         ...fields,
         ArrayField: CustomArrayField
       }}
+      onSubmit={onSubmit}
     />
   );
 };
@@ -124,6 +136,10 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
     if (prevProps.sourceData !== this.props.sourceData) {
       this.setState(old => ({ ...old, internalData: this.props.sourceData }));
     }
+
+    if (prevProps.schema !== this.props.schema) {
+      this.setState(old => ({ ...old, schema: this.props.schema }));
+    }
   }
 
   buildForm(): JSX.Element[] {
@@ -183,8 +199,6 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   }
 
   onFormSubmit = (e: ISubmitEvent<any>): void => {
-    console.log('onSubmit triggered', e);
-
     const internalData = { ...this.state.internalData };
     Object.entries(e.formData).forEach(([k, v]) => (internalData[k] = v));
     this.setState(
@@ -202,10 +216,11 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   render(): React.ReactNode {
     const { schema, internalData } = this.state;
     const uiSchema = this.generateUiSchema(this.props.schema || {});
+    const submitRef = React.createRef<HTMLButtonElement>();
+
     if (!schema) {
       return <div>{this.buildForm()}</div>;
     }
-
     return (
       <div
         className="jpcad-property-panel"
@@ -216,9 +231,29 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
             schema={schema}
             uiSchema={uiSchema}
             formData={internalData}
-            onChange={(e: ISubmitEvent<any>) => this.props.syncData(e.formData)}
             onSubmit={this.onFormSubmit}
             liveValidate
+            onFocus={(id, value) => {
+              this.props.syncSelectedField
+                ? this.props.syncSelectedField(id, value, this.props.parentType)
+                : null;
+            }}
+            onBlur={(id, value) => {
+              this.props.syncSelectedField
+                ? this.props.syncSelectedField(
+                    null,
+                    value,
+                    this.props.parentType
+                  )
+                : null;
+            }}
+            children={
+              <button
+                ref={submitRef}
+                type="submit"
+                style={{ display: 'none' }}
+              />
+            }
           />
         </div>
 
@@ -234,7 +269,10 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
 
           <button
             className="jp-Dialog-button jp-mod-accept jp-mod-styled"
-            type="submit"
+            type="button"
+            onClick={() => {
+              submitRef.current?.click();
+            }}
           >
             <div className="jp-Dialog-buttonLabel">Submit</div>
           </button>

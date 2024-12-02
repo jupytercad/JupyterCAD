@@ -160,7 +160,6 @@
 .jpcad-property-panel .rjsf .array-item:not(:last-child) {
   margin-right: var(--jp-ui-font-size1);
   border-bottom: none;
-  margin-bottom: unset;
   padding-bottom: unset;
 }
 
@@ -563,7 +562,8 @@ body[data-jp-theme-light='true'] {
   .jp-FormGroup-content
   fieldset
   .jp-inputFieldWrapper
-  > input, .custom-array-wrapper input {
+  > input,
+.custom-array-wrapper input {
   box-sizing: border-box;
   border: var(--jp-border-width) solid var(--jp-border-color1);
   background-color: var(--jp-layout-color0);
@@ -593,6 +593,13 @@ body[data-jp-theme-light='true'] {
 .jpcad-property-panel .jp-FormGroup-content .jp-inputFieldWrapper {
   order: 3;
 }
+.jpcad-property-panel .jp-FormGroup-contentNormal .validationErrors {
+  order: 4;
+  list-style: none;
+  color: var(--jp-warn-color0);
+  margin: 0;
+  padding: 0;
+}
 
 .jpcad-property-panel .jp-objectFieldWrapper,
 .jpcad-property-panel .jp-arrayFieldWrapper {
@@ -609,4 +616,15 @@ body[data-jp-theme-light='true'] {
 
 .jpcad-property-panel .custom-array-wrapper {
   display: flex;
+}
+.jpcad-property-panel .rjsf .errors {
+  color: var(--jp-warn-color0);
+}
+.jpcad-property-panel .rjsf .errors ul,
+.jpcad-property-panel .rjsf .validationErros ul,
+.jpcad-property-panel .rjsf .validationErros li,
+.jpcad-property-panel .rjsf .errors li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
