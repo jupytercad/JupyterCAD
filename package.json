@@ -77,8 +77,5 @@
     "stylelint-prettier": "^4.0.0",
     "typescript": "^5",
     "webpack": "^5.76.3"
-  },
-  "dependencies": {
-    "@jupyterlab/ui-components": "^4.3.1"
   }
 }
