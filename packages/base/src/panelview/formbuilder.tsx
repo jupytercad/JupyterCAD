@@ -23,10 +23,49 @@ interface IProps {
   schema?: IDict;
   cancel?: () => void;
 }
+const CustomArrayField = (props: any) => {
+  const { formData, name, required, onChange, schema } = props;
 
-// Wrap FormComponent to ensure validator integration
+  const updateItem = (index: number, value: number) => {
+    const newData = [...formData];
+    newData[index] = value;
+    onChange(newData);
+  };
+
+  return (
+    <fieldset>
+      <legend>
+        {name}
+        {required ? <span className="required">*</span> : ''}
+      </legend>
+      <p className="field-description">{schema.description}</p>
+      <div className="custom-array-wrapper">
+        {formData &&
+          formData.map((value: number, index: number) => (
+            <div key={index} className="array-item">
+              <input
+                type="number"
+                value={value}
+                onChange={e => updateItem(index, parseFloat(e.target.value))}
+              />
+            </div>
+          ))}
+      </div>
+    </fieldset>
+  );
+};
 const WrappedFormComponent = (props: any): JSX.Element => {
-  return <FormComponent {...props} validator={validatorAjv8} />;
+  const { fields, ...rest } = props;
+  return (
+    <FormComponent
+      {...rest}
+      validator={validatorAjv8}
+      fields={{
+        ...fields,
+        ArrayField: CustomArrayField
+      }}
+    />
+  );
 };
 
 // Reusing the datalayer/jupyter-react component:
@@ -87,41 +126,65 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
     }
   }
 
+  buildForm(): JSX.Element[] {
+    if (!this.props.sourceData || !this.state.internalData) {
+      return [];
+    }
+    const inputs: JSX.Element[] = [];
+
+    for (const [key, value] of Object.entries(this.props.sourceData)) {
+      let input: JSX.Element;
+      if (typeof value === 'string' || typeof value === 'number') {
+        input = (
+          <div key={key}>
+            <label htmlFor="">{key}</label>
+            <input
+              type="number"
+              value={this.state.internalData[key]}
+              onChange={e => this.setStateByKey(key, e.target.value)}
+            />
+          </div>
+        );
+        inputs.push(input);
+      }
+    }
+    return inputs;
+  }
+
+  removeArrayButton(schema: IDict, uiSchema: IDict): void {
+    Object.entries(schema['properties'] as IDict).forEach(([k, v]) => {
+      if (v['type'] === 'array') {
+        uiSchema[k] = {
+          'ui:options': {
+            orderable: false,
+            removable: false,
+            addable: false
+          }
+        };
+      } else if (v['type'] === 'object') {
+        uiSchema[k] = {};
+        this.removeArrayButton(v, uiSchema[k]);
+      }
+      uiSchema['Color'] = {
+        'ui:widget': 'color'
+      };
+    });
+  }
+
   generateUiSchema(schema: IDict): IDict {
-    const uiSchema: IDict = {
+    const uiSchema = {
       additionalProperties: {
         'ui:label': false,
         classNames: 'jpcad-hidden-field'
       }
     };
-
-    const processSchema = (currentSchema: IDict, ui: IDict): void => {
-      Object.entries(currentSchema['properties'] || {}).forEach(
-        ([key, value]) => {
-          if (typeof value === 'object' && value !== null && 'type' in value) {
-            const property = value as { type: string };
-            if (property.type === 'array') {
-              ui[key] = {
-                'ui:options': {
-                  orderable: false,
-                  removable: false,
-                  addable: false
-                }
-              };
-            } else if (property.type === 'object') {
-              ui[key] = {};
-              processSchema(property, ui[key]); 
-            }
-          }
-        }
-      );
-    };
-
-    processSchema(schema, uiSchema);
+    this.removeArrayButton(schema, uiSchema);
     return uiSchema;
   }
 
   onFormSubmit = (e: ISubmitEvent<any>): void => {
+    console.log('onSubmit triggered', e);
+
     const internalData = { ...this.state.internalData };
     Object.entries(e.formData).forEach(([k, v]) => (internalData[k] = v));
     this.setState(
@@ -139,9 +202,8 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   render(): React.ReactNode {
     const { schema, internalData } = this.state;
     const uiSchema = this.generateUiSchema(this.props.schema || {});
-
     if (!schema) {
-      return <div>No Schema Available</div>;
+      return <div>{this.buildForm()}</div>;
     }
 
     return (
@@ -149,14 +211,17 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
         className="jpcad-property-panel"
         data-path={this.props.filePath ?? ''}
       >
-        <WrappedFormComponent
-          schema={schema}
-          uiSchema={uiSchema}
-          formData={internalData}
-          onChange={(e: ISubmitEvent<any>) => this.props.syncData(e.formData)}
-          onSubmit={this.onFormSubmit}
-          liveValidate
-        />
+        <div className="jpcad-property-outer jp-scrollbar-tiny">
+          <WrappedFormComponent
+            schema={schema}
+            uiSchema={uiSchema}
+            formData={internalData}
+            onChange={(e: ISubmitEvent<any>) => this.props.syncData(e.formData)}
+            onSubmit={this.onFormSubmit}
+            liveValidate
+          />
+        </div>
+
         <div className="jpcad-property-buttons">
           {this.props.cancel ? (
             <button

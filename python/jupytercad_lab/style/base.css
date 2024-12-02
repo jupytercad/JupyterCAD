@@ -157,14 +157,14 @@
   display: flex;
 }
 
-.jpcad-property-panel .jp-SchemaForm .array-item:not(:last-child) {
+.jpcad-property-panel .rjsf .array-item:not(:last-child) {
   margin-right: var(--jp-ui-font-size1);
   border-bottom: none;
   margin-bottom: unset;
   padding-bottom: unset;
 }
 
-.jpcad-property-panel .jp-SchemaForm .array-item {
+.jpcad-property-panel .rjsf .array-item {
   flex-grow: 1;
 }
 
@@ -189,9 +189,8 @@ div.field.field-array > label + span {
 }
 
 /* TODO Upstream this to jupyterlab jrfs */
-.jp-SchemaForm .control-label,
-.jp-SchemaForm legend {
-  position: inherit;
+.jpcad-property-panel .rjsf .array-item {
+  flex-grow: 1;
 }
 
 div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
@@ -411,9 +410,10 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
   width: 100%;
 }
 
-.jp-SchemaForm .control-label,
-.jp-SchemaForm legend {
+.jpcad-property-panel .rjsf .control-label,
+.jpcad-property-panel .rjsf legend {
   width: 100%;
+  position: inherit;
 }
 
 .jpcad-console {
@@ -494,4 +494,119 @@ body[data-jp-theme-light='false'] {
 }
 body[data-jp-theme-light='true'] {
   --jcad-splitview-background: #edf4f8;
+}
+/* form component style */
+
+.jpcad-property-panel .rjsf {
+  color: var(--jp-ui-font-color1);
+}
+
+.jpcad-property-panel .rjsf > form {
+  padding: var(--jp-ui-font-size1);
+}
+
+.jpcad-property-panel .rjsf fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.jpcad-property-panel .rjsf button[type='submit'] {
+  display: none;
+}
+
+.jpcad-property-panel .rjsf .control-label,
+.jpcad-property-panel .rjsf legend {
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+  position: relative;
+  width: 100%;
+}
+
+.jpcad-property-panel .rjsf legend > :first-child,
+.jpcad-property-panel .rjsf .control-label > :first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.jpcad-property-panel .rjsf .form-group .form-group {
+  margin-bottom: var(--jp-ui-font-size1);
+}
+
+.jpcad-property-panel .rjsf .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.jpcad-property-panel .rjsf .jp-FormGroup-description,
+.jpcad-property-panel .rjsf .field-description,
+.jpcad-property-panel .rjsf .help-block {
+  color: var(--jp-ui-font-color2);
+}
+
+.jpcad-property-panel .rjsf .required {
+  font-size: var(--jp-ui-font-size3);
+  color: var(--jp-warn-color1);
+  font-weight: 800;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.jpcad-property-panel .jp-FormGroup-contentNormal {
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+}
+
+.jpcad-property-panel
+  .jp-FormGroup-content
+  fieldset
+  .jp-inputFieldWrapper
+  > input, .custom-array-wrapper input {
+  box-sizing: border-box;
+  border: var(--jp-border-width) solid var(--jp-border-color1);
+  background-color: var(--jp-layout-color0);
+  color: var(--jp-ui-font-color0);
+  font-size: var(--jp-ui-font-size2);
+  min-width: 0;
+  outline: none !important;
+  padding: 2px 7px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.jpcad-property-panel .jp-FormGroup-contentNormal .jp-FormGroup-fieldLabel {
+  font-weight: bold;
+  order: 1;
+}
+
+.jpcad-property-panel
+  .jp-FormGroup-content
+  .jp-FormGroup-contentNormal
+  .jp-FormGroup-description,
+.jpcad-property-panel .field-description {
+  order: 2;
+  color: var(--jp-ui-font-color2);
+}
+
+.jpcad-property-panel .jp-FormGroup-content .jp-inputFieldWrapper {
+  order: 3;
+}
+
+.jpcad-property-panel .jp-objectFieldWrapper,
+.jpcad-property-panel .jp-arrayFieldWrapper {
+  padding-left: var(--jp-notebook-padding);
+  border-left: solid 4px var(--jp-border-color3);
+}
+
+.jpcad-property-panel .array-item .jp-FormGroup-fieldLabel {
+  display: none;
+}
+.jpcad-property-panel .jp-objectFieldWrapper .jp-FormGroup-description {
+  display: none;
+}
+
+.jpcad-property-panel .custom-array-wrapper {
+  display: flex;
 }
