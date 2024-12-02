@@ -426,3 +426,72 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
 .lm-TabBar-tabIcon .jcad-main-logo[fill] {
   fill: var(--jp-inverse-layout-color3);
 }
+
+.jpcad-control-panel-suggestion {
+  flex-grow: 1;
+}
+.jpcad-control-panel-suggestion > div {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.jcad-Suggestion {
+  color: var(--jp-ui-font-color1);
+}
+
+.jpcad-control-panel-suggestion.selected {
+  background-color: rgba(0, 122, 255, 0.23);
+}
+.jcad-suggestion-tree-node-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 9px;
+  height: 9px;
+}
+
+.jcad-suggestion-tree-node-user {
+  flex-grow: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+  border-radius: 100%;
+}
+.jcad-suggestion-tree-node-user span {
+  width: 20px;
+  text-align: center;
+  font-size: 12px;
+}
+span.jcad-suggestion-tree-node-label {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  flex-grow: 1;
+  padding-left: 5px;
+}
+.jpcad-SplitSlider {
+  position: absolute;
+  cursor: ew-resize;
+  width: 2px;
+  height: 100%;
+  background-color: #bdbdbd;
+  opacity: 0.25;
+  left: calc(50% - 1px);
+}
+
+.jpcad-SplitSlider:hover {
+  border: 2px solid #bdbdbd;
+  opacity: 0.75;
+}
+
+body[data-jp-theme-light='false'] {
+  --jcad-splitview-background: #120b07;
+}
+body[data-jp-theme-light='true'] {
+  --jcad-splitview-background: #edf4f8;
+}

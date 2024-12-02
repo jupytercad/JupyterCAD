@@ -2,7 +2,8 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended'
+    'plugin:@typescript-eslint/recommended',
+    "plugin:react-hooks/recommended"
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -11,6 +12,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint'],
   rules: {
+    "react-hooks/exhaustive-deps": "error",
     '@typescript-eslint/naming-convention': [
       'error',
       {

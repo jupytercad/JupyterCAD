@@ -27,22 +27,10 @@ export class JupyterCadModel implements IJupyterCadModel {
       this._sharedModel = sharedModel;
     } else {
       this._sharedModel = this.createSharedModel();
-      this._sharedModel.changed.connect(this._onSharedModelChanged);
     }
-    this.sharedModel.awareness.on('change', this._onClientStateChanged);
+    this._connectSignal();
     this.annotationModel = annotationModel;
   }
-
-  protected createSharedModel(): IJupyterCadDoc {
-    return JupyterCadDoc.create();
-  }
-
-  private _onSharedModelChanged = (sender: any, changes: any): void => {
-    if (changes && changes?.objectChange?.length) {
-      this._contentChanged.emit(void 0);
-      this.dirty = true;
-    }
-  };
 
   readonly collaborative =
     document.querySelectorAll('[data-jupyter-lite-root]')[0] === undefined;
@@ -75,7 +63,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   }
 
   get users(): IUserData[] {
-    this._usersMap = this._sharedModel?.awareness.getStates();
+    this._usersMap = this.sharedModel?.awareness.getStates();
     const users: IUserData[] = [];
     if (this._usersMap) {
       this._usersMap.forEach((val, key) => {
@@ -111,27 +99,39 @@ export class JupyterCadModel implements IJupyterCadModel {
     return this._clientStateChanged;
   }
 
-  get sharedMetadataChanged(): ISignal<IJupyterCadDoc, MapChange> {
-    return this.sharedModel.metadataChanged;
+  get sharedMetadataChanged(): ISignal<this, MapChange> {
+    return this._sharedMetadataChanged;
   }
 
-  get sharedOptionsChanged(): ISignal<IJupyterCadDoc, MapChange> {
-    return this.sharedModel.optionsChanged;
+  get sharedOptionsChanged(): ISignal<this, MapChange> {
+    return this._sharedOptionsChanged;
   }
 
-  get sharedObjectsChanged(): ISignal<IJupyterCadDoc, IJcadObjectDocChange> {
-    return this.sharedModel.objectsChanged;
+  get sharedObjectsChanged(): ISignal<this, IJcadObjectDocChange> {
+    return this._sharedObjectsChanged;
+  }
+  get sharedModelSwapped(): ISignal<this, void> {
+    return this._sharedModelSwapped;
   }
 
   get disposed(): ISignal<JupyterCadModel, void> {
     return this._disposed;
   }
 
+  swapSharedModel(newSharedModel: IJupyterCadDoc): void {
+    this._disconnectSignal();
+    this._sharedModel.dispose();
+    this._sharedModel = newSharedModel;
+    this._connectSignal();
+    this._sharedObjectsChanged.emit({ objectChange: [] });
+    this._sharedModelSwapped.emit();
+  }
   dispose(): void {
     if (this._isDisposed) {
       return;
     }
     this._isDisposed = true;
+    this._disconnectSignal();
     this._sharedModel.dispose();
     this._disposed.emit();
     Signal.clearData(this);
@@ -215,14 +215,14 @@ export class JupyterCadModel implements IJupyterCadModel {
   }
 
   setUserToFollow(userId?: number): void {
-    if (this._sharedModel) {
-      this._sharedModel.awareness.setLocalStateField('remoteUser', userId);
+    if (this.sharedModel) {
+      this.sharedModel.awareness.setLocalStateField('remoteUser', userId);
     }
   }
 
   syncFormData(form: any): void {
-    if (this._sharedModel) {
-      this._sharedModel.awareness.setLocalStateField('toolbarForm', form);
+    if (this.sharedModel) {
+      this.sharedModel.awareness.setLocalStateField('toolbarForm', form);
     }
   }
 
@@ -238,21 +238,67 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.sharedModel.removeMetadata(key);
   }
 
+  protected createSharedModel(): IJupyterCadDoc {
+    return JupyterCadDoc.create();
+  }
+
+  private _onSharedModelChanged = (sender: any, changes: any): void => {
+    if (changes && changes?.objectChange?.length) {
+      this._contentChanged.emit(void 0);
+      this.dirty = true;
+    }
+  };
+
   private _onClientStateChanged = changed => {
     const clients = this.sharedModel.awareness.getStates() as Map<
       number,
       IJupyterCadClientState
     >;
-
     this._clientStateChanged.emit(clients);
-
-    this._sharedModel.awareness.on('change', update => {
-      if (update.added.length || update.removed.length) {
-        this._userChanged.emit(this.users);
-      }
-    });
+    if (changed.added.length || changed.removed.length) {
+      this._userChanged.emit(this.users);
+    }
   };
 
+  private _connectSignal() {
+    this._sharedModel.changed.connect(this._onSharedModelChanged);
+    this._sharedModel.awareness.on('change', this._onClientStateChanged);
+    this._sharedModel.metadataChanged.connect(
+      this._metadataChangedHandler,
+      this
+    );
+    this._sharedModel.optionsChanged.connect(this._optionsChangedHandler, this);
+    this._sharedModel.objectsChanged.connect(this._objectsChangedHandler, this);
+  }
+  private _disconnectSignal() {
+    this._sharedModel.changed.disconnect(this._onSharedModelChanged);
+    this._sharedModel.awareness.off('change', this._onClientStateChanged);
+    this._sharedModel.metadataChanged.disconnect(
+      this._metadataChangedHandler,
+      this
+    );
+    this._sharedModel.optionsChanged.disconnect(
+      this._optionsChangedHandler,
+      this
+    );
+    this._sharedModel.objectsChanged.disconnect(
+      this._objectsChangedHandler,
+      this
+    );
+  }
+
+  private _metadataChangedHandler(_: IJupyterCadDoc, args: MapChange) {
+    this._sharedMetadataChanged.emit(args);
+  }
+  private _optionsChangedHandler(_: IJupyterCadDoc, args: MapChange) {
+    this._sharedOptionsChanged.emit(args);
+  }
+  private _objectsChangedHandler(
+    _: IJupyterCadDoc,
+    args: IJcadObjectDocChange
+  ) {
+    this._sharedObjectsChanged.emit(args);
+  }
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
   readonly annotationModel?: IAnnotationModel;
@@ -275,6 +321,10 @@ export class JupyterCadModel implements IJupyterCadModel {
     Map<number, IJupyterCadClientState>
   >(this);
 
+  private _sharedMetadataChanged = new Signal<this, MapChange>(this);
+  private _sharedOptionsChanged = new Signal<this, MapChange>(this);
+  private _sharedObjectsChanged = new Signal<this, IJcadObjectDocChange>(this);
+  private _sharedModelSwapped = new Signal<this, void>(this);
   static worker: Worker;
 }
 

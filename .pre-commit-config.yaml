@@ -53,3 +53,4 @@ repos:
           - 'eslint@8.36.0'
           - '@typescript-eslint/eslint-plugin@5.55.0'
           - '@typescript-eslint/parser@5.55.0'
+          - 'eslint-plugin-react-hooks@4.6.2'

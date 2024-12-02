@@ -146,9 +146,14 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
     IJupyterCadModel,
     Map<number, IJupyterCadClientState>
   >;
-  sharedMetadataChanged: ISignal<IJupyterCadDoc, MapChange>;
-  sharedOptionsChanged: ISignal<IJupyterCadDoc, MapChange>;
-  sharedObjectsChanged: ISignal<IJupyterCadDoc, IJcadObjectDocChange>;
+  sharedMetadataChanged: ISignal<IJupyterCadModel, MapChange>;
+  sharedOptionsChanged: ISignal<IJupyterCadModel, MapChange>;
+  sharedObjectsChanged: ISignal<IJupyterCadModel, IJcadObjectDocChange>;
+  sharedModelSwapped: ISignal<IJupyterCadModel, void>;
+  users?: IUserData[];
+  currentUserId?: number | undefined;
+
+  swapSharedModel(newSharedModel: IJupyterCadDoc): void;
 
   getWorker(): Worker;
   getContent(): IJCadContent;
