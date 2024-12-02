@@ -2,8 +2,12 @@ import json
 from typing import Any, Callable
 from functools import partial
 
+from packaging.version import Version
+
 from pycrdt import Array, Map, Text
 from jupyter_ydoc.ybasedoc import YBaseDoc
+
+from .schema import SCHEMA_VERSION
 
 
 class YJCad(YBaseDoc):
@@ -17,7 +21,7 @@ class YJCad(YBaseDoc):
         self.undo_manager.expand_scope(self._yobjects)
 
     def version(self) -> str:
-        return "0.1.0"
+        return SCHEMA_VERSION
 
     def get(self) -> str:
         """
@@ -30,7 +34,13 @@ class YJCad(YBaseDoc):
         meta = self._ymetadata.to_py()
         outputs = self._youtputs.to_py()
         return json.dumps(
-            dict(objects=objects, options=options, metadata=meta, outputs=outputs),
+            dict(
+                schemaVersion=SCHEMA_VERSION,
+                objects=objects,
+                options=options,
+                metadata=meta,
+                outputs=outputs,
+            ),
             indent=2,
             sort_keys=True,
         )
@@ -42,6 +52,16 @@ class YJCad(YBaseDoc):
         :type value: Any
         """
         valueDict = json.loads(value)
+
+        # Assuming file version 3.0.0 if the version is not specified
+        file_version = (
+            Version(valueDict["schemaVersion"])
+            if "schemaVersion" in valueDict
+            else Version("3.0.0")
+        )
+        if file_version > Version(SCHEMA_VERSION):
+            raise ValueError(f"Cannot load file version {file_version}")
+
         newObj = []
         for obj in valueDict["objects"]:
             newObj.append(Map(obj))

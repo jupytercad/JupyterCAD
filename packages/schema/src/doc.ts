@@ -4,6 +4,7 @@ import { ISignal, Signal } from '@lumino/signaling';
 import * as Y from 'yjs';
 
 import { IJCadObject, IJCadOptions } from './_interface/jcad';
+import { SCHEMA_VERSION } from './_interface/version';
 import {
   IDict,
   IJcadObjectDocChange,
@@ -35,7 +36,7 @@ export class JupyterCadDoc
   }
 
   get version(): string {
-    return '0.1.0';
+    return SCHEMA_VERSION;
   }
 
   get objects(): Array<IJCadObject> {

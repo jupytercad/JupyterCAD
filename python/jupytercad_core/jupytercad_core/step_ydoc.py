@@ -5,6 +5,8 @@ from functools import partial
 from pycrdt import Text
 from jupyter_ydoc.ybasedoc import YBaseDoc
 
+from .schema import SCHEMA_VERSION
+
 
 class YSTEP(YBaseDoc):
     def __init__(self, *args, **kwargs):
@@ -12,7 +14,7 @@ class YSTEP(YBaseDoc):
         self._ydoc["source"] = self._ysource = Text()
 
     def version(self) -> str:
-        return "0.1.0"
+        return SCHEMA_VERSION
 
     def get(self) -> str:
         """
