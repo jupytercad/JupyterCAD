@@ -1231,9 +1231,10 @@ export function addCommands(
         newName = `${originalName} Copy${counter > 1 ? ` ${counter}` : ''}`;
         counter++;
       }
-
+      const jcadModel = current.context.model;
       const newObject = { ...clipboard, name: newName };
       sharedModel.addObject(newObject);
+      jcadModel.syncSelected({ [newObject.name]: { type: 'shape' } }, uuid());
     }
   });
 
