@@ -1194,7 +1194,6 @@ export function addCommands(
       }
 
       const objectId = getSelectedObjectId(current);
-
       const sharedModel = current.context.model.sharedModel;
       const objectData = sharedModel.getObjectByName(objectId);
 
@@ -1203,16 +1202,16 @@ export function addCommands(
         return;
       }
 
-      sharedModel.awareness.setLocalStateField('clipboard', objectData);
+      current.context.model.setCopiedObject([objectData]);
     }
   });
   commands.addCommand(CommandIDs.pasteObject, {
     label: trans.__('Paste Object'),
     isEnabled: () => {
       const current = tracker.currentWidget;
-      const clipboard =
-        current?.context.model.sharedModel.awareness.getLocalState()?.clipboard;
-      return current && clipboard && current.context.model.sharedModel.editable;
+      const clipboard = current?.context.model.getCopiedObject();
+      const editable = current?.context.model.sharedModel.editable;
+      return !!(current && clipboard && editable);
     },
     execute: () => {
       const current = tracker.currentWidget;
@@ -1221,7 +1220,13 @@ export function addCommands(
       }
 
       const sharedModel = current.context.model.sharedModel;
-      const clipboard = sharedModel.awareness.getLocalState()?.clipboard;
+      const copiedObjects = current.context.model.getCopiedObject();
+      if (!copiedObjects || copiedObjects.length === 0) {
+        console.error('No object in clipboard to paste.');
+        return;
+      }
+
+      const clipboard = copiedObjects[0];
 
       const originalName = clipboard.name || 'Unnamed Object';
       let newName = originalName;

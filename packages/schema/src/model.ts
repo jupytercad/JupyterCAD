@@ -30,6 +30,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     }
     this._connectSignal();
     this.annotationModel = annotationModel;
+    this._copiedObject = null;
   }
 
   readonly collaborative =
@@ -238,6 +239,14 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.sharedModel.removeMetadata(key);
   }
 
+  setCopiedObject(object: IJCadModel | null): void {
+    this._copiedObject = object ? { ...object } : null;
+  }
+
+  getCopiedObject(): IJCadModel | null {
+    return this._copiedObject ? { ...this._copiedObject } : null;
+  }
+
   protected createSharedModel(): IJupyterCadDoc {
     return JupyterCadDoc.create();
   }
@@ -304,6 +313,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   readonly annotationModel?: IAnnotationModel;
 
   private _sharedModel: IJupyterCadDoc;
+  private _copiedObject: IJCadModel | null;
 
   private _dirty = false;
   private _readOnly = false;
