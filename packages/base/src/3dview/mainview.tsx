@@ -1688,6 +1688,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._sceneL.add(new THREE.AmbientLight(0xffffff, 0.5)); // soft white light
       const light = new THREE.HemisphereLight(0xffffff, 0x444444, 0.5);
       this._sceneL.add(light);
+      this._sceneL.add(this._camera);
       this._sceneL.add(this._meshGroup.clone(true));
       this.initSlider(true);
     } else {
