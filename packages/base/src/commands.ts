@@ -1181,6 +1181,71 @@ export function addCommands(
       await dialog.launch();
     }
   });
+  commands.addCommand(CommandIDs.copyObject, {
+    label: trans.__('Copy Object'),
+    isEnabled: () => {
+      const current = tracker.currentWidget;
+      return current ? current.context.model.sharedModel.editable : false;
+    },
+    execute: () => {
+      const current = tracker.currentWidget;
+      if (!current) {
+        return;
+      }
+
+      const objectId = getSelectedObjectId(current);
+      if (!objectId) {
+        console.warn('No object is selected to copy.');
+        return;
+      }
+
+      const sharedModel = current.context.model.sharedModel;
+      const objectData = sharedModel.getObjectByName(objectId);
+
+      if (!objectData) {
+        console.warn('Could not retrieve object data.');
+        return;
+      }
+
+      sharedModel.awareness.setLocalStateField('clipboard', objectData);
+    }
+  });
+  commands.addCommand(CommandIDs.pasteObject, {
+    label: trans.__('Paste Object'),
+    isEnabled: () => {
+      const current = tracker.currentWidget;
+      const clipboard =
+        current?.context.model.sharedModel.awareness.getLocalState()?.clipboard;
+      return current && clipboard && current.context.model.sharedModel.editable;
+    },
+    execute: () => {
+      const current = tracker.currentWidget;
+      if (!current) {
+        return;
+      }
+
+      const sharedModel = current.context.model.sharedModel;
+      const clipboard = sharedModel.awareness.getLocalState()?.clipboard;
+
+      if (!clipboard) {
+        console.warn('No data in clipboard to paste.');
+        return;
+      }
+
+      const originalName = clipboard.name || 'Unnamed Object';
+      let newName = originalName;
+
+      let counter = 1;
+      while (sharedModel.objects.some(obj => obj.name === newName)) {
+        newName = `${originalName} Copy${counter > 1 ? ` ${counter}` : ''}`;
+        counter++;
+      }
+
+      const newObject = { ...clipboard, name: newName };
+      sharedModel.addObject(newObject);
+    }
+  });
+
   loadKeybindings(commands, keybindings);
 }
 
@@ -1207,6 +1272,9 @@ export namespace CommandIDs {
   export const intersection = 'jupytercad:intersection';
   export const wireframe = 'jupytercad:wireframe';
   export const transform = 'jupytercad:transform';
+
+  export const copyObject = 'jupytercad:copyObject';
+  export const pasteObject = 'jupytercad:pasteObject';
 
   export const chamfer = 'jupytercad:chamfer';
   export const fillet = 'jupytercad:fillet';
