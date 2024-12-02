@@ -5,6 +5,8 @@ from functools import partial
 from pycrdt import Text
 from jupyter_ydoc.ybasedoc import YBaseDoc
 
+from .constants import CURRENT_SCHEMA_VERSION
+
 
 class YSTL(YBaseDoc):
     def __init__(self, *args, **kwargs):
@@ -12,7 +14,7 @@ class YSTL(YBaseDoc):
         self._ydoc["source"] = self._ysource = Text()
 
     def version(self) -> str:
-        return "0.1.0"
+        return CURRENT_SCHEMA_VERSION
 
     def get(self) -> str:
         """

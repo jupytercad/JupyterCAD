@@ -5,6 +5,7 @@ import * as Y from 'yjs';
 
 import { IJCadObject, IJCadOptions } from './_interface/jcad';
 import {
+  CURRENT_SCHEMA_VERSION,
   IDict,
   IJcadObjectDocChange,
   IJupyterCadDoc,
@@ -35,7 +36,7 @@ export class JupyterCadDoc
   }
 
   get version(): string {
-    return '0.1.0';
+    return CURRENT_SCHEMA_VERSION;
   }
 
   get objects(): Array<IJCadObject> {

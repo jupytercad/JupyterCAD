@@ -4,6 +4,7 @@ import {
 } from '@jupyter/collaborative-drive';
 import { logoIcon, CommandIDs as BaseCommandIDs } from '@jupytercad/base';
 import {
+  CURRENT_SCHEMA_VERSION,
   IAnnotationModel,
   IAnnotationToken,
   IJCadExternalCommandRegistry,
@@ -146,7 +147,7 @@ const activate = (
         format: 'text',
         size: undefined,
         content:
-          '{\n\t"objects": [],\n\t"options": {},\n\t"metadata": {},\n\t"outputs": {}}'
+          `{\n\t"schemaVersion": "${CURRENT_SCHEMA_VERSION}",\n\t"objects": [],\n\t"options": {},\n\t"metadata": {},\n\t"outputs": {}}`
       });
 
       // Open the newly created file with the 'Editor'

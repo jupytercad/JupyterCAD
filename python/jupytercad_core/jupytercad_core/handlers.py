@@ -5,6 +5,8 @@ from jupyter_server.base.handlers import APIHandler
 from jupyter_server.utils import url_path_join, ApiPath, to_os_path
 import tornado
 
+from .constants import CURRENT_SCHEMA_VERSION
+
 
 class JCadExportHandler(APIHandler):
     @tornado.web.authenticated
@@ -22,6 +24,7 @@ class JCadExportHandler(APIHandler):
             file_content = fobj.read()
 
         jcad = dict(
+            schemaVersion=CURRENT_SCHEMA_VERSION,
             objects=[
                 dict(
                     name=Path(export_name).stem,
