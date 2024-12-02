@@ -1040,6 +1040,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-root@workspace:."
   dependencies:
+    "@jupyterlab/ui-components": ^4.3.1
     "@typescript-eslint/eslint-plugin": 5.55.0
     "@typescript-eslint/parser": 5.55.0
     copy-webpack-plugin: ^10.0.0

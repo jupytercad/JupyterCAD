@@ -55,7 +55,7 @@ const CustomArrayField = (props: any) => {
       </div>
 
       {errorSchema?.__errors?.length > 0 && (
-        <div className="validationErrors" style={{ color: 'red' }}>
+        <div className="validationErrors">
           {errorSchema.__errors.map((error: string, idx: number) => (
             <p key={idx}>{error}</p>
           ))}
