@@ -1194,10 +1194,6 @@ export function addCommands(
       }
 
       const objectId = getSelectedObjectId(current);
-      if (!objectId) {
-        console.warn('No object is selected to copy.');
-        return;
-      }
 
       const sharedModel = current.context.model.sharedModel;
       const objectData = sharedModel.getObjectByName(objectId);
@@ -1226,11 +1222,6 @@ export function addCommands(
 
       const sharedModel = current.context.model.sharedModel;
       const clipboard = sharedModel.awareness.getLocalState()?.clipboard;
-
-      if (!clipboard) {
-        console.warn('No data in clipboard to paste.');
-        return;
-      }
 
       const originalName = clipboard.name || 'Unnamed Object';
       let newName = originalName;
