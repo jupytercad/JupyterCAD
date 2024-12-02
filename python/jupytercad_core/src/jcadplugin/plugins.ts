@@ -146,8 +146,7 @@ const activate = (
         ...model,
         format: 'text',
         size: undefined,
-        content:
-          `{\n\t"schemaVersion": "${CURRENT_SCHEMA_VERSION}",\n\t"objects": [],\n\t"options": {},\n\t"metadata": {},\n\t"outputs": {}}`
+        content: `{\n\t"schemaVersion": "${CURRENT_SCHEMA_VERSION}",\n\t"objects": [],\n\t"options": {},\n\t"metadata": {},\n\t"outputs": {}}`
       });
 
       // Open the newly created file with the 'Editor'

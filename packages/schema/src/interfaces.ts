@@ -19,7 +19,7 @@ import {
   IJCadOptions
 } from './_interface/jcad';
 
-export const CURRENT_SCHEMA_VERSION = "3.0.0";
+export const CURRENT_SCHEMA_VERSION = '3.0.0';
 
 export interface IDict<T = any> {
   [key: string]: T;

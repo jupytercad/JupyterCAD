@@ -32,7 +32,13 @@ class YJCad(YBaseDoc):
         meta = self._ymetadata.to_py()
         outputs = self._youtputs.to_py()
         return json.dumps(
-            dict(schemaVersion=CURRENT_SCHEMA_VERSION, objects=objects, options=options, metadata=meta, outputs=outputs),
+            dict(
+                schemaVersion=CURRENT_SCHEMA_VERSION,
+                objects=objects,
+                options=options,
+                metadata=meta,
+                outputs=outputs,
+            ),
             indent=2,
             sort_keys=True,
         )
@@ -46,7 +52,9 @@ class YJCad(YBaseDoc):
         valueDict = json.loads(value)
 
         # Assuming file version 3.0.0 if the version is not specified
-        file_version = valueDict["schemaVersion"] if "schemaVersion" in valueDict else "3.0.0"
+        file_version = (
+            valueDict["schemaVersion"] if "schemaVersion" in valueDict else "3.0.0"
+        )
         if file_version != CURRENT_SCHEMA_VERSION:
             raise ValueError(f"Cannot load file version {file_version}")
 
