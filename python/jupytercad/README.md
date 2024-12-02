@@ -39,7 +39,7 @@ Check out the JupyterCAD documentation on ReadTheDocs! https://jupytercad.readth
 
 JupyterCAD is an open-source project, and contributions are always welcome. If you would like to contribute to JupyterCAD, please fork the repository and submit a pull request.
 
-See [CONTRIBUTING](CONTRIBUTING.md) for dev installation instructions.
+See [CONTRIBUTING](../../CONTRIBUTING.md) for dev installation instructions.
 
 ## License
 
