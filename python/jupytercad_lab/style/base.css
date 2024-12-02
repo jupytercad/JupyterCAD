@@ -628,3 +628,10 @@ body[data-jp-theme-light='true'] {
   margin: 0;
   padding: 0;
 }
+.jpcad-property-panel
+  .jp-FormGroup-content
+  fieldset
+  .jp-inputFieldWrapper
+  > input#root_Color {
+  height: revert;
+}
