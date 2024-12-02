@@ -26,7 +26,7 @@ from jupytercad_core.schema import (
     ITorus,
     Parts,
     ShapeMetadata,
-    IAny
+    IAny,
 )
 from .utils import normalize_path
 
