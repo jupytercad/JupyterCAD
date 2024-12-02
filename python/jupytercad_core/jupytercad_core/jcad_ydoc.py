@@ -2,6 +2,8 @@ import json
 from typing import Any, Callable
 from functools import partial
 
+from packaging.version import Version
+
 from pycrdt import Array, Map, Text
 from jupyter_ydoc.ybasedoc import YBaseDoc
 
@@ -53,9 +55,9 @@ class YJCad(YBaseDoc):
 
         # Assuming file version 3.0.0 if the version is not specified
         file_version = (
-            valueDict["schemaVersion"] if "schemaVersion" in valueDict else "3.0.0"
+            Version(valueDict["schemaVersion"]) if "schemaVersion" in valueDict else Version("3.0.0")
         )
-        if file_version != CURRENT_SCHEMA_VERSION:
+        if file_version > Version(CURRENT_SCHEMA_VERSION):
             raise ValueError(f"Cannot load file version {file_version}")
 
         newObj = []
