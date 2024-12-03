@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormComponent } from '@jupyterlab/ui-components';
 import validatorAjv8 from '@rjsf/validator-ajv8';
 import { IDict } from '../types';
+import CustomArrayField from './customarrayfield';
 
 interface IStates {
   internalData?: IDict;
@@ -21,53 +22,6 @@ interface IProps {
   schema?: IDict;
   cancel?: () => void;
 }
-
-const CustomArrayField = (props: any) => {
-  const { formData, name, required, onChange, schema, errorSchema, onBlur } =
-    props;
-  const data = formData || [];
-
-  return (
-    <fieldset>
-      <legend>
-        {name}
-        {required && <span className="required">*</span>}
-      </legend>
-      <p className="field-description">{schema.description}</p>
-      <div className="custom-array-wrapper">
-        {data.map((value: number | null, index: number) => {
-          const fieldErrors = errorSchema?.[index]?.__errors || [];
-
-          return (
-            <div key={index} className="array-item">
-              <input
-                type="number"
-                value={value === null ? '' : value}
-                required={required}
-                onChange={e => {
-                  const updatedValue = [...data];
-                  updatedValue[index] =
-                    e.target.value === '' ? null : parseFloat(e.target.value);
-                  onChange(updatedValue);
-                }}
-                onBlur={() => onBlur(name, value)}
-              />
-              {fieldErrors.length > 0 && (
-                <div className="validationErrors">
-                  {fieldErrors.map((error: string, errorIndex: number) => (
-                    <div key={`${index}-${errorIndex}`} className="error">
-                      {error}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </fieldset>
-  );
-};
 
 const WrappedFormComponent = (props: any): JSX.Element => {
   const { fields, onSubmit, ...rest } = props;
