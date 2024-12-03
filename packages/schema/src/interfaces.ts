@@ -175,8 +175,8 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   addMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;
 
-  getCopiedObject(): IJCadModel | null;
-  setCopiedObject(objectData: IJCadModel): void;
+  getCopiedObject(): IJCadObject | null;
+  setCopiedObject(objectData: IJCadObject): void;
 
   disposed: ISignal<any, void>;
 }

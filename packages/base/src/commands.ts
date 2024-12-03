@@ -1202,7 +1202,7 @@ export function addCommands(
         return;
       }
 
-      current.context.model.setCopiedObject([objectData]);
+      current.context.model.setCopiedObject(objectData);
     }
   });
   commands.addCommand(CommandIDs.pasteObject, {
@@ -1220,13 +1220,13 @@ export function addCommands(
       }
 
       const sharedModel = current.context.model.sharedModel;
-      const copiedObjects = current.context.model.getCopiedObject();
-      if (!copiedObjects || copiedObjects.length === 0) {
+      const copiedObject = current.context.model.getCopiedObject();
+      if (!copiedObject) {
         console.error('No object in clipboard to paste.');
         return;
       }
 
-      const clipboard = copiedObjects[0];
+      const clipboard = copiedObject;
 
       const originalName = clipboard.name || 'Unnamed Object';
       let newName = originalName;
