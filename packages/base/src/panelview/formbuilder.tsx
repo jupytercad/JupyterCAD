@@ -35,31 +35,36 @@ const CustomArrayField = (props: any) => {
       </legend>
       <p className="field-description">{schema.description}</p>
       <div className="custom-array-wrapper">
-        {data.map((value: number | null, index: number) => (
-          <div key={index} className="array-item">
-            <input
-              type="number"
-              value={value === null ? '' : value}
-              required={required}
-              onChange={e => {
-                const updatedValue = [...data];
-                updatedValue[index] =
-                  e.target.value === '' ? null : parseFloat(e.target.value);
-                onChange(updatedValue);
-              }}
-              onBlur={() => onBlur(name, value)}
-            />
-          </div>
-        ))}
-      </div>
+        {data.map((value: number | null, index: number) => {
+          const fieldErrors = errorSchema?.[index]?.__errors || [];
 
-      {errorSchema?.__errors?.length > 0 && (
-        <div className="validationErrors">
-          {errorSchema.__errors.map((error: string, idx: number) => (
-            <p key={idx}>{error}</p>
-          ))}
-        </div>
-      )}
+          return (
+            <div key={index} className="array-item">
+              <input
+                type="number"
+                value={value === null ? '' : value}
+                required={required}
+                onChange={e => {
+                  const updatedValue = [...data];
+                  updatedValue[index] =
+                    e.target.value === '' ? null : parseFloat(e.target.value);
+                  onChange(updatedValue);
+                }}
+                onBlur={() => onBlur(name, value)}
+              />
+              {fieldErrors.length > 0 && (
+                <div className="validationErrors">
+                  {fieldErrors.map((error: string, errorIndex: number) => (
+                    <div key={`${index}-${errorIndex}`} className="error">
+                      {error}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </fieldset>
   );
 };
