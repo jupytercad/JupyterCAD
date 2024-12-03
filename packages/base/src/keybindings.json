@@ -118,5 +118,15 @@
     "command": "jupytercad:exportJcad",
     "keys": ["Accel Alt X"],
     "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:copyObject",
+    "keys": ["Accel C"],
+    "selector": ".data-jcad-keybinding"
+  },
+  {
+    "command": "jupytercad:pasteObject",
+    "keys": ["Accel V"],
+    "selector": ".data-jcad-keybinding"
   }
 ]

@@ -5,7 +5,7 @@ import { PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import Ajv from 'ajv';
 
-import { IJCadContent, IJCadModel } from './_interface/jcad';
+import { IJCadContent, IJCadModel, IJCadObject } from './_interface/jcad';
 import { JupyterCadDoc } from './doc';
 import {
   Camera,
@@ -30,6 +30,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     }
     this._connectSignal();
     this.annotationModel = annotationModel;
+    this._copiedObject = null;
   }
 
   readonly collaborative =
@@ -238,6 +239,14 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.sharedModel.removeMetadata(key);
   }
 
+  setCopiedObject(object: IJCadObject | null): void {
+    this._copiedObject = object ? { ...object } : null;
+  }
+
+  getCopiedObject(): IJCadObject | null {
+    return this._copiedObject ? { ...this._copiedObject } : null;
+  }
+
   protected createSharedModel(): IJupyterCadDoc {
     return JupyterCadDoc.create();
   }
@@ -304,6 +313,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   readonly annotationModel?: IAnnotationModel;
 
   private _sharedModel: IJupyterCadDoc;
+  private _copiedObject: IJCadObject | null;
 
   private _dirty = false;
   private _readOnly = false;
