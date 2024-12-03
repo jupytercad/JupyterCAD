@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface CustomArrayFieldProps {
+interface IProps {
   formData?: any[];
   name: string;
   required: boolean;
@@ -10,7 +10,7 @@ interface CustomArrayFieldProps {
   onBlur: (name: string, value: any) => void;
 }
 
-const CustomArrayField: React.FC<CustomArrayFieldProps> = props => {
+const CustomArrayField: React.FC<IProps> = props => {
   const {
     formData = [],
     name,
