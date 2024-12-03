@@ -21,7 +21,6 @@ const CustomArrayField: React.FC<IProps> = props => {
     onBlur
   } = props;
   let fieldErrors: any = {};
-  console.log(props);
   const handleInputChange = (index: number, value: any) => {
     const updatedValue = [...formData];
     updatedValue[index] = value;
