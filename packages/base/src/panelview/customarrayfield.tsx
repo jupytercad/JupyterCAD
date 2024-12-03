@@ -21,6 +21,7 @@ const CustomArrayField: React.FC<IProps> = props => {
     onBlur
   } = props;
   let fieldErrors: any = {};
+  console.log(props);
   const handleInputChange = (index: number, value: any) => {
     const updatedValue = [...formData];
     updatedValue[index] = value;
@@ -51,6 +52,7 @@ const CustomArrayField: React.FC<IProps> = props => {
         <input
           type="number"
           value={value}
+          step="any"
           required={required}
           onChange={e =>
             handleInputChange(
