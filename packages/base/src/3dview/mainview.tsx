@@ -511,6 +511,7 @@ export class MainView extends React.Component<IProps, IStates> {
     // Create new ViewHelper
     this._viewHelper = new ViewHelper(this._camera, this._renderer.domElement);
     this._viewHelper.center = this._controls.target;
+    this._viewHelper.setLabels('X', 'Y', 'Z');
 
     const viewHelperDiv = document.createElement('div');
     viewHelperDiv.style.position = 'absolute';
