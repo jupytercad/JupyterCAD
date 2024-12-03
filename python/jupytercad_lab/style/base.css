@@ -555,7 +555,8 @@ body[data-jp-theme-light='true'] {
   fieldset
   .jp-inputFieldWrapper
   > input,
-.jpcad-property-panel .custom-array-wrapper input {
+.jpcad-property-panel .custom-array-wrapper input,
+.jpcad-property-panel select {
   box-sizing: border-box;
   border: var(--jp-border-width) solid var(--jp-border-color1);
   background-color: var(--jp-layout-color0);
@@ -620,7 +621,8 @@ body[data-jp-theme-light='true'] {
 }
 
 .jpcad-property-panel
-  .jp-objectFieldWrapper
+  .jp-FormGroup-content
+  .jp-FormGroup-contentNormal
   .jp-arrayFieldWrapper
   + .jp-FormGroup-description {
   display: none;
