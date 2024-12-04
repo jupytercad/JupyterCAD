@@ -20,7 +20,7 @@ const CustomArrayField: React.FC<IProps> = props => {
     onChange,
     onBlur
   } = props;
-  let fieldErrors: any = {};
+
   const handleInputChange = (index: number, value: any) => {
     const updatedValue = [...formData];
     updatedValue[index] = value;
@@ -29,8 +29,6 @@ const CustomArrayField: React.FC<IProps> = props => {
 
   const renderInputField = (value: any, index: number) => {
     const { enum: enumOptions, type: itemType } = schema.items || {};
-    fieldErrors = errorSchema?.[index]?.__errors || [];
-
     if (enumOptions) {
       return (
         <select
@@ -98,11 +96,13 @@ const CustomArrayField: React.FC<IProps> = props => {
 
             {errorSchema?.[index]?.__errors?.length > 0 && (
               <div className="validationErrors">
-                {fieldErrors.map((error: string, errorIndex: number) => (
-                  <div key={`${index}-${errorIndex}`} className="error">
-                    {error}
-                  </div>
-                ))}
+                {errorSchema?.[index]?.__errors.map(
+                  (error: string, errorIndex: number) => (
+                    <div key={`${index}-${errorIndex}`} className="error">
+                      {error}
+                    </div>
+                  )
+                )}
               </div>
             )}
           </div>

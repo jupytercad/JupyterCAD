@@ -640,3 +640,7 @@ body[data-jp-theme-light='true'] {
   margin: 0;
   padding: 0;
 }
+
+.jpcad-property-panel .rjsf .jp-ArrayOperationsButton {
+  display: none;
+}

@@ -143,70 +143,75 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
   };
 
   render(): React.ReactNode {
-    const { schema, internalData } = this.state;
-    const uiSchema = this.generateUiSchema(this.props.schema || {});
-    const submitRef = React.createRef<HTMLButtonElement>();
+    if (this.props.schema) {
+      const schema = { ...this.props.schema, additionalProperties: true };
 
-    if (!schema) {
+      const submitRef = React.createRef<HTMLButtonElement>();
+
+      return (
+        <div
+          className="jpcad-property-panel"
+          data-path={this.props.filePath ?? ''}
+        >
+          <div className="jpcad-property-outer jp-scrollbar-tiny">
+            <WrappedFormComponent
+              schema={{ ...schema, additionalProperties: true }}
+              uiSchema={this.generateUiSchema(this.props.schema)}
+              formData={this.state.internalData}
+              onSubmit={this.onFormSubmit}
+              liveValidate
+              onFocus={(id, value) => {
+                this.props.syncSelectedField
+                  ? this.props.syncSelectedField(
+                      id,
+                      value,
+                      this.props.parentType
+                    )
+                  : null;
+              }}
+              onBlur={(id, value) => {
+                this.props.syncSelectedField
+                  ? this.props.syncSelectedField(
+                      null,
+                      value,
+                      this.props.parentType
+                    )
+                  : null;
+              }}
+              children={
+                <button
+                  ref={submitRef}
+                  type="submit"
+                  style={{ display: 'none' }}
+                />
+              }
+            />
+          </div>
+
+          <div className="jpcad-property-buttons">
+            {this.props.cancel ? (
+              <button
+                className="jp-Dialog-button jp-mod-reject jp-mod-styled"
+                onClick={this.props.cancel}
+              >
+                <div className="jp-Dialog-buttonLabel">Cancel</div>
+              </button>
+            ) : null}
+
+            <button
+              className="jp-Dialog-button jp-mod-accept jp-mod-styled"
+              type="button"
+              onClick={() => {
+                submitRef.current?.click();
+              }}
+            >
+              <div className="jp-Dialog-buttonLabel">Submit</div>
+            </button>
+          </div>
+        </div>
+      );
+    } else {
       return <div>{this.buildForm()}</div>;
     }
-    return (
-      <div
-        className="jpcad-property-panel"
-        data-path={this.props.filePath ?? ''}
-      >
-        <div className="jpcad-property-outer jp-scrollbar-tiny">
-          <WrappedFormComponent
-            schema={schema}
-            uiSchema={uiSchema}
-            formData={internalData}
-            onSubmit={this.onFormSubmit}
-            liveValidate
-            onFocus={(id, value) => {
-              this.props.syncSelectedField
-                ? this.props.syncSelectedField(id, value, this.props.parentType)
-                : null;
-            }}
-            onBlur={(id, value) => {
-              this.props.syncSelectedField
-                ? this.props.syncSelectedField(
-                    null,
-                    value,
-                    this.props.parentType
-                  )
-                : null;
-            }}
-            children={
-              <button
-                ref={submitRef}
-                type="submit"
-                style={{ display: 'none' }}
-              />
-            }
-          />
-        </div>
-
-        <div className="jpcad-property-buttons">
-          {this.props.cancel ? (
-            <button
-              className="jp-Dialog-button jp-mod-reject jp-mod-styled"
-              onClick={this.props.cancel}
-            >
-              <div className="jp-Dialog-buttonLabel">Cancel</div>
-            </button>
-          ) : null}
-
-          <button
-            className="jp-Dialog-button jp-mod-accept jp-mod-styled"
-            type="button"
-            onClick={() => {
-              submitRef.current?.click();
-            }}
-          >
-            <div className="jp-Dialog-buttonLabel">Submit</div>
-          </button>
-        </div>
-      </div>
-    );
   }
 }
