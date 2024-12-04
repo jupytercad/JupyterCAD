@@ -12,15 +12,15 @@
     },
     "Angle1": {
       "type": "number",
-      "description": "The angle of the sphere"
+      "description": "First angle defining a spherical segment"
     },
     "Angle2": {
       "type": "number",
-      "description": "The angle of the sphere"
+      "description": "Second angle defining a spherical segment"
     },
     "Angle3": {
       "type": "number",
-      "description": "The angle of the sphere"
+      "description": "The angle between the radii lying within the bounding semidisks"
     },
     "Color": {
       "type": "string",
