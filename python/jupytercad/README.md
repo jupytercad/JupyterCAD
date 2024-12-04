@@ -6,7 +6,7 @@ JupyterCAD is a JupyterLab extension for 3D geometry modeling with collaborative
 
 JupyterCAD has support for FreeCAD files, which makes it easy to import and export models from FreeCAD. It also has a range of features for creating and manipulating 3D shapes, including a variety of primitives, transformations, and Boolean operations.
 
-![jupytercad](../../docs/source/assets/jupytercad-screenshot.png)
+![jupytercad](https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/docs/source/assets/jupytercad-screenshot.png)
 
 ## Requirements
 
@@ -39,7 +39,7 @@ Check out the JupyterCAD documentation on ReadTheDocs! https://jupytercad.readth
 
 JupyterCAD is an open-source project, and contributions are always welcome. If you would like to contribute to JupyterCAD, please fork the repository and submit a pull request.
 
-See [CONTRIBUTING](../../CONTRIBUTING.md) for dev installation instructions.
+See [CONTRIBUTING](https://github.com/jupytercad/JupyterCAD/blob/main/CONTRIBUTING.md) for dev installation instructions.
 
 ## License
 
