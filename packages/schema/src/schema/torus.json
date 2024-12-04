@@ -8,24 +8,24 @@
     "Radius1": {
       "type": "number",
       "exclusiveMinimum": 0,
-      "description": "The radius of the torus"
+      "description": "The distance from the center of the pipe to the center of the torus"
     },
     "Radius2": {
       "type": "number",
       "exclusiveMinimum": 0,
-      "description": "The radius of the torus"
+      "description": "The radius of the pipe"
     },
     "Angle1": {
       "type": "number",
-      "description": "The angle of the torus"
+      "description": "First angle to create a torus ring segment"
     },
     "Angle2": {
       "type": "number",
-      "description": "The angle of the torus"
+      "description": "Second angle to create a torus ring segment"
     },
     "Angle3": {
       "type": "number",
-      "description": "The angle of the torus"
+      "description": "Angle to create a torus pipe segment"
     },
     "Color": {
       "type": "string",
