@@ -40,6 +40,38 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.0.0rc1
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.0.0-rc.0...4e02a6fcdb8bac29d280f934df6d9f05bdb23bd5))
+
+### Enhancements made
+
+- Improve primitive properties description [#630](https://github.com/jupytercad/JupyterCAD/pull/630) ([@martinRenou](https://github.com/martinRenou))
+- Add labels to viewHelper [#628](https://github.com/jupytercad/JupyterCAD/pull/628) ([@arjxn-py](https://github.com/arjxn-py))
+- Copy & Paste objects [#624](https://github.com/jupytercad/JupyterCAD/pull/624) ([@arjxn-py](https://github.com/arjxn-py))
+
+### Bugs fixed
+
+- Missing pydantic dependency in jupytercad-core [#636](https://github.com/jupytercad/JupyterCAD/pull/636) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+### Documentation improvements
+
+- Add more examples [#635](https://github.com/jupytercad/JupyterCAD/pull/635) ([@arjxn-py](https://github.com/arjxn-py))
+- Update README - mention "collaborative" in the title [#633](https://github.com/jupytercad/JupyterCAD/pull/633) ([@martinRenou](https://github.com/martinRenou))
+- Update README screenshot [#632](https://github.com/jupytercad/JupyterCAD/pull/632) ([@martinRenou](https://github.com/martinRenou))
+- More examples [#631](https://github.com/jupytercad/JupyterCAD/pull/631) ([@martinRenou](https://github.com/martinRenou))
+- Fix empty README issue on PyPi [#626](https://github.com/jupytercad/JupyterCAD/pull/626) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-12-02&to=2024-12-04&type=c))
+
+[@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2024-12-02..2024-12-04&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-12-02..2024-12-04&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-12-02..2024-12-04&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2024-12-02..2024-12-04&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.0.0rc0
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.0.0-alpha.7...f37ac37fc049759060219001740c60cf1f68782d))
@@ -58,8 +90,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-11-29&to=2024-12-02&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-11-29..2024-12-02&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-11-29..2024-12-02&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-11-29..2024-12-02&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.0.0a7
 
