@@ -22,6 +22,7 @@ dependencies = [
   "jupyter_server>=2.0.6,<3",
   "jupyter_ydoc>=2,<4",
   "jupyter-collaboration>=3.0.0,<4",
+  "pydantic>=2,<3",
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 license = {file = "LICENSE"}
