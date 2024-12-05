@@ -1,3 +1,3 @@
-__version__ = "3.0.0rc1"
+__version__ = "3.0.0"
 
 from jupytercad_lab import CadDocument  # noqa

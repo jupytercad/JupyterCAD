@@ -40,6 +40,214 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.0.0
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@2.0.2...84e8161e69ed4b4967fb9dfcea8828c7a980732e))
+
+### Highlights
+
+#### Python console for the 3D view
+
+There is now an embdedded Python console that the user can open next to the 3D view in order to interact with the current document. [#392](https://github.com/jupytercad/JupyterCAD/pull/392) ([@trungleduc](https://github.com/trungleduc))
+
+#### Color customization
+
+Users can now customize the shapes colors. [#397](https://github.com/jupytercad/JupyterCAD/pull/397) ([@arjxn-py](https://github.com/arjxn-py))
+
+#### UX improvements
+
+There have been many UX improvements done, mainly:
+
+- Added keyboard shorctuts for all CAD operations [#451](https://github.com/jupytercad/JupyterCAD/pull/451) ([@arjxn-py](https://github.com/arjxn-py))
+- Improved toolbar interactions ([@arjxn-py](https://github.com/arjxn-py))
+- Added Axes Helper in the 3D view [#440](https://github.com/jupytercad/JupyterCAD/pull/440) ([@arjxn-py](https://github.com/arjxn-py))
+- Added copy/pasting support [#624](https://github.com/jupytercad/JupyterCAD/pull/624) ([@arjxn-py](https://github.com/arjxn-py))
+- Camera movement upon object selection [#506](https://github.com/jupytercad/JupyterCAD/pull/506) ([@arjxn-py](https://github.com/arjxn-py))
+- Show hidden shape in transparency upon selection [#587](https://github.com/jupytercad/JupyterCAD/pull/587) ([@martinRenou](https://github.com/martinRenou))
+
+And many more! See the detailed logs.
+
+#### 3D controls
+
+Add mouse controls for interactively modifying objects position/rotation. [#529](https://github.com/jupytercad/JupyterCAD/pull/529) ([@arjxn-py](https://github.com/arjxn-py))
+
+#### Suggestions
+
+JupyterCAD now supports suggestions from collaborators. This feature is only available if using `pip install "jupyter-collaboration>=3.1.0rc0"`. [#579](https://github.com/jupytercad/JupyterCAD/pull/579) ([@trungleduc](https://github.com/trungleduc))
+
+### Detailed logs
+
+#### Enhancements made
+
+- Improve file validation warning message [#641](https://github.com/jupytercad/JupyterCAD/pull/641) ([@martinRenou](https://github.com/martinRenou))
+- JupyterLite: Do not hard fail on invalid file format + add examples [#639](https://github.com/jupytercad/JupyterCAD/pull/639) ([@martinRenou](https://github.com/martinRenou))
+- Improve primitive properties description [#630](https://github.com/jupytercad/JupyterCAD/pull/630) ([@martinRenou](https://github.com/martinRenou))
+- Add labels to viewHelper [#628](https://github.com/jupytercad/JupyterCAD/pull/628) ([@arjxn-py](https://github.com/arjxn-py))
+- Copy & Paste objects [#624](https://github.com/jupytercad/JupyterCAD/pull/624) ([@arjxn-py](https://github.com/arjxn-py))
+- Introducing file versioning [#623](https://github.com/jupytercad/JupyterCAD/pull/623) ([@martinRenou](https://github.com/martinRenou))
+- Rotation Controls [#603](https://github.com/jupytercad/JupyterCAD/pull/603) ([@arjxn-py](https://github.com/arjxn-py))
+- Improve placement info + missing "degrees" info [#602](https://github.com/jupytercad/JupyterCAD/pull/602) ([@martinRenou](https://github.com/martinRenou))
+- Add commands to command palette [#598](https://github.com/jupytercad/JupyterCAD/pull/598) ([@martinRenou](https://github.com/martinRenou))
+- Disable transform control for readonly files [#594](https://github.com/jupytercad/JupyterCAD/pull/594) ([@martinRenou](https://github.com/martinRenou))
+- Add transform icon [#593](https://github.com/jupytercad/JupyterCAD/pull/593) ([@IsabelParedes](https://github.com/IsabelParedes))
+- Add stl and stp icons [#591](https://github.com/jupytercad/JupyterCAD/pull/591) ([@IsabelParedes](https://github.com/IsabelParedes))
+- Show selection in transparency for non-visible objects [#587](https://github.com/jupytercad/JupyterCAD/pull/587) ([@martinRenou](https://github.com/martinRenou))
+- Add suggestion panel [#579](https://github.com/jupytercad/JupyterCAD/pull/579) ([@trungleduc](https://github.com/trungleduc))
+- Enable toggling transform controls [#578](https://github.com/jupytercad/JupyterCAD/pull/578) ([@arjxn-py](https://github.com/arjxn-py))
+- Perform a dry run for transforms [#575](https://github.com/jupytercad/JupyterCAD/pull/575) ([@martinRenou](https://github.com/martinRenou))
+- Allow transforming objects when clipping is enabled [#565](https://github.com/jupytercad/JupyterCAD/pull/565) ([@martinRenou](https://github.com/martinRenou))
+- Swap annotation and object properties panel [#554](https://github.com/jupytercad/JupyterCAD/pull/554) ([@trungleduc](https://github.com/trungleduc))
+- Improve selection logic [#542](https://github.com/jupytercad/JupyterCAD/pull/542) ([@martinRenou](https://github.com/martinRenou))
+- Object properties panel: Use selected object name as the title [#540](https://github.com/jupytercad/JupyterCAD/pull/540) ([@martinRenou](https://github.com/martinRenou))
+- ClipPlane: fix z-fighting artifacts [#539](https://github.com/jupytercad/JupyterCAD/pull/539) ([@martinRenou](https://github.com/martinRenou))
+- Set visible back to True for operator inputs upon removal of the output [#534](https://github.com/jupytercad/JupyterCAD/pull/534) ([@martinRenou](https://github.com/martinRenou))
+- Allow opening JupyterCAD documents with the JSON viewer + Allow opening STL and STEP in JupyterLite [#531](https://github.com/jupytercad/JupyterCAD/pull/531) ([@martinRenou](https://github.com/martinRenou))
+- Add Translation Controls [#529](https://github.com/jupytercad/JupyterCAD/pull/529) ([@arjxn-py](https://github.com/arjxn-py))
+- Grey icon in tabs [#527](https://github.com/jupytercad/JupyterCAD/pull/527) ([@martinRenou](https://github.com/martinRenou))
+- Reorder toolbar icons [#522](https://github.com/jupytercad/JupyterCAD/pull/522) ([@arjxn-py](https://github.com/arjxn-py))
+- Update main logo [#520](https://github.com/jupytercad/JupyterCAD/pull/520) ([@martinRenou](https://github.com/martinRenou))
+- JupyterCAD icons to left and right tabs [#519](https://github.com/jupytercad/JupyterCAD/pull/519) ([@martinRenou](https://github.com/martinRenou))
+- Smooth animated camera movement to center object [#506](https://github.com/jupytercad/JupyterCAD/pull/506) ([@arjxn-py](https://github.com/arjxn-py))
+- Comparable Default Dimensions [#501](https://github.com/jupytercad/JupyterCAD/pull/501) ([@arjxn-py](https://github.com/arjxn-py))
+- Use logarithmic depth buffer [#495](https://github.com/jupytercad/JupyterCAD/pull/495) ([@martinRenou](https://github.com/martinRenou))
+- Handle zoom while camera change [#492](https://github.com/jupytercad/JupyterCAD/pull/492) ([@arjxn-py](https://github.com/arjxn-py))
+- Add clipping plane and exploded view icons [#474](https://github.com/jupytercad/JupyterCAD/pull/474) ([@IsabelParedes](https://github.com/IsabelParedes))
+- Bounding Box for Selection [#473](https://github.com/jupytercad/JupyterCAD/pull/473) ([@arjxn-py](https://github.com/arjxn-py))
+- Add `logoicon` as tabicon [#466](https://github.com/jupytercad/JupyterCAD/pull/466) ([@arjxn-py](https://github.com/arjxn-py))
+- Button to Center view on visible objects [#452](https://github.com/jupytercad/JupyterCAD/pull/452) ([@arjxn-py](https://github.com/arjxn-py))
+- Add all proposed Keyboard shortcuts [#451](https://github.com/jupytercad/JupyterCAD/pull/451) ([@arjxn-py](https://github.com/arjxn-py))
+
+#### Bugs fixed
+
+- Missing pydantic dependency in jupytercad-core [#636](https://github.com/jupytercad/JupyterCAD/pull/636) ([@martinRenou](https://github.com/martinRenou))
+- Handle file renaming in panels [#622](https://github.com/jupytercad/JupyterCAD/pull/622) ([@martinRenou](https://github.com/martinRenou))
+- No transform controls when exploded view is enabled [#616](https://github.com/jupytercad/JupyterCAD/pull/616) ([@martinRenou](https://github.com/martinRenou))
+- Do not show the transform if there is no current selection [#615](https://github.com/jupytercad/JupyterCAD/pull/615) ([@martinRenou](https://github.com/martinRenou))
+- Fix selection of newly created objects in the 3D view [#614](https://github.com/jupytercad/JupyterCAD/pull/614) ([@martinRenou](https://github.com/martinRenou))
+- Transform controls: undo positioning upon failure [#610](https://github.com/jupytercad/JupyterCAD/pull/610) ([@martinRenou](https://github.com/martinRenou))
+- Allow exporting .stl to .jcad [#604](https://github.com/jupytercad/JupyterCAD/pull/604) ([@martinRenou](https://github.com/martinRenou))
+- Fix missing placement for STL & STEP Files [#600](https://github.com/jupytercad/JupyterCAD/pull/600) ([@arjxn-py](https://github.com/arjxn-py))
+- Expand undo_manager scope [#581](https://github.com/jupytercad/JupyterCAD/pull/581) ([@trungleduc](https://github.com/trungleduc))
+- Add a min-height to the toolbar separator [#577](https://github.com/jupytercad/JupyterCAD/pull/577) ([@brichet](https://github.com/brichet))
+- Bug fix: Prevent tree from wrongly updating the selection [#571](https://github.com/jupytercad/JupyterCAD/pull/571) ([@martinRenou](https://github.com/martinRenou))
+- Fix selection logic [#569](https://github.com/jupytercad/JupyterCAD/pull/569) ([@martinRenou](https://github.com/martinRenou))
+- Fix initial selected edges color [#566](https://github.com/jupytercad/JupyterCAD/pull/566) ([@martinRenou](https://github.com/martinRenou))
+- Fix selection through clip plane [#564](https://github.com/jupytercad/JupyterCAD/pull/564) ([@martinRenou](https://github.com/martinRenou))
+- Make selection logic smoother [#563](https://github.com/jupytercad/JupyterCAD/pull/563) ([@arjxn-py](https://github.com/arjxn-py))
+- Do not update the camera position automatically for single object scene [#559](https://github.com/jupytercad/JupyterCAD/pull/559) ([@martinRenou](https://github.com/martinRenou))
+- Refactor Bounding Box Logic [#555](https://github.com/jupytercad/JupyterCAD/pull/555) ([@arjxn-py](https://github.com/arjxn-py))
+- Re-add `setColor` api [#552](https://github.com/jupytercad/JupyterCAD/pull/552) ([@arjxn-py](https://github.com/arjxn-py))
+- Prevent getting back to non-wireframe after operator [#549](https://github.com/jupytercad/JupyterCAD/pull/549) ([@arjxn-py](https://github.com/arjxn-py))
+- Fix ui issues [#548](https://github.com/jupytercad/JupyterCAD/pull/548) ([@trungleduc](https://github.com/trungleduc))
+- Fix clip plane controls when switching camera projection [#538](https://github.com/jupytercad/JupyterCAD/pull/538) ([@martinRenou](https://github.com/martinRenou))
+- Revert "Orthographic camera: fix missing near and far parameters" [#536](https://github.com/jupytercad/JupyterCAD/pull/536) ([@martinRenou](https://github.com/martinRenou))
+- Fix context switching for the right panel [#533](https://github.com/jupytercad/JupyterCAD/pull/533) ([@martinRenou](https://github.com/martinRenou))
+- Update CAD app to include missing collaboration tokens [#530](https://github.com/jupytercad/JupyterCAD/pull/530) ([@martinRenou](https://github.com/martinRenou))
+- Set collaborative attribute to False in Jupyterlite [#525](https://github.com/jupytercad/JupyterCAD/pull/525) ([@martinRenou](https://github.com/martinRenou))
+- Cleanup and fix SVG logo [#523](https://github.com/jupytercad/JupyterCAD/pull/523) ([@martinRenou](https://github.com/martinRenou))
+- Fix bounding box on exploded view [#521](https://github.com/jupytercad/JupyterCAD/pull/521) ([@arjxn-py](https://github.com/arjxn-py))
+- Fixed intensity & decay [#515](https://github.com/jupytercad/JupyterCAD/pull/515) ([@arjxn-py](https://github.com/arjxn-py))
+- Fix lighting issue [#514](https://github.com/jupytercad/JupyterCAD/pull/514) ([@arjxn-py](https://github.com/arjxn-py))
+- Fix clip plane color [#513](https://github.com/jupytercad/JupyterCAD/pull/513) ([@martinRenou](https://github.com/martinRenou))
+- Orthographic camera: fix missing near and far parameters [#510](https://github.com/jupytercad/JupyterCAD/pull/510) ([@martinRenou](https://github.com/martinRenou))
+- Fix clip plane color [#508](https://github.com/jupytercad/JupyterCAD/pull/508) ([@martinRenou](https://github.com/martinRenou))
+- Cadapp version [#507](https://github.com/jupytercad/JupyterCAD/pull/507) ([@SylvainCorlay](https://github.com/SylvainCorlay))
+- Fix handling of theme change [#505](https://github.com/jupytercad/JupyterCAD/pull/505) ([@arjxn-py](https://github.com/arjxn-py))
+- Streamline edge selection [#498](https://github.com/jupytercad/JupyterCAD/pull/498) ([@arjxn-py](https://github.com/arjxn-py))
+- refLength was not always updating [#493](https://github.com/jupytercad/JupyterCAD/pull/493) ([@martinRenou](https://github.com/martinRenou))
+- Exaggerate clip plane size [#490](https://github.com/jupytercad/JupyterCAD/pull/490) ([@martinRenou](https://github.com/martinRenou))
+- Prevent breaking aspect ratio on camera change [#479](https://github.com/jupytercad/JupyterCAD/pull/479) ([@arjxn-py](https://github.com/arjxn-py))
+- Sync editor upon editor change [#448](https://github.com/jupytercad/JupyterCAD/pull/448) ([@arjxn-py](https://github.com/arjxn-py))
+- Fix breaking viewHelper while changing camera [#469](https://github.com/jupytercad/JupyterCAD/pull/469) ([@arjxn-py](https://github.com/arjxn-py))
+- Toggle buttons working correctly when multiple editors are open [#447](https://github.com/jupytercad/JupyterCAD/pull/447) ([@arjxn-py](https://github.com/arjxn-py))
+- Fix lite build [#436](https://github.com/jupytercad/JupyterCAD/pull/436) ([@martinRenou](https://github.com/martinRenou))
+- Correct artifact output [#432](https://github.com/jupytercad/JupyterCAD/pull/432) ([@trungleduc](https://github.com/trungleduc))
+- Fix python api [#422](https://github.com/jupytercad/JupyterCAD/pull/422) ([@trungleduc](https://github.com/trungleduc))
+- Fix jupyterlite deployment [#409](https://github.com/jupytercad/JupyterCAD/pull/409) ([@trungleduc](https://github.com/trungleduc))
+- Fix python console in the standalone app [#402](https://github.com/jupytercad/JupyterCAD/pull/402) ([@trungleduc](https://github.com/trungleduc))
+
+#### Maintenance and upkeep improvements
+
+- Update UI-tests snapshots [#589](https://github.com/jupytercad/JupyterCAD/pull/589) ([@martinRenou](https://github.com/martinRenou))
+- Add test for exploded view [#584](https://github.com/jupytercad/JupyterCAD/pull/584) ([@arjxn-py](https://github.com/arjxn-py))
+- Add test for rotated shape [#583](https://github.com/jupytercad/JupyterCAD/pull/583) ([@arjxn-py](https://github.com/arjxn-py))
+- Undo opencascade positioning and rotation [#580](https://github.com/jupytercad/JupyterCAD/pull/580) ([@arjxn-py](https://github.com/arjxn-py))
+- Introduce IMouseDrag interface [#570](https://github.com/jupytercad/JupyterCAD/pull/570) ([@martinRenou](https://github.com/martinRenou))
+- Bump jupyter-collaboration v3 [#553](https://github.com/jupytercad/JupyterCAD/pull/553) ([@trungleduc](https://github.com/trungleduc))
+- Unpin jupyterlite-xeus in lite build [#541](https://github.com/jupytercad/JupyterCAD/pull/541) ([@martinRenou](https://github.com/martinRenou))
+- Pin Python in docs build [#528](https://github.com/jupytercad/JupyterCAD/pull/528) ([@martinRenou](https://github.com/martinRenou))
+- Bump @jupyter/ydoc [#516](https://github.com/jupytercad/JupyterCAD/pull/516) ([@trungleduc](https://github.com/trungleduc))
+- Add `--no-occ-build` option [#504](https://github.com/jupytercad/JupyterCAD/pull/504) ([@trungleduc](https://github.com/trungleduc))
+- Bump pydantic==2.9.2 for build [#497](https://github.com/jupytercad/JupyterCAD/pull/497) ([@davidbrochart](https://github.com/davidbrochart))
+- Bump yjs-widgets>=0.3.7 [#494](https://github.com/jupytercad/JupyterCAD/pull/494) ([@davidbrochart](https://github.com/davidbrochart))
+- Update jupyter-collaboration v3.0.0-beta.8 [#472](https://github.com/jupytercad/JupyterCAD/pull/472) ([@davidbrochart](https://github.com/davidbrochart))
+- Remove unnecessary warning [#470](https://github.com/jupytercad/JupyterCAD/pull/470) ([@trungleduc](https://github.com/trungleduc))
+- Reduce field of view of Camera [#465](https://github.com/jupytercad/JupyterCAD/pull/465) ([@arjxn-py](https://github.com/arjxn-py))
+- Rename launcher button [#461](https://github.com/jupytercad/JupyterCAD/pull/461) ([@martinRenou](https://github.com/martinRenou))
+- Try fixing galata workflow [#439](https://github.com/jupytercad/JupyterCAD/pull/439) ([@arjxn-py](https://github.com/arjxn-py))
+- Lite deployment missing deps [#434](https://github.com/jupytercad/JupyterCAD/pull/434) ([@martinRenou](https://github.com/martinRenou))
+- Lite deployment: Disable docprovider-extension [#433](https://github.com/jupytercad/JupyterCAD/pull/433) ([@martinRenou](https://github.com/martinRenou))
+- Add link to playwright report in PR [#430](https://github.com/jupytercad/JupyterCAD/pull/430) ([@trungleduc](https://github.com/trungleduc))
+- Bump jupyter-collaboration v3 [#429](https://github.com/jupytercad/JupyterCAD/pull/429) ([@davidbrochart](https://github.com/davidbrochart))
+- Fix metadata [#424](https://github.com/jupytercad/JupyterCAD/pull/424) ([@davidbrochart](https://github.com/davidbrochart))
+- Fix dependencies pinning [#420](https://github.com/jupytercad/JupyterCAD/pull/420) ([@martinRenou](https://github.com/martinRenou))
+- Update `ThreeJS` [#418](https://github.com/jupytercad/JupyterCAD/pull/418) ([@arjxn-py](https://github.com/arjxn-py))
+- Try fixing the upload of Github pages [#416](https://github.com/jupytercad/JupyterCAD/pull/416) ([@martinRenou](https://github.com/martinRenou))
+- Exclude node_modules from sdists [#415](https://github.com/jupytercad/JupyterCAD/pull/415) ([@martinRenou](https://github.com/martinRenou))
+- Update yjs-widgets dependency + make it shared [#414](https://github.com/jupytercad/JupyterCAD/pull/414) ([@martinRenou](https://github.com/martinRenou))
+- Remove the guidata option [#413](https://github.com/jupytercad/JupyterCAD/pull/413) ([@arjxn-py](https://github.com/arjxn-py))
+- Save jupyterlite build artifact [#404](https://github.com/jupytercad/JupyterCAD/pull/404) ([@trungleduc](https://github.com/trungleduc))
+- Preview PR using appsharing.space [#403](https://github.com/jupytercad/JupyterCAD/pull/403) ([@trungleduc](https://github.com/trungleduc))
+- Try fixing bot to update snapshots [#401](https://github.com/jupytercad/JupyterCAD/pull/401) ([@arjxn-py](https://github.com/arjxn-py))
+- Fix bot to update snapshots [#400](https://github.com/jupytercad/JupyterCAD/pull/400) ([@arjxn-py](https://github.com/arjxn-py))
+- Fix bot behaviour to update snapshots [#398](https://github.com/jupytercad/JupyterCAD/pull/398) ([@arjxn-py](https://github.com/arjxn-py))
+- Bump ypywidgets v0.9 [#387](https://github.com/jupytercad/JupyterCAD/pull/387) ([@davidbrochart](https://github.com/davidbrochart))
+- #78 Re-enable `jupyterlab.browser_check` [#386](https://github.com/jupytercad/JupyterCAD/pull/386) ([@arjxn-py](https://github.com/arjxn-py))
+- Fix code format [#383](https://github.com/jupytercad/JupyterCAD/pull/383) ([@trungleduc](https://github.com/trungleduc))
+- Add icons in filebrowser [#460](https://github.com/jupytercad/JupyterCAD/pull/460) ([@martinRenou](https://github.com/martinRenou))
+- Reactive toolbar w.r.t. width [#455](https://github.com/jupytercad/JupyterCAD/pull/455) ([@arjxn-py](https://github.com/arjxn-py))
+- Improve the UX of the clip-plane and wireframe buttons [#441](https://github.com/jupytercad/JupyterCAD/pull/441) ([@arjxn-py](https://github.com/arjxn-py))
+- Add interactive axes helper [#440](https://github.com/jupytercad/JupyterCAD/pull/440) ([@arjxn-py](https://github.com/arjxn-py))
+- Save artifact data on failure [#431](https://github.com/jupytercad/JupyterCAD/pull/431) ([@trungleduc](https://github.com/trungleduc))
+- Add jcad icon in the launcher [#428](https://github.com/jupytercad/JupyterCAD/pull/428) ([@martinRenou](https://github.com/martinRenou))
+- Use SharedModelFactory to create shared model [#425](https://github.com/jupytercad/JupyterCAD/pull/425) ([@davidbrochart](https://github.com/davidbrochart))
+- Remove unneeded jupytercad_lab dependencies [#417](https://github.com/jupytercad/JupyterCAD/pull/417) ([@martinRenou](https://github.com/martinRenou))
+- Smart color handling for edges based upon mesh luminance [#412](https://github.com/jupytercad/JupyterCAD/pull/412) ([@arjxn-py](https://github.com/arjxn-py))
+- Little darker shade of color for edges [#408](https://github.com/jupytercad/JupyterCAD/pull/408) ([@arjxn-py](https://github.com/arjxn-py))
+- Replace toggle wireframe button to the right [#405](https://github.com/jupytercad/JupyterCAD/pull/405) ([@arjxn-py](https://github.com/arjxn-py))
+- Add Color Customization for JupyterCAD Models [#397](https://github.com/jupytercad/JupyterCAD/pull/397) ([@arjxn-py](https://github.com/arjxn-py))
+- Enable Damping for Smoother Model Movement [#395](https://github.com/jupytercad/JupyterCAD/pull/395) ([@arjxn-py](https://github.com/arjxn-py))
+- Delete parent object if edge is selected with `[Delete]` key binding [#393](https://github.com/jupytercad/JupyterCAD/pull/393) ([@arjxn-py](https://github.com/arjxn-py))
+- Add python console to 3D view [#392](https://github.com/jupytercad/JupyterCAD/pull/392) ([@trungleduc](https://github.com/trungleduc))
+- Enable Toggling Wireframe View [#390](https://github.com/jupytercad/JupyterCAD/pull/390) ([@arjxn-py](https://github.com/arjxn-py))
+- Position & Axis inputs in a row [#389](https://github.com/jupytercad/JupyterCAD/pull/389) ([@arjxn-py](https://github.com/arjxn-py))
+- Delete Object Keyboard Shortcut [#388](https://github.com/jupytercad/JupyterCAD/pull/388) ([@arjxn-py](https://github.com/arjxn-py))
+- Improve shape metadata update logic [#385](https://github.com/jupytercad/JupyterCAD/pull/385) ([@trungleduc](https://github.com/trungleduc))
+- Implement `Undo` & `Redo` keyboard shortcuts [#382](https://github.com/jupytercad/JupyterCAD/pull/382) ([@arjxn-py](https://github.com/arjxn-py))
+- Include Notebook API into lite kernel deployment [#364](https://github.com/jupytercad/JupyterCAD/pull/364) ([@martinRenou](https://github.com/martinRenou))
+
+#### Documentation improvements
+
+- Add more examples [#635](https://github.com/jupytercad/JupyterCAD/pull/635) ([@arjxn-py](https://github.com/arjxn-py))
+- Update README - mention "collaborative" in the title [#633](https://github.com/jupytercad/JupyterCAD/pull/633) ([@martinRenou](https://github.com/martinRenou))
+- Update README screenshot [#632](https://github.com/jupytercad/JupyterCAD/pull/632) ([@martinRenou](https://github.com/martinRenou))
+- More examples [#631](https://github.com/jupytercad/JupyterCAD/pull/631) ([@martinRenou](https://github.com/martinRenou))
+- Fix empty README issue on PyPi [#626](https://github.com/jupytercad/JupyterCAD/pull/626) ([@martinRenou](https://github.com/martinRenou))
+- Fix typo in comment-on-pr.yml [#556](https://github.com/jupytercad/JupyterCAD/pull/556) ([@tshakah](https://github.com/tshakah))
+- Pin Python in docs build [#528](https://github.com/jupytercad/JupyterCAD/pull/528) ([@martinRenou](https://github.com/martinRenou))
+- Fix README comment about freecad [#499](https://github.com/jupytercad/JupyterCAD/pull/499) ([@martinRenou](https://github.com/martinRenou))
+- Remove non-relevant steps [#421](https://github.com/jupytercad/JupyterCAD/pull/421) ([@arjxn-py](https://github.com/arjxn-py))
+- Contributing Guide in `.rst` [#381](https://github.com/jupytercad/JupyterCAD/pull/381) ([@arjxn-py](https://github.com/arjxn-py))
+- Update example for colors [#437](https://github.com/jupytercad/JupyterCAD/pull/437) ([@arjxn-py](https://github.com/arjxn-py))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-07-19&to=2024-12-05&type=c))
+
+[@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2024-07-19..2024-12-05&type=Issues) | [@brichet](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Abrichet+updated%3A2024-07-19..2024-12-05&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Adavidbrochart+updated%3A2024-07-19..2024-12-05&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-07-19..2024-12-05&type=Issues) | [@IsabelParedes](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AIsabelParedes+updated%3A2024-07-19..2024-12-05&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-07-19..2024-12-05&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2024-07-19..2024-12-05&type=Issues) | [@SylvainCorlay](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3ASylvainCorlay+updated%3A2024-07-19..2024-12-05&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-07-19..2024-12-05&type=Issues) | [@tshakah](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atshakah+updated%3A2024-07-19..2024-12-05&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.0.0rc1
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.0.0-rc.0...4e02a6fcdb8bac29d280f934df6d9f05bdb23bd5))
@@ -69,8 +277,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-12-02&to=2024-12-04&type=c))
 
 [@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2024-12-02..2024-12-04&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-12-02..2024-12-04&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-12-02..2024-12-04&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2024-12-02..2024-12-04&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.0.0rc0
 
