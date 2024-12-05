@@ -24,7 +24,7 @@ interface IProps {
 }
 
 const WrappedFormComponent = (props: any): JSX.Element => {
-  const { fields, onSubmit, ...rest } = props;
+  const { fields, ...rest } = props;
   return (
     <FormComponent
       {...rest}
@@ -33,7 +33,6 @@ const WrappedFormComponent = (props: any): JSX.Element => {
         ...fields,
         ArrayField: CustomArrayField
       }}
-      onSubmit={onSubmit}
     />
   );
 };
@@ -155,7 +154,7 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
         >
           <div className="jpcad-property-outer jp-scrollbar-tiny">
             <WrappedFormComponent
-              schema={{ ...schema, additionalProperties: true }}
+              schema={schema}
               uiSchema={this.generateUiSchema(this.props.schema)}
               formData={this.state.internalData}
               onSubmit={this.onFormSubmit}
