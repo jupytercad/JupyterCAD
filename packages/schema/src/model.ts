@@ -149,7 +149,11 @@ export class JupyterCadModel implements IJupyterCadModel {
     const valid = validate(jsonData);
 
     if (!valid) {
-      console.warn('JupyterCAD File format invalid', data);
+      let errorMsg = 'JupyterCAD File format invalid:\n';
+      for (const error of validate.errors || []) {
+        errorMsg = `${errorMsg}- ${error.instancePath} ${error.message}\n`;
+      }
+      console.warn(errorMsg);
     }
 
     this.sharedModel.transact(() => {
