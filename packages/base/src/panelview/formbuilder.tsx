@@ -1,10 +1,9 @@
-import { SchemaForm } from '@deathbeds/jupyterlab-rjsf';
-import { MessageLoop } from '@lumino/messaging';
-import { Widget } from '@lumino/widgets';
 import { ISubmitEvent } from '@rjsf/core';
 import * as React from 'react';
-
+import { FormComponent } from '@jupyterlab/ui-components';
+import validatorAjv8 from '@rjsf/validator-ajv8';
 import { IDict } from '../types';
+import CustomArrayField from './customarrayfield';
 
 interface IStates {
   internalData?: IDict;
@@ -24,33 +23,18 @@ interface IProps {
   cancel?: () => void;
 }
 
-// Reusing the datalayer/jupyter-react component:
-// https://github.com/datalayer/jupyter-react/blob/main/packages/react/src/jupyter/lumino/Lumino.tsx
-export const LuminoSchemaForm = (
-  props: React.PropsWithChildren<any>
-): JSX.Element => {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const { children } = props;
-  React.useEffect(() => {
-    const widget = children as SchemaForm;
-    try {
-      MessageLoop.sendMessage(widget, Widget.Msg.BeforeAttach);
-      ref.current!.insertBefore(widget.node, null);
-      MessageLoop.sendMessage(widget, Widget.Msg.AfterAttach);
-    } catch (e) {
-      console.warn('Exception while attaching Lumino widget.', e);
-    }
-    return () => {
-      try {
-        if (widget.isAttached || widget.node.isConnected) {
-          Widget.detach(widget);
-        }
-      } catch (e) {
-        // The widget is destroyed already by React.
-      }
-    };
-  }, [children]);
-  return <div ref={ref} />;
+const WrappedFormComponent = (props: any): JSX.Element => {
+  const { fields, ...rest } = props;
+  return (
+    <FormComponent
+      {...rest}
+      validator={validatorAjv8}
+      fields={{
+        ...fields,
+        ArrayField: CustomArrayField
+      }}
+    />
+  );
 };
 
 export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
@@ -76,9 +60,13 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
     );
   };
 
-  componentDidUpdate(prevProps: IProps, prevState: IStates): void {
+  componentDidUpdate(prevProps: IProps): void {
     if (prevProps.sourceData !== this.props.sourceData) {
       this.setState(old => ({ ...old, internalData: this.props.sourceData }));
+    }
+
+    if (prevProps.schema !== this.props.schema) {
+      this.setState(old => ({ ...old, schema: this.props.schema }));
     }
   }
 
@@ -159,33 +147,54 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
 
       const submitRef = React.createRef<HTMLButtonElement>();
 
-      const formSchema = new SchemaForm(schema ?? {}, {
-        liveValidate: true,
-        formData: this.state.internalData,
-        onSubmit: this.onFormSubmit,
-        onFocus: (id, value) => {
-          this.props.syncSelectedField
-            ? this.props.syncSelectedField(id, value, this.props.parentType)
-            : null;
-        },
-        onBlur: (id, value) => {
-          this.props.syncSelectedField
-            ? this.props.syncSelectedField(null, value, this.props.parentType)
-            : null;
-        },
-        uiSchema: this.generateUiSchema(this.props.schema),
-        children: (
-          <button ref={submitRef} type="submit" style={{ display: 'none' }} />
-        )
-      });
       return (
         <div
           className="jpcad-property-panel"
           data-path={this.props.filePath ?? ''}
         >
-          <div className="jpcad-property-outer jp-scrollbar-tiny">
-            <LuminoSchemaForm>{formSchema}</LuminoSchemaForm>
+          <div
+            className="jpcad-property-outer jp-scrollbar-tiny"
+            onKeyUp={(e: React.KeyboardEvent) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                submitRef.current?.click();
+              }
+            }}
+          >
+            <WrappedFormComponent
+              schema={schema}
+              uiSchema={this.generateUiSchema(this.props.schema)}
+              formData={this.state.internalData}
+              onSubmit={this.onFormSubmit}
+              liveValidate
+              onFocus={(id, value) => {
+                this.props.syncSelectedField
+                  ? this.props.syncSelectedField(
+                      id,
+                      value,
+                      this.props.parentType
+                    )
+                  : null;
+              }}
+              onBlur={(id, value) => {
+                this.props.syncSelectedField
+                  ? this.props.syncSelectedField(
+                      null,
+                      value,
+                      this.props.parentType
+                    )
+                  : null;
+              }}
+              children={
+                <button
+                  ref={submitRef}
+                  type="submit"
+                  style={{ display: 'none' }}
+                />
+              }
+            />
           </div>
+
           <div className="jpcad-property-buttons">
             {this.props.cancel ? (
               <button
@@ -198,7 +207,10 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
 
             <button
               className="jp-Dialog-button jp-mod-accept jp-mod-styled"
-              onClick={() => submitRef.current?.click()}
+              type="button"
+              onClick={() => {
+                submitRef.current?.click();
+              }}
             >
               <div className="jp-Dialog-buttonLabel">Submit</div>
             </button>
