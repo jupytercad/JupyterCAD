@@ -539,15 +539,12 @@ body[data-jp-theme-light='true'] {
 .jpcad-property-panel .rjsf .field-description,
 .jpcad-property-panel .rjsf .help-block {
   color: var(--jp-ui-font-color2);
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 .jpcad-property-panel .rjsf .required {
-  font-size: var(--jp-ui-font-size3);
-  color: var(--jp-warn-color1);
-  font-weight: 800;
-  position: absolute;
-  top: 0;
-  right: 0;
+  display: none;
 }
 
 .jpcad-property-panel
