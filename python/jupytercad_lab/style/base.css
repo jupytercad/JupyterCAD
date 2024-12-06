@@ -644,3 +644,9 @@ body[data-jp-theme-light='true'] {
 .jpcad-property-panel .rjsf .jp-ArrayOperationsButton {
   display: none;
 }
+
+/* Hide additional property fields with remove buttons that should not be displayed in the form */
+.jpcad-property-panel
+  .form-group:has(.jp-FormGroup-removeButton):not(:has(.jp-root)) {
+  display: none;
+}
