@@ -586,6 +586,8 @@ body[data-jp-theme-light='true'] {
 .jpcad-property-panel .jp-FormGroup-contentNormal .jp-FormGroup-fieldLabel {
   font-weight: bold;
   order: 1;
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 .jpcad-property-panel
