@@ -1,36 +1,36 @@
 {
-  "metadata": {},
   "objects": [
     {
-      "name": "Cone 2",
-      "parameters": {
-        "Angle": 360.0,
-        "Color": "#808080",
-        "Height": 1.0,
-        "Placement": {
-          "Angle": 0.0,
-          "Axis": [
-            0.0,
-            0.0,
-            1.0
-          ],
-          "Position": [
-            0.0,
-            0.0,
-            0.0
-          ]
-        },
-        "Radius1": 1.0,
-        "Radius2": 0.5
-      },
       "shape": "Part::Cone",
+      "parameters": {
+        "Color": "#808080",
+        "Placement": {
+          "Position": [
+            0,
+            0,
+            0
+          ],
+          "Axis": [
+            0,
+            0,
+            1
+          ],
+          "Angle": 0
+        },
+        "Radius1": 1,
+        "Radius2": 0.5,
+        "Height": 1,
+        "Angle": 360
+      },
+      "visible": false,
+      "name": "Cone 2",
       "shapeMetadata": {
+        "mass": 1.8325957145940461,
         "centerOfMass": [
           -6.058199393263841e-17,
           2.0723036786925725e-17,
           0.39285714285714285
         ],
-        "mass": 1.8325957145940461,
         "matrixOfInertia": [
           [
             -5.4519880673556786e-18,
@@ -48,40 +48,40 @@
             -1.233818932721875e-17
           ]
         ]
-      },
-      "visible": false
+      }
     },
     {
-      "name": "Torus 1",
+      "shape": "Part::Torus",
       "parameters": {
-        "Angle1": -180.0,
-        "Angle2": 180.0,
-        "Angle3": 360.0,
         "Color": "#808080",
         "Placement": {
-          "Angle": 0.0,
-          "Axis": [
-            0.0,
-            0.0,
-            1.0
-          ],
           "Position": [
-            0.0,
-            0.0,
+            0,
+            0,
             0.7364505167168927
-          ]
+          ],
+          "Axis": [
+            0,
+            0,
+            1
+          ],
+          "Angle": 0
         },
-        "Radius1": 1.0,
-        "Radius2": 0.5
+        "Radius1": 1,
+        "Radius2": 0.5,
+        "Angle1": -180,
+        "Angle2": 180,
+        "Angle3": 360
       },
-      "shape": "Part::Torus",
+      "visible": false,
+      "name": "Torus 1",
       "shapeMetadata": {
+        "mass": 4.93480220054468,
         "centerOfMass": [
-          0.0,
+          0,
           9.161103904252746e-17,
           0.7364505167168927
         ],
-        "mass": 4.93480220054468,
         "matrixOfInertia": [
           [
             -3.125194232497564e-17,
@@ -99,42 +99,42 @@
             -2.6459020529442214e-18
           ]
         ]
-      },
-      "visible": false
+      }
     },
     {
+      "shape": "Part::Cut",
+      "parameters": {
+        "Color": "#808080",
+        "Placement": {
+          "Position": [
+            0,
+            0,
+            0
+          ],
+          "Axis": [
+            0,
+            0,
+            1
+          ],
+          "Angle": 0
+        },
+        "Base": "Cone 2",
+        "Tool": "Torus 1",
+        "Refine": false
+      },
+      "visible": false,
+      "name": "Cut 1",
       "dependencies": [
         "Cone 2",
         "Torus 1"
       ],
-      "name": "Cut 1",
-      "parameters": {
-        "Base": "Cone 2",
-        "Color": "#808080",
-        "Placement": {
-          "Angle": 0.0,
-          "Axis": [
-            0.0,
-            0.0,
-            1.0
-          ],
-          "Position": [
-            0.0,
-            0.0,
-            0.0
-          ]
-        },
-        "Refine": false,
-        "Tool": "Torus 1"
-      },
-      "shape": "Part::Cut",
       "shapeMetadata": {
+        "mass": 1.4727222742005952,
         "centerOfMass": [
           9.423221235210437e-17,
           -2.0513163740647632e-17,
           0.35667121547629077
         ],
-        "mass": 1.4727222742005952,
         "matrixOfInertia": [
           [
             -6.499367495911696e-17,
@@ -152,40 +152,40 @@
             -1.9435192181459086e-17
           ]
         ]
-      },
-      "visible": false
+      }
     },
     {
-      "name": "Cone 1",
+      "shape": "Part::Cone",
       "parameters": {
-        "Angle": 360.0,
         "Color": "#808080",
-        "Height": 1.5,
         "Placement": {
-          "Angle": 0.0,
-          "Axis": [
-            0.0,
-            0.0,
-            1.0
-          ],
           "Position": [
-            0.0,
-            0.0,
-            1.0
-          ]
+            0,
+            0,
+            1
+          ],
+          "Axis": [
+            0,
+            0,
+            1
+          ],
+          "Angle": 0
         },
         "Radius1": 0.3,
         "Radius2": 0.2,
+        "Height": 1.5,
+        "Angle": 360,
         "newKey": "New Value"
       },
-      "shape": "Part::Cone",
+      "visible": false,
+      "name": "Cone 1",
       "shapeMetadata": {
+        "mass": 0.2984513020910303,
         "centerOfMass": [
           -2.615587731466708e-17,
           -3.2753708931836884e-18,
           1.651315789473684
         ],
-        "mass": 0.2984513020910303,
         "matrixOfInertia": [
           [
             4.890322430631987e-18,
@@ -203,40 +203,40 @@
             -3.505999643533179e-20
           ]
         ]
-      },
-      "visible": false
+      }
     },
     {
-      "name": "Sphere 1",
+      "shape": "Part::Sphere",
       "parameters": {
-        "Angle1": -60.0,
-        "Angle2": 90.0,
-        "Angle3": 360.0,
         "Color": "#808080",
         "Placement": {
-          "Angle": 0.0,
-          "Axis": [
-            0.0,
-            0.0,
-            1.0
-          ],
           "Position": [
-            0.0,
-            0.0,
+            0,
+            0,
             2.5
-          ]
+          ],
+          "Axis": [
+            0,
+            0,
+            1
+          ],
+          "Angle": 0
         },
         "Radius": 0.4,
+        "Angle1": -60,
+        "Angle2": 90,
+        "Angle3": 360,
         "newKey": "New Value"
       },
-      "shape": "Part::Sphere",
+      "visible": false,
+      "name": "Sphere 1",
       "shapeMetadata": {
+        "mass": 0.26463484077802824,
         "centerOfMass": [
           -1.0242436042226551e-17,
           1.7265661961376824e-17,
           2.504748569983232
         ],
-        "mass": 0.26463484077802824,
         "matrixOfInertia": [
           [
             -2.2625905326374704e-18,
@@ -254,40 +254,40 @@
             2.59165358308885e-19
           ]
         ]
-      },
-      "visible": false
+      }
     },
     {
-      "name": "Sphere 2",
+      "shape": "Part::Sphere",
       "parameters": {
-        "Angle1": -10.0,
-        "Angle2": 10.0,
-        "Angle3": 360.0,
         "Color": "#808080",
         "Placement": {
-          "Angle": 0.0,
-          "Axis": [
-            0.0,
-            0.0,
-            1.0
-          ],
           "Position": [
-            0.0,
-            0.0,
+            0,
+            0,
             2.1685712405196007
-          ]
+          ],
+          "Axis": [
+            0,
+            0,
+            1
+          ],
+          "Angle": 0
         },
         "Radius": 0.55,
+        "Angle1": -10,
+        "Angle2": 10,
+        "Angle3": 360,
         "newKey": "New Value"
       },
-      "shape": "Part::Sphere",
+      "visible": false,
+      "name": "Sphere 2",
       "shapeMetadata": {
+        "mass": 0.17970116278232462,
         "centerOfMass": [
           -9.653379249849987e-18,
           -8.048808862965647e-18,
           2.1685712405196007
         ],
-        "mass": 0.17970116278232462,
         "matrixOfInertia": [
           [
             1.0842021724855044e-19,
@@ -305,44 +305,44 @@
             -7.222237291452134e-35
           ]
         ]
-      },
-      "visible": false
+      }
     },
     {
+      "shape": "Part::MultiFuse",
+      "parameters": {
+        "Shapes": [
+          "Sphere 1",
+          "Sphere 2"
+        ],
+        "Color": "#808080",
+        "Placement": {
+          "Position": [
+            0,
+            0,
+            0
+          ],
+          "Axis": [
+            0,
+            0,
+            1
+          ],
+          "Angle": 0
+        },
+        "Refine": false
+      },
+      "visible": false,
+      "name": "Union 1",
       "dependencies": [
         "Sphere 1",
         "Sphere 2"
       ],
-      "name": "Union 1",
-      "parameters": {
-        "Color": "#808080",
-        "Placement": {
-          "Angle": 0.0,
-          "Axis": [
-            0.0,
-            0.0,
-            1.0
-          ],
-          "Position": [
-            0.0,
-            0.0,
-            0.0
-          ]
-        },
-        "Refine": false,
-        "Shapes": [
-          "Sphere 1",
-          "Sphere 2"
-        ]
-      },
-      "shape": "Part::MultiFuse",
       "shapeMetadata": {
+        "mass": 0.4185788774413008,
         "centerOfMass": [
           2.072158402474663e-17,
           2.0926315969283363e-17,
           2.378141198656336
         ],
-        "mass": 0.4185788774413008,
         "matrixOfInertia": [
           [
             1.3688192928576623e-17,
@@ -360,44 +360,44 @@
             3.2378452388575027e-19
           ]
         ]
-      },
-      "visible": false
+      }
     },
     {
+      "shape": "Part::MultiFuse",
+      "parameters": {
+        "Shapes": [
+          "Union 1",
+          "Cone 1"
+        ],
+        "Color": "#808080",
+        "Placement": {
+          "Position": [
+            0,
+            0,
+            0
+          ],
+          "Axis": [
+            0,
+            0,
+            1
+          ],
+          "Angle": 0
+        },
+        "Refine": false
+      },
+      "visible": false,
+      "name": "Union 2",
       "dependencies": [
         "Union 1",
         "Cone 1"
       ],
-      "name": "Union 2",
-      "parameters": {
-        "Color": "#808080",
-        "Placement": {
-          "Angle": 0.0,
-          "Axis": [
-            0.0,
-            0.0,
-            1.0
-          ],
-          "Position": [
-            0.0,
-            0.0,
-            0.0
-          ]
-        },
-        "Refine": false,
-        "Shapes": [
-          "Union 1",
-          "Cone 1"
-        ]
-      },
-      "shape": "Part::MultiFuse",
       "shapeMetadata": {
+        "mass": 0.6553826629376613,
         "centerOfMass": [
           4.5658790890912273e-17,
           1.380490710861523e-17,
           2.0566609279526706
         ],
-        "mass": 0.6553826629376613,
         "matrixOfInertia": [
           [
             1.3838584804442358e-17,
@@ -415,44 +415,44 @@
             -9.9001395059143e-19
           ]
         ]
-      },
-      "visible": false
+      }
     },
     {
+      "shape": "Part::MultiFuse",
+      "parameters": {
+        "Shapes": [
+          "Union 2",
+          "Cut 1"
+        ],
+        "Color": "#c69653",
+        "Placement": {
+          "Position": [
+            0,
+            0,
+            0
+          ],
+          "Axis": [
+            0,
+            0,
+            1
+          ],
+          "Angle": 0
+        },
+        "Refine": false
+      },
+      "visible": false,
+      "name": "Union 3",
       "dependencies": [
         "Union 2",
         "Cut 1"
       ],
-      "name": "Union 3",
-      "parameters": {
-        "Color": "#c69653",
-        "Placement": {
-          "Angle": 0.0,
-          "Axis": [
-            0.0,
-            0.0,
-            1.0
-          ],
-          "Position": [
-            0.0,
-            0.0,
-            0.0
-          ]
-        },
-        "Refine": false,
-        "Shapes": [
-          "Union 2",
-          "Cut 1"
-        ]
-      },
-      "shape": "Part::MultiFuse",
       "shapeMetadata": {
+        "mass": 2.128104937138256,
         "centerOfMass": [
           -5.379986081345721e-17,
           -4.52728625237289e-17,
           0.8802092070885044
         ],
-        "mass": 2.128104937138256,
         "matrixOfInertia": [
           [
             -9.383779806637849e-17,
@@ -470,11 +470,113 @@
             1.4044393939790295e-18
           ]
         ]
+      }
+    },
+    {
+      "shape": "Part::Chamfer",
+      "parameters": {
+        "Color": "#c69653",
+        "Placement": {
+          "Position": [
+            0,
+            0,
+            0
+          ],
+          "Axis": [
+            0,
+            0,
+            1
+          ],
+          "Angle": 0
+        },
+        "Base": "Union 3",
+        "Edge": 12,
+        "Dist": 0.05,
+        "newKey": "New Value"
       },
-      "visible": true
+      "visible": false,
+      "name": "Chamfer 1",
+      "dependencies": [
+        "Union 3"
+      ],
+      "shapeMetadata": {
+        "mass": 2.123934582749789,
+        "centerOfMass": [
+          3.328784709803995e-8,
+          -1.058673922955205e-12,
+          0.8778339958132287
+        ],
+        "matrixOfInertia": [
+          [
+            -7.268513364380788e-8,
+            2.424425017387252e-12,
+            0.5017844699750879
+          ],
+          [
+            1.835156333488246,
+            9.748015769261912e-13,
+            -7.268513364380788e-8
+          ],
+          [
+            9.748015769261912e-13,
+            1.835156373394718,
+            2.424425017387252e-12
+          ]
+        ]
+      }
+    },
+    {
+      "shape": "Part::Chamfer",
+      "parameters": {
+        "Color": "#c69653",
+        "Placement": {
+          "Position": [
+            0,
+            0,
+            0
+          ],
+          "Axis": [
+            0,
+            0,
+            1
+          ],
+          "Angle": 0
+        },
+        "Base": "Chamfer 1",
+        "Edge": 7,
+        "Dist": 0.05
+      },
+      "visible": true,
+      "name": "Chamfer 2",
+      "dependencies": [
+        "Chamfer 1"
+      ],
+      "shapeMetadata": {
+        "mass": 2.1197638902577074,
+        "centerOfMass": [
+          -1.9189393593178536e-8,
+          -2.978350039572389e-14,
+          0.8751396353464885
+        ],
+        "matrixOfInertia": [
+          [
+            5.6417809553990317e-8,
+            -1.4718842630039028e-13,
+            0.5006224049093723
+          ],
+          [
+            1.826738064190132,
+            2.598842697431063e-14,
+            5.6417809553990317e-8
+          ],
+          [
+            2.598842697431063e-14,
+            1.8267380413900287,
+            -1.4718842630039028e-13
+          ]
+        ]
+      }
     }
   ],
-  "options": {},
-  "outputs": {},
-  "schemaVersion": "3.0.0"
+  "options": {}
 }
