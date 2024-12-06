@@ -86,7 +86,6 @@ const CustomArrayField: React.FC<IProps> = props => {
     <fieldset>
       <legend>
         {name}
-        {required && <span className="required">*</span>}
       </legend>
       <p className="field-description">{schema.description}</p>
       <div className="custom-array-wrapper">
