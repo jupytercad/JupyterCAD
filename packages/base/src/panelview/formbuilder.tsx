@@ -152,7 +152,15 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
           className="jpcad-property-panel"
           data-path={this.props.filePath ?? ''}
         >
-          <div className="jpcad-property-outer jp-scrollbar-tiny">
+          <div
+            className="jpcad-property-outer jp-scrollbar-tiny"
+            onKeyUp={(e: React.KeyboardEvent) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                submitRef.current?.click();
+              }
+            }}
+          >
             <WrappedFormComponent
               schema={schema}
               uiSchema={this.generateUiSchema(this.props.schema)}
