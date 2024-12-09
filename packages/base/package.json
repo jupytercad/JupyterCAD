@@ -35,7 +35,6 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@deathbeds/jupyterlab-rjsf": "^1.1.0",
     "@jupyter/collaborative-drive": "^3.1.0-alpha.0",
     "@jupyter/ydoc": "^3.0.0",
     "@jupytercad/occ-worker": "^3.0.0",
@@ -51,7 +50,7 @@
     "@jupyterlab/observables": "^5.0.0",
     "@jupyterlab/services": "^7.0.0",
     "@jupyterlab/translation": "^4.0.0",
-    "@jupyterlab/ui-components": "^4.0.0",
+    "@jupyterlab/ui-components": "^4.3.1",
     "@lumino/commands": "^2.0.0",
     "@lumino/coreutils": "^2.0.0",
     "@lumino/messaging": "^2.0.0",

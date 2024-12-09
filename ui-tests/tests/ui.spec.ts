@@ -115,9 +115,7 @@ test.describe('UI Test', () => {
       }
 
       await page.getByTitle('New Box').click();
-      await page
-        .locator('input[id^="id-jp-schemaform"][label="Name"]')
-        .fill('Foo');
+      await page.locator('input[id^="root_Name"][label="Name"]').fill('Foo');
       await page
         .locator('div.jp-Dialog-buttonLabel', {
           hasText: 'Submit'
@@ -187,8 +185,8 @@ test.describe('UI Test', () => {
         .locator('[data-test-id="react-tree-root"]')
         .getByText('box2')
         .click();
-      await page.getByLabel('Height*').click();
-      await page.getByLabel('Height*').fill('32');
+      await page.locator('input#root_Height').click();
+      await page.locator('input#root_Height').fill('32');
       await page.getByRole('button', { name: 'Submit' }).click();
 
       // Deselect object for the screenshot
@@ -223,12 +221,12 @@ test.describe('UI Test', () => {
       await page.sidebar.close('right');
       // Create a cone
       await page.getByTitle('New Cone').click();
-      await page.getByLabel('Radius1').click();
-      await page.getByLabel('Radius1').fill('15');
-      await page.getByLabel('Radius2').click();
-      await page.getByLabel('Radius2').fill('5');
-      await page.getByLabel('Height').click();
-      await page.getByLabel('Height').fill('20');
+      await page.locator('input#root_Radius1').click();
+      await page.locator('input#root_Radius1').fill('15');
+      await page.locator('input#root_Radius2').click();
+      await page.locator('input#root_Radius2').fill('5');
+      await page.locator('input#root_Height').click();
+      await page.locator('input#root_Height').fill('20');
       await page
         .locator('div.jp-Dialog-buttonLabel', {
           hasText: 'Submit'
@@ -286,8 +284,8 @@ test.describe('UI Test', () => {
       // Apply Exploded view
       await page.getByTitle('Exploded View').click();
       await page.getByLabel('Enabled').click();
-      await page.getByLabel('Factor').click();
-      await page.getByLabel('Factor').fill('3.5');
+      await page.locator('input#root_Factor').click();
+      await page.locator('input#root_Factor').fill('3.5');
       await page
         .locator('div.jp-Dialog-buttonLabel', {
           hasText: 'Submit'
@@ -324,13 +322,13 @@ test.describe('UI Test', () => {
         }
         await page.sidebar.open('left');
         await page.waitForTimeout(500);
-        await page.getByLabel('Length*').fill('0.5');
+        await page.locator('input#root_Height').fill('0.5');
         await page.getByRole('button', { name: 'Submit' }).click();
         await page.waitForTimeout(500);
-        await page.getByLabel('Width*').fill('1.5');
+        await page.locator('input#root_Width').fill('1.5');
         await page.getByRole('button', { name: 'Submit' }).click();
         await page.waitForTimeout(500);
-        await page.getByLabel('Height*').fill('2');
+        await page.locator('input#root_Height').fill('2');
         await page.getByRole('button', { name: 'Submit' }).click();
         await page.sidebar.close('left');
         await page.waitForTimeout(500);
