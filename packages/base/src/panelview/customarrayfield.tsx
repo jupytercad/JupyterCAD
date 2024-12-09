@@ -84,9 +84,7 @@ const CustomArrayField: React.FC<IProps> = props => {
 
   return (
     <fieldset>
-      <legend>
-        {name}
-      </legend>
+      <legend>{name}</legend>
       <p className="field-description">{schema.description}</p>
       <div className="custom-array-wrapper">
         {formData.map((value: any, index: number) => (
