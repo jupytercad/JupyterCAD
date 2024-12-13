@@ -66,7 +66,7 @@ export const Fillet = operatorCache<IFillet>('Part::Fillet', _Fillet);
 export const ObjectFile = operatorCache<{
   content: string;
   type: IAny['Type'];
-  placement: {
+  placement?: {
     Position: number[];
     Axis: number[];
     Angle: number;
