@@ -9,7 +9,11 @@ export function _Any(
   content: IJCadContent
 ): OCC.TopoDS_Shape | undefined {
   const { Content, Type, Placement } = arg;
-  const result = _loadObjectFile({ content: Content, type: Type });
+  const result = _loadObjectFile({
+    content: Content,
+    type: Type,
+    placement: Placement
+  });
   if (result) {
     return setShapePlacement(result, Placement);
   }

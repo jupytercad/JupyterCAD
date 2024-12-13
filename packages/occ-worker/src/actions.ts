@@ -32,7 +32,14 @@ function buildModel(
     } else if (parameters['Shape']) {
       // Creating occ shape from brep file.
       const type = parameters['Type'] ?? 'brep';
-      shapeData = ObjectFile({ content: parameters['Shape'], type }, model);
+      shapeData = ObjectFile(
+        {
+          content: parameters['Shape'],
+          type,
+          placement: parameters?.Placement
+        },
+        model
+      );
     } else if (shape.startsWith('Post::') && shapeMetadata) {
       const shapeFormat = (shapeMetadata.shapeFormat ??
         JCadWorkerSupportedFormat.BREP) as JCadWorkerSupportedFormat;
