@@ -691,6 +691,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jupyter/collaborative-drive@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@jupyter/collaborative-drive@npm:3.1.0"
+  dependencies:
+    "@jupyter/ydoc": ^2.0.0 || ^3.0.0
+    "@jupyterlab/services": ^7.2.0
+    "@lumino/coreutils": ^2.1.0
+    "@lumino/disposable": ^2.1.0
+  checksum: ef4288ccc6dc4b353d53c014b2caa87d29e5af64c1649175b6ff75127297953139f79f8774c22ab0e249cc5fcef36dc6503a6c3862e160205bf6a55b368e6ac8
+  languageName: node
+  linkType: hard
+
 "@jupyter/collaborative-drive@npm:^3.1.0-alpha.0, @jupyter/collaborative-drive@npm:^3.1.0-rc.0":
   version: 3.1.0-rc.0
   resolution: "@jupyter/collaborative-drive@npm:3.1.0-rc.0"
@@ -767,7 +779,7 @@ __metadata:
   resolution: "@jupytercad/base@workspace:packages/base"
   dependencies:
     "@apidevtools/json-schema-ref-parser": ^9.0.9
-    "@jupyter/collaborative-drive": ^3.1.0-alpha.0
+    "@jupyter/collaborative-drive": ^3.1.0
     "@jupyter/ydoc": ^3.0.0
     "@jupytercad/occ-worker": ^3.0.0
     "@jupytercad/schema": ^3.0.0
