@@ -349,12 +349,12 @@ const OPERATORS = {
       const selectedShapes = Object.keys(selected).map(key => key);
 
       // Fallback to at least two objects if selection is empty
-      const baseShapes = selectedShapes.length > 0
-        ? selectedShapes
-        : [objects[0].name || '', objects[1].name || ''];
+      const baseShapes =
+        selectedShapes.length > 0
+          ? selectedShapes
+          : [objects[0].name || '', objects[1].name || ''];
 
-        console.log('baseShapes', baseShapes);
-        
+      console.log('baseShapes', baseShapes);
 
       const baseModel = model.sharedModel.getObjectByName(baseShapes[0]);
       return {
@@ -375,7 +375,7 @@ const OPERATORS = {
           name: Name,
           dependencies: parameters['Shapes']
         };
-  
+
         return executeOperator(
           'Fuse',
           objectModel,
@@ -384,7 +384,7 @@ const OPERATORS = {
             parameters['Shapes'].map((shape: string) => {
               setVisible(sharedModel, shape, false);
             });
-  
+
             sharedModel.addObject(objectModel);
           }
         );
