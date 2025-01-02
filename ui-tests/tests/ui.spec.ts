@@ -382,4 +382,46 @@ test.describe('UI Test', () => {
       }
     });
   });
+
+  test.describe('Suggestion Panel test', () => {
+    test(`Test Suggestion Panel`, async ({ page }) => {
+      await page.goto();
+
+      const fileName = 'test.jcad';
+      const fullPath = `examples/${fileName}`;
+      await page.notebook.openByPath(fullPath);
+      await page.notebook.activate(fullPath);
+      await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
+      // await page.sidebar.close('right');
+      await page.getByTitle('Create new fork').click();
+      await page.getByLabel('Ok').click();
+
+      // Select cone
+      await page
+      .locator('[data-test-id="react-tree-root"]')
+      .getByText('Cone 1')
+      .click();
+
+      await page
+      .locator('[data-test-id="react-tree-root"]')
+      .getByTitle('Cone 1')
+      .click();
+
+      await page.locator('input#root_Height').click();
+      await page.locator('input#root_Height').fill('20');
+
+      await page
+        .locator('div.jp-Dialog-buttonLabel', {
+          hasText: 'Submit'
+        })
+        .click();
+
+      let main = await page.$('#jp-main-split-panel');
+      if (main) {
+        expect(await main.screenshot()).toMatchSnapshot({
+          name: `JCAD-Suggestion.png`
+        });
+      }
+    });
+  });
 });
