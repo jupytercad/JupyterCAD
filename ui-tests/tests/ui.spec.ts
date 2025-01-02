@@ -398,14 +398,14 @@ test.describe('UI Test', () => {
 
       // Select cone
       await page
-      .locator('[data-test-id="react-tree-root"]')
-      .getByText('Cone 1')
-      .click();
+        .locator('[data-test-id="react-tree-root"]')
+        .getByText('Cone 1')
+        .click();
 
       await page
-      .locator('[data-test-id="react-tree-root"]')
-      .getByTitle('Cone 1')
-      .click();
+        .locator('[data-test-id="react-tree-root"]')
+        .getByTitle('Cone 1')
+        .click();
 
       await page.locator('input#root_Height').click();
       await page.locator('input#root_Height').fill('20');
