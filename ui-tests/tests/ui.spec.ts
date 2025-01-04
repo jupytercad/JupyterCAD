@@ -395,17 +395,12 @@ test.describe('UI Test', () => {
       // await page.sidebar.close('right');
       await page.locator('li#tab-key-1-7').click();
       await page.getByTitle('Create new fork').click();
-      await page.getByLabel('Ok').click();
+      await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
 
       // Select cone
       await page
       .locator('[data-test-id="react-tree-root"]')
       .getByText('Cone 1')
-      .click();
-
-      await page
-      .locator('[data-test-id="react-tree-root"]')
-      .getByTitle('Cone 1')
       .click();
 
       await page.locator('input#root_Height').click();
