@@ -412,6 +412,9 @@ test.describe('UI Test', () => {
         })
         .click();
 
+      await page.getByTitle('Accept suggestion').click();
+      await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
+
       let main = await page.$('#jp-main-split-panel');
       if (main) {
         expect(await main.screenshot()).toMatchSnapshot({
