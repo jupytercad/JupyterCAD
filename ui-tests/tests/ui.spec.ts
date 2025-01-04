@@ -393,6 +393,7 @@ test.describe('UI Test', () => {
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
       // await page.sidebar.close('right');
+      await page.locator('li#tab-key-1-7').click();
       await page.getByTitle('Create new fork').click();
       await page.getByLabel('Ok').click();
 
