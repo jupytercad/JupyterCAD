@@ -421,6 +421,18 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.addEventListener('dragging-changed', event => {
         this._controls.enabled = !event.value;
       });
+      // Add event listener for keydown and keyup to enable/disable rotation snapping
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Control') {
+          this._transformControls.rotationSnap = THREE.MathUtils.degToRad(10);
+        }
+      });
+
+      document.addEventListener('keyup', event => {
+        if (event.key === 'Control') {
+          this._transformControls.rotationSnap = null;
+        }
+      });
       // Update the currently transformed object in the shared model once finished moving
       this._transformControls.addEventListener('mouseUp', async () => {
         const updatedObject = this._selectedMeshes[0];
