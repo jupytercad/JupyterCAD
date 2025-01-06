@@ -1868,7 +1868,7 @@ export class MainView extends React.Component<IProps, IStates> {
     return screenPosition;
   }
 
-  private handleSnapChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  private _handleSnapChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
     if (!isNaN(value) && value > 0) {
       this.setState({ rotationSnapValue: value });
