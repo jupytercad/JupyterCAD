@@ -78,6 +78,7 @@ interface IStates {
   transform: boolean;
   clipEnabled: boolean;
   rotationSnapValue: number;
+  transformMode: string | undefined;
 }
 
 interface ILineIntersection extends THREE.Intersection {
@@ -123,7 +124,8 @@ export class MainView extends React.Component<IProps, IStates> {
       wireframe: false,
       transform: false,
       clipEnabled: true,
-      rotationSnapValue: 10
+      rotationSnapValue: 10,
+      transformMode: 'translate'
     };
   }
 
@@ -143,6 +145,12 @@ export class MainView extends React.Component<IProps, IStates> {
     this._transformControls.rotationSnap = THREE.MathUtils.degToRad(
       this.state.rotationSnapValue
     );
+    this._transformControls.addEventListener('change', () => {
+      const newMode = this._transformControls.mode || 'translate';
+      if (this.state.transformMode !== newMode) {
+        this.setState({ transformMode: newMode });
+      }
+    });
   }
 
   componentDidUpdate(oldProps: IProps, oldState: IStates): void {
@@ -1930,7 +1938,7 @@ export class MainView extends React.Component<IProps, IStates> {
           >
             <div style={{ marginBottom: '2px' }}>Press R to switch mode</div>
 
-            {this._transformControls.mode === 'rotate' && (
+            {this.state.transformMode === 'rotate' && (
               <div>
                 <label style={{ marginRight: '8px' }}>Rotation Snap (°):</label>
                 <input
