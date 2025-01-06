@@ -1237,7 +1237,11 @@ export function addCommands(
         counter++;
       }
       const jcadModel = current.context.model;
-      const newObject = { ...clipboard, name: newName };
+      const newObject = {
+        ...clipboard,
+        name: newName,
+        visible: true
+      };
       sharedModel.addObject(newObject);
       jcadModel.syncSelected({ [newObject.name]: { type: 'shape' } }, uuid());
     }
