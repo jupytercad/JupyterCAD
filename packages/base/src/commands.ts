@@ -354,8 +354,6 @@ const OPERATORS = {
           ? selectedShapes
           : [objects[0].name || '', objects[1].name || ''];
 
-      console.log('baseShapes', baseShapes);
-
       const baseModel = model.sharedModel.getObjectByName(baseShapes[0]);
       return {
         Name: newName('Union', model),
