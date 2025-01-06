@@ -1237,6 +1237,7 @@ export class MainView extends React.Component<IProps, IStates> {
         if (material?.linewidth) {
           material.linewidth = SELECTED_LINEWIDTH;
         }
+        selectedMesh.material.wireframe = false;
       } else {
         // Highlight non-edges using a bounding box
         const parentGroup = this._meshGroup?.getObjectByName(selectedMesh.name)
