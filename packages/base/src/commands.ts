@@ -345,13 +345,19 @@ const OPERATORS = {
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
       const selected = model.localState?.selected.value || {};
-      const sel0 = getSelectedMeshName(selected, 0);
-      const sel1 = getSelectedMeshName(selected, 1);
-      const baseName = sel0 || objects[0].name || '';
-      const baseModel = model.sharedModel.getObjectByName(baseName);
+
+      const selectedShapes = Object.keys(selected).map(key => key);
+
+      // Fallback to at least two objects if selection is empty
+      const baseShapes =
+        selectedShapes.length > 0
+          ? selectedShapes
+          : [objects[0].name || '', objects[1].name || ''];
+
+      const baseModel = model.sharedModel.getObjectByName(baseShapes[0]);
       return {
         Name: newName('Union', model),
-        Shapes: [baseName, sel1 || objects[1].name || ''],
+        Shapes: baseShapes,
         Refine: false,
         Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }

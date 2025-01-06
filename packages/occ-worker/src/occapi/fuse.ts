@@ -30,13 +30,27 @@ export function _Fuse(
       }
     }
   });
-  const operator = new oc.BRepAlgoAPI_Fuse_3(
-    occShapes[0],
-    occShapes[1],
-    new oc.Message_ProgressRange_1()
-  );
-  if (operator.IsDone()) {
-    return setShapePlacement(operator.Shape(), Placement);
+
+  if (occShapes.length === 0) {
+    return;
   }
-  return;
+
+  let fusedShape = occShapes[0];
+
+  for (let i = 1; i < occShapes.length; i++) {
+    const operator = new oc.BRepAlgoAPI_Fuse_3(
+      fusedShape,
+      occShapes[i],
+      new oc.Message_ProgressRange_1()
+    );
+
+    if (operator.IsDone()) {
+      fusedShape = operator.Shape();
+    } else {
+      console.error(`Fusion failed at index ${i}`);
+      return;
+    }
+  }
+
+  return setShapePlacement(fusedShape, Placement);
 }
