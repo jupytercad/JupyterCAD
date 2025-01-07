@@ -145,14 +145,15 @@ export class MainView extends React.Component<IProps, IStates> {
     this._transformControls.rotationSnap = THREE.MathUtils.degToRad(
       this.state.rotationSnapValue
     );
-    document.addEventListener('keydown', event => {
+    this._keyDownHandler = (event: KeyboardEvent) => {
       if (event.key === 'r') {
         const newMode = this._transformControls.mode || 'translate';
         if (this.state.transformMode !== newMode) {
           this.setState({ transformMode: newMode });
         }
       }
-    });
+    };
+    document.addEventListener('keydown', this._keyDownHandler);
   }
 
   componentDidUpdate(oldProps: IProps, oldState: IStates): void {
@@ -191,6 +192,8 @@ export class MainView extends React.Component<IProps, IStates> {
     this._mainViewModel.renderSignal.disconnect(this._requestRender, this);
     this._mainViewModel.workerBusy.disconnect(this._workerBusyHandler, this);
     this._mainViewModel.dispose();
+
+    document.removeEventListener('keydown', this._keyDownHandler);
   }
 
   addContextMenu = (): void => {
@@ -2029,4 +2032,5 @@ export class MainView extends React.Component<IProps, IStates> {
   private _sliderPos = 0;
   private _slideInit = false;
   private _sceneL: THREE.Scene | undefined = undefined;
+  private _keyDownHandler: (event: KeyboardEvent) => void;
 }
