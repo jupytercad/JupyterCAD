@@ -191,18 +191,6 @@ export class MainView extends React.Component<IProps, IStates> {
     this._mainViewModel.renderSignal.disconnect(this._requestRender, this);
     this._mainViewModel.workerBusy.disconnect(this._workerBusyHandler, this);
     this._mainViewModel.dispose();
-    // Add event listener for keydown and keyup to enable/disable rotation snapping
-    document.addEventListener('keydown', event => {
-      if (event.key === 'Control') {
-        this._transformControls.rotationSnap = THREE.MathUtils.degToRad(10);
-      }
-    });
-
-    document.addEventListener('keyup', event => {
-      if (event.key === 'Control') {
-        this._transformControls.rotationSnap = null;
-      }
-    });
   }
 
   addContextMenu = (): void => {
