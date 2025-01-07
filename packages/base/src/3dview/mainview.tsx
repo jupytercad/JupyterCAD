@@ -77,6 +77,8 @@ interface IStates {
   wireframe: boolean;
   transform: boolean;
   clipEnabled: boolean;
+  rotationSnapValue: number;
+  transformMode: string | undefined;
 }
 
 interface ILineIntersection extends THREE.Intersection {
@@ -121,7 +123,9 @@ export class MainView extends React.Component<IProps, IStates> {
       firstLoad: true,
       wireframe: false,
       transform: false,
-      clipEnabled: true
+      clipEnabled: true,
+      rotationSnapValue: 10,
+      transformMode: 'translate'
     };
   }
 
@@ -138,10 +142,27 @@ export class MainView extends React.Component<IProps, IStates> {
         this.lookAtPosition(customEvent.detail.objPosition);
       }
     });
+    this._transformControls.rotationSnap = THREE.MathUtils.degToRad(
+      this.state.rotationSnapValue
+    );
+    this._keyDownHandler = (event: KeyboardEvent) => {
+      if (event.key === 'r') {
+        const newMode = this._transformControls.mode || 'translate';
+        if (this.state.transformMode !== newMode) {
+          this.setState({ transformMode: newMode });
+        }
+      }
+    };
+    document.addEventListener('keydown', this._keyDownHandler);
   }
 
   componentDidUpdate(oldProps: IProps, oldState: IStates): void {
     this.resizeCanvasToDisplaySize();
+    if (oldState.rotationSnapValue !== this.state.rotationSnapValue) {
+      this._transformControls.rotationSnap = THREE.MathUtils.degToRad(
+        this.state.rotationSnapValue
+      );
+    }
   }
 
   componentWillUnmount(): void {
@@ -171,6 +192,8 @@ export class MainView extends React.Component<IProps, IStates> {
     this._mainViewModel.renderSignal.disconnect(this._requestRender, this);
     this._mainViewModel.workerBusy.disconnect(this._workerBusyHandler, this);
     this._mainViewModel.dispose();
+
+    document.removeEventListener('keydown', this._keyDownHandler);
   }
 
   addContextMenu = (): void => {
@@ -1837,6 +1860,14 @@ export class MainView extends React.Component<IProps, IStates> {
     });
     return screenPosition;
   }
+
+  private _handleSnapChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    if (!isNaN(value) && value > 0) {
+      this.setState({ rotationSnapValue: value });
+    }
+  };
+
   render(): JSX.Element {
     const isTransformOrClipEnabled =
       this.state.transform || this._clipSettings.enabled;
@@ -1898,7 +1929,25 @@ export class MainView extends React.Component<IProps, IStates> {
               fontSize: '12px'
             }}
           >
-            Press R to switch mode
+            <div style={{ marginBottom: '2px' }}>Press R to switch mode</div>
+
+            {this.state.transformMode === 'rotate' && (
+              <div>
+                <label style={{ marginRight: '8px' }}>Rotation Snap (°):</label>
+                <input
+                  type="number"
+                  value={this.state.rotationSnapValue}
+                  onChange={this._handleSnapChange}
+                  style={{
+                    width: '50px',
+                    padding: '4px',
+                    borderRadius: '4px',
+                    border: '1px solid #ccc',
+                    fontSize: '12px'
+                  }}
+                />
+              </div>
+            )}
           </div>
         )}
         <div
@@ -1983,4 +2032,5 @@ export class MainView extends React.Component<IProps, IStates> {
   private _sliderPos = 0;
   private _slideInit = false;
   private _sceneL: THREE.Scene | undefined = undefined;
+  private _keyDownHandler: (event: KeyboardEvent) => void;
 }
