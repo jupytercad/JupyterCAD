@@ -1944,7 +1944,7 @@ export class MainView extends React.Component<IProps, IStates> {
                 <input
                   type="number"
                   value={this.state.rotationSnapValue}
-                  onChange={this.handleSnapChange}
+                  onChange={this._handleSnapChange}
                   style={{
                     width: '50px',
                     padding: '4px',
