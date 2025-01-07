@@ -1,6 +1,7 @@
 # JupyterCAD - A JupyterLab extension for collaborative 3D geometry modeling.
 
 [![Lite](https://jupyterlite.rtfd.io/en/latest/_static/badge.svg)](https://jupytercad.github.io/JupyterCAD/)
+<a href='https://jupytercad.readthedocs.io/' target="_blank"><img alt='View Documentation' src='https://img.shields.io/badge/Documentation-100000?style=flat&logo=View Documentation&logoColor=FFFFFF&labelColor=FFD43B&color=4B8BBE'/></a>
 
 JupyterCAD is a JupyterLab extension for 3D geometry modeling with collaborative editing support. It is designed to allow multiple people to work on the same file at the same time, and to facilitate discussion and collaboration around the 3D shapes being created.
 
