@@ -145,10 +145,12 @@ export class MainView extends React.Component<IProps, IStates> {
     this._transformControls.rotationSnap = THREE.MathUtils.degToRad(
       this.state.rotationSnapValue
     );
-    this._transformControls.addEventListener('change', () => {
-      const newMode = this._transformControls.mode || 'translate';
-      if (this.state.transformMode !== newMode) {
-        this.setState({ transformMode: newMode });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'r') {
+        const newMode = this._transformControls.mode || 'translate';
+        if (this.state.transformMode !== newMode) {
+          this.setState({ transformMode: newMode });
+        }
       }
     });
   }
@@ -189,6 +191,18 @@ export class MainView extends React.Component<IProps, IStates> {
     this._mainViewModel.renderSignal.disconnect(this._requestRender, this);
     this._mainViewModel.workerBusy.disconnect(this._workerBusyHandler, this);
     this._mainViewModel.dispose();
+    // Add event listener for keydown and keyup to enable/disable rotation snapping
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Control') {
+        this._transformControls.rotationSnap = THREE.MathUtils.degToRad(10);
+      }
+    });
+
+    document.addEventListener('keyup', event => {
+      if (event.key === 'Control') {
+        this._transformControls.rotationSnap = null;
+      }
+    });
   }
 
   addContextMenu = (): void => {
@@ -438,18 +452,6 @@ export class MainView extends React.Component<IProps, IStates> {
       // Disable the orbit control whenever we do transformation
       this._transformControls.addEventListener('dragging-changed', event => {
         this._controls.enabled = !event.value;
-      });
-      // Add event listener for keydown and keyup to enable/disable rotation snapping
-      document.addEventListener('keydown', event => {
-        if (event.key === 'Control') {
-          this._transformControls.rotationSnap = THREE.MathUtils.degToRad(10);
-        }
-      });
-
-      document.addEventListener('keyup', event => {
-        if (event.key === 'Control') {
-          this._transformControls.rotationSnap = null;
-        }
       });
       // Update the currently transformed object in the shared model once finished moving
       this._transformControls.addEventListener('mouseUp', async () => {
