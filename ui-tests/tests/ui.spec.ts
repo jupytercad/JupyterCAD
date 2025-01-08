@@ -382,4 +382,86 @@ test.describe('UI Test', () => {
       }
     });
   });
+
+  test.describe('Suggestion Panel test', () => {
+    test(`Test Delete Suggestion`, async ({ page }) => {
+      await page.goto();
+
+      const fileName = 'test.jcad';
+      const fullPath = `examples/${fileName}`;
+      await page.notebook.openByPath(fullPath);
+      await page.notebook.activate(fullPath);
+      await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
+
+      // Activate Right Panel
+      await page.locator('li#tab-key-1-7').click();
+      await page.getByTitle('Create new fork').click();
+      await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
+
+      // Select cone
+      await page
+        .locator('[data-test-id="react-tree-root"]')
+        .getByText('Cone 1')
+        .click();
+
+      await page.locator('input#root_Height').click();
+      await page.locator('input#root_Height').fill('20');
+
+      await page
+        .locator('div.jp-Dialog-buttonLabel', {
+          hasText: 'Submit'
+        })
+        .click();
+
+      await page.getByTitle('Delete suggestion').click();
+      await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
+
+      let main = await page.$('#jp-main-split-panel');
+      if (main) {
+        expect(await main.screenshot()).toMatchSnapshot({
+          name: `JCAD-Delete-Suggestion.png`
+        });
+      }
+    });
+
+    test(`Test Accept Suggestion`, async ({ page }) => {
+      await page.goto();
+
+      const fileName = 'test.jcad';
+      const fullPath = `examples/${fileName}`;
+      await page.notebook.openByPath(fullPath);
+      await page.notebook.activate(fullPath);
+      await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
+
+      // Activate Right Panel
+      await page.locator('li#tab-key-1-7').click();
+      await page.getByTitle('Create new fork').click();
+      await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
+
+      // Select cone
+      await page
+        .locator('[data-test-id="react-tree-root"]')
+        .getByText('Cone 1')
+        .click();
+
+      await page.locator('input#root_Height').click();
+      await page.locator('input#root_Height').fill('20');
+
+      await page
+        .locator('div.jp-Dialog-buttonLabel', {
+          hasText: 'Submit'
+        })
+        .click();
+
+      await page.getByTitle('Accept suggestion').click();
+      await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
+
+      let main = await page.$('#jp-main-split-panel');
+      if (main) {
+        expect(await main.screenshot()).toMatchSnapshot({
+          name: `JCAD-Accept-Suggestion.png`
+        });
+      }
+    });
+  });
 });
