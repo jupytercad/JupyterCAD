@@ -40,6 +40,43 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.0.1
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.0.0...f5754fb51eb20ba965e22c2fd635cb60d88b930e))
+
+### Enhancements made
+
+- Enable Rotation Snap by default and make it customisable [#661](https://github.com/jupytercad/JupyterCAD/pull/661) ([@arjxn-py](https://github.com/arjxn-py))
+- Allow fusing more than two objects at once [#659](https://github.com/jupytercad/JupyterCAD/pull/659) ([@arjxn-py](https://github.com/arjxn-py))
+- When copy-pasting a hidden object, the copied object is made visible [#656](https://github.com/jupytercad/JupyterCAD/pull/656) ([@arjxn-py](https://github.com/arjxn-py))
+
+### Bugs fixed
+
+- Dropdown selector for base on chamfer and fillet [#664](https://github.com/jupytercad/JupyterCAD/pull/664) ([@arjxn-py](https://github.com/arjxn-py))
+- Avoid applying wireframe to selected edges [#655](https://github.com/jupytercad/JupyterCAD/pull/655) ([@arjxn-py](https://github.com/arjxn-py))
+- Fix placement for non-primitive shapes coming from freecad [#653](https://github.com/jupytercad/JupyterCAD/pull/653) ([@arjxn-py](https://github.com/arjxn-py))
+
+### Maintenance and upkeep improvements
+
+- Add UI tests for the suggestion panel [#660](https://github.com/jupytercad/JupyterCAD/pull/660) ([@arjxn-py](https://github.com/arjxn-py))
+- Bump `jupyter-collaboration` to `3.1.0` [#657](https://github.com/jupytercad/JupyterCAD/pull/657) ([@arjxn-py](https://github.com/arjxn-py))
+- Replace @jupyterlab/rjsf with FormComponent from @jupyterlab/ui-components [#625](https://github.com/jupytercad/JupyterCAD/pull/625) ([@Meriem-BenIsmail](https://github.com/Meriem-BenIsmail))
+
+### Documentation improvements
+
+- Add documentation badge [#663](https://github.com/jupytercad/JupyterCAD/pull/663) ([@arjxn-py](https://github.com/arjxn-py))
+- Light logo for light mode and dark for dark [#649](https://github.com/jupytercad/JupyterCAD/pull/649) ([@arjxn-py](https://github.com/arjxn-py))
+- Improve pawn example [#647](https://github.com/jupytercad/JupyterCAD/pull/647) ([@martinRenou](https://github.com/martinRenou))
+- Add chess pawn example [#645](https://github.com/jupytercad/JupyterCAD/pull/645) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-12-05&to=2025-01-10&type=c))
+
+[@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2024-12-05..2025-01-10&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-12-05..2025-01-10&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-12-05..2025-01-10&type=Issues) | [@Meriem-BenIsmail](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AMeriem-BenIsmail+updated%3A2024-12-05..2025-01-10&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2024-12-05..2025-01-10&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-12-05..2025-01-10&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.0.0
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@2.0.2...84e8161e69ed4b4967fb9dfcea8828c7a980732e))
@@ -245,8 +282,6 @@ JupyterCAD now supports suggestions from collaborators. This feature is only ava
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2024-07-19&to=2024-12-05&type=c))
 
 [@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2024-07-19..2024-12-05&type=Issues) | [@brichet](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Abrichet+updated%3A2024-07-19..2024-12-05&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Adavidbrochart+updated%3A2024-07-19..2024-12-05&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2024-07-19..2024-12-05&type=Issues) | [@IsabelParedes](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AIsabelParedes+updated%3A2024-07-19..2024-12-05&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2024-07-19..2024-12-05&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2024-07-19..2024-12-05&type=Issues) | [@SylvainCorlay](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3ASylvainCorlay+updated%3A2024-07-19..2024-12-05&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2024-07-19..2024-12-05&type=Issues) | [@tshakah](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atshakah+updated%3A2024-07-19..2024-12-05&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.0.0rc1
 
