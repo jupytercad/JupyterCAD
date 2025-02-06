@@ -66,7 +66,7 @@ export class JupyterCadDoc
     return this._optionsChanged;
   }
 
-  getSource(): JSONValue | string {
+  getSource(): JSONObject {
     const objects = this._objects.toJSON();
     const options = this._options.toJSON();
     const metadata = this._metadata.toJSON();
