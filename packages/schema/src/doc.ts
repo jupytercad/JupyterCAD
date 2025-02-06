@@ -1,5 +1,5 @@
 import { MapChange, YDocument } from '@jupyter/ydoc';
-import { JSONExt, JSONObject, JSONValue } from '@lumino/coreutils';
+import { JSONExt, JSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import * as Y from 'yjs';
 
@@ -66,7 +66,7 @@ export class JupyterCadDoc
     return this._optionsChanged;
   }
 
-  getSource(): JSONValue | string {
+  getSource(): JSONObject {
     const objects = this._objects.toJSON();
     const options = this._options.toJSON();
     const metadata = this._metadata.toJSON();
@@ -75,7 +75,7 @@ export class JupyterCadDoc
     return { objects, options, metadata, outputs };
   }
 
-  setSource(value: JSONValue): void {
+  setSource(value: JSONObject | string): void {
     if (!value) {
       return;
     }
