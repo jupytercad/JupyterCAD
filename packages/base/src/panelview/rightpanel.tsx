@@ -80,7 +80,7 @@ export class RightPanelWidget extends SidePanel {
     super.dispose();
   }
 
-  private _currentContext: JupyterCadModel | null;
+  private _currentContext: IJupyterCadModel | null;
   private _handleFileChange: () => void;
   private _model: IControlPanelModel;
   private _annotationModel: IAnnotationModel;
