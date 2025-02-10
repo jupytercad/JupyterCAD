@@ -2,7 +2,7 @@ import {
   IAnnotationModel,
   IJupyterCadModel,
   IJupyterCadTracker,
-  JupyterCadDoc,
+  JupyterCadDoc
 } from '@jupytercad/schema';
 import { SidePanel } from '@jupyterlab/ui-components';
 

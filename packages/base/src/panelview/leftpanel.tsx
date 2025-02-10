@@ -31,8 +31,6 @@ export class LeftPanelWidget extends SidePanel {
       tracker: options.tracker
     });
     this.addWidget(properties);
-
-
     options.tracker.currentChanged.connect((_, changed) => {
       if (changed) {
         this._currentModel = changed.model;
