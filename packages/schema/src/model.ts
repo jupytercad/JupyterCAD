@@ -115,6 +115,20 @@ export class JupyterCadModel implements IJupyterCadModel {
     return this._sharedModelSwapped;
   }
 
+  /**
+   * Getter for the file path associated with the contents manager.
+   */
+  get filePath(): string {
+    return this._filePath;
+  }
+
+  /**
+   * Setter for the file path associated with the contents manager.
+   */
+  set filePath(path: string) {
+    this._filePath = path;
+  }
+
   get disposed(): ISignal<JupyterCadModel, void> {
     return this._disposed;
   }
@@ -322,6 +336,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _dirty = false;
   private _readOnly = false;
   private _isDisposed = false;
+  private _filePath: string;
 
   private _userChanged = new Signal<this, IUserData[]>(this);
   private _usersMap?: Map<number, any>;
