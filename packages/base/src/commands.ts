@@ -40,7 +40,6 @@ import {
 import keybindings from './keybindings.json';
 import { DEFAULT_MESH_COLOR } from './3dview/helpers';
 import { JupyterCadPanel, JupyterCadWidget } from './widget';
-import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
@@ -631,17 +630,17 @@ const EXPORT_FORM = {
       }
     }
   },
-  default: (context: DocumentRegistry.IContext<IJupyterCadModel>) => {
+  default: (model: IJupyterCadModel) => {
     return {
-      Name: PathExt.basename(context.path).replace(
-        PathExt.extname(context.path),
+      Name: PathExt.basename(model.filePath).replace(
+        PathExt.extname(model.filePath),
         '.jcad'
       )
     };
   },
-  syncData: (context: DocumentRegistry.IContext<IJupyterCadModel>) => {
+  syncData: (model: IJupyterCadModel) => {
     return (props: IDict) => {
-      const endpoint = context.model?.sharedModel?.toJcadEndpoint;
+      const endpoint = model.sharedModel?.toJcadEndpoint;
       if (!endpoint) {
         showErrorMessage('Error', 'Missing endpoint.');
         return;
@@ -650,7 +649,7 @@ const EXPORT_FORM = {
       requestAPI<{ done: boolean }>(endpoint, {
         method: 'POST',
         body: JSON.stringify({
-          path: context.path,
+          path: model.filePath,
           newName: Name
         })
       });
