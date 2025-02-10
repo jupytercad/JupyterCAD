@@ -58,6 +58,7 @@ export class JupyterCadDocumentWidgetFactory extends ABCWidgetFactory<
       }
     }
     const { model } = context;
+    model.filePath = context.localPath;
     const content = new JupyterCadPanel({
       model,
       workerRegistry: this._workerRegistry,

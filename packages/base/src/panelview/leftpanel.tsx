@@ -41,10 +41,7 @@ export class LeftPanelWidget extends SidePanel {
         if (this._currentModel) {
           this._currentModel.pathChanged.disconnect(this._handleFileChange);
         }
-        console.log(changed);
-        
-        console.log(changed.model.filePath);
-        
+
         this._currentModel = changed.model;
         header.title.label = changed.model.filePath;
         this._currentModel.pathChanged.connect(this._handleFileChange);
