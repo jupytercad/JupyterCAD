@@ -2,7 +2,7 @@ import {
   IAnnotationModel,
   IJupyterCadModel,
   IJupyterCadTracker,
-  JupyterCadDoc
+  JupyterCadDoc,
 } from '@jupytercad/schema';
 import { SidePanel } from '@jupyterlab/ui-components';
 
@@ -43,10 +43,18 @@ export class RightPanelWidget extends SidePanel {
       this.addWidget(suggestion);
     }
 
+    this._handleFileChange = () => {
+      header.title.label = this._currentModel?.filePath || '-';
+    };
+
     options.tracker.currentChanged.connect(async (_, changed) => {
       if (changed) {
+        if (this._currentModel) {
+          this._currentModel.pathChanged.disconnect(this._handleFileChange);
+        }
         this._currentModel = changed.model;
         header.title.label = this._currentModel.filePath;
+        this._currentModel.pathChanged.connect(this._handleFileChange);
         this._annotationModel.model =
           options.tracker.currentWidget?.model || undefined;
         // await changed.model.ready;
@@ -56,7 +64,7 @@ export class RightPanelWidget extends SidePanel {
           jupytercadModel: changed.model
         });
       } else {
-        header.title.label = this._currentModel?.filePath || '-';
+        header.title.label = '-';
         this._currentModel = null;
         this._annotationModel.model = undefined;
         suggestionModel?.switchContext({
@@ -72,6 +80,7 @@ export class RightPanelWidget extends SidePanel {
   }
 
   private _currentModel: IJupyterCadModel | null;
+  private _handleFileChange: () => void;
   private _model: IControlPanelModel;
   private _annotationModel: IAnnotationModel;
 }

@@ -19,6 +19,7 @@ import {
   Pointer
 } from './interfaces';
 import jcadSchema from './schema/jcad.json';
+import { Context } from '@jupyterlab/docregistry';
 
 export class JupyterCadModel implements IJupyterCadModel {
   constructor(options: JupyterCadModel.IOptions) {
@@ -127,6 +128,10 @@ export class JupyterCadModel implements IJupyterCadModel {
    */
   set filePath(path: string) {
     this._filePath = path;
+  }
+
+  get pathChanged(): ISignal<Context<IJupyterCadModel>, string> {
+    return this._context.pathChanged;
   }
 
   get disposed(): ISignal<JupyterCadModel, void> {
@@ -337,6 +342,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _readOnly = false;
   private _isDisposed = false;
   private _filePath: string;
+  private _context: Context<IJupyterCadModel>;
 
   private _userChanged = new Signal<this, IUserData[]>(this);
   private _usersMap?: Map<number, any>;
