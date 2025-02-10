@@ -32,21 +32,14 @@ export class LeftPanelWidget extends SidePanel {
     });
     this.addWidget(properties);
 
-    this._handleFileChange = () => {
-      header.title.label = this._currentContext?.filePath || '-';
-    };
 
     options.tracker.currentChanged.connect((_, changed) => {
       if (changed) {
-        if (this._currentContext) {
-          this._currentContext.pathChanged.disconnect(this._handleFileChange);
-        }
-        this._currentContext = changed.model;
+        this._currentModel = changed.model;
         header.title.label = changed.model.filePath;
-        this._currentContext.pathChanged.connect(this._handleFileChange);
       } else {
-        header.title.label = '-';
-        this._currentContext = null;
+        header.title.label = this._currentModel?.filePath || '-';
+        this._currentModel = null;
       }
     });
     (this.content as AccordionPanel).setRelativeSizes([4, 6]);
@@ -56,8 +49,7 @@ export class LeftPanelWidget extends SidePanel {
     super.dispose();
   }
 
-  private _currentContext: IJupyterCadModel | null;
-  private _handleFileChange: () => void;
+  private _currentModel: IJupyterCadModel | null;
   private _model: IControlPanelModel;
 }
 
