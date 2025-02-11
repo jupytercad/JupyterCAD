@@ -231,9 +231,9 @@ jobs:
         shell: bash -l {0}
         run: |
           set -eux
-          cp ./jupytercad_core/dist/jupytercad*.whl jupytercad_core.whl
-          cp ./jupytercad_lab/dist/jupytercad*.whl jupytercad_lab.whl
-          cp ./jupytercad_app/dist/jupytercad*.whl jupytercad_app.whl
+          cp ./jupytercad_core/dist/jupytercad*.whl jupytercad_core-0.0.1-py3-none-any.whl
+          cp ./jupytercad_lab/dist/jupytercad*.whl jupytercad_lab-0.0.1-py3-none-any.whl
+          cp ./jupytercad_app/dist/jupytercad*.whl jupytercad_app-0.0.1-py3-none-any.whl
 
           python -m pip install jupytercad*.whl
 
