@@ -1,8 +1,16 @@
 import { ICollaborativeDrive } from '@jupyter/collaborative-drive';
-import { JupyterCadPanel } from '@jupytercad/base';
+import {
+  JupyterCadPanel,
+  JupyterCadOutputWidget,
+  ToolbarWidget,
+  JupyterCadTracker
+} from '@jupytercad/base';
 import {
   IJCadWorkerRegistry,
   IJCadWorkerRegistryToken,
+  IJCadExternalCommandRegistry,
+  IJCadExternalCommandRegistryToken,
+  IJupyterCadDocTracker,
   IJupyterCadDoc,
   JupyterCadModel
 } from '@jupytercad/schema';
@@ -20,6 +28,11 @@ import {
   IJupyterYWidgetManager,
   JupyterYModel
 } from 'yjs-widgets';
+import { Toolbar } from '@jupyterlab/ui-components';
+import { ConsolePanel } from '@jupyterlab/console';
+import { PathExt } from '@jupyterlab/coreutils';
+import { NotebookPanel } from '@jupyterlab/notebook';
+import { CommandRegistry } from '@lumino/commands';
 
 export interface ICommMetadata {
   create_ydoc: boolean;
@@ -36,15 +49,30 @@ export class YJupyterCADModel extends JupyterYModel {
 }
 
 export class YJupyterCADLuminoWidget extends Panel {
-  constructor(options: {
-    model: JupyterCadModel;
-    workerRegistry: IJCadWorkerRegistry;
-  }) {
+  constructor(options: IOptions) {
     super();
+    console.log('hi', options);
+
+    const { model } = options;
 
     this.addClass(CLASS_NAME);
-    this._jcadWidget = new JupyterCadPanel(options);
-    this.addWidget(this._jcadWidget);
+    this._buildWidget(options);
+
+    // If the filepath was not set when building the widget, the toolbar is not built.
+    // The widget has to be built again to include the toolbar.
+    const onchange = (_: any, args: any) => {
+      if (args.stateChange) {
+        args.stateChange.forEach((change: any) => {
+          if (change.name === 'path') {
+            this.layout?.removeWidget(this._jcadWidget);
+            this._jcadWidget.dispose();
+            this._buildWidget(options);
+          }
+        });
+      }
+    };
+
+    model.sharedModel.changed.connect(onchange);
   }
 
   onResize = (): void => {
@@ -56,17 +84,72 @@ export class YJupyterCADLuminoWidget extends Panel {
     }
   };
 
-  private _jcadWidget: JupyterCadPanel;
+  get jcadWidget(): JupyterCadOutputWidget {
+    return this._jcadWidget;
+  }
+
+  /**
+   * Build the widget and add it to the panel.
+   * @param options
+   */
+  private _buildWidget = (options: IOptions) => {
+    console.log(options);
+
+    const { commands, workerRegistry, model, externalCommands, tracker } =
+      options;
+    // Ensure the model filePath is relevant with the shared model path.
+    if (model.sharedModel.getState('path')) {
+      model.filePath = model.sharedModel.getState('path') as string;
+    }
+    const content = new JupyterCadPanel({
+      model: model,
+      workerRegistry: workerRegistry as IJCadWorkerRegistry
+    });
+    let toolbar: Toolbar | undefined = undefined;
+    console.log(externalCommands);
+
+    if (model.filePath) {
+      toolbar = new ToolbarWidget({
+        commands,
+        model,
+        externalCommands: externalCommands?.getCommands() || []
+      });
+    }
+    this._jcadWidget = new JupyterCadOutputWidget({
+      model,
+      content,
+      toolbar
+    });
+    this.addWidget(this._jcadWidget);
+    tracker?.add(this._jcadWidget);
+  };
+
+  private _jcadWidget: JupyterCadOutputWidget;
+}
+
+interface IOptions {
+  commands: CommandRegistry;
+  workerRegistry?: IJCadWorkerRegistry;
+  model: JupyterCadModel;
+  externalCommands?: IJCadExternalCommandRegistry;
+  tracker?: JupyterCadTracker;
 }
 
 export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:yjswidget-plugin',
   autoStart: true,
   requires: [IJCadWorkerRegistryToken],
-  optional: [IJupyterYWidgetManager, ICollaborativeDrive],
+  optional: [
+    IJCadExternalCommandRegistryToken,
+    IJupyterCadDocTracker,
+    IJupyterYWidgetManager,
+    ICollaborativeDrive
+  ],
   activate: (
     app: JupyterFrontEnd,
-    workerRegistry: IJCadWorkerRegistry,
+    externalCommandRegistry?: IJCadExternalCommandRegistry,
+    jcadTracker?: JupyterCadTracker,
+    workerRegistry?: IJCadWorkerRegistry,
     yWidgetManager?: IJupyterYWidgetManager,
     drive?: ICollaborativeDrive
   ): void => {
@@ -94,6 +177,28 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
           sharedModel: jupyterCadDoc
         });
 
+        this.jupyterCADModel.contentsManager = app.serviceManager.contents;
+
+        if (!sharedModel) {
+          // The path of the project is set to the path of the notebook, to be able to
+          // add local geoJSON/shape file in a "file-less" project.
+          let currentWidgetPath: string | undefined = undefined;
+          const currentWidget = app.shell.currentWidget;
+          if (
+            currentWidget instanceof NotebookPanel ||
+            currentWidget instanceof ConsolePanel
+          ) {
+            currentWidgetPath = currentWidget.sessionContext.path;
+          }
+
+          if (currentWidgetPath) {
+            this.jupyterCADModel.filePath = PathExt.join(
+              PathExt.dirname(currentWidgetPath),
+              'unsaved_project'
+            );
+          }
+        }
+
         return this.jupyterCADModel.sharedModel.ydoc;
       }
     }
@@ -104,8 +209,11 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
         this.node = node;
 
         const widget = new YJupyterCADLuminoWidget({
+          commands: app.commands,
+          externalCommands: externalCommandRegistry,
           model: yModel.jupyterCADModel,
-          workerRegistry
+          workerRegistry: workerRegistry,
+          tracker: jcadTracker
         });
         // Widget.attach(widget, node);
 

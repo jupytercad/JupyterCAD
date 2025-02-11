@@ -39,7 +39,7 @@ export class JupyterCadDocumentWidget
   }
 
   get model(): IJupyterCadModel {
-    return this.context.model;
+    return this.model;
   }
 
   /**

@@ -19,6 +19,7 @@ import {
   Pointer
 } from './interfaces';
 import jcadSchema from './schema/jcad.json';
+import { Contents } from '@jupyterlab/services';
 
 export class JupyterCadModel implements IJupyterCadModel {
   constructor(options: JupyterCadModel.IOptions) {
@@ -95,6 +96,21 @@ export class JupyterCadModel implements IJupyterCadModel {
 
   get localState(): IJupyterCadClientState | null {
     return this.sharedModel.awareness.getLocalState() as IJupyterCadClientState | null;
+  }
+
+  /**
+   * Getter for the contents manager.
+   */
+  get contentsManager(): Contents.IManager | undefined {
+    return this._contentsManager;
+  }
+
+  /**
+   * Setter for the contents manager.
+   * Also updates the file path.
+   */
+  set contentsManager(manager: Contents.IManager | undefined) {
+    this._contentsManager = manager;
   }
 
   get clientStateChanged(): ISignal<this, Map<number, IJupyterCadClientState>> {
@@ -344,6 +360,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _isDisposed = false;
   private _filePath: string;
   private _pathChanged: Signal<JupyterCadModel, string>;
+  private _contentsManager?: Contents.IManager;
 
   private _userChanged = new Signal<this, IUserData[]>(this);
   private _usersMap?: Map<number, any>;

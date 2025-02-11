@@ -119,7 +119,7 @@ const activate = (
       tracker.save(widget);
     });
     themeManager.themeChanged.connect((_, changes) =>
-      widget.context.model.themeChanged.emit(changes)
+      widget.model.themeChanged.emit(changes)
     );
     tracker.add(widget);
     app.shell.activateById('jupytercad::leftControlPanel');

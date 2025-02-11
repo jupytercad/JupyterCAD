@@ -11,6 +11,7 @@ import { User } from '@jupyterlab/services';
 import { JSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import { SplitPanel } from '@lumino/widgets';
+import { Contents } from '@jupyterlab/services';
 
 import {
   IJCadContent,
@@ -142,6 +143,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   localState: IJupyterCadClientState | null;
   filePath: string;
   pathChanged: ISignal<IJupyterCadModel, string>;
+  contentsManager: Contents.IManager | undefined;
 
   themeChanged: Signal<
     IJupyterCadModel,
