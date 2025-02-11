@@ -3,10 +3,48 @@ version: 2
 build:
   os: 'ubuntu-20.04'
   tools:
-    python: 'mambaforge-4.10'
+    python: "3.12"
+    nodejs: "20"
+  jobs:
+    # Install micromamba
+    pre_create_environment:
+      # The recommended syntax in the micromamba docs is process substitution.
+      # RTD's default shell chokes on it, so we're doing it in multiple steps
+      # instead.
+      - curl -L micro.mamba.pm/install.sh > /tmp/micromamba-install.sh
+      - chmod +x /tmp/micromamba-install.sh
+      # For some reason, SHELL is not set. The install script requires it.
+      - SHELL=/bin/bash /bin/bash /tmp/micromamba-install.sh
 
-conda:
-  environment: docs/environment.yml
+    # Override the create_environment step (undocumented feature) to create
+    # multiple environments.
+    create_environment:
+      # Pin micromamba
+      - /bin/bash --login -c "micromamba self-update --version 2.0.5"
+      # Create the env for building the docs
+      - /bin/bash --login -c "micromamba env create -n jupytercad-docs -f docs/environment-docs.yml"
+      # Create the isolated env for building JupyterCAD
+      - /bin/bash --login -c "micromamba create -n jupytercad-build -c conda-forge nodejs hatch pip python=3.13"
+      - /bin/bash --login -c "micromamba run -n jupytercad-build pip install 'jupyterlab==4.3' 'datamodel-code-generator>=0.23.0'"
 
-sphinx:
-  configuration: docs/source/conf.py
+    # Override the install step to do nothing - we already created the envs
+    install:
+      - "echo 'Skipping! We already have the environments we need.'"
+    # Before building the docs, build JupyterCAD in its isolated environment,
+    # then install the wheels into the docs environment.
+    pre_build:
+      - /bin/bash --login -c "micromamba run -n jupytercad-build jlpm install"
+      - /bin/bash --login -c "micromamba run -n jupytercad-build jlpm build"
+
+    build:
+      html:
+        - |-
+          /bin/bash --login -c "cd docs && micromamba run -n jupytercad-docs \
+          python -m sphinx -T -b html -d _build/doctrees -D language=en . \
+          $READTHEDOCS_OUTPUT/html"
+
+# conda:
+#   environment: docs/environment.yml
+
+# sphinx:
+#   configuration: docs/source/conf.py
