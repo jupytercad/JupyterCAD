@@ -51,7 +51,6 @@ export class YJupyterCADModel extends JupyterYModel {
 export class YJupyterCADLuminoWidget extends Panel {
   constructor(options: IOptions) {
     super();
-    console.log('hi', options);
 
     const { model } = options;
 
@@ -93,7 +92,6 @@ export class YJupyterCADLuminoWidget extends Panel {
    * @param options
    */
   private _buildWidget = (options: IOptions) => {
-    console.log(options);
 
     const { commands, workerRegistry, model, externalCommands, tracker } =
       options;
@@ -106,7 +104,6 @@ export class YJupyterCADLuminoWidget extends Panel {
       workerRegistry: workerRegistry as IJCadWorkerRegistry
     });
     let toolbar: Toolbar | undefined = undefined;
-    console.log(externalCommands);
 
     if (model.filePath) {
       toolbar = new ToolbarWidget({
@@ -147,9 +144,9 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
   ],
   activate: (
     app: JupyterFrontEnd,
+    workerRegistry: IJCadWorkerRegistry,
     externalCommandRegistry?: IJCadExternalCommandRegistry,
     jcadTracker?: JupyterCadTracker,
-    workerRegistry?: IJCadWorkerRegistry,
     yWidgetManager?: IJupyterYWidgetManager,
     drive?: ICollaborativeDrive
   ): void => {
