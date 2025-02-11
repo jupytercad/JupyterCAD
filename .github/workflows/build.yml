@@ -243,7 +243,6 @@ jobs:
         run: |
           set -eux
           mkdir -p content && cp ../examples/*.jcad ../examples/*.STEP ../examples/*.stl ../examples/*.ipynb ./content
-          jlpm && jlpm run build
           jupyter lite build --contents content --output-dir dist
 
       - name: Upload github-pages artifact
