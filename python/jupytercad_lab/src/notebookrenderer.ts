@@ -92,7 +92,6 @@ export class YJupyterCADLuminoWidget extends Panel {
    * @param options
    */
   private _buildWidget = (options: IOptions) => {
-
     const { commands, workerRegistry, model, externalCommands, tracker } =
       options;
     // Ensure the model filePath is relevant with the shared model path.

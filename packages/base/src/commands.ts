@@ -699,6 +699,7 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.toggleConsole, {
     label: trans.__('Toggle console'),
+    isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
     isEnabled: () => {
       return tracker.currentWidget
         ? tracker.currentWidget.model.sharedModel.editable
@@ -708,6 +709,7 @@ export function addCommands(
   });
   commands.addCommand(CommandIDs.executeConsole, {
     label: trans.__('Execute console'),
+    isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
     isEnabled: () => {
       return tracker.currentWidget
         ? tracker.currentWidget.model.sharedModel.editable
@@ -717,6 +719,7 @@ export function addCommands(
   });
   commands.addCommand(CommandIDs.removeConsole, {
     label: trans.__('Remove console'),
+    isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
     isEnabled: () => {
       return tracker.currentWidget
         ? tracker.currentWidget.model.sharedModel.editable
@@ -727,6 +730,7 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.invokeCompleter, {
     label: trans.__('Display the completion helper.'),
+    isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
     execute: () => {
       const currentWidget = tracker.currentWidget;
       if (!currentWidget || !completionProviderManager) {
@@ -741,6 +745,7 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.selectCompleter, {
     label: trans.__('Select the completion suggestion.'),
+    isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
     execute: () => {
       const currentWidget = tracker.currentWidget;
       if (!currentWidget || !completionProviderManager) {
