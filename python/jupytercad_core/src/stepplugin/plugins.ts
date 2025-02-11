@@ -17,7 +17,7 @@ import {
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
 import { JupyterCadStepModelFactory } from './modelfactory';
-import { JupyterCadWidgetFactory } from '../factory';
+import { JupyterCadDocumentWidgetFactory } from '../factory';
 import { JupyterCadStepDoc } from './model';
 import { stpIcon } from '@jupytercad/base';
 
@@ -31,7 +31,7 @@ const activate = (
   externalCommandRegistry: IJCadExternalCommandRegistry,
   drive: ICollaborativeDrive | null
 ): void => {
-  const widgetFactory = new JupyterCadWidgetFactory({
+  const widgetFactory = new JupyterCadDocumentWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-stepmodel',
     fileTypes: ['step'],
@@ -74,7 +74,7 @@ const activate = (
       tracker.save(widget);
     });
     themeManager.themeChanged.connect((_, changes) =>
-      widget.context.model.themeChanged.emit(changes)
+      widget.model.themeChanged.emit(changes)
     );
     tracker.add(widget);
     app.shell.activateById('jupytercad::leftControlPanel');

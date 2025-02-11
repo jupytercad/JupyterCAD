@@ -4,13 +4,14 @@ import {
   StateChange,
   YDocument
 } from '@jupyter/ydoc';
-import { IWidgetTracker } from '@jupyterlab/apputils';
+import { IWidgetTracker, MainAreaWidget } from '@jupyterlab/apputils';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
 import { User } from '@jupyterlab/services';
 import { JSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import { SplitPanel } from '@lumino/widgets';
+import { Contents } from '@jupyterlab/services';
 
 import {
   IJCadContent,
@@ -36,8 +37,8 @@ export interface IAnnotationModel {
   updateSignal: ISignal<this, null>;
   user: User.IIdentity | undefined;
 
-  context: DocumentRegistry.IContext<IJupyterCadModel> | undefined;
-  contextChanged: ISignal<this, void>;
+  model: IJupyterCadModel | undefined;
+  modelChanged: ISignal<this, void>;
 
   update(): void;
 
@@ -140,6 +141,9 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   sharedModel: IJupyterCadDoc;
   annotationModel?: IAnnotationModel;
   localState: IJupyterCadClientState | null;
+  filePath: string;
+  pathChanged: ISignal<IJupyterCadModel, string>;
+  contentsManager: Contents.IManager | undefined;
 
   themeChanged: Signal<
     IJupyterCadModel,
@@ -363,9 +367,20 @@ export interface IJCadWorkerRegistry {
   getAllWorkers(): IJCadWorker[];
 }
 
-export type IJupyterCadWidget = IDocumentWidget<SplitPanel, IJupyterCadModel>;
-
 export type IJupyterCadTracker = IWidgetTracker<IJupyterCadWidget>;
+
+export interface IJupyterCadDocumentWidget
+  extends IDocumentWidget<SplitPanel, IJupyterCadModel> {
+  readonly model: IJupyterCadModel;
+}
+
+export interface IJupyterCadOutputWidget extends MainAreaWidget {
+  model: IJupyterCadModel;
+}
+
+export type IJupyterCadWidget =
+  | IJupyterCadDocumentWidget
+  | IJupyterCadOutputWidget;
 
 export interface IJCadFormSchemaRegistry {
   /**
