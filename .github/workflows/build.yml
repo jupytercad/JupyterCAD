@@ -25,7 +25,7 @@ jobs:
             yarn=3
 
       - name: Setup pip cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: pip-3.9-${{ hashFiles('package.json') }}
@@ -38,7 +38,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Setup yarn cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -47,7 +47,7 @@ jobs:
             yarn-
 
       - name: Setup OpenCascade build cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             packages/opencascade/lib/jupytercad.opencascade.js
@@ -159,7 +159,7 @@ jobs:
         run: jlpm install
 
       - name: Set up browser cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ${{ github.workspace }}/pw-browsers
