@@ -39,7 +39,7 @@ import {
 } from './tools';
 import keybindings from './keybindings.json';
 import { DEFAULT_MESH_COLOR } from './3dview/helpers';
-import { JupyterCadPanel, JupyterCadOutputwidget } from './widget';
+import { JupyterCadPanel, JupyterCadWidget } from './widget';
 import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
@@ -203,7 +203,7 @@ function getSelectedEdge(
 export async function executeOperator(
   name: string,
   objectModel: IJCadObject,
-  current: JupyterCadOutputwidget,
+  current: JupyterCadWidget,
   transaction: (sharedModel: IJupyterCadDoc) => any
 ) {
   const sharedModel = current.model.sharedModel;
@@ -271,7 +271,7 @@ const OPERATORS = {
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
-    syncData: (current: JupyterCadOutputwidget) => {
+    syncData: (current: JupyterCadWidget) => {
       return async (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
@@ -316,7 +316,7 @@ const OPERATORS = {
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
-    syncData: (current: JupyterCadOutputwidget) => {
+    syncData: (current: JupyterCadWidget) => {
       return async (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
@@ -364,7 +364,7 @@ const OPERATORS = {
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
-    syncData: (current: JupyterCadOutputwidget) => {
+    syncData: (current: JupyterCadWidget) => {
       return async (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
@@ -408,7 +408,7 @@ const OPERATORS = {
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
-    syncData: (current: JupyterCadOutputwidget) => {
+    syncData: (current: JupyterCadWidget) => {
       return async (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
@@ -451,7 +451,7 @@ const OPERATORS = {
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
-    syncData: (current: JupyterCadOutputwidget) => {
+    syncData: (current: JupyterCadWidget) => {
       return async (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
@@ -492,7 +492,7 @@ const OPERATORS = {
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
     },
-    syncData: (current: JupyterCadOutputwidget) => {
+    syncData: (current: JupyterCadWidget) => {
       return async (props: IDict) => {
         const { Name, ...parameters } = props;
         const objectModel: IJCadObject = {
@@ -667,7 +667,7 @@ function loadKeybindings(commands: CommandRegistry, keybindings: any[]) {
   });
 }
 
-function getSelectedObjectId(widget: JupyterCadOutputwidget): string {
+function getSelectedObjectId(widget: JupyterCadWidget): string {
   const selected = widget.model.sharedModel.awareness.getLocalState()?.selected;
 
   if (selected && selected.value) {
@@ -686,7 +686,7 @@ function getSelectedObjectId(widget: JupyterCadOutputwidget): string {
  */
 export function addCommands(
   app: JupyterFrontEnd,
-  tracker: WidgetTracker<JupyterCadOutputwidget>,
+  tracker: WidgetTracker<JupyterCadWidget>,
   translator: ITranslator,
   formSchemaRegistry: IJCadFormSchemaRegistry,
   workerRegistry: IJCadWorkerRegistry,
@@ -1326,7 +1326,7 @@ namespace Private {
 
   export function createPart(
     part: keyof typeof PARTS,
-    tracker: WidgetTracker<JupyterCadOutputwidget>
+    tracker: WidgetTracker<JupyterCadWidget>
   ) {
     return async (args: any) => {
       const current = tracker.currentWidget;
@@ -1418,7 +1418,7 @@ namespace Private {
 
   export function executeOperator(
     operator: keyof typeof OPERATORS,
-    tracker: WidgetTracker<JupyterCadOutputwidget>
+    tracker: WidgetTracker<JupyterCadWidget>
   ) {
     return async (args: any) => {
       const current = tracker.currentWidget;
@@ -1461,7 +1461,7 @@ namespace Private {
   }
 
   export function executeConsole(
-    tracker: WidgetTracker<JupyterCadOutputwidget>
+    tracker: WidgetTracker<JupyterCadWidget>
   ): void {
     const current = tracker.currentWidget;
 
@@ -1472,7 +1472,7 @@ namespace Private {
   }
 
   export function removeConsole(
-    tracker: WidgetTracker<JupyterCadOutputwidget>
+    tracker: WidgetTracker<JupyterCadWidget>
   ): void {
     const current = tracker.currentWidget;
 

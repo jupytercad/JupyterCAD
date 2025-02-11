@@ -25,7 +25,7 @@ import { MessageLoop } from '@lumino/messaging';
 
 const CELL_OUTPUT_WIDGET_CLASS = 'jcad-cell-output-widget';
 
-export type JupyterCadOutputwidget =
+export type JupyterCadWidget =
   | JupyterCadDocumentWidget
   | JupyterCadOutputWidget;
 export class JupyterCadDocumentWidget
@@ -39,7 +39,7 @@ export class JupyterCadDocumentWidget
   }
 
   get model(): IJupyterCadModel {
-    return this.model;
+    return this.context.model;
   }
 
   /**

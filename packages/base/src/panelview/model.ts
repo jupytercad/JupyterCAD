@@ -1,12 +1,9 @@
 import { IJupyterCadDoc, IJupyterCadModel } from '@jupytercad/schema';
 import { ISignal } from '@lumino/signaling';
 
-import {
-  IJupyterCadTracker,
-  IJupyterCadOutputwidget
-} from '@jupytercad/schema';
+import { IJupyterCadTracker, IJupyterCadWidget } from '@jupytercad/schema';
 import { IControlPanelModel } from '../types';
-import { JupyterCadOutputwidget } from '../widget';
+import { JupyterCadWidget } from '../widget';
 import { MainViewModel } from '../3dview/mainviewmodel';
 
 export class ControlPanelModel implements IControlPanelModel {
@@ -15,10 +12,7 @@ export class ControlPanelModel implements IControlPanelModel {
     this._documentChanged = this._tracker.currentChanged;
   }
 
-  get documentChanged(): ISignal<
-    IJupyterCadTracker,
-    IJupyterCadOutputwidget | null
-  > {
+  get documentChanged(): ISignal<IJupyterCadTracker, IJupyterCadWidget | null> {
     return this._documentChanged;
   }
 
@@ -35,8 +29,8 @@ export class ControlPanelModel implements IControlPanelModel {
   }
 
   get mainViewModel(): MainViewModel | undefined {
-    return (this._tracker.currentWidget as JupyterCadOutputwidget | null)
-      ?.content.currentViewModel;
+    return (this._tracker.currentWidget as JupyterCadWidget | null)?.content
+      .currentViewModel;
   }
 
   disconnect(f: any): void {
@@ -52,7 +46,7 @@ export class ControlPanelModel implements IControlPanelModel {
   private readonly _tracker: IJupyterCadTracker;
   private _documentChanged: ISignal<
     IJupyterCadTracker,
-    IJupyterCadOutputwidget | null
+    IJupyterCadWidget | null
   >;
 }
 

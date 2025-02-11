@@ -6,7 +6,8 @@ import {
   IJupyterCadClientState,
   IJupyterCadModel,
   IJupyterCadTracker,
-  ISelection
+  ISelection,
+  JupyterCadModel
 } from '@jupytercad/schema';
 import { ReactWidget } from '@jupyterlab/apputils';
 import { PanelWithToolbar } from '@jupyterlab/ui-components';
@@ -21,7 +22,7 @@ import {
 } from '../tools';
 import { IControlPanelModel } from '../types';
 import { ObjectPropertiesForm } from './formbuilder';
-import { JupyterCadOutputwidget } from '../widget';
+import { JupyterCadWidget } from '../widget';
 
 export class ObjectProperties extends PanelWithToolbar {
   constructor(params: ObjectProperties.IOptions) {
@@ -81,12 +82,13 @@ export class ObjectProperties extends PanelWithToolbar {
 
         if (changed.model.sharedModel.editable) {
           currentModel = changed.model;
-          const clients = currentModel.sharedModel.awareness.getStates() as Map<
-            number,
-            IJupyterCadClientState
-          >;
-          updateTitle(currentModel, clients);
-          currentModel.clientStateChanged.connect(updateTitle);
+          const clients =
+            currentModel?.sharedModel.awareness.getStates() as Map<
+              number,
+              IJupyterCadClientState
+            >;
+          updateTitle(currentModel as JupyterCadModel, clients);
+          currentModel?.clientStateChanged.connect(updateTitle);
 
           body.show();
         } else {
@@ -190,7 +192,7 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     }
 
     const currentWidget = this.props.tracker
-      .currentWidget as JupyterCadOutputwidget | null;
+      .currentWidget as JupyterCadWidget | null;
     if (!currentWidget) {
       return;
     }

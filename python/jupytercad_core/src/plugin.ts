@@ -1,4 +1,4 @@
-import { AnnotationModel, JupyterCadOutputwidget } from '@jupytercad/base';
+import { AnnotationModel, JupyterCadWidget } from '@jupytercad/base';
 import {
   IAnnotationModel,
   IAnnotationToken,
@@ -36,7 +36,7 @@ export const trackerPlugin: JupyterFrontEndPlugin<IJupyterCadTracker> = {
     translator: ITranslator,
     mainMenu?: IMainMenu
   ): IJupyterCadTracker => {
-    const tracker = new WidgetTracker<JupyterCadOutputwidget>({
+    const tracker = new WidgetTracker<JupyterCadWidget>({
       namespace: NAME_SPACE
     });
     tracker.currentChanged.connect(() => {

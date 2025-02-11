@@ -1,7 +1,7 @@
 import {
   ControlPanelModel,
   logoIcon,
-  JupyterCadOutputwidget,
+  JupyterCadWidget,
   LeftPanelWidget,
   RightPanelWidget,
   addCommands,
@@ -44,7 +44,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
   optional: [IMainMenu, ITranslator, ICompletionProviderManager],
   activate: (
     app: JupyterFrontEnd,
-    tracker: WidgetTracker<JupyterCadOutputwidget>,
+    tracker: WidgetTracker<JupyterCadWidget>,
     formSchemaRegistry: IJCadFormSchemaRegistry,
     workerRegistry: IJCadWorkerRegistry,
     mainMenu?: IMainMenu,
