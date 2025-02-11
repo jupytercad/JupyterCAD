@@ -235,8 +235,6 @@ jobs:
           cp ./jupytercad_lab/dist/jupytercad*.whl jupytercad_lab-0.0.1-py3-none-any.whl
           cp ./jupytercad_app/dist/jupytercad*.whl jupytercad_app-0.0.1-py3-none-any.whl
 
-          python -m pip install jupytercad*.whl
-
       - name: Build the lite site
         shell: bash -l {0}
         working-directory: lite
