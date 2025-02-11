@@ -30,7 +30,7 @@ import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { ILauncher } from '@jupyterlab/launcher';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 
-import { JupyterCadWidgetFactory } from '../factory';
+import { JupyterCadDocumentWidgetFactory } from '../factory';
 import { JupyterCadJcadModelFactory } from './modelfactory';
 import { MimeDocumentFactory } from '@jupyterlab/docregistry';
 
@@ -58,7 +58,7 @@ const activate = (
   palette: ICommandPalette | null,
   drive: ICollaborativeDrive | null
 ): void => {
-  const widgetFactory = new JupyterCadWidgetFactory({
+  const widgetFactory = new JupyterCadDocumentWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-jcadmodel',
     fileTypes: [CONTENT_TYPE],
@@ -119,7 +119,7 @@ const activate = (
       tracker.save(widget);
     });
     themeManager.themeChanged.connect((_, changes) =>
-      widget.context.model.themeChanged.emit(changes)
+      widget.model.themeChanged.emit(changes)
     );
     tracker.add(widget);
     app.shell.activateById('jupytercad::leftControlPanel');

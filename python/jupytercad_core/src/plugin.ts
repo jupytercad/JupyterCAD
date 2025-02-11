@@ -59,11 +59,11 @@ export const annotationPlugin: JupyterFrontEndPlugin<IAnnotationModel> = {
   provides: IAnnotationToken,
   activate: (app: JupyterFrontEnd, tracker: IJupyterCadTracker) => {
     const annotationModel = new AnnotationModel({
-      context: tracker.currentWidget?.context
+      model: tracker.currentWidget?.model
     });
 
     tracker.currentChanged.connect((_, changed) => {
-      annotationModel.context = changed?.context || undefined;
+      annotationModel.model = changed?.model || undefined;
     });
     return annotationModel;
   }
