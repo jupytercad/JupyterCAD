@@ -1,7 +1,7 @@
 name: xeus-python-kernel
 channels:
   - https://prefix.dev/emscripten-forge-dev
-  - conda-forge
+  - https://prefix.dev/conda-forge
 dependencies:
   - python=3.13
   - pip
