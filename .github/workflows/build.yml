@@ -221,6 +221,7 @@ jobs:
             pip
             jupyterlite-core
             jupyterlite-xeus
+            jupyter-server
 
       - name: Download extension package
         uses: actions/download-artifact@v4
