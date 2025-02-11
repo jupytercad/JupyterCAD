@@ -23,8 +23,7 @@ export class JupyterCadStlModelFactory
   /**
    * Whether the model is collaborative or not.
    */
-  readonly collaborative =
-    document.querySelectorAll('[data-jupyter-lite-root]')[0] === undefined;
+  readonly collaborative = true;
 
   /**
    * The name of the model.
