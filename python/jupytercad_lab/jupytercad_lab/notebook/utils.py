@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 from urllib.parse import urljoin
 
@@ -14,3 +15,10 @@ def multi_urljoin(*parts) -> str:
         parts[0],
         "/".join(part for part in parts[1:]),
     )
+
+
+def normalize_path(path: str) -> str:
+    if os.path.isabs(path):
+        return path
+    else:
+        return os.path.abspath(os.path.join(os.getcwd(), path))

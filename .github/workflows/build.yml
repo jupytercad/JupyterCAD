@@ -25,7 +25,7 @@ jobs:
             yarn=3
 
       - name: Setup pip cache
-        uses: actions/cache@v4
+        uses: actions/cache@v2
         with:
           path: ~/.cache/pip
           key: pip-3.9-${{ hashFiles('package.json') }}
@@ -38,7 +38,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Setup yarn cache
-        uses: actions/cache@v4
+        uses: actions/cache@v2
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -47,7 +47,7 @@ jobs:
             yarn-
 
       - name: Setup OpenCascade build cache
-        uses: actions/cache@v4
+        uses: actions/cache@v2
         with:
           path: |
             packages/opencascade/lib/jupytercad.opencascade.js
@@ -84,7 +84,6 @@ jobs:
             python/jupytercad_core/dist/jupytercad*
             python/jupytercad_lab/dist/jupytercad*
             python/jupytercad_app/dist/jupytercad*
-            python/jupytercad/dist/jupytercad*
           if-no-files-found: error
 
   test_isolated:
@@ -149,7 +148,7 @@ jobs:
         shell: bash -l {0}
         run: |
           set -eux
-          cp ./jupytercad_core/dist/jupytercad*.whl ./jupytercad_lab/dist/jupytercad*.whl ./jupytercad_app/dist/jupytercad*.whl ./jupytercad/dist/jupytercad*.whl .
+          cp ./jupytercad_core/dist/jupytercad*.whl ./jupytercad_lab/dist/jupytercad*.whl ./jupytercad_app/dist/jupytercad*.whl .
           python -m pip install jupytercad*.whl
 
       - name: Install dependencies
@@ -160,7 +159,7 @@ jobs:
         run: jlpm install
 
       - name: Set up browser cache
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: |
             ${{ github.workspace }}/pw-browsers
@@ -222,7 +221,6 @@ jobs:
             pip
             jupyterlite-core
             jupyterlite-xeus
-            jupyter_server
 
       - name: Download extension package
         uses: actions/download-artifact@v4
@@ -233,16 +231,15 @@ jobs:
         shell: bash -l {0}
         run: |
           set -eux
-          cp ./jupytercad_core/dist/jupytercad*.whl jupytercad_core-0.0.1-py3-none-any.whl
-          cp ./jupytercad_lab/dist/jupytercad*.whl jupytercad_lab-0.0.1-py3-none-any.whl
-          cp ./jupytercad_app/dist/jupytercad*.whl jupytercad_app-0.0.1-py3-none-any.whl
+          cp ./jupytercad_core/dist/jupytercad*.whl ./jupytercad_lab/dist/jupytercad*.whl ./jupytercad_app/dist/jupytercad*.whl .
+          python -m pip install jupytercad*.whl
 
       - name: Build the lite site
         shell: bash -l {0}
         working-directory: lite
         run: |
           set -eux
-          mkdir -p content && cp ../examples/*.jcad ../examples/*.STEP ../examples/*.stl ../examples/*.ipynb ./content
+          mkdir -p content && cp ../examples/*.jcad ../examples/*.STEP ../examples/*.stl ./content
           jupyter lite build --contents content --output-dir dist
 
       - name: Upload github-pages artifact

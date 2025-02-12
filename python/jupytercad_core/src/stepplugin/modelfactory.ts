@@ -23,7 +23,8 @@ export class JupyterCadStepModelFactory
   /**
    * Whether the model is collaborative or not.
    */
-  readonly collaborative = true;
+  readonly collaborative =
+    document.querySelectorAll('[data-jupyter-lite-root]')[0] === undefined;
 
   /**
    * The name of the model.

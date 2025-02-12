@@ -15,7 +15,6 @@ import {
   JupyterCadModel
 } from '@jupytercad/schema';
 
-import { showErrorMessage } from '@jupyterlab/apputils';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
@@ -23,11 +22,11 @@ import {
 import { Contents } from '@jupyterlab/services';
 import { MessageLoop } from '@lumino/messaging';
 import { Panel, Widget } from '@lumino/widgets';
+import * as Y from 'yjs';
 import {
   IJupyterYWidget,
   IJupyterYWidgetManager,
-  JupyterYModel,
-  JupyterYDoc
+  JupyterYModel
 } from 'yjs-widgets';
 import { Toolbar } from '@jupyterlab/ui-components';
 import { ConsolePanel } from '@jupyterlab/console';
@@ -95,6 +94,10 @@ export class YJupyterCADLuminoWidget extends Panel {
   private _buildWidget = (options: IOptions) => {
     const { commands, workerRegistry, model, externalCommands, tracker } =
       options;
+    // Ensure the model filePath is relevant with the shared model path.
+    if (model.sharedModel.getState('path')) {
+      model.filePath = model.sharedModel.getState('path') as string;
+    }
     const content = new JupyterCadPanel({
       model: model,
       workerRegistry: workerRegistry as IJCadWorkerRegistry
@@ -150,57 +153,17 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
       console.error('Missing IJupyterYWidgetManager token!');
       return;
     }
-
+    if (!drive) {
+      console.error('Missing ICollaborativeDrive token!');
+      return;
+    }
     class YJupyterCADModelFactory extends YJupyterCADModel {
-      protected async initialize(commMetadata: {
-        [key: string]: any;
-      }): Promise<void> {
+      ydocFactory(commMetadata: ICommMetadata): Y.Doc {
         const { path, format, contentType } = commMetadata;
         const fileFormat = format as Contents.FileFormat;
 
-        if (!drive) {
-          showErrorMessage(
-            'Error using the JupyterCAD Python API',
-            'You cannot use the JupyterCAD Python API without a collaborative drive. You need to install a package providing collaboration features (e.g. jupyter-collaboration).'
-          );
-          throw new Error(
-            'Failed to create the YDoc without a collaborative drive'
-          );
-        }
-
-        // The path of the project is relative to the path of the notebook
-        let currentWidgetPath = '';
-        const currentWidget = app.shell.currentWidget;
-        if (
-          currentWidget instanceof NotebookPanel ||
-          currentWidget instanceof ConsolePanel
-        ) {
-          currentWidgetPath = currentWidget.sessionContext.path;
-        }
-
-        let localPath = '';
-        if (path) {
-          localPath = PathExt.join(PathExt.dirname(currentWidgetPath), path);
-
-          // If the file does not exist yet, create it
-          try {
-            await app.serviceManager.contents.get(localPath);
-          } catch (e) {
-            await app.serviceManager.contents.save(localPath, {
-              content: btoa('{}'),
-              format: 'base64'
-            });
-          }
-        } else {
-          // If the user did not provide a path, do not create
-          localPath = PathExt.join(
-            PathExt.dirname(currentWidgetPath),
-            'unsaved_project'
-          );
-        }
-
         const sharedModel = drive!.sharedModelFactory.createNew({
-          path: localPath,
+          path,
           format: fileFormat,
           contentType,
           collaborative: true
@@ -211,10 +174,28 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
         });
 
         this.jupyterCADModel.contentsManager = app.serviceManager.contents;
-        this.jupyterCADModel.filePath = localPath;
 
-        this.ydoc = this.jupyterCADModel.sharedModel.ydoc;
-        this.sharedModel = new JupyterYDoc(commMetadata, this.ydoc);
+        if (!sharedModel) {
+          // The path of the project is set to the path of the notebook, to be able to
+          // add local geoJSON/shape file in a "file-less" project.
+          let currentWidgetPath: string | undefined = undefined;
+          const currentWidget = app.shell.currentWidget;
+          if (
+            currentWidget instanceof NotebookPanel ||
+            currentWidget instanceof ConsolePanel
+          ) {
+            currentWidgetPath = currentWidget.sessionContext.path;
+          }
+
+          if (currentWidgetPath) {
+            this.jupyterCADModel.filePath = PathExt.join(
+              PathExt.dirname(currentWidgetPath),
+              'unsaved_project'
+            );
+          }
+        }
+
+        return this.jupyterCADModel.sharedModel.ydoc;
       }
     }
 

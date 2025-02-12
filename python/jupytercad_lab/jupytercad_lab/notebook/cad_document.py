@@ -28,6 +28,7 @@ from jupytercad_core.schema import (
     ShapeMetadata,
     IAny,
 )
+from .utils import normalize_path
 
 logger = logging.getLogger(__file__)
 
@@ -71,7 +72,7 @@ class CadDocument(CommWidget):
         contentType = None
 
         if filePath is not None:
-            path = filePath
+            path = normalize_path(filePath)
             file_name = Path(path).name
             try:
                 ext = file_name.split(".")[1].lower()
