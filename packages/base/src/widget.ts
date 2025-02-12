@@ -272,7 +272,7 @@ export class JupyterCadPanel extends SplitPanel {
         this.setRelativeSizes([2, 1]);
         this._consoleOpened = true;
         await consolePanel.console.inject(
-          `from jupytercad_lab import CadDocument\ndoc = CadDocument("${jcadPath}")`
+          `from jupytercad import CadDocument\ndoc = CadDocument("${jcadPath}")`
         );
         consolePanel.console.sessionContext.kernelChanged.connect((_, arg) => {
           if (!arg.newValue) {
