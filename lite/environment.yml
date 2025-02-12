@@ -16,4 +16,3 @@ dependencies:
       - my-jupyter-shared-drive
       - ../jupytercad_core-0.0.1-py3-none-any.whl
       - ../jupytercad_lab-0.0.1-py3-none-any.whl
-      - ../jupytercad_lite-0.0.1-py3-none-any.whl
