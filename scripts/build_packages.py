@@ -17,6 +17,7 @@ def build_packages():
         "jupytercad_lab",
         "jupytercad_app",
         "jupytercad",
+        "jupytercad_lite",
     ]
 
     execute(install_build_deps)
