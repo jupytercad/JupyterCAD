@@ -119,7 +119,7 @@
       },
       "@jupyter/docprovider": {
         "singleton": true,
-        "bundled": false
+        "bundled": true
       },
       "yjs-widgets": {
         "singleton": true,
