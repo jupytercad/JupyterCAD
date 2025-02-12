@@ -35,10 +35,12 @@ def install_dev(no_occ_build=False):
             execute("jupyter server extension enable jupytercad_core")
 
         if py_package != "jupytercad_app":
-            execute(f"pip install -e {python_package_prefix}/jupytercad")
             execute(
                 f"jupyter labextension develop {python_package_prefix}/{py_package} --overwrite"
             )
+
+    if py_package != "jupytercad_app":
+        execute(f"pip install -e {python_package_prefix}/jupytercad")
 
 
 if __name__ == "__main__":
