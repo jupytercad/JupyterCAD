@@ -22,6 +22,8 @@ dependencies = [
   "jupytercad_core==3.0.1",
   "jupytercad_lab==3.0.1",
   "jupytercad_app==3.0.1",
+  "jupyter-collaboration>=3,<4",
+  "jupyterlab>=4.3,<5",
 ]
 dynamic = ["version"]
 license = {file = "LICENSE"}

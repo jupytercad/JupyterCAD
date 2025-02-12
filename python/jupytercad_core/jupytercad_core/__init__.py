@@ -9,8 +9,6 @@ except ImportError:
     warnings.warn("Importing 'jupytercad_core' outside a proper installation.")
     __version__ = "dev"
 
-from .handlers import setup_handlers
-
 
 def _jupyter_labextension_paths():
     return [{"src": "labextension", "dest": "@jupytercad/jupytercad-core"}]
@@ -24,5 +22,7 @@ def _load_jupyter_server_extension(server_app):
     server_app: jupyterlab.labapp.LabApp
         JupyterLab application instance
     """
+    from .handlers import setup_handlers
+
     setup_handlers(server_app.web_app)
     server_app.log.info("Registered jupytercad server extension")
