@@ -149,7 +149,7 @@ jobs:
         shell: bash -l {0}
         run: |
           set -eux
-          cp ./jupytercad_core/dist/jupytercad*.whl ./jupytercad_lab/dist/jupytercad*.whl ./jupytercad_app/dist/jupytercad*.whl .
+          cp ./jupytercad_core/dist/jupytercad*.whl ./jupytercad_lab/dist/jupytercad*.whl ./jupytercad_app/dist/jupytercad*.whl ./jupytercad/dist/jupytercad*.whl .
           python -m pip install jupytercad*.whl
 
       - name: Install dependencies
@@ -236,7 +236,6 @@ jobs:
           cp ./jupytercad_core/dist/jupytercad*.whl jupytercad_core-0.0.1-py3-none-any.whl
           cp ./jupytercad_lab/dist/jupytercad*.whl jupytercad_lab-0.0.1-py3-none-any.whl
           cp ./jupytercad_app/dist/jupytercad*.whl jupytercad_app-0.0.1-py3-none-any.whl
-          cp ./jupytercad/dist/jupytercad*.whl jupytercad-0.0.1-py3-none-any.whl
 
       - name: Build the lite site
         shell: bash -l {0}
