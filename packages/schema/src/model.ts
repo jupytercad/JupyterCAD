@@ -35,7 +35,8 @@ export class JupyterCadModel implements IJupyterCadModel {
     this._pathChanged = new Signal<JupyterCadModel, string>(this);
   }
 
-  readonly collaborative = true;
+  readonly collaborative =
+    document.querySelectorAll('[data-jupyter-lite-root]')[0] === undefined;
 
   get sharedModel(): IJupyterCadDoc {
     return this._sharedModel;
