@@ -118,10 +118,6 @@
       "@jupyter/collaborative-drive": {
         "singleton": true,
         "bundled": false
-      },
-      "@jupyter/docprovider": {
-        "singleton": true,
-        "bundled": false
       }
     }
   }
