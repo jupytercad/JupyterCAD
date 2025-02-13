@@ -39,6 +39,8 @@ def install_dev(no_occ_build=False):
                 f"jupyter labextension develop {python_package_prefix}/{py_package} --overwrite"
             )
 
+    execute(f"pip install -e {python_package_prefix}/jupytercad")
+
 
 if __name__ == "__main__":
     argv = sys.argv
