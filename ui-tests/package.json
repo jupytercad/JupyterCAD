@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "start": "jupyter lab --config jupyter_server_test_config.py",
+    "start:lite": "python -m http.server 8866",
     "test": "npx playwright test --workers 1",
     "test:update": "npx playwright test --update-snapshots",
     "test:debug": "PWDEBUG=1 npx playwright test --workers 1"
