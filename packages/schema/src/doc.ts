@@ -75,12 +75,20 @@ export class JupyterCadDoc
     return { objects, options, metadata, outputs };
   }
 
-  setSource(value: JSONObject | string): void {
-    if (!value) {
+  setSource(source: JSONObject | string): void {
+    if (!source) {
       return;
     }
+    let value: JSONObject;
+
+    if (typeof source === 'string') {
+      value = JSON.parse(source);
+    } else {
+      value = source;
+    }
+
     this.transact(() => {
-      const objects = value['objects'] ?? [];
+      const objects = (value['objects'] ?? []) as any[];
       objects.forEach(obj => {
         this._objects.push([new Y.Map(Object.entries(obj))]);
       });
