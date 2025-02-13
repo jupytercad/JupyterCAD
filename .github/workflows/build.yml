@@ -255,6 +255,13 @@ jobs:
           path: ./lite/dist
           retention-days: 30
 
+      - name: Upload lite artifact
+        id: upload-lite-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lite-artifacts
+          path: ./lite/dist
+
       - name: Save artifact data
         uses: trungleduc/appsharingspace-pr-comment/.github/actions/save-artifact-link@v2
         with:
