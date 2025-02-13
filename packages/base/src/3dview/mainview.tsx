@@ -947,7 +947,8 @@ export class MainView extends React.Component<IProps, IStates> {
           } else {
             if (objColor && el.material?.color) {
               el.material.color = originalEdgeColor;
-              el.material.linewidth = DEFAULT_LINEWIDTH / window.devicePixelRatio;
+              el.material.linewidth =
+                DEFAULT_LINEWIDTH / window.devicePixelRatio;
               el.userData.originalColor = originalEdgeColor.clone();
             }
           }
