@@ -8,10 +8,10 @@ module.exports = {
   webServer: {
     command: 'jlpm start:lite',
     url: 'http://localhost:8000/lab',
-    timeout: 120 * 1000,
+    timeout: 1000,
     reuseExistingServer: false
   },
-  retries: 1,
+  retries: 0,
   use: {
     ...baseConfig.use,
     acceptDownloads: true,

@@ -26,14 +26,14 @@ test.describe('UI Test', () => {
   });
 
   test.describe('File operations', () => {
-    test.beforeAll(async ({ request }) => {
-      const content = galata.newContentsHelper(request);
-      await content.deleteDirectory('/examples');
-      await content.uploadDirectory(
-        path.resolve(__dirname, '../../examples'),
-        '/examples'
-      );
-    });
+    // test.beforeAll(async ({ request }) => {
+    //   const content = galata.newContentsHelper(request);
+    //   await content.deleteDirectory('/examples');
+    //   await content.uploadDirectory(
+    //     path.resolve(__dirname, '../../examples'),
+    //     '/examples'
+    //   );
+    // });
     let errors = 0;
     test.beforeEach(async ({ page }) => {
       page.setViewportSize({ width: 1920, height: 1080 });
