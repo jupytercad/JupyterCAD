@@ -333,8 +333,7 @@ jobs:
       - name: Execute integration tests
         shell: bash -l {0}
         working-directory: ui-tests
-        run: |
-          npx playwright test:lite
+        run: npx playwright test
 
       - name: Upload Playwright Test report
         id: upload-galata-artifact
