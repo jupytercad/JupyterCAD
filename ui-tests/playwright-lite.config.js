@@ -7,7 +7,8 @@ module.exports = {
   ...baseConfig,
   webServer: {
     command: 'jlpm start:lite',
-    url: 'http://localhost:8888/lab',
+    url: 'http://localhost:8866/lab',
+    port: 8866,
     timeout: 120 * 1000,
     reuseExistingServer: false
   },
