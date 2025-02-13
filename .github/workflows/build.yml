@@ -302,7 +302,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: lite-artifacts
-
+      - name: debug
+        run: ls
       # - name: Install the extension
       #   shell: bash -l {0}
       #   run: |
