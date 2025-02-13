@@ -14,8 +14,12 @@ module.exports = {
   retries: 1,
   use: {
     ...baseConfig.use,
-    trace: 'off',
-
+    acceptDownloads: true,
+    appPath: '',
+    autoGoto: false,
+    baseURL: 'http://localhost:8000',
+    trace: 'retain-on-failure',
+    video: 'retain-on-failure',
   },
   expect: {
     toMatchSnapshot: {
