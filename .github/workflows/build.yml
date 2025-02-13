@@ -251,7 +251,6 @@ jobs:
         id: upload-jupyterlite-artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          name: lite-artifacts
           path: ./lite/dist
           retention-days: 30
 
