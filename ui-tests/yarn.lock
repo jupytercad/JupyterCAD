@@ -725,7 +725,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/galata@npm:^5.2.5":
+"@jupyterlab/galata@npm:^5.3.4":
   version: 5.3.5
   resolution: "@jupyterlab/galata@npm:5.3.5"
   dependencies:
@@ -2839,7 +2839,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "jupytercad-ui-tests@workspace:."
   dependencies:
-    "@jupyterlab/galata": ^5.2.5
+    "@jupyterlab/galata": ^5.3.4
     "@playwright/test": ^1.32.0
     "@types/klaw-sync": ^6.0.1
     klaw-sync: ^6.0.0
