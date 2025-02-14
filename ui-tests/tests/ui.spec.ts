@@ -54,7 +54,7 @@ test.describe('UI Test', () => {
         page
       }) => {
         await page.goto();
-        const fullPath = `examples/${file}`;
+        const fullPath = `${file}`;
         await page.notebook.openByPath(fullPath);
         await page.notebook.activate(fullPath);
         await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
@@ -140,7 +140,7 @@ test.describe('UI Test', () => {
       await page.goto();
 
       const fileName = 'test.jcad';
-      const fullPath = `examples/${fileName}`;
+      const fullPath = `${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
@@ -176,7 +176,7 @@ test.describe('UI Test', () => {
       await page.goto();
 
       const fileName = 'test.jcad';
-      const fullPath = `examples/${fileName}`;
+      const fullPath = `${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
@@ -214,7 +214,7 @@ test.describe('UI Test', () => {
       await page.goto();
 
       const fileName = 'test.jcad';
-      const fullPath = `examples/${fileName}`;
+      const fullPath = `${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
@@ -276,7 +276,7 @@ test.describe('UI Test', () => {
       await page.goto();
 
       const fileName = 'test.jcad';
-      const fullPath = `examples/${fileName}`;
+      const fullPath = `${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
@@ -388,7 +388,7 @@ test.describe('UI Test', () => {
       await page.goto();
 
       const fileName = 'test.jcad';
-      const fullPath = `examples/${fileName}`;
+      const fullPath = `${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
@@ -428,7 +428,7 @@ test.describe('UI Test', () => {
       await page.goto();
 
       const fileName = 'test.jcad';
-      const fullPath = `examples/${fileName}`;
+      const fullPath = `${fileName}`;
       await page.notebook.openByPath(fullPath);
       await page.notebook.activate(fullPath);
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
