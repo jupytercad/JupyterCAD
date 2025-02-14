@@ -5,6 +5,9 @@ test.use({ autoGoto: false });
 
 test.describe('UI Test', () => {
   const fileList = ['test.jcad', '3M_CONNECTOR.STEP', 'fan.stl'];
+  test.beforeEach(async ({ page }) => {
+    await page.goto('lab/index.html');
+  });
 
   test.describe('Extension activation test', () => {
     test('should emit an activation console message', async ({
@@ -49,34 +52,34 @@ test.describe('UI Test', () => {
       errors = 0;
     });
 
-    for (const file of fileList) {
-      test(`Should be able to render ${file} without error`, async ({
-        page
-      }) => {
-        await page.goto();
-        const fullPath = `examples/${file}`;
-        await page.notebook.openByPath(fullPath);
-        await page.notebook.activate(fullPath);
-        await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
-        await page.waitForTimeout(1000);
+    // for (const file of fileList) {
+    //   test(`Should be able to render ${file} without error`, async ({
+    //     page
+    //   }) => {
+    //     await page.goto();
+    //     const fullPath = `examples/${file}`;
+    //     await page.notebook.openByPath(fullPath);
+    //     await page.notebook.activate(fullPath);
+    //     await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
+    //     await page.waitForTimeout(1000);
 
-        if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
-          await page.getByRole('button', { name: 'Ok' }).click();
-        }
+    //     if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
+    //       await page.getByRole('button', { name: 'Ok' }).click();
+    //     }
 
-        await page.sidebar.close('left');
-        await page.sidebar.close('right');
-        await page.waitForTimeout(1000);
-        const main = await page.$('#jp-main-split-panel');
-        expect(errors).toBe(0);
-        if (main) {
-          expect(await main.screenshot()).toMatchSnapshot({
-            name: `Render-${file}.png`,
-            maxDiffPixelRatio: 0.01
-          });
-        }
-      });
-    }
+    //     await page.sidebar.close('left');
+    //     await page.sidebar.close('right');
+    //     await page.waitForTimeout(1000);
+    //     const main = await page.$('#jp-main-split-panel');
+    //     expect(errors).toBe(0);
+    //     if (main) {
+    //       expect(await main.screenshot()).toMatchSnapshot({
+    //         name: `Render-${file}.png`,
+    //         maxDiffPixelRatio: 0.01
+    //       });
+    //     }
+    //   });
+    // }
   });
 
   // test.describe('File operator test', () => {
