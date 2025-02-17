@@ -56,6 +56,10 @@ export class JupyterCadStepDoc extends JupyterCadDoc {
     ];
   }
 
+  setSource(value: string): void {
+    this._source.insert(0, value);
+  }
+
   static create(): JupyterCadStepDoc {
     return new JupyterCadStepDoc();
   }
