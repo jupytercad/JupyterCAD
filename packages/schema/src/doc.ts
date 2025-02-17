@@ -347,10 +347,10 @@ export class JupyterCadDoc
     this._optionsChanged.emit(event.keys);
   };
 
-  protected _objects: Y.Array<Y.Map<any>>;
-  protected _options: Y.Map<any>;
-  protected _metadata: Y.Map<string>;
-  protected _outputs: Y.Map<IPostResult>;
+  private _objects: Y.Array<Y.Map<any>>;
+  private _options: Y.Map<any>;
+  private _metadata: Y.Map<string>;
+  private _outputs: Y.Map<IPostResult>;
   private _metadataChanged = new Signal<IJupyterCadDoc, MapChange>(this);
   private _optionsChanged = new Signal<IJupyterCadDoc, MapChange>(this);
   private _objectsChanged = new Signal<IJupyterCadDoc, IJcadObjectDocChange>(

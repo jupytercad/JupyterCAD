@@ -5,8 +5,7 @@ import {
   IJupyterCadDoc,
   JupyterCadDoc
 } from '@jupytercad/schema';
-import { JSONExt, JSONObject } from '@lumino/coreutils';
-import { IPostResult } from '@jupytercad/schema';
+import { JSONExt } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import * as Y from 'yjs';
 
