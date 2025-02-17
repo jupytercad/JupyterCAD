@@ -57,39 +57,8 @@ export class JupyterCadStepDoc extends JupyterCadDoc {
     ];
   }
 
-  setSource(source: JSONObject | string): void {
-    if (!source) {
-      return;
-    }
-    let value: JSONObject;
-
-    if (typeof source === 'string') {
-      value = JSON.parse(source);
-    } else {
-      value = source;
-    }
-
-    this.transact(() => {
-      const objects = (value['objects'] ?? []) as any[];
-      objects.forEach(obj => {
-        this._objects.push([new Y.Map(Object.entries(obj))]);
-      });
-
-      const options = value['options'] ?? {};
-      Object.entries(options).forEach(([key, val]) =>
-        this._options.set(key, val)
-      );
-
-      const metadata = value['metadata'] ?? {};
-      Object.entries(metadata).forEach(([key, val]) =>
-        this._metadata.set(key, val as string)
-      );
-
-      const outputs = value['outputs'] ?? {};
-      Object.entries(outputs).forEach(([key, val]) =>
-        this._outputs.set(key, val as IPostResult)
-      );
-    });
+  setSource(value: string): void {
+    this._source.insert(0, value);
   }
 
   static create(): JupyterCadStepDoc {
