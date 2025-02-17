@@ -5,9 +5,10 @@ import {
   IJupyterCadDoc,
   JupyterCadDoc
 } from '@jupytercad/schema';
-import { JSONExt } from '@lumino/coreutils';
+import { JSONExt, JSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import * as Y from 'yjs';
+import { IPostResult } from '@jupytercad/schema';
 
 export class JupyterCadStlDoc extends JupyterCadDoc {
   constructor() {
@@ -54,6 +55,41 @@ export class JupyterCadStlDoc extends JupyterCadDoc {
         }
       }
     ];
+  }
+
+  setSource(source: JSONObject | string): void {
+    if (!source) {
+      return;
+    }
+    let value: JSONObject;
+
+    if (typeof source === 'string') {
+      value = JSON.parse(source);
+    } else {
+      value = source;
+    }
+
+    this.transact(() => {
+      const objects = (value['objects'] ?? []) as any[];
+      objects.forEach(obj => {
+        this._objects.push([new Y.Map(Object.entries(obj))]);
+      });
+
+      const options = value['options'] ?? {};
+      Object.entries(options).forEach(([key, val]) =>
+        this._options.set(key, val)
+      );
+
+      const metadata = value['metadata'] ?? {};
+      Object.entries(metadata).forEach(([key, val]) =>
+        this._metadata.set(key, val as string)
+      );
+
+      const outputs = value['outputs'] ?? {};
+      Object.entries(outputs).forEach(([key, val]) =>
+        this._outputs.set(key, val as IPostResult)
+      );
+    });
   }
 
   static create(): JupyterCadStlDoc {
