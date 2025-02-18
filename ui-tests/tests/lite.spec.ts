@@ -21,11 +21,15 @@ test.describe('UI Test', () => {
   });
 
   for (const file of fileList) {
-    test(`Should be able to render ${file} without error`, async ({ browser }) => {
+    test(`Should be able to render ${file} without error`, async ({
+      browser
+    }) => {
       const context = await browser.newContext();
       const page = await context.newPage();
 
-      await page.goto(`lab/index.html?path=${file}`, {waitUntil: 'domcontentloaded'});
+      await page.goto(`lab/index.html?path=${file}`, {
+        waitUntil: 'domcontentloaded'
+      });
       console.log('FILE LOADED');
 
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
@@ -39,10 +43,13 @@ test.describe('UI Test', () => {
       // await page.sidebar.close('right');
       await page.waitForTimeout(1000);
 
-      const main = await page.waitForSelector('#jp-main-split-panel', { state: 'visible', timeout: 10000 });
+      const main = await page.waitForSelector('#jp-main-split-panel', {
+        state: 'visible',
+        timeout: 10000
+      });
 
-      console.log('hurrayyyy',main);
-      
+      console.log('hurrayyyy', main);
+
       expect(errors).toBe(0);
       if (main) {
         expect(await main.screenshot()).toMatchSnapshot({

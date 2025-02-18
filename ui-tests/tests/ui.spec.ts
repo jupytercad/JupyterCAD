@@ -7,20 +7,14 @@ test.describe('UI Test', () => {
   const fileList = ['test.jcad', '3M_CONNECTOR.STEP', 'fan.stl'];
 
   test.describe('Extension activation test', () => {
-    test('should emit an activation console message', async ({
-      page
-    }) => {
+    test('should emit an activation console message', async ({ page }) => {
       const logs: string[] = [];
 
       page.on('console', message => {
-        console.log('CONSOLE MSG:', message.text());
         logs.push(message.text());
-        console.log(`Total logs captured: ${logs.length}`);
       });
 
-      console.log('pagey', page);
-      
-      await page.goto('?path=pad.jcad');
+      await page.goto();
 
       expect(logs.filter(s => s === 'Initializing OCC...')).toHaveLength(1);
       expect(logs.filter(s => s === 'Done!')).toHaveLength(1);
