@@ -50,31 +50,12 @@ test.describe('UI Test', () => {
     });
 
     for (const file of fileList) {
-      test(`Should be able to render ${file} without error`, async ({
-        page
-      }) => {
-        await page.goto(`lab/index.html?path=${file}`);
+      test(`Should be able to render ${file} without error`, async ({ browser }) => {
+        const context = await browser.newContext();
+        const page = await context.newPage();
+        await page.goto(`lab/index.html?path=${file}`, { waitUntil: 'load' });
         console.log('FILE LOADED');
-        
-        // const fullPath = `examples/${file}`;
-        // await page.notebook.openByPath(fullPath);
-        // await page.notebook.activate(fullPath);
-        // await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
-        // await page.waitForTimeout(1000);
-        
-        // console.log("before");
-        
 
-        // if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
-        //   await page.getByRole('button', { name: 'Ok' }).click();
-        // }
-
-        // console.log('after');
-        
-
-        // await page.sidebar.close('left');
-        // await page.sidebar.close('right');
-        // await page.waitForTimeout(1000);
         const main = await page.$('#jp-main-split-panel');
         expect(errors).toBe(0);
         if (main) {
