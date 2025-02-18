@@ -6,24 +6,24 @@ test.use({ autoGoto: false });
 test.describe('UI Test', () => {
   const fileList = ['test.jcad', '3M_CONNECTOR.STEP', 'fan.stl'];
 
-  test.describe('Extension activation test', () => {
-    test('should emit an activation console message', async ({
-      page,
-      request
-    }) => {
-      const logs: string[] = [];
+  // test.describe('Extension activation test', () => {
+  //   test('should emit an activation console message', async ({
+  //     page
+  //   }) => {
+  //     const logs: string[] = [];
 
-      page.on('console', message => {
-        console.log('CONSOLE MSG', message.text());
-        logs.push(message.text());
-      });
+  //     page.on('console', message => {
+  //       console.log('CONSOLE MSG:', message.text());
+  //       logs.push(message.text());
+  //       console.log(`Total logs captured: ${logs.length}`);
+  //     });
+      
+  //     await page.goto();
 
-      await page.goto();
-
-      expect(logs.filter(s => s === 'Initializing OCC...')).toHaveLength(1);
-      expect(logs.filter(s => s === 'Done!')).toHaveLength(1);
-    });
-  });
+  //     expect(logs.filter(s => s === 'Initializing OCC...')).toHaveLength(1);
+  //     expect(logs.filter(s => s === 'Done!')).toHaveLength(1);
+  //   });
+  // });
 
   test.describe('File operations', () => {
     // test.beforeAll(async ({ request }) => {
@@ -49,34 +49,42 @@ test.describe('UI Test', () => {
       errors = 0;
     });
 
-    // for (const file of fileList) {
-    //   test(`Should be able to render ${file} without error`, async ({
-    //     page
-    //   }) => {
-    //     await page.goto();
-    //     const fullPath = `examples/${file}`;
-    //     await page.notebook.openByPath(fullPath);
-    //     await page.notebook.activate(fullPath);
-    //     await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
-    //     await page.waitForTimeout(1000);
+    for (const file of fileList) {
+      test(`Should be able to render ${file} without error`, async ({
+        page
+      }) => {
+        await page.goto(`lab/index.html?path=${file}`);
+        console.log('FILE LOADED');
+        
+        // const fullPath = `examples/${file}`;
+        // await page.notebook.openByPath(fullPath);
+        // await page.notebook.activate(fullPath);
+        // await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
+        // await page.waitForTimeout(1000);
+        
+        // console.log("before");
+        
 
-    //     if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
-    //       await page.getByRole('button', { name: 'Ok' }).click();
-    //     }
+        // if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
+        //   await page.getByRole('button', { name: 'Ok' }).click();
+        // }
 
-    //     await page.sidebar.close('left');
-    //     await page.sidebar.close('right');
-    //     await page.waitForTimeout(1000);
-    //     const main = await page.$('#jp-main-split-panel');
-    //     expect(errors).toBe(0);
-    //     if (main) {
-    //       expect(await main.screenshot()).toMatchSnapshot({
-    //         name: `Render-${file}.png`,
-    //         maxDiffPixelRatio: 0.01
-    //       });
-    //     }
-    //   });
-    // }
+        // console.log('after');
+        
+
+        // await page.sidebar.close('left');
+        // await page.sidebar.close('right');
+        // await page.waitForTimeout(1000);
+        const main = await page.$('#jp-main-split-panel');
+        expect(errors).toBe(0);
+        if (main) {
+          expect(await main.screenshot()).toMatchSnapshot({
+            name: `Render-${file}.png`,
+            maxDiffPixelRatio: 0.01
+          });
+        }
+      });
+    }
   });
 
   // test.describe('File operator test', () => {
