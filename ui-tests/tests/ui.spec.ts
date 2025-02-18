@@ -6,34 +6,36 @@ test.use({ autoGoto: false });
 test.describe('UI Test', () => {
   const fileList = ['test.jcad', '3M_CONNECTOR.STEP', 'fan.stl'];
 
-  // test.describe('Extension activation test', () => {
-  //   test('should emit an activation console message', async ({
-  //     page
-  //   }) => {
-  //     const logs: string[] = [];
+  test.describe('Extension activation test', () => {
+    test('should emit an activation console message', async ({
+      page
+    }) => {
+      const logs: string[] = [];
 
-  //     page.on('console', message => {
-  //       console.log('CONSOLE MSG:', message.text());
-  //       logs.push(message.text());
-  //       console.log(`Total logs captured: ${logs.length}`);
-  //     });
+      page.on('console', message => {
+        console.log('CONSOLE MSG:', message.text());
+        logs.push(message.text());
+        console.log(`Total logs captured: ${logs.length}`);
+      });
+
+      console.log('pagey', page);
       
-  //     await page.goto();
+      await page.goto('?path=pad.jcad');
 
-  //     expect(logs.filter(s => s === 'Initializing OCC...')).toHaveLength(1);
-  //     expect(logs.filter(s => s === 'Done!')).toHaveLength(1);
-  //   });
-  // });
+      expect(logs.filter(s => s === 'Initializing OCC...')).toHaveLength(1);
+      expect(logs.filter(s => s === 'Done!')).toHaveLength(1);
+    });
+  });
 
   test.describe('File operations', () => {
-    // test.beforeAll(async ({ request }) => {
-    //   const content = galata.newContentsHelper(request);
-    //   await content.deleteDirectory('/examples');
-    //   await content.uploadDirectory(
-    //     path.resolve(__dirname, '../../examples'),
-    //     '/examples'
-    //   );
-    // });
+    test.beforeAll(async ({ request }) => {
+      const content = galata.newContentsHelper(request);
+      await content.deleteDirectory('/examples');
+      await content.uploadDirectory(
+        path.resolve(__dirname, '../../examples'),
+        '/examples'
+      );
+    });
     let errors = 0;
     test.beforeEach(async ({ page }) => {
       page.setViewportSize({ width: 1920, height: 1080 });
@@ -50,13 +52,13 @@ test.describe('UI Test', () => {
     });
 
     for (const file of fileList) {
-      test(`Should be able to render ${file} without error`, async ({ browser }) => {
-        const context = await browser.newContext();
-        const page = await context.newPage();
-
-        await page.goto(`lab/index.html?path=${file}`, {waitUntil: 'domcontentloaded'});
-        console.log('FILE LOADED');
-
+      test(`Should be able to render ${file} without error`, async ({
+        page
+      }) => {
+        await page.goto();
+        const fullPath = `examples/${file}`;
+        await page.notebook.openByPath(fullPath);
+        await page.notebook.activate(fullPath);
         await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
         await page.waitForTimeout(1000);
 
@@ -64,14 +66,10 @@ test.describe('UI Test', () => {
           await page.getByRole('button', { name: 'Ok' }).click();
         }
 
-        // await page.sidebar.close('left');
-        // await page.sidebar.close('right');
+        await page.sidebar.close('left');
+        await page.sidebar.close('right');
         await page.waitForTimeout(1000);
-
-        const main = await page.waitForSelector('#jp-main-split-panel', { state: 'visible', timeout: 10000 });
-
-        console.log('hurrayyyy',main);
-        
+        const main = await page.$('#jp-main-split-panel');
         expect(errors).toBe(0);
         if (main) {
           expect(await main.screenshot()).toMatchSnapshot({
