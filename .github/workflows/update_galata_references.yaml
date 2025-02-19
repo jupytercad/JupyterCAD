@@ -108,3 +108,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           start_server_script: 'null'
           test_folder: ui-tests
+          update_script: test:updatelite
