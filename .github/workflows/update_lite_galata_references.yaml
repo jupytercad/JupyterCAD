@@ -1,4 +1,4 @@
-name: Update Lite Galata References
+name: update-lite-snapshots
 
 on:
   issue_comment:
@@ -84,6 +84,7 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: |
+          pip install jupyterlab
           jlpm install
           yarn playwright install
 
