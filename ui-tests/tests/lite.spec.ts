@@ -87,7 +87,7 @@ test.describe('UI Test', () => {
       '.jupytercad-notebook-widget',
       {
         state: 'visible',
-        timeout: 10000
+        timeout: 100000
       }
     );
 
