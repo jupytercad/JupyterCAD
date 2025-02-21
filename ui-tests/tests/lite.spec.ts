@@ -63,7 +63,7 @@ test.describe('UI Test', () => {
   test('Should create and execute a new .ipynb file', async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
-    await page.goto('lab/index.html?path=jcad.ipynb',  {
+    await page.goto('lab/index.html?path=jcad.ipynb', {
       waitUntil: 'domcontentloaded'
     });
 
