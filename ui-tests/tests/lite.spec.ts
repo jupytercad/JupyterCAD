@@ -59,4 +59,34 @@ test.describe('UI Test', () => {
       }
     });
   }
+
+  test('Should create and execute a new .ipynb file', async ({ page }) => {
+    await page.goto('lab');
+
+    await page.click('[title="Create a new notebook"]');
+    await page.waitForSelector('.jp-Notebook', { state: 'visible' });
+
+    await page.keyboard.type(
+      "from jupytercad import CadDocument\n" +
+      "doc = CadDocument()\n" +
+      "doc.add_cone().add_sphere(radius=0.8).cut(color='#ff0000')"
+    );
+
+    await page.keyboard.press('Control+Enter');
+
+    await page.locator('.jp-InputArea-prompt >> text="[1]:"').first().waitFor();
+
+    const outputErrors = await page.$$('.jp-OutputArea-error');
+    expect(outputErrors.length).toBe(0);
+
+    const jcadWidget = await page.waitForSelector('.jupytercad-notebook-widget', {
+      state: 'visible',
+      timeout: 10000
+    });
+
+    expect(await jcadWidget.screenshot()).toMatchSnapshot({
+      name: 'Render-notebook.png',
+      maxDiffPixelRatio: 0.01
+    });
+  });
 });
