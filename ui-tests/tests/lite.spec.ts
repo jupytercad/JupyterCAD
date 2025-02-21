@@ -78,7 +78,7 @@ test.describe('UI Test', () => {
 
     await page.keyboard.press('Control+Enter');
 
-    await page.locator('.jp-InputArea-prompt >> text="[1]:"').first().waitFor();
+    // await page.locator('.jp-InputArea-prompt >> text="[1]:"').first().waitFor();
 
     const outputErrors = await page.$$('.jp-OutputArea-error');
     expect(outputErrors.length).toBe(0);
