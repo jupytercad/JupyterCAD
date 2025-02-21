@@ -60,16 +60,18 @@ test.describe('UI Test', () => {
     });
   }
 
-  test('Should create and execute a new .ipynb file', async ({ page }) => {
-    await page.goto('lab');
+  test('Should create and execute a new .ipynb file', async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto('lab/index.html');
 
     await page.click('[title="Create a new notebook"]');
     await page.waitForSelector('.jp-Notebook', { state: 'visible' });
 
     await page.keyboard.type(
-      "from jupytercad import CadDocument\n" +
-      "doc = CadDocument()\n" +
-      "doc.add_cone().add_sphere(radius=0.8).cut(color='#ff0000')"
+      'from jupytercad import CadDocument\n' +
+        'doc = CadDocument()\n' +
+        "doc.add_cone().add_sphere(radius=0.8).cut(color='#ff0000')"
     );
 
     await page.keyboard.press('Control+Enter');
@@ -79,10 +81,13 @@ test.describe('UI Test', () => {
     const outputErrors = await page.$$('.jp-OutputArea-error');
     expect(outputErrors.length).toBe(0);
 
-    const jcadWidget = await page.waitForSelector('.jupytercad-notebook-widget', {
-      state: 'visible',
-      timeout: 10000
-    });
+    const jcadWidget = await page.waitForSelector(
+      '.jupytercad-notebook-widget',
+      {
+        state: 'visible',
+        timeout: 10000
+      }
+    );
 
     expect(await jcadWidget.screenshot()).toMatchSnapshot({
       name: 'Render-notebook.png',
