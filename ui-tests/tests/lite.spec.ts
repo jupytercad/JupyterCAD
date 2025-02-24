@@ -1,5 +1,4 @@
 import { expect, test, galata } from '@jupyterlab/galata';
-import path from 'path';
 
 test.use({ autoGoto: false });
 
@@ -33,19 +32,13 @@ test.describe('UI Test', () => {
       console.log('FILE LOADED');
 
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
-      await page.waitForTimeout(1000);
 
       if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
         await page.getByRole('button', { name: 'Ok' }).click();
       }
 
-      // await page.sidebar.close('left');
-      // await page.sidebar.close('right');
-      await page.waitForTimeout(1000);
-
       const main = await page.waitForSelector('#jp-main-split-panel', {
-        state: 'visible',
-        timeout: 10000
+        state: 'visible'
       });
 
       console.log('hurrayyyy', main);
@@ -68,8 +61,7 @@ test.describe('UI Test', () => {
     });
 
     const Notebook = await page.waitForSelector('.jp-Notebook', {
-      state: 'visible',
-      timeout: 10000
+      state: 'visible'
     });
     await Notebook.click();
 
@@ -83,8 +75,7 @@ test.describe('UI Test', () => {
     const jcadWidget = await page.waitForSelector(
       '.jupytercad-notebook-widget',
       {
-        state: 'visible',
-        timeout: 100000
+        state: 'visible'
       }
     );
 
