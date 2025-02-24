@@ -37,7 +37,7 @@ test.describe('UI Test', () => {
         await page.getByRole('button', { name: 'Ok' }).click();
       }
 
-      const main = await page.waitForSelector('#jp-main-split-panel', {
+      const main = await page.waitForSelector('.jp-MainAreaWidget', {
         state: 'visible'
       });
 
