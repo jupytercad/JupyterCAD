@@ -11,6 +11,7 @@ test.describe('UI Test', () => {
       const logs: string[] = [];
 
       page.on('console', message => {
+        console.log('CONSOLE MSG', message.text());
         logs.push(message.text());
       });
 
