@@ -42,6 +42,7 @@ test.describe('UI Test', () => {
       });
 
       console.log('hurrayyyy', main);
+      await page.waitForTimeout(10000);
 
       expect(errors).toBe(0);
       if (main) {
