@@ -67,18 +67,15 @@ test.describe('UI Test', () => {
       waitUntil: 'domcontentloaded'
     });
 
-    // await page.click('[title="Create a new notebook"]');
-    // await page.waitForSelector('.jp-Notebook', { state: 'visible' });
-
-    // await page.keyboard.type(
-    //   'from jupytercad import CadDocument\n' +
-    //     'doc = CadDocument()\n' +
-    //     "doc.add_cone().add_sphere(radius=0.8).cut(color='#ff0000')"
-    // );
+    const Notebook = await page.waitForSelector('.jp-Notebook', {
+      state: 'visible',
+      timeout: 10000
+    });
+    await Notebook.click();
 
     await page.keyboard.press('Control+Enter');
 
-    // await page.locator('.jp-InputArea-prompt >> text="[1]:"').first().waitFor();
+    await page.locator('.jp-InputArea-prompt >> text="[1]:"').first().waitFor();
 
     const outputErrors = await page.$$('.jp-OutputArea-error');
     expect(outputErrors.length).toBe(0);
