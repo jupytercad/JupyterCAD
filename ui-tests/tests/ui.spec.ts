@@ -7,10 +7,7 @@ test.describe('UI Test', () => {
   const fileList = ['test.jcad', '3M_CONNECTOR.STEP', 'fan.stl'];
 
   test.describe('Extension activation test', () => {
-    test('should emit an activation console message', async ({
-      page,
-      request
-    }) => {
+    test('should emit an activation console message', async ({ page }) => {
       const logs: string[] = [];
 
       page.on('console', message => {
