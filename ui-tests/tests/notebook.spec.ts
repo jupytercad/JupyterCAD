@@ -55,16 +55,6 @@ const testCellOutputs = async (
   }
 };
 
-/**
- * Custom waitForApplication for the notebook file browser page
- */
-export async function treeWaitForApplication({ baseURL }, use, testInfo) {
-  const waitIsReady = async (page): Promise<void> => {
-    await page.waitForSelector('#filebrowser');
-  };
-  await use(waitIsReady);
-}
-
 test.describe('Notebook API Visual Regression', () => {
   test.beforeEach(async ({ page, tmpPath }) => {
     page.on('console', message => {

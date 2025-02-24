@@ -29,7 +29,6 @@ test.describe('UI Test', () => {
       await page.goto(`lab/index.html?path=${file}`, {
         waitUntil: 'domcontentloaded'
       });
-      console.log('FILE LOADED');
 
       await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
 
@@ -41,7 +40,6 @@ test.describe('UI Test', () => {
         state: 'visible'
       });
 
-      console.log('hurrayyyy', main);
       await page.waitForTimeout(10000);
 
       expect(errors).toBe(0);
