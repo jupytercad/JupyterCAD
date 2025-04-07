@@ -314,6 +314,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this._onKeyDown(e);
       });
 
+      // Not enabling damping since it makes the syncing between cameraL and camera trickier
       this._controls = new OrbitControls(
         this._camera,
         this._renderer.domElement
