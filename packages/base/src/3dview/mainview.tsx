@@ -324,8 +324,6 @@ export class MainView extends React.Component<IProps, IStates> {
         this._scene.position.y,
         this._scene.position.z
       );
-      // this._controls.enableDamping = true;
-      // this._controls.dampingFactor = 0.15;
 
       this._renderer.domElement.addEventListener('mousedown', e => {
         this._mouseDrag.start.set(e.clientX, e.clientY);
@@ -582,7 +580,12 @@ export class MainView extends React.Component<IProps, IStates> {
 
     if (this._sceneL && this._cameraL) {
       this._cameraL.matrixWorld.copy(this._camera.matrixWorld);
-      this._cameraL.matrixWorld.decompose(this._cameraL.position, this._cameraL.quaternion, this._cameraL.scale);
+      this._cameraL.matrixWorld.decompose(
+        this._cameraL.position,
+        this._cameraL.quaternion,
+        this._cameraL.scale
+      );
+      this._cameraL.updateProjectionMatrix();
 
       this._renderer.setScissor(
         0,
@@ -623,6 +626,12 @@ export class MainView extends React.Component<IProps, IStates> {
         this._camera.bottom = this._divRef.current.clientHeight / -2;
       }
       this._camera.updateProjectionMatrix();
+
+      if (this._sceneL && this._cameraL) {
+        this._sceneL.remove(this._cameraL);
+        this._cameraL = this._camera.clone();
+        this._sceneL.add(this._cameraL);
+      }
     }
   };
 
@@ -1699,7 +1708,6 @@ export class MainView extends React.Component<IProps, IStates> {
     if (this._sceneL && this._cameraL) {
       this._sceneL.remove(this._cameraL);
       this._cameraL = this._camera.clone();
-      this._cameraL.matrixAutoUpdate = false;
       this._sceneL.add(this._cameraL);
     }
 
@@ -1722,7 +1730,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._sceneL.background = SPLITVIEW_BACKGROUND_COLOR;
       this._sceneL.add(this._ambientLight.clone()); // soft white light
       this._cameraL = this._camera.clone();
-      this._cameraL.matrixAutoUpdate = false;
       this._sceneL.add(this._cameraL);
       this._sceneL.add(this._meshGroup.clone());
       this.initSlider(true);
@@ -2044,6 +2051,9 @@ export class MainView extends React.Component<IProps, IStates> {
   private _sliderPos = 0;
   private _slideInit = false;
   private _sceneL: THREE.Scene | undefined = undefined;
-  private _cameraL: THREE.PerspectiveCamera | THREE.OrthographicCamera | undefined = undefined; // Threejs camera
+  private _cameraL:
+    | THREE.PerspectiveCamera
+    | THREE.OrthographicCamera
+    | undefined = undefined; // Threejs camera
   private _keyDownHandler: (event: KeyboardEvent) => void;
 }
