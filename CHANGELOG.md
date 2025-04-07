@@ -40,6 +40,22 @@ pip install jupytercad-freecad
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.1.1
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.1.0...43b96a3897150588535b424c5c36fdf30b218f73))
+
+### Bugs fixed
+
+- Suggestion split screen: Use same lighting setting [#702](https://github.com/jupytercad/JupyterCAD/pull/702) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2025-03-06&to=2025-04-07&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2025-03-06..2025-04-07&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2025-03-06..2025-04-07&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.1.0
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.0.1...f4b4e2a8876e107605abbd796c1ca7a825037fe8))
@@ -83,8 +99,6 @@ pip install jupytercad-freecad
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2025-01-10&to=2025-03-06&type=c))
 
 [@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2025-01-10..2025-03-06&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2025-01-10..2025-03-06&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2025-01-10..2025-03-06&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2025-01-10..2025-03-06&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2025-01-10..2025-03-06&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.0.1
 
