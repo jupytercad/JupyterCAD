@@ -85,3 +85,6 @@ export class JupyterCadDocumentWidgetFactory extends ABCWidgetFactory<
   private _externalCommandRegistry: IJCadExternalCommandRegistry;
   private _backendCheck?: () => boolean;
 }
+
+// Backward compat
+export const JupyterCadWidgetFactory = JupyterCadDocumentWidgetFactory;
