@@ -260,7 +260,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._scene = new THREE.Scene();
 
-      this._scene.add(new THREE.AmbientLight(0xffffff, 0.5)); // soft white light
+      this._ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // soft white light
+      this._scene.add(this._ambientLight);
 
       this._cameraLight = new THREE.PointLight(0xffffff, 1);
       this._cameraLight.decay = 0;
@@ -1710,9 +1711,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._sliderPos = (this._divRef.current?.clientWidth ?? 0) / 2;
       this._sceneL = new THREE.Scene();
       this._sceneL.background = SPLITVIEW_BACKGROUND_COLOR;
-      this._sceneL.add(new THREE.AmbientLight(0xffffff, 0.5)); // soft white light
-      const light = new THREE.HemisphereLight(0xffffff, 0x444444, 0.5);
-      this._sceneL.add(light);
+      this._sceneL.add(this._ambientLight); // soft white light
       this._sceneL.add(this._camera);
       this._sceneL.add(this._meshGroup.clone(true));
       this.initSlider(true);
@@ -2006,6 +2005,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _currentSelection: { [key: string]: ISelection } | null = null;
 
   private _scene: THREE.Scene; // Threejs scene
+  private _ambientLight: THREE.AmbientLight;
   private _camera: THREE.PerspectiveCamera | THREE.OrthographicCamera; // Threejs camera
   private _cameraLight: THREE.PointLight;
   private _raycaster = new THREE.Raycaster();
