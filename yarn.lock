@@ -759,15 +759,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupytercad/base@^3.1.1, @jupytercad/base@workspace:packages/base":
+"@jupytercad/base@^3.1.2, @jupytercad/base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@jupytercad/base@workspace:packages/base"
   dependencies:
     "@apidevtools/json-schema-ref-parser": ^9.0.9
     "@jupyter/collaborative-drive": ^3.1.0
     "@jupyter/ydoc": ^3.0.0
-    "@jupytercad/occ-worker": ^3.1.1
-    "@jupytercad/schema": ^3.1.1
+    "@jupytercad/occ-worker": ^3.1.2
+    "@jupytercad/schema": ^3.1.2
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/completer": ^4.2.4
@@ -811,8 +811,8 @@ __metadata:
     "@jupyter/collaborative-drive": ^3.1.0-alpha.0
     "@jupyter/docprovider": ^3.1.0-alpha.0
     "@jupyter/ydoc": ^3.0.0
-    "@jupytercad/base": ^3.1.1
-    "@jupytercad/schema": ^3.1.1
+    "@jupytercad/base": ^3.1.2
+    "@jupytercad/schema": ^3.1.2
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/application-extension": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
@@ -874,14 +874,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/jupytercad-core@^3.1.1, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
+"@jupytercad/jupytercad-core@^3.1.2, @jupytercad/jupytercad-core@workspace:python/jupytercad_core":
   version: 0.0.0-use.local
   resolution: "@jupytercad/jupytercad-core@workspace:python/jupytercad_core"
   dependencies:
     "@jupyter/collaborative-drive": ^3.1.0-alpha.0
-    "@jupytercad/base": ^3.1.1
-    "@jupytercad/occ-worker": ^3.1.1
-    "@jupytercad/schema": ^3.1.1
+    "@jupytercad/base": ^3.1.2
+    "@jupytercad/occ-worker": ^3.1.2
+    "@jupytercad/schema": ^3.1.2
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -914,9 +914,9 @@ __metadata:
   resolution: "@jupytercad/jupytercad-lab@workspace:python/jupytercad_lab"
   dependencies:
     "@jupyter/collaborative-drive": ^3.1.0-alpha.0
-    "@jupytercad/base": ^3.1.1
-    "@jupytercad/jupytercad-core": ^3.1.1
-    "@jupytercad/schema": ^3.1.1
+    "@jupytercad/base": ^3.1.2
+    "@jupytercad/jupytercad-core": ^3.1.2
+    "@jupytercad/schema": ^3.1.2
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/apputils": ^4.0.0
     "@jupyterlab/builder": ^4.0.0
@@ -966,12 +966,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/occ-worker@^3.1.1, @jupytercad/occ-worker@workspace:packages/occ-worker":
+"@jupytercad/occ-worker@^3.1.2, @jupytercad/occ-worker@workspace:packages/occ-worker":
   version: 0.0.0-use.local
   resolution: "@jupytercad/occ-worker@workspace:packages/occ-worker"
   dependencies:
-    "@jupytercad/opencascade": ^3.1.1
-    "@jupytercad/schema": ^3.1.1
+    "@jupytercad/opencascade": ^3.1.2
+    "@jupytercad/schema": ^3.1.2
     "@lumino/coreutils": ^2.0.0
     "@types/node": ^18.15.11
     copy-webpack-plugin: ^10.0.0
@@ -987,7 +987,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/opencascade@^3.1.1, @jupytercad/opencascade@workspace:packages/opencascade":
+"@jupytercad/opencascade@^3.1.2, @jupytercad/opencascade@workspace:packages/opencascade":
   version: 0.0.0-use.local
   resolution: "@jupytercad/opencascade@workspace:packages/opencascade"
   dependencies:
@@ -999,7 +999,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupytercad/schema@^3.1.1, @jupytercad/schema@workspace:packages/schema":
+"@jupytercad/schema@^3.1.2, @jupytercad/schema@workspace:packages/schema":
   version: 0.0.0-use.local
   resolution: "@jupytercad/schema@workspace:packages/schema"
   dependencies:
@@ -5392,9 +5392,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.73":
-  version: 1.5.132
-  resolution: "electron-to-chromium@npm:1.5.132"
-  checksum: 299712fad9aa48f25c73965f76086465b2719743cf32f9826ca6b755b0207a03c3ea07af2c9d3d3fb306a79b9866494c96c7f438779dd8c88af2e64654253cf1
+  version: 1.5.134
+  resolution: "electron-to-chromium@npm:1.5.134"
+  checksum: 07e29b36c4ffa8dcdbfd089af9610e8e99617ae04ca718f355d3d057114197de33a560efbc9573d56cb427ad05f79888827b3bb4da569cbab202d31af5159dab
   languageName: node
   linkType: hard
 
@@ -12608,8 +12608,8 @@ __metadata:
   linkType: hard
 
 "webpack@npm:^5.76.1, webpack@npm:^5.76.3, webpack@npm:^5.77.0":
-  version: 5.98.0
-  resolution: "webpack@npm:5.98.0"
+  version: 5.99.1
+  resolution: "webpack@npm:5.99.1"
   dependencies:
     "@types/eslint-scope": ^3.7.7
     "@types/estree": ^1.0.6
@@ -12639,7 +12639,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 0de353c694bc4d5af810e4f4d4fd356271b21b2253583a9f618416b5fcbaf8db5a5487c12cc1379778d2a07d56382293334153af6e2ce59ded59488f08015fd1
+  checksum: 69f02093ce21becc9c3b37f6fab554e7fed9137f6cbb589615377fd6ddcfd435022911d07785f6ec7cf16739294c9d0ceb5e689ac6c8d9cf5be24f23cafd607d
   languageName: node
   linkType: hard
 
