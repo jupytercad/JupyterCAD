@@ -227,7 +227,7 @@ class CadDocument(CommWidget):
         :return: The document itself.
         """
         try:
-            from OCC.Core.BRepTools import breptools_Write
+            from OCC.Core.BRepTools import breptools
         except ImportError:
             raise RuntimeError("Cannot add an OpenCascade shape if it's not installed.")
 
@@ -237,7 +237,7 @@ class CadDocument(CommWidget):
             return
 
         with tempfile.NamedTemporaryFile() as tmp:
-            breptools_Write(shape, tmp.name, True, False, 1)
+            breptools.Write(shape, tmp.name, True, False, 1)
             brepdata = tmp.read().decode("ascii")
 
         data = {
