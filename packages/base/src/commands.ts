@@ -37,7 +37,7 @@ import {
   wireframeIcon,
   transformIcon,
   pencilSolidIcon,
-  cameraSolidIcon
+  videoSolidIcon
 } from './tools';
 import keybindings from './keybindings.json';
 import { DEFAULT_MESH_COLOR } from './3dview/helpers';
@@ -1085,27 +1085,33 @@ export function addCommands(
       commands.notifyCommandChanged(CommandIDs.transform);
     }
   });
-
+  let toggled: boolean;
   commands.addCommand(CommandIDs.updateCameraSettings, {
-    label: trans.__('Camera Settings'),
+    label: trans.__('Choose between Perspective and Orthographic Projection.'),
     isEnabled: () => Boolean(tracker.currentWidget),
-    icon: cameraSolidIcon,
-    execute: async () => {
+    icon: videoSolidIcon,
+    isToggled: () => {
       const current = tracker.currentWidget;
-
+      if (current) {
+        const content = current?.content;
+        const projection = content['Type'];
+        console.log('projection:', projection);
+        return (toggled = projection === 'Perspective');
+      } else {return false;}
+    },
+    execute: async () => {
+      toggled = !toggled;
+      const current = tracker.currentWidget;
       if (!current) {
         return;
+      } else {
+        const panel = current.content;
+        const projection = toggled
+          ? { Type: 'Perspective' }
+          : { Type: 'Orthographic' };
+        const updatePanel = CAMERA_FORM.syncData(panel);
+        updatePanel(projection);
       }
-
-      const dialog = new FormDialog({
-        model: current.model,
-        title: CAMERA_FORM.title,
-        schema: CAMERA_FORM.schema,
-        sourceData: CAMERA_FORM.default(current.content),
-        syncData: CAMERA_FORM.syncData(current.content),
-        cancelButton: true
-      });
-      await dialog.launch();
     }
   });
 
