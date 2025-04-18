@@ -31,7 +31,6 @@ import terminalToolbarStr from '../style/icon/terminal-toolbar.svg';
 import visibilitySvg from '../style/icon/visibility.svg';
 import visibilityOffSvg from '../style/icon/visibilityOff.svg';
 
-
 export const visibilityIcon = new LabIcon({
   name: 'jupytercad:visibilityIcon',
   svgstr: visibilitySvg

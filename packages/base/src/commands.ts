@@ -37,8 +37,7 @@ import {
   wireframeIcon,
   transformIcon,
   pencilSolidIcon,
-  cameraSolidIcon,
-  terminalToolbarIcon
+  cameraSolidIcon
 } from './tools';
 import keybindings from './keybindings.json';
 import { DEFAULT_MESH_COLOR } from './3dview/helpers';

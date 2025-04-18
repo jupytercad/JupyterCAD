@@ -5,7 +5,7 @@ import {
   redoIcon,
   Toolbar,
   ReactiveToolbar,
-  undoIcon,
+  undoIcon
 } from '@jupyterlab/ui-components';
 import { CommandRegistry } from '@lumino/commands';
 import { Widget } from '@lumino/widgets';
