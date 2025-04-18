@@ -35,7 +35,10 @@ import {
   chamferIcon,
   filletIcon,
   wireframeIcon,
-  transformIcon
+  transformIcon,
+  pencilSolidIcon,
+  cameraSolidIcon,
+  terminalToolbarIcon
 } from './tools';
 import keybindings from './keybindings.json';
 import { DEFAULT_MESH_COLOR } from './3dview/helpers';
@@ -792,7 +795,7 @@ export function addCommands(
   });
   commands.addCommand(CommandIDs.newSketch, {
     label: trans.__('New Sketch'),
-    iconClass: 'fa fa-pencil',
+    icon: pencilSolidIcon,
     isEnabled: () => {
       return tracker.currentWidget
         ? tracker.currentWidget.model.sharedModel.editable
@@ -1087,7 +1090,7 @@ export function addCommands(
   commands.addCommand(CommandIDs.updateCameraSettings, {
     label: trans.__('Camera Settings'),
     isEnabled: () => Boolean(tracker.currentWidget),
-    iconClass: 'fa fa-camera',
+    icon: cameraSolidIcon,
     execute: async () => {
       const current = tracker.currentWidget;
 
