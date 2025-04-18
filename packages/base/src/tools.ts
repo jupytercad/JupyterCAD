@@ -24,6 +24,9 @@ import chamferIconStr from '../style/icon/chamfer.svg';
 import filletIconStr from '../style/icon/fillet.svg';
 import wireframeIconStr from '../style/icon/wireframe.svg';
 import chevronRightStr from '../style/icon/chevron-right.svg';
+import pencilSolidStr from '../style/icon/pencil-solid.svg';
+import cameraSolidStr from '../style/icon/camera-solid.svg';
+import terminalToolbarStr from '../style/icon/terminal-toolbar.svg';
 
 import visibilitySvg from '../style/icon/visibility.svg';
 import visibilityOffSvg from '../style/icon/visibilityOff.svg';
@@ -136,9 +139,25 @@ export const wireframeIcon = new LabIcon({
   name: 'jupytercad:wireframe-icon',
   svgstr: wireframeIconStr
 });
+
 export const chevronRightIcon = new LabIcon({
   name: 'jupytercad:chevron-right-icon',
   svgstr: chevronRightStr
+});
+
+export const pencilSolidIcon = new LabIcon({
+  name: 'jupytercad:pencil-solid-icon',
+  svgstr: pencilSolidStr
+});
+
+export const cameraSolidIcon = new LabIcon({
+  name: 'jupytercad:camera-solid-icon',
+  svgstr: cameraSolidStr
+});
+
+export const terminalToolbarIcon = new LabIcon({
+  name: 'jupytercad:terminal-toolbar-icon',
+  svgstr: terminalToolbarStr
 });
 
 export const debounce = (

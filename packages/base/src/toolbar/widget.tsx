@@ -5,8 +5,7 @@ import {
   redoIcon,
   Toolbar,
   ReactiveToolbar,
-  undoIcon,
-  terminalIcon
+  undoIcon
 } from '@jupyterlab/ui-components';
 import { CommandRegistry } from '@lumino/commands';
 import { Widget } from '@lumino/widgets';
@@ -14,6 +13,7 @@ import * as React from 'react';
 
 import { CommandIDs } from '../commands';
 import { UsersItem } from './usertoolbaritem';
+import { terminalToolbarIcon } from '../tools';
 
 export const TOOLBAR_SEPARATOR_CLASS = 'jcad-Toolbar-Separator';
 
@@ -226,7 +226,7 @@ export class ToolbarWidget extends ReactiveToolbar {
             id: CommandIDs.toggleConsole,
             commands: options.commands,
             label: '',
-            icon: terminalIcon
+            icon: terminalToolbarIcon
           })
         );
 
