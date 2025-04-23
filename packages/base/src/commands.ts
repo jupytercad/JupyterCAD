@@ -46,7 +46,7 @@ import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
 import { v4 as uuid } from 'uuid';
-import { ExplodedView, JupyterCadTracker } from './types';
+import { CameraSettings, ExplodedView, JupyterCadTracker } from './types';
 import { JSONObject } from '@lumino/coreutils';
 import { JupyterCadDocumentWidget } from './widget';
 
@@ -588,36 +588,6 @@ const EXPLODED_VIEW_FORM = {
   }
 };
 
-const CAMERA_FORM = {
-  title: 'Camera Settings',
-  schema: {
-    type: 'object',
-    required: ['Type'],
-    additionalProperties: false,
-    properties: {
-      Type: {
-        title: 'Projection',
-        description: 'The projection type',
-        type: 'string',
-        enum: ['Perspective', 'Orthographic']
-      }
-    }
-  },
-  default: (panel: JupyterCadPanel) => {
-    return {
-      Type: panel.cameraSettings?.type ?? 'Perspective'
-    };
-  },
-  syncData: (panel: JupyterCadPanel) => {
-    return (props: IDict) => {
-      const { Type } = props;
-      panel.cameraSettings = {
-        type: Type
-      };
-    };
-  }
-};
-
 const EXPORT_FORM = {
   title: 'Export to .jcad',
   schema: {
@@ -1085,33 +1055,33 @@ export function addCommands(
       commands.notifyCommandChanged(CommandIDs.transform);
     }
   });
-  let toggled: boolean;
+
   commands.addCommand(CommandIDs.updateCameraSettings, {
-    label: trans.__('Choose between Perspective and Orthographic Projection.'),
+    label: trans.__('Choose between Perspective and Orthographic Projection'),
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: videoSolidIcon,
     isToggled: () => {
-      const current = tracker.currentWidget;
-      if (current) {
-        const content = current?.content;
-        const projection = content['Type'];
-        console.log('projection:', projection);
-        return (toggled = projection === 'Perspective');
-      } else {return false;}
+      const current = tracker.currentWidget?.content;
+      return current?.cameraSettings?.type === 'Orthographic';
     },
     execute: async () => {
-      toggled = !toggled;
       const current = tracker.currentWidget;
       if (!current) {
         return;
       } else {
-        const panel = current.content;
-        const projection = toggled
-          ? { Type: 'Perspective' }
-          : { Type: 'Orthographic' };
-        const updatePanel = CAMERA_FORM.syncData(panel);
-        updatePanel(projection);
+        const currentSettings: CameraSettings | undefined =
+          current.content.cameraSettings;
+        if (currentSettings) {
+          if (currentSettings.type === 'Perspective') {
+            current.content.cameraSettings = { type: 'Orthographic' };
+          } else {
+            current.content.cameraSettings = { type: 'Perspective' };
+          }
+        } else {
+          current.content.cameraSettings = { type: 'Perspective' };
+        }
       }
+      commands.notifyCommandChanged(CommandIDs.updateCameraSettings);
     }
   });
 
