@@ -77,6 +77,8 @@ interface IStates {
   wireframe: boolean;
   transform: boolean;
   clipEnabled: boolean;
+  explodedViewEnabled: boolean;
+  explodedViewFactor: number;
   rotationSnapValue: number;
   transformMode: string | undefined;
 }
@@ -124,6 +126,8 @@ export class MainView extends React.Component<IProps, IStates> {
       wireframe: false,
       transform: false,
       clipEnabled: false,
+      explodedViewEnabled: false,
+      explodedViewFactor: 0,
       rotationSnapValue: 10,
       transformMode: 'translate'
     };
@@ -1526,12 +1530,20 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     if (change.key === 'explodedView') {
-      const explodedView = change.newValue as ExplodedView | undefined;
+      const explodedView = change.newValue as ExplodedView;
 
       if (change.type !== 'remove' && explodedView) {
-        this._explodedView = explodedView;
-
-        this._setupExplodedView();
+        this.setState(
+          oldState => ({
+            ...oldState,
+            explodedViewEnabled: explodedView.enabled,
+            explodedViewFactor: explodedView.factor
+          }),
+          () => {
+            this._explodedView = explodedView;
+            this._setupExplodedView();
+          }
+        );
       }
     }
 
@@ -1887,6 +1899,14 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   };
 
+  private _handleExplosionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newValue = parseInt(event.target.value, 10);
+    this.setState({ explodedViewFactor: newValue });
+    this._explodedView.factor = newValue;
+  };
+
   render(): JSX.Element {
     const isTransformOrClipEnabled =
       this.state.transform || this.state.clipEnabled;
@@ -1969,6 +1989,38 @@ export class MainView extends React.Component<IProps, IStates> {
             )}
           </div>
         )}
+        {this.state.explodedViewEnabled && (
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '10px',
+              left: '10px',
+              padding: '8px',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              color: 'white',
+              borderRadius: '4px',
+              fontSize: '12px'
+            }}
+          >
+            <div style={{ marginBottom: '4px' }}>Exploded view factor:</div>
+
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <input
+                type="range"
+                min="0"
+                max="20"
+                step="0.5"
+                value={this.state.explodedViewFactor}
+                onChange={this._handleExplosionChange}
+                style={{ width: '120px', marginRight: '8px' }}
+              />
+              <span style={{ minWidth: '30px', textAlign: 'right' }}>
+                {this.state.explodedViewFactor}
+              </span>
+            </div>
+          </div>
+        )}
+
         <div
           id={'split-label-left'}
           style={{

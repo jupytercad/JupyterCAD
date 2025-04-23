@@ -115,6 +115,8 @@ export class JupyterCadPanel extends SplitPanel {
     this._view = new ObservableMap<JSONValue>({});
     const cameraSettings: CameraSettings = { type: 'Perspective' };
     this._view.set('cameraSettings', cameraSettings);
+    const explodedView: ExplodedView = { enabled: false, factor: 0 };
+    this._view.set('explodedView', explodedView);
     this._mainViewModel = new MainViewModel({
       jcadModel: options.model,
       workerRegistry: options.workerRegistry,
@@ -168,12 +170,12 @@ export class JupyterCadPanel extends SplitPanel {
     this._view.set('axes', value || null);
   }
 
-  get explodedView(): ExplodedView | undefined {
-    return this._view.get('explodedView') as ExplodedView | undefined;
+  get explodedView(): ExplodedView {
+    return this._view.get('explodedView') as ExplodedView;
   }
 
-  set explodedView(value: ExplodedView | undefined) {
-    this._view.set('explodedView', value || null);
+  set explodedView(value: ExplodedView) {
+    this._view.set('explodedView', value);
   }
 
   get cameraSettings(): CameraSettings {

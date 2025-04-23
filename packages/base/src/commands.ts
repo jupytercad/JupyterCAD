@@ -554,7 +554,7 @@ const AXES_FORM = {
   }
 };
 
-const EXPLODED_VIEW_FORM = {
+/*const EXPLODED_VIEW_FORM = {
   title: 'Exploded View Settings',
   schema: {
     type: 'object',
@@ -586,7 +586,7 @@ const EXPLODED_VIEW_FORM = {
       };
     };
   }
-};
+};*/
 
 const EXPORT_FORM = {
   title: 'Export to .jcad',
@@ -1038,17 +1038,15 @@ export function addCommands(
       if (!current) {
         return;
       }
+      const panel = current.content;
 
-      const dialog = new FormDialog({
-        model: current.model,
-        title: EXPLODED_VIEW_FORM.title,
-        schema: EXPLODED_VIEW_FORM.schema,
-        sourceData: EXPLODED_VIEW_FORM.default(current.content),
-        syncData: EXPLODED_VIEW_FORM.syncData(current.content),
-        cancelButton: true
-      });
-      await dialog.launch();
-
+      if (panel.explodedView.enabled) {
+        console.log('Exploded view changed from enabled to disabled');
+        panel.explodedView = { ...panel.explodedView, enabled: false };
+      } else {
+        console.log('Exploded view changed from disabled to enabled');
+        panel.explodedView = { ...panel.explodedView, enabled: true };
+      }
       commands.notifyCommandChanged(CommandIDs.updateExplodedView);
 
       // Notify change so that toggle button for transform disables if needed
