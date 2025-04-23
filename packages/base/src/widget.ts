@@ -176,12 +176,12 @@ export class JupyterCadPanel extends SplitPanel {
     this._view.set('explodedView', value || null);
   }
 
-  get cameraSettings(): CameraSettings | undefined {
+  get cameraSettings(): CameraSettings {
     return this._view.get('cameraSettings') as CameraSettings;
   }
 
-  set cameraSettings(value: CameraSettings | undefined) {
-    this._view.set('cameraSettings', value || null);
+  set cameraSettings(value: CameraSettings) {
+    this._view.set('cameraSettings', value);
   }
 
   get clipView(): ClipSettings | undefined {

@@ -1068,21 +1068,16 @@ export function addCommands(
     icon: videoSolidIcon,
     isToggled: () => {
       const current = tracker.currentWidget?.content;
-      return current?.cameraSettings?.type === 'Orthographic';
+      return current?.cameraSettings.type === 'Orthographic';
     },
     execute: async () => {
       const current = tracker.currentWidget;
       if (!current) {
         return;
       } else {
-        const currentSettings: CameraSettings | undefined =
-          current.content.cameraSettings;
-        if (currentSettings) {
-          if (currentSettings.type === 'Perspective') {
-            current.content.cameraSettings = { type: 'Orthographic' };
-          } else {
-            current.content.cameraSettings = { type: 'Perspective' };
-          }
+        const currentSettings: CameraSettings = current.content.cameraSettings;
+        if (currentSettings.type === 'Perspective') {
+          current.content.cameraSettings = { type: 'Orthographic' };
         } else {
           current.content.cameraSettings = { type: 'Perspective' };
         }
