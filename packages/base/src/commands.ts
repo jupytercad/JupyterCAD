@@ -1057,7 +1057,13 @@ export function addCommands(
   });
 
   commands.addCommand(CommandIDs.updateCameraSettings, {
-    label: trans.__('Choose between Perspective and Orthographic Projection'),
+    label: () => {
+      const isOn =
+        tracker.currentWidget?.content?.cameraSettings?.type === 'Perspective';
+      return isOn
+        ? trans.__('Perspective projection is on')
+        : trans.__('Orthographic projection is on');
+    },
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: videoSolidIcon,
     isToggled: () => {
