@@ -1077,9 +1077,9 @@ export function addCommands(
       } else {
         const currentSettings: CameraSettings = current.content.cameraSettings;
         if (currentSettings.type === 'Perspective') {
-          current.content.cameraSettings = { type: 'Orthographic' };
+          current.content.cameraSettings.type = 'Orthographic';
         } else {
-          current.content.cameraSettings = { type: 'Perspective' };
+          current.content.cameraSettings.type = 'Perspective';
         }
       }
       commands.notifyCommandChanged(CommandIDs.updateCameraSettings);
