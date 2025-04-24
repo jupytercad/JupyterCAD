@@ -25,7 +25,7 @@ import filletIconStr from '../style/icon/fillet.svg';
 import wireframeIconStr from '../style/icon/wireframe.svg';
 import chevronRightStr from '../style/icon/chevron-right.svg';
 import pencilSolidStr from '../style/icon/pencil-solid.svg';
-import cameraSolidStr from '../style/icon/camera-solid.svg';
+import videoSolidStr from '../style/icon/video-solid.svg';
 import terminalToolbarStr from '../style/icon/terminal-toolbar.svg';
 
 import visibilitySvg from '../style/icon/visibility.svg';
@@ -150,9 +150,9 @@ export const pencilSolidIcon = new LabIcon({
   svgstr: pencilSolidStr
 });
 
-export const cameraSolidIcon = new LabIcon({
-  name: 'jupytercad:camera-solid-icon',
-  svgstr: cameraSolidStr
+export const videoSolidIcon = new LabIcon({
+  name: 'jupytercad:video-solid-icon',
+  svgstr: videoSolidStr
 });
 
 export const terminalToolbarIcon = new LabIcon({

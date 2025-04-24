@@ -1536,7 +1536,7 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     if (change.key === 'cameraSettings') {
-      const cameraSettings = change.newValue as CameraSettings | undefined;
+      const cameraSettings = change.newValue as CameraSettings;
 
       if (change.type !== 'remove' && cameraSettings) {
         this._cameraSettings = cameraSettings;

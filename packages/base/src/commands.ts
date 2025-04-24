@@ -37,7 +37,7 @@ import {
   wireframeIcon,
   transformIcon,
   pencilSolidIcon,
-  cameraSolidIcon
+  videoSolidIcon
 } from './tools';
 import keybindings from './keybindings.json';
 import { DEFAULT_MESH_COLOR } from './3dview/helpers';
@@ -46,7 +46,7 @@ import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
 import { v4 as uuid } from 'uuid';
-import { ExplodedView, JupyterCadTracker } from './types';
+import { CameraSettings, ExplodedView, JupyterCadTracker } from './types';
 import { JSONObject } from '@lumino/coreutils';
 import { JupyterCadDocumentWidget } from './widget';
 
@@ -588,36 +588,6 @@ const EXPLODED_VIEW_FORM = {
   }
 };
 
-const CAMERA_FORM = {
-  title: 'Camera Settings',
-  schema: {
-    type: 'object',
-    required: ['Type'],
-    additionalProperties: false,
-    properties: {
-      Type: {
-        title: 'Projection',
-        description: 'The projection type',
-        type: 'string',
-        enum: ['Perspective', 'Orthographic']
-      }
-    }
-  },
-  default: (panel: JupyterCadPanel) => {
-    return {
-      Type: panel.cameraSettings?.type ?? 'Perspective'
-    };
-  },
-  syncData: (panel: JupyterCadPanel) => {
-    return (props: IDict) => {
-      const { Type } = props;
-      panel.cameraSettings = {
-        type: Type
-      };
-    };
-  }
-};
-
 const EXPORT_FORM = {
   title: 'Export to .jcad',
   schema: {
@@ -1087,25 +1057,32 @@ export function addCommands(
   });
 
   commands.addCommand(CommandIDs.updateCameraSettings, {
-    label: trans.__('Camera Settings'),
+    label: () => {
+      const isOn =
+        tracker.currentWidget?.content?.cameraSettings?.type === 'Perspective';
+      return isOn
+        ? trans.__('Perspective projection is on')
+        : trans.__('Orthographic projection is on');
+    },
     isEnabled: () => Boolean(tracker.currentWidget),
-    icon: cameraSolidIcon,
+    icon: videoSolidIcon,
+    isToggled: () => {
+      const current = tracker.currentWidget?.content;
+      return current?.cameraSettings.type === 'Orthographic';
+    },
     execute: async () => {
       const current = tracker.currentWidget;
-
       if (!current) {
         return;
+      } else {
+        const currentSettings: CameraSettings = current.content.cameraSettings;
+        if (currentSettings.type === 'Perspective') {
+          current.content.cameraSettings.type = 'Orthographic';
+        } else {
+          current.content.cameraSettings.type = 'Perspective';
+        }
       }
-
-      const dialog = new FormDialog({
-        model: current.model,
-        title: CAMERA_FORM.title,
-        schema: CAMERA_FORM.schema,
-        sourceData: CAMERA_FORM.default(current.content),
-        syncData: CAMERA_FORM.syncData(current.content),
-        cancelButton: true
-      });
-      await dialog.launch();
+      commands.notifyCommandChanged(CommandIDs.updateCameraSettings);
     }
   });
 

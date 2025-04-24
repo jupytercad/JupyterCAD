@@ -112,7 +112,9 @@ export class JupyterCadPanel extends SplitPanel {
     model: IJupyterCadModel;
     workerRegistry: IJCadWorkerRegistry;
   }) {
-    this._view = new ObservableMap<JSONValue>();
+    this._view = new ObservableMap<JSONValue>({});
+    const cameraSettings: CameraSettings = { type: 'Perspective' };
+    this._view.set('cameraSettings', cameraSettings);
     this._mainViewModel = new MainViewModel({
       jcadModel: options.model,
       workerRegistry: options.workerRegistry,
@@ -174,12 +176,12 @@ export class JupyterCadPanel extends SplitPanel {
     this._view.set('explodedView', value || null);
   }
 
-  get cameraSettings(): CameraSettings | undefined {
-    return this._view.get('cameraSettings') as CameraSettings | undefined;
+  get cameraSettings(): CameraSettings {
+    return this._view.get('cameraSettings') as CameraSettings;
   }
 
-  set cameraSettings(value: CameraSettings | undefined) {
-    this._view.set('cameraSettings', value || null);
+  set cameraSettings(value: CameraSettings) {
+    this._view.set('cameraSettings', value);
   }
 
   get clipView(): ClipSettings | undefined {
