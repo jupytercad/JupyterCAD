@@ -1058,11 +1058,11 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.updateCameraSettings, {
     label: () => {
-      const isOn =
+      const isPerspectiveOn =
         tracker.currentWidget?.content?.cameraSettings?.type === 'Perspective';
-      return isOn
-        ? trans.__('Perspective projection is on')
-        : trans.__('Orthographic projection is on');
+      return isPerspectiveOn
+        ? trans.__('Switch to orthographic projection')
+        : trans.__('Switch to perspective projection');
     },
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: videoSolidIcon,
@@ -1077,9 +1077,15 @@ export function addCommands(
       } else {
         const currentSettings: CameraSettings = current.content.cameraSettings;
         if (currentSettings.type === 'Perspective') {
-          current.content.cameraSettings.type = 'Orthographic';
+          current.content.cameraSettings = {
+            ...current.content.cameraSettings,
+            type: 'Orthographic'
+          };
         } else {
-          current.content.cameraSettings.type = 'Perspective';
+          current.content.cameraSettings = {
+            ...current.content.cameraSettings,
+            type: 'Perspective'
+          };
         }
       }
       commands.notifyCommandChanged(CommandIDs.updateCameraSettings);
