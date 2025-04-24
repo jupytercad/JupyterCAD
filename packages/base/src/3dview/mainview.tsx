@@ -1899,12 +1899,13 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   };
 
-  private _handleExplosionChange = (
+  private _handleExplodedViewChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const newValue = parseInt(event.target.value, 10);
     this.setState({ explodedViewFactor: newValue });
     this._explodedView.factor = newValue;
+    this._setupExplodedView();
   };
 
   render(): JSX.Element {
@@ -2011,7 +2012,7 @@ export class MainView extends React.Component<IProps, IStates> {
                 max="20"
                 step="0.5"
                 value={this.state.explodedViewFactor}
-                onChange={this._handleExplosionChange}
+                onChange={this._handleExplodedViewChange}
                 style={{ width: '120px', marginRight: '8px' }}
               />
               <span style={{ minWidth: '30px', textAlign: 'right' }}>
