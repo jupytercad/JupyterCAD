@@ -123,7 +123,7 @@ export class MainView extends React.Component<IProps, IStates> {
       firstLoad: true,
       wireframe: false,
       transform: false,
-      clipEnabled: true,
+      clipEnabled: false,
       rotationSnapValue: 10,
       transformMode: 'translate'
     };
@@ -1889,7 +1889,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
   render(): JSX.Element {
     const isTransformOrClipEnabled =
-      this.state.transform || this._clipSettings.enabled;
+      this.state.transform || this.state.clipEnabled;
     return (
       <div
         className="jcad-Mainview data-jcad-keybinding"
