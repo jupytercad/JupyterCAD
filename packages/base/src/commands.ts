@@ -554,40 +554,6 @@ const AXES_FORM = {
   }
 };
 
-/*const EXPLODED_VIEW_FORM = {
-  title: 'Exploded View Settings',
-  schema: {
-    type: 'object',
-    required: ['Enabled', 'Factor'],
-    additionalProperties: false,
-    properties: {
-      Enabled: {
-        type: 'boolean',
-        description: 'Whether the exploded view is enabled or not'
-      },
-      Factor: {
-        type: 'number',
-        description: 'The exploded view factor'
-      }
-    }
-  },
-  default: (panel: JupyterCadPanel) => {
-    return {
-      Enabled: panel.explodedView?.enabled ?? false,
-      Factor: panel.explodedView?.factor ?? 0.5
-    };
-  },
-  syncData: (panel: JupyterCadPanel) => {
-    return (props: IDict) => {
-      const { Enabled, Factor } = props;
-      panel.explodedView = {
-        enabled: Enabled,
-        factor: Factor
-      };
-    };
-  }
-};*/
-
 const EXPORT_FORM = {
   title: 'Export to .jcad',
   schema: {
