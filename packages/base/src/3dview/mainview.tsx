@@ -1182,10 +1182,10 @@ export class MainView extends React.Component<IProps, IStates> {
     const material = new THREE.MeshBasicMaterial({
       color: clientColor
         ? new THREE.Color(
-          clientColor.r / 255,
-          clientColor.g / 255,
-          clientColor.b / 255
-        )
+            clientColor.r / 255,
+            clientColor.g / 255,
+            clientColor.b / 255
+          )
         : 'black'
     });
 
@@ -1943,7 +1943,7 @@ export class MainView extends React.Component<IProps, IStates> {
                 itemId={key}
                 model={this._model.annotationModel}
                 open={false}
-              // open={annotation.open} // TODO: "open" missing from the IAnnotation interface?
+                // open={annotation.open} // TODO: "open" missing from the IAnnotation interface?
               />
             </div>
           );
@@ -1970,16 +1970,19 @@ export class MainView extends React.Component<IProps, IStates> {
               color: 'white',
               borderRadius: '4px',
               fontSize: '12px',
-              gap: '8px', // spacing between the two overlays
-
+              gap: '8px' // spacing between the two overlays
             }}
           >
             {isTransformOrClipEnabled && (
               <div>
-                <div style={{ marginBottom: '2px' }}>Press R to switch mode</div>
+                <div style={{ marginBottom: '2px' }}>
+                  Press R to switch mode
+                </div>
                 {this.state.transformMode === 'rotate' && (
                   <div>
-                    <label style={{ marginRight: '8px' }}>Rotation Snap (°):</label>
+                    <label style={{ marginRight: '8px' }}>
+                      Rotation Snap (°):
+                    </label>
                     <input
                       type="number"
                       value={this.state.rotationSnapValue}
