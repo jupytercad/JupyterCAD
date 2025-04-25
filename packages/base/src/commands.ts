@@ -41,12 +41,17 @@ import {
 } from './tools';
 import keybindings from './keybindings.json';
 import { DEFAULT_MESH_COLOR } from './3dview/helpers';
-import { JupyterCadPanel, JupyterCadWidget } from './widget';
+import { JupyterCadWidget } from './widget';
 import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
 import { v4 as uuid } from 'uuid';
-import { CameraSettings, ExplodedView, JupyterCadTracker } from './types';
+import {
+  AxeHelper,
+  CameraSettings,
+  ExplodedView,
+  JupyterCadTracker
+} from './types';
 import { JSONObject } from '@lumino/coreutils';
 import { JupyterCadDocumentWidget } from './widget';
 
@@ -520,40 +525,6 @@ const OPERATORS = {
   }
 };
 
-const AXES_FORM = {
-  title: 'Axes Helper',
-  schema: {
-    type: 'object',
-    required: ['Size', 'Visible'],
-    additionalProperties: false,
-    properties: {
-      Size: {
-        type: 'number',
-        description: 'Size of the axes'
-      },
-      Visible: {
-        type: 'boolean',
-        description: 'Whether the axes are visible or not'
-      }
-    }
-  },
-  default: (panel: JupyterCadPanel) => {
-    return {
-      Size: panel.axes?.size ?? 5,
-      Visible: panel.axes?.visible ?? true
-    };
-  },
-  syncData: (panel: JupyterCadPanel) => {
-    return (props: IDict) => {
-      const { Size, Visible } = props;
-      panel.axes = {
-        size: Size,
-        visible: Visible
-      };
-    };
-  }
-};
-
 const EXPORT_FORM = {
   title: 'Export to .jcad',
   schema: {
@@ -968,22 +939,29 @@ export function addCommands(
     label: trans.__('Axes Helper'),
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: axesIcon,
+    isToggled: () => {
+      const current = tracker.currentWidget?.content;
+      return current?.axes.visible === true;
+    },
+
     execute: async () => {
       const current = tracker.currentWidget;
 
       if (!current) {
         return;
       }
-
-      const dialog = new FormDialog({
-        model: current.model,
-        title: AXES_FORM.title,
-        schema: AXES_FORM.schema,
-        sourceData: AXES_FORM.default(current.content),
-        syncData: AXES_FORM.syncData(current.content),
-        cancelButton: true
-      });
-      await dialog.launch();
+      const axes: AxeHelper = current.content.axes;
+      if (axes.visible === true) {
+        current.content.axes = {
+          ...current.content.axes,
+          visible: false
+        };
+      } else {
+        current.content.axes = {
+          ...current.content.axes,
+          visible: true
+        };
+      }
     }
   });
 
