@@ -163,8 +163,7 @@ jobs:
       - name: Execute integration tests
         shell: bash -l {0}
         working-directory: ui-tests
-        run: |
-          npx playwright test --browser chromium
+        run: jlpm run test
 
       - name: Upload Playwright Test report
         id: upload-galata-artifact
