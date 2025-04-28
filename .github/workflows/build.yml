@@ -156,17 +156,15 @@ jobs:
       - name: Install
         shell: bash -l {0}
         working-directory: ui-tests
-        env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: |
           jlpm install
-          yarn playwright install
+          yarn playwright install chromium
 
       - name: Execute integration tests
         shell: bash -l {0}
         working-directory: ui-tests
         run: |
-          npx playwright test
+          npx playwright test --browser chromium
 
       - name: Upload Playwright Test report
         id: upload-galata-artifact
