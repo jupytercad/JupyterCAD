@@ -554,40 +554,6 @@ const AXES_FORM = {
   }
 };
 
-const EXPLODED_VIEW_FORM = {
-  title: 'Exploded View Settings',
-  schema: {
-    type: 'object',
-    required: ['Enabled', 'Factor'],
-    additionalProperties: false,
-    properties: {
-      Enabled: {
-        type: 'boolean',
-        description: 'Whether the exploded view is enabled or not'
-      },
-      Factor: {
-        type: 'number',
-        description: 'The exploded view factor'
-      }
-    }
-  },
-  default: (panel: JupyterCadPanel) => {
-    return {
-      Enabled: panel.explodedView?.enabled ?? false,
-      Factor: panel.explodedView?.factor ?? 0.5
-    };
-  },
-  syncData: (panel: JupyterCadPanel) => {
-    return (props: IDict) => {
-      const { Enabled, Factor } = props;
-      panel.explodedView = {
-        enabled: Enabled,
-        factor: Factor
-      };
-    };
-  }
-};
-
 const EXPORT_FORM = {
   title: 'Export to .jcad',
   schema: {
@@ -1038,17 +1004,13 @@ export function addCommands(
       if (!current) {
         return;
       }
+      const panel = current.content;
 
-      const dialog = new FormDialog({
-        model: current.model,
-        title: EXPLODED_VIEW_FORM.title,
-        schema: EXPLODED_VIEW_FORM.schema,
-        sourceData: EXPLODED_VIEW_FORM.default(current.content),
-        syncData: EXPLODED_VIEW_FORM.syncData(current.content),
-        cancelButton: true
-      });
-      await dialog.launch();
-
+      if (panel.explodedView.enabled) {
+        panel.explodedView = { ...panel.explodedView, enabled: false };
+      } else {
+        panel.explodedView = { ...panel.explodedView, enabled: true };
+      }
       commands.notifyCommandChanged(CommandIDs.updateExplodedView);
 
       // Notify change so that toggle button for transform disables if needed
