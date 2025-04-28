@@ -153,24 +153,14 @@ jobs:
           cp ./jupytercad_core/dist/jupytercad*.whl ./jupytercad_lab/dist/jupytercad*.whl ./jupytercad_app/dist/jupytercad*.whl ./jupytercad/dist/jupytercad*.whl .
           python -m pip install jupytercad*.whl
 
-      - name: Install dependencies
+      - name: Install
         shell: bash -l {0}
         working-directory: ui-tests
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-        run: jlpm install
-
-      - name: Set up browser cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{ github.workspace }}/pw-browsers
-          key: ${{ runner.os }}-${{ hashFiles('ui-tests/yarn.lock') }}
-
-      - name: Install browser
-        shell: bash -l {0}
-        run: npx playwright install chromium
-        working-directory: ui-tests
+        run: |
+          jlpm install
+          yarn playwright install
 
       - name: Execute integration tests
         shell: bash -l {0}
