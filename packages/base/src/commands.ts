@@ -1007,10 +1007,8 @@ export function addCommands(
       const panel = current.content;
 
       if (panel.explodedView.enabled) {
-        console.log('Exploded view changed from enabled to disabled');
         panel.explodedView = { ...panel.explodedView, enabled: false };
       } else {
-        console.log('Exploded view changed from disabled to enabled');
         panel.explodedView = { ...panel.explodedView, enabled: true };
       }
       commands.notifyCommandChanged(CommandIDs.updateExplodedView);
