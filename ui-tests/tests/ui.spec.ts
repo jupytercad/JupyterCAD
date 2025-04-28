@@ -290,168 +290,168 @@ test.describe('UI Test', () => {
       }
     });
   });
-});
 
-test.describe('JCAD creation test', () => {
-  test.describe('Extension activation test', () => {
-    test('should create a CAD File', async ({ page, request }) => {
+  test.describe('JCAD creation test', () => {
+    test.describe('Extension activation test', () => {
+      test('should create a CAD File', async ({ page, request }) => {
+        await page.goto();
+        await page.getByLabel('notebook content').getByText('CAD File').click();
+
+        await page.getByTitle('New Box').getByRole('button').click();
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await page.waitForTimeout(1000);
+        await page.locator('#tab-key-1-6').click();
+
+        await page.waitForTimeout(1000);
+        const main = await page.locator('#jp-main-dock-panel');
+
+        if (main) {
+          expect(await main.screenshot()).toMatchSnapshot({
+            name: `JCAD-New.png`
+          });
+        }
+        await page.sidebar.open('left');
+        await page.waitForTimeout(500);
+        await page.locator('input#root_Height').fill('0.5');
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await page.waitForTimeout(500);
+        await page.locator('input#root_Width').fill('1.5');
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await page.waitForTimeout(500);
+        await page.locator('input#root_Height').fill('2');
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await page.sidebar.close('left');
+        await page.waitForTimeout(500);
+        if (main) {
+          expect(await main.screenshot()).toMatchSnapshot({
+            name: `JCAD-Modified.png`
+          });
+        }
+
+        await page.getByTitle('Undo').getByRole('button').click();
+        await page.getByTitle('Undo').getByRole('button').click();
+        await page.getByTitle('Undo').getByRole('button').click();
+        await page.waitForTimeout(1000);
+        if (main) {
+          expect(await main.screenshot()).toMatchSnapshot({
+            name: `JCAD-Undo.png`
+          });
+        }
+        await page.getByTitle('Redo').getByRole('button').click();
+        await page.getByTitle('Redo').getByRole('button').click();
+        await page.getByTitle('Redo').getByRole('button').click();
+        await page.waitForTimeout(1000);
+        if (main) {
+          expect(await main.screenshot()).toMatchSnapshot({
+            name: `JCAD-Redo.png`
+          });
+        }
+      });
+    });
+  });
+
+  test.describe('Console activation test', () => {
+    test('should open console', async ({ page }) => {
       await page.goto();
+      await page.sidebar.close('right');
+      await page.sidebar.close('left');
       await page.getByLabel('notebook content').getByText('CAD File').click();
-
-      await page.getByTitle('New Box').getByRole('button').click();
-      await page.getByRole('button', { name: 'Submit' }).click();
+      await page.getByRole('button', { name: 'Toggle console' }).click();
+      await page.getByRole('button', { name: 'Remove console' });
+      await page.getByRole('textbox').nth(1).click();
+      await page.getByRole('textbox').nth(1).fill('doc.add_box()');
       await page.waitForTimeout(1000);
-      await page.locator('#tab-key-1-6').click();
-
+      await page.keyboard.press('Shift+Enter');
       await page.waitForTimeout(1000);
       const main = await page.locator('#jp-main-dock-panel');
 
       if (main) {
         expect(await main.screenshot()).toMatchSnapshot({
-          name: `JCAD-New.png`
-        });
-      }
-      await page.sidebar.open('left');
-      await page.waitForTimeout(500);
-      await page.locator('input#root_Height').fill('0.5');
-      await page.getByRole('button', { name: 'Submit' }).click();
-      await page.waitForTimeout(500);
-      await page.locator('input#root_Width').fill('1.5');
-      await page.getByRole('button', { name: 'Submit' }).click();
-      await page.waitForTimeout(500);
-      await page.locator('input#root_Height').fill('2');
-      await page.getByRole('button', { name: 'Submit' }).click();
-      await page.sidebar.close('left');
-      await page.waitForTimeout(500);
-      if (main) {
-        expect(await main.screenshot()).toMatchSnapshot({
-          name: `JCAD-Modified.png`
-        });
-      }
-
-      await page.getByTitle('Undo').getByRole('button').click();
-      await page.getByTitle('Undo').getByRole('button').click();
-      await page.getByTitle('Undo').getByRole('button').click();
-      await page.waitForTimeout(1000);
-      if (main) {
-        expect(await main.screenshot()).toMatchSnapshot({
-          name: `JCAD-Undo.png`
-        });
-      }
-      await page.getByTitle('Redo').getByRole('button').click();
-      await page.getByTitle('Redo').getByRole('button').click();
-      await page.getByTitle('Redo').getByRole('button').click();
-      await page.waitForTimeout(1000);
-      if (main) {
-        expect(await main.screenshot()).toMatchSnapshot({
-          name: `JCAD-Redo.png`
+          name: `JCAD-Console.png`
         });
       }
     });
   });
-});
 
-test.describe('Console activation test', () => {
-  test('should open console', async ({ page }) => {
-    await page.goto();
-    await page.sidebar.close('right');
-    await page.sidebar.close('left');
-    await page.getByLabel('notebook content').getByText('CAD File').click();
-    await page.getByRole('button', { name: 'Toggle console' }).click();
-    await page.getByRole('button', { name: 'Remove console' });
-    await page.getByRole('textbox').nth(1).click();
-    await page.getByRole('textbox').nth(1).fill('doc.add_box()');
-    await page.waitForTimeout(1000);
-    await page.keyboard.press('Shift+Enter');
-    await page.waitForTimeout(1000);
-    const main = await page.locator('#jp-main-dock-panel');
+  test.describe('Suggestion Panel test', () => {
+    test(`Test Delete Suggestion`, async ({ page }) => {
+      await page.goto();
 
-    if (main) {
-      expect(await main.screenshot()).toMatchSnapshot({
-        name: `JCAD-Console.png`
-      });
-    }
-  });
-});
+      const fileName = 'test.jcad';
+      const fullPath = `examples/${fileName}`;
+      await page.notebook.openByPath(fullPath);
+      await page.notebook.activate(fullPath);
+      await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
 
-test.describe('Suggestion Panel test', () => {
-  test(`Test Delete Suggestion`, async ({ page }) => {
-    await page.goto();
+      // Activate Right Panel
+      await page.locator('li#tab-key-1-7').click();
+      await page.getByTitle('Create new fork').click();
+      await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
 
-    const fileName = 'test.jcad';
-    const fullPath = `examples/${fileName}`;
-    await page.notebook.openByPath(fullPath);
-    await page.notebook.activate(fullPath);
-    await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
+      // Select cone
+      await page
+        .locator('[data-test-id="react-tree-root"]')
+        .getByText('Cone 1')
+        .click();
 
-    // Activate Right Panel
-    await page.locator('li#tab-key-1-7').click();
-    await page.getByTitle('Create new fork').click();
-    await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
+      await page.locator('input#root_Height').click();
+      await page.locator('input#root_Height').fill('20');
 
-    // Select cone
-    await page
-      .locator('[data-test-id="react-tree-root"]')
-      .getByText('Cone 1')
-      .click();
+      await page
+        .locator('div.jp-Dialog-buttonLabel', {
+          hasText: 'Submit'
+        })
+        .click();
 
-    await page.locator('input#root_Height').click();
-    await page.locator('input#root_Height').fill('20');
+      await page.getByTitle('Delete suggestion').click();
+      await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
 
-    await page
-      .locator('div.jp-Dialog-buttonLabel', {
-        hasText: 'Submit'
-      })
-      .click();
+      let main = await page.$('#jp-main-split-panel');
+      if (main) {
+        expect(await main.screenshot()).toMatchSnapshot({
+          name: `JCAD-Delete-Suggestion.png`
+        });
+      }
+    });
 
-    await page.getByTitle('Delete suggestion').click();
-    await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
+    test(`Test Accept Suggestion`, async ({ page }) => {
+      await page.goto();
 
-    let main = await page.$('#jp-main-split-panel');
-    if (main) {
-      expect(await main.screenshot()).toMatchSnapshot({
-        name: `JCAD-Delete-Suggestion.png`
-      });
-    }
-  });
+      const fileName = 'test.jcad';
+      const fullPath = `examples/${fileName}`;
+      await page.notebook.openByPath(fullPath);
+      await page.notebook.activate(fullPath);
+      await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
 
-  test(`Test Accept Suggestion`, async ({ page }) => {
-    await page.goto();
+      // Activate Right Panel
+      await page.locator('li#tab-key-1-7').click();
+      await page.getByTitle('Create new fork').click();
+      await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
 
-    const fileName = 'test.jcad';
-    const fullPath = `examples/${fileName}`;
-    await page.notebook.openByPath(fullPath);
-    await page.notebook.activate(fullPath);
-    await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
+      // Select cone
+      await page
+        .locator('[data-test-id="react-tree-root"]')
+        .getByText('Cone 1')
+        .click();
 
-    // Activate Right Panel
-    await page.locator('li#tab-key-1-7').click();
-    await page.getByTitle('Create new fork').click();
-    await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
+      await page.locator('input#root_Height').click();
+      await page.locator('input#root_Height').fill('20');
 
-    // Select cone
-    await page
-      .locator('[data-test-id="react-tree-root"]')
-      .getByText('Cone 1')
-      .click();
+      await page
+        .locator('div.jp-Dialog-buttonLabel', {
+          hasText: 'Submit'
+        })
+        .click();
 
-    await page.locator('input#root_Height').click();
-    await page.locator('input#root_Height').fill('20');
+      await page.getByTitle('Accept suggestion').click();
+      await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
 
-    await page
-      .locator('div.jp-Dialog-buttonLabel', {
-        hasText: 'Submit'
-      })
-      .click();
-
-    await page.getByTitle('Accept suggestion').click();
-    await page.locator('div.jp-Dialog-buttonLabel[aria-label="Ok"]').click();
-
-    let main = await page.$('#jp-main-split-panel');
-    if (main) {
-      expect(await main.screenshot()).toMatchSnapshot({
-        name: `JCAD-Accept-Suggestion.png`
-      });
-    }
+      let main = await page.$('#jp-main-split-panel');
+      if (main) {
+        expect(await main.screenshot()).toMatchSnapshot({
+          name: `JCAD-Accept-Suggestion.png`
+        });
+      }
+    });
   });
 });

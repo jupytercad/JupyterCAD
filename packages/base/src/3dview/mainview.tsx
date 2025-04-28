@@ -1970,7 +1970,7 @@ export class MainView extends React.Component<IProps, IStates> {
               color: 'white',
               borderRadius: '4px',
               fontSize: '12px',
-              gap: '8px' // spacing between the two overlays
+              gap: '8px'
             }}
           >
             {isTransformOrClipEnabled && (
