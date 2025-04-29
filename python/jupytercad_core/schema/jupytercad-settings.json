@@ -1,13 +1,13 @@
 {
-    "title": "JupyterCAD Settings",
-    "description": "Settings for the JupyterCAD extension.",
-    "type": "object",
-    "properties": {
-      "showAxesHelper": {
-        "type": "boolean",
-        "title": "Show Axes Helper",
-        "description": "Toggle the visibility of the axes helper in the 3D viewport.",
-        "default": false
-      }
+  "title": "JupyterCAD Settings",
+  "description": "Settings for the JupyterCAD extension.",
+  "type": "object",
+  "properties": {
+    "showAxesHelper": {
+      "type": "boolean",
+      "title": "Show Axes Helper",
+      "description": "Toggle the visibility of the axes helper in the 3D viewport.",
+      "default": false
     }
   }
+}

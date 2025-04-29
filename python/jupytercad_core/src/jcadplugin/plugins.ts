@@ -61,7 +61,6 @@ const activate = async (
   palette: ICommandPalette | null,
   drive: ICollaborativeDrive | null
 ): Promise<void> => {
-
   const setting = await settingRegistry.load(SETTINGS_ID);
   setting.changed.connect(() => {
     const newSettings = setting.composite as any;
