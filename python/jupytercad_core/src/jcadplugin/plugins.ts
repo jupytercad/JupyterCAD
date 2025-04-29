@@ -33,20 +33,23 @@ import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { JupyterCadDocumentWidgetFactory } from '../factory';
 import { JupyterCadJcadModelFactory } from './modelfactory';
 import { MimeDocumentFactory } from '@jupyterlab/docregistry';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 const FACTORY = 'JupyterCAD';
 const CONTENT_TYPE = 'jcad';
 const PALETTE_CATEGORY = 'JupyterCAD';
+const SETTINGS_ID = '@jupytercad/jupytercad_core:jupytercad-settings';
 
 namespace CommandIDs {
   export const createNew = 'jupytercad:create-new-jcad-file';
 }
 
-const activate = (
+const activate = async (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
   annotationModel: IAnnotationModel,
+  settingRegistry: ISettingRegistry,
   browserFactory: IFileBrowserFactory,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
@@ -57,7 +60,14 @@ const activate = (
   launcher: ILauncher | null,
   palette: ICommandPalette | null,
   drive: ICollaborativeDrive | null
-): void => {
+): Promise<void> => {
+
+  const setting = await settingRegistry.load(SETTINGS_ID);
+  setting.changed.connect(() => {
+    const newSettings = setting.composite as any;
+    console.log('Settings updated:', newSettings);
+  });
+
   const widgetFactory = new JupyterCadDocumentWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-jcadmodel',
@@ -188,6 +198,7 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IJupyterCadDocTracker,
     IThemeManager,
     IAnnotationToken,
+    ISettingRegistry,
     IFileBrowserFactory,
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken,
