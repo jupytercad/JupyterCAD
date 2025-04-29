@@ -1,7 +1,6 @@
 {
   "metadata": {
-    "annotation_29c5280e-8625-4df2-912a-32aa90017552": "{\"position\":[-36.1767807258494,99.75043783365507,538.2064137258739],\"label\":\"New annotation\",\"contents\":[{\"value\":\"I don't like this window color, can you change it?\",\"user\":{\"username\":\"df6d8fe262c641fcafa07da7336acbad\",\"name\":\"Anonymous Erinome\",\"display_name\":\"Anonymous Erinome\",\"initials\":\"AE\",\"avatar_url\":null,\"color\":\"var(--jp-collaborator-color7)\"}}]}",
-    "annotation_6f237b7c-d600-4d8d-a357-ad475c94ad93": "{\"position\":[-152.5901027396778,40.161167083635746,352],\"label\":\"New annotation\",\"contents\":[{\"value\":\"This floor is not wide enough\",\"user\":{\"username\":\"df6d8fe262c641fcafa07da7336acbad\",\"name\":\"Anonymous Erinome\",\"display_name\":\"Anonymous Erinome\",\"initials\":\"AE\",\"avatar_url\":null,\"color\":\"var(--jp-collaborator-color7)\"}}]}"
+    "annotation_1a8070b9-1daa-49e1-a848-fd5b454bdae4": "{\"position\":[-130.26230074366637,30.671260581525274,0],\"label\":\"New annotation\",\"contents\":[{\"value\":\"The floor should be thicker\",\"user\":{\"username\":\"c5a9d7c1fc1441e5946c60296e623b1b\",\"name\":\"Anonymous Callirrhoe\",\"display_name\":\"Anonymous Callirrhoe\",\"initials\":\"AC\",\"avatar_url\":null,\"color\":\"var(--jp-collaborator-color7)\"}}],\"parent\":\"Structure014\"}"
   },
   "objects": [
     {
