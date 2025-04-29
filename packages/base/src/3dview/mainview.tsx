@@ -213,7 +213,7 @@ export class MainView extends React.Component<IProps, IStates> {
         );
 
         // If in exploded view, we scale down to the initial position (to before exploding the view)
-        if (this._explodedView.enabled) {
+        if (this.explodedViewEnabled) {
           const explodedState = computeExplodedState({
             mesh: this._pointer3D.mesh,
             boundingGroup: this._boundingGroup,
@@ -714,7 +714,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._pointer3D.parent = picked.mesh;
 
       // If in exploded view, we scale down to the initial position (to before exploding the view)
-      if (this._explodedView.enabled) {
+      if (this.explodedViewEnabled) {
         const explodedState = computeExplodedState({
           mesh: this._pointer3D.parent,
           boundingGroup: this._boundingGroup,
@@ -1440,7 +1440,7 @@ export class MainView extends React.Component<IProps, IStates> {
         collaboratorPointer.mesh.visible = true;
 
         // If we are in exploded view, we display the collaborator cursor at the exploded position
-        if (this._explodedView.enabled) {
+        if (this.explodedViewEnabled) {
           const explodedState = computeExplodedState({
             mesh: parent,
             boundingGroup: this._boundingGroup,
@@ -1611,8 +1611,12 @@ export class MainView extends React.Component<IProps, IStates> {
     }
   }
 
+  get explodedViewEnabled(): boolean {
+    return this._explodedView.enabled && this._explodedView.factor !== 0;
+  }
+
   private _setupExplodedView() {
-    if (this._explodedView.enabled) {
+    if (this.explodedViewEnabled) {
       const center = new THREE.Vector3();
       this._boundingGroup.getCenter(center);
 
@@ -1870,7 +1874,7 @@ export class MainView extends React.Component<IProps, IStates> {
     );
 
     // If in exploded view, we explode the annotation position as well
-    if (this._explodedView.enabled && parent) {
+    if (this.explodedViewEnabled && parent) {
       const explodedState = computeExplodedState({
         mesh: parent,
         boundingGroup: this._boundingGroup,
