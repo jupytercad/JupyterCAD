@@ -1985,7 +1985,9 @@ export class MainView extends React.Component<IProps, IStates> {
             {isTransformOrClipEnabled && (
               <div>
                 <div style={{ marginBottom: '2px' }}>
-                  Press R to switch mode
+                  {this.state.transformMode === 'rotate'
+                    ? 'Press R to switch to translation mode'
+                    : 'Press R to switch to rotation mode'}
                 </div>
                 {this.state.transformMode === 'rotate' && (
                   <div>
