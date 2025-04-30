@@ -38,7 +38,7 @@ import { ISettingRegistry } from '@jupyterlab/settingregistry';
 const FACTORY = 'JupyterCAD';
 const CONTENT_TYPE = 'jcad';
 const PALETTE_CATEGORY = 'JupyterCAD';
-const SETTINGS_ID = '@jupytercad/jupytercad_core:jupytercad-settings';
+const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
 
 namespace CommandIDs {
   export const createNew = 'jupytercad:create-new-jcad-file';
