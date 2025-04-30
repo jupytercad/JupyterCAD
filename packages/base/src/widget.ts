@@ -114,7 +114,7 @@ export class JupyterCadPanel extends SplitPanel {
   }) {
     this._view = new ObservableMap<JSONValue>({});
     const cameraSettings: CameraSettings = { type: 'Perspective' };
-    const axes: AxeHelper = { visible: false };
+    const axes: AxeHelper = { visible: false};
     this._view.set('cameraSettings', cameraSettings);
     const explodedView: ExplodedView = { enabled: false, factor: 0 };
     this._view.set('explodedView', explodedView);
@@ -228,6 +228,10 @@ export class JupyterCadPanel extends SplitPanel {
 
   set transform(value: boolean) {
     this._view.set('transform', value);
+  }
+
+  get consoleOpened(): boolean {
+    return this._consoleOpened;
   }
 
   executeConsole() {

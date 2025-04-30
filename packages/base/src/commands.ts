@@ -614,7 +614,13 @@ export function addCommands(
         ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
-    execute: async () => await Private.toggleConsole(tracker)
+    isToggled: () => {
+      return tracker.currentWidget?.content.consoleOpened===true
+    },
+    execute: async () => {
+      await Private.toggleConsole(tracker)
+      commands.notifyCommandChanged(CommandIDs.toggleConsole);
+    }
   });
   commands.addCommand(CommandIDs.executeConsole, {
     label: trans.__('Execute console'),
