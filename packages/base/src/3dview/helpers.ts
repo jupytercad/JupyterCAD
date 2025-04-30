@@ -353,6 +353,7 @@ export function buildShape(options: {
   );
   boundingBox.position.copy(center);
   boundingBox.visible = false;
+  boundingBox.renderOrder = 1;
   boundingBox.name = SELECTION_BOUNDING_BOX;
   meshGroup.add(boundingBox);
 
