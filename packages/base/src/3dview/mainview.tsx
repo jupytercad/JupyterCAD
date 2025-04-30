@@ -1182,10 +1182,10 @@ export class MainView extends React.Component<IProps, IStates> {
     const material = new THREE.MeshBasicMaterial({
       color: clientColor
         ? new THREE.Color(
-          clientColor.r / 255,
-          clientColor.g / 255,
-          clientColor.b / 255
-        )
+            clientColor.r / 255,
+            clientColor.g / 255,
+            clientColor.b / 255
+          )
         : 'black'
     });
 
@@ -1952,7 +1952,7 @@ export class MainView extends React.Component<IProps, IStates> {
                 itemId={key}
                 model={this._model.annotationModel}
                 open={false}
-              // open={annotation.open} // TODO: "open" missing from the IAnnotation interface?
+                // open={annotation.open} // TODO: "open" missing from the IAnnotation interface?
               />
             </div>
           );
