@@ -962,6 +962,7 @@ export function addCommands(
           visible: true
         };
       }
+      commands.notifyCommandChanged(CommandIDs.updateAxes);
     }
   });
 
