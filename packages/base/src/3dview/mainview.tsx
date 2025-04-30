@@ -1312,14 +1312,17 @@ export class MainView extends React.Component<IProps, IStates> {
         child.name.startsWith(selectedMeshName)
       );
 
-      if (matchingChild) {
+      if (matchingChild && selectedMeshName.startsWith('edge')) {
+        const parent = matchingChild.parent;
+        if (parent) {
+          this._transformControls.attach(parent as BasicMesh);
+        }
+      } else {
         this._transformControls.attach(matchingChild as BasicMesh);
-
-        this._transformControls.visible = this.state.transform;
-        this._transformControls.enabled = this.state.transform;
-
-        return;
       }
+      this._transformControls.visible = this.state.transform;
+      this._transformControls.enabled = this.state.transform;
+      return;
     }
 
     // Detach TransformControls from the previous selection
