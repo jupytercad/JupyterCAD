@@ -230,6 +230,10 @@ export class JupyterCadPanel extends SplitPanel {
     this._view.set('transform', value);
   }
 
+  get consoleOpened(): boolean {
+    return this._consoleOpened;
+  }
+
   executeConsole() {
     if (this._consoleView) {
       this._consoleView.execute();
