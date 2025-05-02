@@ -615,10 +615,10 @@ export function addCommands(
         : false;
     },
     isToggled: () => {
-      return tracker.currentWidget?.content.consoleOpened===true
+      return tracker.currentWidget?.content.consoleOpened === true;
     },
     execute: async () => {
-      await Private.toggleConsole(tracker)
+      await Private.toggleConsole(tracker);
       commands.notifyCommandChanged(CommandIDs.toggleConsole);
     }
   });
