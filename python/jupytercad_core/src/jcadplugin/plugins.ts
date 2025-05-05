@@ -61,11 +61,7 @@ const activate = async (
   palette: ICommandPalette | null,
   drive: ICollaborativeDrive | null
 ): Promise<void> => {
-  const setting = await settingRegistry.load(SETTINGS_ID);
-  setting.changed.connect(() => {
-    const newSettings = setting.composite as any;
-    console.log('Settings updated:', newSettings);
-  });
+  await settingRegistry.load(SETTINGS_ID);
 
   const widgetFactory = new JupyterCadDocumentWidgetFactory({
     name: FACTORY,
@@ -98,7 +94,8 @@ const activate = async (
 
   // Creating and registering the model factory for our custom DocumentModel
   const modelFactory = new JupyterCadJcadModelFactory({
-    annotationModel
+    annotationModel,
+    settingRegistry
   });
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype

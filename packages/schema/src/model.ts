@@ -20,10 +20,13 @@ import {
 } from './interfaces';
 import jcadSchema from './schema/jcad.json';
 import { Contents } from '@jupyterlab/services';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
+
+const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
 
 export class JupyterCadModel implements IJupyterCadModel {
   constructor(options: JupyterCadModel.IOptions) {
-    const { annotationModel, sharedModel } = options;
+    const { annotationModel, sharedModel, settingRegistry } = options;
     if (sharedModel) {
       this._sharedModel = sharedModel;
     } else {
@@ -31,8 +34,28 @@ export class JupyterCadModel implements IJupyterCadModel {
     }
     this._connectSignal();
     this.annotationModel = annotationModel;
+    this.settingRegistry = settingRegistry;
     this._copiedObject = null;
     this._pathChanged = new Signal<JupyterCadModel, string>(this);
+  }
+
+  /**
+   * Initialize custom settings for JupyterLab.
+   */
+  async initSettings(): Promise<void> {
+    if (this.settingRegistry) {
+      const setting = await this.settingRegistry.load(SETTINGS_ID);
+      this._settings = setting.composite as any;
+
+      setting.changed.connect(() => {
+        this._settings = setting.composite as any;
+        console.log('JupyterGIS Settings updated:', this._settings);
+      });
+    }
+  }
+
+  getSettings(): any {
+    return this._settings;
   }
 
   readonly collaborative = true;
@@ -350,7 +373,9 @@ export class JupyterCadModel implements IJupyterCadModel {
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
   readonly annotationModel?: IAnnotationModel;
+  readonly settingRegistry?: ISettingRegistry;
 
+  private _settings: any = {};
   private _sharedModel: IJupyterCadDoc;
   private _copiedObject: IJCadObject | null;
 
@@ -384,5 +409,6 @@ export namespace JupyterCadModel {
   export interface IOptions
     extends DocumentRegistry.IModelOptions<IJupyterCadDoc> {
     annotationModel?: IAnnotationModel;
+    settingRegistry?: ISettingRegistry;
   }
 }
