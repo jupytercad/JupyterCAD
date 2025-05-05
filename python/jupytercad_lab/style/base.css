@@ -439,8 +439,10 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
 }
 
 .jpcad-control-panel-suggestion.selected {
-  background-color: rgba(0, 122, 255, 0.23);
+  color: var(--jp-ui-inverse-font-color1);
+  background: var(--jp-brand-color1);
 }
+
 .jcad-suggestion-tree-node-icon {
   display: flex;
   flex-direction: column;
