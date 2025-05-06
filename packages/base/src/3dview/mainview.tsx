@@ -1348,6 +1348,12 @@ export class MainView extends React.Component<IProps, IStates> {
         return;
       }
     }
+
+    // Detach TransformControls from the previous selection
+    this._transformControls.detach();
+
+    this._transformControls.visible = false;
+    this._transformControls.enabled = false;
   }
 
   private _onSharedMetadataChanged = (
