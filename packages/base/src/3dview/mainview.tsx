@@ -116,6 +116,7 @@ export class MainView extends React.Component<IProps, IStates> {
     );
     this._mainViewModel.renderSignal.connect(this._requestRender, this);
     this._mainViewModel.workerBusy.connect(this._workerBusyHandler, this);
+    this._mainViewModel.afterShowSignal.connect(this._handleWindowResize, this);
 
     this._raycaster.params.Line2 = { threshold: 50 };
 
@@ -157,7 +158,6 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   componentDidMount(): void {
-    window.addEventListener('resize', this._handleWindowResize);
     this.generateScene();
     this.addContextMenu();
     this._mainViewModel.initWorker();
@@ -1338,12 +1338,39 @@ export class MainView extends React.Component<IProps, IStates> {
   private _updateTransformControls(selection: string[]) {
     if (selection.length === 1 && !this._explodedView.enabled) {
       const selectedMeshName = selection[0];
-      const matchingChild = this._meshGroup?.children.find(child =>
+
+      if (selectedMeshName.startsWith('edge')) {
+        const selectedMesh = this._meshGroup?.getObjectByName(
+          selectedMeshName
+        ) as BasicMesh;
+
+        if (selectedMesh.parent?.name) {
+          const parentName = selectedMesh.parent.name;
+
+          // Not using getObjectByName, we want the full group
+          // TODO Improve this detection of the full group. startsWith looks brittle
+          const parent = this._meshGroup?.children.find(child =>
+            child.name.startsWith(parentName)
+          );
+
+          if (parent) {
+            this._transformControls.attach(parent as BasicMesh);
+
+            this._transformControls.visible = this.state.transform;
+            this._transformControls.enabled = this.state.transform;
+          }
+        }
+        return;
+      }
+
+      // Not using getObjectByName, we want the full group
+      // TODO Improve this detection of the full group. startsWith looks brittle
+      const selectedMesh = this._meshGroup?.children.find(child =>
         child.name.startsWith(selectedMeshName)
       );
 
-      if (matchingChild) {
-        this._transformControls.attach(matchingChild as BasicMesh);
+      if (selectedMesh) {
+        this._transformControls.attach(selectedMesh as BasicMesh);
 
         this._transformControls.visible = this.state.transform;
         this._transformControls.enabled = this.state.transform;
@@ -1549,15 +1576,20 @@ export class MainView extends React.Component<IProps, IStates> {
     sender: ObservableMap<JSONValue>,
     change: IObservableMap.IChangedArgs<JSONValue>
   ): void {
-    // if (change.key === 'axes') {
-    //   this._sceneAxe?.removeFromParent();
-    //   const axe = change.newValue as AxeHelper | undefined;
-
-    //   if (change.type !== 'remove' && axe && axe.visible) {
-    //     this._sceneAxe = new THREE.AxesHelper(axe.size);
-    //     this._scene.add(this._sceneAxe);
-    //   }
-    // }
+    if (change.key === 'axes') {
+      this._sceneAxe?.removeFromParent();
+      const axe = change.newValue as AxeHelper;
+      if (change.type !== 'remove' && axe && axe.visible) {
+        const axesHelper = new THREE.AxesHelper(
+          this._refLength ? this._refLength * 5 : 20
+        );
+        const material = axesHelper.material as THREE.LineBasicMaterial;
+        material.depthTest = false;
+        axesHelper.renderOrder = 1;
+        this._sceneAxe = axesHelper;
+        this._scene.add(this._sceneAxe);
+      }
+    }
 
     if (change.key === 'explodedView') {
       const explodedView = change.newValue as ExplodedView;
@@ -1761,8 +1793,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._transformControls.camera = this._camera;
     this._clipPlaneTransformControls.camera = this._camera;
 
-    const resizeEvent = new Event('resize');
-    window.dispatchEvent(resizeEvent);
+    this.resizeCanvasToDisplaySize();
   }
 
   private _updateSplit(enabled: boolean) {
@@ -2010,7 +2041,9 @@ export class MainView extends React.Component<IProps, IStates> {
             {isTransformOrClipEnabled && (
               <div>
                 <div style={{ marginBottom: '2px' }}>
-                  Press R to switch mode
+                  {this.state.transformMode === 'rotate'
+                    ? 'Press R to switch to translation mode'
+                    : 'Press R to switch to rotation mode'}
                 </div>
                 {this.state.transformMode === 'rotate' && (
                   <div>

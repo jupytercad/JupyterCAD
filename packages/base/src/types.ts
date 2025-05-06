@@ -11,7 +11,6 @@ export type ValueOf<T> = T[keyof T];
  * Axe's dimensions
  */
 export type AxeHelper = {
-  size: number;
   visible: boolean;
 };
 
