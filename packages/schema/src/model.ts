@@ -52,7 +52,8 @@ export class JupyterCadModel implements IJupyterCadModel {
   /**
    * Return stored settings.
    */
-  getSettings(): any {
+  async getSettings(): Promise<any> {
+    await this.initSettings();
     return this._settings;
   }
 
