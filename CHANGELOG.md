@@ -2,6 +2,47 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.1.3
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.1.2...500f4381f6b080284f8d2b260098775a3959c9b2))
+
+### Enhancements made
+
+- Apply the transform control on the parent when clicking on an edge [#732](https://github.com/jupytercad/JupyterCAD/pull/732) ([@HaudinFlorence](https://github.com/HaudinFlorence))
+- Make the toolbar console button a toggle button [#731](https://github.com/jupytercad/JupyterCAD/pull/731) ([@HaudinFlorence](https://github.com/HaudinFlorence))
+- Update the switch mode label for the transform controls [#730](https://github.com/jupytercad/JupyterCAD/pull/730) ([@HaudinFlorence](https://github.com/HaudinFlorence))
+- Replace the FormDialog by a toggle button for the axes helper [#726](https://github.com/jupytercad/JupyterCAD/pull/726) ([@HaudinFlorence](https://github.com/HaudinFlorence))
+- Replace the dialogform by a toggle button for the exploded view [#722](https://github.com/jupytercad/JupyterCAD/pull/722) ([@HaudinFlorence](https://github.com/HaudinFlorence))
+- Replace the formDialog by a toggle button for CameraSettings [#717](https://github.com/jupytercad/JupyterCAD/pull/717) ([@HaudinFlorence](https://github.com/HaudinFlorence))
+- Use svg icons only for the toolbar icons [#713](https://github.com/jupytercad/JupyterCAD/pull/713) ([@HaudinFlorence](https://github.com/HaudinFlorence))
+
+### Bugs fixed
+
+- Properly handle lumino events [#735](https://github.com/jupytercad/JupyterCAD/pull/735) ([@martinRenou](https://github.com/martinRenou))
+- Use jupyterlab css variables for the selected suggestions [#733](https://github.com/jupytercad/JupyterCAD/pull/733) ([@HaudinFlorence](https://github.com/HaudinFlorence))
+- Follow up of PR 726. Fix the axes helper toggle button broken behavior [#727](https://github.com/jupytercad/JupyterCAD/pull/727) ([@HaudinFlorence](https://github.com/HaudinFlorence))
+- Fix ArchDetail.jcad annotations model + check exploded view [#724](https://github.com/jupytercad/JupyterCAD/pull/724) ([@martinRenou](https://github.com/martinRenou))
+- Use react state to show text message for clip plane [#720](https://github.com/jupytercad/JupyterCAD/pull/720) ([@arjxn-py](https://github.com/arjxn-py))
+- Follow up of PR 717. Fix reassignment of cameraSettings [#719](https://github.com/jupytercad/JupyterCAD/pull/719) ([@HaudinFlorence](https://github.com/HaudinFlorence))
+- Replace Deprecated `breptools_Write` with `breptools.Write` [#711](https://github.com/jupytercad/JupyterCAD/pull/711) ([@arjxn-py](https://github.com/arjxn-py))
+- Fix blank tab bug [#710](https://github.com/jupytercad/JupyterCAD/pull/710) ([@arjxn-py](https://github.com/arjxn-py))
+
+### Maintenance and upkeep improvements
+
+- Reset UI-tests snapshots [#723](https://github.com/jupytercad/JupyterCAD/pull/723) ([@martinRenou](https://github.com/martinRenou))
+
+### Other merged PRs
+
+- Fix CHANGELOG formatting [#716](https://github.com/jupytercad/JupyterCAD/pull/716) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2025-04-08&to=2025-05-06&type=c))
+
+[@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2025-04-08..2025-05-06&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2025-04-08..2025-05-06&type=Issues) | [@HaudinFlorence](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AHaudinFlorence+updated%3A2025-04-08..2025-05-06&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2025-04-08..2025-05-06&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2025-04-08..2025-05-06&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2025-04-08..2025-05-06&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.1.2
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.1.1...0745ab0ddf3248495ad85239833b655038fbb23e))
@@ -16,8 +57,6 @@
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2025-04-07&to=2025-04-08&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2025-04-07..2025-04-08&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2025-04-07..2025-04-08&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.1.1
 
