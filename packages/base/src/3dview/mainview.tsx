@@ -1308,12 +1308,39 @@ export class MainView extends React.Component<IProps, IStates> {
   private _updateTransformControls(selection: string[]) {
     if (selection.length === 1 && !this._explodedView.enabled) {
       const selectedMeshName = selection[0];
-      const matchingChild = this._meshGroup?.children.find(child =>
+
+      if (selectedMeshName.startsWith('edge')) {
+        const selectedMesh = this._meshGroup?.getObjectByName(
+          selectedMeshName
+        ) as BasicMesh;
+
+        if (selectedMesh.parent?.name) {
+          const parentName = selectedMesh.parent.name;
+
+          // Not using getObjectByName, we want the full group
+          // TODO Improve this detection of the full group. startsWith looks brittle
+          const parent = this._meshGroup?.children.find(child =>
+            child.name.startsWith(parentName)
+          );
+
+          if (parent) {
+            this._transformControls.attach(parent as BasicMesh);
+
+            this._transformControls.visible = this.state.transform;
+            this._transformControls.enabled = this.state.transform;
+          }
+        }
+        return;
+      }
+
+      // Not using getObjectByName, we want the full group
+      // TODO Improve this detection of the full group. startsWith looks brittle
+      const selectedMesh = this._meshGroup?.children.find(child =>
         child.name.startsWith(selectedMeshName)
       );
 
-      if (matchingChild) {
-        this._transformControls.attach(matchingChild as BasicMesh);
+      if (selectedMesh) {
+        this._transformControls.attach(selectedMesh as BasicMesh);
 
         this._transformControls.visible = this.state.transform;
         this._transformControls.enabled = this.state.transform;
