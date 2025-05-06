@@ -115,6 +115,7 @@ export class MainView extends React.Component<IProps, IStates> {
     );
     this._mainViewModel.renderSignal.connect(this._requestRender, this);
     this._mainViewModel.workerBusy.connect(this._workerBusyHandler, this);
+    this._mainViewModel.afterShowSignal.connect(this._handleWindowResize, this);
 
     this._raycaster.params.Line2 = { threshold: 50 };
 
@@ -134,7 +135,6 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   componentDidMount(): void {
-    window.addEventListener('resize', this._handleWindowResize);
     this.generateScene();
     this.addContextMenu();
     this._mainViewModel.initWorker();
@@ -1730,9 +1730,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._transformControls.camera = this._camera;
     this._clipPlaneTransformControls.camera = this._camera;
-
-    const resizeEvent = new Event('resize');
-    window.dispatchEvent(resizeEvent);
   }
 
   private _updateSplit(enabled: boolean) {
