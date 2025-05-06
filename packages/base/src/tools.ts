@@ -35,6 +35,7 @@ export const visibilityIcon = new LabIcon({
   name: 'jupytercad:visibilityIcon',
   svgstr: visibilitySvg
 });
+
 export const visibilityOffIcon = new LabIcon({
   name: 'jupytercad:visibilityOffIcon',
   svgstr: visibilityOffSvg
