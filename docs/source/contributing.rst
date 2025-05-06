@@ -7,11 +7,14 @@ Contributing
 Development install
 -------------------
 
-**Note:** You will need :ref:`Node.js <https://nodejs.org/>` and :ref:`Docker <https://www.docker.com/>` to build the extension package.
+You need to create a development environment with `nodejs` and `jupyterlab` installed.  We are here proposing to use `micromamba`.
 
-The ``jlpm`` command is JupyterLab's pinned version of
-:ref:`yarn <https://yarnpkg.com/>` that is installed with JupyterLab. You may use
-:ref:`yarn <https://yarnpkg.com/>` or :ref:`npm <https://www.npmjs.com/>` in lieu of ``jlpm`` below.
+.. code-block:: bash
+
+    # Create an environment with micromamba and install nodejs and jupyterlab
+    micromamba create -n jupytercad_dev -c conda-forge nodejs jupyterlab -y
+
+You then need to clone the repository, proceed to installation and rebuild the extension.
 
 .. code-block:: bash
 
@@ -19,12 +22,23 @@ The ``jlpm`` command is JupyterLab's pinned version of
     git clone https://github.com/jupytercad/JupyterCAD.git
     # Change directory to the jupytercad directory
     cd JupyterCAD
-    # Install JupyterLab for jlpm
-    pip install jupyterlab
-    # Install package in development mode
-    python scripts/dev-install.py
+    # Install dependencies and the package in development mode
+    jlpm install
+    jlpm dev ## if you haven't Docker installed replace this line by `jlpm dev --no-occ-build`
     # Rebuild extension Typescript source after making changes
     jlpm run build
+
+**Note:** There are 2 possibilities for the installation. 
+
+1) either you are using [Docker](https://www.docker.com/) to build `@jupytercad/opencascade` package and you need to run `jlpm dev` in the commands above.
+
+2) or you are using a prebuilt version by calling `jlpm dev --no-occ-build` to install the package.
+
+
+**Note:** The `jlpm` command is JupyterLab's pinned version of
+[yarn](https://yarnpkg.com/) that is installed with JupyterLab. You may use
+`yarn` or `npm` in lieu of `jlpm` above.
+
 
 You can watch the source directory and run JupyterLab at the same time in different terminals to watch for changes in the extension's source and automatically rebuild the extension.
 
