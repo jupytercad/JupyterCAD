@@ -162,6 +162,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
 
   swapSharedModel(newSharedModel: IJupyterCadDoc): void;
 
+  getSettings(): any;
   getWorker(): Worker;
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;

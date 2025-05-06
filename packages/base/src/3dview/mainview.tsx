@@ -22,11 +22,12 @@ import { TransformControls } from 'three/examples/jsm/controls/TransformControls
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { ViewHelper } from 'three/examples/jsm/helpers/ViewHelper';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import { FloatingAnnotation } from '../annotation';
 import { getCSSVariableColor, throttle } from '../tools';
 import {
-  AxeHelper,
+  // AxeHelper,
   CameraSettings,
   ClipSettings,
   ExplodedView,
@@ -131,6 +132,16 @@ export class MainView extends React.Component<IProps, IStates> {
       rotationSnapValue: 10,
       transformMode: 'translate'
     };
+
+    this._settings = this._model.getSettings();
+    this._jcadSettings = this._settings.composite as any;
+
+    this._settings.changed.connect(() => {
+      this._jcadSettings = this._settings.composite as any;
+      window.dispatchEvent(new Event('resize'));
+      console.log('JupyterGIS Settings updated:', this._jcadSettings);
+    });
+
   }
 
   componentDidMount(): void {
@@ -521,6 +532,13 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.setSpace('local');
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
+
+      this._sceneAxe = new THREE.AxesHelper(this._refLength || 10);
+      this._scene.add(this._sceneAxe);
+
+      console.log('JupyterGIS Settings:', this._jcadSettings);
+      
+      this._sceneAxe.visible = this._jcadSettings.showAxesHelper;
 
       this._createViewHelper();
     }
@@ -1519,15 +1537,15 @@ export class MainView extends React.Component<IProps, IStates> {
     sender: ObservableMap<JSONValue>,
     change: IObservableMap.IChangedArgs<JSONValue>
   ): void {
-    if (change.key === 'axes') {
-      this._sceneAxe?.removeFromParent();
-      const axe = change.newValue as AxeHelper | undefined;
+    // if (change.key === 'axes') {
+    //   this._sceneAxe?.removeFromParent();
+    //   const axe = change.newValue as AxeHelper | undefined;
 
-      if (change.type !== 'remove' && axe && axe.visible) {
-        this._sceneAxe = new THREE.AxesHelper(axe.size);
-        this._scene.add(this._sceneAxe);
-      }
-    }
+    //   if (change.type !== 'remove' && axe && axe.visible) {
+    //     this._sceneAxe = new THREE.AxesHelper(axe.size);
+    //     this._scene.add(this._sceneAxe);
+    //   }
+    // }
 
     if (change.key === 'explodedView') {
       const explodedView = change.newValue as ExplodedView;
@@ -2113,4 +2131,6 @@ export class MainView extends React.Component<IProps, IStates> {
     | THREE.OrthographicCamera
     | undefined = undefined; // Threejs camera
   private _keyDownHandler: (event: KeyboardEvent) => void;
+  private _settings: ISettingRegistry.ISettings;
+  private _jcadSettings: any;
 }

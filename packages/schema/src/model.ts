@@ -45,15 +45,13 @@ export class JupyterCadModel implements IJupyterCadModel {
   async initSettings(): Promise<void> {
     if (this.settingRegistry) {
       const setting = await this.settingRegistry.load(SETTINGS_ID);
-      this._settings = setting.composite as any;
-
-      setting.changed.connect(() => {
-        this._settings = setting.composite as any;
-        console.log('JupyterGIS Settings updated:', this._settings);
-      });
+      this._settings = setting;
     }
   }
 
+  /**
+   * Return stored settings.
+   */
   getSettings(): any {
     return this._settings;
   }
@@ -375,7 +373,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   readonly annotationModel?: IAnnotationModel;
   readonly settingRegistry?: ISettingRegistry;
 
-  private _settings: any = {};
+  private _settings: ISettingRegistry.ISettings;
   private _sharedModel: IJupyterCadDoc;
   private _copiedObject: IJCadObject | null;
 
