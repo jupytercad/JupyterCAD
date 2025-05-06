@@ -443,6 +443,10 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
   background: var(--jp-brand-color1);
 }
 
+.jpcad-control-panel-suggestion.selected .jp-icon-selectable[fill] {
+  fill: #fff;
+}
+
 .jcad-suggestion-tree-node-icon {
   display: flex;
   flex-direction: column;
