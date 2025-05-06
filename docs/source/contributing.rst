@@ -28,7 +28,7 @@ You then need to clone the repository, proceed to installation and rebuild the e
     # Rebuild extension Typescript source after making changes
     jlpm run build
 
-**Note:** There are 2 possibilities for the installation. 
+**Note:** There are 2 possibilities for the installation.
 
 1) either you are using [Docker](https://www.docker.com/) to build `@jupytercad/opencascade` package and you need to run `jlpm dev` in the commands above.
 
