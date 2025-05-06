@@ -52,6 +52,14 @@ export class MainViewModel implements IDisposable {
     return this._renderSignal;
   }
 
+  get afterShowSignal(): ISignal<this, null> {
+    return this._afterShowSignal;
+  }
+
+  emitAfterShow() {
+    this._afterShowSignal.emit(null);
+  }
+
   get workerBusy(): ISignal<this, boolean> {
     return this._workerBusy;
   }
@@ -322,6 +330,7 @@ export class MainViewModel implements IDisposable {
       postResult?: IDict<IPostOperatorInput>;
     }
   >(this);
+  private _afterShowSignal = new Signal<this, null>(this);
   private _workerBusy = new Signal<this, boolean>(this);
   private _isDisposed = false;
 }
