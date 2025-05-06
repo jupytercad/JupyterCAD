@@ -199,6 +199,7 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
   display: flex;
   flex-direction: row-reverse;
 }
+
 .jpcad-toolbar-react-widget {
   display: flex;
   flex-direction: row;
@@ -398,10 +399,12 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
 .highlight {
   background-color: var(--jp-layout-color2) !important;
 }
+
 .jupytercad-notebook-widget {
   height: 600px;
   width: 100%;
 }
+
 .jupytercad-notebook-widget > div {
   height: 100%;
   width: 100%;
@@ -465,11 +468,14 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
   vertical-align: middle;
   border-radius: 100%;
 }
+
 .jcad-suggestion-tree-node-user span {
   width: 20px;
   text-align: center;
   font-size: 12px;
+  color: var(--jp-ui-font-color1);
 }
+
 span.jcad-suggestion-tree-node-label {
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -477,6 +483,7 @@ span.jcad-suggestion-tree-node-label {
   flex-grow: 1;
   padding-left: 5px;
 }
+
 .jpcad-SplitSlider {
   position: absolute;
   cursor: ew-resize;
@@ -495,6 +502,7 @@ span.jcad-suggestion-tree-node-label {
 body[data-jp-theme-light='false'] {
   --jcad-splitview-background: #120b07;
 }
+
 body[data-jp-theme-light='true'] {
   --jcad-splitview-background: #edf4f8;
 }
