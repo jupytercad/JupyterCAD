@@ -1730,6 +1730,8 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._transformControls.camera = this._camera;
     this._clipPlaneTransformControls.camera = this._camera;
+
+    this.resizeCanvasToDisplaySize();
   }
 
   private _updateSplit(enabled: boolean) {
