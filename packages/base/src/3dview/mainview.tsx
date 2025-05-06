@@ -139,8 +139,8 @@ export class MainView extends React.Component<IProps, IStates> {
       this._jcadSettings = settings.composite as any;
 
       console.log('JupyterGIS Settings updated:', this._jcadSettings);
-        console.log(this._settings);
-    
+      console.log(this._settings);
+
       settings.changed.connect(() => {
         this._jcadSettings = settings.composite as any;
         window.dispatchEvent(new Event('resize'));
@@ -148,13 +148,10 @@ export class MainView extends React.Component<IProps, IStates> {
         console.log(this._settings);
 
         if (this._sceneAxe) {
-        this._sceneAxe.visible = this._jcadSettings.showAxesHelper;
+          this._sceneAxe.visible = this._jcadSettings.showAxesHelper;
         }
-        
       });
     });
-    
-
   }
 
   componentDidMount(): void {
@@ -549,7 +546,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._scene.add(this._sceneAxe);
 
       // console.log('JupyterGIS Settings:', this._jcadSettings);
-      
+
       // this._sceneAxe.visible = this._jcadSettings.showAxesHelper;
 
       this._createViewHelper();
