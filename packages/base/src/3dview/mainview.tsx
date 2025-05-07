@@ -542,22 +542,21 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
 
-      const axesHelper = new THREE.AxesHelper(
-        this._refLength ? this._refLength * 5 : 20
-      );
+      this._createViewHelper();
+    }
+  };
+
+  private _createAxesHelper() {
+    if (this._refLength) {
+      const axesHelper = new THREE.AxesHelper(this._refLength * 5);
       const material = axesHelper.material as THREE.LineBasicMaterial;
       material.depthTest = false;
       axesHelper.renderOrder = 1;
       this._sceneAxe = axesHelper;
       this._scene.add(this._sceneAxe);
-
-      // console.log('JupyterGIS Settings:', this._jcadSettings);
-
-      // this._sceneAxe.visible = this._jcadSettings.showAxesHelper;
-
-      this._createViewHelper();
     }
-  };
+  }
+  
 
   private _createViewHelper() {
     // Remove the existing ViewHelperDiv if it already exists
@@ -1059,6 +1058,8 @@ export class MainView extends React.Component<IProps, IStates> {
         this._refLength * 10,
         this._refLength * 10
       );
+
+      this._createAxesHelper();
     } else {
       this._refLength = null;
     }
@@ -1886,6 +1887,7 @@ export class MainView extends React.Component<IProps, IStates> {
       slider.addEventListener('pointerdown', onPointerDown);
     }
   }
+
 
   private _updateClipping() {
     if (this._clipSettings.enabled) {
