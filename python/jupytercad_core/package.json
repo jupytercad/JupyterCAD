@@ -1,6 +1,6 @@
 {
   "name": "@jupytercad/jupytercad-core",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "JupyterCad core extension",
   "keywords": [
     "jupyter",
@@ -55,9 +55,9 @@
   },
   "dependencies": {
     "@jupyter/collaborative-drive": "^3.1.0-alpha.0",
-    "@jupytercad/base": "^3.1.2",
-    "@jupytercad/occ-worker": "^3.1.2",
-    "@jupytercad/schema": "^3.1.2",
+    "@jupytercad/base": "^3.1.3",
+    "@jupytercad/occ-worker": "^3.1.3",
+    "@jupytercad/schema": "^3.1.3",
     "@jupyterlab/application": "^4.0.0",
     "@jupyterlab/apputils": "^4.0.0",
     "@jupyterlab/docregistry": "^4.0.0",
