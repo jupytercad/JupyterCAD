@@ -542,7 +542,14 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
 
-      this._sceneAxe = new THREE.AxesHelper(this._refLength || 10);
+
+      const axesHelper = new THREE.AxesHelper(
+        this._refLength ? this._refLength * 5 : 20
+      );
+      const material = axesHelper.material as THREE.LineBasicMaterial;
+      material.depthTest = false;
+      axesHelper.renderOrder = 1;
+      this._sceneAxe = axesHelper;
       this._scene.add(this._sceneAxe);
 
       // console.log('JupyterGIS Settings:', this._jcadSettings);
@@ -1573,20 +1580,20 @@ export class MainView extends React.Component<IProps, IStates> {
     sender: ObservableMap<JSONValue>,
     change: IObservableMap.IChangedArgs<JSONValue>
   ): void {
-    if (change.key === 'axes') {
-      this._sceneAxe?.removeFromParent();
-      const axe = change.newValue as AxeHelper;
-      if (change.type !== 'remove' && axe && axe.visible) {
-        const axesHelper = new THREE.AxesHelper(
-          this._refLength ? this._refLength * 5 : 20
-        );
-        const material = axesHelper.material as THREE.LineBasicMaterial;
-        material.depthTest = false;
-        axesHelper.renderOrder = 1;
-        this._sceneAxe = axesHelper;
-        this._scene.add(this._sceneAxe);
-      }
-    }
+    // if (change.key === 'axes') {
+    //   this._sceneAxe?.removeFromParent();
+    //   const axe = change.newValue as AxeHelper;
+    //   if (change.type !== 'remove' && axe && axe.visible) {
+    //     const axesHelper = new THREE.AxesHelper(
+    //       this._refLength ? this._refLength * 5 : 20
+    //     );
+    //     const material = axesHelper.material as THREE.LineBasicMaterial;
+    //     material.depthTest = false;
+    //     axesHelper.renderOrder = 1;
+    //     this._sceneAxe = axesHelper;
+    //     this._scene.add(this._sceneAxe);
+    //   }
+    // }
 
     if (change.key === 'explodedView') {
       const explodedView = change.newValue as ExplodedView;
@@ -1880,6 +1887,7 @@ export class MainView extends React.Component<IProps, IStates> {
       slider.addEventListener('pointerdown', onPointerDown);
     }
   }
+
 
   private _updateClipping() {
     if (this._clipSettings.enabled) {
