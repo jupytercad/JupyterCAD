@@ -548,6 +548,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _createAxesHelper() {
     if (this._refLength) {
+      this._sceneAxe?.removeFromParent();
       const axesHelper = new THREE.AxesHelper(this._refLength * 5);
       const material = axesHelper.material as THREE.LineBasicMaterial;
       material.depthTest = false;
