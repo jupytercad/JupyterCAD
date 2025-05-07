@@ -542,7 +542,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.enabled = false;
       this._transformControls.visible = false;
 
-
       const axesHelper = new THREE.AxesHelper(
         this._refLength ? this._refLength * 5 : 20
       );
@@ -1887,7 +1886,6 @@ export class MainView extends React.Component<IProps, IStates> {
       slider.addEventListener('pointerdown', onPointerDown);
     }
   }
-
 
   private _updateClipping() {
     if (this._clipSettings.enabled) {
