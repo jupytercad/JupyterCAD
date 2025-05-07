@@ -13,8 +13,8 @@
         "type": "string",
         "title": "Camera Type",
         "description": "Choose between perspective or orthographic camera for the 3D viewport.",
-        "enum": ["perspective", "orthographic"],
-        "default": "perspective"
+        "enum": ["Perspective", "Orthographic"],
+        "default": "Perspective"
       }
     }
   }

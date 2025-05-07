@@ -28,7 +28,7 @@ import { FloatingAnnotation } from '../annotation';
 import { getCSSVariableColor, throttle } from '../tools';
 import {
   // AxeHelper,
-  CameraSettings,
+  // CameraSettings,
   ClipSettings,
   ExplodedView,
   SplitScreenSettings
@@ -150,6 +150,7 @@ export class MainView extends React.Component<IProps, IStates> {
         if (this._sceneAxe) {
           this._sceneAxe.visible = this._jcadSettings.showAxesHelper;
         }
+        this._updateCamera();
       });
     });
   }
@@ -554,6 +555,7 @@ export class MainView extends React.Component<IProps, IStates> {
       material.depthTest = false;
       axesHelper.renderOrder = 1;
       this._sceneAxe = axesHelper;
+      this._sceneAxe.visible = this._jcadSettings.showAxesHelper;
       this._scene.add(this._sceneAxe);
     }
   }
@@ -1613,15 +1615,15 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     }
 
-    if (change.key === 'cameraSettings') {
-      const cameraSettings = change.newValue as CameraSettings;
+    // if (change.key === 'cameraSettings') {
+    //   const cameraSettings = change.newValue as CameraSettings;
 
-      if (change.type !== 'remove' && cameraSettings) {
-        this._cameraSettings = cameraSettings;
+    //   if (change.type !== 'remove' && cameraSettings) {
+    //     this._cameraSettings = cameraSettings;
 
-        this._updateCamera();
-      }
-    }
+    //     this._updateCamera();
+    //   }
+    // }
 
     if (change.key === 'clipView') {
       const clipSettings = change.newValue as ClipSettings | undefined;
@@ -1755,7 +1757,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._camera.remove(this._cameraLight);
     this._scene.remove(this._camera);
 
-    if (this._cameraSettings.type === 'Perspective') {
+    if (this._jcadSettings.cameraType === 'Perspective') {
       this._camera = new THREE.PerspectiveCamera(
         50,
         2,
@@ -2137,7 +2139,7 @@ export class MainView extends React.Component<IProps, IStates> {
   // TODO Make this a shared property
   private _explodedView: ExplodedView = { enabled: false, factor: 0 };
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
-  private _cameraSettings: CameraSettings = { type: 'Perspective' };
+  // private _cameraSettings: CameraSettings = { type: 'Perspective' };
   private _clipSettings: ClipSettings = { enabled: false, showClipPlane: true };
   private _clippingPlaneMeshControl: BasicMesh; // Plane mesh using for controlling the clip plane in the UI
   private _clippingPlaneMesh: THREE.Mesh | null = null; // Plane mesh used for "filling the gaps"
