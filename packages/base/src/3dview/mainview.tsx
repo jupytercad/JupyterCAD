@@ -557,7 +557,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._scene.add(this._sceneAxe);
     }
   }
-  
 
   private _createViewHelper() {
     // Remove the existing ViewHelperDiv if it already exists
@@ -1888,7 +1887,6 @@ export class MainView extends React.Component<IProps, IStates> {
       slider.addEventListener('pointerdown', onPointerDown);
     }
   }
-
 
   private _updateClipping() {
     if (this._clipSettings.enabled) {

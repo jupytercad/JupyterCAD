@@ -61,7 +61,6 @@ const activate = async (
   palette: ICommandPalette | null,
   drive: ICollaborativeDrive | null
 ): Promise<void> => {
-
   let settings: ISettingRegistry.ISettings | null = null;
 
   try {
