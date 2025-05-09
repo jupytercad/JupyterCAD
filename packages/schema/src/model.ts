@@ -59,8 +59,10 @@ export class JupyterCadModel implements IJupyterCadModel {
     const composite = this._settings.composite;
 
     this._jcadSettings = {
-      showAxesHelper: composite.showAxesHelper as boolean ?? false,
-      cameraType: (composite.cameraType as 'Perspective' | 'Orthographic') ?? 'Perspective'
+      showAxesHelper: (composite.showAxesHelper as boolean) ?? false,
+      cameraType:
+        (composite.cameraType as 'Perspective' | 'Orthographic') ??
+        'Perspective'
     };
   }
 

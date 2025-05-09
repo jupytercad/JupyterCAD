@@ -890,7 +890,7 @@ export function addCommands(
       if (!current || !current.model.sharedModel.editable) {
         return false;
       }
-  
+
       const viewModel = current.content.currentViewModel;
       if (!viewModel) {
         return false;
@@ -965,7 +965,7 @@ export function addCommands(
       await settings.set('showAxesHelper', !currentValue);
       commands.notifyCommandChanged(CommandIDs.updateAxes);
     }
-  }); 
+  });
 
   commands.addCommand(CommandIDs.updateExplodedView, {
     label: trans.__('Exploded View'),
@@ -976,17 +976,17 @@ export function addCommands(
       if (!current) {
         return false;
       }
-    
+
       const viewModel = current.content.currentViewModel;
       if (!viewModel) {
         return false;
       }
-    
+
       const viewSettings = viewModel.viewSettings as JSONObject;
       return viewSettings?.explodedView
         ? (viewSettings.explodedView as ExplodedView).enabled
         : false;
-    },    
+    },
     execute: async () => {
       const current = tracker.currentWidget;
 
@@ -1031,11 +1031,12 @@ export function addCommands(
       }
       const settings = await current.model.getSettings();
       const currentType = settings.composite.cameraType;
-      const newType = currentType === 'Perspective' ? 'Orthographic' : 'Perspective';
+      const newType =
+        currentType === 'Perspective' ? 'Orthographic' : 'Perspective';
       await settings.set('cameraType', newType);
       commands.notifyCommandChanged(CommandIDs.updateCameraSettings);
     }
-  });  
+  });
 
   commands.addCommand(CommandIDs.updateClipView, {
     label: trans.__('Clipping'),

@@ -274,11 +274,17 @@ export class MainView extends React.Component<IProps, IStates> {
       SPLITVIEW_BACKGROUND_COLOR.set(
         getCSSVariableColor(SPLITVIEW_BACKGROUND_COLOR_CSS)
       );
-      if(this._mainViewModel.viewSettings.cameraSettings){
-        const cameraSettings = this._mainViewModel.viewSettings.cameraSettings as CameraSettings;
-        console.log(cameraSettings.type)
+      if (this._mainViewModel.viewSettings.cameraSettings) {
+        const cameraSettings = this._mainViewModel.viewSettings
+          .cameraSettings as CameraSettings;
+        console.log(cameraSettings.type);
         if (cameraSettings.type === 'Perspective') {
-          this._camera = new THREE.PerspectiveCamera(50, 2, CAMERA_NEAR, CAMERA_FAR);
+          this._camera = new THREE.PerspectiveCamera(
+            50,
+            2,
+            CAMERA_NEAR,
+            CAMERA_FAR
+          );
         } else if (cameraSettings.type === 'Orthographic') {
           const width = this._divRef.current?.clientWidth || 0;
           const height = this._divRef.current?.clientHeight || 0;
