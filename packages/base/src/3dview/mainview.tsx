@@ -28,7 +28,7 @@ import { FloatingAnnotation } from '../annotation';
 import { getCSSVariableColor, throttle } from '../tools';
 import {
   // AxeHelper,
-  // CameraSettings,
+  CameraSettings,
   ClipSettings,
   ExplodedView,
   SplitScreenSettings
@@ -274,12 +274,23 @@ export class MainView extends React.Component<IProps, IStates> {
       SPLITVIEW_BACKGROUND_COLOR.set(
         getCSSVariableColor(SPLITVIEW_BACKGROUND_COLOR_CSS)
       );
-      this._camera = new THREE.PerspectiveCamera(
-        50,
-        2,
-        CAMERA_NEAR,
-        CAMERA_FAR
-      );
+      if(this._mainViewModel.viewSettings.cameraSettings){
+        const cameraSettings = this._mainViewModel.viewSettings.cameraSettings as CameraSettings;
+        console.log(cameraSettings.type)
+        if (cameraSettings.type === 'Perspective') {
+          this._camera = new THREE.PerspectiveCamera(50, 2, CAMERA_NEAR, CAMERA_FAR);
+        } else if (cameraSettings.type === 'Orthographic') {
+          const width = this._divRef.current?.clientWidth || 0;
+          const height = this._divRef.current?.clientHeight || 0;
+          this._camera = new THREE.OrthographicCamera(
+            width / -2,
+            width / 2,
+            height / 2,
+            height / -2
+          );
+          this._camera.updateProjectionMatrix();
+        }
+      }
       this._camera.position.set(8, 8, 8);
       this._camera.up.set(0, 0, 1);
 

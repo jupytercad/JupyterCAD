@@ -102,21 +102,27 @@ export class JupyterCadPanel extends SplitPanel {
   constructor(options: JupyterCadPanel.IOptions) {
     super({ orientation: 'vertical', spacing: 0 });
     const { model, workerRegistry, consoleTracker, ...consoleOption } = options;
-    this._initModel({ model, workerRegistry });
-    this._initView();
     this._consoleOption = consoleOption;
     this._consoleTracker = consoleTracker;
+    this._initModel({ model, workerRegistry }).then(() => {
+      this._initView();
+    });
   }
 
-  _initModel(options: {
+  async _initModel(options: {
     model: IJupyterCadModel;
     workerRegistry: IJCadWorkerRegistry;
-  }) {
+  }): Promise<void> {
     this._view = new ObservableMap<JSONValue>({});
-    const cameraSettings: CameraSettings = { type: 'Perspective' };
-    const axes: AxeHelper = { visible: false };
-    this._view.set('cameraSettings', cameraSettings);
+
+    await options.model.initSettings();
+    const settings = await options.model.getSettings();
+
+    const cameraSettings: CameraSettings = { type: settings.composite.cameraType };
+    const axes: AxeHelper = { visible: settings.composite.showAxesHelper };
     const explodedView: ExplodedView = { enabled: false, factor: 0 };
+  
+    this._view.set('cameraSettings', cameraSettings);
     this._view.set('explodedView', explodedView);
     this._view.set('axes', axes);
     this._mainViewModel = new MainViewModel({
