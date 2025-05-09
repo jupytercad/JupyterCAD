@@ -887,13 +887,16 @@ export function addCommands(
     label: trans.__('Toggle Transform Controls'),
     isEnabled: () => {
       const current = tracker.currentWidget;
-
-      if (!current || !tracker.currentWidget.model.sharedModel.editable) {
+      if (!current || !current.model.sharedModel.editable) {
+        return false;
+      }
+  
+      const viewModel = current.content.currentViewModel;
+      if (!viewModel) {
         return false;
       }
 
-      const viewSettings = tracker.currentWidget.content.currentViewModel
-        .viewSettings as JSONObject;
+      const viewSettings = viewModel.viewSettings as JSONObject;
       return viewSettings.explodedView
         ? !(viewSettings.explodedView as ExplodedView).enabled
         : true;
@@ -969,12 +972,21 @@ export function addCommands(
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: explodedViewIcon,
     isToggled: () => {
-      const viewSettings = tracker.currentWidget?.content.currentViewModel
-        .viewSettings as JSONObject;
+      const current = tracker.currentWidget;
+      if (!current) {
+        return false;
+      }
+    
+      const viewModel = current.content.currentViewModel;
+      if (!viewModel) {
+        return false;
+      }
+    
+      const viewSettings = viewModel.viewSettings as JSONObject;
       return viewSettings?.explodedView
         ? (viewSettings.explodedView as ExplodedView).enabled
         : false;
-    },
+    },    
     execute: async () => {
       const current = tracker.currentWidget;
 
