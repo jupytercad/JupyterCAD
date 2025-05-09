@@ -118,8 +118,8 @@ export class JupyterCadPanel extends SplitPanel {
     await options.model.initSettings();
     const settings = await options.model.getSettings();
 
-    const cameraSettings: CameraSettings = { type: settings.composite.cameraType };
-    const axes: AxeHelper = { visible: settings.composite.showAxesHelper };
+    const cameraSettings: CameraSettings = { type: settings.composite.cameraType as 'Perspective' | 'Orthographic' };
+    const axes: AxeHelper = { visible: settings.composite.showAxesHelper as boolean };
     const explodedView: ExplodedView = { enabled: false, factor: 0 };
   
     this._view.set('cameraSettings', cameraSettings);

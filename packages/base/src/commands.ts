@@ -47,8 +47,8 @@ import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
 import { v4 as uuid } from 'uuid';
 import {
-  AxeHelper,
-  CameraSettings,
+  // AxeHelper,
+  // CameraSettings,
   ExplodedView,
   JupyterCadTracker
 } from './types';
@@ -946,31 +946,23 @@ export function addCommands(
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: axesIcon,
     isToggled: () => {
-      const current = tracker.currentWidget?.content;
-      return current?.axes.visible === true;
+      const current = tracker.currentWidget;
+      if (!current) {
+        return false;
+      }
+      return current.model.jcadSettings().showAxesHelper;
     },
-
     execute: async () => {
       const current = tracker.currentWidget;
-
       if (!current) {
         return;
       }
-      const axes: AxeHelper = current.content.axes;
-      if (axes.visible === true) {
-        current.content.axes = {
-          ...current.content.axes,
-          visible: false
-        };
-      } else {
-        current.content.axes = {
-          ...current.content.axes,
-          visible: true
-        };
-      }
+      const settings = await current.model.getSettings();
+      const currentValue = settings.composite.showAxesHelper;
+      await settings.set('showAxesHelper', !currentValue);
       commands.notifyCommandChanged(CommandIDs.updateAxes);
     }
-  });
+  }); 
 
   commands.addCommand(CommandIDs.updateExplodedView, {
     label: trans.__('Exploded View'),
@@ -1005,39 +997,33 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.updateCameraSettings, {
     label: () => {
-      const isPerspectiveOn =
-        tracker.currentWidget?.content?.cameraSettings?.type === 'Perspective';
-      return isPerspectiveOn
+      const current = tracker.currentWidget;
+      if (!current) {
+        return trans.__('Switch Camera Projection');
+      }
+      const currentType = current.model.jcadSettings().cameraType;
+      return currentType === 'Perspective'
         ? trans.__('Switch to orthographic projection')
         : trans.__('Switch to perspective projection');
     },
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: videoSolidIcon,
     isToggled: () => {
-      const current = tracker.currentWidget?.content;
-      return current?.cameraSettings.type === 'Orthographic';
+      const current = tracker.currentWidget;
+      return current?.model.jcadSettings().cameraType === 'Orthographic';
     },
     execute: async () => {
       const current = tracker.currentWidget;
       if (!current) {
         return;
-      } else {
-        const currentSettings: CameraSettings = current.content.cameraSettings;
-        if (currentSettings.type === 'Perspective') {
-          current.content.cameraSettings = {
-            ...current.content.cameraSettings,
-            type: 'Orthographic'
-          };
-        } else {
-          current.content.cameraSettings = {
-            ...current.content.cameraSettings,
-            type: 'Perspective'
-          };
-        }
       }
+      const settings = await current.model.getSettings();
+      const currentType = settings.composite.cameraType;
+      const newType = currentType === 'Perspective' ? 'Orthographic' : 'Perspective';
+      await settings.set('cameraType', newType);
       commands.notifyCommandChanged(CommandIDs.updateCameraSettings);
     }
-  });
+  });  
 
   commands.addCommand(CommandIDs.updateClipView, {
     label: trans.__('Clipping'),

@@ -12,6 +12,7 @@ import { JSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import { SplitPanel } from '@lumino/widgets';
 import { Contents } from '@jupyterlab/services';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import {
   IJCadContent,
@@ -163,7 +164,8 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   swapSharedModel(newSharedModel: IJupyterCadDoc): void;
 
   initSettings(): Promise<void>;
-  getSettings(): any;
+  getSettings(): Promise<ISettingRegistry.ISettings>;
+  jcadSettings(): IJCadSettings;
   getWorker(): Worker;
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;
@@ -421,4 +423,9 @@ export interface IJCadExternalCommand {
 export interface IJCadExternalCommandRegistry {
   getCommands(): IJCadExternalCommand[];
   registerCommand(command: IJCadExternalCommand): void;
+}
+
+export interface IJCadSettings {
+  showAxesHelper: boolean;
+  cameraType: 'Perspective' | 'Orthographic';
 }
