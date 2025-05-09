@@ -5,6 +5,7 @@ import {
 } from '@jupytercad/schema';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { Contents } from '@jupyterlab/services';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 /**
  * A Model factory to create new instances of JupyterCadModel.
@@ -14,6 +15,7 @@ export class JupyterCadJcadModelFactory
 {
   constructor(options: JupyterCadJcadModelFactory.IOptions) {
     this._annotationModel = options.annotationModel;
+    this._settingRegistry = options.settingRegistry;
   }
 
   /**
@@ -85,17 +87,21 @@ export class JupyterCadJcadModelFactory
     const model = new JupyterCadModel({
       sharedModel: options.sharedModel,
       languagePreference: options.languagePreference,
-      annotationModel: this._annotationModel
+      annotationModel: this._annotationModel,
+      settingRegistry: this._settingRegistry
     });
+    model.initSettings();
     return model;
   }
 
   private _annotationModel: IAnnotationModel;
+  private _settingRegistry: ISettingRegistry;
   private _disposed = false;
 }
 
 export namespace JupyterCadJcadModelFactory {
   export interface IOptions {
     annotationModel: IAnnotationModel;
+    settingRegistry: ISettingRegistry;
   }
 }

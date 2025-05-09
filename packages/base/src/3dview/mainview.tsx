@@ -22,11 +22,12 @@ import { TransformControls } from 'three/examples/jsm/controls/TransformControls
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { ViewHelper } from 'three/examples/jsm/helpers/ViewHelper';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import { FloatingAnnotation } from '../annotation';
 import { getCSSVariableColor, throttle } from '../tools';
 import {
-  AxeHelper,
+  // AxeHelper,
   CameraSettings,
   ClipSettings,
   ExplodedView,
@@ -132,6 +133,26 @@ export class MainView extends React.Component<IProps, IStates> {
       rotationSnapValue: 10,
       transformMode: 'translate'
     };
+
+    this._model.getSettings().then(settings => {
+      this._settings = settings;
+      this._jcadSettings = settings.composite as any;
+
+      console.log('JupyterGIS Settings updated:', this._jcadSettings);
+      console.log(this._settings);
+
+      settings.changed.connect(() => {
+        this._jcadSettings = settings.composite as any;
+        window.dispatchEvent(new Event('resize'));
+        console.log('JupyterGIS Settings updated:', this._jcadSettings);
+        console.log(this._settings);
+
+        if (this._sceneAxe) {
+          this._sceneAxe.visible = this._jcadSettings.showAxesHelper;
+        }
+        this._updateCamera();
+      });
+    });
   }
 
   componentDidMount(): void {
@@ -253,12 +274,29 @@ export class MainView extends React.Component<IProps, IStates> {
       SPLITVIEW_BACKGROUND_COLOR.set(
         getCSSVariableColor(SPLITVIEW_BACKGROUND_COLOR_CSS)
       );
-      this._camera = new THREE.PerspectiveCamera(
-        50,
-        2,
-        CAMERA_NEAR,
-        CAMERA_FAR
-      );
+      if (this._mainViewModel.viewSettings.cameraSettings) {
+        const cameraSettings = this._mainViewModel.viewSettings
+          .cameraSettings as CameraSettings;
+        console.log(cameraSettings.type);
+        if (cameraSettings.type === 'Perspective') {
+          this._camera = new THREE.PerspectiveCamera(
+            50,
+            2,
+            CAMERA_NEAR,
+            CAMERA_FAR
+          );
+        } else if (cameraSettings.type === 'Orthographic') {
+          const width = this._divRef.current?.clientWidth || 0;
+          const height = this._divRef.current?.clientHeight || 0;
+          this._camera = new THREE.OrthographicCamera(
+            width / -2,
+            width / 2,
+            height / 2,
+            height / -2
+          );
+          this._camera.updateProjectionMatrix();
+        }
+      }
       this._camera.position.set(8, 8, 8);
       this._camera.up.set(0, 0, 1);
 
@@ -525,6 +563,19 @@ export class MainView extends React.Component<IProps, IStates> {
       this._createViewHelper();
     }
   };
+
+  private _createAxesHelper() {
+    if (this._refLength) {
+      this._sceneAxe?.removeFromParent();
+      const axesHelper = new THREE.AxesHelper(this._refLength * 5);
+      const material = axesHelper.material as THREE.LineBasicMaterial;
+      material.depthTest = false;
+      axesHelper.renderOrder = 1;
+      this._sceneAxe = axesHelper;
+      this._sceneAxe.visible = this._jcadSettings.showAxesHelper;
+      this._scene.add(this._sceneAxe);
+    }
+  }
 
   private _createViewHelper() {
     // Remove the existing ViewHelperDiv if it already exists
@@ -1026,6 +1077,8 @@ export class MainView extends React.Component<IProps, IStates> {
         this._refLength * 10,
         this._refLength * 10
       );
+
+      this._createAxesHelper();
     } else {
       this._refLength = null;
     }
@@ -1546,20 +1599,20 @@ export class MainView extends React.Component<IProps, IStates> {
     sender: ObservableMap<JSONValue>,
     change: IObservableMap.IChangedArgs<JSONValue>
   ): void {
-    if (change.key === 'axes') {
-      this._sceneAxe?.removeFromParent();
-      const axe = change.newValue as AxeHelper;
-      if (change.type !== 'remove' && axe && axe.visible) {
-        const axesHelper = new THREE.AxesHelper(
-          this._refLength ? this._refLength * 5 : 20
-        );
-        const material = axesHelper.material as THREE.LineBasicMaterial;
-        material.depthTest = false;
-        axesHelper.renderOrder = 1;
-        this._sceneAxe = axesHelper;
-        this._scene.add(this._sceneAxe);
-      }
-    }
+    // if (change.key === 'axes') {
+    //   this._sceneAxe?.removeFromParent();
+    //   const axe = change.newValue as AxeHelper;
+    //   if (change.type !== 'remove' && axe && axe.visible) {
+    //     const axesHelper = new THREE.AxesHelper(
+    //       this._refLength ? this._refLength * 5 : 20
+    //     );
+    //     const material = axesHelper.material as THREE.LineBasicMaterial;
+    //     material.depthTest = false;
+    //     axesHelper.renderOrder = 1;
+    //     this._sceneAxe = axesHelper;
+    //     this._scene.add(this._sceneAxe);
+    //   }
+    // }
 
     if (change.key === 'explodedView') {
       const explodedView = change.newValue as ExplodedView;
@@ -1579,15 +1632,15 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     }
 
-    if (change.key === 'cameraSettings') {
-      const cameraSettings = change.newValue as CameraSettings;
+    // if (change.key === 'cameraSettings') {
+    //   const cameraSettings = change.newValue as CameraSettings;
 
-      if (change.type !== 'remove' && cameraSettings) {
-        this._cameraSettings = cameraSettings;
+    //   if (change.type !== 'remove' && cameraSettings) {
+    //     this._cameraSettings = cameraSettings;
 
-        this._updateCamera();
-      }
-    }
+    //     this._updateCamera();
+    //   }
+    // }
 
     if (change.key === 'clipView') {
       const clipSettings = change.newValue as ClipSettings | undefined;
@@ -1721,7 +1774,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._camera.remove(this._cameraLight);
     this._scene.remove(this._camera);
 
-    if (this._cameraSettings.type === 'Perspective') {
+    if (this._jcadSettings.cameraType === 'Perspective') {
       this._camera = new THREE.PerspectiveCamera(
         50,
         2,
@@ -2103,7 +2156,7 @@ export class MainView extends React.Component<IProps, IStates> {
   // TODO Make this a shared property
   private _explodedView: ExplodedView = { enabled: false, factor: 0 };
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
-  private _cameraSettings: CameraSettings = { type: 'Perspective' };
+  // private _cameraSettings: CameraSettings = { type: 'Perspective' };
   private _clipSettings: ClipSettings = { enabled: false, showClipPlane: true };
   private _clippingPlaneMeshControl: BasicMesh; // Plane mesh using for controlling the clip plane in the UI
   private _clippingPlaneMesh: THREE.Mesh | null = null; // Plane mesh used for "filling the gaps"
@@ -2146,4 +2199,6 @@ export class MainView extends React.Component<IProps, IStates> {
     | THREE.OrthographicCamera
     | undefined = undefined; // Threejs camera
   private _keyDownHandler: (event: KeyboardEvent) => void;
+  private _settings: ISettingRegistry.ISettings;
+  private _jcadSettings: any;
 }

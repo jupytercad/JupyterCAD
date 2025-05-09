@@ -33,20 +33,23 @@ import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { JupyterCadDocumentWidgetFactory } from '../factory';
 import { JupyterCadJcadModelFactory } from './modelfactory';
 import { MimeDocumentFactory } from '@jupyterlab/docregistry';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 const FACTORY = 'JupyterCAD';
 const CONTENT_TYPE = 'jcad';
 const PALETTE_CATEGORY = 'JupyterCAD';
+const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
 
 namespace CommandIDs {
   export const createNew = 'jupytercad:create-new-jcad-file';
 }
 
-const activate = (
+const activate = async (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
   annotationModel: IAnnotationModel,
+  settingRegistry: ISettingRegistry,
   browserFactory: IFileBrowserFactory,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
@@ -57,7 +60,16 @@ const activate = (
   launcher: ILauncher | null,
   palette: ICommandPalette | null,
   drive: ICollaborativeDrive | null
-): void => {
+): Promise<void> => {
+  let settings: ISettingRegistry.ISettings | null = null;
+
+  try {
+    settings = await settingRegistry.load(SETTINGS_ID);
+    console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
+  } catch (error) {
+    console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+  }
+
   const widgetFactory = new JupyterCadDocumentWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-jcadmodel',
@@ -89,7 +101,8 @@ const activate = (
 
   // Creating and registering the model factory for our custom DocumentModel
   const modelFactory = new JupyterCadJcadModelFactory({
-    annotationModel
+    annotationModel,
+    settingRegistry
   });
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype
@@ -188,6 +201,7 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IJupyterCadDocTracker,
     IThemeManager,
     IAnnotationToken,
+    ISettingRegistry,
     IFileBrowserFactory,
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken,

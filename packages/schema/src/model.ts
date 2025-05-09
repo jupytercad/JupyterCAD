@@ -16,14 +16,18 @@ import {
   IJupyterCadModel,
   ISelection,
   IUserData,
-  Pointer
+  Pointer,
+  IJCadSettings
 } from './interfaces';
 import jcadSchema from './schema/jcad.json';
 import { Contents } from '@jupyterlab/services';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
+
+const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
 
 export class JupyterCadModel implements IJupyterCadModel {
   constructor(options: JupyterCadModel.IOptions) {
-    const { annotationModel, sharedModel } = options;
+    const { annotationModel, sharedModel, settingRegistry } = options;
     if (sharedModel) {
       this._sharedModel = sharedModel;
     } else {
@@ -31,8 +35,46 @@ export class JupyterCadModel implements IJupyterCadModel {
     }
     this._connectSignal();
     this.annotationModel = annotationModel;
+    this.settingRegistry = settingRegistry;
     this._copiedObject = null;
     this._pathChanged = new Signal<JupyterCadModel, string>(this);
+  }
+
+  /**
+   * Initialize custom settings for JupyterLab.
+   */
+  async initSettings(): Promise<void> {
+    if (this.settingRegistry) {
+      this._settings = await this.settingRegistry.load(SETTINGS_ID);
+
+      this._updateLocalSettings();
+
+      this._settings.changed.connect(() => {
+        this._updateLocalSettings();
+      });
+    }
+  }
+
+  private _updateLocalSettings(): void {
+    const composite = this._settings.composite;
+
+    this._jcadSettings = {
+      showAxesHelper: (composite.showAxesHelper as boolean) ?? false,
+      cameraType:
+        (composite.cameraType as 'Perspective' | 'Orthographic') ??
+        'Perspective'
+    };
+  }
+
+  jcadSettings(): IJCadSettings {
+    return this._jcadSettings;
+  }
+
+  /**
+   * Return stored settings.
+   */
+  async getSettings(): Promise<ISettingRegistry.ISettings> {
+    return this._settings;
   }
 
   readonly collaborative = true;
@@ -350,7 +392,9 @@ export class JupyterCadModel implements IJupyterCadModel {
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
   readonly annotationModel?: IAnnotationModel;
+  readonly settingRegistry?: ISettingRegistry;
 
+  private _settings: ISettingRegistry.ISettings;
   private _sharedModel: IJupyterCadDoc;
   private _copiedObject: IJCadObject | null;
 
@@ -360,6 +404,10 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _filePath: string;
   private _pathChanged: Signal<JupyterCadModel, string>;
   private _contentsManager?: Contents.IManager;
+  private _jcadSettings: IJCadSettings = {
+    showAxesHelper: false,
+    cameraType: 'Perspective'
+  };
 
   private _userChanged = new Signal<this, IUserData[]>(this);
   private _usersMap?: Map<number, any>;
@@ -384,5 +432,6 @@ export namespace JupyterCadModel {
   export interface IOptions
     extends DocumentRegistry.IModelOptions<IJupyterCadDoc> {
     annotationModel?: IAnnotationModel;
+    settingRegistry?: ISettingRegistry;
   }
 }
