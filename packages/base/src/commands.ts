@@ -46,10 +46,7 @@ import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
 import { v4 as uuid } from 'uuid';
-import {
-  ExplodedView,
-  JupyterCadTracker
-} from './types';
+import { ExplodedView, JupyterCadTracker } from './types';
 import { JSONObject } from '@lumino/coreutils';
 import { JupyterCadDocumentWidget } from './widget';
 

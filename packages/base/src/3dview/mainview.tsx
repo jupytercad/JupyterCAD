@@ -1592,7 +1592,6 @@ export class MainView extends React.Component<IProps, IStates> {
     sender: ObservableMap<JSONValue>,
     change: IObservableMap.IChangedArgs<JSONValue>
   ): void {
-
     if (change.key === 'explodedView') {
       const explodedView = change.newValue as ExplodedView;
 
