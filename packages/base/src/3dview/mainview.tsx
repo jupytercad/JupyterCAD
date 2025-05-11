@@ -133,7 +133,6 @@ export class MainView extends React.Component<IProps, IStates> {
     };
 
     this._model.settingsChanged.connect(this._handleSettingsChange, this);
-
   }
 
   componentDidMount(): void {
@@ -724,7 +723,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._updateCamera();
   }
-  
 
   private _onPointerMove(e: MouseEvent) {
     const rect = this._renderer.domElement.getBoundingClientRect();
