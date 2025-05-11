@@ -3,6 +3,7 @@ import {
   IAnnotation,
   IDict,
   IDisplayShape,
+  IJCadSettings,
   IJupyterCadClientState,
   IJupyterCadModel,
   IPostOperatorInput,
@@ -22,7 +23,6 @@ import { TransformControls } from 'three/examples/jsm/controls/TransformControls
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { ViewHelper } from 'three/examples/jsm/helpers/ViewHelper';
-import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import { FloatingAnnotation } from '../annotation';
 import { getCSSVariableColor, throttle } from '../tools';
@@ -134,7 +134,6 @@ export class MainView extends React.Component<IProps, IStates> {
     };
 
     this._model.getSettings().then(settings => {
-      this._settings = settings;
       this._jcadSettings = settings.composite as any;
 
       settings.changed.connect(() => {
@@ -1610,16 +1609,6 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     }
 
-    // if (change.key === 'cameraSettings') {
-    //   const cameraSettings = change.newValue as CameraSettings;
-
-    //   if (change.type !== 'remove' && cameraSettings) {
-    //     this._cameraSettings = cameraSettings;
-
-    //     this._updateCamera();
-    //   }
-    // }
-
     if (change.key === 'clipView') {
       const clipSettings = change.newValue as ClipSettings | undefined;
 
@@ -2176,6 +2165,5 @@ export class MainView extends React.Component<IProps, IStates> {
     | THREE.OrthographicCamera
     | undefined = undefined; // Threejs camera
   private _keyDownHandler: (event: KeyboardEvent) => void;
-  private _settings: ISettingRegistry.ISettings;
-  private _jcadSettings: any;
+  private _jcadSettings: IJCadSettings;
 }
