@@ -27,7 +27,6 @@ import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { FloatingAnnotation } from '../annotation';
 import { getCSSVariableColor, throttle } from '../tools';
 import {
-  // AxeHelper,
   CameraSettings,
   ClipSettings,
   ExplodedView,
@@ -138,14 +137,9 @@ export class MainView extends React.Component<IProps, IStates> {
       this._settings = settings;
       this._jcadSettings = settings.composite as any;
 
-      console.log('JupyterGIS Settings updated:', this._jcadSettings);
-      console.log(this._settings);
-
       settings.changed.connect(() => {
         this._jcadSettings = settings.composite as any;
         window.dispatchEvent(new Event('resize'));
-        console.log('JupyterGIS Settings updated:', this._jcadSettings);
-        console.log(this._settings);
 
         if (this._sceneAxe) {
           this._sceneAxe.visible = this._jcadSettings.showAxesHelper;
@@ -277,7 +271,6 @@ export class MainView extends React.Component<IProps, IStates> {
       if (this._mainViewModel.viewSettings.cameraSettings) {
         const cameraSettings = this._mainViewModel.viewSettings
           .cameraSettings as CameraSettings;
-        console.log(cameraSettings.type);
         if (cameraSettings.type === 'Perspective') {
           this._camera = new THREE.PerspectiveCamera(
             50,
@@ -1599,20 +1592,6 @@ export class MainView extends React.Component<IProps, IStates> {
     sender: ObservableMap<JSONValue>,
     change: IObservableMap.IChangedArgs<JSONValue>
   ): void {
-    // if (change.key === 'axes') {
-    //   this._sceneAxe?.removeFromParent();
-    //   const axe = change.newValue as AxeHelper;
-    //   if (change.type !== 'remove' && axe && axe.visible) {
-    //     const axesHelper = new THREE.AxesHelper(
-    //       this._refLength ? this._refLength * 5 : 20
-    //     );
-    //     const material = axesHelper.material as THREE.LineBasicMaterial;
-    //     material.depthTest = false;
-    //     axesHelper.renderOrder = 1;
-    //     this._sceneAxe = axesHelper;
-    //     this._scene.add(this._sceneAxe);
-    //   }
-    // }
 
     if (change.key === 'explodedView') {
       const explodedView = change.newValue as ExplodedView;
@@ -2156,7 +2135,6 @@ export class MainView extends React.Component<IProps, IStates> {
   // TODO Make this a shared property
   private _explodedView: ExplodedView = { enabled: false, factor: 0 };
   private _explodedViewLinesHelperGroup: THREE.Group | null = null; // The list of line helpers for the exploded view
-  // private _cameraSettings: CameraSettings = { type: 'Perspective' };
   private _clipSettings: ClipSettings = { enabled: false, showClipPlane: true };
   private _clippingPlaneMeshControl: BasicMesh; // Plane mesh using for controlling the clip plane in the UI
   private _clippingPlaneMesh: THREE.Mesh | null = null; // Plane mesh used for "filling the gaps"

@@ -47,8 +47,6 @@ import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
 import { v4 as uuid } from 'uuid';
 import {
-  // AxeHelper,
-  // CameraSettings,
   ExplodedView,
   JupyterCadTracker
 } from './types';
