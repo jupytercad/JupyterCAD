@@ -3,7 +3,6 @@ import {
   IAnnotation,
   IDict,
   IDisplayShape,
-  IJCadSettings,
   IJupyterCadClientState,
   IJupyterCadModel,
   IPostOperatorInput,
@@ -133,19 +132,8 @@ export class MainView extends React.Component<IProps, IStates> {
       transformMode: 'translate'
     };
 
-    this._model.getSettings().then(settings => {
-      this._jcadSettings = settings.composite as any;
+    this._model.settingsChanged.connect(this._handleSettingsChange, this);
 
-      settings.changed.connect(() => {
-        this._jcadSettings = settings.composite as any;
-        window.dispatchEvent(new Event('resize'));
-
-        if (this._sceneAxe) {
-          this._sceneAxe.visible = this._jcadSettings.showAxesHelper;
-        }
-        this._updateCamera();
-      });
-    });
   }
 
   componentDidMount(): void {
@@ -564,7 +552,7 @@ export class MainView extends React.Component<IProps, IStates> {
       material.depthTest = false;
       axesHelper.renderOrder = 1;
       this._sceneAxe = axesHelper;
-      this._sceneAxe.visible = this._jcadSettings.showAxesHelper;
+      this._sceneAxe.visible = this._model.jcadSettings().showAxesHelper;
       this._scene.add(this._sceneAxe);
     }
   }
@@ -728,6 +716,15 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     });
   }
+
+  private _handleSettingsChange(): void {
+    if (this._sceneAxe) {
+      this._sceneAxe.visible = this._model.jcadSettings().showAxesHelper;
+    }
+
+    this._updateCamera();
+  }
+  
 
   private _onPointerMove(e: MouseEvent) {
     const rect = this._renderer.domElement.getBoundingClientRect();
@@ -1741,7 +1738,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._camera.remove(this._cameraLight);
     this._scene.remove(this._camera);
 
-    if (this._jcadSettings.cameraType === 'Perspective') {
+    if (this._model.jcadSettings().cameraType === 'Perspective') {
       this._camera = new THREE.PerspectiveCamera(
         50,
         2,
@@ -2165,5 +2162,4 @@ export class MainView extends React.Component<IProps, IStates> {
     | THREE.OrthographicCamera
     | undefined = undefined; // Threejs camera
   private _keyDownHandler: (event: KeyboardEvent) => void;
-  private _jcadSettings: IJCadSettings;
 }

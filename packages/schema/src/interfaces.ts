@@ -160,6 +160,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   sharedModelSwapped: ISignal<IJupyterCadModel, void>;
   users?: IUserData[];
   currentUserId?: number | undefined;
+  settingsChanged: ISignal<IJupyterCadModel, void>;
 
   swapSharedModel(newSharedModel: IJupyterCadDoc): void;
 

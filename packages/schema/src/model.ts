@@ -43,13 +43,15 @@ export class JupyterCadModel implements IJupyterCadModel {
   /**
    * Initialize custom settings for JupyterLab.
    */
-  async initSettings(): Promise<void> {
+  readonly settingsChanged = new Signal<this, void>(this);
+
+  async initSettings() {
     if (this.settingRegistry) {
-      this._settings = await this.settingRegistry.load(SETTINGS_ID);
+      const setting = await this.settingRegistry.load(SETTINGS_ID);
+      this._settings = setting;
 
-      this._updateLocalSettings();
-
-      this._settings.changed.connect(() => {
+      setting.changed.connect(() => {
+        this.settingsChanged.emit();
         this._updateLocalSettings();
       });
     }
