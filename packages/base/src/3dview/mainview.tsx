@@ -716,13 +716,15 @@ export class MainView extends React.Component<IProps, IStates> {
     });
   }
 
-  private _handleSettingsChange(): void {
-    if (this._sceneAxe) {
+  private _handleSettingsChange(_: IJupyterCadModel, changedKey: string): void {
+    if (changedKey === 'showAxesHelper' && this._sceneAxe) {
       this._sceneAxe.visible = this._model.jcadSettings.showAxesHelper;
     }
-
-    this._updateCamera();
-  }
+  
+    if (changedKey === 'cameraType') {
+      this._updateCamera();
+    }
+  }  
 
   private _onPointerMove(e: MouseEvent) {
     const rect = this._renderer.domElement.getBoundingClientRect();

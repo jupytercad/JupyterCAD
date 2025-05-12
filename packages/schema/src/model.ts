@@ -38,7 +38,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.settingRegistry = settingRegistry;
     this._copiedObject = null;
     this._pathChanged = new Signal<JupyterCadModel, string>(this);
-    this._settingsChanged = new Signal<JupyterCadModel, void>(this);
+    this._settingsChanged = new Signal<JupyterCadModel, string>(this);
   }
 
   /**
@@ -56,9 +56,19 @@ export class JupyterCadModel implements IJupyterCadModel {
   }
   
   private _onSettingsChanged(): void {
-    this._settingsChanged.emit();
+    const oldSettings = this._jcadSettings;
     this._updateLocalSettings();
+    const newSettings = this._jcadSettings;
+  
+    if (oldSettings.showAxesHelper !== newSettings.showAxesHelper) {
+      this._settingsChanged.emit('showAxesHelper');
+    }
+  
+    if (oldSettings.cameraType !== newSettings.cameraType) {
+      this._settingsChanged.emit('cameraType');
+    }
   }
+  
 
   private _updateLocalSettings(): void {
     const composite = this._settings.composite;
@@ -78,7 +88,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   /**
    * Expose the settingsChanged signal for external use.
    */
-  get settingsChanged(): ISignal<JupyterCadModel, void> {
+  get settingsChanged(): ISignal<JupyterCadModel, string> {
     return this._settingsChanged;
   }
 
@@ -429,7 +439,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     this,
     Map<number, IJupyterCadClientState>
   >(this);
-  private _settingsChanged: Signal<JupyterCadModel, void>;
+  private _settingsChanged: Signal<JupyterCadModel, string>;
 
   private _sharedMetadataChanged = new Signal<this, MapChange>(this);
   private _sharedOptionsChanged = new Signal<this, MapChange>(this);
