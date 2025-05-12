@@ -34,7 +34,6 @@ const activate = async (
   externalCommandRegistry: IJCadExternalCommandRegistry,
   drive: ICollaborativeDrive | null
 ): Promise<void> => {
-
   let settings: ISettingRegistry.ISettings | null = null;
 
   try {
