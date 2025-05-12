@@ -38,23 +38,26 @@ export class JupyterCadModel implements IJupyterCadModel {
     this.settingRegistry = settingRegistry;
     this._copiedObject = null;
     this._pathChanged = new Signal<JupyterCadModel, string>(this);
+    this._settingsChanged = new Signal<JupyterCadModel, void>(this);
   }
 
   /**
    * Initialize custom settings for JupyterLab.
    */
-  readonly settingsChanged = new Signal<this, void>(this);
-
   async initSettings() {
     if (this.settingRegistry) {
       const setting = await this.settingRegistry.load(SETTINGS_ID);
       this._settings = setting;
 
-      setting.changed.connect(() => {
-        this.settingsChanged.emit();
-        this._updateLocalSettings();
-      });
+      this._updateLocalSettings();
+  
+      setting.changed.connect(this._onSettingsChanged, this);
     }
+  }
+  
+  private _onSettingsChanged(): void {
+    this._settingsChanged.emit();
+    this._updateLocalSettings();
   }
 
   private _updateLocalSettings(): void {
@@ -70,7 +73,14 @@ export class JupyterCadModel implements IJupyterCadModel {
 
   get jcadSettings(): IJCadSettings {
     return this._jcadSettings;
-  }  
+  }
+
+  /**
+   * Expose the settingsChanged signal for external use.
+   */
+  get settingsChanged(): ISignal<JupyterCadModel, void> {
+    return this._settingsChanged;
+  }
 
   /**
    * Return stored settings.
@@ -406,10 +416,7 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _filePath: string;
   private _pathChanged: Signal<JupyterCadModel, string>;
   private _contentsManager?: Contents.IManager;
-  private _jcadSettings: IJCadSettings = {
-    showAxesHelper: false,
-    cameraType: 'Perspective'
-  };
+  private _jcadSettings: IJCadSettings;
 
   private _userChanged = new Signal<this, IUserData[]>(this);
   private _usersMap?: Map<number, any>;
@@ -422,6 +429,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     this,
     Map<number, IJupyterCadClientState>
   >(this);
+  private _settingsChanged: Signal<JupyterCadModel, void>;
 
   private _sharedMetadataChanged = new Signal<this, MapChange>(this);
   private _sharedOptionsChanged = new Signal<this, MapChange>(this);
