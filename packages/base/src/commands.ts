@@ -948,7 +948,7 @@ export function addCommands(
       if (!current) {
         return false;
       }
-      return current.model.jcadSettings().showAxesHelper;
+      return current.model.jcadSettings.showAxesHelper;
     },
     execute: async () => {
       const current = tracker.currentWidget;
@@ -1008,7 +1008,7 @@ export function addCommands(
       if (!current) {
         return trans.__('Switch Camera Projection');
       }
-      const currentType = current.model.jcadSettings().cameraType;
+      const currentType = current.model.jcadSettings.cameraType;
       return currentType === 'Perspective'
         ? trans.__('Switch to orthographic projection')
         : trans.__('Switch to perspective projection');
@@ -1017,7 +1017,7 @@ export function addCommands(
     icon: videoSolidIcon,
     isToggled: () => {
       const current = tracker.currentWidget;
-      return current?.model.jcadSettings().cameraType === 'Orthographic';
+      return current?.model.jcadSettings.cameraType === 'Orthographic';
     },
     execute: async () => {
       const current = tracker.currentWidget;

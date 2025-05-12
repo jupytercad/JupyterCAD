@@ -161,12 +161,12 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   users?: IUserData[];
   currentUserId?: number | undefined;
   settingsChanged: ISignal<IJupyterCadModel, void>;
+  jcadSettings: IJCadSettings;
 
   swapSharedModel(newSharedModel: IJupyterCadDoc): void;
 
   initSettings(): Promise<void>;
   getSettings(): Promise<ISettingRegistry.ISettings>;
-  jcadSettings(): IJCadSettings;
   getWorker(): Worker;
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;

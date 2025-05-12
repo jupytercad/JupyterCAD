@@ -551,7 +551,7 @@ export class MainView extends React.Component<IProps, IStates> {
       material.depthTest = false;
       axesHelper.renderOrder = 1;
       this._sceneAxe = axesHelper;
-      this._sceneAxe.visible = this._model.jcadSettings().showAxesHelper;
+      this._sceneAxe.visible = this._model.jcadSettings.showAxesHelper;
       this._scene.add(this._sceneAxe);
     }
   }
@@ -718,7 +718,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
   private _handleSettingsChange(): void {
     if (this._sceneAxe) {
-      this._sceneAxe.visible = this._model.jcadSettings().showAxesHelper;
+      this._sceneAxe.visible = this._model.jcadSettings.showAxesHelper;
     }
 
     this._updateCamera();
@@ -1736,7 +1736,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._camera.remove(this._cameraLight);
     this._scene.remove(this._camera);
 
-    if (this._model.jcadSettings().cameraType === 'Perspective') {
+    if (this._model.jcadSettings.cameraType === 'Perspective') {
       this._camera = new THREE.PerspectiveCamera(
         50,
         2,

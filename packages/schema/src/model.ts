@@ -68,9 +68,9 @@ export class JupyterCadModel implements IJupyterCadModel {
     };
   }
 
-  jcadSettings(): IJCadSettings {
+  get jcadSettings(): IJCadSettings {
     return this._jcadSettings;
-  }
+  }  
 
   /**
    * Return stored settings.
