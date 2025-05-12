@@ -15,6 +15,7 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import { JupyterCadStepModelFactory } from './modelfactory';
 import { JupyterCadDocumentWidgetFactory } from '../factory';
@@ -22,15 +23,27 @@ import { JupyterCadStepDoc } from './model';
 import { stpIcon } from '@jupytercad/base';
 
 const FACTORY = 'JupyterCAD STEP Viewer';
+const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
 
-const activate = (
+const activate = async (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
+  settingRegistry: ISettingRegistry,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
   drive: ICollaborativeDrive | null
-): void => {
+): Promise<void> => {
+
+  let settings: ISettingRegistry.ISettings | null = null;
+
+  try {
+    settings = await settingRegistry.load(SETTINGS_ID);
+    console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
+  } catch (error) {
+    console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+  }
+
   const widgetFactory = new JupyterCadDocumentWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-stepmodel',
@@ -87,6 +100,7 @@ const stepPlugin: JupyterFrontEndPlugin<void> = {
   requires: [
     IJupyterCadDocTracker,
     IThemeManager,
+    ISettingRegistry,
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken
   ],
