@@ -50,25 +50,24 @@ export class JupyterCadModel implements IJupyterCadModel {
       this._settings = setting;
 
       this._updateLocalSettings();
-  
+
       setting.changed.connect(this._onSettingsChanged, this);
     }
   }
-  
+
   private _onSettingsChanged(): void {
     const oldSettings = this._jcadSettings;
     this._updateLocalSettings();
     const newSettings = this._jcadSettings;
-  
+
     if (oldSettings.showAxesHelper !== newSettings.showAxesHelper) {
       this._settingsChanged.emit('showAxesHelper');
     }
-  
+
     if (oldSettings.cameraType !== newSettings.cameraType) {
       this._settingsChanged.emit('cameraType');
     }
   }
-  
 
   private _updateLocalSettings(): void {
     const composite = this._settings.composite;

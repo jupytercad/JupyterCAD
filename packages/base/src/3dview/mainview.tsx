@@ -720,11 +720,11 @@ export class MainView extends React.Component<IProps, IStates> {
     if (changedKey === 'showAxesHelper' && this._sceneAxe) {
       this._sceneAxe.visible = this._model.jcadSettings.showAxesHelper;
     }
-  
+
     if (changedKey === 'cameraType') {
       this._updateCamera();
     }
-  }  
+  }
 
   private _onPointerMove(e: MouseEvent) {
     const rect = this._renderer.domElement.getBoundingClientRect();
