@@ -57,7 +57,7 @@ const activate = async (
   app.docRegistry.addWidgetFactory(widgetFactory);
 
   // Creating and registering the model factory for our custom DocumentModel
-  const modelFactory = new JupyterCadStlModelFactory();
+  const modelFactory = new JupyterCadStlModelFactory({settingRegistry});
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype
   app.docRegistry.addFileType({
