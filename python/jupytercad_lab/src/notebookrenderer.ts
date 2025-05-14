@@ -34,6 +34,10 @@ import { ConsolePanel } from '@jupyterlab/console';
 import { PathExt } from '@jupyterlab/coreutils';
 import { NotebookPanel } from '@jupyterlab/notebook';
 import { CommandRegistry } from '@lumino/commands';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
+
+const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
+export const CLASS_NAME = 'jupytercad-notebook-widget';
 
 export interface ICommMetadata {
   create_ydoc: boolean;
@@ -42,8 +46,6 @@ export interface ICommMetadata {
   contentType: string;
   ymodel_name: string;
 }
-
-export const CLASS_NAME = 'jupytercad-notebook-widget';
 
 export class YJupyterCADModel extends JupyterYModel {
   jupyterCADModel: JupyterCadModel;
@@ -131,21 +133,32 @@ interface IOptions {
 export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:yjswidget-plugin',
   autoStart: true,
-  requires: [IJCadWorkerRegistryToken],
+  requires: [IJCadWorkerRegistryToken, ISettingRegistry],
   optional: [
     IJCadExternalCommandRegistryToken,
     IJupyterCadDocTracker,
     IJupyterYWidgetManager,
     ICollaborativeDrive
   ],
-  activate: (
+  activate: async (
     app: JupyterFrontEnd,
     workerRegistry: IJCadWorkerRegistry,
+    settingRegistry: ISettingRegistry,
     externalCommandRegistry?: IJCadExternalCommandRegistry,
     jcadTracker?: JupyterCadTracker,
     yWidgetManager?: IJupyterYWidgetManager,
     drive?: ICollaborativeDrive
-  ): void => {
+  ): Promise<void> => {
+
+    let settings: ISettingRegistry.ISettings | null = null;
+
+    try {
+      settings = await settingRegistry.load(SETTINGS_ID);
+      console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
+    } catch (error) {
+      console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+    }
+
     if (!yWidgetManager) {
       console.error('Missing IJupyterYWidgetManager token!');
       return;
@@ -207,8 +220,9 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
         })!;
         const jupyterCadDoc = sharedModel as IJupyterCadDoc;
         this.jupyterCADModel = new JupyterCadModel({
-          sharedModel: jupyterCadDoc
-        });
+          sharedModel: jupyterCadDoc,
+          settingRegistry: settingRegistry
+        });  
 
         this.jupyterCADModel.contentsManager = app.serviceManager.contents;
         this.jupyterCADModel.filePath = localPath;
