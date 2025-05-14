@@ -126,7 +126,7 @@ const activate = (
   });
 
   app.commands.addCommand(CommandIDs.createNew, {
-    label: args => 'CAD File',
+    label: args => (args['label'] as string) ?? 'CAD file',
     caption: 'Create a new JCAD Editor',
     icon: logoIcon,
     execute: async args => {
@@ -180,6 +180,14 @@ const activate = (
       });
     }
   }
+
+  // Inject “New JupyterCAD file” into the File Browser context menu
+  app.contextMenu.addItem({
+    command: CommandIDs.createNew,
+    selector: '.jp-DirListing',
+    rank: 55,
+    args: { label: 'New JupyterCAD file' }
+  });
 };
 
 const jcadPlugin: JupyterFrontEndPlugin<void> = {
