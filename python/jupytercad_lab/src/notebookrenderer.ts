@@ -149,7 +149,6 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
     yWidgetManager?: IJupyterYWidgetManager,
     drive?: ICollaborativeDrive
   ): Promise<void> => {
-
     let settings: ISettingRegistry.ISettings | null = null;
 
     try {
@@ -222,7 +221,7 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
         this.jupyterCADModel = new JupyterCadModel({
           sharedModel: jupyterCadDoc,
           settingRegistry: settingRegistry
-        });  
+        });
 
         this.jupyterCADModel.contentsManager = app.serviceManager.contents;
         this.jupyterCADModel.filePath = localPath;
