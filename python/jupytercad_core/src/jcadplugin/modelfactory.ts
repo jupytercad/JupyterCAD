@@ -95,13 +95,13 @@ export class JupyterCadJcadModelFactory
   }
 
   private _annotationModel: IAnnotationModel;
-  private _settingRegistry: ISettingRegistry;
+  private _settingRegistry: ISettingRegistry | undefined;
   private _disposed = false;
 }
 
 export namespace JupyterCadJcadModelFactory {
   export interface IOptions {
     annotationModel: IAnnotationModel;
-    settingRegistry: ISettingRegistry;
+    settingRegistry?: ISettingRegistry;
   }
 }

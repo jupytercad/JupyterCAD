@@ -49,7 +49,6 @@ const activate = async (
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
   annotationModel: IAnnotationModel,
-  settingRegistry: ISettingRegistry,
   browserFactory: IFileBrowserFactory,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
@@ -59,15 +58,20 @@ const activate = async (
   consoleTracker: IConsoleTracker,
   launcher: ILauncher | null,
   palette: ICommandPalette | null,
-  drive: ICollaborativeDrive | null
+  drive: ICollaborativeDrive | null,
+  settingRegistry?: ISettingRegistry,
 ): Promise<void> => {
   let settings: ISettingRegistry.ISettings | null = null;
 
-  try {
-    settings = await settingRegistry.load(SETTINGS_ID);
-    console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
-  } catch (error) {
-    console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+  if (settingRegistry) {
+    try {
+      settings = await settingRegistry.load(SETTINGS_ID);
+      console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
+    } catch (error) {
+      console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+    }
+  } else {
+    console.warn('No settingRegistry available; using default settings.');
   }
 
   const widgetFactory = new JupyterCadDocumentWidgetFactory({
@@ -209,7 +213,6 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IJupyterCadDocTracker,
     IThemeManager,
     IAnnotationToken,
-    ISettingRegistry,
     IFileBrowserFactory,
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken,
@@ -218,7 +221,7 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IRenderMimeRegistry,
     IConsoleTracker
   ],
-  optional: [ILauncher, ICommandPalette, ICollaborativeDrive],
+  optional: [ILauncher, ICommandPalette, ICollaborativeDrive, ISettingRegistry],
   autoStart: true,
   activate
 };
