@@ -8,7 +8,7 @@ class JupyterCadStepModel extends JupyterCadModel {
   constructor(options: {
     sharedModel?: IJupyterCadDoc;
     languagePreference?: string;
-    settingRegistry: ISettingRegistry;
+    settingRegistry?: ISettingRegistry;
   }) {
     super({
       sharedModel: options.sharedModel,
@@ -33,7 +33,7 @@ class JupyterCadStepModel extends JupyterCadModel {
 export class JupyterCadStepModelFactory
   implements DocumentRegistry.IModelFactory<JupyterCadStepModel>
 {
-  constructor(options: { settingRegistry: ISettingRegistry }) {
+  constructor(options: { settingRegistry?: ISettingRegistry }) {
     this._settingRegistry = options.settingRegistry;
   }
 
@@ -113,5 +113,5 @@ export class JupyterCadStepModelFactory
   }
 
   private _disposed = false;
-  private _settingRegistry: ISettingRegistry;
+  private _settingRegistry: ISettingRegistry | undefined;
 }

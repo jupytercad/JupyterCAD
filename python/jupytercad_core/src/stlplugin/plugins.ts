@@ -29,18 +29,22 @@ const activate = async (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
-  settingRegistry: ISettingRegistry,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
-  drive: ICollaborativeDrive | null
+  drive: ICollaborativeDrive | null,
+  settingRegistry?: ISettingRegistry
 ): Promise<void> => {
   let settings: ISettingRegistry.ISettings | null = null;
 
-  try {
-    settings = await settingRegistry.load(SETTINGS_ID);
-    console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
-  } catch (error) {
-    console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+  if (settingRegistry) {
+    try {
+      settings = await settingRegistry.load(SETTINGS_ID);
+      console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
+    } catch (error) {
+      console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+    }
+  } else {
+    console.warn('No settingRegistry available; using default settings.');
   }
 
   const widgetFactory = new JupyterCadDocumentWidgetFactory({
@@ -53,13 +57,14 @@ const activate = async (
     workerRegistry,
     externalCommandRegistry
   });
-  // Registering the widget factory
+
   app.docRegistry.addWidgetFactory(widgetFactory);
 
-  // Creating and registering the model factory for our custom DocumentModel
-  const modelFactory = new JupyterCadStlModelFactory({ settingRegistry });
+  const modelFactory = new JupyterCadStlModelFactory(
+    settingRegistry ? { settingRegistry } : {}
+  );
   app.docRegistry.addModelFactory(modelFactory);
-  // register the filetype
+
   app.docRegistry.addFileType({
     name: 'stl',
     displayName: 'STL',
@@ -99,11 +104,10 @@ const stlPlugin: JupyterFrontEndPlugin<void> = {
   requires: [
     IJupyterCadDocTracker,
     IThemeManager,
-    ISettingRegistry,
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken
   ],
-  optional: [ICollaborativeDrive],
+  optional: [ICollaborativeDrive, ISettingRegistry],
   autoStart: true,
   activate
 };

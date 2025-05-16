@@ -133,29 +133,32 @@ interface IOptions {
 export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupytercad:yjswidget-plugin',
   autoStart: true,
-  requires: [IJCadWorkerRegistryToken, ISettingRegistry],
+  requires: [IJCadWorkerRegistryToken],
   optional: [
     IJCadExternalCommandRegistryToken,
     IJupyterCadDocTracker,
     IJupyterYWidgetManager,
-    ICollaborativeDrive
+    ICollaborativeDrive,
+    ISettingRegistry
   ],
   activate: async (
     app: JupyterFrontEnd,
     workerRegistry: IJCadWorkerRegistry,
-    settingRegistry: ISettingRegistry,
     externalCommandRegistry?: IJCadExternalCommandRegistry,
     jcadTracker?: JupyterCadTracker,
     yWidgetManager?: IJupyterYWidgetManager,
-    drive?: ICollaborativeDrive
+    drive?: ICollaborativeDrive,
+    settingRegistry?: ISettingRegistry
   ): Promise<void> => {
     let settings: ISettingRegistry.ISettings | null = null;
 
-    try {
-      settings = await settingRegistry.load(SETTINGS_ID);
-      console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
-    } catch (error) {
-      console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+    if (settingRegistry) {
+      try {
+        settings = await settingRegistry.load(SETTINGS_ID);
+        console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
+      } catch (error) {
+        console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+      }
     }
 
     if (!yWidgetManager) {

@@ -29,18 +29,22 @@ const activate = async (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
-  settingRegistry: ISettingRegistry,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
-  drive: ICollaborativeDrive | null
+  drive: ICollaborativeDrive | null,
+  settingRegistry?: ISettingRegistry
 ): Promise<void> => {
   let settings: ISettingRegistry.ISettings | null = null;
 
-  try {
-    settings = await settingRegistry.load(SETTINGS_ID);
-    console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
-  } catch (error) {
-    console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+  if (settingRegistry) {
+    try {
+      settings = await settingRegistry.load(SETTINGS_ID);
+      console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
+    } catch (error) {
+      console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+    }
+  } else {
+    console.warn('No settingRegistry available; using default settings.');
   }
 
   const widgetFactory = new JupyterCadDocumentWidgetFactory({
@@ -99,11 +103,10 @@ const stepPlugin: JupyterFrontEndPlugin<void> = {
   requires: [
     IJupyterCadDocTracker,
     IThemeManager,
-    ISettingRegistry,
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken
   ],
-  optional: [ICollaborativeDrive],
+  optional: [ICollaborativeDrive, ISettingRegistry],
   autoStart: true,
   activate
 };
