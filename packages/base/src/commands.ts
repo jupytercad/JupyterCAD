@@ -189,21 +189,28 @@ function getSelectedMeshName(
   return '';
 }
 
-function getSelectedEdge(
+function getSelectedEdges(
   selection: { [key: string]: ISelection } | undefined
-): { shape: string; edgeIndex: number } | undefined {
+): { shape: string; edgeIndices: number[] } | undefined {
   if (selection === undefined) {
     return;
   }
-
-  const selectedNames = Object.keys(selection);
-  for (const name of selectedNames) {
-    if (selection[name].type === 'edge') {
-      return {
-        shape: selection[name].parent!,
-        edgeIndex: selection[name].edgeIndex!
-      };
-    }
+  const shape = Object.values(selection)
+    .filter(
+      sel =>
+        sel.type === 'edge' && sel.parent !== undefined && sel.parent !== null
+    )
+    .map(sel => sel.parent)[0];
+  const edgeIndices = Object.values(selection)
+    .filter(
+      sel =>
+        sel.type === 'edge' &&
+        sel.parent === shape &&
+        sel.edgeIndex !== undefined
+    )
+    .map(sel => sel.edgeIndex as number);
+  if (shape && edgeIndices.length) {
+    return { shape, edgeIndices };
   }
 }
 
@@ -446,13 +453,14 @@ const OPERATORS = {
     shape: 'Part::Chamfer',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selectedEdge = getSelectedEdge(model.localState?.selected.value);
-      const baseName = selectedEdge?.shape || objects[0].name || '';
+      const selectedEdges = getSelectedEdges(model.localState?.selected.value);
+      const baseName = selectedEdges?.shape || objects[0].name || '';
       const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Chamfer', model),
         Base: baseName,
-        Edge: selectedEdge?.edgeIndex || 0,
+        // now supply an array
+        Edge: selectedEdges?.edgeIndices || [],
         Dist: 0.2,
         Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
@@ -487,13 +495,13 @@ const OPERATORS = {
     shape: 'Part::Fillet',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selectedEdge = getSelectedEdge(model.localState?.selected.value);
-      const baseName = selectedEdge?.shape || objects[0].name || '';
+      const sel = getSelectedEdges(model.localState?.selected.value);
+      const baseName = sel?.shape || objects[0].name || '';
       const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Fillet', model),
         Base: baseName,
-        Edge: selectedEdge?.edgeIndex || 0,
+        Edge: sel?.edgeIndices || [],
         Radius: 0.2,
         Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }

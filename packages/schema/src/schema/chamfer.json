@@ -11,9 +11,21 @@
       "fcType": "App::PropertyLink"
     },
     "Edge": {
-      "type": "number",
-      "minimum": 0,
-      "description": "The edge index"
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "description": "The edge index"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0
+          },
+          "description": "List of edge indices"
+        }
+      ]
     },
     "Dist": {
       "type": "number",
