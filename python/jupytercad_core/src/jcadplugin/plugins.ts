@@ -59,7 +59,7 @@ const activate = async (
   launcher: ILauncher | null,
   palette: ICommandPalette | null,
   drive: ICollaborativeDrive | null,
-  settingRegistry?: ISettingRegistry,
+  settingRegistry?: ISettingRegistry
 ): Promise<void> => {
   let settings: ISettingRegistry.ISettings | null = null;
 
