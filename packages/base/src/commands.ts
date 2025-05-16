@@ -454,6 +454,7 @@ const OPERATORS = {
       return {
         Name: newName('Chamfer', model),
         Base: baseName,
+        // now supply an array
         Edge: selectedEdges?.edgeIndices || [],
         Dist: 0.2,
         Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
