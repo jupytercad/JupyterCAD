@@ -955,10 +955,23 @@ export function addCommands(
       if (!current) {
         return;
       }
-      const settings = await current.model.getSettings();
-      const currentValue = settings.composite.showAxesHelper;
-      await settings.set('showAxesHelper', !currentValue);
-      commands.notifyCommandChanged(CommandIDs.updateAxes);
+
+      try {
+        const settings = await current.model.getSettings();
+
+        if (settings?.composite) {
+          const currentValue = settings.composite.showAxesHelper ?? false;
+          await settings.set('showAxesHelper', !currentValue);
+        } else {
+          const currentValue = current.model.jcadSettings.showAxesHelper;
+          current.model.jcadSettings.showAxesHelper = !currentValue;
+        }
+
+        current.model.emitSettingChanged('showAxesHelper');
+        commands.notifyCommandChanged(CommandIDs.updateAxes);
+      } catch (err) {
+        console.error('Failed to toggle Axes Helper:', err);
+      }
     }
   });
 
@@ -1024,12 +1037,28 @@ export function addCommands(
       if (!current) {
         return;
       }
-      const settings = await current.model.getSettings();
-      const currentType = settings.composite.cameraType;
-      const newType =
-        currentType === 'Perspective' ? 'Orthographic' : 'Perspective';
-      await settings.set('cameraType', newType);
-      commands.notifyCommandChanged(CommandIDs.updateCameraSettings);
+
+      try {
+        const settings = await current.model.getSettings();
+
+        if (settings?.composite) {
+          // If settings exist, toggle there
+          const currentType = settings.composite.cameraType;
+          const newType =
+            currentType === 'Perspective' ? 'Orthographic' : 'Perspective';
+          await settings.set('cameraType', newType);
+        } else {
+          // Fallback: directly toggle model's own jcadSettings
+          const currentType = current.model.jcadSettings.cameraType;
+          current.model.jcadSettings.cameraType =
+            currentType === 'Perspective' ? 'Orthographic' : 'Perspective';
+          current.model.emitSettingChanged('cameraType');
+        }
+
+        commands.notifyCommandChanged(CommandIDs.updateCameraSettings);
+      } catch (err) {
+        console.error('Failed to toggle camera projection:', err);
+      }
     }
   });
 

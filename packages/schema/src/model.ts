@@ -91,6 +91,10 @@ export class JupyterCadModel implements IJupyterCadModel {
     return this._settingsChanged;
   }
 
+  emitSettingChanged(settingName: string) {
+    this._settingsChanged.emit(settingName);
+  }
+
   /**
    * Return stored settings.
    */
@@ -425,7 +429,10 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _filePath: string;
   private _pathChanged: Signal<JupyterCadModel, string>;
   private _contentsManager?: Contents.IManager;
-  private _jcadSettings: IJCadSettings;
+  private _jcadSettings: IJCadSettings = {
+    showAxesHelper: false,
+    cameraType: 'Perspective'
+  };
 
   private _userChanged = new Signal<this, IUserData[]>(this);
   private _usersMap?: Map<number, any>;

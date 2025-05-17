@@ -167,6 +167,7 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
 
   initSettings(): Promise<void>;
   getSettings(): Promise<ISettingRegistry.ISettings>;
+  emitSettingChanged(key: string): void;
   getWorker(): Worker;
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;
