@@ -16,14 +16,18 @@ import {
   IJupyterCadModel,
   ISelection,
   IUserData,
-  Pointer
+  Pointer,
+  IJCadSettings
 } from './interfaces';
 import jcadSchema from './schema/jcad.json';
 import { Contents } from '@jupyterlab/services';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
+
+const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
 
 export class JupyterCadModel implements IJupyterCadModel {
   constructor(options: JupyterCadModel.IOptions) {
-    const { annotationModel, sharedModel } = options;
+    const { annotationModel, sharedModel, settingRegistry } = options;
     if (sharedModel) {
       this._sharedModel = sharedModel;
     } else {
@@ -31,8 +35,84 @@ export class JupyterCadModel implements IJupyterCadModel {
     }
     this._connectSignal();
     this.annotationModel = annotationModel;
+    this.settingRegistry = settingRegistry;
     this._copiedObject = null;
     this._pathChanged = new Signal<JupyterCadModel, string>(this);
+    this._settingsChanged = new Signal<JupyterCadModel, string>(this);
+  }
+
+  /**
+   * Initialize custom settings for JupyterLab.
+   */
+  async initSettings() {
+    if (this.settingRegistry) {
+      try {
+        const setting = await this.settingRegistry.load(SETTINGS_ID);
+        this._settings = setting;
+
+        this._updateLocalSettings();
+
+        setting.changed.connect(this._onSettingsChanged, this);
+      } catch (error) {
+        console.error(`Failed to load settings for ${SETTINGS_ID}:`, error);
+        this._jcadSettings = {
+          showAxesHelper: false,
+          cameraType: 'Perspective'
+        };
+      }
+    } else {
+      this._jcadSettings = {
+        showAxesHelper: false,
+        cameraType: 'Perspective'
+      };
+    }
+  }
+
+  private _onSettingsChanged(): void {
+    const oldSettings = this._jcadSettings;
+    this._updateLocalSettings();
+    const newSettings = this._jcadSettings;
+
+    if (oldSettings.showAxesHelper !== newSettings.showAxesHelper) {
+      this._settingsChanged.emit('showAxesHelper');
+    }
+
+    if (oldSettings.cameraType !== newSettings.cameraType) {
+      this._settingsChanged.emit('cameraType');
+    }
+  }
+
+  private _updateLocalSettings(): void {
+    const composite = this._settings.composite;
+
+    this._jcadSettings = {
+      showAxesHelper: (composite.showAxesHelper as boolean) ?? false,
+      cameraType:
+        (composite.cameraType as 'Perspective' | 'Orthographic') ??
+        'Perspective'
+    };
+  }
+
+  get jcadSettings(): IJCadSettings {
+    return this._jcadSettings;
+  }
+
+  /**
+   * Expose the settingsChanged signal for external use.
+   */
+  get settingsChanged(): ISignal<JupyterCadModel, string> {
+    return this._settingsChanged;
+  }
+
+  emitSettingChanged(settingName: string) {
+    this._settingsChanged.emit(settingName);
+  }
+
+  /**
+   * Return stored settings.
+   */
+  async getSettings(): Promise<ISettingRegistry.ISettings> {
+    return this._settings;
   }
 
   readonly collaborative = true;
@@ -350,7 +430,9 @@ export class JupyterCadModel implements IJupyterCadModel {
   readonly defaultKernelName: string = '';
   readonly defaultKernelLanguage: string = '';
   readonly annotationModel?: IAnnotationModel;
+  readonly settingRegistry?: ISettingRegistry;
 
+  private _settings: ISettingRegistry.ISettings;
   private _sharedModel: IJupyterCadDoc;
   private _copiedObject: IJCadObject | null;
 
@@ -360,6 +442,10 @@ export class JupyterCadModel implements IJupyterCadModel {
   private _filePath: string;
   private _pathChanged: Signal<JupyterCadModel, string>;
   private _contentsManager?: Contents.IManager;
+  private _jcadSettings: IJCadSettings = {
+    showAxesHelper: false,
+    cameraType: 'Perspective'
+  };
 
   private _userChanged = new Signal<this, IUserData[]>(this);
   private _usersMap?: Map<number, any>;
@@ -372,6 +458,7 @@ export class JupyterCadModel implements IJupyterCadModel {
     this,
     Map<number, IJupyterCadClientState>
   >(this);
+  private _settingsChanged: Signal<JupyterCadModel, string>;
 
   private _sharedMetadataChanged = new Signal<this, MapChange>(this);
   private _sharedOptionsChanged = new Signal<this, MapChange>(this);
@@ -384,5 +471,6 @@ export namespace JupyterCadModel {
   export interface IOptions
     extends DocumentRegistry.IModelOptions<IJupyterCadDoc> {
     annotationModel?: IAnnotationModel;
+    settingRegistry?: ISettingRegistry;
   }
 }

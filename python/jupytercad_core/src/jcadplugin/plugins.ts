@@ -33,16 +33,18 @@ import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { JupyterCadDocumentWidgetFactory } from '../factory';
 import { JupyterCadJcadModelFactory } from './modelfactory';
 import { MimeDocumentFactory } from '@jupyterlab/docregistry';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 const FACTORY = 'JupyterCAD';
 const CONTENT_TYPE = 'jcad';
 const PALETTE_CATEGORY = 'JupyterCAD';
+const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
 
 namespace CommandIDs {
   export const createNew = 'jupytercad:create-new-jcad-file';
 }
 
-const activate = (
+const activate = async (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
@@ -56,8 +58,22 @@ const activate = (
   consoleTracker: IConsoleTracker,
   launcher: ILauncher | null,
   palette: ICommandPalette | null,
-  drive: ICollaborativeDrive | null
-): void => {
+  drive: ICollaborativeDrive | null,
+  settingRegistry?: ISettingRegistry
+): Promise<void> => {
+  let settings: ISettingRegistry.ISettings | null = null;
+
+  if (settingRegistry) {
+    try {
+      settings = await settingRegistry.load(SETTINGS_ID);
+      console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
+    } catch (error) {
+      console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+    }
+  } else {
+    console.warn('No settingRegistry available; using default settings.');
+  }
+
   const widgetFactory = new JupyterCadDocumentWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-jcadmodel',
@@ -89,7 +105,8 @@ const activate = (
 
   // Creating and registering the model factory for our custom DocumentModel
   const modelFactory = new JupyterCadJcadModelFactory({
-    annotationModel
+    annotationModel,
+    settingRegistry
   });
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype
@@ -204,7 +221,7 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IRenderMimeRegistry,
     IConsoleTracker
   ],
-  optional: [ILauncher, ICommandPalette, ICollaborativeDrive],
+  optional: [ILauncher, ICommandPalette, ICollaborativeDrive, ISettingRegistry],
   autoStart: true,
   activate
 };
