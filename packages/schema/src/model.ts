@@ -46,12 +46,25 @@ export class JupyterCadModel implements IJupyterCadModel {
    */
   async initSettings() {
     if (this.settingRegistry) {
-      const setting = await this.settingRegistry.load(SETTINGS_ID);
-      this._settings = setting;
+      try {
+        const setting = await this.settingRegistry.load(SETTINGS_ID);
+        this._settings = setting;
 
-      this._updateLocalSettings();
+        this._updateLocalSettings();
 
-      setting.changed.connect(this._onSettingsChanged, this);
+        setting.changed.connect(this._onSettingsChanged, this);
+      } catch (error) {
+        console.error(`Failed to load settings for ${SETTINGS_ID}:`, error);
+        this._jcadSettings = {
+          showAxesHelper: false,
+          cameraType: 'Perspective'
+        };
+      }
+    } else {
+      this._jcadSettings = {
+        showAxesHelper: false,
+        cameraType: 'Perspective'
+      };
     }
   }
 
