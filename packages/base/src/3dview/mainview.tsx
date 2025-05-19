@@ -311,7 +311,6 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.domElement.addEventListener('contextmenu', e => {
         e.preventDefault();
         e.stopPropagation();
-        this._contextMenu.open(e);
       });
 
       document.addEventListener('keydown', e => {
@@ -332,6 +331,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._renderer.domElement.addEventListener('mousedown', e => {
         this._mouseDrag.start.set(e.clientX, e.clientY);
+        this._mouseDrag.button = e.button;
       });
 
       this._renderer.domElement.addEventListener('mouseup', e => {
@@ -339,7 +339,11 @@ export class MainView extends React.Component<IProps, IStates> {
         const distance = this._mouseDrag.end.distanceTo(this._mouseDrag.start);
 
         if (distance <= CLICK_THRESHOLD) {
-          this._onClick(e);
+          if (this._mouseDrag.button === 0) {
+            this._onClick(e);
+          } else if (this._mouseDrag.button === 2) {
+            this._contextMenu.open(e);
+          }
         }
       });
 
