@@ -46,12 +46,7 @@ import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
 import { v4 as uuid } from 'uuid';
-import {
-  AxeHelper,
-  CameraSettings,
-  ExplodedView,
-  JupyterCadTracker
-} from './types';
+import { ExplodedView, JupyterCadTracker } from './types';
 import { JSONObject } from '@lumino/coreutils';
 import { JupyterCadDocumentWidget } from './widget';
 
@@ -894,13 +889,16 @@ export function addCommands(
     label: trans.__('Toggle Transform Controls'),
     isEnabled: () => {
       const current = tracker.currentWidget;
-
-      if (!current || !tracker.currentWidget.model.sharedModel.editable) {
+      if (!current || !current.model.sharedModel.editable) {
         return false;
       }
 
-      const viewSettings = tracker.currentWidget.content.currentViewModel
-        .viewSettings as JSONObject;
+      const viewModel = current.content.currentViewModel;
+      if (!viewModel) {
+        return false;
+      }
+
+      const viewSettings = viewModel.viewSettings as JSONObject;
       return viewSettings.explodedView
         ? !(viewSettings.explodedView as ExplodedView).enabled
         : true;
@@ -953,29 +951,34 @@ export function addCommands(
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: axesIcon,
     isToggled: () => {
-      const current = tracker.currentWidget?.content;
-      return current?.axes.visible === true;
+      const current = tracker.currentWidget;
+      if (!current) {
+        return false;
+      }
+      return current.model.jcadSettings.showAxesHelper;
     },
-
     execute: async () => {
       const current = tracker.currentWidget;
-
       if (!current) {
         return;
       }
-      const axes: AxeHelper = current.content.axes;
-      if (axes.visible === true) {
-        current.content.axes = {
-          ...current.content.axes,
-          visible: false
-        };
-      } else {
-        current.content.axes = {
-          ...current.content.axes,
-          visible: true
-        };
+
+      try {
+        const settings = await current.model.getSettings();
+
+        if (settings?.composite) {
+          const currentValue = settings.composite.showAxesHelper ?? false;
+          await settings.set('showAxesHelper', !currentValue);
+        } else {
+          const currentValue = current.model.jcadSettings.showAxesHelper;
+          current.model.jcadSettings.showAxesHelper = !currentValue;
+        }
+
+        current.model.emitSettingChanged('showAxesHelper');
+        commands.notifyCommandChanged(CommandIDs.updateAxes);
+      } catch (err) {
+        console.error('Failed to toggle Axes Helper:', err);
       }
-      commands.notifyCommandChanged(CommandIDs.updateAxes);
     }
   });
 
@@ -984,8 +987,17 @@ export function addCommands(
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: explodedViewIcon,
     isToggled: () => {
-      const viewSettings = tracker.currentWidget?.content.currentViewModel
-        .viewSettings as JSONObject;
+      const current = tracker.currentWidget;
+      if (!current) {
+        return false;
+      }
+
+      const viewModel = current.content.currentViewModel;
+      if (!viewModel) {
+        return false;
+      }
+
+      const viewSettings = viewModel.viewSettings as JSONObject;
       return viewSettings?.explodedView
         ? (viewSettings.explodedView as ExplodedView).enabled
         : false;
@@ -1012,37 +1024,48 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.updateCameraSettings, {
     label: () => {
-      const isPerspectiveOn =
-        tracker.currentWidget?.content?.cameraSettings?.type === 'Perspective';
-      return isPerspectiveOn
+      const current = tracker.currentWidget;
+      if (!current) {
+        return trans.__('Switch Camera Projection');
+      }
+      const currentType = current.model.jcadSettings.cameraType;
+      return currentType === 'Perspective'
         ? trans.__('Switch to orthographic projection')
         : trans.__('Switch to perspective projection');
     },
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: videoSolidIcon,
     isToggled: () => {
-      const current = tracker.currentWidget?.content;
-      return current?.cameraSettings.type === 'Orthographic';
+      const current = tracker.currentWidget;
+      return current?.model.jcadSettings.cameraType === 'Orthographic';
     },
     execute: async () => {
       const current = tracker.currentWidget;
       if (!current) {
         return;
-      } else {
-        const currentSettings: CameraSettings = current.content.cameraSettings;
-        if (currentSettings.type === 'Perspective') {
-          current.content.cameraSettings = {
-            ...current.content.cameraSettings,
-            type: 'Orthographic'
-          };
-        } else {
-          current.content.cameraSettings = {
-            ...current.content.cameraSettings,
-            type: 'Perspective'
-          };
-        }
       }
-      commands.notifyCommandChanged(CommandIDs.updateCameraSettings);
+
+      try {
+        const settings = await current.model.getSettings();
+
+        if (settings?.composite) {
+          // If settings exist, toggle there
+          const currentType = settings.composite.cameraType;
+          const newType =
+            currentType === 'Perspective' ? 'Orthographic' : 'Perspective';
+          await settings.set('cameraType', newType);
+        } else {
+          // Fallback: directly toggle model's own jcadSettings
+          const currentType = current.model.jcadSettings.cameraType;
+          current.model.jcadSettings.cameraType =
+            currentType === 'Perspective' ? 'Orthographic' : 'Perspective';
+          current.model.emitSettingChanged('cameraType');
+        }
+
+        commands.notifyCommandChanged(CommandIDs.updateCameraSettings);
+      } catch (err) {
+        console.error('Failed to toggle camera projection:', err);
+      }
     }
   });
 
