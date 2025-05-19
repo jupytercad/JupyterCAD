@@ -34,10 +34,12 @@ export function _Chamfer(
       mapOfShape
     );
 
-    const edge = oc.TopoDS.Edge_1(mapOfShape.FindKey(Edge + 1));
-
     const chamferBuilder = new oc.BRepFilletAPI_MakeChamfer(base.occShape);
-    chamferBuilder.Add_2(Dist, edge);
+    const edgeList = Array.isArray(Edge) ? Edge : [Edge];
+    for (const edgeIdx of edgeList) {
+      const e = oc.TopoDS.Edge_1(mapOfShape.FindKey(edgeIdx + 1));
+      chamferBuilder.Add_2(Dist, e);
+    }
 
     chamferBuilder.Build(new oc.Message_ProgressRange_1());
 
