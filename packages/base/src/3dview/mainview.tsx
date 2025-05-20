@@ -1075,6 +1075,8 @@ export class MainView extends React.Component<IProps, IStates> {
     } else {
       this._refLength = null;
     }
+
+    this._updateCamera();
   }
 
   private async _objToMesh(
@@ -1756,11 +1758,17 @@ export class MainView extends React.Component<IProps, IStates> {
       const distance = position.distanceTo(target);
       const zoomFactor = 1000 / distance;
 
+      const refLength = this._refLength ?? 1000; // Fallback value if undefined
+      const near = Math.max(refLength / 20, 0.01);
+      const far = refLength * 20;
+    
       this._camera = new THREE.OrthographicCamera(
         width / -2,
         width / 2,
         height / 2,
-        height / -2
+        height / -2,
+        near,
+        far
       );
       this._camera.zoom = zoomFactor;
       this._camera.updateProjectionMatrix();
