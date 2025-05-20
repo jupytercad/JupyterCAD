@@ -25,11 +25,7 @@ import { ViewHelper } from 'three/examples/jsm/helpers/ViewHelper';
 
 import { FloatingAnnotation } from '../annotation';
 import { getCSSVariableColor, throttle } from '../tools';
-import {
-  ClipSettings,
-  ExplodedView,
-  SplitScreenSettings
-} from '../types';
+import { ClipSettings, ExplodedView, SplitScreenSettings } from '../types';
 import { FollowIndicator } from './followindicator';
 import {
   BasicMesh,
@@ -1744,7 +1740,7 @@ export class MainView extends React.Component<IProps, IStates> {
       const refLength = this._refLength ?? 1000; // Fallback value if undefined
       const near = Math.max(refLength / 20, 0.01);
       const far = refLength * 20;
-    
+
       this._camera = new THREE.OrthographicCamera(
         width / -2,
         width / 2,
