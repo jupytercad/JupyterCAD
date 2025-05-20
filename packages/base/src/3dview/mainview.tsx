@@ -1074,7 +1074,9 @@ export class MainView extends React.Component<IProps, IStates> {
           this._controls.target
         );
         const zoomFactor = 1000 / distance;
-        this._camera.zoom = zoomFactor;
+        if (updateCamera) {
+          this._camera.zoom = zoomFactor;
+        }
 
         console.log(near, far);
 
