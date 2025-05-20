@@ -25,7 +25,12 @@ import { ViewHelper } from 'three/examples/jsm/helpers/ViewHelper';
 
 import { FloatingAnnotation } from '../annotation';
 import { getCSSVariableColor, throttle } from '../tools';
-import { CameraSettings, ClipSettings, ExplodedView, SplitScreenSettings } from '../types';
+import {
+  CameraSettings,
+  ClipSettings,
+  ExplodedView,
+  SplitScreenSettings
+} from '../types';
 import { FollowIndicator } from './followindicator';
 import {
   BasicMesh,
@@ -1061,18 +1066,17 @@ export class MainView extends React.Component<IProps, IStates> {
       }
 
       // Update near and far for orthographic camera if applicable
-      if (
-        this._camera instanceof THREE.OrthographicCamera
-      ) {
+      if (this._camera instanceof THREE.OrthographicCamera) {
         const near = Math.max(this._refLength / 20, 0.01);
         const far = this._refLength * 20;
 
-        const distance = this._camera.position.distanceTo(this._controls.target);
+        const distance = this._camera.position.distanceTo(
+          this._controls.target
+        );
         const zoomFactor = 1000 / distance;
         this._camera.zoom = zoomFactor;
 
         console.log(near, far);
-        
 
         this._camera.near = near;
         this._camera.far = far;
