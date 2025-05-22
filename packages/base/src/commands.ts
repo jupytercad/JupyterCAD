@@ -568,6 +568,43 @@ const EXPORT_FORM = {
   }
 };
 
+const EXPORT_FCSTD_FORM = {
+  title: 'Export to .FCStd',
+  schema: {
+    type: 'object',
+    required: ['Name'],
+    additionalProperties: false,
+    properties: {
+      Name: {
+        title: 'File name',
+        description: 'The exported FCStd file name',
+        type: 'string'
+      }
+    }
+  },
+  default: (model: IJupyterCadModel) => ({
+    Name: PathExt.basename(model.filePath).replace(
+      PathExt.extname(model.filePath),
+      '.FCStd'
+    )
+  }),
+  syncData: (model: IJupyterCadModel) => (props: IDict) => {
+    // Hardcode the endpoint instead of using model.sharedModel?.toFcstdEndpoint
+    const endpoint = 'jupytercad_freecad/export-fcstd';
+
+    const { Name } = props;
+    requestAPI<{ done: boolean }>(endpoint, {
+      method: 'POST',
+      body: JSON.stringify({ path: model.filePath, newName: Name })
+    }).catch(error => {
+      showErrorMessage(
+        'Export Error',
+        `Failed to export to FCStd: ${error.message}`
+      );
+    });
+  }
+};
+
 function loadKeybindings(commands: CommandRegistry, keybindings: any[]) {
   keybindings.forEach(binding => {
     commands.addKeyBinding({
@@ -1149,6 +1186,28 @@ export function addCommands(
       await dialog.launch();
     }
   });
+  commands.addCommand(CommandIDs.exportFcstd, {
+    label: 'Export to .FCStd',
+    isEnabled: () =>
+      tracker.currentWidget?.model?.filePath.toLowerCase().endsWith('.jcad') ===
+      true,
+    iconClass: 'fa fa-file-export',
+    execute: async () => {
+      const current = tracker.currentWidget;
+      if (!current) {
+        return;
+      }
+      const dialog = new FormDialog({
+        model: current.model,
+        title: EXPORT_FCSTD_FORM.title,
+        schema: EXPORT_FCSTD_FORM.schema,
+        sourceData: EXPORT_FCSTD_FORM.default(current.model),
+        syncData: EXPORT_FCSTD_FORM.syncData(current.model),
+        cancelButton: true
+      });
+      await dialog.launch();
+    }
+  });
   commands.addCommand(CommandIDs.copyObject, {
     label: trans.__('Copy Object'),
     isEnabled: () => {
@@ -1255,6 +1314,7 @@ export namespace CommandIDs {
 
   export const splitScreen = 'jupytercad:splitScreen';
   export const exportJcad = 'jupytercad:exportJcad';
+  export const exportFcstd = 'jupytercad:exportFcstd';
 
   export const toggleConsole = 'jupytercad:toggleConsole';
   export const invokeCompleter = 'jupytercad:invokeConsoleCompleter';
