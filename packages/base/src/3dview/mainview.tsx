@@ -1078,6 +1078,12 @@ export class MainView extends React.Component<IProps, IStates> {
           this._camera.zoom = zoomFactor;
         }
 
+        this._camera.position.set(
+          10 * this._refLength,
+          10 * this._refLength,
+          10 * this._refLength
+        );
+
         this._camera.near = near;
         this._camera.far = far;
         this._camera.updateProjectionMatrix();
