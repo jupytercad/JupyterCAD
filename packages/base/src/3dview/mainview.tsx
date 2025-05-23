@@ -1065,10 +1065,35 @@ export class MainView extends React.Component<IProps, IStates> {
         );
       }
 
-      // Update near and far for orthographic camera if applicable
       if (this._camera instanceof THREE.OrthographicCamera) {
-        const near = Math.max(this._refLength / 20, 0.01);
-        const far = this._refLength * 20;
+        const boundingSphere = new THREE.Sphere();
+        this._boundingGroup.getBoundingSphere(boundingSphere);
+        const center = boundingSphere.center;
+        const radius = boundingSphere.radius;
+
+        const aspect =
+          this._renderer.domElement.clientWidth /
+          this._renderer.domElement.clientHeight;
+        const frustumSize = radius * 2;
+
+        // Position the camera at an angle away from the center
+        const offset = radius * 2;
+        this._camera.position.set(
+          center.x + offset,
+          center.y + offset,
+          center.z + offset
+        );
+        this._camera.lookAt(center);
+
+        // Update orthographic frustum
+        this._camera.left = (-frustumSize * aspect) / 2;
+        this._camera.right = (frustumSize * aspect) / 2;
+        this._camera.top = frustumSize / 2;
+        this._camera.bottom = -frustumSize / 2;
+
+        // Set near/far conservatively
+        this._camera.near = 0.01;
+        this._camera.far = offset * 5;
 
         const distance = this._camera.position.distanceTo(
           this._controls.target
@@ -1077,15 +1102,6 @@ export class MainView extends React.Component<IProps, IStates> {
         if (updateCamera) {
           this._camera.zoom = zoomFactor;
         }
-
-        this._camera.position.set(
-          10 * this._refLength,
-          10 * this._refLength,
-          10 * this._refLength
-        );
-
-        this._camera.near = near;
-        this._camera.far = far;
         this._camera.updateProjectionMatrix();
       }
 
@@ -1776,24 +1792,40 @@ export class MainView extends React.Component<IProps, IStates> {
     } else {
       const width = this._divRef.current?.clientWidth || 0;
       const height = this._divRef.current?.clientHeight || 0;
-
+      const aspect = width / height || 1;
       const distance = position.distanceTo(target);
       const zoomFactor = 1000 / distance;
 
-      const refLength = this._refLength ?? 1000; // Fallback value if undefined
-      const near = Math.max(refLength / 20, 0.01);
-      const far = refLength * 20;
+      const refLength = this._refLength ?? 1000;
+
+      // Fallback bounding sphere if _boundingGroup isn't available yet
+      const boundingSphere = new THREE.Sphere();
+      this._boundingGroup?.getBoundingSphere(boundingSphere);
+      const center = boundingSphere.center;
+      const radius = boundingSphere.radius || refLength;
+
+      const frustumSize = radius * 2;
 
       this._camera = new THREE.OrthographicCamera(
-        width / -2,
-        width / 2,
-        height / 2,
-        height / -2,
-        near,
-        far
+        (-frustumSize * aspect) / 2,
+        (frustumSize * aspect) / 2,
+        frustumSize / 2,
+        -frustumSize / 2,
+        0.01,
+        radius * 10
+      );
+
+      this._camera.updateProjectionMatrix();
+
+      // Position and lookAt based on bounding sphere
+      const offset = radius * 2;
+      this._camera.position.set(
+        center.x + offset,
+        center.y + offset,
+        center.z + offset
       );
       this._camera.zoom = zoomFactor;
-      this._camera.updateProjectionMatrix();
+      this._camera.lookAt(center);
     }
 
     this._camera.add(this._cameraLight);
