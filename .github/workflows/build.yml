@@ -112,7 +112,7 @@ jobs:
           sudo rm -rf $(which node)
 
           cp ./jupytercad_core/dist/jupytercad*.whl ./jupytercad_lab/dist/jupytercad*.whl ./jupytercad_app/dist/jupytercad*.whl .
-          python -m pip install "jupyterlab>=4.0.0" jupytercad*.whl
+          python -m pip install "jupyterlab==4.4.2" jupytercad*.whl
 
           jupyter labextension list
           jupyter labextension list 2>&1 | grep -ie "jupytercad.*OK"
@@ -208,7 +208,7 @@ jobs:
           create-args: >-
             python=3.12
             pip
-            jupyterlab>=4.0.0
+            jupyterlab==4.4.2
             jupyterlite-core
             jupyterlite-xeus
             jupyter_server
