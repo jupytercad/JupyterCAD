@@ -12,7 +12,7 @@ import { Widget } from '@lumino/widgets';
 import * as React from 'react';
 
 import { CommandIDs } from '../commands';
-import { UsersItem } from './usertoolbaritem';
+import { UsersItem } from '@jupyter/collaboration';
 import { terminalToolbarIcon } from '../tools';
 
 export const TOOLBAR_SEPARATOR_CLASS = 'jcad-Toolbar-Separator';
