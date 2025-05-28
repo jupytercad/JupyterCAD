@@ -1078,12 +1078,6 @@ export class MainView extends React.Component<IProps, IStates> {
 
         // Position the camera at an angle away from the center
         const offset = radius * 2;
-        this._camera.position.set(
-          center.x + offset,
-          center.y + offset,
-          center.z + offset
-        );
-        this._camera.lookAt(center);
 
         // Update orthographic frustum
         this._camera.left = (-frustumSize * aspect) / 2;
@@ -1092,16 +1086,9 @@ export class MainView extends React.Component<IProps, IStates> {
         this._camera.bottom = -frustumSize / 2;
 
         // Set near/far conservatively
-        this._camera.near = 0.01;
+        this._camera.near = 0;
         this._camera.far = offset * 5;
 
-        const distance = this._camera.position.distanceTo(
-          this._controls.target
-        );
-        const zoomFactor = 1000 / distance;
-        if (updateCamera) {
-          this._camera.zoom = zoomFactor;
-        }
         this._camera.updateProjectionMatrix();
       }
 
