@@ -68,6 +68,7 @@ export interface IPickedResult {
 export interface IMouseDrag {
   start: THREE.Vector2;
   end: THREE.Vector2;
+  button?: number;
 }
 
 export interface IMeshGroupMetadata {
@@ -353,6 +354,7 @@ export function buildShape(options: {
   );
   boundingBox.position.copy(center);
   boundingBox.visible = false;
+  boundingBox.renderOrder = 1;
   boundingBox.name = SELECTION_BOUNDING_BOX;
   meshGroup.add(boundingBox);
 

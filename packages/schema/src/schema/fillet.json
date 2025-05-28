@@ -7,12 +7,25 @@
   "properties": {
     "Base": {
       "type": "string",
-      "description": "The name of input object"
+      "description": "The name of input object",
+      "fcType": "App::PropertyLink"
     },
     "Edge": {
-      "type": "number",
-      "minimum": 0,
-      "description": "The edge index"
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "description": "The edge index"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0
+          },
+          "description": "List of edge indices"
+        }
+      ]
     },
     "Radius": {
       "type": "number",

@@ -30,19 +30,21 @@ import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { ILauncher } from '@jupyterlab/launcher';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 
-import { JupyterCadWidgetFactory } from '../factory';
+import { JupyterCadDocumentWidgetFactory } from '../factory';
 import { JupyterCadJcadModelFactory } from './modelfactory';
 import { MimeDocumentFactory } from '@jupyterlab/docregistry';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 const FACTORY = 'JupyterCAD';
 const CONTENT_TYPE = 'jcad';
 const PALETTE_CATEGORY = 'JupyterCAD';
+const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
 
 namespace CommandIDs {
   export const createNew = 'jupytercad:create-new-jcad-file';
 }
 
-const activate = (
+const activate = async (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
@@ -56,9 +58,23 @@ const activate = (
   consoleTracker: IConsoleTracker,
   launcher: ILauncher | null,
   palette: ICommandPalette | null,
-  drive: ICollaborativeDrive | null
-): void => {
-  const widgetFactory = new JupyterCadWidgetFactory({
+  drive: ICollaborativeDrive | null,
+  settingRegistry?: ISettingRegistry
+): Promise<void> => {
+  let settings: ISettingRegistry.ISettings | null = null;
+
+  if (settingRegistry) {
+    try {
+      settings = await settingRegistry.load(SETTINGS_ID);
+      console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
+    } catch (error) {
+      console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+    }
+  } else {
+    console.warn('No settingRegistry available; using default settings.');
+  }
+
+  const widgetFactory = new JupyterCadDocumentWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-jcadmodel',
     fileTypes: [CONTENT_TYPE],
@@ -89,7 +105,8 @@ const activate = (
 
   // Creating and registering the model factory for our custom DocumentModel
   const modelFactory = new JupyterCadJcadModelFactory({
-    annotationModel
+    annotationModel,
+    settingRegistry
   });
   app.docRegistry.addModelFactory(modelFactory);
   // register the filetype
@@ -119,14 +136,14 @@ const activate = (
       tracker.save(widget);
     });
     themeManager.themeChanged.connect((_, changes) =>
-      widget.context.model.themeChanged.emit(changes)
+      widget.model.themeChanged.emit(changes)
     );
     tracker.add(widget);
     app.shell.activateById('jupytercad::leftControlPanel');
   });
 
   app.commands.addCommand(CommandIDs.createNew, {
-    label: args => 'CAD File',
+    label: args => (args['label'] as string) ?? 'CAD file',
     caption: 'Create a new JCAD Editor',
     icon: logoIcon,
     execute: async args => {
@@ -180,6 +197,14 @@ const activate = (
       });
     }
   }
+
+  // Inject “New JupyterCAD file” into the File Browser context menu
+  app.contextMenu.addItem({
+    command: CommandIDs.createNew,
+    selector: '.jp-DirListing',
+    rank: 55,
+    args: { label: 'New JupyterCAD file' }
+  });
 };
 
 const jcadPlugin: JupyterFrontEndPlugin<void> = {
@@ -196,7 +221,7 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IRenderMimeRegistry,
     IConsoleTracker
   ],
-  optional: [ILauncher, ICommandPalette, ICollaborativeDrive],
+  optional: [ILauncher, ICommandPalette, ICollaborativeDrive, ISettingRegistry],
   autoStart: true,
   activate
 };

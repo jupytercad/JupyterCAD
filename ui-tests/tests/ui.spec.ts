@@ -7,10 +7,7 @@ test.describe('UI Test', () => {
   const fileList = ['test.jcad', '3M_CONNECTOR.STEP', 'fan.stl'];
 
   test.describe('Extension activation test', () => {
-    test('should emit an activation console message', async ({
-      page,
-      request
-    }) => {
+    test('should emit an activation console message', async ({ page }) => {
       const logs: string[] = [];
 
       page.on('console', message => {
@@ -283,14 +280,7 @@ test.describe('UI Test', () => {
       await page.sidebar.close('right');
       // Apply Exploded view
       await page.getByTitle('Exploded View').click();
-      await page.getByLabel('Enabled').click();
-      await page.locator('input#root_Factor').click();
-      await page.locator('input#root_Factor').fill('3.5');
-      await page
-        .locator('div.jp-Dialog-buttonLabel', {
-          hasText: 'Submit'
-        })
-        .click();
+      await page.getByRole('slider').fill('3.5');
 
       let main = await page.$('#jp-main-split-panel');
       if (main) {

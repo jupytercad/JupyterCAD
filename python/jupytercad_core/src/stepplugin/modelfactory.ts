@@ -2,8 +2,21 @@ import { IJupyterCadDoc, JupyterCadModel } from '@jupytercad/schema';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { Contents } from '@jupyterlab/services';
 import { JupyterCadStepDoc } from './model';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 class JupyterCadStepModel extends JupyterCadModel {
+  constructor(options: {
+    sharedModel?: IJupyterCadDoc;
+    languagePreference?: string;
+    settingRegistry?: ISettingRegistry;
+  }) {
+    super({
+      sharedModel: options.sharedModel,
+      languagePreference: options.languagePreference,
+      settingRegistry: options.settingRegistry
+    });
+  }
+
   fromString(data: string): void {
     (this.sharedModel as JupyterCadStepDoc).source = data;
     this.dirty = true;
@@ -18,13 +31,16 @@ class JupyterCadStepModel extends JupyterCadModel {
  * A Model factory to create new instances of JupyterCadModel.
  */
 export class JupyterCadStepModelFactory
-  implements DocumentRegistry.IModelFactory<JupyterCadModel>
+  implements DocumentRegistry.IModelFactory<JupyterCadStepModel>
 {
+  constructor(options: { settingRegistry?: ISettingRegistry }) {
+    this._settingRegistry = options.settingRegistry;
+  }
+
   /**
    * Whether the model is collaborative or not.
    */
-  readonly collaborative =
-    document.querySelectorAll('[data-jupyter-lite-root]')[0] === undefined;
+  readonly collaborative = true;
 
   /**
    * The name of the model.
@@ -89,10 +105,13 @@ export class JupyterCadStepModelFactory
   ): JupyterCadStepModel {
     const model = new JupyterCadStepModel({
       sharedModel: options.sharedModel,
-      languagePreference: options.languagePreference
+      languagePreference: options.languagePreference,
+      settingRegistry: this._settingRegistry
     });
+    model.initSettings();
     return model;
   }
 
   private _disposed = false;
+  private _settingRegistry: ISettingRegistry | undefined;
 }

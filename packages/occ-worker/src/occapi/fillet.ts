@@ -34,13 +34,15 @@ export function _Fillet(
       mapOfShape
     );
 
-    const edge = oc.TopoDS.Edge_1(mapOfShape.FindKey(Edge + 1));
-
     const filletBuilder = new oc.BRepFilletAPI_MakeFillet(
       base.occShape,
       oc.ChFi3d_FilletShape
     );
-    filletBuilder.Add_2(Radius, edge);
+    const edgeList = Array.isArray(Edge) ? Edge : [Edge];
+    for (const edgeIdx of edgeList) {
+      const e = oc.TopoDS.Edge_1(mapOfShape.FindKey(edgeIdx + 1));
+      filletBuilder.Add_2(Radius, e);
+    }
 
     filletBuilder.Build(new oc.Message_ProgressRange_1());
 

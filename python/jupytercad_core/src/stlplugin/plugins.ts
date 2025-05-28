@@ -17,21 +17,37 @@ import {
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 
 import { JupyterCadStlModelFactory } from './modelfactory';
-import { JupyterCadWidgetFactory } from '../factory';
+import { JupyterCadDocumentWidgetFactory } from '../factory';
 import { JupyterCadStlDoc } from './model';
 import { stlIcon } from '@jupytercad/base';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 const FACTORY = 'JupyterCAD STL Viewer';
+const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
 
-const activate = (
+const activate = async (
   app: JupyterFrontEnd,
   tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
-  drive: ICollaborativeDrive | null
-): void => {
-  const widgetFactory = new JupyterCadWidgetFactory({
+  drive: ICollaborativeDrive | null,
+  settingRegistry?: ISettingRegistry
+): Promise<void> => {
+  let settings: ISettingRegistry.ISettings | null = null;
+
+  if (settingRegistry) {
+    try {
+      settings = await settingRegistry.load(SETTINGS_ID);
+      console.log(`Loaded settings for ${SETTINGS_ID}`, settings);
+    } catch (error) {
+      console.warn(`Failed to load settings for ${SETTINGS_ID}`, error);
+    }
+  } else {
+    console.warn('No settingRegistry available; using default settings.');
+  }
+
+  const widgetFactory = new JupyterCadDocumentWidgetFactory({
     name: FACTORY,
     modelName: 'jupytercad-stlmodel',
     fileTypes: ['stl'],
@@ -41,13 +57,14 @@ const activate = (
     workerRegistry,
     externalCommandRegistry
   });
-  // Registering the widget factory
+
   app.docRegistry.addWidgetFactory(widgetFactory);
 
-  // Creating and registering the model factory for our custom DocumentModel
-  const modelFactory = new JupyterCadStlModelFactory();
+  const modelFactory = new JupyterCadStlModelFactory(
+    settingRegistry ? { settingRegistry } : {}
+  );
   app.docRegistry.addModelFactory(modelFactory);
-  // register the filetype
+
   app.docRegistry.addFileType({
     name: 'stl',
     displayName: 'STL',
@@ -74,7 +91,7 @@ const activate = (
       tracker.save(widget);
     });
     themeManager.themeChanged.connect((_, changes) =>
-      widget.context.model.themeChanged.emit(changes)
+      widget.model.themeChanged.emit(changes)
     );
     tracker.add(widget);
     app.shell.activateById('jupytercad::leftControlPanel');
@@ -90,7 +107,7 @@ const stlPlugin: JupyterFrontEndPlugin<void> = {
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken
   ],
-  optional: [ICollaborativeDrive],
+  optional: [ICollaborativeDrive, ISettingRegistry],
   autoStart: true,
   activate
 };

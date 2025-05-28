@@ -28,7 +28,6 @@ from jupytercad_core.schema import (
     ShapeMetadata,
     IAny,
 )
-from .utils import normalize_path
 
 logger = logging.getLogger(__file__)
 
@@ -72,7 +71,7 @@ class CadDocument(CommWidget):
         contentType = None
 
         if filePath is not None:
-            path = normalize_path(filePath)
+            path = filePath
             file_name = Path(path).name
             try:
                 ext = file_name.split(".")[1].lower()
@@ -228,7 +227,7 @@ class CadDocument(CommWidget):
         :return: The document itself.
         """
         try:
-            from OCC.Core.BRepTools import breptools_Write
+            from OCC.Core.BRepTools import breptools
         except ImportError:
             raise RuntimeError("Cannot add an OpenCascade shape if it's not installed.")
 
@@ -238,7 +237,7 @@ class CadDocument(CommWidget):
             return
 
         with tempfile.NamedTemporaryFile() as tmp:
-            breptools_Write(shape, tmp.name, True, False, 1)
+            breptools.Write(shape, tmp.name, True, False, 1)
             brepdata = tmp.read().decode("ascii")
 
         data = {

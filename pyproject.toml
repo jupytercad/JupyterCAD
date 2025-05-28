@@ -23,6 +23,7 @@ python_packages = [
     "python/jupytercad_app:jupytercad_app",
     "python/jupytercad_core:jupytercad_core",
     "python/jupytercad_lab:jupytercad_lab",
+    "python/jupytercad_lite:jupytercad_lite",
 ]
 
 [tool.jupyter-releaser.hooks]

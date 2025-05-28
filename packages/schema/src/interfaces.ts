@@ -4,13 +4,15 @@ import {
   StateChange,
   YDocument
 } from '@jupyter/ydoc';
-import { IWidgetTracker } from '@jupyterlab/apputils';
+import { IWidgetTracker, MainAreaWidget } from '@jupyterlab/apputils';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { DocumentRegistry, IDocumentWidget } from '@jupyterlab/docregistry';
 import { User } from '@jupyterlab/services';
 import { JSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 import { SplitPanel } from '@lumino/widgets';
+import { Contents } from '@jupyterlab/services';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import {
   IJCadContent,
@@ -36,8 +38,8 @@ export interface IAnnotationModel {
   updateSignal: ISignal<this, null>;
   user: User.IIdentity | undefined;
 
-  context: DocumentRegistry.IContext<IJupyterCadModel> | undefined;
-  contextChanged: ISignal<this, void>;
+  model: IJupyterCadModel | undefined;
+  modelChanged: ISignal<this, void>;
 
   update(): void;
 
@@ -109,6 +111,9 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   setOutput(key: string, value: IPostResult): void;
   removeOutput(key: string): void;
 
+  getSource(): JSONObject;
+  setSource(value: JSONObject | string): void;
+
   getMetadata(key: string): string | undefined;
   setMetadata(key: string, value: string): void;
   removeMetadata(key: string): void;
@@ -137,6 +142,9 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   sharedModel: IJupyterCadDoc;
   annotationModel?: IAnnotationModel;
   localState: IJupyterCadClientState | null;
+  filePath: string;
+  pathChanged: ISignal<IJupyterCadModel, string>;
+  contentsManager: Contents.IManager | undefined;
 
   themeChanged: Signal<
     IJupyterCadModel,
@@ -152,9 +160,14 @@ export interface IJupyterCadModel extends DocumentRegistry.IModel {
   sharedModelSwapped: ISignal<IJupyterCadModel, void>;
   users?: IUserData[];
   currentUserId?: number | undefined;
+  settingsChanged: ISignal<IJupyterCadModel, string>;
+  jcadSettings: IJCadSettings;
 
   swapSharedModel(newSharedModel: IJupyterCadDoc): void;
 
+  initSettings(): Promise<void>;
+  getSettings(): Promise<ISettingRegistry.ISettings>;
+  emitSettingChanged(key: string): void;
   getWorker(): Worker;
   getContent(): IJCadContent;
   getAllObject(): IJCadModel;
@@ -360,9 +373,20 @@ export interface IJCadWorkerRegistry {
   getAllWorkers(): IJCadWorker[];
 }
 
-export type IJupyterCadWidget = IDocumentWidget<SplitPanel, IJupyterCadModel>;
-
 export type IJupyterCadTracker = IWidgetTracker<IJupyterCadWidget>;
+
+export interface IJupyterCadDocumentWidget
+  extends IDocumentWidget<SplitPanel, IJupyterCadModel> {
+  readonly model: IJupyterCadModel;
+}
+
+export interface IJupyterCadOutputWidget extends MainAreaWidget {
+  model: IJupyterCadModel;
+}
+
+export type IJupyterCadWidget =
+  | IJupyterCadDocumentWidget
+  | IJupyterCadOutputWidget;
 
 export interface IJCadFormSchemaRegistry {
   /**
@@ -401,4 +425,9 @@ export interface IJCadExternalCommand {
 export interface IJCadExternalCommandRegistry {
   getCommands(): IJCadExternalCommand[];
   registerCommand(command: IJCadExternalCommand): void;
+}
+
+export interface IJCadSettings {
+  showAxesHelper: boolean;
+  cameraType: 'Perspective' | 'Orthographic';
 }

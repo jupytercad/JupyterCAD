@@ -35,18 +35,21 @@ import {
   chamferIcon,
   filletIcon,
   wireframeIcon,
-  transformIcon
+  transformIcon,
+  pencilSolidIcon,
+  videoSolidIcon
 } from './tools';
 import keybindings from './keybindings.json';
 import { DEFAULT_MESH_COLOR } from './3dview/helpers';
-import { JupyterCadPanel, JupyterCadWidget } from './widget';
-import { DocumentRegistry } from '@jupyterlab/docregistry';
+import { JupyterCadWidget } from './widget';
 import { PathExt } from '@jupyterlab/coreutils';
 import { MainViewModel } from './3dview/mainviewmodel';
 import { handleRemoveObject } from './panelview';
 import { v4 as uuid } from 'uuid';
-import { ExplodedView } from './types';
+import { ExplodedView, JupyterCadTracker } from './types';
 import { JSONObject } from '@lumino/coreutils';
+import { JupyterCadDocumentWidget } from './widget';
+
 export function newName(type: string, model: IJupyterCadModel): string {
   const sharedModel = model.sharedModel;
 
@@ -181,21 +184,28 @@ function getSelectedMeshName(
   return '';
 }
 
-function getSelectedEdge(
+function getSelectedEdges(
   selection: { [key: string]: ISelection } | undefined
-): { shape: string; edgeIndex: number } | undefined {
+): { shape: string; edgeIndices: number[] } | undefined {
   if (selection === undefined) {
     return;
   }
-
-  const selectedNames = Object.keys(selection);
-  for (const name of selectedNames) {
-    if (selection[name].type === 'edge') {
-      return {
-        shape: selection[name].parent!,
-        edgeIndex: selection[name].edgeIndex!
-      };
-    }
+  const shape = Object.values(selection)
+    .filter(
+      sel =>
+        sel.type === 'edge' && sel.parent !== undefined && sel.parent !== null
+    )
+    .map(sel => sel.parent)[0];
+  const edgeIndices = Object.values(selection)
+    .filter(
+      sel =>
+        sel.type === 'edge' &&
+        sel.parent === shape &&
+        sel.edgeIndex !== undefined
+    )
+    .map(sel => sel.edgeIndex as number);
+  if (shape && edgeIndices.length) {
+    return { shape, edgeIndices };
   }
 }
 
@@ -205,7 +215,7 @@ export async function executeOperator(
   current: JupyterCadWidget,
   transaction: (sharedModel: IJupyterCadDoc) => any
 ) {
-  const sharedModel = current.context.model.sharedModel;
+  const sharedModel = current.model.sharedModel;
 
   if (!sharedModel) {
     return;
@@ -221,7 +231,7 @@ export async function executeOperator(
   }
 
   // Try a dry run with the update content to verify its feasibility
-  const currentJcadContent = current.context.model.getContent();
+  const currentJcadContent = current.model.getContent();
   const updatedContent: IJCadContent = {
     ...currentJcadContent,
     objects: [...currentJcadContent.objects, objectModel]
@@ -243,7 +253,7 @@ export async function executeOperator(
   }
   sharedModel.transact(() => {
     transaction(sharedModel);
-    current.context.model.syncSelected(
+    current.model.syncSelected(
       { [objectModel.name]: { type: 'shape' } },
       uuid()
     );
@@ -438,13 +448,13 @@ const OPERATORS = {
     shape: 'Part::Chamfer',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selectedEdge = getSelectedEdge(model.localState?.selected.value);
-      const baseName = selectedEdge?.shape || objects[0].name || '';
+      const selectedEdges = getSelectedEdges(model.localState?.selected.value);
+      const baseName = selectedEdges?.shape || objects[0].name || '';
       const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Chamfer', model),
         Base: baseName,
-        Edge: selectedEdge?.edgeIndex || 0,
+        Edge: selectedEdges?.edgeIndices || [],
         Dist: 0.2,
         Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
@@ -479,13 +489,13 @@ const OPERATORS = {
     shape: 'Part::Fillet',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selectedEdge = getSelectedEdge(model.localState?.selected.value);
-      const baseName = selectedEdge?.shape || objects[0].name || '';
+      const sel = getSelectedEdges(model.localState?.selected.value);
+      const baseName = sel?.shape || objects[0].name || '';
       const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
         Name: newName('Fillet', model),
         Base: baseName,
-        Edge: selectedEdge?.edgeIndex || 0,
+        Edge: sel?.edgeIndices || [],
         Radius: 0.2,
         Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
@@ -517,104 +527,6 @@ const OPERATORS = {
   }
 };
 
-const AXES_FORM = {
-  title: 'Axes Helper',
-  schema: {
-    type: 'object',
-    required: ['Size', 'Visible'],
-    additionalProperties: false,
-    properties: {
-      Size: {
-        type: 'number',
-        description: 'Size of the axes'
-      },
-      Visible: {
-        type: 'boolean',
-        description: 'Whether the axes are visible or not'
-      }
-    }
-  },
-  default: (panel: JupyterCadPanel) => {
-    return {
-      Size: panel.axes?.size ?? 5,
-      Visible: panel.axes?.visible ?? true
-    };
-  },
-  syncData: (panel: JupyterCadPanel) => {
-    return (props: IDict) => {
-      const { Size, Visible } = props;
-      panel.axes = {
-        size: Size,
-        visible: Visible
-      };
-    };
-  }
-};
-
-const EXPLODED_VIEW_FORM = {
-  title: 'Exploded View Settings',
-  schema: {
-    type: 'object',
-    required: ['Enabled', 'Factor'],
-    additionalProperties: false,
-    properties: {
-      Enabled: {
-        type: 'boolean',
-        description: 'Whether the exploded view is enabled or not'
-      },
-      Factor: {
-        type: 'number',
-        description: 'The exploded view factor'
-      }
-    }
-  },
-  default: (panel: JupyterCadPanel) => {
-    return {
-      Enabled: panel.explodedView?.enabled ?? false,
-      Factor: panel.explodedView?.factor ?? 0.5
-    };
-  },
-  syncData: (panel: JupyterCadPanel) => {
-    return (props: IDict) => {
-      const { Enabled, Factor } = props;
-      panel.explodedView = {
-        enabled: Enabled,
-        factor: Factor
-      };
-    };
-  }
-};
-
-const CAMERA_FORM = {
-  title: 'Camera Settings',
-  schema: {
-    type: 'object',
-    required: ['Type'],
-    additionalProperties: false,
-    properties: {
-      Type: {
-        title: 'Projection',
-        description: 'The projection type',
-        type: 'string',
-        enum: ['Perspective', 'Orthographic']
-      }
-    }
-  },
-  default: (panel: JupyterCadPanel) => {
-    return {
-      Type: panel.cameraSettings?.type ?? 'Perspective'
-    };
-  },
-  syncData: (panel: JupyterCadPanel) => {
-    return (props: IDict) => {
-      const { Type } = props;
-      panel.cameraSettings = {
-        type: Type
-      };
-    };
-  }
-};
-
 const EXPORT_FORM = {
   title: 'Export to .jcad',
   schema: {
@@ -629,17 +541,17 @@ const EXPORT_FORM = {
       }
     }
   },
-  default: (context: DocumentRegistry.IContext<IJupyterCadModel>) => {
+  default: (model: IJupyterCadModel) => {
     return {
-      Name: PathExt.basename(context.path).replace(
-        PathExt.extname(context.path),
+      Name: PathExt.basename(model.filePath).replace(
+        PathExt.extname(model.filePath),
         '.jcad'
       )
     };
   },
-  syncData: (context: DocumentRegistry.IContext<IJupyterCadModel>) => {
+  syncData: (model: IJupyterCadModel) => {
     return (props: IDict) => {
-      const endpoint = context.model?.sharedModel?.toJcadEndpoint;
+      const endpoint = model.sharedModel?.toJcadEndpoint;
       if (!endpoint) {
         showErrorMessage('Error', 'Missing endpoint.');
         return;
@@ -648,7 +560,7 @@ const EXPORT_FORM = {
       requestAPI<{ done: boolean }>(endpoint, {
         method: 'POST',
         body: JSON.stringify({
-          path: context.path,
+          path: model.filePath,
           newName: Name
         })
       });
@@ -667,8 +579,7 @@ function loadKeybindings(commands: CommandRegistry, keybindings: any[]) {
 }
 
 function getSelectedObjectId(widget: JupyterCadWidget): string {
-  const selected =
-    widget.context.model.sharedModel.awareness.getLocalState()?.selected;
+  const selected = widget.model.sharedModel.awareness.getLocalState()?.selected;
 
   if (selected && selected.value) {
     const selectedKey = Object.keys(selected.value)[0];
@@ -699,27 +610,36 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.toggleConsole, {
     label: trans.__('Toggle console'),
+    isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
-    execute: async () => await Private.toggleConsole(tracker)
+    isToggled: () => {
+      return tracker.currentWidget?.content.consoleOpened === true;
+    },
+    execute: async () => {
+      await Private.toggleConsole(tracker);
+      commands.notifyCommandChanged(CommandIDs.toggleConsole);
+    }
   });
   commands.addCommand(CommandIDs.executeConsole, {
     label: trans.__('Execute console'),
+    isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     execute: () => Private.executeConsole(tracker)
   });
   commands.addCommand(CommandIDs.removeConsole, {
     label: trans.__('Remove console'),
+    isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     execute: () => Private.removeConsole(tracker)
@@ -727,6 +647,7 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.invokeCompleter, {
     label: trans.__('Display the completion helper.'),
+    isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
     execute: () => {
       const currentWidget = tracker.currentWidget;
       if (!currentWidget || !completionProviderManager) {
@@ -741,6 +662,7 @@ export function addCommands(
 
   commands.addCommand(CommandIDs.selectCompleter, {
     label: trans.__('Select the completion suggestion.'),
+    isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
     execute: () => {
       const currentWidget = tracker.currentWidget;
       if (!currentWidget || !completionProviderManager) {
@@ -756,14 +678,14 @@ export function addCommands(
     label: trans.__('Redo'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     execute: args => {
       const current = tracker.currentWidget;
 
       if (current) {
-        return current.context.model.sharedModel.redo();
+        return current.model.sharedModel.redo();
       }
     },
     icon: redoIcon
@@ -773,24 +695,24 @@ export function addCommands(
     label: trans.__('Undo'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     execute: args => {
       const current = tracker.currentWidget;
 
       if (current) {
-        return current.context.model.sharedModel.undo();
+        return current.model.sharedModel.undo();
       }
     },
     icon: undoIcon
   });
   commands.addCommand(CommandIDs.newSketch, {
     label: trans.__('New Sketch'),
-    iconClass: 'fa fa-pencil',
+    icon: pencilSolidIcon,
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     execute: async args => {
@@ -801,7 +723,7 @@ export function addCommands(
       }
 
       const props = {
-        sharedModel: current.context.model.sharedModel,
+        sharedModel: current.model.sharedModel,
         closeCallback: {
           handler: () => {
             /* Awful hack to allow the body can close the dialog*/
@@ -818,7 +740,7 @@ export function addCommands(
     label: trans.__('Remove Object'),
     isEnabled: () => {
       const current = tracker.currentWidget;
-      return current ? current.context.model.sharedModel.editable : false;
+      return current ? current.model.sharedModel.editable : false;
     },
     execute: () => {
       const current = tracker.currentWidget;
@@ -831,7 +753,7 @@ export function addCommands(
         console.warn('No object is selected.');
         return;
       }
-      const sharedModel = current.context.model.sharedModel;
+      const sharedModel = current.model.sharedModel;
 
       handleRemoveObject(objectId, sharedModel, () =>
         sharedModel.awareness.setLocalStateField('selected', {})
@@ -843,7 +765,7 @@ export function addCommands(
     label: trans.__('New Box'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     icon: boxIcon,
@@ -854,7 +776,7 @@ export function addCommands(
     label: trans.__('New Cylinder'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     icon: cylinderIcon,
@@ -865,7 +787,7 @@ export function addCommands(
     label: trans.__('New Sphere'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     icon: sphereIcon,
@@ -876,7 +798,7 @@ export function addCommands(
     label: trans.__('New Cone'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     icon: coneIcon,
@@ -887,7 +809,7 @@ export function addCommands(
     label: trans.__('New Torus'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     icon: torusIcon,
@@ -898,7 +820,7 @@ export function addCommands(
     label: trans.__('Extrusion'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     icon: extrusionIcon,
@@ -909,7 +831,7 @@ export function addCommands(
     label: trans.__('Cut'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     icon: cutIcon,
@@ -920,7 +842,7 @@ export function addCommands(
     label: trans.__('Union'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     icon: unionIcon,
@@ -931,7 +853,7 @@ export function addCommands(
     label: trans.__('Intersection'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     icon: intersectionIcon,
@@ -967,16 +889,16 @@ export function addCommands(
     label: trans.__('Toggle Transform Controls'),
     isEnabled: () => {
       const current = tracker.currentWidget;
-
-      if (
-        !current ||
-        !tracker.currentWidget.context.model.sharedModel.editable
-      ) {
+      if (!current || !current.model.sharedModel.editable) {
         return false;
       }
 
-      const viewSettings = tracker.currentWidget.content.currentViewModel
-        .viewSettings as JSONObject;
+      const viewModel = current.content.currentViewModel;
+      if (!viewModel) {
+        return false;
+      }
+
+      const viewSettings = viewModel.viewSettings as JSONObject;
       return viewSettings.explodedView
         ? !(viewSettings.explodedView as ExplodedView).enabled
         : true;
@@ -1006,7 +928,7 @@ export function addCommands(
     label: trans.__('Make chamfer'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     icon: chamferIcon,
@@ -1017,7 +939,7 @@ export function addCommands(
     label: trans.__('Make fillet'),
     isEnabled: () => {
       return tracker.currentWidget
-        ? tracker.currentWidget.context.model.sharedModel.editable
+        ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
     icon: filletIcon,
@@ -1028,22 +950,35 @@ export function addCommands(
     label: trans.__('Axes Helper'),
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: axesIcon,
+    isToggled: () => {
+      const current = tracker.currentWidget;
+      if (!current) {
+        return false;
+      }
+      return current.model.jcadSettings.showAxesHelper;
+    },
     execute: async () => {
       const current = tracker.currentWidget;
-
       if (!current) {
         return;
       }
 
-      const dialog = new FormDialog({
-        context: current.context,
-        title: AXES_FORM.title,
-        schema: AXES_FORM.schema,
-        sourceData: AXES_FORM.default(current.content),
-        syncData: AXES_FORM.syncData(current.content),
-        cancelButton: true
-      });
-      await dialog.launch();
+      try {
+        const settings = await current.model.getSettings();
+
+        if (settings?.composite) {
+          const currentValue = settings.composite.showAxesHelper ?? false;
+          await settings.set('showAxesHelper', !currentValue);
+        } else {
+          const currentValue = current.model.jcadSettings.showAxesHelper;
+          current.model.jcadSettings.showAxesHelper = !currentValue;
+        }
+
+        current.model.emitSettingChanged('showAxesHelper');
+        commands.notifyCommandChanged(CommandIDs.updateAxes);
+      } catch (err) {
+        console.error('Failed to toggle Axes Helper:', err);
+      }
     }
   });
 
@@ -1052,8 +987,17 @@ export function addCommands(
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: explodedViewIcon,
     isToggled: () => {
-      const viewSettings = tracker.currentWidget?.content.currentViewModel
-        .viewSettings as JSONObject;
+      const current = tracker.currentWidget;
+      if (!current) {
+        return false;
+      }
+
+      const viewModel = current.content.currentViewModel;
+      if (!viewModel) {
+        return false;
+      }
+
+      const viewSettings = viewModel.viewSettings as JSONObject;
       return viewSettings?.explodedView
         ? (viewSettings.explodedView as ExplodedView).enabled
         : false;
@@ -1064,17 +1008,13 @@ export function addCommands(
       if (!current) {
         return;
       }
+      const panel = current.content;
 
-      const dialog = new FormDialog({
-        context: current.context,
-        title: EXPLODED_VIEW_FORM.title,
-        schema: EXPLODED_VIEW_FORM.schema,
-        sourceData: EXPLODED_VIEW_FORM.default(current.content),
-        syncData: EXPLODED_VIEW_FORM.syncData(current.content),
-        cancelButton: true
-      });
-      await dialog.launch();
-
+      if (panel.explodedView.enabled) {
+        panel.explodedView = { ...panel.explodedView, enabled: false };
+      } else {
+        panel.explodedView = { ...panel.explodedView, enabled: true };
+      }
       commands.notifyCommandChanged(CommandIDs.updateExplodedView);
 
       // Notify change so that toggle button for transform disables if needed
@@ -1083,25 +1023,49 @@ export function addCommands(
   });
 
   commands.addCommand(CommandIDs.updateCameraSettings, {
-    label: trans.__('Camera Settings'),
+    label: () => {
+      const current = tracker.currentWidget;
+      if (!current) {
+        return trans.__('Switch Camera Projection');
+      }
+      const currentType = current.model.jcadSettings.cameraType;
+      return currentType === 'Perspective'
+        ? trans.__('Switch to orthographic projection')
+        : trans.__('Switch to perspective projection');
+    },
     isEnabled: () => Boolean(tracker.currentWidget),
-    iconClass: 'fa fa-camera',
+    icon: videoSolidIcon,
+    isToggled: () => {
+      const current = tracker.currentWidget;
+      return current?.model.jcadSettings.cameraType === 'Orthographic';
+    },
     execute: async () => {
       const current = tracker.currentWidget;
-
       if (!current) {
         return;
       }
 
-      const dialog = new FormDialog({
-        context: current.context,
-        title: CAMERA_FORM.title,
-        schema: CAMERA_FORM.schema,
-        sourceData: CAMERA_FORM.default(current.content),
-        syncData: CAMERA_FORM.syncData(current.content),
-        cancelButton: true
-      });
-      await dialog.launch();
+      try {
+        const settings = await current.model.getSettings();
+
+        if (settings?.composite) {
+          // If settings exist, toggle there
+          const currentType = settings.composite.cameraType;
+          const newType =
+            currentType === 'Perspective' ? 'Orthographic' : 'Perspective';
+          await settings.set('cameraType', newType);
+        } else {
+          // Fallback: directly toggle model's own jcadSettings
+          const currentType = current.model.jcadSettings.cameraType;
+          current.model.jcadSettings.cameraType =
+            currentType === 'Perspective' ? 'Orthographic' : 'Perspective';
+          current.model.emitSettingChanged('cameraType');
+        }
+
+        commands.notifyCommandChanged(CommandIDs.updateCameraSettings);
+      } catch (err) {
+        console.error('Failed to toggle camera projection:', err);
+      }
     }
   });
 
@@ -1164,9 +1128,7 @@ export function addCommands(
   commands.addCommand(CommandIDs.exportJcad, {
     label: trans.__('Export to .jcad'),
     isEnabled: () => {
-      return Boolean(
-        tracker.currentWidget?.context?.model?.sharedModel?.toJcadEndpoint
-      );
+      return Boolean(tracker.currentWidget?.model?.sharedModel?.toJcadEndpoint);
     },
     iconClass: 'fa fa-file-export',
     execute: async () => {
@@ -1177,11 +1139,11 @@ export function addCommands(
       }
 
       const dialog = new FormDialog({
-        context: current.context,
+        model: current.model,
         title: EXPORT_FORM.title,
         schema: EXPORT_FORM.schema,
-        sourceData: EXPORT_FORM.default(tracker.currentWidget?.context),
-        syncData: EXPORT_FORM.syncData(tracker.currentWidget?.context),
+        sourceData: EXPORT_FORM.default(tracker.currentWidget?.model),
+        syncData: EXPORT_FORM.syncData(tracker.currentWidget?.model),
         cancelButton: true
       });
       await dialog.launch();
@@ -1191,7 +1153,7 @@ export function addCommands(
     label: trans.__('Copy Object'),
     isEnabled: () => {
       const current = tracker.currentWidget;
-      return current ? current.context.model.sharedModel.editable : false;
+      return current ? current.model.sharedModel.editable : false;
     },
     execute: () => {
       const current = tracker.currentWidget;
@@ -1200,7 +1162,7 @@ export function addCommands(
       }
 
       const objectId = getSelectedObjectId(current);
-      const sharedModel = current.context.model.sharedModel;
+      const sharedModel = current.model.sharedModel;
       const objectData = sharedModel.getObjectByName(objectId);
 
       if (!objectData) {
@@ -1208,15 +1170,15 @@ export function addCommands(
         return;
       }
 
-      current.context.model.setCopiedObject(objectData);
+      current.model.setCopiedObject(objectData);
     }
   });
   commands.addCommand(CommandIDs.pasteObject, {
     label: trans.__('Paste Object'),
     isEnabled: () => {
       const current = tracker.currentWidget;
-      const clipboard = current?.context.model.getCopiedObject();
-      const editable = current?.context.model.sharedModel.editable;
+      const clipboard = current?.model.getCopiedObject();
+      const editable = current?.model.sharedModel.editable;
       return !!(current && clipboard && editable);
     },
     execute: () => {
@@ -1225,8 +1187,8 @@ export function addCommands(
         return;
       }
 
-      const sharedModel = current.context.model.sharedModel;
-      const copiedObject = current.context.model.getCopiedObject();
+      const sharedModel = current.model.sharedModel;
+      const copiedObject = current.model.getCopiedObject();
       if (!copiedObject) {
         console.error('No object in clipboard to paste.');
         return;
@@ -1242,7 +1204,7 @@ export function addCommands(
         newName = `${originalName} Copy${counter > 1 ? ` ${counter}` : ''}`;
         counter++;
       }
-      const jcadModel = current.context.model;
+      const jcadModel = current.model;
       const newObject = {
         ...clipboard,
         name: newName,
@@ -1337,7 +1299,7 @@ namespace Private {
 
       const value = PARTS[part];
 
-      current.context.model.syncFormData(value);
+      current.model.syncFormData(value);
 
       const syncSelectedField = (
         id: string | null,
@@ -1349,7 +1311,7 @@ namespace Private {
           const prefix = id.split('_')[0];
           property = id.substring(prefix.length);
         }
-        current.context.model.syncSelectedPropField({
+        current.model.syncSelectedPropField({
           id: property,
           value,
           parentType
@@ -1357,9 +1319,9 @@ namespace Private {
       };
 
       const dialog = new FormDialog({
-        context: current.context,
+        model: current.model,
         title: value.title,
-        sourceData: value.default(current.context.model),
+        sourceData: value.default(current.model),
         schema: FORM_SCHEMA[value.shape],
         syncData: async (props: IDict) => {
           const { Name, ...parameters } = props;
@@ -1370,13 +1332,13 @@ namespace Private {
             name: Name
           };
 
-          const jcadModel = current.context.model;
+          const jcadModel = current.model;
 
           if (jcadModel) {
             const sharedModel = jcadModel.sharedModel;
             if (!sharedModel.objectExists(objectModel.name)) {
               // Try a dry run with the update content to verify its feasibility
-              const currentJcadContent = current.context.model.getContent();
+              const currentJcadContent = current.model.getContent();
               const updatedContent: IJCadContent = {
                 ...currentJcadContent,
                 objects: [...currentJcadContent.objects, objectModel]
@@ -1408,7 +1370,7 @@ namespace Private {
           }
         },
         cancelButton: () => {
-          current.context.model.syncFormData(undefined);
+          current.model.syncFormData(undefined);
         },
         syncSelectedPropField: syncSelectedField
       });
@@ -1431,7 +1393,7 @@ namespace Private {
 
       // Fill form schema with available objects
       const form_schema = JSON.parse(JSON.stringify(FORM_SCHEMA[op.shape]));
-      const allObjects = current.context.model.getAllObject().map(o => o.name);
+      const allObjects = current.model.getAllObject().map(o => o.name);
       for (const prop in form_schema['properties']) {
         const fcType = form_schema['properties'][prop]['fcType'];
         if (fcType) {
@@ -1449,9 +1411,9 @@ namespace Private {
       }
 
       const dialog = new FormDialog({
-        context: current.context,
+        model: current.model,
         title: op.title,
-        sourceData: op.default(current.context.model),
+        sourceData: op.default(current.model),
         schema: form_schema,
         syncData: op.syncData(current),
         cancelButton: true
@@ -1465,7 +1427,7 @@ namespace Private {
   ): void {
     const current = tracker.currentWidget;
 
-    if (!current) {
+    if (!current || !(current instanceof JupyterCadDocumentWidget)) {
       return;
     }
     current.content.executeConsole();
@@ -1476,27 +1438,20 @@ namespace Private {
   ): void {
     const current = tracker.currentWidget;
 
-    if (!current) {
+    if (!current || !(current instanceof JupyterCadDocumentWidget)) {
       return;
     }
     current.content.removeConsole();
   }
 
   export async function toggleConsole(
-    tracker: WidgetTracker<JupyterCadWidget>
+    tracker: JupyterCadTracker
   ): Promise<void> {
     const current = tracker.currentWidget;
 
-    if (!current) {
+    if (!current || !(current instanceof JupyterCadDocumentWidget)) {
       return;
     }
-    const currentPath = current.context.path.split(':');
-    let realPath = '';
-    if (currentPath.length > 1) {
-      realPath = currentPath[1];
-    } else {
-      realPath = currentPath[0];
-    }
-    await current.content.toggleConsole(realPath);
+    await current.content.toggleConsole(current.model.filePath);
   }
 }
