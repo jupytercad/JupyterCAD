@@ -1074,10 +1074,7 @@ export class MainView extends React.Component<IProps, IStates> {
         const aspect =
           this._renderer.domElement.clientWidth /
           this._renderer.domElement.clientHeight;
-        const frustumSize = radius * 2;
-
-        // Position the camera at an angle away from the center
-        const offset = radius * 2;
+        const frustumSize = radius * 200;
 
         // Update orthographic frustum
         this._camera.left = (-frustumSize * aspect) / 2;
@@ -1087,7 +1084,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
         // Set near/far conservatively
         this._camera.near = 0;
-        this._camera.far = offset * 5;
+        this._camera.far = frustumSize;
 
         this._camera.updateProjectionMatrix();
       }
@@ -1798,8 +1795,8 @@ export class MainView extends React.Component<IProps, IStates> {
         (frustumSize * aspect) / 2,
         frustumSize / 2,
         -frustumSize / 2,
-        0.01,
-        radius * 10
+        0,
+        radius * 5
       );
 
       this._camera.updateProjectionMatrix();
