@@ -2041,18 +2041,32 @@ export class MainView extends React.Component<IProps, IStates> {
                     <label style={{ marginRight: '8px' }}>
                       Rotation Snap (°):
                     </label>
-                    <input
-                      type="number"
-                      value={this.state.rotationSnapValue}
-                      onChange={this._handleSnapChange}
-                      style={{
-                        width: '50px',
-                        padding: '4px',
-                        borderRadius: '4px',
-                        border: '1px solid #ccc',
-                        fontSize: '12px'
-                      }}
-                    />
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <input
+                        type="range"
+                        min="0"
+                        max="180"
+                        step="1"
+                        value={this.state.rotationSnapValue}
+                        onChange={this._handleSnapChange}
+                        style={{ width: '120px', marginRight: '8px' }}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        max="180"
+                        step="1"
+                        value={this.state.rotationSnapValue}
+                        onChange={this._handleSnapChange}
+                        style={{
+                          width: '50px',
+                          padding: '4px',
+                          borderRadius: '4px',
+                          border: '1px solid #ccc',
+                          fontSize: '12px'
+                        }}
+                      />
+                    </div>
                   </div>
                 )}
               </div>
