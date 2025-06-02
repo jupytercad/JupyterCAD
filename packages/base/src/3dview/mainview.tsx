@@ -171,7 +171,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this.state.rotationSnapValue
       );
     }
-    if (oldState.translationSnapValue !== this.state.translationSnapValue){
+    if (oldState.translationSnapValue !== this.state.translationSnapValue) {
       this._transformControls.translationSnap = this.state.translationSnapValue;
     }
   }
@@ -1954,16 +1954,18 @@ export class MainView extends React.Component<IProps, IStates> {
     return screenPosition;
   }
 
-  private _handleSnapChange = (
-    key: 'rotationSnapValue' | 'translationSnapValue'
-  ) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(event.target.value);
-    if (!isNaN(value)) {
-      // enforce > 0 for rotation
-      if (key === 'rotationSnapValue' && value <= 0) {return;}
-      this.setState({ [key]: value } as Pick<this['state'], typeof key>);
-    }
-  };
+  private _handleSnapChange =
+    (key: 'rotationSnapValue' | 'translationSnapValue') =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = parseFloat(event.target.value);
+      if (!isNaN(value)) {
+        // enforce > 0 for rotation
+        if (key === 'rotationSnapValue' && value <= 0) {
+          return;
+        }
+        this.setState({ [key]: value } as Pick<this['state'], typeof key>);
+      }
+    };
 
   private _handleExplodedViewChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -2058,7 +2060,9 @@ export class MainView extends React.Component<IProps, IStates> {
                         max="10"
                         step="0.1"
                         value={this.state.translationSnapValue}
-                        onChange={this._handleSnapChange('translationSnapValue')}
+                        onChange={this._handleSnapChange(
+                          'translationSnapValue'
+                        )}
                         style={{ width: '120px', marginRight: '8px' }}
                       />
                       <input
@@ -2067,7 +2071,9 @@ export class MainView extends React.Component<IProps, IStates> {
                         max="10"
                         step="0.1"
                         value={this.state.translationSnapValue}
-                        onChange={this._handleSnapChange('translationSnapValue')}
+                        onChange={this._handleSnapChange(
+                          'translationSnapValue'
+                        )}
                         style={{
                           width: '50px',
                           padding: '4px',
