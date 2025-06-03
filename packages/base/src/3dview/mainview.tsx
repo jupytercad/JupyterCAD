@@ -2048,43 +2048,44 @@ export class MainView extends React.Component<IProps, IStates> {
                     ? 'Press R to switch to translation mode'
                     : 'Press R to switch to rotation mode'}
                 </div>
-                {this.state.transformMode === 'translate' && this._refLength && (
-                  <div>
-                    <label style={{ marginRight: '8px' }}>
-                      Translation Snap:
-                    </label>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <input
-                        type="range"
-                        min="0"
-                        max= {this._refLength * 10}
-                        step={this._refLength / 10}
-                        value={this.state.translationSnapValue}
-                        onChange={this._handleSnapChange(
-                          'translationSnapValue'
-                        )}
-                        style={{ width: '120px', marginRight: '8px' }}
-                      />
-                      <input
-                        type="number"
-                        min="0"
-                        max= {this._refLength * 10}
-                        step={this._refLength / 10}
-                        value={this.state.translationSnapValue}
-                        onChange={this._handleSnapChange(
-                          'translationSnapValue'
-                        )}
-                        style={{
-                          width: '50px',
-                          padding: '4px',
-                          borderRadius: '4px',
-                          border: '1px solid #ccc',
-                          fontSize: '12px'
-                        }}
-                      />
+                {this.state.transformMode === 'translate' &&
+                  this._refLength && (
+                    <div>
+                      <label style={{ marginRight: '8px' }}>
+                        Translation Snap:
+                      </label>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <input
+                          type="range"
+                          min="0"
+                          max={this._refLength * 10}
+                          step="0.1"
+                          value={this.state.translationSnapValue}
+                          onChange={this._handleSnapChange(
+                            'translationSnapValue'
+                          )}
+                          style={{ width: '120px', marginRight: '8px' }}
+                        />
+                        <input
+                          type="number"
+                          min="0"
+                          max={this._refLength * 10}
+                          step="0.1"
+                          value={this.state.translationSnapValue}
+                          onChange={this._handleSnapChange(
+                            'translationSnapValue'
+                          )}
+                          style={{
+                            width: '50px',
+                            padding: '4px',
+                            borderRadius: '4px',
+                            border: '1px solid #ccc',
+                            fontSize: '12px'
+                          }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 {this.state.transformMode === 'rotate' && (
                   <div>
