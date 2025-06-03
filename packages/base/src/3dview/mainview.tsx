@@ -2048,7 +2048,7 @@ export class MainView extends React.Component<IProps, IStates> {
                     ? 'Press R to switch to translation mode'
                     : 'Press R to switch to rotation mode'}
                 </div>
-                {this.state.transformMode === 'translate' && (
+                {this.state.transformMode === 'translate' && this._refLength && (
                   <div>
                     <label style={{ marginRight: '8px' }}>
                       Translation Snap:
@@ -2057,8 +2057,8 @@ export class MainView extends React.Component<IProps, IStates> {
                       <input
                         type="range"
                         min="0"
-                        max="10"
-                        step="0.1"
+                        max= {this._refLength * 10}
+                        step={this._refLength / 10}
                         value={this.state.translationSnapValue}
                         onChange={this._handleSnapChange(
                           'translationSnapValue'
@@ -2068,8 +2068,8 @@ export class MainView extends React.Component<IProps, IStates> {
                       <input
                         type="number"
                         min="0"
-                        max="10"
-                        step="0.1"
+                        max= {this._refLength * 10}
+                        step={this._refLength / 10}
                         value={this.state.translationSnapValue}
                         onChange={this._handleSnapChange(
                           'translationSnapValue'
