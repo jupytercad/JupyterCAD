@@ -90,6 +90,7 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
 
   readonly editable: boolean;
   readonly toJcadEndpoint?: string;
+  readonly toFcstdEndpoint?: string;
 
   objectExists(name: string): boolean;
   getObjectByName(name: string): IJCadObject | undefined;

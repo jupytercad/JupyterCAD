@@ -129,6 +129,9 @@ function populateMenus(mainMenu: IMainMenu, isEnabled: () => boolean): void {
   mainMenu.fileMenu.addItem({
     command: CommandIDs.exportJcad
   });
+  mainMenu.fileMenu.addItem({
+    command: CommandIDs.exportFcstd
+  });
   // Add undo/redo hooks to the edit menu.
   mainMenu.editMenu.undoers.redo.add({
     id: CommandIDs.redo,
