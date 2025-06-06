@@ -117,7 +117,7 @@ class CadDocument(CommWidget):
     def rename(self, old_name: str, new_name: str) -> CadDocument:
         if new_name == old_name:
             return self
-        new_obj = doc.get_object(old_name)
+        new_obj = self.get_object(old_name)
         new_obj.name = new_name
         self.add_object(new_obj).remove(old_name)
         return self
