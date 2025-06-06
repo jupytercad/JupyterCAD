@@ -2059,9 +2059,7 @@ export class MainView extends React.Component<IProps, IStates> {
                           type="range"
                           min="0"
                           max={this._refLength * 10}
-                          step={
-                            this._refLength >= 1 ? 0.1 : this._refLength / 10
-                          }
+                          step={this._refLength / 100}
                           value={this.state.translationSnapValue}
                           onChange={this._handleSnapChange(
                             'translationSnapValue'
@@ -2072,9 +2070,7 @@ export class MainView extends React.Component<IProps, IStates> {
                           type="number"
                           min="0"
                           max={this._refLength * 10}
-                          step={
-                            this._refLength >= 1 ? 0.1 : this._refLength / 10
-                          }
+                          step={this._refLength / 100}
                           value={this.state.translationSnapValue}
                           onChange={this._handleSnapChange(
                             'translationSnapValue'
