@@ -79,6 +79,7 @@ interface IStates {
   explodedViewEnabled: boolean;
   explodedViewFactor: number;
   rotationSnapValue: number;
+  translationSnapValue: number;
   transformMode: string | undefined;
 }
 
@@ -129,6 +130,7 @@ export class MainView extends React.Component<IProps, IStates> {
       explodedViewEnabled: false,
       explodedViewFactor: 0,
       rotationSnapValue: 10,
+      translationSnapValue: 1,
       transformMode: 'translate'
     };
 
@@ -150,6 +152,7 @@ export class MainView extends React.Component<IProps, IStates> {
     this._transformControls.rotationSnap = THREE.MathUtils.degToRad(
       this.state.rotationSnapValue
     );
+    this._transformControls.translationSnap = this.state.translationSnapValue;
     this._keyDownHandler = (event: KeyboardEvent) => {
       if (event.key === 'r') {
         const newMode = this._transformControls.mode || 'translate';
@@ -167,6 +170,9 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.rotationSnap = THREE.MathUtils.degToRad(
         this.state.rotationSnapValue
       );
+    }
+    if (oldState.translationSnapValue !== this.state.translationSnapValue) {
+      this._transformControls.translationSnap = this.state.translationSnapValue;
     }
   }
 
@@ -1948,12 +1954,18 @@ export class MainView extends React.Component<IProps, IStates> {
     return screenPosition;
   }
 
-  private _handleSnapChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    if (!isNaN(value) && value > 0) {
-      this.setState({ rotationSnapValue: value });
-    }
-  };
+  private _handleSnapChange =
+    (key: 'rotationSnapValue' | 'translationSnapValue') =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = parseFloat(event.target.value);
+      if (!isNaN(value)) {
+        // enforce > 0 for rotation
+        if (key === 'rotationSnapValue' && value <= 0) {
+          return;
+        }
+        this.setState({ [key]: value } as Pick<this['state'], typeof key>);
+      }
+    };
 
   private _handleExplodedViewChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -2036,6 +2048,45 @@ export class MainView extends React.Component<IProps, IStates> {
                     ? 'Press R to switch to translation mode'
                     : 'Press R to switch to rotation mode'}
                 </div>
+                {this.state.transformMode === 'translate' &&
+                  this._refLength && (
+                    <div>
+                      <label style={{ marginRight: '8px' }}>
+                        Translation Snap:
+                      </label>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <input
+                          type="range"
+                          min="0"
+                          max={this._refLength * 10}
+                          step={this._refLength / 100}
+                          value={this.state.translationSnapValue}
+                          onChange={this._handleSnapChange(
+                            'translationSnapValue'
+                          )}
+                          style={{ width: '120px', marginRight: '8px' }}
+                        />
+                        <input
+                          type="number"
+                          min="0"
+                          max={this._refLength * 10}
+                          step={this._refLength / 100}
+                          value={this.state.translationSnapValue}
+                          onChange={this._handleSnapChange(
+                            'translationSnapValue'
+                          )}
+                          style={{
+                            width: '50px',
+                            padding: '4px',
+                            borderRadius: '4px',
+                            border: '1px solid #ccc',
+                            fontSize: '12px'
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
                 {this.state.transformMode === 'rotate' && (
                   <div>
                     <label style={{ marginRight: '8px' }}>
@@ -2048,7 +2099,7 @@ export class MainView extends React.Component<IProps, IStates> {
                         max="180"
                         step="1"
                         value={this.state.rotationSnapValue}
-                        onChange={this._handleSnapChange}
+                        onChange={this._handleSnapChange('rotationSnapValue')}
                         style={{ width: '120px', marginRight: '8px' }}
                       />
                       <input
@@ -2057,7 +2108,7 @@ export class MainView extends React.Component<IProps, IStates> {
                         max="180"
                         step="1"
                         value={this.state.rotationSnapValue}
-                        onChange={this._handleSnapChange}
+                        onChange={this._handleSnapChange('rotationSnapValue')}
                         style={{
                           width: '50px',
                           padding: '4px',
