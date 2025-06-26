@@ -15,6 +15,8 @@ git clone https://github.com/jupytercad/JupyterCAD.git
 cd JupyterCAD
 # Install JupyterLab for jlpm
 pip install jupyterlab
+# Set up node_modules/npm packages
+jlpm install
 # Install package in development mode
 jlpm dev
 # Rebuild extension Typescript source after making changes
