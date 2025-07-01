@@ -78,6 +78,7 @@ mainBuild:
     - symbol: Standard_Transient
     - symbol: StdPrs_ToolTriangulatedShape
     - symbol: STEPControl_Reader
+    - symbol: StlAPI_Writer
     - symbol: TColgp_Array1OfDir
     - symbol: TColgp_Array1OfPnt
     - symbol: TColStd_Array1OfInteger

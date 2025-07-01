@@ -324,7 +324,8 @@ export type IMessageHandler =
 
 export enum JCadWorkerSupportedFormat {
   BREP = 'BREP',
-  GLTF = 'GLTF'
+  GLTF = 'GLTF',
+  STL = 'STL'
 }
 export interface IJCadWorker {
   ready: Promise<void>;

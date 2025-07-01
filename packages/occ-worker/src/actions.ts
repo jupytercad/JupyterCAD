@@ -8,6 +8,7 @@ import {
 } from '@jupytercad/schema';
 
 import { getShapesFactory, ObjectFile } from './occapi';
+import { _PostOperatorForSTL } from './occapi/postOperator';
 import { OccParser } from './occparser';
 import { IOperatorArg, IOperatorFuncOutput } from './types';
 
@@ -27,9 +28,14 @@ function buildModel(
     }
     const shapeFactory = getShapesFactory();
     let shapeData: IOperatorFuncOutput | undefined = undefined;
+    // Three main paths:
+
+    // 1. Regular shapes (Part::Box, Part::Cylinder, etc.)
     if (shapeFactory[shape]) {
       shapeData = shapeFactory[shape]?.(parameters as IOperatorArg, model);
-    } else if (parameters['Shape']) {
+    }
+    // 2. Shapes from files (BREP, STL files)
+    else if (parameters['Shape']) {
       // Creating occ shape from brep file.
       const type = parameters['Type'] ?? 'brep';
       shapeData = ObjectFile(
@@ -40,7 +46,9 @@ function buildModel(
         },
         model
       );
-    } else if (shape.startsWith('Post::') && shapeMetadata) {
+    }
+    // 3. Post-processing operations (Post::*)
+    else if (shape.startsWith('Post::') && shapeMetadata) {
       const shapeFormat = (shapeMetadata.shapeFormat ??
         JCadWorkerSupportedFormat.BREP) as JCadWorkerSupportedFormat;
 
@@ -58,6 +66,10 @@ function buildModel(
           };
           break;
         }
+        case JCadWorkerSupportedFormat.STL: {
+          shapeData = _PostOperatorForSTL(parameters as IOperatorArg, model);
+          break;
+        }
 
         default:
           break;
@@ -65,6 +77,9 @@ function buildModel(
     }
     if (shapeData) {
       outputModel.push({ shapeData, jcObject: object });
+      if (shapeData.postShape) {
+        console.log('Output Model:', { shapeData, jcObject: object });
+      }
     }
   });
   return outputModel;

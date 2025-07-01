@@ -22,3 +22,50 @@ export function _loadStlFile(content: string): OCC.TopoDS_Shape | undefined {
     return undefined;
   }
 }
+
+export function _writeStlFile(
+  shape: OCC.TopoDS_Shape,
+  linearDeflection = 0.01,
+  angularDeflection = 0.05
+): string {
+  const oc = getOcc();
+
+  console.log(
+    `🔧 Using STL settings - Linear: ${linearDeflection}, Angular: ${angularDeflection}`
+  );
+
+  // Set tessellation parameters on the shape before writing
+  new oc.BRepMesh_IncrementalMesh_2(
+    shape,
+    linearDeflection, // Linear deflection (smaller = more triangles)
+    false, // Relative mode
+    angularDeflection, // Angular deflection in radians
+    true // Parallel processing
+  );
+
+  const writer = new oc.StlAPI_Writer();
+  const progress = new oc.Message_ProgressRange_1();
+  const fakeFileName = `${uuid()}.stl`;
+
+  try {
+    const success = writer.Write(shape, fakeFileName, progress);
+    if (!success) {
+      throw new Error('StlAPI_Writer failed to write the file.');
+    }
+
+    const stlContent = oc.FS.readFile(fakeFileName, {
+      encoding: 'utf8'
+    }) as string;
+
+    console.log(
+      `✅ Generated STL (Linear: ${linearDeflection}, Angular: ${angularDeflection}), length: ${stlContent.length}`
+    );
+    return stlContent;
+  } finally {
+    if (oc.FS.analyzePath(fakeFileName).exists) {
+      oc.FS.unlink(fakeFileName);
+    }
+    writer.delete();
+    progress.delete();
+  }
+}

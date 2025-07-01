@@ -6,6 +6,7 @@ import {
   IJCadWorkerRegistry,
   IJCadWorkerRegistryToken,
   IJupyterCadDocTracker,
+  // IJupyterCadTracker,
   IJupyterCadWidget,
   IJCadExternalCommandRegistry,
   IJCadExternalCommandRegistryToken
@@ -15,26 +16,30 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
+import { ITranslator, nullTranslator } from '@jupyterlab/translation';
 
 import { JupyterCadStlModelFactory } from './modelfactory';
 import { JupyterCadDocumentWidgetFactory } from '../factory';
 import { JupyterCadStlDoc } from './model';
 import { stlIcon } from '@jupytercad/base';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
+import { addCommands, CommandIDs } from './commands';
 
 const FACTORY = 'JupyterCAD STL Viewer';
 const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
 
 const activate = async (
   app: JupyterFrontEnd,
-  tracker: WidgetTracker<IJupyterCadWidget>,
+  tracker: WidgetTracker<IJupyterCadWidget>, // CORRECT: Using the concrete class
   themeManager: IThemeManager,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
   drive: ICollaborativeDrive | null,
-  settingRegistry?: ISettingRegistry
+  settingRegistry?: ISettingRegistry,
+  translator?: ITranslator
 ): Promise<void> => {
   let settings: ISettingRegistry.ISettings | null = null;
+  translator = translator ?? nullTranslator;
 
   if (settingRegistry) {
     try {
@@ -46,6 +51,8 @@ const activate = async (
   } else {
     console.warn('No settingRegistry available; using default settings.');
   }
+
+  addCommands(app, tracker, translator);
 
   const widgetFactory = new JupyterCadDocumentWidgetFactory({
     name: FACTORY,
@@ -88,14 +95,21 @@ const activate = async (
   widgetFactory.widgetCreated.connect((sender, widget) => {
     widget.title.icon = stlIcon;
     widget.context.pathChanged.connect(() => {
-      tracker.save(widget);
+      tracker.save(widget); // This works because the type is WidgetTracker
     });
     themeManager.themeChanged.connect((_, changes) =>
       widget.model.themeChanged.emit(changes)
     );
-    tracker.add(widget);
+    tracker.add(widget); // This also works
     app.shell.activateById('jupytercad::leftControlPanel');
     app.shell.activateById('jupytercad::rightControlPanel');
+  });
+
+  // Add the command to the context menu for the object tree
+  app.contextMenu.addItem({
+    command: CommandIDs.exportSTL,
+    selector: '.jpcad-object-tree-item',
+    rank: 10
   });
 };
 
@@ -107,7 +121,7 @@ const stlPlugin: JupyterFrontEndPlugin<void> = {
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken
   ],
-  optional: [ICollaborativeDrive, ISettingRegistry],
+  optional: [ICollaborativeDrive, ISettingRegistry, ITranslator],
   autoStart: true,
   activate
 };

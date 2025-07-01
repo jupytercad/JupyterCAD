@@ -124,6 +124,8 @@ export class MainViewModel implements IDisposable {
             rawPostResult[key] = val;
           } else if (format === JCadWorkerSupportedFormat.GLTF) {
             threejsPostResult[key] = val;
+          } else if (format === JCadWorkerSupportedFormat.STL) {
+            rawPostResult[key] = val;
           }
         });
 
