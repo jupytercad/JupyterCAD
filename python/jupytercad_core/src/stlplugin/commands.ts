@@ -1,9 +1,10 @@
 import { FormDialog } from '@jupytercad/base';
 import {
   IDict,
-  //   IJCadObject,
-  //   IJupyterCadModel,
-  IJupyterCadTracker
+  IJCadObject,
+  IJupyterCadModel,
+  IJupyterCadTracker,
+  JCadWorkerSupportedFormat
 } from '@jupytercad/schema';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { showErrorMessage } from '@jupyterlab/apputils';
@@ -13,7 +14,6 @@ export namespace CommandIDs {
   export const exportSTL = 'jupytercad:stl:export';
 }
 
-// The form schema is now defined directly here
 const formSchema = {
   type: 'object',
   properties: {
@@ -56,13 +56,44 @@ export function addCommands(
 }
 
 namespace Private {
+  const stlOperator = {
+    title: 'Export to STL',
+    syncData: (model: IJupyterCadModel) => {
+      return (props: IDict) => {
+        const { Name, ...parameters } = props;
+        const objectModel = {
+          shape: 'Post::ExportSTL',
+          parameters,
+          visible: true,
+          name: Name,
+          shapeMetadata: {
+            shapeFormat: JCadWorkerSupportedFormat.STL,
+            workerId: 'jupytercad-stl:worker'
+          }
+        };
+        const sharedModel = model.sharedModel;
+        if (sharedModel) {
+          sharedModel.transact(() => {
+            if (!sharedModel.objectExists(objectModel.name)) {
+              sharedModel.addObject(objectModel as IJCadObject);
+            } else {
+              showErrorMessage(
+                'The object already exists',
+                'There is an existing object with the same name.'
+              );
+            }
+          });
+        }
+      };
+    }
+  };
+
   export function executeExportSTL(
     app: JupyterFrontEnd,
     tracker: IJupyterCadTracker
   ) {
     return async (args: any) => {
       const current = tracker.currentWidget;
-
       if (!current) {
         return;
       }
@@ -83,9 +114,13 @@ namespace Private {
         return;
       }
 
-      formJsonSchema.properties.Object.enum = objectNames;
+      formJsonSchema['required'] = ['Name', ...formJsonSchema['required']];
+      formJsonSchema['properties'] = {
+        Name: { type: 'string', description: 'The Name of the Export Object' },
+        ...formJsonSchema['properties']
+      };
+      formJsonSchema['properties']['Object']['enum'] = objectNames;
 
-      // Find the right-clicked object name from the DOM
       const node = app.contextMenuHitTest(node =>
         node.classList.contains('jpcad-object-tree-item')
       );
@@ -100,24 +135,20 @@ namespace Private {
           : objectNames[0]);
 
       const sourceData = {
+        Name: selectedObjectName
+          ? `${selectedObjectName}_STL_Export`
+          : 'STL_Export',
         Object: selectedObjectName,
-        LinearDeflection: 0.01,
-        AngularDeflection: 0.05
+        LinearDeflection: 0.1,
+        AngularDeflection: 0.5
       };
 
       const dialog = new FormDialog({
-        model,
-        title: 'Export to STL',
+        model: current.model,
+        title: stlOperator.title,
         sourceData,
         schema: formJsonSchema,
-        syncData: (props: IDict) => {
-          // TODO: This is where the new logic will go.
-          // 1. Call viewModel.exportObject(props.Object, 'STL', { ...options })
-          // 2. Receive STL content
-          // 3. Trigger download
-          console.log('Export properties:', props);
-          alert('Exporting is not implemented yet!');
-        },
+        syncData: stlOperator.syncData(current.model),
         cancelButton: true
       });
       await dialog.launch();

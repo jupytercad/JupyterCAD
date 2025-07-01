@@ -24,6 +24,7 @@ import { JupyterCadStlDoc } from './model';
 import { stlIcon } from '@jupytercad/base';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { addCommands, CommandIDs } from './commands';
+import { STLWorker } from './worker';
 
 const FACTORY = 'JupyterCAD STL Viewer';
 const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
@@ -51,6 +52,10 @@ const activate = async (
   } else {
     console.warn('No settingRegistry available; using default settings.');
   }
+
+  const WORKER_ID = 'jupytercad-stl:worker';
+  const worker = new STLWorker({ tracker });
+  workerRegistry.registerWorker(WORKER_ID, worker);
 
   addCommands(app, tracker, translator);
 

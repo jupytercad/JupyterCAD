@@ -25,8 +25,8 @@ export function _loadStlFile(content: string): OCC.TopoDS_Shape | undefined {
 
 export function _writeStlFile(
   shape: OCC.TopoDS_Shape,
-  linearDeflection = 0.01,
-  angularDeflection = 0.05
+  linearDeflection = 0.1,
+  angularDeflection = 0.5
 ): string {
   const oc = getOcc();
 
