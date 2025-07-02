@@ -19,8 +19,14 @@ const formSchema = {
   properties: {
     Object: {
       type: 'string',
-      description: 'The object to export to STL',
+      description: 'The object to export',
       enum: []
+    },
+    Type: {
+      type: 'string',
+      default: 'STL',
+      enum: ['BREP', 'STL'],
+      description: 'The filetype for export (Brep/Stl)'
     },
     LinearDeflection: {
       type: 'number',
@@ -37,7 +43,7 @@ const formSchema = {
       default: 0.05
     }
   },
-  required: ['Object'],
+  required: ['Object', 'Type'],
   additionalProperties: false
 };
 
@@ -139,6 +145,7 @@ namespace Private {
           ? `${selectedObjectName}_STL_Export`
           : 'STL_Export',
         Object: selectedObjectName,
+        Type: 'STL',
         LinearDeflection: 0.1,
         AngularDeflection: 0.5
       };

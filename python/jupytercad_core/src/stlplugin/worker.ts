@@ -41,7 +41,6 @@ export class STLWorker implements IJCadWorker {
     if (msg.payload && Object.keys(msg.payload).length > 0) {
       const jCadObject = msg.payload['jcObject'] as IJCadObject;
       const stlContent = msg.payload['postShape'];
-
       if (stlContent && typeof stlContent === 'string') {
         this._downloadSTL(jCadObject.name, stlContent);
       } else {
@@ -58,7 +57,6 @@ export class STLWorker implements IJCadWorker {
 
     const link = document.createElement('a');
     link.href = url;
-    // Use the original object's name for the download, not the temporary export object's name
     const originalObjectName = objectName.replace(/_STL_Export$/, '');
     link.download = `${originalObjectName
       .toLowerCase()

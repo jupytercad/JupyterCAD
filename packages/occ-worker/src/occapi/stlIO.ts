@@ -30,17 +30,12 @@ export function _writeStlFile(
 ): string {
   const oc = getOcc();
 
-  console.log(
-    `🔧 Using STL settings - Linear: ${linearDeflection}, Angular: ${angularDeflection}`
-  );
-
-  // Set tessellation parameters on the shape before writing
   new oc.BRepMesh_IncrementalMesh_2(
     shape,
-    linearDeflection, // Linear deflection (smaller = more triangles)
-    false, // Relative mode
-    angularDeflection, // Angular deflection in radians
-    true // Parallel processing
+    linearDeflection,
+    false,
+    angularDeflection,
+    true
   );
 
   const writer = new oc.StlAPI_Writer();

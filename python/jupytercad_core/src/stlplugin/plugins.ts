@@ -6,7 +6,6 @@ import {
   IJCadWorkerRegistry,
   IJCadWorkerRegistryToken,
   IJupyterCadDocTracker,
-  // IJupyterCadTracker,
   IJupyterCadWidget,
   IJCadExternalCommandRegistry,
   IJCadExternalCommandRegistryToken
@@ -31,7 +30,7 @@ const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
 
 const activate = async (
   app: JupyterFrontEnd,
-  tracker: WidgetTracker<IJupyterCadWidget>, // CORRECT: Using the concrete class
+  tracker: WidgetTracker<IJupyterCadWidget>,
   themeManager: IThemeManager,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
@@ -100,17 +99,16 @@ const activate = async (
   widgetFactory.widgetCreated.connect((sender, widget) => {
     widget.title.icon = stlIcon;
     widget.context.pathChanged.connect(() => {
-      tracker.save(widget); // This works because the type is WidgetTracker
+      tracker.save(widget);
     });
     themeManager.themeChanged.connect((_, changes) =>
       widget.model.themeChanged.emit(changes)
     );
-    tracker.add(widget); // This also works
+    tracker.add(widget);
     app.shell.activateById('jupytercad::leftControlPanel');
     app.shell.activateById('jupytercad::rightControlPanel');
   });
 
-  // Add the command to the context menu for the object tree
   app.contextMenu.addItem({
     command: CommandIDs.exportSTL,
     selector: '.jpcad-object-tree-item',

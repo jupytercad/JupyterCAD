@@ -21,38 +21,16 @@ export function _PostOperator(
       content
     );
     if (base?.occShape) {
-      const postShape = _writeBrep(base.occShape);
-      return { postShape };
-    }
-  }
-  return { postShape: '' };
-}
-
-export function _PostOperatorForSTL(
-  arg: IPostOperator,
-  content: IJCadContent
-): { postShape: string } {
-  const baseObject = content.objects.filter(obj => obj.name === arg.Object);
-  if (baseObject.length === 0) {
-    return { postShape: '' };
-  }
-  const shapesFactory = getShapesFactory();
-  const baseShape = baseObject[0].shape;
-  if (baseShape && shapesFactory[baseShape]) {
-    const base = shapesFactory[baseShape]?.(
-      baseObject[0].parameters as IOperatorArg,
-      content
-    );
-    if (base?.occShape) {
-      // Extract deflection settings from the Post operator parameters
-      const linearDeflection = arg.LinearDeflection;
-      const angularDeflection = arg.AngularDeflection;
-
-      const postShape = _writeStlFile(
-        base.occShape,
-        linearDeflection,
-        angularDeflection
-      );
+      let postShape = '';
+      if (arg.Type === 'BREP') {
+        postShape = _writeBrep(base.occShape);
+      } else if (arg.Type === 'STL') {
+        postShape = _writeStlFile(
+          base.occShape,
+          arg.LinearDeflection,
+          arg.AngularDeflection
+        );
+      }
       return { postShape };
     }
   }
