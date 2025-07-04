@@ -9,12 +9,13 @@ import {
 import { PromiseDelegate } from '@lumino/coreutils';
 import { v4 as uuid } from 'uuid';
 
-export class STLWorker implements IJCadWorker {
-  constructor(options: STLWorker.IOptions) {
+export class ExportWorker implements IJCadWorker {
+  constructor(options: ExportWorker.IOptions) {
     this._tracker = options.tracker;
+    this.shapeFormat = options.shapeFormat;
   }
 
-  shapeFormat = JCadWorkerSupportedFormat.STL;
+  shapeFormat: JCadWorkerSupportedFormat;
 
   get ready(): Promise<void> {
     return this._ready.promise;
@@ -40,27 +41,41 @@ export class STLWorker implements IJCadWorker {
 
     if (msg.payload && Object.keys(msg.payload).length > 0) {
       const jCadObject = msg.payload['jcObject'] as IJCadObject;
-      const stlContent = msg.payload['postShape'];
-      if (stlContent && typeof stlContent === 'string') {
-        this._downloadSTL(jCadObject.name, stlContent);
+      const content = msg.payload['postShape'];
+      const format = jCadObject?.shapeMetadata?.shapeFormat || this.shapeFormat;
+
+      if (
+        format === JCadWorkerSupportedFormat.STL &&
+        typeof content === 'string'
+      ) {
+        this._downloadFile(jCadObject.name, content, 'stl');
+      } else if (
+        format === JCadWorkerSupportedFormat.BREP &&
+        typeof content === 'string'
+      ) {
+        this._downloadFile(jCadObject.name, content, 'brep');
       } else {
-        console.error('No STL content received for object:', jCadObject.name);
+        console.error('No valid content received for object:', jCadObject.name);
       }
     }
   }
 
-  private _downloadSTL(objectName: string, stlContent: string): void {
-    const blob = new Blob([stlContent], {
+  private _downloadFile(
+    objectName: string,
+    content: string,
+    ext: string
+  ): void {
+    const blob = new Blob([content], {
       type: 'application/octet-stream'
     });
     const url = URL.createObjectURL(blob);
 
     const link = document.createElement('a');
     link.href = url;
-    const originalObjectName = objectName.replace(/_STL_Export$/, '');
+    const originalObjectName = objectName.replace(/_(STL|BREP)_Export$/, '');
     link.download = `${originalObjectName
       .toLowerCase()
-      .replace(/[^a-z0-9]/g, '_')}.stl`;
+      .replace(/[^a-z0-9]/g, '_')}.${ext}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -89,8 +104,9 @@ export class STLWorker implements IJCadWorker {
   private _tracker: IJupyterCadTracker;
 }
 
-export namespace STLWorker {
+export namespace ExportWorker {
   export interface IOptions {
     tracker: IJupyterCadTracker;
+    shapeFormat: JCadWorkerSupportedFormat;
   }
 }

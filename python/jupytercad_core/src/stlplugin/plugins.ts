@@ -23,7 +23,8 @@ import { JupyterCadStlDoc } from './model';
 import { stlIcon } from '@jupytercad/base';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { addCommands, CommandIDs } from './commands';
-import { STLWorker } from './worker';
+import { ExportWorker } from './worker';
+import { JCadWorkerSupportedFormat } from '@jupytercad/schema';
 
 const FACTORY = 'JupyterCAD STL Viewer';
 const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
@@ -52,9 +53,17 @@ const activate = async (
     console.warn('No settingRegistry available; using default settings.');
   }
 
-  const WORKER_ID = 'jupytercad-stl:worker';
-  const worker = new STLWorker({ tracker });
-  workerRegistry.registerWorker(WORKER_ID, worker);
+  const stlWorker = new ExportWorker({
+    tracker,
+    shapeFormat: JCadWorkerSupportedFormat.STL
+  });
+  workerRegistry.registerWorker('jupytercad-stl:worker', stlWorker);
+
+  const brepWorker = new ExportWorker({
+    tracker,
+    shapeFormat: JCadWorkerSupportedFormat.BREP
+  });
+  workerRegistry.registerWorker('jupytercad-brep:worker', brepWorker);
 
   addCommands(app, tracker, translator);
 

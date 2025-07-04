@@ -63,18 +63,36 @@ export function addCommands(
 
 namespace Private {
   const stlOperator = {
-    title: 'Export to STL',
+    title: 'Export to STL/BREP',
     syncData: (model: IJupyterCadModel) => {
       return (props: IDict) => {
-        const { Name, ...parameters } = props;
+        const { Name, Type, LinearDeflection, AngularDeflection, ...rest } =
+          props;
+        const shapeFormat =
+          Type === 'BREP'
+            ? JCadWorkerSupportedFormat.BREP
+            : JCadWorkerSupportedFormat.STL;
+
+        // Choose workerId based on format
+        const workerId =
+          shapeFormat === JCadWorkerSupportedFormat.BREP
+            ? 'jupytercad-brep:worker'
+            : 'jupytercad-stl:worker';
+
+        // Only include mesh parameters for STL
+        const parameters =
+          Type === 'STL'
+            ? { ...rest, Type, LinearDeflection, AngularDeflection }
+            : { ...rest, Type };
+
         const objectModel = {
           shape: 'Post::ExportSTL',
           parameters,
           visible: true,
           name: Name,
           shapeMetadata: {
-            shapeFormat: JCadWorkerSupportedFormat.STL,
-            workerId: 'jupytercad-stl:worker'
+            shapeFormat,
+            workerId
           }
         };
         const sharedModel = model.sharedModel;
@@ -140,6 +158,7 @@ namespace Private {
           ? selectedObjectNames[0]
           : objectNames[0]);
 
+      // Use Type from the form, but default to STL for initial value
       const sourceData = {
         Name: selectedObjectName
           ? `${selectedObjectName}_STL_Export`
