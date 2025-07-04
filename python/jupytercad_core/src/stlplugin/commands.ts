@@ -11,7 +11,8 @@ import { showErrorMessage } from '@jupyterlab/apputils';
 import { ITranslator } from '@jupyterlab/translation';
 
 export namespace CommandIDs {
-  export const exportSTL = 'jupytercad:stl:export';
+  export const exportAsSTL = 'jupytercad:stl:export-as-stl';
+  export const exportAsBREP = 'jupytercad:stl:export-as-brep';
 }
 
 const formSchema = {
@@ -54,10 +55,17 @@ export function addCommands(
 ) {
   const trans = translator.load('jupyterlab');
   const { commands } = app;
-  commands.addCommand(CommandIDs.exportSTL, {
-    label: trans.__('Export to STL...'),
+
+  commands.addCommand(CommandIDs.exportAsSTL, {
+    label: trans.__('Export as STL'),
     isEnabled: () => Boolean(tracker.currentWidget),
-    execute: Private.executeExportSTL(app, tracker)
+    execute: Private.executeExport(app, tracker, 'STL')
+  });
+
+  commands.addCommand(CommandIDs.exportAsBREP, {
+    label: trans.__('Export as BREP'),
+    isEnabled: () => Boolean(tracker.currentWidget),
+    execute: Private.executeExport(app, tracker, 'BREP')
   });
 }
 
@@ -86,7 +94,7 @@ namespace Private {
             : { ...rest, Type };
 
         const objectModel = {
-          shape: 'Post::ExportSTL',
+          shape: 'Post::Export',
           parameters,
           visible: true,
           name: Name,
@@ -112,9 +120,10 @@ namespace Private {
     }
   };
 
-  export function executeExportSTL(
+  export function executeExport(
     app: JupyterFrontEnd,
-    tracker: IJupyterCadTracker
+    tracker: IJupyterCadTracker,
+    exportType: 'STL' | 'BREP'
   ) {
     return async (args: any) => {
       const current = tracker.currentWidget;
@@ -145,6 +154,12 @@ namespace Private {
       };
       formJsonSchema['properties']['Object']['enum'] = objectNames;
 
+      // Hide mesh params for BREP
+      if (exportType === 'BREP') {
+        delete formJsonSchema['properties']['LinearDeflection'];
+        delete formJsonSchema['properties']['AngularDeflection'];
+      }
+
       const node = app.contextMenuHitTest(node =>
         node.classList.contains('jpcad-object-tree-item')
       );
@@ -158,15 +173,15 @@ namespace Private {
           ? selectedObjectNames[0]
           : objectNames[0]);
 
-      // Use Type from the form, but default to STL for initial value
       const sourceData = {
         Name: selectedObjectName
-          ? `${selectedObjectName}_STL_Export`
-          : 'STL_Export',
+          ? `${selectedObjectName}_${exportType}`
+          : `${exportType}`,
         Object: selectedObjectName,
-        Type: 'STL',
-        LinearDeflection: 0.1,
-        AngularDeflection: 0.5
+        Type: exportType,
+        ...(exportType === 'STL'
+          ? { LinearDeflection: 0.1, AngularDeflection: 0.5 }
+          : {})
       };
 
       const dialog = new FormDialog({

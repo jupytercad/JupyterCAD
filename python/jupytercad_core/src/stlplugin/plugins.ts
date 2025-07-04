@@ -16,6 +16,7 @@ import {
 } from '@jupyterlab/application';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 import { ITranslator, nullTranslator } from '@jupyterlab/translation';
+import { Menu } from '@lumino/widgets';
 
 import { JupyterCadStlModelFactory } from './modelfactory';
 import { JupyterCadDocumentWidgetFactory } from '../factory';
@@ -118,8 +119,15 @@ const activate = async (
     app.shell.activateById('jupytercad::rightControlPanel');
   });
 
+  // Create the export submenu
+  const exportMenu = new Menu({ commands: app.commands });
+  exportMenu.title.label = 'Export as';
+  exportMenu.addItem({ command: CommandIDs.exportAsSTL });
+  exportMenu.addItem({ command: CommandIDs.exportAsBREP });
+
   app.contextMenu.addItem({
-    command: CommandIDs.exportSTL,
+    type: 'submenu',
+    submenu: exportMenu,
     selector: '.jpcad-object-tree-item',
     rank: 10
   });
