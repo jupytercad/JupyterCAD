@@ -34,14 +34,14 @@ const formSchema = {
       description: 'Linear deflection (smaller = more triangles)',
       minimum: 0.0001,
       maximum: 1.0,
-      default: 0.01
+      default: 0.1
     },
     AngularDeflection: {
       type: 'number',
       description: 'Angular deflection in radians',
       minimum: 0.01,
       maximum: 1.0,
-      default: 0.05
+      default: 0.5
     }
   },
   required: ['Object', 'Type'],
@@ -70,7 +70,7 @@ export function addCommands(
 }
 
 namespace Private {
-  const stlOperator = {
+  const exportOperator = {
     title: 'Export to STL/BREP',
     syncData: (model: IJupyterCadModel) => {
       return (props: IDict) => {
@@ -186,10 +186,10 @@ namespace Private {
 
       const dialog = new FormDialog({
         model: current.model,
-        title: stlOperator.title,
+        title: exportOperator.title,
         sourceData,
         schema: formJsonSchema,
-        syncData: stlOperator.syncData(current.model),
+        syncData: exportOperator.syncData(current.model),
         cancelButton: true
       });
       await dialog.launch();

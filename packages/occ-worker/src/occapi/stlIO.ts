@@ -52,9 +52,7 @@ export function _writeStlFile(
       encoding: 'utf8'
     }) as string;
 
-    console.log(
-      `✅ Generated STL (Linear: ${linearDeflection}, Angular: ${angularDeflection}), length: ${stlContent.length}`
-    );
+    console.log(`Generated STL content, length: ${stlContent.length}`);
     return stlContent;
   } finally {
     if (oc.FS.analyzePath(fakeFileName).exists) {
