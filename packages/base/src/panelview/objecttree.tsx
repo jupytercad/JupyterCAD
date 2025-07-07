@@ -447,7 +447,9 @@ class ObjectTreeReact extends React.Component<IProps, IStates> {
                 className={`jpcad-control-panel-tree ${
                   opts.selected ? 'selected' : ''
                 } ${isParentNode ? 'jpcad-object-tree-item' : ''}`}
-                data-object-name={isParentNode ? (opts.node.id as string) : null}
+                data-object-name={
+                  isParentNode ? (opts.node.id as string) : null
+                }
                 onClick={() => this.handleNodeClick(opts.node.id as string)}
               >
                 <div
