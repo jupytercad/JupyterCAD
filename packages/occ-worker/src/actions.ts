@@ -59,7 +59,7 @@ function buildModel(
           };
           break;
         }
-        case JCadWorkerSupportedFormat.BREP: 
+        case JCadWorkerSupportedFormat.BREP:
         case JCadWorkerSupportedFormat.STL: {
           shapeData = shapeFactory['Post::Operator']?.(
             parameters as IOperatorArg,
