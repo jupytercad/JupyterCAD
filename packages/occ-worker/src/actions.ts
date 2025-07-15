@@ -46,13 +46,6 @@ function buildModel(
         JCadWorkerSupportedFormat.BREP) as JCadWorkerSupportedFormat;
 
       switch (shapeFormat) {
-        case JCadWorkerSupportedFormat.BREP: {
-          shapeData = shapeFactory['Post::Operator']?.(
-            parameters as IOperatorArg,
-            model
-          );
-          break;
-        }
         case JCadWorkerSupportedFormat.GLTF: {
           shapeData = {
             postShape: ''
