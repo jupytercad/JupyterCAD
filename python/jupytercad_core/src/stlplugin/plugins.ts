@@ -16,14 +16,12 @@ import {
 } from '@jupyterlab/application';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 import { ITranslator, nullTranslator } from '@jupyterlab/translation';
-import { Menu } from '@lumino/widgets';
 
 import { JupyterCadStlModelFactory } from './modelfactory';
 import { JupyterCadDocumentWidgetFactory } from '../factory';
 import { JupyterCadStlDoc } from './model';
 import { stlIcon } from '@jupytercad/base';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
-import { addCommands, CommandIDs } from './commands';
 import { ExportWorker } from './worker';
 import { JCadWorkerSupportedFormat } from '@jupytercad/schema';
 
@@ -65,8 +63,6 @@ const activate = async (
     shapeFormat: JCadWorkerSupportedFormat.BREP
   });
   workerRegistry.registerWorker('jupytercad-brep:worker', brepWorker);
-
-  addCommands(app, tracker, translator);
 
   const widgetFactory = new JupyterCadDocumentWidgetFactory({
     name: FACTORY,
@@ -117,19 +113,6 @@ const activate = async (
     tracker.add(widget);
     app.shell.activateById('jupytercad::leftControlPanel');
     app.shell.activateById('jupytercad::rightControlPanel');
-  });
-
-  // Create the export submenu
-  const exportMenu = new Menu({ commands: app.commands });
-  exportMenu.title.label = 'Export as';
-  exportMenu.addItem({ command: CommandIDs.exportAsSTL });
-  exportMenu.addItem({ command: CommandIDs.exportAsBREP });
-
-  app.contextMenu.addItem({
-    type: 'submenu',
-    submenu: exportMenu,
-    selector: '.jpcad-object-tree-item',
-    rank: 10
   });
 };
 

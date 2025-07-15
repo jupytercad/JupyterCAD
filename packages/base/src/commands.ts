@@ -8,7 +8,9 @@ import {
   IJupyterCadDoc,
   IJupyterCadModel,
   ISelection,
-  Parts
+  Parts,
+  JCadWorkerSupportedFormat,
+  IJupyterCadTracker
 } from '@jupytercad/schema';
 import { CommandRegistry } from '@lumino/commands';
 import { JupyterFrontEnd } from '@jupyterlab/application';
@@ -16,6 +18,7 @@ import { showErrorMessage, WidgetTracker } from '@jupyterlab/apputils';
 import { ITranslator } from '@jupyterlab/translation';
 import { filterIcon, redoIcon, undoIcon } from '@jupyterlab/ui-components';
 import { ICompletionProviderManager } from '@jupyterlab/completer';
+import { Menu } from '@lumino/widgets';
 import { FormDialog } from './formdialog';
 import { SketcherDialog } from './sketcher/sketcherdialog';
 import {
@@ -77,6 +80,26 @@ export async function dryRunCheck(options: {
     return null;
   }
   return dryRunResult;
+}
+
+export function getSelectedObject(
+  app: JupyterFrontEnd,
+  model: IJupyterCadModel,
+  objectNames: string[]
+): string {
+  const node = app.contextMenuHitTest(node =>
+    node.classList.contains('jpcad-object-tree-item')
+  );
+  if (node?.dataset.objectName) {
+    return node.dataset.objectName;
+  }
+
+  const selected = Object.keys(model.localState?.selected?.value || {});
+  if (selected.length > 0) {
+    return selected[0];
+  }
+
+  return objectNames[0];
 }
 
 export function setVisible(
@@ -1215,6 +1238,31 @@ export function addCommands(
     }
   });
 
+  commands.addCommand(CommandIDs.exportAsSTL, {
+    label: trans.__('Export as STL'),
+    isEnabled: () => Boolean(tracker.currentWidget),
+    execute: Private.executeExport(app, tracker, 'STL')
+  });
+
+  commands.addCommand(CommandIDs.exportAsBREP, {
+    label: trans.__('Export as BREP'),
+    isEnabled: () => Boolean(tracker.currentWidget),
+    execute: Private.executeExport(app, tracker, 'BREP')
+  });
+
+  // Create the export submenu
+  const exportMenu = new Menu({ commands: app.commands });
+  exportMenu.title.label = 'Export as';
+  exportMenu.addItem({ command: CommandIDs.exportAsSTL });
+  exportMenu.addItem({ command: CommandIDs.exportAsBREP });
+
+  app.contextMenu.addItem({
+    type: 'submenu',
+    submenu: exportMenu,
+    selector: '.jpcad-object-tree-item',
+    rank: 10
+  });
+
   loadKeybindings(commands, keybindings);
 }
 
@@ -1261,6 +1309,9 @@ export namespace CommandIDs {
   export const removeConsole = 'jupytercad:removeConsole';
   export const executeConsole = 'jupytercad:executeConsole';
   export const selectCompleter = 'jupytercad:selectConsoleCompleter';
+
+  export const exportAsSTL = 'jupytercad:stl:export-as-stl';
+  export const exportAsBREP = 'jupytercad:stl:export-as-brep';
 }
 
 namespace Private {
@@ -1416,6 +1467,160 @@ namespace Private {
         sourceData: op.default(current.model),
         schema: form_schema,
         syncData: op.syncData(current),
+        cancelButton: true
+      });
+      await dialog.launch();
+    };
+  }
+
+  const exportOperator = {
+    title: 'Export to STL/BREP',
+    syncData: (model: IJupyterCadModel) => {
+      return (props: IDict) => {
+        const { Name, Type, LinearDeflection, AngularDeflection, ...rest } =
+          props;
+        const shapeFormat =
+          Type === 'BREP'
+            ? JCadWorkerSupportedFormat.BREP
+            : JCadWorkerSupportedFormat.STL;
+
+        // Choose workerId based on format
+        const workerId =
+          shapeFormat === JCadWorkerSupportedFormat.BREP
+            ? 'jupytercad-brep:worker'
+            : 'jupytercad-stl:worker';
+
+        // Only include mesh parameters for STL
+        const parameters =
+          Type === 'STL'
+            ? { ...rest, Type, LinearDeflection, AngularDeflection }
+            : { ...rest, Type };
+
+        const objectModel = {
+          shape: 'Post::Export',
+          parameters,
+          visible: true,
+          name: Name,
+          shapeMetadata: {
+            shapeFormat,
+            workerId
+          }
+        };
+        const sharedModel = model.sharedModel;
+        if (sharedModel) {
+          sharedModel.transact(() => {
+            if (!sharedModel.objectExists(objectModel.name)) {
+              sharedModel.addObject(objectModel as IJCadObject);
+            } else {
+              showErrorMessage(
+                'The object already exists',
+                'There is an existing object with the same name.'
+              );
+            }
+          });
+        }
+      };
+    }
+  };
+
+  export function executeExport(
+    app: JupyterFrontEnd,
+    tracker: IJupyterCadTracker,
+    exportType: 'STL' | 'BREP'
+  ) {
+    return async (args: any) => {
+      const current = tracker.currentWidget;
+      if (!current) {
+        return;
+      }
+      const model = current.model;
+      if (!model) {
+        return;
+      }
+
+      const formSchema = {
+        type: 'object',
+        properties: {
+          Object: {
+            type: 'string',
+            description: 'The object to export',
+            enum: []
+          },
+          Type: {
+            type: 'string',
+            default: 'STL',
+            enum: ['BREP', 'STL'],
+            description: 'The filetype for export (Brep/Stl)'
+          },
+          LinearDeflection: {
+            type: 'number',
+            description: 'Linear deflection (smaller = more triangles)',
+            minimum: 0.0001,
+            maximum: 1.0,
+            default: 0.1
+          },
+          AngularDeflection: {
+            type: 'number',
+            description: 'Angular deflection in radians',
+            minimum: 0.01,
+            maximum: 1.0,
+            default: 0.5
+          }
+        },
+        required: ['Object', 'Type'],
+        additionalProperties: false
+      };
+
+      const formJsonSchema = JSON.parse(JSON.stringify(formSchema));
+      const objects = model.getAllObject();
+      const objectNames = objects.map(obj => obj.name);
+
+      if (objectNames.length === 0) {
+        showErrorMessage(
+          'No Objects',
+          'There are no objects in the document to export.'
+        );
+        return;
+      }
+
+      formJsonSchema['required'] = ['Name', ...formJsonSchema['required']];
+      formJsonSchema['properties'] = {
+        Name: { type: 'string', description: 'The Name of the Export Object' },
+        ...formJsonSchema['properties']
+      };
+      formJsonSchema['properties']['Object']['enum'] = objectNames;
+
+      // Remove Type field from form since user already chose it
+      delete formJsonSchema['properties']['Type'];
+      formJsonSchema['required'] = formJsonSchema['required'].filter(
+        (field: string) => field !== 'Type'
+      );
+
+      // Hide mesh params for BREP
+      if (exportType === 'BREP') {
+        delete formJsonSchema['properties']['LinearDeflection'];
+        delete formJsonSchema['properties']['AngularDeflection'];
+      }
+
+      const clickedObjectName = getSelectedObject(app, model, objectNames);
+
+      const sourceData = {
+        Name: clickedObjectName
+          ? `${clickedObjectName}_${exportType}`
+          : `${exportType}`,
+        Object: clickedObjectName,
+        Type: exportType,
+        ...(exportType === 'STL'
+          ? { LinearDeflection: 0.1, AngularDeflection: 0.5 }
+          : {})
+      };
+
+      const dialog = new FormDialog({
+        model: current.model,
+        title: exportOperator.title,
+        sourceData,
+        schema: formJsonSchema,
+        syncData: exportOperator.syncData(current.model),
         cancelButton: true
       });
       await dialog.launch();
