@@ -663,3 +663,13 @@ body[data-jp-theme-light='true'] {
   .form-group:has(.jp-FormGroup-removeButton):not(:has(.jp-root)) {
   display: none;
 }
+
+.jp-toolbar-users-item > .lm-MenuBar-itemIcon {
+  cursor: pointer !important;
+  border: 2px solid transparent;
+  border-radius: 50%;
+}
+
+.jp-toolbar-users-item > .lm-MenuBar-itemIcon.selected {
+  border-color: var(--jp-brand-color1);
+}

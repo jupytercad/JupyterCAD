@@ -5,14 +5,15 @@ import {
   redoIcon,
   Toolbar,
   ReactiveToolbar,
-  undoIcon
+  undoIcon,
+  classes
 } from '@jupyterlab/ui-components';
 import { CommandRegistry } from '@lumino/commands';
 import { Widget } from '@lumino/widgets';
 import * as React from 'react';
+import { DefaultIconRenderer, UsersItem } from '@jupyter/collaboration';
 
 import { CommandIDs } from '../commands';
-import { UsersItem } from '@jupyter/collaboration';
 import { terminalToolbarIcon } from '../tools';
 
 export const TOOLBAR_SEPARATOR_CLASS = 'jcad-Toolbar-Separator';
@@ -25,6 +26,47 @@ export class Separator extends Widget {
     super();
     this.addClass(TOOLBAR_SEPARATOR_CLASS);
   }
+}
+
+function createUserIconRenderer(model: JupyterCadModel) {
+  let selectedUserId: number | undefined;
+
+  return (props: UsersItem.IIconRendererProps): JSX.Element => {
+    const { user } = props;
+
+    const isSelected = user.userId === selectedUserId;
+    const className = classes(
+      props.className ?? '',
+      isSelected ? 'selected' : ''
+    );
+
+    const onClick = () => {
+      if (user.userId === selectedUserId) {
+        selectedUserId = undefined;
+        model.setUserToFollow(undefined);
+      } else {
+        selectedUserId = user.userId;
+        model.setUserToFollow(user.userId);
+      }
+    };
+
+    return (
+      <DefaultIconRenderer
+        user={user}
+        onClick={onClick}
+        className={className}
+      />
+    );
+  };
+}
+
+/**
+ * Create the UsersItem component using the custom follow-mode iconRenderer.
+ */
+function createUsersItemWithFollow(model: JupyterCadModel): React.ReactElement {
+  return (
+    <UsersItem model={model} iconRenderer={createUserIconRenderer(model)} />
+  );
 }
 
 export class ToolbarWidget extends ReactiveToolbar {
@@ -246,7 +288,7 @@ export class ToolbarWidget extends ReactiveToolbar {
         // Users
         this.addItem(
           'users',
-          ReactWidget.create(<UsersItem model={options.model} />)
+          ReactWidget.create(createUsersItemWithFollow(options.model))
         );
       }
     }, 100);
