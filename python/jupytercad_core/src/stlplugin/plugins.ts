@@ -15,12 +15,15 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
+import { ITranslator, nullTranslator } from '@jupyterlab/translation';
 
 import { JupyterCadStlModelFactory } from './modelfactory';
 import { JupyterCadDocumentWidgetFactory } from '../factory';
 import { JupyterCadStlDoc } from './model';
 import { stlIcon } from '@jupytercad/base';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
+import { ExportWorker } from './worker';
+import { JCadWorkerSupportedFormat } from '@jupytercad/schema';
 
 const FACTORY = 'JupyterCAD STL Viewer';
 const SETTINGS_ID = '@jupytercad/jupytercad-core:jupytercad-settings';
@@ -32,9 +35,11 @@ const activate = async (
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
   drive: ICollaborativeDrive | null,
-  settingRegistry?: ISettingRegistry
+  settingRegistry?: ISettingRegistry,
+  translator?: ITranslator
 ): Promise<void> => {
   let settings: ISettingRegistry.ISettings | null = null;
+  translator = translator ?? nullTranslator;
 
   if (settingRegistry) {
     try {
@@ -46,6 +51,18 @@ const activate = async (
   } else {
     console.warn('No settingRegistry available; using default settings.');
   }
+
+  const stlWorker = new ExportWorker({
+    tracker,
+    shapeFormat: JCadWorkerSupportedFormat.STL
+  });
+  workerRegistry.registerWorker('jupytercad-stl:worker', stlWorker);
+
+  const brepWorker = new ExportWorker({
+    tracker,
+    shapeFormat: JCadWorkerSupportedFormat.BREP
+  });
+  workerRegistry.registerWorker('jupytercad-brep:worker', brepWorker);
 
   const widgetFactory = new JupyterCadDocumentWidgetFactory({
     name: FACTORY,
@@ -107,7 +124,7 @@ const stlPlugin: JupyterFrontEndPlugin<void> = {
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken
   ],
-  optional: [ICollaborativeDrive, ISettingRegistry],
+  optional: [ICollaborativeDrive, ISettingRegistry, ITranslator],
   autoStart: true,
   activate
 };

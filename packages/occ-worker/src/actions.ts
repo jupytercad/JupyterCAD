@@ -27,6 +27,7 @@ function buildModel(
     }
     const shapeFactory = getShapesFactory();
     let shapeData: IOperatorFuncOutput | undefined = undefined;
+
     if (shapeFactory[shape]) {
       shapeData = shapeFactory[shape]?.(parameters as IOperatorArg, model);
     } else if (parameters['Shape']) {
@@ -45,17 +46,18 @@ function buildModel(
         JCadWorkerSupportedFormat.BREP) as JCadWorkerSupportedFormat;
 
       switch (shapeFormat) {
-        case JCadWorkerSupportedFormat.BREP: {
-          shapeData = shapeFactory['Post::Operator']?.(
-            parameters as IOperatorArg,
-            model
-          );
-          break;
-        }
         case JCadWorkerSupportedFormat.GLTF: {
           shapeData = {
             postShape: ''
           };
+          break;
+        }
+        case JCadWorkerSupportedFormat.BREP:
+        case JCadWorkerSupportedFormat.STL: {
+          shapeData = shapeFactory['Post::Operator']?.(
+            parameters as IOperatorArg,
+            model
+          );
           break;
         }
 

@@ -8,6 +8,12 @@
     "Object": {
       "type": "string",
       "description": "The name of input object"
+    },
+    "Type": {
+      "type": "string",
+      "default": "BREP",
+      "enum": ["BREP", "STL"],
+      "description": "The filetype for export (Brep/Stl)"
     }
   }
 }

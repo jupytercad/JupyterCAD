@@ -2,6 +2,7 @@ import { IJCadContent, IPostOperator } from '@jupytercad/schema';
 
 import { IOperatorArg } from '../types';
 import { _writeBrep } from './brepIO';
+import { _writeStlFile } from './stlIO';
 import { getShapesFactory } from './common';
 
 export function _PostOperator(
@@ -20,7 +21,16 @@ export function _PostOperator(
       content
     );
     if (base?.occShape) {
-      const postShape = _writeBrep(base.occShape);
+      let postShape = '';
+      if (arg.Type === 'BREP') {
+        postShape = _writeBrep(base.occShape);
+      } else if (arg.Type === 'STL') {
+        postShape = _writeStlFile(
+          base.occShape,
+          arg.LinearDeflection,
+          arg.AngularDeflection
+        );
+      }
       return { postShape };
     }
   }

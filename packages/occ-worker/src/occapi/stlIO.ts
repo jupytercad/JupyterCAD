@@ -22,3 +22,42 @@ export function _loadStlFile(content: string): OCC.TopoDS_Shape | undefined {
     return undefined;
   }
 }
+
+export function _writeStlFile(
+  shape: OCC.TopoDS_Shape,
+  linearDeflection = 0.1,
+  angularDeflection = 0.5
+): string {
+  const oc = getOcc();
+
+  new oc.BRepMesh_IncrementalMesh_2(
+    shape,
+    linearDeflection,
+    false,
+    angularDeflection,
+    true
+  );
+
+  const writer = new oc.StlAPI_Writer();
+  const progress = new oc.Message_ProgressRange_1();
+  const fakeFileName = `${uuid()}.stl`;
+
+  try {
+    const success = writer.Write(shape, fakeFileName, progress);
+    if (!success) {
+      throw new Error('StlAPI_Writer failed to write the file.');
+    }
+
+    const stlContent = oc.FS.readFile(fakeFileName, {
+      encoding: 'utf8'
+    }) as string;
+
+    return stlContent;
+  } finally {
+    if (oc.FS.analyzePath(fakeFileName).exists) {
+      oc.FS.unlink(fakeFileName);
+    }
+    writer.delete();
+    progress.delete();
+  }
+}
