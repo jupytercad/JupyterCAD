@@ -2,6 +2,33 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.1.5
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.1.4...6badc9c5d56fd381a53cf60c13dd08f062135216))
+
+### Enhancements made
+
+- Add STL/BREP export feature. [#764](https://github.com/jupytercad/JupyterCAD/pull/764) ([@Yahiewi](https://github.com/Yahiewi))
+
+### Bugs fixed
+
+- Restore the users item visibility [#767](https://github.com/jupytercad/JupyterCAD/pull/767) ([@brichet](https://github.com/brichet))
+- Bring back follow mode [#766](https://github.com/jupytercad/JupyterCAD/pull/766) ([@arjxn-py](https://github.com/arjxn-py))
+
+### Maintenance and upkeep improvements
+
+### Other merged PRs
+
+- Update CONTRIBUTING.md [#761](https://github.com/jupytercad/JupyterCAD/pull/761) ([@asmith26](https://github.com/asmith26))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2025-06-19&to=2025-07-23&type=c))
+
+[@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2025-06-19..2025-07-23&type=Issues) | [@asmith26](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aasmith26+updated%3A2025-06-19..2025-07-23&type=Issues) | [@brichet](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Abrichet+updated%3A2025-06-19..2025-07-23&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2025-06-19..2025-07-23&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2025-06-19..2025-07-23&type=Issues) | [@Yahiewi](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AYahiewi+updated%3A2025-06-19..2025-07-23&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.1.4
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.1.3...04890fe366cfea1da18b80bdfd808eb811bc5480))
@@ -31,8 +58,6 @@
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2025-05-06&to=2025-06-19&type=c))
 
 [@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2025-05-06..2025-06-19&type=Issues) | [@chaffra](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Achaffra+updated%3A2025-05-06..2025-06-19&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2025-05-06..2025-06-19&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2025-05-06..2025-06-19&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2025-05-06..2025-06-19&type=Issues) | [@Yahiewi](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AYahiewi+updated%3A2025-05-06..2025-06-19&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.1.3
 
