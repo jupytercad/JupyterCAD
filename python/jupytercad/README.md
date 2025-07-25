@@ -27,6 +27,7 @@ You can install JupyterCAD using conda/mamba (this installs freecad automaticall
 mamba install -c conda-forge jupytercad
 ```
 
+
 Or using pip:
 
 ```bash
