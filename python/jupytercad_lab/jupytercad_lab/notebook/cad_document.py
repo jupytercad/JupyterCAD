@@ -65,6 +65,52 @@ class CadDocument(CommWidget):
         return []
 
     @classmethod
+    def open(cls, path: str) -> CadDocument:
+        """
+        Open a .jcad file from the local filesystem.
+
+        :param path: The path to the file.
+        :return: A new CadDocument instance.
+        """
+        instance = cls()
+        with open(path, "r") as f:
+            jcad_content = json.load(f)
+
+        objects = jcad_content.get("objects", [])
+        for obj in objects:
+            instance._objects_array.append(Map(obj))
+
+        options = jcad_content.get("options", {})
+        for key, value in options.items():
+            instance._options[key] = value
+
+        metadata = jcad_content.get("metadata", {})
+        for key, value in metadata.items():
+            instance._metadata[key] = value
+
+        outputs = jcad_content.get("outputs", {})
+        for key, value in outputs.items():
+            instance._outputs[key] = value
+
+        return instance
+
+    def save(self, path: str):
+        """
+        Save the document to a .jcad file on the local filesystem.
+
+        :param path: The path to the file.
+        """
+        content = {
+            "schemaVersion": "3.0.0",
+            "objects": self._objects_array.to_py(),
+            "options": self._options.to_py(),
+            "metadata": self._metadata.to_py(),
+            "outputs": self._outputs.to_py(),
+        }
+        with open(path, "w") as f:
+            json.dump(content, f, indent=4)
+
+    @classmethod
     def _path_to_comm(cls, filePath: Optional[str]) -> Dict:
         path = None
         format = None
