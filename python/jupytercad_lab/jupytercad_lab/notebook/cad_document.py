@@ -65,9 +65,9 @@ class CadDocument(CommWidget):
         return []
 
     @classmethod
-    def open(cls, path: str) -> CadDocument:
+    def load(cls, path: str) -> CadDocument:
         """
-        Open a .jcad file from the local filesystem.
+        Loads a .jcad file from the local filesystem.
 
         :param path: The path to the file.
         :return: A new CadDocument instance.
@@ -94,9 +94,9 @@ class CadDocument(CommWidget):
 
         return instance
 
-    def save(self, path: str):
+    def save(self, path: str) -> None:
         """
-        Save the document to a .jcad file on the local filesystem.
+        Save the CadDocument to a .jcad file on the local filesystem.
 
         :param path: The path to the file.
         """
