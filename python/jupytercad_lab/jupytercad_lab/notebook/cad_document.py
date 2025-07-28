@@ -67,7 +67,7 @@ class CadDocument(CommWidget):
     @classmethod
     def load(cls, path: str) -> CadDocument:
         """
-        Loads a .jcad file from the local filesystem.
+        Load a .jcad file from the local filesystem.
 
         :param path: The path to the file.
         :return: A new CadDocument instance.
