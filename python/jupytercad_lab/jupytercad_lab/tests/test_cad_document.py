@@ -1,7 +1,7 @@
-import json
 import os
 import tempfile
 from jupytercad_lab.notebook.cad_document import CadDocument
+
 
 def test_save_and_load():
     # Create a new CadDocument
