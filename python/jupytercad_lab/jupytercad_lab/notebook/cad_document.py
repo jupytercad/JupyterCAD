@@ -65,6 +65,10 @@ class CadDocument(CommWidget):
         return []
 
     @classmethod
+    def load_simplified(cls, path: str) -> CadDocument:  # todo
+        return cls(path)
+
+    @classmethod
     def load(cls, path: str) -> CadDocument:
         """
         Load a .jcad file from the local filesystem.
