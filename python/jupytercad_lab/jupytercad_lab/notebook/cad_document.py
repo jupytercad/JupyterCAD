@@ -26,7 +26,8 @@ from jupytercad_core.schema import (
     ITorus,
     Parts,
     ShapeMetadata,
-    IAny, SCHEMA_VERSION,
+    IAny,
+    SCHEMA_VERSION,
 )
 
 logger = logging.getLogger(__file__)
