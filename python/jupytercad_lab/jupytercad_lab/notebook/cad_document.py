@@ -6,7 +6,7 @@ import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from pycrdt import Array, Doc, Map
+from pycrdt import Array, Doc, Map, Text
 from pydantic import BaseModel
 from ypywidgets.comm import CommWidget
 
@@ -26,7 +26,7 @@ from jupytercad_core.schema import (
     ITorus,
     Parts,
     ShapeMetadata,
-    IAny,
+    IAny, SCHEMA_VERSION,
 )
 
 logger = logging.getLogger(__file__)
@@ -50,6 +50,7 @@ class CadDocument(CommWidget):
             ydoc=ydoc,
         )
 
+        self.ydoc["schemaVersion"] = self._schemaVersion = Text(SCHEMA_VERSION)
         self.ydoc["objects"] = self._objects_array = Array()
         self.ydoc["metadata"] = self._metadata = Map()
         self.ydoc["outputs"] = self._outputs = Map()
@@ -105,7 +106,7 @@ class CadDocument(CommWidget):
         :param path: The path to the file.
         """
         content = {
-            "schemaVersion": "3.0.0",
+            "schemaVersion": SCHEMA_VERSION,
             "objects": self._objects_array.to_py(),
             "options": self._options.to_py(),
             "metadata": self._metadata.to_py(),
