@@ -67,13 +67,9 @@ class CadDocument(CommWidget):
         return []
 
     @classmethod
-    def load_simplified(cls, path: str) -> CadDocument:  # todo
-        return cls(path)
-
-    @classmethod
-    def load(cls, path: str) -> CadDocument:
+    def import_from_file(cls, path: str) -> CadDocument:
         """
-        Load a .jcad file from the local filesystem.
+        Import a CadDocument from a .jcad file.
 
         :param path: The path to the file.
         :return: A new CadDocument instance.
@@ -82,21 +78,10 @@ class CadDocument(CommWidget):
         with open(path, "r") as f:
             jcad_content = json.load(f)
 
-        objects = jcad_content.get("objects", [])
-        for obj in objects:
-            instance._objects_array.append(Map(obj))
-
-        options = jcad_content.get("options", {})
-        for key, value in options.items():
-            instance._options[key] = value
-
-        metadata = jcad_content.get("metadata", {})
-        for key, value in metadata.items():
-            instance._metadata[key] = value
-
-        outputs = jcad_content.get("outputs", {})
-        for key, value in outputs.items():
-            instance._outputs[key] = value
+        instance.ydoc["objects"] = instance._objects_array = Array([Map(obj) for obj in jcad_content.get("objects", [])])
+        instance.ydoc["options"] = instance._options = Map(jcad_content.get("options", {}))
+        instance.ydoc["metadata"] = instance._metadata = Map(jcad_content.get("metadata", {}))
+        instance.ydoc["outputs"] = instance._outputs = Map(jcad_content.get("outputs", {}))
 
         return instance
 
