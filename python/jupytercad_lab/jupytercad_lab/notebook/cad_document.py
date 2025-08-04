@@ -78,10 +78,18 @@ class CadDocument(CommWidget):
         with open(path, "r") as f:
             jcad_content = json.load(f)
 
-        instance.ydoc["objects"] = instance._objects_array = Array([Map(obj) for obj in jcad_content.get("objects", [])])
-        instance.ydoc["options"] = instance._options = Map(jcad_content.get("options", {}))
-        instance.ydoc["metadata"] = instance._metadata = Map(jcad_content.get("metadata", {}))
-        instance.ydoc["outputs"] = instance._outputs = Map(jcad_content.get("outputs", {}))
+        instance.ydoc["objects"] = instance._objects_array = Array(
+            [Map(obj) for obj in jcad_content.get("objects", [])]
+        )
+        instance.ydoc["options"] = instance._options = Map(
+            jcad_content.get("options", {})
+        )
+        instance.ydoc["metadata"] = instance._metadata = Map(
+            jcad_content.get("metadata", {})
+        )
+        instance.ydoc["outputs"] = instance._outputs = Map(
+            jcad_content.get("outputs", {})
+        )
 
         return instance
 
