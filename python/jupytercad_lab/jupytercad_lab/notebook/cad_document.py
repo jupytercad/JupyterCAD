@@ -67,7 +67,7 @@ class CadDocument(CommWidget):
         return []
 
     @classmethod
-    def import_from_file(cls, path: str) -> CadDocument:
+    def import_from_file(cls, path: str | Path) -> CadDocument:
         """
         Import a CadDocument from a .jcad file.
 
@@ -93,7 +93,7 @@ class CadDocument(CommWidget):
 
         return instance
 
-    def save(self, path: str) -> None:
+    def save(self, path: str | Path) -> None:
         """
         Save the CadDocument to a .jcad file on the local filesystem.
 
@@ -240,7 +240,7 @@ class CadDocument(CommWidget):
 
     def add_step_file(
         self,
-        path: str,
+        path: str | Path,
         name: str = "",
         position: List[float] = [0, 0, 0],
         rotation_axis: List[float] = [0, 0, 1],
