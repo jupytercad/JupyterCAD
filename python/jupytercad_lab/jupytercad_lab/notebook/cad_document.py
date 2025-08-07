@@ -240,7 +240,7 @@ class CadDocument(CommWidget):
 
     def add_step_file(
         self,
-        path: str | Path,
+        path: str,
         name: str = "",
         position: List[float] = [0, 0, 0],
         rotation_axis: List[float] = [0, 0, 1],
