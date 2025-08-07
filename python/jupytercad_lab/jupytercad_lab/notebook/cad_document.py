@@ -109,12 +109,25 @@ class CadDocument(CommWidget):
             return "#808080"
 
     def remove(self, name: str) -> CadDocument:
+        """
+        Remove an object from the document.
+
+        :param name: The name of the object to remove.
+        :return: The document itself.
+        """
         index = self._get_yobject_index_by_name(name)
         if self._objects_array and index != -1:
             self._objects_array.pop(index)
         return self
 
     def rename(self, old_name: str, new_name: str) -> CadDocument:
+        """
+        Rename an object in the document.
+
+        :param old_name: The current name of the object.
+        :param new_name: The new name for the object.
+        :return: The document itself.
+        """
         if new_name == old_name:
             return self
         new_obj = self.get_object(old_name)
@@ -727,6 +740,12 @@ class CadDocument(CommWidget):
         return shape1, shape2
 
     def set_visible(self, name: str, value):
+        """
+        Set the visibility of an object.
+
+        :param name: The name of the object.
+        :param value: The visibility value (True or False).
+        """
         obj: Optional[Map] = self._get_yobject_by_name(name)
 
         if obj is None:
@@ -735,6 +754,12 @@ class CadDocument(CommWidget):
         obj["visible"] = value
 
     def set_color(self, name: str, value: str):
+        """
+        Set the color of an object.
+
+        :param name: The name of the object.
+        :param value: The color in hex format (e.g., "#FF5733").
+        """
         obj: Optional[Map] = self._get_yobject_by_name(name)
 
         if obj is None:
