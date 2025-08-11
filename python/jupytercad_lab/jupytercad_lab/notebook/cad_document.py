@@ -6,7 +6,7 @@ import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from pycrdt import Array, Doc, Map
+from pycrdt import Array, Doc, Map, Text
 from pydantic import BaseModel
 from ypywidgets.comm import CommWidget
 
@@ -27,6 +27,7 @@ from jupytercad_core.schema import (
     Parts,
     ShapeMetadata,
     IAny,
+    SCHEMA_VERSION,
 )
 
 logger = logging.getLogger(__file__)
@@ -50,6 +51,7 @@ class CadDocument(CommWidget):
             ydoc=ydoc,
         )
 
+        self.ydoc["schemaVersion"] = self._schemaVersion = Text(SCHEMA_VERSION)
         self.ydoc["objects"] = self._objects_array = Array()
         self.ydoc["metadata"] = self._metadata = Map()
         self.ydoc["outputs"] = self._outputs = Map()
@@ -63,6 +65,49 @@ class CadDocument(CommWidget):
         if self._objects_array:
             return [x["name"] for x in self._objects_array]
         return []
+
+    @classmethod
+    def import_from_file(cls, path: str | Path) -> CadDocument:
+        """
+        Import a CadDocument from a .jcad file.
+
+        :param path: The path to the file.
+        :return: A new CadDocument instance.
+        """
+        instance = cls()
+        with open(path, "r") as f:
+            jcad_content = json.load(f)
+
+        instance.ydoc["objects"] = instance._objects_array = Array(
+            [Map(obj) for obj in jcad_content.get("objects", [])]
+        )
+        instance.ydoc["options"] = instance._options = Map(
+            jcad_content.get("options", {})
+        )
+        instance.ydoc["metadata"] = instance._metadata = Map(
+            jcad_content.get("metadata", {})
+        )
+        instance.ydoc["outputs"] = instance._outputs = Map(
+            jcad_content.get("outputs", {})
+        )
+
+        return instance
+
+    def save(self, path: str | Path) -> None:
+        """
+        Save the CadDocument to a .jcad file on the local filesystem.
+
+        :param path: The path to the file.
+        """
+        content = {
+            "schemaVersion": SCHEMA_VERSION,
+            "objects": self._objects_array.to_py(),
+            "options": self._options.to_py(),
+            "metadata": self._metadata.to_py(),
+            "outputs": self._outputs.to_py(),
+        }
+        with open(path, "w") as f:
+            json.dump(content, f, indent=4)
 
     @classmethod
     def _path_to_comm(cls, filePath: Optional[str]) -> Dict:
