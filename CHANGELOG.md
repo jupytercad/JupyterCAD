@@ -2,6 +2,31 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.1.6
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.1.5...2fca4767d8e107f5d6cf854bb8520b3f645066d4))
+
+### Enhancements made
+
+- Add save and load methods to CadDocument [#772](https://github.com/jupytercad/JupyterCAD/pull/772) ([@asmith26](https://github.com/asmith26))
+
+### Maintenance and upkeep improvements
+
+- Fix lite bot [#770](https://github.com/jupytercad/JupyterCAD/pull/770) ([@martinRenou](https://github.com/martinRenou))
+- Fixing bot again... [#769](https://github.com/jupytercad/JupyterCAD/pull/769) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Add missing docstrings [#776](https://github.com/jupytercad/JupyterCAD/pull/776) ([@asmith26](https://github.com/asmith26))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2025-07-23&to=2025-08-18&type=c))
+
+[@asmith26](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aasmith26+updated%3A2025-07-23..2025-08-18&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2025-07-23..2025-08-18&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.1.5
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.1.4...6badc9c5d56fd381a53cf60c13dd08f062135216))
@@ -26,8 +51,6 @@
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2025-06-19&to=2025-07-23&type=c))
 
 [@arjxn-py](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2025-06-19..2025-07-23&type=Issues) | [@asmith26](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aasmith26+updated%3A2025-06-19..2025-07-23&type=Issues) | [@brichet](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Abrichet+updated%3A2025-06-19..2025-07-23&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2025-06-19..2025-07-23&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2025-06-19..2025-07-23&type=Issues) | [@Yahiewi](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AYahiewi+updated%3A2025-06-19..2025-07-23&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.1.4
 
