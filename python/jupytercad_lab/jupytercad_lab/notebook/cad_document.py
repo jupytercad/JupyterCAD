@@ -580,7 +580,11 @@ class CadDocument(CommWidget):
                 "Tool": tool,
                 "Refine": refine,
                 "Color": color,
-                "Placement": {"Position": [0, 0, 0], "Axis": [0, 0, 1], "Angle": 0},
+                "Placement": {
+                    "Position": position,
+                    "Axis": rotation_axis,
+                    "Angle": rotation_angle,
+                },
             },
         }
         self.set_visible(base, False)
@@ -623,7 +627,12 @@ class CadDocument(CommWidget):
             "parameters": {
                 "Shapes": [shape1, shape2],
                 "Refine": refine,
-                "Placement": {"Position": [0, 0, 0], "Axis": [0, 0, 1], "Angle": 0},
+                "Color": color,
+                "Placement": {
+                    "Position": position,
+                    "Axis": rotation_axis,
+                    "Angle": rotation_angle,
+                },
             },
         }
         self.set_visible(shape1, False)
@@ -667,7 +676,12 @@ class CadDocument(CommWidget):
             "parameters": {
                 "Shapes": [shape1, shape2],
                 "Refine": refine,
-                "Placement": {"Position": [0, 0, 0], "Axis": [0, 0, 1], "Angle": 0},
+                "Color": color,
+                "Placement": {
+                    "Position": position,
+                    "Axis": rotation_axis,
+                    "Angle": rotation_angle,
+                },
             },
         }
         self.set_visible(shape1, False)
@@ -712,7 +726,12 @@ class CadDocument(CommWidget):
                 "Base": shape,
                 "Edge": edge,
                 "Dist": dist,
-                "Placement": {"Position": [0, 0, 0], "Axis": [0, 0, 1], "Angle": 0},
+                "Color": color,
+                "Placement": {
+                    "Position": position,
+                    "Axis": rotation_axis,
+                    "Angle": rotation_angle,
+                },
             },
         }
         self.set_visible(shape, False)
@@ -756,7 +775,12 @@ class CadDocument(CommWidget):
                 "Base": shape,
                 "Edge": edge,
                 "Radius": radius,
-                "Placement": {"Position": [0, 0, 0], "Axis": [0, 0, 1], "Angle": 0},
+                "Color": color,
+                "Placement": {
+                    "Position": position,
+                    "Axis": rotation_axis,
+                    "Angle": rotation_angle,
+                },
             },
         }
         self.set_visible(shape, False)
