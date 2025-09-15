@@ -642,6 +642,12 @@ export function addCommands(
     isToggled: () => {
       return tracker.currentWidget?.content.consoleOpened === true;
     },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: async () => {
       await Private.toggleConsole(tracker);
       commands.notifyCommandChanged(CommandIDs.toggleConsole);
@@ -655,6 +661,12 @@ export function addCommands(
         ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: () => Private.executeConsole(tracker)
   });
   commands.addCommand(CommandIDs.removeConsole, {
@@ -665,12 +677,24 @@ export function addCommands(
         ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: () => Private.removeConsole(tracker)
   });
 
   commands.addCommand(CommandIDs.invokeCompleter, {
     label: trans.__('Display the completion helper.'),
     isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: () => {
       const currentWidget = tracker.currentWidget;
       if (!currentWidget || !completionProviderManager) {
@@ -686,6 +710,12 @@ export function addCommands(
   commands.addCommand(CommandIDs.selectCompleter, {
     label: trans.__('Select the completion suggestion.'),
     isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: () => {
       const currentWidget = tracker.currentWidget;
       if (!currentWidget || !completionProviderManager) {
@@ -704,6 +734,12 @@ export function addCommands(
         ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: args => {
       const current = tracker.currentWidget;
 
@@ -721,6 +757,12 @@ export function addCommands(
         ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: args => {
       const current = tracker.currentWidget;
 
@@ -737,6 +779,12 @@ export function addCommands(
       return tracker.currentWidget
         ? tracker.currentWidget.model.sharedModel.editable
         : false;
+    },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
     },
     execute: async args => {
       const current = tracker.currentWidget;
@@ -765,6 +813,12 @@ export function addCommands(
       const current = tracker.currentWidget;
       return current ? current.model.sharedModel.editable : false;
     },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: () => {
       const current = tracker.currentWidget;
       if (!current) {
@@ -792,6 +846,12 @@ export function addCommands(
         : false;
     },
     icon: boxIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.createPart('box', tracker)
   });
 
@@ -803,6 +863,12 @@ export function addCommands(
         : false;
     },
     icon: cylinderIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.createPart('cylinder', tracker)
   });
 
@@ -814,6 +880,12 @@ export function addCommands(
         : false;
     },
     icon: sphereIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.createPart('sphere', tracker)
   });
 
@@ -825,6 +897,12 @@ export function addCommands(
         : false;
     },
     icon: coneIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.createPart('cone', tracker)
   });
 
@@ -836,6 +914,12 @@ export function addCommands(
         : false;
     },
     icon: torusIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.createPart('torus', tracker)
   });
 
@@ -847,6 +931,12 @@ export function addCommands(
         : false;
     },
     icon: extrusionIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.executeOperator('extrusion', tracker)
   });
 
@@ -858,6 +948,12 @@ export function addCommands(
         : false;
     },
     icon: cutIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.executeOperator('cut', tracker)
   });
 
@@ -869,6 +965,12 @@ export function addCommands(
         : false;
     },
     icon: unionIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.executeOperator('union', tracker)
   });
 
@@ -880,6 +982,12 @@ export function addCommands(
         : false;
     },
     icon: intersectionIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.executeOperator('intersection', tracker)
   });
 
@@ -891,6 +999,12 @@ export function addCommands(
     isToggled: () => {
       const current = tracker.currentWidget?.content;
       return current?.wireframe || false;
+    },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
     },
     execute: async () => {
       const current = tracker.currentWidget?.content;
@@ -930,6 +1044,12 @@ export function addCommands(
       const current = tracker.currentWidget?.content;
       return current?.transform || false;
     },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: async () => {
       const current = tracker.currentWidget?.content;
 
@@ -955,6 +1075,12 @@ export function addCommands(
         : false;
     },
     icon: chamferIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.executeOperator('chamfer', tracker)
   });
 
@@ -966,6 +1092,12 @@ export function addCommands(
         : false;
     },
     icon: filletIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.executeOperator('fillet', tracker)
   });
 
@@ -979,6 +1111,12 @@ export function addCommands(
         return false;
       }
       return current.model.jcadSettings.showAxesHelper;
+    },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
     },
     execute: async () => {
       const current = tracker.currentWidget;
@@ -1025,6 +1163,12 @@ export function addCommands(
         ? (viewSettings.explodedView as ExplodedView).enabled
         : false;
     },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: async () => {
       const current = tracker.currentWidget;
 
@@ -1061,6 +1205,12 @@ export function addCommands(
     isToggled: () => {
       const current = tracker.currentWidget;
       return current?.model.jcadSettings.cameraType === 'Orthographic';
+    },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
     },
     execute: async () => {
       const current = tracker.currentWidget;
@@ -1102,6 +1252,12 @@ export function addCommands(
       return current?.clipView?.enabled || false;
     },
     icon: clippingIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: async () => {
       const current = tracker.currentWidget;
 
@@ -1134,6 +1290,12 @@ export function addCommands(
     label: trans.__('Split screen'),
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: filterIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: async () => {
       const current = tracker.currentWidget;
 
@@ -1154,6 +1316,12 @@ export function addCommands(
       return Boolean(tracker.currentWidget?.model?.sharedModel?.toJcadEndpoint);
     },
     iconClass: 'fa fa-file-export',
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: async () => {
       const current = tracker.currentWidget;
 
@@ -1177,6 +1345,12 @@ export function addCommands(
     isEnabled: () => {
       const current = tracker.currentWidget;
       return current ? current.model.sharedModel.editable : false;
+    },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
     },
     execute: () => {
       const current = tracker.currentWidget;
@@ -1203,6 +1377,12 @@ export function addCommands(
       const clipboard = current?.model.getCopiedObject();
       const editable = current?.model.sharedModel.editable;
       return !!(current && clipboard && editable);
+    },
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
     },
     execute: () => {
       const current = tracker.currentWidget;
@@ -1241,12 +1421,24 @@ export function addCommands(
   commands.addCommand(CommandIDs.exportAsSTL, {
     label: trans.__('Export as STL'),
     isEnabled: () => Boolean(tracker.currentWidget),
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.executeExport(app, tracker, 'STL')
   });
 
   commands.addCommand(CommandIDs.exportAsBREP, {
     label: trans.__('Export as BREP'),
     isEnabled: () => Boolean(tracker.currentWidget),
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {}
+      }
+    },
     execute: Private.executeExport(app, tracker, 'BREP')
   });
 
