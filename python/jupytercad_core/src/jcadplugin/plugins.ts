@@ -156,7 +156,8 @@ const activate = async (
           },
           cwd: {
             type: 'string',
-            description: 'The current working directory where the file should be created'
+            description:
+              'The current working directory where the file should be created'
           }
         }
       }
