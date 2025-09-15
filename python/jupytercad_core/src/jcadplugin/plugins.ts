@@ -146,6 +146,22 @@ const activate = async (
     label: args => (args['label'] as string) ?? 'CAD file',
     caption: 'Create a new JCAD Editor',
     icon: logoIcon,
+    describedBy: {
+      args: {
+        type: 'object',
+        properties: {
+          label: {
+            type: 'string',
+            description: 'The label for the file creation command'
+          },
+          cwd: {
+            type: 'string',
+            description:
+              'The current working directory where the file should be created'
+          }
+        }
+      }
+    },
     execute: async args => {
       // Get the directory in which the JCAD file must be created;
       // otherwise take the current filebrowser directory

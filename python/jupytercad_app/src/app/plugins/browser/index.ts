@@ -66,6 +66,12 @@ const browserWidget: JupyterFrontEndPlugin<void> = {
       label: 'Open File',
       caption: 'Open files from disk',
       icon: fileUploadIcon,
+      describedBy: {
+        args: {
+          type: 'object',
+          properties: {}
+        }
+      },
       execute: args => {
         input.click();
       }

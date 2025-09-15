@@ -210,6 +210,12 @@ export class MainView extends React.Component<IProps, IStates> {
   addContextMenu = (): void => {
     const commands = new CommandRegistry();
     commands.addCommand('add-annotation', {
+      describedBy: {
+        args: {
+          type: 'object',
+          properties: {}
+        }
+      },
       execute: () => {
         if (!this._pointer3D) {
           return;

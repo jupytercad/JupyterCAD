@@ -21,6 +21,12 @@ export class MainMenu extends MenuBar {
   private _createHelpMenu(): void {
     this._commands.addCommand('jupytercad:help-menu:documentation', {
       label: 'Documentation',
+      describedBy: {
+        args: {
+          type: 'object',
+          properties: {}
+        }
+      },
       execute: () => {
         window.open('https://github.com/jupytercad/JupyterCAD', '_blank');
       },
