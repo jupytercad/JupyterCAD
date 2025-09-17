@@ -190,7 +190,6 @@ class ObjectPropertiesReact extends React.Component<IProps, IStates> {
     if (!this.state.jcadObject || !objectName) {
       return;
     }
-
     const currentWidget = this.props.tracker
       .currentWidget as JupyterCadWidget | null;
     if (!currentWidget) {
