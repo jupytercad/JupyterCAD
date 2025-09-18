@@ -151,6 +151,10 @@ export class ObjectPropertiesForm extends React.Component<IProps, IStates> {
         <div
           className="jpcad-property-panel"
           data-path={this.props.filePath ?? ''}
+          // Prevent any key press from propagating to other elements
+          onKeyDown={(e: React.KeyboardEvent) => {
+            e.stopPropagation();
+          }}
         >
           <div
             className="jpcad-property-outer jp-scrollbar-tiny"
