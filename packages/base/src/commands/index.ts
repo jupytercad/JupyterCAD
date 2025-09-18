@@ -1,287 +1,66 @@
 import {
   IDict,
-  IDryRunResponsePayload,
-  IJCadContent,
   IJCadFormSchemaRegistry,
   IJCadObject,
   IJCadWorkerRegistry,
-  IJupyterCadDoc,
   IJupyterCadModel,
-  ISelection,
-  Parts,
+  IJupyterCadTracker,
   JCadWorkerSupportedFormat,
-  IJupyterCadTracker
+  Parts
 } from '@jupytercad/schema';
-import { CommandRegistry } from '@lumino/commands';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { showErrorMessage, WidgetTracker } from '@jupyterlab/apputils';
+import { ICompletionProviderManager } from '@jupyterlab/completer';
+import { PathExt } from '@jupyterlab/coreutils';
 import { ITranslator } from '@jupyterlab/translation';
 import { filterIcon, redoIcon, undoIcon } from '@jupyterlab/ui-components';
-import { ICompletionProviderManager } from '@jupyterlab/completer';
+import { CommandRegistry } from '@lumino/commands';
+import { JSONObject } from '@lumino/coreutils';
 import { Menu } from '@lumino/widgets';
-import { FormDialog } from './formdialog';
-import { SketcherDialog } from './sketcher/sketcherdialog';
+import { v4 as uuid } from 'uuid';
+
+import { DEFAULT_MESH_COLOR } from '../3dview/helpers';
+import { FormDialog } from '../formdialog';
+import keybindings from '../keybindings.json';
+import { SketcherDialog } from '../sketcher/sketcherdialog';
 import {
   axesIcon,
   boxIcon,
+  chamferIcon,
+  clippingIcon,
   coneIcon,
   cutIcon,
   cylinderIcon,
   explodedViewIcon,
   extrusionIcon,
+  filletIcon,
   intersectionIcon,
+  pencilSolidIcon,
   requestAPI,
   sphereIcon,
   torusIcon,
-  unionIcon,
-  clippingIcon,
-  chamferIcon,
-  filletIcon,
-  wireframeIcon,
   transformIcon,
-  pencilSolidIcon,
-  videoSolidIcon
+  unionIcon,
+  videoSolidIcon,
+  wireframeIcon
+} from '../tools';
+import { ExplodedView, JupyterCadTracker } from '../types';
+import { JupyterCadDocumentWidget, JupyterCadWidget } from '../widget';
+import {
+  addDocumentActionCommands,
+  addShapeCreationCommands,
+  addShapeOperationCommands,
+  DocumentActionCommandIDs,
+  ShapeCreationCommandMap,
+  ShapeOperationCommandMap
+} from './operationcommands';
+import {
+  getSelectedEdges,
+  getSelectedMeshName,
+  getSelectedObject,
+  newName,
+  PARTS
 } from './tools';
-import keybindings from './keybindings.json';
-import { DEFAULT_MESH_COLOR } from './3dview/helpers';
-import { JupyterCadWidget } from './widget';
-import { PathExt } from '@jupyterlab/coreutils';
-import { MainViewModel } from './3dview/mainviewmodel';
-import { handleRemoveObject } from './panelview';
-import { v4 as uuid } from 'uuid';
-import { ExplodedView, JupyterCadTracker } from './types';
-import { JSONObject } from '@lumino/coreutils';
-import { JupyterCadDocumentWidget } from './widget';
-
-export function newName(type: string, model: IJupyterCadModel): string {
-  const sharedModel = model.sharedModel;
-
-  let n = 1;
-  let name = `${type} 1`;
-  while (sharedModel.objectExists(name)) {
-    name = `${type} ${++n}`;
-  }
-
-  return name;
-}
-
-export async function dryRunCheck(options: {
-  jcadContent: IJCadContent;
-  mainView: MainViewModel;
-  requestedOperator: string;
-}): Promise<IDryRunResponsePayload | null> {
-  const { jcadContent, mainView, requestedOperator } = options;
-  const dryRunResult = await mainView.dryRun(jcadContent);
-  if (dryRunResult.status === 'error') {
-    showErrorMessage(
-      `Failed to apply ${requestedOperator} operator`,
-      `The ${requestedOperator} tool was unable to create the desired shape due to invalid parameter values. The values you entered may not be compatible with the dimensions of your piece.`
-    );
-    return null;
-  }
-  return dryRunResult;
-}
-
-export function getSelectedObject(
-  app: JupyterFrontEnd,
-  model: IJupyterCadModel,
-  objectNames: string[]
-): string {
-  const node = app.contextMenuHitTest(node =>
-    node.classList.contains('jpcad-object-tree-item')
-  );
-  if (node?.dataset.objectName) {
-    return node.dataset.objectName;
-  }
-
-  const selected = Object.keys(model.localState?.selected?.value || {});
-  if (selected.length > 0) {
-    return selected[0];
-  }
-
-  return objectNames[0];
-}
-
-export function setVisible(
-  sharedModel: IJupyterCadDoc,
-  name: string,
-  value: boolean
-) {
-  sharedModel.updateObjectByName(name, {
-    data: { key: 'visible', value }
-  });
-}
-
-const PARTS = {
-  box: {
-    title: 'Box parameters',
-    shape: 'Part::Box',
-    default: (model: IJupyterCadModel) => {
-      return {
-        Name: newName('Box', model),
-        Length: 1,
-        Width: 1,
-        Height: 1,
-        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
-      };
-    }
-  },
-  cylinder: {
-    title: 'Cylinder parameters',
-    shape: 'Part::Cylinder',
-    default: (model: IJupyterCadModel) => {
-      return {
-        Name: newName('Cylinder', model),
-        Radius: 1,
-        Height: 1,
-        Angle: 360,
-        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
-      };
-    }
-  },
-  sphere: {
-    title: 'Sphere parameters',
-    shape: 'Part::Sphere',
-    default: (model: IJupyterCadModel) => {
-      return {
-        Name: newName('Sphere', model),
-        Radius: 1,
-        Angle1: -90,
-        Angle2: 90,
-        Angle3: 360,
-        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
-      };
-    }
-  },
-  cone: {
-    title: 'Cone parameters',
-    shape: 'Part::Cone',
-    default: (model: IJupyterCadModel) => {
-      return {
-        Name: newName('Cone', model),
-        Radius1: 1,
-        Radius2: 0.5,
-        Height: 1,
-        Angle: 360,
-        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
-      };
-    }
-  },
-  torus: {
-    title: 'Torus parameters',
-    shape: 'Part::Torus',
-    default: (model: IJupyterCadModel) => {
-      return {
-        Name: newName('Torus', model),
-        Radius1: 1,
-        Radius2: 0.5,
-        Angle1: -180,
-        Angle2: 180,
-        Angle3: 360,
-        Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
-      };
-    }
-  }
-};
-
-function getSelectedMeshName(
-  selection: { [key: string]: ISelection } | undefined,
-  index: number
-): string {
-  if (selection === undefined) {
-    return '';
-  }
-
-  const selectedNames = Object.keys(selection);
-
-  if (selectedNames[index]) {
-    const selected = selection[selectedNames[index]];
-
-    if (selected.type === 'shape') {
-      return selectedNames[index];
-    } else {
-      return selected.parent as string;
-    }
-  }
-
-  return '';
-}
-
-function getSelectedEdges(
-  selection: { [key: string]: ISelection } | undefined
-): { shape: string; edgeIndices: number[] } | undefined {
-  if (selection === undefined) {
-    return;
-  }
-  const shape = Object.values(selection)
-    .filter(
-      sel =>
-        sel.type === 'edge' && sel.parent !== undefined && sel.parent !== null
-    )
-    .map(sel => sel.parent)[0];
-  const edgeIndices = Object.values(selection)
-    .filter(
-      sel =>
-        sel.type === 'edge' &&
-        sel.parent === shape &&
-        sel.edgeIndex !== undefined
-    )
-    .map(sel => sel.edgeIndex as number);
-  if (shape && edgeIndices.length) {
-    return { shape, edgeIndices };
-  }
-}
-
-export async function executeOperator(
-  name: string,
-  objectModel: IJCadObject,
-  current: JupyterCadWidget,
-  transaction: (sharedModel: IJupyterCadDoc) => any
-) {
-  const sharedModel = current.model.sharedModel;
-
-  if (!sharedModel) {
-    return;
-  }
-
-  if (sharedModel.objectExists(objectModel.name)) {
-    showErrorMessage(
-      'The object already exists',
-      'There is an existing object with the same name.'
-    );
-
-    return;
-  }
-
-  // Try a dry run with the update content to verify its feasibility
-  const currentJcadContent = current.model.getContent();
-  const updatedContent: IJCadContent = {
-    ...currentJcadContent,
-    objects: [...currentJcadContent.objects, objectModel]
-  };
-
-  const dryRunResult = await dryRunCheck({
-    jcadContent: updatedContent,
-    mainView: current.content.currentViewModel,
-    requestedOperator: name
-  });
-  if (!dryRunResult) {
-    return;
-  }
-  // Everything's good, we can apply the change to the shared model
-
-  const objMeta = dryRunResult.shapeMetadata?.[objectModel.name];
-  if (objMeta) {
-    objectModel.shapeMetadata = objMeta;
-  }
-  sharedModel.transact(() => {
-    transaction(sharedModel);
-    current.model.syncSelected(
-      { [objectModel.name]: { type: 'shape' } },
-      uuid()
-    );
-  });
-}
 
 const OPERATORS = {
   cut: {
@@ -289,7 +68,7 @@ const OPERATORS = {
     shape: 'Part::Cut',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selected = model.localState?.selected.value || {};
+      const selected = model.localState?.selected?.value || {};
       const sel0 = getSelectedMeshName(selected, 0);
       const sel1 = getSelectedMeshName(selected, 1);
       const baseName = sel0 || objects[0].name || '';
@@ -302,30 +81,6 @@ const OPERATORS = {
         Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
-    },
-    syncData: (current: JupyterCadWidget) => {
-      return async (props: IDict) => {
-        const { Name, ...parameters } = props;
-        const objectModel: IJCadObject = {
-          shape: 'Part::Cut',
-          parameters,
-          visible: true,
-          name: Name,
-          dependencies: [parameters['Base'], parameters['Tool']]
-        };
-
-        return executeOperator(
-          'Cut',
-          objectModel,
-          current,
-          (sharedModel: IJupyterCadDoc) => {
-            setVisible(sharedModel, parameters['Base'], false);
-            setVisible(sharedModel, parameters['Tool'], false);
-
-            sharedModel.addObject(objectModel);
-          }
-        );
-      };
     }
   },
   extrusion: {
@@ -333,7 +88,7 @@ const OPERATORS = {
     shape: 'Part::Extrusion',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selected = model.localState?.selected.value || {};
+      const selected = model.localState?.selected?.value || {};
       const sel0 = getSelectedMeshName(selected, 0);
       const baseName = sel0 || objects[0].name || '';
       const baseModel = model.sharedModel.getObjectByName(baseName);
@@ -347,29 +102,6 @@ const OPERATORS = {
         Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
-    },
-    syncData: (current: JupyterCadWidget) => {
-      return async (props: IDict) => {
-        const { Name, ...parameters } = props;
-        const objectModel: IJCadObject = {
-          shape: 'Part::Extrusion',
-          parameters,
-          visible: true,
-          name: Name,
-          dependencies: [parameters['Base']]
-        };
-
-        return executeOperator(
-          'Extrusion',
-          objectModel,
-          current,
-          (sharedModel: IJupyterCadDoc) => {
-            setVisible(sharedModel, parameters['Base'], false);
-
-            sharedModel.addObject(objectModel);
-          }
-        );
-      };
     }
   },
   union: {
@@ -377,7 +109,7 @@ const OPERATORS = {
     shape: 'Part::MultiFuse',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selected = model.localState?.selected.value || {};
+      const selected = model.localState?.selected?.value || {};
 
       const selectedShapes = Object.keys(selected).map(key => key);
 
@@ -395,31 +127,6 @@ const OPERATORS = {
         Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
-    },
-    syncData: (current: JupyterCadWidget) => {
-      return async (props: IDict) => {
-        const { Name, ...parameters } = props;
-        const objectModel: IJCadObject = {
-          shape: 'Part::MultiFuse',
-          parameters,
-          visible: true,
-          name: Name,
-          dependencies: parameters['Shapes']
-        };
-
-        return executeOperator(
-          'Fuse',
-          objectModel,
-          current,
-          (sharedModel: IJupyterCadDoc) => {
-            parameters['Shapes'].map((shape: string) => {
-              setVisible(sharedModel, shape, false);
-            });
-
-            sharedModel.addObject(objectModel);
-          }
-        );
-      };
     }
   },
   intersection: {
@@ -427,7 +134,7 @@ const OPERATORS = {
     shape: 'Part::MultiCommon',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selected = model.localState?.selected.value || {};
+      const selected = model.localState?.selected?.value || {};
       const sel0 = getSelectedMeshName(selected, 0);
       const sel1 = getSelectedMeshName(selected, 1);
       const baseName = sel0 || objects[0].name || '';
@@ -439,31 +146,6 @@ const OPERATORS = {
         Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
-    },
-    syncData: (current: JupyterCadWidget) => {
-      return async (props: IDict) => {
-        const { Name, ...parameters } = props;
-        const objectModel: IJCadObject = {
-          shape: 'Part::MultiCommon',
-          parameters,
-          visible: true,
-          name: Name,
-          dependencies: parameters['Shapes']
-        };
-
-        return executeOperator(
-          'Intersection',
-          objectModel,
-          current,
-          (sharedModel: IJupyterCadDoc) => {
-            parameters['Shapes'].map((shape: string) => {
-              setVisible(sharedModel, shape, false);
-            });
-
-            sharedModel.addObject(objectModel);
-          }
-        );
-      };
     }
   },
   chamfer: {
@@ -471,7 +153,7 @@ const OPERATORS = {
     shape: 'Part::Chamfer',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const selectedEdges = getSelectedEdges(model.localState?.selected.value);
+      const selectedEdges = getSelectedEdges(model.localState?.selected?.value);
       const baseName = selectedEdges?.shape || objects[0].name || '';
       const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
@@ -482,29 +164,6 @@ const OPERATORS = {
         Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
       };
-    },
-    syncData: (current: JupyterCadWidget) => {
-      return async (props: IDict) => {
-        const { Name, ...parameters } = props;
-        const objectModel: IJCadObject = {
-          shape: 'Part::Chamfer',
-          parameters,
-          visible: true,
-          name: Name,
-          dependencies: [parameters['Base']]
-        };
-
-        return executeOperator(
-          'Chamfer',
-          objectModel,
-          current,
-          (sharedModel: IJupyterCadDoc) => {
-            setVisible(sharedModel, parameters['Base'], false);
-
-            sharedModel.addObject(objectModel);
-          }
-        );
-      };
     }
   },
   fillet: {
@@ -512,7 +171,7 @@ const OPERATORS = {
     shape: 'Part::Fillet',
     default: (model: IJupyterCadModel) => {
       const objects = model.getAllObject();
-      const sel = getSelectedEdges(model.localState?.selected.value);
+      const sel = getSelectedEdges(model.localState?.selected?.value);
       const baseName = sel?.shape || objects[0].name || '';
       const baseModel = model.sharedModel.getObjectByName(baseName);
       return {
@@ -522,29 +181,6 @@ const OPERATORS = {
         Radius: 0.2,
         Color: baseModel?.parameters?.Color || DEFAULT_MESH_COLOR,
         Placement: { Position: [0, 0, 0], Axis: [0, 0, 1], Angle: 0 }
-      };
-    },
-    syncData: (current: JupyterCadWidget) => {
-      return async (props: IDict) => {
-        const { Name, ...parameters } = props;
-        const objectModel: IJCadObject = {
-          shape: 'Part::Fillet',
-          parameters,
-          visible: true,
-          name: Name,
-          dependencies: [parameters['Base']]
-        };
-
-        return executeOperator(
-          'Fillet',
-          objectModel,
-          current,
-          (sharedModel: IJupyterCadDoc) => {
-            setVisible(sharedModel, parameters['Base'], false);
-
-            sharedModel.addObject(objectModel);
-          }
-        );
       };
     }
   }
@@ -582,10 +218,7 @@ const EXPORT_FORM = {
       const { Name } = props;
       requestAPI<{ done: boolean }>(endpoint, {
         method: 'POST',
-        body: JSON.stringify({
-          path: model.filePath,
-          newName: Name
-        })
+        body: JSON.stringify({ path: model.filePath, newName: Name })
       });
     };
   }
@@ -604,9 +237,9 @@ function loadKeybindings(commands: CommandRegistry, keybindings: any[]) {
 function getSelectedObjectId(widget: JupyterCadWidget): string {
   const selected = widget.model.sharedModel.awareness.getLocalState()?.selected;
 
-  if (selected && selected.value) {
-    const selectedKey = Object.keys(selected.value)[0];
-    const selectedItem = selected.value[selectedKey];
+  if (selected && selected?.value) {
+    const selectedKey = Object.keys(selected?.value)[0];
+    const selectedItem = selected?.value[selectedKey];
     if (selectedItem.type === 'edge' && selectedItem.parent) {
       return selectedItem.parent;
     }
@@ -631,6 +264,9 @@ export function addCommands(
   const { commands } = app;
   Private.updateFormSchema(formSchemaRegistry);
 
+  addShapeCreationCommands({ tracker, commands, trans });
+  addShapeOperationCommands({ tracker, commands, trans });
+  addDocumentActionCommands({ tracker, commands, trans });
   commands.addCommand(CommandIDs.toggleConsole, {
     label: trans.__('Toggle console'),
     isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
@@ -642,12 +278,7 @@ export function addCommands(
     isToggled: () => {
       return tracker.currentWidget?.content.consoleOpened === true;
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: async () => {
       await Private.toggleConsole(tracker);
       commands.notifyCommandChanged(CommandIDs.toggleConsole);
@@ -661,12 +292,7 @@ export function addCommands(
         ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: () => Private.executeConsole(tracker)
   });
   commands.addCommand(CommandIDs.removeConsole, {
@@ -677,24 +303,14 @@ export function addCommands(
         ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: () => Private.removeConsole(tracker)
   });
 
   commands.addCommand(CommandIDs.invokeCompleter, {
     label: trans.__('Display the completion helper.'),
     isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: () => {
       const currentWidget = tracker.currentWidget;
       if (!currentWidget || !completionProviderManager) {
@@ -710,12 +326,7 @@ export function addCommands(
   commands.addCommand(CommandIDs.selectCompleter, {
     label: trans.__('Select the completion suggestion.'),
     isVisible: () => tracker.currentWidget instanceof JupyterCadDocumentWidget,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: () => {
       const currentWidget = tracker.currentWidget;
       if (!currentWidget || !completionProviderManager) {
@@ -734,12 +345,7 @@ export function addCommands(
         ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: args => {
       const current = tracker.currentWidget;
 
@@ -757,12 +363,7 @@ export function addCommands(
         ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: args => {
       const current = tracker.currentWidget;
 
@@ -780,12 +381,7 @@ export function addCommands(
         ? tracker.currentWidget.model.sharedModel.editable
         : false;
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: async args => {
       const current = tracker.currentWidget;
 
@@ -813,12 +409,7 @@ export function addCommands(
       const current = tracker.currentWidget;
       return current ? current.model.sharedModel.editable : false;
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: () => {
       const current = tracker.currentWidget;
       if (!current) {
@@ -830,11 +421,10 @@ export function addCommands(
         console.warn('No object is selected.');
         return;
       }
-      const sharedModel = current.model.sharedModel;
-
-      handleRemoveObject(objectId, sharedModel, () =>
-        sharedModel.awareness.setLocalStateField('selected', {})
-      );
+      commands.execute(DocumentActionCommandIDs.removeObjectWithParams, {
+        filePath: current.model.filePath,
+        objectId
+      });
     }
   });
 
@@ -846,13 +436,8 @@ export function addCommands(
         : false;
     },
     icon: boxIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
-    execute: Private.createPart('box', tracker)
+    describedBy: { args: { type: 'object', properties: {} } },
+    execute: Private.createPart('box', tracker, commands)
   });
 
   commands.addCommand(CommandIDs.newCylinder, {
@@ -863,13 +448,8 @@ export function addCommands(
         : false;
     },
     icon: cylinderIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
-    execute: Private.createPart('cylinder', tracker)
+    describedBy: { args: { type: 'object', properties: {} } },
+    execute: Private.createPart('cylinder', tracker, commands)
   });
 
   commands.addCommand(CommandIDs.newSphere, {
@@ -880,13 +460,8 @@ export function addCommands(
         : false;
     },
     icon: sphereIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
-    execute: Private.createPart('sphere', tracker)
+    describedBy: { args: { type: 'object', properties: {} } },
+    execute: Private.createPart('sphere', tracker, commands)
   });
 
   commands.addCommand(CommandIDs.newCone, {
@@ -897,13 +472,8 @@ export function addCommands(
         : false;
     },
     icon: coneIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
-    execute: Private.createPart('cone', tracker)
+    describedBy: { args: { type: 'object', properties: {} } },
+    execute: Private.createPart('cone', tracker, commands)
   });
 
   commands.addCommand(CommandIDs.newTorus, {
@@ -914,13 +484,8 @@ export function addCommands(
         : false;
     },
     icon: torusIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
-    execute: Private.createPart('torus', tracker)
+    describedBy: { args: { type: 'object', properties: {} } },
+    execute: Private.createPart('torus', tracker, commands)
   });
 
   commands.addCommand(CommandIDs.extrusion, {
@@ -931,13 +496,8 @@ export function addCommands(
         : false;
     },
     icon: extrusionIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
-    execute: Private.executeOperator('extrusion', tracker)
+    describedBy: { args: { type: 'object', properties: {} } },
+    execute: Private.launchOperatorDialog('extrusion', tracker, commands)
   });
 
   commands.addCommand(CommandIDs.cut, {
@@ -948,13 +508,8 @@ export function addCommands(
         : false;
     },
     icon: cutIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
-    execute: Private.executeOperator('cut', tracker)
+    describedBy: { args: { type: 'object', properties: {} } },
+    execute: Private.launchOperatorDialog('cut', tracker, commands)
   });
 
   commands.addCommand(CommandIDs.union, {
@@ -965,13 +520,8 @@ export function addCommands(
         : false;
     },
     icon: unionIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
-    execute: Private.executeOperator('union', tracker)
+    describedBy: { args: { type: 'object', properties: {} } },
+    execute: Private.launchOperatorDialog('union', tracker, commands)
   });
 
   commands.addCommand(CommandIDs.intersection, {
@@ -982,13 +532,8 @@ export function addCommands(
         : false;
     },
     icon: intersectionIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
-    execute: Private.executeOperator('intersection', tracker)
+    describedBy: { args: { type: 'object', properties: {} } },
+    execute: Private.launchOperatorDialog('intersection', tracker, commands)
   });
 
   commands.addCommand(CommandIDs.wireframe, {
@@ -1000,12 +545,7 @@ export function addCommands(
       const current = tracker.currentWidget?.content;
       return current?.wireframe || false;
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: async () => {
       const current = tracker.currentWidget?.content;
 
@@ -1044,12 +584,7 @@ export function addCommands(
       const current = tracker.currentWidget?.content;
       return current?.transform || false;
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: async () => {
       const current = tracker.currentWidget?.content;
 
@@ -1075,13 +610,8 @@ export function addCommands(
         : false;
     },
     icon: chamferIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
-    execute: Private.executeOperator('chamfer', tracker)
+    describedBy: { args: { type: 'object', properties: {} } },
+    execute: Private.launchOperatorDialog('chamfer', tracker, commands)
   });
 
   commands.addCommand(CommandIDs.fillet, {
@@ -1092,13 +622,8 @@ export function addCommands(
         : false;
     },
     icon: filletIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
-    execute: Private.executeOperator('fillet', tracker)
+    describedBy: { args: { type: 'object', properties: {} } },
+    execute: Private.launchOperatorDialog('fillet', tracker, commands)
   });
 
   commands.addCommand(CommandIDs.updateAxes, {
@@ -1112,12 +637,7 @@ export function addCommands(
       }
       return current.model.jcadSettings.showAxesHelper;
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: async () => {
       const current = tracker.currentWidget;
       if (!current) {
@@ -1163,12 +683,7 @@ export function addCommands(
         ? (viewSettings.explodedView as ExplodedView).enabled
         : false;
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: async () => {
       const current = tracker.currentWidget;
 
@@ -1206,12 +721,7 @@ export function addCommands(
       const current = tracker.currentWidget;
       return current?.model.jcadSettings.cameraType === 'Orthographic';
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: async () => {
       const current = tracker.currentWidget;
       if (!current) {
@@ -1252,12 +762,7 @@ export function addCommands(
       return current?.clipView?.enabled || false;
     },
     icon: clippingIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: async () => {
       const current = tracker.currentWidget;
 
@@ -1274,10 +779,7 @@ export function addCommands(
       panel.clipView.enabled = !panel.clipView.enabled;
 
       const { enabled, showClipPlane } = panel.clipView;
-      panel.clipView = {
-        enabled: enabled,
-        showClipPlane: showClipPlane
-      };
+      panel.clipView = { enabled: enabled, showClipPlane: showClipPlane };
       commands.notifyCommandChanged(CommandIDs.updateClipView);
     }
   });
@@ -1290,12 +792,7 @@ export function addCommands(
     label: trans.__('Split screen'),
     isEnabled: () => Boolean(tracker.currentWidget),
     icon: filterIcon,
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: async () => {
       const current = tracker.currentWidget;
 
@@ -1316,12 +813,7 @@ export function addCommands(
       return Boolean(tracker.currentWidget?.model?.sharedModel?.toJcadEndpoint);
     },
     iconClass: 'fa fa-file-export',
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: async () => {
       const current = tracker.currentWidget;
 
@@ -1346,12 +838,7 @@ export function addCommands(
       const current = tracker.currentWidget;
       return current ? current.model.sharedModel.editable : false;
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: () => {
       const current = tracker.currentWidget;
       if (!current) {
@@ -1378,12 +865,7 @@ export function addCommands(
       const editable = current?.model.sharedModel.editable;
       return !!(current && clipboard && editable);
     },
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: () => {
       const current = tracker.currentWidget;
       if (!current) {
@@ -1408,11 +890,7 @@ export function addCommands(
         counter++;
       }
       const jcadModel = current.model;
-      const newObject = {
-        ...clipboard,
-        name: newName,
-        visible: true
-      };
+      const newObject = { ...clipboard, name: newName, visible: true };
       sharedModel.addObject(newObject);
       jcadModel.syncSelected({ [newObject.name]: { type: 'shape' } }, uuid());
     }
@@ -1421,24 +899,14 @@ export function addCommands(
   commands.addCommand(CommandIDs.exportAsSTL, {
     label: trans.__('Export as STL'),
     isEnabled: () => Boolean(tracker.currentWidget),
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: Private.executeExport(app, tracker, 'STL')
   });
 
   commands.addCommand(CommandIDs.exportAsBREP, {
     label: trans.__('Export as BREP'),
     isEnabled: () => Boolean(tracker.currentWidget),
-    describedBy: {
-      args: {
-        type: 'object',
-        properties: {}
-      }
-    },
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: Private.executeExport(app, tracker, 'BREP')
   });
 
@@ -1531,7 +999,8 @@ namespace Private {
 
   export function createPart(
     part: keyof typeof PARTS,
-    tracker: WidgetTracker<JupyterCadWidget>
+    tracker: WidgetTracker<JupyterCadWidget>,
+    commands?: CommandRegistry
   ) {
     return async (args: any) => {
       const current = tracker.currentWidget;
@@ -1539,9 +1008,7 @@ namespace Private {
       if (!current) {
         return;
       }
-
       const value = PARTS[part];
-
       current.model.syncFormData(value);
 
       const syncSelectedField = (
@@ -1568,48 +1035,14 @@ namespace Private {
         schema: FORM_SCHEMA[value.shape],
         syncData: async (props: IDict) => {
           const { Name, ...parameters } = props;
-          const objectModel: IJCadObject = {
-            shape: value.shape as Parts,
-            parameters,
-            visible: true,
-            name: Name
-          };
-
-          const jcadModel = current.model;
-
-          if (jcadModel) {
-            const sharedModel = jcadModel.sharedModel;
-            if (!sharedModel.objectExists(objectModel.name)) {
-              // Try a dry run with the update content to verify its feasibility
-              const currentJcadContent = current.model.getContent();
-              const updatedContent: IJCadContent = {
-                ...currentJcadContent,
-                objects: [...currentJcadContent.objects, objectModel]
-              };
-
-              const dryRunResult = await dryRunCheck({
-                jcadContent: updatedContent,
-                mainView: current.content.currentViewModel,
-                requestedOperator: value.shape
-              });
-              if (!dryRunResult) {
-                return;
-              }
-              const objMeta = dryRunResult.shapeMetadata?.[objectModel.name];
-              if (objMeta) {
-                objectModel.shapeMetadata = objMeta;
-              }
-              sharedModel.addObject(objectModel);
-              jcadModel.syncSelected(
-                { [objectModel.name]: { type: 'shape' } },
-                uuid()
-              );
-            } else {
-              showErrorMessage(
-                'The object already exists',
-                'There is an existing object with the same name.'
-              );
-            }
+          const shapeName = value.shape as Parts;
+          const commandId = ShapeCreationCommandMap[shapeName];
+          if (commands && commandId) {
+            return await commands.execute(commandId, {
+              Name,
+              filePath: current.model.filePath,
+              parameters
+            });
           }
         },
         cancelButton: () => {
@@ -1621,9 +1054,10 @@ namespace Private {
     };
   }
 
-  export function executeOperator(
+  export function launchOperatorDialog(
     operator: keyof typeof OPERATORS,
-    tracker: WidgetTracker<JupyterCadWidget>
+    tracker: WidgetTracker<JupyterCadWidget>,
+    commands: CommandRegistry
   ) {
     return async (args: any) => {
       const current = tracker.currentWidget;
@@ -1631,7 +1065,6 @@ namespace Private {
       if (!current) {
         return;
       }
-
       const op = OPERATORS[operator];
 
       // Fill form schema with available objects
@@ -1652,13 +1085,24 @@ namespace Private {
           }
         }
       }
-
+      const operatorCommandId = ShapeOperationCommandMap[op.shape];
+      if (!operatorCommandId) {
+        return;
+      }
+      const syncData = async (props: IDict) => {
+        const { Name, ...parameters } = props;
+        await commands.execute(operatorCommandId, {
+          Name,
+          filePath: current.model.filePath,
+          parameters
+        });
+      };
       const dialog = new FormDialog({
         model: current.model,
         title: op.title,
         sourceData: op.default(current.model),
         schema: form_schema,
-        syncData: op.syncData(current),
+        syncData,
         cancelButton: true
       });
       await dialog.launch();
@@ -1693,10 +1137,7 @@ namespace Private {
           parameters,
           visible: true,
           name: Name,
-          shapeMetadata: {
-            shapeFormat,
-            workerId
-          }
+          shapeMetadata: { shapeFormat, workerId }
         };
         const sharedModel = model.sharedModel;
         if (sharedModel) {

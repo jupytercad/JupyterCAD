@@ -29,7 +29,7 @@ import { v4 as uuid } from 'uuid';
 import visibilitySvg from '../../style/icon/visibility.svg';
 import visibilityOffSvg from '../../style/icon/visibilityOff.svg';
 import { IControlPanelModel } from '../types';
-import { setVisible } from '../commands';
+import { setVisible } from '../commands/tools';
 
 const visibilityIcon = new LabIcon({
   name: 'jupytercad:visibilityIcon',
