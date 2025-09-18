@@ -134,17 +134,19 @@ export function addShapeCreationCommands(options: {
               Radius: {
                 type: 'number',
                 exclusiveMinimum: 0,
-                description: 'The radius of the cylinder'
+                description: 'The radius of the cylinder base (must be > 0)'
               },
               Height: {
                 type: 'number',
                 exclusiveMinimum: 0,
-                description: 'The height of the cylinder'
+                description: 'The cylinder height along its local Z axis'
               },
               Angle: {
                 type: 'number',
                 exclusiveMinimum: 0,
-                description: 'The angle of the cylinder'
+                default: 360,
+                description:
+                  'The angular span of the cylinder in degrees (0 = none, 360 = full).'
               },
               Color: {
                 type: 'string',
@@ -202,16 +204,21 @@ export function addShapeCreationCommands(options: {
               },
               Angle1: {
                 type: 'number',
-                description: 'First angle defining a spherical segment'
+                description:
+                  'The lower polar angle limit in degrees (start of the vertical sweep, -90 = bottom pole).',
+                default: -90
               },
               Angle2: {
                 type: 'number',
-                description: 'Second angle defining a spherical segment'
+                description:
+                  'The upper polar angle limit in degrees (end of the vertical sweep, 90 = top pole).',
+                default: 90
               },
               Angle3: {
                 type: 'number',
                 description:
-                  'The angle between the radii lying within the bounding semidisks'
+                  'The azimuthal angle in degrees defining the sweep around the Z axis (360 = full sphere, < 360 = spherical wedge).',
+                default: 360
               },
               Color: {
                 type: 'string',
@@ -231,7 +238,6 @@ export function addShapeCreationCommands(options: {
     }) => {
       const { Name, filePath, parameters } = args;
       const current = tracker.find(w => w.model.filePath === filePath);
-
       if (!current) {
         return;
       }
@@ -265,22 +271,27 @@ export function addShapeCreationCommands(options: {
               Radius1: {
                 type: 'number',
                 exclusiveMinimum: 0,
-                description: 'The bottom radius of the cone'
+                description:
+                  'The radius of the bottom face of the cone (base circle).'
               },
               Radius2: {
                 type: 'number',
                 exclusiveMinimum: 0,
-                description: 'The top radius of the cone'
+                description:
+                  'The radius of the top face of the cone (tip circle). Set to 0 for a true cone.'
               },
               Height: {
                 type: 'number',
                 exclusiveMinimum: 0,
-                description: 'The height of the cone'
+                description:
+                  'The height of the cone along its local Z axis (distance between top and bottom faces).'
               },
               Angle: {
                 type: 'number',
                 exclusiveMinimum: 0,
-                description: 'The angle of the cone'
+                default: 360,
+                description:
+                  'The angular span of the cone in degrees (360 = full cone, < 360 = sector).'
               },
               Color: {
                 type: 'string',
@@ -338,45 +349,42 @@ export function addShapeCreationCommands(options: {
               'Placement'
             ],
             properties: {
-              filePath: {
-                type: 'string',
-                description: 'The path to the jcad file to be modified'
+              Radius1: {
+                type: 'number',
+                exclusiveMinimum: 0,
+                description:
+                  'The major radius of the torus (distance from the center of the torus to the center of the tube)'
               },
-              Name: { type: 'string', description: 'Name of the new object' },
-              parameters: {
-                type: 'object',
-                properties: {
-                  Radius1: {
-                    type: 'number',
-                    exclusiveMinimum: 0,
-                    description:
-                      'The distance from the center of the pipe to the center of the torus'
-                  },
-                  Radius2: {
-                    type: 'number',
-                    exclusiveMinimum: 0,
-                    description: 'The radius of the pipe'
-                  },
-                  Angle1: {
-                    type: 'number',
-                    description: 'First angle to create a torus ring segment'
-                  },
-                  Angle2: {
-                    type: 'number',
-                    description: 'Second angle to create a torus ring segment'
-                  },
-                  Angle3: {
-                    type: 'number',
-                    description: 'Angle to create a torus pipe segment'
-                  },
-                  Color: {
-                    type: 'string',
-                    description: 'The color of the torus',
-                    default: '#808080'
-                  },
-                  Placement: DEFAULT_PLACEMENT_SCHEMA
-                }
-              }
+              Radius2: {
+                type: 'number',
+                exclusiveMinimum: 0,
+                description:
+                  'The minor radius of the torus (radius of the tube cross-section).'
+              },
+              Angle1: {
+                type: 'number',
+                default: -180,
+                description:
+                  'The start angle of the torus ring segment in degrees (defines the beginning of the sweep around the main axis).'
+              },
+              Angle2: {
+                type: 'number',
+                default: 180,
+                description:
+                  'The end angle of the torus ring segment in degrees (defines the end of the sweep around the main axis).'
+              },
+              Angle3: {
+                type: 'number',
+                default: 360,
+                description:
+                  'The angular span of the tube cross-section in degrees (360 = full tube, < 360 = partial tube).'
+              },
+              Color: {
+                type: 'string',
+                description: 'The color of the torus',
+                default: '#808080'
+              },
+              Placement: DEFAULT_PLACEMENT_SCHEMA
             }
           }
         }
@@ -892,7 +900,6 @@ export function addShapeOperationCommands(options: {
       parameters: IChamfer;
     }) => {
       const { filePath, Name, parameters } = args;
-
       const current = tracker.find(w => w.model.filePath === filePath);
       if (!current) {
         return;
