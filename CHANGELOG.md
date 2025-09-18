@@ -2,6 +2,32 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.1.7
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/v3.1.6...fee0d2a3870c2935cd62139f4961ee47c523c099))
+
+### Enhancements made
+
+- Switch to commands [#783](https://github.com/jupytercad/JupyterCAD/pull/783) ([@trungleduc](https://github.com/trungleduc))
+
+### Bugs fixed
+
+- Fix unused arguments [#781](https://github.com/jupytercad/JupyterCAD/pull/781) ([@asmith26](https://github.com/asmith26))
+
+### Maintenance and upkeep improvements
+
+### Documentation improvements
+
+- Add `describedBy` to commands [#782](https://github.com/jupytercad/JupyterCAD/pull/782) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2025-08-18&to=2025-09-18&type=c))
+
+[@asmith26](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aasmith26+updated%3A2025-08-18..2025-09-18&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Agithub-actions+updated%3A2025-08-18..2025-09-18&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Ajtpio+updated%3A2025-08-18..2025-09-18&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Apre-commit-ci+updated%3A2025-08-18..2025-09-18&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2025-08-18..2025-09-18&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.1.6
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.1.5...2fca4767d8e107f5d6cf854bb8520b3f645066d4))
@@ -24,8 +50,6 @@
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2025-07-23&to=2025-08-18&type=c))
 
 [@asmith26](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aasmith26+updated%3A2025-07-23..2025-08-18&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2025-07-23..2025-08-18&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.1.5
 
