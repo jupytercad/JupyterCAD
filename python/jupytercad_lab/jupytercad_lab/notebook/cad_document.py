@@ -702,10 +702,11 @@ class CadDocument(CommWidget):
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
-        Extrude a shape to create a 3D object.
+        Apply an extrusion operation on an object.
+        If no object is provided as input, the last created object will be used as operand.
 
         :param name: The name that will be used for the object in the document.
-        :param shape: The shape to extrude.
+        :param shape: The input object used for the extrusion. Can be the name of the object or its index in the objects list.
         :param direction: The direction of the extrusion.
         :param length_fwd: The length of the extrusion.
         :param length_rev: The length of the extrusion in the reverse direction.
