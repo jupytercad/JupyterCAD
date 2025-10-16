@@ -24,6 +24,7 @@ from jupytercad_core.schema import (
     IChamfer,
     IFillet,
     ITorus,
+    ISketchObject,
     Parts,
     ShapeMetadata,
     IAny,
@@ -956,3 +957,4 @@ OBJECT_FACTORY.register_factory(Parts.Part__Sphere.value, ISphere)
 OBJECT_FACTORY.register_factory(Parts.Part__Torus.value, ITorus)
 OBJECT_FACTORY.register_factory(Parts.Part__Chamfer.value, IChamfer)
 OBJECT_FACTORY.register_factory(Parts.Part__Fillet.value, IFillet)
+OBJECT_FACTORY.register_factory(Parts.Sketcher__SketchObject.value, ISketchObject)
