@@ -30,6 +30,7 @@ from jupytercad_core.schema import (
     IAny,
     SCHEMA_VERSION,
 )
+from jupytercad_core.schema.interfaces import geomLineSegment, geomCircle
 
 logger = logging.getLogger(__file__)
 
@@ -546,6 +547,7 @@ class CadDocument(CommWidget):
     def add_sketch(
         self,
         name: str = "",
+        geometry: List[Union[geomCircle.IGeomCircle, geomLineSegment.IGeomLineSegment]] = [],
         attachment_offset_position: List[float] = [0, 0, 0],
         attachment_offset_rotation_axis: List[float] = [0, 0, 1],
         attachment_offset_rotation_angle: float = 0,
@@ -558,6 +560,7 @@ class CadDocument(CommWidget):
         Add a sketch to the document.
 
         :param name: The name that will be used for the object in the document.
+        :param geometry: The list of geometries for the sketch.
         :param attachment_offset_position: The attachment offset 3D position.
         :param attachment_offset_rotation_axis: The attachment offset 3D axis used for the rotation.
         :param attachment_offset_rotation_angle: The attachment offset rotation angle, in degrees.
@@ -576,7 +579,7 @@ class CadDocument(CommWidget):
                     "Axis": attachment_offset_rotation_axis,
                     "Angle": attachment_offset_rotation_angle,
                 },
-                "Geometry": [],
+                "Geometry": geometry,
                 "Color": color,
                 "Placement": {
                     "Position": position,
@@ -931,6 +934,7 @@ class PythonJcadObject(BaseModel):
         IFuse,
         ISphere,
         ITorus,
+        ISketchObject,
         IFillet,
         IChamfer,
     ]
