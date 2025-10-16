@@ -547,7 +547,9 @@ class CadDocument(CommWidget):
     def add_sketch(
         self,
         name: str = "",
-        geometry: List[Union[geomCircle.IGeomCircle, geomLineSegment.IGeomLineSegment]] = [],
+        geometry: List[
+            Union[geomCircle.IGeomCircle, geomLineSegment.IGeomLineSegment]
+        ] = [],
         attachment_offset_position: List[float] = [0, 0, 0],
         attachment_offset_rotation_axis: List[float] = [0, 0, 1],
         attachment_offset_rotation_angle: float = 0,
