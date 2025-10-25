@@ -146,7 +146,7 @@ export class SketcherModel implements ISketcherModel {
       return;
     }
     if (!this._sharedModel.objectExists(fileName)) {
-      const geometryList: (IGeomCircle | IGeomLineSegment)[] = [];
+      const geometryList: (IGeomPoint | IGeomCircle | IGeomLineSegment)[] = [];
       this._points.forEach(
         p =>
           void geometryList.push(
@@ -183,19 +183,19 @@ export class SketcherModel implements ISketcherModel {
       );
     }
   }
- private _writePoint(p: IPosition, plane: IPlane): IGeomPoint {
+ private _writePoint(p: IPoint, plane: IPlane): IGeomPoint {
     let PositionX = 0;
     let PositionY = 0;
     let PositionZ = 0;
     if (plane === 'XY') {
-      PositionX = p.x;
-      PositionY = p.y;
+      PositionX = p.position.x;
+      PositionY = p.position.y;
     } else if (plane === 'YZ') {
-      PositionY = p.x;
-      PositionZ = p.y;
+      PositionY = p.position.x;
+      PositionZ = p.position.y;
     } else {
-      PositionZ = p.x;
-      PositionX = p.y;
+      PositionZ = p.position.x;
+      PositionX = p.position.y;
     }
     return {
       TypeId: 'Part::GeomPoint',

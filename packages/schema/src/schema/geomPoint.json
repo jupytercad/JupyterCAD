@@ -2,7 +2,7 @@
   "type": "object",
   "description": "Part::GeomPoint",
   "title": "IGeomPoint",
-  "required": ["TypeId", "X", "Y", "Z"],
+  "required": ["TypeId", "PositionX", "PositionY", "PositionZ"],
   "additionalProperties": false,
   "properties": {
     "TypeId": {

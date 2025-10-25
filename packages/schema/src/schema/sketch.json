@@ -15,6 +15,9 @@
       "items": {
         "anyOf": [
           {
+            "$ref": "./geomPoint.json"
+          },
+          {
             "$ref": "./geomCircle.json"
           },
           {

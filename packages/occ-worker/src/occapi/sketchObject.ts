@@ -4,6 +4,7 @@ import { IJCadContent, ISketchObject } from '@jupytercad/schema';
 import { getOcc } from './common';
 import { _GeomCircle } from './geomCircle';
 import { _GeomLine } from './geomLineSegment';
+import { _GeomPoint } from './geomPoint';
 
 export function _SketchObject(
   arg: ISketchObject,
@@ -18,6 +19,10 @@ export function _SketchObject(
   builder.MakeCompound(compound);
   for (const geom of arg.Geometry) {
     switch (geom.TypeId) {
+      case 'Part::GeomPoint':
+        builder.Add(compound, _GeomPoint(geom));
+        break;
+
       case 'Part::GeomCircle':
         builder.Add(compound, _GeomCircle(geom));
         break;
