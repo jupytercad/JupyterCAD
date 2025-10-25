@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "description": "Part::GeomPoint",
+  "title": "IGeomPoint",
+  "required": ["TypeId", "X", "Y", "Z"],
+  "additionalProperties": false,
+  "properties": {
+    "TypeId": {
+      "const": "Part::GeomPoint",
+      "description": "Geometry type"
+    },
+    "PositionX": {
+      "type": "number",
+      "description": "PositionX"
+    },
+    "PositionY": {
+      "type": "number",
+      "description": "PositionY"
+    },
+    "PositionZ": {
+      "type": "number",
+      "description": "PositionZ"
+    }
+  }
+}

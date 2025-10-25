@@ -1,5 +1,6 @@
 import {
   IDict,
+  IGeomPoint,
   IGeomCircle,
   IGeomLineSegment,
   IJCadObject,
@@ -146,6 +147,12 @@ export class SketcherModel implements ISketcherModel {
     }
     if (!this._sharedModel.objectExists(fileName)) {
       const geometryList: (IGeomCircle | IGeomLineSegment)[] = [];
+      this._points.forEach(
+        p =>
+          void geometryList.push(
+            this._writePoint(p.export(this._gridSize), plane)
+          )
+      );
       this._circles.forEach(
         c =>
           void geometryList.push(
@@ -176,7 +183,27 @@ export class SketcherModel implements ISketcherModel {
       );
     }
   }
-
+ private _writePoint(p: IPosition, plane: IPlane): IGeomPoint {
+    let PositionX = 0;
+    let PositionY = 0;
+    let PositionZ = 0;
+    if (plane === 'XY') {
+      PositionX = p.x;
+      PositionY = p.y;
+    } else if (plane === 'YZ') {
+      PositionY = p.x;
+      PositionZ = p.y;
+    } else {
+      PositionZ = p.x;
+      PositionX = p.y;
+    }
+    return {
+      TypeId: 'Part::GeomPoint',
+      PositionX,
+      PositionY,
+      PositionZ,
+    };
+  }
   private _writeLine(l: ILine, plane: IPlane): IGeomLineSegment {
     let StartX = 0;
     let StartY = 0;
