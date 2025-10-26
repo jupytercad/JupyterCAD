@@ -13,8 +13,10 @@ export class Point implements IPoint {
     return { x: this._x, y: this._y };
   }
 
-  export(scaleFactor = 1): IPosition {
-    return { x: this._x / scaleFactor, y: this._y / scaleFactor };
+  export(scaleFactor = 1): IPoint {
+    return {
+      position: { x: this._x / scaleFactor, y: this._y / scaleFactor }
+    };
   }
   private _x: number;
   private _y: number;
