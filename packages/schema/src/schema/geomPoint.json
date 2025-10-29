@@ -2,24 +2,24 @@
   "type": "object",
   "description": "Part::GeomPoint",
   "title": "IGeomPoint",
-  "required": ["TypeId", "PositionX", "PositionY", "PositionZ"],
+  "required": ["TypeId", "X", "Y", "Z"],
   "additionalProperties": false,
   "properties": {
     "TypeId": {
       "const": "Part::GeomPoint",
       "description": "Geometry type"
     },
-    "PositionX": {
+    "X": {
       "type": "number",
-      "description": "PositionX"
+      "description": "X coordinate"
     },
-    "PositionY": {
+    "Y": {
       "type": "number",
-      "description": "PositionY"
+      "description": "Y coordinate"
     },
-    "PositionZ": {
+    "Z": {
       "type": "number",
-      "description": "PositionZ"
+      "description": "Z coordinate"
     }
   }
 }

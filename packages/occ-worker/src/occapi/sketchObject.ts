@@ -19,10 +19,10 @@ export function _SketchObject(
   builder.MakeCompound(compound);
   for (const geom of arg.Geometry) {
     switch (geom.TypeId) {
-      case 'Part::GeomPoint':
+      case 'Part::GeomPoint': {
         builder.Add(compound, _GeomPoint(geom));
         break;
-
+      }      
       case 'Part::GeomCircle':
         builder.Add(compound, _GeomCircle(geom));
         break;
