@@ -167,7 +167,8 @@ export class SketcherReactWidget extends React.Component<IProps, IState> {
     switch (this.state.mode) {
       case 'LINE': {
         if (model.editing.type === 'LINE') {
-          model.addPoint(worldPos, { color: '#ffffff00' });
+          const endPoint = model.addPoint(worldPos, { color: '#ffffff00' });
+          const startPoint = model.editing.content!['startPoint'];
           const lineId = model.editing.content!['tempId'];
           const line = model.getLineById(lineId)!;
           const midpoint = {
@@ -175,7 +176,7 @@ export class SketcherReactWidget extends React.Component<IProps, IState> {
             y: (line.start.y + line.end.y) / 2
           };
           const mid = model.addPoint(midpoint, { color: 'red' });
-          line.controlPoints = [mid];
+          line.controlPoints = [startPoint, mid, endPoint];
           model.stopEdit();
         } else {
           const startPoint = model.addPoint(worldPos, { color: '#ffffff00' });

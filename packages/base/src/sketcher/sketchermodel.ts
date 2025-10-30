@@ -148,21 +148,25 @@ export class SketcherModel implements ISketcherModel {
     if (!this._sharedModel.objectExists(fileName)) {
       const geometryList: (IGeomPoint | IGeomCircle | IGeomLineSegment)[] = [];
       // export points as Part::GeomPoint entries
-      this._points.forEach(p =>
-        void geometryList.push(this._writePoint(p.export(this._gridSize), plane))
-      );
-      this._circles.forEach(
-        c =>
-          void geometryList.push(
-            this._writeCircle(c.export(this._gridSize), plane)
-          )
-      );
-      this._lines.forEach(
-        l =>
-          void geometryList.push(
-            this._writeLine(l.export(this._gridSize), plane)
-          )
-      );
+      // but exclude points that are used as control points for lines/circles
+      const controlPointIds = new Set<string>();
+      this._lines.forEach(l => {
+        if (l.controlPoints) {
+          l.controlPoints.forEach(id => controlPointIds.add(id));
+        }
+        void geometryList.push(this._writeLine(l.export(this._gridSize), plane));
+      });
+      this._circles.forEach(c => {
+        if (c.controlPoints) {
+          c.controlPoints.forEach(id => controlPointIds.add(id));
+        }
+        void geometryList.push(this._writeCircle(c.export(this._gridSize), plane));
+      });
+      this._points.forEach((p, id) => {
+        if (!controlPointIds.has(id)) {
+          void geometryList.push(this._writePoint(p.export(this._gridSize), plane));
+        }
+      });
       const newSketch: IJCadObject = {
         shape: 'Sketcher::SketchObject',
         name: fileName,
