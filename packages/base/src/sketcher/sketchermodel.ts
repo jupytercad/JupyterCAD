@@ -146,9 +146,9 @@ export class SketcherModel implements ISketcherModel {
       return;
     }
     if (!this._sharedModel.objectExists(fileName)) {
-      const geometryList: (IGeomPoint | IGeomCircle | IGeomLineSegment)[] = [];
-      // export points as Part::GeomPoint entries
-      // but exclude points that are used as control points for lines/circles
+      const geometryList: (IGeomPoint | IGeomLineSegment | IGeomCircle)[] = [];
+      // export lines as Part::IGeomLineSegment, circles as Part::IGeomCircle
+      // export points as Part::GeomPoint but exclude points that are used as control points for lines/circles
       const controlPointIds = new Set<string>();
       this._lines.forEach(l => {
         if (l.controlPoints) {
