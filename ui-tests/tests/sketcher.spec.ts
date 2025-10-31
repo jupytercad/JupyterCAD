@@ -97,4 +97,79 @@ test.describe('Sketcher test', () => {
       });
     }
   });
+
+ test(`Should draw points onto the main view`, async ({ page }) => {
+    await page.goto();
+    const fileName = 'test.jcad';
+    await page.getByTitle('Create a new JCAD Editor').first().click();
+    await page.locator('div.jpcad-Spinner').waitFor({ state: 'hidden' });
+
+    await page.waitForTimeout(1000);
+    if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
+      await page.getByRole('button', { name: 'Ok' }).click();
+    }
+    // Close the property panel
+    await page
+      .getByRole('tablist', { name: 'alternate sidebar' })
+      .getByRole('tab', { name: 'JupyterCad Control Panel' })
+      .click();
+
+    // Draw points
+    await page.getByTitle('New Sketch').click();
+    await page.getByRole('button', { name: 'POINT' }).click();
+    await page.getByRole('dialog').locator('canvas').click({
+        position: {
+          x: 297,
+          y: 167
+        }
+      });
+    await page.getByRole('dialog').locator('canvas').click({
+        position: {
+          x: 298,
+          y: 291
+        }
+      });
+    await page.getByRole('dialog').locator('canvas').click({
+        position: {
+          x: 423,
+          y: 167
+        }
+      });
+    await page.getByRole('dialog').locator('canvas').click({
+        position: {
+          x: 425,
+          y: 285
+        }
+      });
+    await page.getByRole('dialog').locator('canvas').click({
+        position: {
+          x: 334,
+          y: 194
+        }
+      });
+    await page.getByRole('dialog').locator('canvas').click({
+        position: {
+          x: 357,
+          y: 263
+        }
+      });
+    await page.getByRole('dialog').locator('canvas').click({
+        position: {
+          x: 390,
+          y: 219
+        }
+      });
+    await page.getByRole('textbox', { name: 'Sketch name' }).click();
+    await page.getByRole('textbox', { name: 'Sketch name' }).fill('Points');
+    await page.getByRole('button', { name: 'SAVE' }).click();
+
+    await page.getByText('Points', { exact: true }).click();    
+    const canvas = await page.locator('canvas');
+    if (canvas) {
+      expect(await canvas.screenshot()).toMatchSnapshot({
+          name: `Sketcher-Points-${fileName}.png`,
+          maxDiffPixelRatio: 0.01
+      });
+    }
+  });
 });
