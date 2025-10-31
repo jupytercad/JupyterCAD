@@ -98,7 +98,7 @@ test.describe('Sketcher test', () => {
     }
   });
 
- test(`Should draw points onto the main view`, async ({ page }) => {
+  test(`Should draw points onto the main view`, async ({ page }) => {
     await page.goto();
     const fileName = 'test.jcad';
     await page.getByTitle('Create a new JCAD Editor').first().click();
@@ -117,43 +117,64 @@ test.describe('Sketcher test', () => {
     // Draw points
     await page.getByTitle('New Sketch').click();
     await page.getByRole('button', { name: 'POINT' }).click();
-    await page.getByRole('dialog').locator('canvas').click({
+    await page
+      .getByRole('dialog')
+      .locator('canvas')
+      .click({
         position: {
           x: 297,
           y: 167
         }
       });
-    await page.getByRole('dialog').locator('canvas').click({
+    await page
+      .getByRole('dialog')
+      .locator('canvas')
+      .click({
         position: {
           x: 298,
           y: 291
         }
       });
-    await page.getByRole('dialog').locator('canvas').click({
+    await page
+      .getByRole('dialog')
+      .locator('canvas')
+      .click({
         position: {
           x: 423,
           y: 167
         }
       });
-    await page.getByRole('dialog').locator('canvas').click({
+    await page
+      .getByRole('dialog')
+      .locator('canvas')
+      .click({
         position: {
           x: 425,
           y: 285
         }
       });
-    await page.getByRole('dialog').locator('canvas').click({
+    await page
+      .getByRole('dialog')
+      .locator('canvas')
+      .click({
         position: {
           x: 334,
           y: 194
         }
       });
-    await page.getByRole('dialog').locator('canvas').click({
+    await page
+      .getByRole('dialog')
+      .locator('canvas')
+      .click({
         position: {
           x: 357,
           y: 263
         }
       });
-    await page.getByRole('dialog').locator('canvas').click({
+    await page
+      .getByRole('dialog')
+      .locator('canvas')
+      .click({
         position: {
           x: 390,
           y: 219
@@ -163,12 +184,12 @@ test.describe('Sketcher test', () => {
     await page.getByRole('textbox', { name: 'Sketch name' }).fill('Points');
     await page.getByRole('button', { name: 'SAVE' }).click();
 
-    await page.getByText('Points', { exact: true }).click();    
+    await page.getByText('Points', { exact: true }).click();
     const canvas = await page.locator('canvas');
     if (canvas) {
       expect(await canvas.screenshot()).toMatchSnapshot({
-          name: `Sketcher-Points-${fileName}.png`,
-          maxDiffPixelRatio: 0.01
+        name: `Sketcher-Points-${fileName}.png`,
+        maxDiffPixelRatio: 0.01
       });
     }
   });

@@ -22,7 +22,7 @@ export function _SketchObject(
       case 'Part::GeomPoint': {
         builder.Add(compound, _GeomPoint(geom));
         break;
-      }      
+      }
       case 'Part::GeomCircle':
         builder.Add(compound, _GeomCircle(geom));
         break;

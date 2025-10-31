@@ -154,17 +154,23 @@ export class SketcherModel implements ISketcherModel {
         if (l.controlPoints) {
           l.controlPoints.forEach(id => controlPointIds.add(id));
         }
-        void geometryList.push(this._writeLine(l.export(this._gridSize), plane));
+        void geometryList.push(
+          this._writeLine(l.export(this._gridSize), plane)
+        );
       });
       this._circles.forEach(c => {
         if (c.controlPoints) {
           c.controlPoints.forEach(id => controlPointIds.add(id));
         }
-        void geometryList.push(this._writeCircle(c.export(this._gridSize), plane));
+        void geometryList.push(
+          this._writeCircle(c.export(this._gridSize), plane)
+        );
       });
       this._points.forEach((p, id) => {
         if (!controlPointIds.has(id)) {
-          void geometryList.push(this._writePoint(p.export(this._gridSize), plane));
+          void geometryList.push(
+            this._writePoint(p.export(this._gridSize), plane)
+          );
         }
       });
       const newSketch: IJCadObject = {
