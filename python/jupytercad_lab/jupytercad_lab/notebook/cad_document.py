@@ -548,7 +548,11 @@ class CadDocument(CommWidget):
         self,
         name: str = "",
         geometry: List[
-            Union[geomPoint.IGeomPoint, geomCircle.IGeomCircle, geomLineSegment.IGeomLineSegment]
+            Union[
+                geomPoint.IGeomPoint,
+                geomCircle.IGeomCircle,
+                geomLineSegment.IGeomLineSegment,
+            ]
         ] = [],
         attachment_offset_position: List[float] = [0, 0, 0],
         attachment_offset_rotation_axis: List[float] = [0, 0, 1],
