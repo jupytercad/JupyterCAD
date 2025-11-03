@@ -30,7 +30,7 @@ from jupytercad_core.schema import (
     IAny,
     SCHEMA_VERSION,
 )
-from jupytercad_core.schema.interfaces import geomLineSegment, geomCircle
+from jupytercad_core.schema.interfaces import geomPoint, geomLineSegment, geomCircle
 
 logger = logging.getLogger(__file__)
 
@@ -548,7 +548,7 @@ class CadDocument(CommWidget):
         self,
         name: str = "",
         geometry: List[
-            Union[geomCircle.IGeomCircle, geomLineSegment.IGeomLineSegment]
+            Union[geomPoint.IGeomPoint, geomCircle.IGeomCircle, geomLineSegment.IGeomLineSegment]
         ] = [],
         attachment_offset_position: List[float] = [0, 0, 0],
         attachment_offset_rotation_axis: List[float] = [0, 0, 1],
