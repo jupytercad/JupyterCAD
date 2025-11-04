@@ -46,7 +46,7 @@ You can run JupyterCAD entirely in the browser using **JupyterLite**.
    ```yaml
    - jupytercad-lite
    ```
-3. **Add your jcad and example files** under the `content/` directory of your repository.  
+3. **Add your jcad and example files** under the `content/` directory of your repository.
    These files will be available directly inside your Lite deployment.
 4. **Enable GitHub Pages** under _Settings → Pages_ for your repository.
 5. Once the build completes, your Lite deployment will be live at:
