@@ -121,9 +121,6 @@ export class SketcherReactWidget extends React.Component<IProps, IState> {
         }
         break;
       }
-      case 'POINT': {
-        break;
-      }
       default:
         break;
     }
@@ -197,10 +194,6 @@ export class SketcherReactWidget extends React.Component<IProps, IState> {
 
           model.startEdit('CIRCLE', { centerId, radius: 0 });
         }
-        break;
-      }
-      case 'POINT': {
-        model.addPoint(worldPos);
         break;
       }
       default:
