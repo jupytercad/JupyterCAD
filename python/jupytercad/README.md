@@ -37,6 +37,29 @@ Once you have installed the extension, you should be able to open the CAD viewer
 
 Additionally, you can install `jupytercad-freecad` and edit `.FCStd` files in JupyterLab.
 
+## Deploying JupyterCAD with JupyterLite
+
+You can run JupyterCAD entirely in the browser using **JupyterLite**.
+
+1. **Create a repository** using the [xeus-lite-demo](https://github.com/jupyterlite/xeus-lite-demo) template.
+2. In your fork, edit `environment.yml` and add:
+   ```yaml
+   - jupytercad-lite
+   ```
+3. **Add your jcad and example files** under the `content/` directory of your repository.
+   These files will be available directly inside your Lite deployment.
+4. **Enable GitHub Pages** under _Settings → Pages_ for your repository.
+5. Once the build completes, your Lite deployment will be live at:
+   ```
+   https://<username>.github.io/<repo-name>/
+   ```
+
+This provides a lightweight, fully browser-based JupyterCAD environment — no server required.
+
+> [!IMPORTANT]
+> Collaboration is **not yet supported** in JupyterLite static deployments.
+
+
 ## Documentation
 
 Check out the JupyterCAD documentation on ReadTheDocs! https://jupytercad.readthedocs.io
