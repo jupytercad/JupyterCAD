@@ -467,7 +467,7 @@ export class SketcherReactWidget extends React.Component<IProps, IState> {
               display: 'flex'
             }}
           >
-            {['POINT', 'LINE', 'CIRCLE'].map(op => (
+            {['LINE', 'CIRCLE'].map(op => (
               <ToolbarSwitch
                 key={op}
                 label={op}
