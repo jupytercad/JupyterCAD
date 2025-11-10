@@ -11,7 +11,7 @@ from .interfaces.torus import ITorus  # noqa
 from .interfaces.chamfer import IChamfer  # noqa
 from .interfaces.fillet import IFillet  # noqa
 from .interfaces.any import IAny  # noqa
-
+from .interfaces.sketch import ISketchObject  # noqa
 from .interfaces.jcad import IJCadContent
 
 SCHEMA_VERSION = IJCadContent.model_fields["schemaVersion"].default  # noqa
