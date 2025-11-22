@@ -24,11 +24,13 @@ from jupytercad_core.schema import (
     IChamfer,
     IFillet,
     ITorus,
+    ISketchObject,
     Parts,
     ShapeMetadata,
     IAny,
     SCHEMA_VERSION,
 )
+from jupytercad_core.schema.interfaces import geomLineSegment, geomCircle
 
 logger = logging.getLogger(__file__)
 
@@ -542,6 +544,54 @@ class CadDocument(CommWidget):
         }
         return self.add_object(OBJECT_FACTORY.create_object(data, self))
 
+    def add_sketch(
+        self,
+        name: str = "",
+        geometry: List[
+            Union[geomCircle.IGeomCircle, geomLineSegment.IGeomLineSegment]
+        ] = [],
+        attachment_offset_position: List[float] = [0, 0, 0],
+        attachment_offset_rotation_axis: List[float] = [0, 0, 1],
+        attachment_offset_rotation_angle: float = 0,
+        color: str = "#808080",
+        position: List[float] = [0, 0, 0],
+        rotation_axis: List[float] = [0, 0, 1],
+        rotation_angle: float = 0,
+    ) -> CadDocument:
+        """
+        Add a sketch to the document.
+
+        :param name: The name that will be used for the object in the document.
+        :param geometry: The list of geometries for the sketch.
+        :param attachment_offset_position: The attachment offset 3D position.
+        :param attachment_offset_rotation_axis: The attachment offset 3D axis used for the rotation.
+        :param attachment_offset_rotation_angle: The attachment offset rotation angle, in degrees.
+        :param color: The color of the sketch in hex format (e.g., "#FF5733") or RGB float list.
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """
+        data = {
+            "shape": Parts.Sketcher__SketchObject.value,
+            "name": name if name else self._new_name("Sketch"),
+            "parameters": {
+                "AttachmentOffset": {
+                    "Position": attachment_offset_position,
+                    "Axis": attachment_offset_rotation_axis,
+                    "Angle": attachment_offset_rotation_angle,
+                },
+                "Geometry": geometry,
+                "Color": color,
+                "Placement": {
+                    "Position": position,
+                    "Axis": rotation_axis,
+                    "Angle": rotation_angle,
+                },
+            },
+        }
+        return self.add_object(OBJECT_FACTORY.create_object(data, self))
+
     def cut(
         self,
         name: str = "",
@@ -886,6 +936,7 @@ class PythonJcadObject(BaseModel):
         IFuse,
         ISphere,
         ITorus,
+        ISketchObject,
         IFillet,
         IChamfer,
     ]
@@ -954,5 +1005,6 @@ OBJECT_FACTORY.register_factory(Parts.Part__MultiCommon.value, IIntersection)
 OBJECT_FACTORY.register_factory(Parts.Part__MultiFuse.value, IFuse)
 OBJECT_FACTORY.register_factory(Parts.Part__Sphere.value, ISphere)
 OBJECT_FACTORY.register_factory(Parts.Part__Torus.value, ITorus)
+OBJECT_FACTORY.register_factory(Parts.Sketcher__SketchObject.value, ISketchObject)
 OBJECT_FACTORY.register_factory(Parts.Part__Chamfer.value, IChamfer)
 OBJECT_FACTORY.register_factory(Parts.Part__Fillet.value, IFillet)
