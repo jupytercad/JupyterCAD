@@ -709,10 +709,13 @@ export class MainView extends React.Component<IProps, IStates> {
         this._divRef.current.clientHeight,
         false
       );
+
+      // Update the size of the label renderer to match the container div.
       this._labelRenderer.setSize(
         this._divRef.current.clientWidth,
         this._divRef.current.clientHeight
       );
+      
       if (this._camera instanceof THREE.PerspectiveCamera) {
         this._camera.aspect =
           this._divRef.current.clientWidth / this._divRef.current.clientHeight;
