@@ -3,7 +3,7 @@ import path from 'path';
 
 test.use({ autoGoto: false });
 
-test.describe('Measure Tools', () => {
+test.describe('Measurement test', () => {
   test.beforeEach(async ({ page, request }) => {
     page.setViewportSize({ width: 1920, height: 1080 });
     const content = galata.newContentsHelper(request);
