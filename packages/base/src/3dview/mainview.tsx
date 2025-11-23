@@ -168,45 +168,45 @@ export class MainView extends React.Component<IProps, IStates> {
     document.addEventListener('keydown', this._keyDownHandler);
   }
 
-    componentDidUpdate(oldProps: IProps, oldState: IStates): void {
-      // Resize the canvas to fit the display area
-      this.resizeCanvasToDisplaySize();
+  componentDidUpdate(oldProps: IProps, oldState: IStates): void {
+    // Resize the canvas to fit the display area
+    this.resizeCanvasToDisplaySize();
 
-      // Update transform controls rotation snap if the value has changed
-      if (oldState.rotationSnapValue !== this.state.rotationSnapValue) {
-        this._transformControls.rotationSnap = THREE.MathUtils.degToRad(
-          this.state.rotationSnapValue
-        );
-      }
+    // Update transform controls rotation snap if the value has changed
+    if (oldState.rotationSnapValue !== this.state.rotationSnapValue) {
+      this._transformControls.rotationSnap = THREE.MathUtils.degToRad(
+        this.state.rotationSnapValue
+      );
+    }
 
-      // Update transform controls translation snap if the value has changed
-      if (oldState.translationSnapValue !== this.state.translationSnapValue) {
-        this._transformControls.translationSnap = this.state.translationSnapValue;
-      }
+    // Update transform controls translation snap if the value has changed
+    if (oldState.translationSnapValue !== this.state.translationSnapValue) {
+      this._transformControls.translationSnap = this.state.translationSnapValue;
+    }
 
-      // Handle measurement display based on the selection box
-      if (oldState.selectionBox !== this.state.selectionBox) {
-        // If there is a new selection box, create and display measurements
-        if (this.state.selectionBox) {
-          // Clear any existing measurement visuals
-          if (this._measurementGroup) {
-            this._measurementGroup.clear();
-            this._scene.remove(this._measurementGroup);
-          }
-          // Create a new measurement object for the selection box
-          const measurement = new Measurement({ box: this.state.selectionBox });
-          this._measurementGroup = measurement.group;
-          this._scene.add(this._measurementGroup);
-        } else {
-          // If the selection box is removed, clear the measurement visuals
-          if (this._measurementGroup) {
-            this._measurementGroup.clear();
-            this._scene.remove(this._measurementGroup);
-            this._measurementGroup = null;
-          }
+    // Handle measurement display based on the selection box
+    if (oldState.selectionBox !== this.state.selectionBox) {
+      // If there is a new selection box, create and display measurements
+      if (this.state.selectionBox) {
+        // Clear any existing measurement visuals
+        if (this._measurementGroup) {
+          this._measurementGroup.clear();
+          this._scene.remove(this._measurementGroup);
+        }
+        // Create a new measurement object for the selection box
+        const measurement = new Measurement({ box: this.state.selectionBox });
+        this._measurementGroup = measurement.group;
+        this._scene.add(this._measurementGroup);
+      } else {
+        // If the selection box is removed, clear the measurement visuals
+        if (this._measurementGroup) {
+          this._measurementGroup.clear();
+          this._scene.remove(this._measurementGroup);
+          this._measurementGroup = null;
         }
       }
     }
+  }
 
   componentWillUnmount(): void {
     window.cancelAnimationFrame(this._requestID);
@@ -697,7 +697,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._renderer.render(this._scene, this._camera);
 
-    this._labelRenderer.render(this._scene, this._camera);  // Render the 2D labels on top of the 3D scene
+    this._labelRenderer.render(this._scene, this._camera); // Render the 2D labels on top of the 3D scene
     this._viewHelper.render(this._renderer);
     this.updateCameraRotation();
   };
@@ -715,7 +715,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this._divRef.current.clientWidth,
         this._divRef.current.clientHeight
       );
-      
+
       if (this._camera instanceof THREE.PerspectiveCamera) {
         this._camera.aspect =
           this._divRef.current.clientWidth / this._divRef.current.clientHeight;
