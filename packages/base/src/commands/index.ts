@@ -28,6 +28,7 @@ import {
   boxIcon,
   chamferIcon,
   clippingIcon,
+  rulerIcon,
   coneIcon,
   cutIcon,
   cylinderIcon,
@@ -784,8 +785,29 @@ export function addCommands(
     }
   });
 
+  commands.addCommand(CommandIDs.toggleMeasurement, {
+    label: trans.__('Toggle Measurement'),
+    isEnabled: () => {
+      return tracker.currentWidget !== null;
+    },
+    isToggled: () => {
+      const current = tracker.currentWidget?.content;
+      return current?.measurement ?? false;
+    },
+    icon: rulerIcon,
+    execute: async () => {
+      const current = tracker.currentWidget?.content;
+      if (!current) {
+        return;
+      }
+      current.measurement = !current.measurement;
+      commands.notifyCommandChanged(CommandIDs.toggleMeasurement);
+    }
+  });
+
   tracker.currentChanged.connect(() => {
     commands.notifyCommandChanged(CommandIDs.updateClipView);
+    commands.notifyCommandChanged(CommandIDs.toggleMeasurement);
   });
 
   commands.addCommand(CommandIDs.splitScreen, {
@@ -960,6 +982,7 @@ export namespace CommandIDs {
   export const updateExplodedView = 'jupytercad:updateExplodedView';
   export const updateCameraSettings = 'jupytercad:updateCameraSettings';
   export const updateClipView = 'jupytercad:updateClipView';
+  export const toggleMeasurement = 'jupytercad:toggleMeasurement';
 
   export const splitScreen = 'jupytercad:splitScreen';
   export const exportJcad = 'jupytercad:exportJcad';

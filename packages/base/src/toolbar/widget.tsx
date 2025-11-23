@@ -242,6 +242,14 @@ export class ToolbarWidget extends ReactiveToolbar {
             commands: options.commands
           })
         );
+        this.addItem(
+          'Toggle Measurement',
+          new CommandToolbarButton({
+            id: CommandIDs.toggleMeasurement,
+            label: '',
+            commands: options.commands
+          })
+        );
         this.addItem('separator6', new Separator());
 
         this.addItem(

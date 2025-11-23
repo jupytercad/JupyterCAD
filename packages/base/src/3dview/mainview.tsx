@@ -83,7 +83,8 @@ interface IStates {
   rotationSnapValue: number;
   translationSnapValue: number;
   transformMode: string | undefined;
-  selectionBox: THREE.Box3 | null;
+  measurement: boolean;
+  
 }
 
 interface ILineIntersection extends THREE.Intersection {
@@ -135,7 +136,8 @@ export class MainView extends React.Component<IProps, IStates> {
       rotationSnapValue: 10,
       translationSnapValue: 1,
       transformMode: 'translate',
-      selectionBox: null
+      measurement: false,
+      
     };
 
     this._model.settingsChanged.connect(this._handleSettingsChange, this);
@@ -168,45 +170,27 @@ export class MainView extends React.Component<IProps, IStates> {
     document.addEventListener('keydown', this._keyDownHandler);
   }
 
-    componentDidUpdate(oldProps: IProps, oldState: IStates): void {
-      // Resize the canvas to fit the display area
-      this.resizeCanvasToDisplaySize();
+  componentDidUpdate(oldProps: IProps, oldState: IStates): void {
+    // Resize the canvas to fit the display area
+    this.resizeCanvasToDisplaySize();
 
-      // Update transform controls rotation snap if the value has changed
-      if (oldState.rotationSnapValue !== this.state.rotationSnapValue) {
-        this._transformControls.rotationSnap = THREE.MathUtils.degToRad(
-          this.state.rotationSnapValue
-        );
-      }
-
-      // Update transform controls translation snap if the value has changed
-      if (oldState.translationSnapValue !== this.state.translationSnapValue) {
-        this._transformControls.translationSnap = this.state.translationSnapValue;
-      }
-
-      // Handle measurement display based on the selection box
-      if (oldState.selectionBox !== this.state.selectionBox) {
-        // If there is a new selection box, create and display measurements
-        if (this.state.selectionBox) {
-          // Clear any existing measurement visuals
-          if (this._measurementGroup) {
-            this._measurementGroup.clear();
-            this._scene.remove(this._measurementGroup);
-          }
-          // Create a new measurement object for the selection box
-          const measurement = new Measurement({ box: this.state.selectionBox });
-          this._measurementGroup = measurement.group;
-          this._scene.add(this._measurementGroup);
-        } else {
-          // If the selection box is removed, clear the measurement visuals
-          if (this._measurementGroup) {
-            this._measurementGroup.clear();
-            this._scene.remove(this._measurementGroup);
-            this._measurementGroup = null;
-          }
-        }
-      }
+    // Update transform controls rotation snap if the value has changed
+    if (oldState.rotationSnapValue !== this.state.rotationSnapValue) {
+      this._transformControls.rotationSnap = THREE.MathUtils.degToRad(
+        this.state.rotationSnapValue
+      );
     }
+
+    // Update transform controls translation snap if the value has changed
+    if (oldState.translationSnapValue !== this.state.translationSnapValue) {
+      this._transformControls.translationSnap = this.state.translationSnapValue;
+    }
+
+    // Handle measurement display when the measurement tool is toggled.
+    if (oldState.measurement !== this.state.measurement) {
+      this._refreshMeasurement();
+    }
+  }
 
   componentWillUnmount(): void {
     window.cancelAnimationFrame(this._requestID);
@@ -1408,17 +1392,28 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._updateTransformControls(selectedNames);
 
-    // Calculate bounding box for selected items
-    if (this._selectedMeshes.length > 0) {
+    // Refresh measurement annotations when the selection changes.
+    this._refreshMeasurement();
+  }
+
+  private _refreshMeasurement = (): void => {
+    // Clear existing measurement annotations if any.
+    if (this._measurementGroup) {
+      this._measurementGroup.clear();
+      this._scene.remove(this._measurementGroup);
+      this._measurementGroup = null;
+    }
+
+    // If measurement tool is enabled and there are selected meshes, create new measurement annotations.
+    if (this.state.measurement && this._selectedMeshes.length > 0) {
       const combinedBox = new THREE.Box3();
       for (const mesh of this._selectedMeshes) {
-        // We need to account for the object's transformation
         const box = new THREE.Box3().setFromObject(mesh);
         combinedBox.union(box);
       }
-      this.setState({ selectionBox: combinedBox });
-    } else {
-      this.setState({ selectionBox: null });
+      const measurement = new Measurement({ box: combinedBox });
+      this._measurementGroup = measurement.group;
+      this._scene.add(this._measurementGroup);
     }
   }
 
@@ -1734,6 +1729,13 @@ export class MainView extends React.Component<IProps, IStates> {
             );
           }
         );
+      }
+    }
+    if (change.key === 'measurement') {
+      const measurementEnabled = change.newValue as boolean | undefined;
+
+      if (measurementEnabled !== undefined) {
+        this.setState(old => ({ ...old, measurement: measurementEnabled }));
       }
     }
   }
