@@ -14,9 +14,7 @@ test.describe('Measurement test', () => {
     );
   });
 
-  test('Should display measurement on object selection', async ({
-    page
-  }) => {
+  test('Should display measurement on object selection', async ({ page }) => {
     test.setTimeout(120000);
     await page.goto();
 
@@ -33,9 +31,15 @@ test.describe('Measurement test', () => {
       .click();
 
     // Check if the measurement labels are displayed
-    const xLabel = page.locator('.measurement-label', { hasText: /X: \d+\.\d{2}/ });
-    const yLabel = page.locator('.measurement-label', { hasText: /Y: \d+\.\d{2}/ });
-    const zLabel = page.locator('.measurement-label', { hasText: /Z: \d+\.\d{2}/ });
+    const xLabel = page.locator('.measurement-label', {
+      hasText: /X: \d+\.\d{2}/
+    });
+    const yLabel = page.locator('.measurement-label', {
+      hasText: /Y: \d+\.\d{2}/
+    });
+    const zLabel = page.locator('.measurement-label', {
+      hasText: /Z: \d+\.\d{2}/
+    });
 
     await expect(xLabel).toBeVisible();
     await expect(yLabel).toBeVisible();

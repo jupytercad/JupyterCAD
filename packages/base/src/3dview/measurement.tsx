@@ -135,7 +135,9 @@ export class Measurement extends React.Component<IMeasurementProps> {
     const label = new CSS2DObject(labelDiv);
 
     // Position the label at the midpoint of the line
-    const midPoint = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+    const midPoint = new THREE.Vector3()
+      .addVectors(start, end)
+      .multiplyScalar(0.5);
     label.position.copy(midPoint);
 
     this._group.add(label);

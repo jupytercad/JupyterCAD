@@ -84,7 +84,6 @@ interface IStates {
   translationSnapValue: number;
   transformMode: string | undefined;
   measurement: boolean;
-  
 }
 
 interface ILineIntersection extends THREE.Intersection {
@@ -136,8 +135,7 @@ export class MainView extends React.Component<IProps, IStates> {
       rotationSnapValue: 10,
       translationSnapValue: 1,
       transformMode: 'translate',
-      measurement: false,
-      
+      measurement: false
     };
 
     this._model.settingsChanged.connect(this._handleSettingsChange, this);
@@ -681,7 +679,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._renderer.render(this._scene, this._camera);
 
-    this._labelRenderer.render(this._scene, this._camera);  // Render the 2D labels on top of the 3D scene
+    this._labelRenderer.render(this._scene, this._camera); // Render the 2D labels on top of the 3D scene
     this._viewHelper.render(this._renderer);
     this.updateCameraRotation();
   };
@@ -699,7 +697,7 @@ export class MainView extends React.Component<IProps, IStates> {
         this._divRef.current.clientWidth,
         this._divRef.current.clientHeight
       );
-      
+
       if (this._camera instanceof THREE.PerspectiveCamera) {
         this._camera.aspect =
           this._divRef.current.clientWidth / this._divRef.current.clientHeight;
@@ -1415,7 +1413,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this._measurementGroup = measurement.group;
       this._scene.add(this._measurementGroup);
     }
-  }
+  };
 
   /*
    * Attach the transform controls to the current selection, or detach it
