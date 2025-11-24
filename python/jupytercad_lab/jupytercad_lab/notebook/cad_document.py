@@ -738,6 +738,60 @@ class CadDocument(CommWidget):
         self.set_visible(shape2, False)
         return self.add_object(OBJECT_FACTORY.create_object(data, self))
 
+    def extrude(
+        self,
+        name: str = "",
+        shape: str | int = None,
+        direction: List[float] = [0, 0, 1],
+        length_fwd: float = 10,
+        length_rev: float = 0,
+        solid: bool = False,
+        color: Optional[str] = None,
+        position: List[float] = [0, 0, 0],
+        rotation_axis: List[float] = [0, 0, 1],
+        rotation_angle: float = 0,
+    ) -> CadDocument:
+        """
+        Apply an extrusion operation on an object.
+        If no object is provided as input, the last created object will be used as operand.
+
+        :param name: The name that will be used for the object in the document.
+        :param shape: The input object used for the extrusion. Can be the name of the object or its index in the objects list.
+        :param direction: The direction of the extrusion.
+        :param length_fwd: The length of the extrusion.
+        :param length_rev: The length of the extrusion in the reverse direction.
+        :param solid: Whether to create a solid or a shell.
+        :param color: The color in hex format (e.g., "#FF5733") or RGB float list. Defaults to the base object's color if None.
+        :param position: The shape 3D position.
+        :param rotation_axis: The 3D axis used for the rotation.
+        :param rotation_angle: The shape rotation angle, in degrees.
+        :return: The document itself.
+        """
+        shape = self._get_operand(shape)
+
+        if color is None:
+            color = self._get_color(shape)
+
+        data = {
+            "shape": Parts.Part__Extrusion.value,
+            "name": name if name else self._new_name("Extrusion"),
+            "parameters": {
+                "Base": shape,
+                "Dir": direction,
+                "LengthFwd": length_fwd,
+                "LengthRev": length_rev,
+                "Solid": solid,
+                "Color": color,
+                "Placement": {
+                    "Position": position,
+                    "Axis": rotation_axis,
+                    "Angle": rotation_angle,
+                },
+            },
+        }
+        self.set_visible(shape, False)
+        return self.add_object(OBJECT_FACTORY.create_object(data, self))
+
     def chamfer(
         self,
         name: str = "",
