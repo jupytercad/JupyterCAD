@@ -1730,6 +1730,7 @@ export class MainView extends React.Component<IProps, IStates> {
       }
     }
     if (change.key === 'measurement') {
+      // Update the measurement state when the measurement tool is toggled.
       const measurementEnabled = change.newValue as boolean | undefined;
 
       if (measurementEnabled !== undefined) {

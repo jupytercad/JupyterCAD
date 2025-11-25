@@ -807,7 +807,6 @@ export function addCommands(
 
   tracker.currentChanged.connect(() => {
     commands.notifyCommandChanged(CommandIDs.updateClipView);
-    commands.notifyCommandChanged(CommandIDs.toggleMeasurement);
   });
 
   commands.addCommand(CommandIDs.splitScreen, {
