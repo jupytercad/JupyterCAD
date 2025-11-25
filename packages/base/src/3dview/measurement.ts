@@ -1,56 +1,26 @@
 /**
- * This file defines a React component for rendering measurements of a 3D object.
+ * This file defines a class for rendering measurements of a 3D object.
  * It uses `three.js` to create dimension lines and labels for a given bounding box.
  */
-import * as React from 'react';
 import * as THREE from 'three';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 /**
- * Props for the Measurement component.
- */
-interface IMeasurementProps {
-  /**
-   * The bounding box to measure.
-   */
-  box: THREE.Box3;
-}
-
-/**
- * A React component that displays the dimensions of a THREE.Box3.
+ * A class that displays the dimensions of a THREE.Box3.
  * It creates visual annotations (lines and labels) for the X, Y, and Z dimensions.
  */
-export class Measurement extends React.Component<IMeasurementProps> {
+export class Measurement {
   private _group: THREE.Group;
+  private _box: THREE.Box3;
 
   /**
-   * Constructor for the Measurement component.
-   * @param props The component props.
+   * Constructor for the Measurement class.
+   * @param box The bounding box to measure.
    */
-  constructor(props: IMeasurementProps) {
-    super(props);
+  constructor(box: THREE.Box3) {
+    this._box = box;
     this._group = new THREE.Group();
     this.createAnnotations();
-  }
-
-  /**
-   * Called when the component updates.
-   * If the bounding box has changed, it clears the old annotations and creates new ones.
-   * @param prevProps The previous component props.
-   */
-  componentDidUpdate(prevProps: IMeasurementProps) {
-    if (this.props.box !== prevProps.box) {
-      this.clearAnnotations();
-      this.createAnnotations();
-    }
-  }
-
-  /**
-   * Called when the component is about to be unmounted.
-   * It clears any existing annotations.
-   */
-  componentWillUnmount() {
-    this.clearAnnotations();
   }
 
   /**
@@ -64,16 +34,15 @@ export class Measurement extends React.Component<IMeasurementProps> {
    * Creates the dimension lines and labels for the bounding box.
    */
   createAnnotations() {
-    const { box } = this.props;
-    if (!box) {
+    if (!this._box) {
       return;
     }
 
     const size = new THREE.Vector3();
-    box.getSize(size);
+    this._box.getSize(size);
 
-    const min = box.min;
-    const max = box.max;
+    const min = this._box.min;
+    const max = this._box.max;
 
     // Create dimension lines for X, Y, and Z axes
     this.createDimensionLine(
@@ -141,14 +110,6 @@ export class Measurement extends React.Component<IMeasurementProps> {
     label.position.copy(midPoint);
 
     this._group.add(label);
-  }
-
-  /**
-   * This component does not render any DOM elements itself.
-   * The measurements are rendered in the 3D scene.
-   */
-  render(): null {
-    return null;
   }
 
   /**

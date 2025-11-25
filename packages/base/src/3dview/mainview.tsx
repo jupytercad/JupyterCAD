@@ -1409,7 +1409,7 @@ export class MainView extends React.Component<IProps, IStates> {
         const box = new THREE.Box3().setFromObject(mesh);
         combinedBox.union(box);
       }
-      const measurement = new Measurement({ box: combinedBox });
+      const measurement = new Measurement(combinedBox);
       this._measurementGroup = measurement.group;
       this._scene.add(this._measurementGroup);
     }
