@@ -111,11 +111,29 @@ export class Measurement {
       linewidth: 1,
       scale: 1,
       dashSize: 0.1,
-      gapSize: 0.1
+      gapSize: 0.1,
+      depthTest: false, // Render lines on top of other objects for better visibility
+      depthWrite: false,
+      transparent: true
     });
     const geometry = new THREE.BufferGeometry().setFromPoints([start, end]);
+    // Create a thin halo (solid) line behind the dashed line to improve
+    // contrast when measurements pass over objects.
+    const haloMat = new THREE.LineBasicMaterial({
+      color: 0xffffff,
+      linewidth: 4,
+      depthTest: false,
+      depthWrite: false,
+      transparent: true,
+      opacity: 0.85
+    });
+    const halo = new THREE.Line(geometry.clone(), haloMat);
+    halo.renderOrder = 0;  // Ensure halo renders just before the dashed line
+    this._group.add(halo);
+
     const line = new THREE.Line(geometry, material);
     line.computeLineDistances();
+    line.renderOrder = 1;  // Ensure dashed line renders on top of the halo and other objects
     this._group.add(line);
 
     // Create the label
