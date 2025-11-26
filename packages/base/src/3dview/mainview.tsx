@@ -504,6 +504,15 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.addEventListener('dragging-changed', event => {
         this._controls.enabled = !event.value;
       });
+      this._transformControls.addEventListener(
+        'change',
+        throttle(() => {
+          if (this.state.measurement) {
+            this._refreshMeasurement();
+            // Refresh measurement annotations when the transformed object changes.
+          }
+        }, 100)
+      );
       // Update the currently transformed object in the shared model once finished moving
       this._transformControls.addEventListener('mouseUp', async () => {
         const updatedObject = this._selectedMeshes[0];
@@ -1051,6 +1060,7 @@ export class MainView extends React.Component<IProps, IStates> {
     });
 
     this._updateTransformControls(selectedNames);
+    this._refreshMeasurement();
 
     // Update the reflength.
     this._updateRefLength(this._refLength === null);
