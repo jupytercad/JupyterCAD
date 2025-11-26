@@ -8,17 +8,28 @@ import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 /**
  * A class that displays the dimensions of a THREE.Box3.
  * It creates visual annotations (lines and labels) for the X, Y, and Z dimensions.
+ * The measurement can be axis-aligned or oriented by providing a position and quaternion.
  */
 export class Measurement {
   private _group: THREE.Group;
   private _box: THREE.Box3;
+  private _quaternion?: THREE.Quaternion;
+  private _position?: THREE.Vector3;
 
   /**
    * Constructor for the Measurement class.
    * @param box The bounding box to measure.
+   * @param position Optional position to apply to the measurement group for oriented measurements.
+   * @param quaternion Optional quaternion to apply to the measurement group for oriented measurements.
    */
-  constructor(box: THREE.Box3) {
+  constructor(
+    box: THREE.Box3,
+    position?: THREE.Vector3,
+    quaternion?: THREE.Quaternion
+  ) {
     this._box = box;
+    this._position = position;
+    this._quaternion = quaternion;
     this._group = new THREE.Group();
     this.createAnnotations();
   }
@@ -63,6 +74,15 @@ export class Measurement {
       'Z',
       size.z
     );
+  
+    // The annotations are created for an axis-aligned box at the origin, so 
+    // transform the group to match the object's actual position and orientation.
+    if (this._quaternion) {
+      this._group.quaternion.copy(this._quaternion);
+    }
+    if (this._position) {
+      this._group.position.copy(this._position);
+    }
   }
 
   /**

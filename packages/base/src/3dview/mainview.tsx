@@ -1414,14 +1414,35 @@ export class MainView extends React.Component<IProps, IStates> {
 
     // If measurement tool is enabled and there are selected meshes, create new measurement annotations.
     if (this.state.measurement && this._selectedMeshes.length > 0) {
-      const combinedBox = new THREE.Box3();
-      for (const mesh of this._selectedMeshes) {
-        const box = new THREE.Box3().setFromObject(mesh);
-        combinedBox.union(box);
+      if (this._selectedMeshes.length === 1) {
+        // For a single selected object, create an oriented measurement that aligns with the object's rotation.
+        const mesh = this._selectedMeshes[0];
+        const meshGroup = mesh.parent as THREE.Group;
+
+        if (!mesh.geometry.boundingBox) {
+          mesh.geometry.computeBoundingBox();
+        }
+        const localBox = mesh.geometry.boundingBox!.clone();
+
+        // Pass the local bounding box, position, and quaternion to the Measurement constructor.
+        const measurement = new Measurement(
+          localBox,
+          meshGroup.position,
+          meshGroup.quaternion
+        );
+        this._measurementGroup = measurement.group;
+        this._scene.add(this._measurementGroup);
+      } else {
+        // For multiple selected objects, create a single axis-aligned bounding box that encloses all of them.
+        const combinedBox = new THREE.Box3();
+        for (const mesh of this._selectedMeshes) {
+          const box = new THREE.Box3().setFromObject(mesh.parent!);
+          combinedBox.union(box);
+        }
+        const measurement = new Measurement(combinedBox);
+        this._measurementGroup = measurement.group;
+        this._scene.add(this._measurementGroup);
       }
-      const measurement = new Measurement(combinedBox);
-      this._measurementGroup = measurement.group;
-      this._scene.add(this._measurementGroup);
     }
   };
 
