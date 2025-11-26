@@ -128,12 +128,12 @@ export class Measurement {
       opacity: 0.85
     });
     const halo = new THREE.Line(geometry.clone(), haloMat);
-    halo.renderOrder = 0;  // Ensure halo renders just before the dashed line
+    halo.renderOrder = 0; // Ensure halo renders just before the dashed line
     this._group.add(halo);
 
     const line = new THREE.Line(geometry, material);
     line.computeLineDistances();
-    line.renderOrder = 1;  // Ensure dashed line renders on top of the halo and other objects
+    line.renderOrder = 1; // Ensure dashed line renders on top of the halo and other objects
     this._group.add(line);
 
     // Create the label
