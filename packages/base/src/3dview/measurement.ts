@@ -74,8 +74,8 @@ export class Measurement {
       'Z',
       size.z
     );
-  
-    // The annotations are created for an axis-aligned box at the origin, so 
+
+    // The annotations are created for an axis-aligned box at the origin, so
     // transform the group to match the object's actual position and orientation.
     if (this._quaternion) {
       this._group.quaternion.copy(this._quaternion);
