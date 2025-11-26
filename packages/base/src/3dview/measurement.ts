@@ -55,25 +55,32 @@ export class Measurement {
     const min = this._box.min;
     const max = this._box.max;
 
-    // Create dimension lines for X, Y, and Z axes
-    this.createDimensionLine(
-      new THREE.Vector3(min.x, min.y, min.z),
-      new THREE.Vector3(max.x, min.y, min.z),
-      'X',
-      size.x
-    );
-    this.createDimensionLine(
-      new THREE.Vector3(max.x, min.y, min.z),
-      new THREE.Vector3(max.x, max.y, min.z),
-      'Y',
-      size.y
-    );
-    this.createDimensionLine(
-      new THREE.Vector3(max.x, max.y, min.z),
-      new THREE.Vector3(max.x, max.y, max.z),
-      'Z',
-      size.z
-    );
+    // Create dimension lines only for dimensions with a size greater than a small epsilon.
+    // This is useful for hiding zero-dimension measurements for 2D objects like edges.
+    if (size.x > 1e-6) {
+      this.createDimensionLine(
+        new THREE.Vector3(min.x, min.y, min.z),
+        new THREE.Vector3(max.x, min.y, min.z),
+        'X',
+        size.x
+      );
+    }
+    if (size.y > 1e-6) {
+      this.createDimensionLine(
+        new THREE.Vector3(max.x, min.y, min.z),
+        new THREE.Vector3(max.x, max.y, min.z),
+        'Y',
+        size.y
+      );
+    }
+    if (size.z > 1e-6) {
+      this.createDimensionLine(
+        new THREE.Vector3(max.x, max.y, min.z),
+        new THREE.Vector3(max.x, max.y, max.z),
+        'Z',
+        size.z
+      );
+    }
 
     // The annotations are created for an axis-aligned box at the origin, so transform
     // the group to match the object's actual position and orientation (if provided).
