@@ -1077,6 +1077,30 @@ export class MainView extends React.Component<IProps, IStates> {
         );
       }
 
+      if (this._camera instanceof THREE.OrthographicCamera) {
+        const boundingSphere = new THREE.Sphere();
+        this._boundingGroup.getBoundingSphere(boundingSphere);
+        const center = boundingSphere.center;
+        const radius = boundingSphere.radius;
+
+        const aspect =
+          this._renderer.domElement.clientWidth /
+          this._renderer.domElement.clientHeight;
+        const frustumSize = radius * 200;
+
+        // Update orthographic frustum
+        this._camera.left = (-frustumSize * aspect) / 2;
+        this._camera.right = (frustumSize * aspect) / 2;
+        this._camera.top = frustumSize / 2;
+        this._camera.bottom = -frustumSize / 2;
+
+        // Set near/far conservatively
+        this._camera.near = 0;
+        this._camera.far = frustumSize;
+
+        this._camera.updateProjectionMatrix();
+      }
+
       // Update clip plane size
       this._clippingPlaneMeshControl.geometry = new THREE.PlaneGeometry(
         this._refLength * 10,
@@ -1764,18 +1788,40 @@ export class MainView extends React.Component<IProps, IStates> {
     } else {
       const width = this._divRef.current?.clientWidth || 0;
       const height = this._divRef.current?.clientHeight || 0;
-
+      const aspect = width / height || 1;
       const distance = position.distanceTo(target);
       const zoomFactor = 1000 / distance;
 
+      const refLength = this._refLength ?? 1000;
+
+      // Fallback bounding sphere if _boundingGroup isn't available yet
+      const boundingSphere = new THREE.Sphere();
+      this._boundingGroup?.getBoundingSphere(boundingSphere);
+      const center = boundingSphere.center;
+      const radius = boundingSphere.radius || refLength;
+
+      const frustumSize = radius * 2;
+
       this._camera = new THREE.OrthographicCamera(
-        width / -2,
-        width / 2,
-        height / 2,
-        height / -2
+        (-frustumSize * aspect) / 2,
+        (frustumSize * aspect) / 2,
+        frustumSize / 2,
+        -frustumSize / 2,
+        0,
+        radius * 5
+      );
+
+      this._camera.updateProjectionMatrix();
+
+      // Position and lookAt based on bounding sphere
+      const offset = radius * 2;
+      this._camera.position.set(
+        center.x + offset,
+        center.y + offset,
+        center.z + offset
       );
       this._camera.zoom = zoomFactor;
-      this._camera.updateProjectionMatrix();
+      this._camera.lookAt(center);
     }
 
     this._camera.add(this._cameraLight);
