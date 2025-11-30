@@ -105,8 +105,24 @@ export class Measurement {
     axis: string,
     value: number
   ) {
+    const geometry = new THREE.BufferGeometry().setFromPoints([start, end]);
+
+    // Create a solid white line (to go behind the dashed line to improve
+    // contrast when measurements pass over objects)
+    const whiteLineMaterial = new THREE.LineBasicMaterial({
+      color: 0xffffff,
+      linewidth: 4,
+      depthTest: false,
+      depthWrite: false,
+      transparent: true,
+      opacity: 0.85
+    });
+    const whiteLine = new THREE.Line(geometry, whiteLineMaterial);
+    whiteLine.renderOrder = 0; // Ensure white line renders just before the dashed line
+    this._group.add(whiteLine);
+
     // Create the dashed line
-    const material = new THREE.LineDashedMaterial({
+    const dashLineMaterial = new THREE.LineDashedMaterial({
       color: 0x000000,
       linewidth: 1,
       scale: 1,
@@ -116,25 +132,10 @@ export class Measurement {
       depthWrite: false,
       transparent: true
     });
-    const geometry = new THREE.BufferGeometry().setFromPoints([start, end]);
-    // Create a thin halo (solid) line behind the dashed line to improve
-    // contrast when measurements pass over objects.
-    const haloMat = new THREE.LineBasicMaterial({
-      color: 0xffffff,
-      linewidth: 4,
-      depthTest: false,
-      depthWrite: false,
-      transparent: true,
-      opacity: 0.85
-    });
-    const halo = new THREE.Line(geometry.clone(), haloMat);
-    halo.renderOrder = 0; // Ensure halo renders just before the dashed line
-    this._group.add(halo);
-
-    const line = new THREE.Line(geometry, material);
-    line.computeLineDistances();
-    line.renderOrder = 1; // Ensure dashed line renders on top of the halo and other objects
-    this._group.add(line);
+    const dashLine = new THREE.Line(geometry.clone(), dashLineMaterial);
+    dashLine.computeLineDistances();
+    dashLine.renderOrder = 1; // Ensure dashed line renders on top of the solid white line
+    this._group.add(dashLine);
 
     // Create the label
     const labelDiv = document.createElement('div');
@@ -145,7 +146,6 @@ export class Measurement {
     labelDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
     labelDiv.style.padding = '2px 5px';
     labelDiv.style.borderRadius = '3px';
-
     const label = new CSS2DObject(labelDiv);
 
     // Position the label at the midpoint of the line
