@@ -27,12 +27,12 @@ repos:
 
   # Autoformat: Python code
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 25.9.0
+    rev: 25.11.0
     hooks:
       - id: black
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.3
+    rev: v0.14.7
     hooks:
       - id: ruff
         args: ['--fix']
@@ -44,7 +44,7 @@ repos:
         entry: prettier --no-error-on-unmatched-pattern --write --ignore-unknown
 
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.39.0
+    rev: v10.0.0-alpha.1
     hooks:
       - id: eslint
         files: \.tsx?$
