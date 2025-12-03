@@ -27,7 +27,7 @@ python_packages = [
 ]
 
 [tool.jupyter-releaser.hooks]
-before-bump-version = ["python -m pip install build 'jupyterlab>=4.0.0'"]
+before-bump-version = ["python -m pip install hatch build 'jupyterlab>=4.0.0'"]
 before-build-npm = [
     "python -m pip install datamodel-code-generator",
     "jlpm",
