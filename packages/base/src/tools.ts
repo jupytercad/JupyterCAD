@@ -20,6 +20,7 @@ import sphereIconStr from '../style/icon/sphere.svg';
 import torusIconStr from '../style/icon/torus.svg';
 import unionIconStr from '../style/icon/union.svg';
 import clippingIconStr from '../style/icon/clipPlane.svg';
+import rulerIconStr from '../style/icon/ruler.svg';
 import chamferIconStr from '../style/icon/chamfer.svg';
 import filletIconStr from '../style/icon/fillet.svg';
 import wireframeIconStr from '../style/icon/wireframe.svg';
@@ -124,6 +125,11 @@ export const explodedViewIcon = new LabIcon({
 export const clippingIcon = new LabIcon({
   name: 'jupytercad:clipping-icon',
   svgstr: clippingIconStr
+});
+
+export const rulerIcon = new LabIcon({
+  name: 'jupytercad:ruler-icon',
+  svgstr: rulerIconStr
 });
 
 export const chamferIcon = new LabIcon({
