@@ -12,7 +12,7 @@ import { ControlPanelHeader } from './header';
 import { SuggestionPanel } from '../suggestion/suggestionpanel';
 import { SuggestionModel } from '../suggestion/model';
 import { IForkManager } from '@jupyter/docprovider';
-import { ICollaborativeDrive } from '@jupyter/collaborative-drive';
+import { ICollaborativeContentProvider } from '@jupyter/collaborative-drive';
 
 export class RightPanelWidget extends SidePanel {
   constructor(options: RightPanelWidget.IOptions) {
@@ -20,7 +20,7 @@ export class RightPanelWidget extends SidePanel {
     this.addClass('jpcad-sidepanel-widget');
     this.addClass('data-jcad-keybinding');
     this.node.tabIndex = 0;
-    const { model, tracker, forkManager, collaborativeDrive, annotationModel } =
+    const { model, tracker, forkManager, collaborativeContentProvider, annotationModel } =
       options;
     this._model = model;
     this._annotationModel = annotationModel;
@@ -37,7 +37,7 @@ export class RightPanelWidget extends SidePanel {
         filePath: '',
         tracker: tracker,
         forkManager: forkManager,
-        collaborativeDrive: collaborativeDrive
+        collaborativeContentProvider: collaborativeContentProvider
       });
       const suggestion = new SuggestionPanel({ model: suggestionModel });
       this.addWidget(suggestion);
@@ -91,7 +91,7 @@ export namespace RightPanelWidget {
     tracker: IJupyterCadTracker;
     annotationModel: IAnnotationModel;
     forkManager?: IForkManager;
-    collaborativeDrive?: ICollaborativeDrive;
+    collaborativeContentProvider?: ICollaborativeContentProvider;
   }
   export interface IProps {
     filePath?: string;

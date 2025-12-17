@@ -1,7 +1,4 @@
-import {
-  ICollaborativeDrive,
-  SharedDocumentFactory
-} from '@jupyter/collaborative-drive';
+import { ICollaborativeContentProvider } from '@jupyter/collaborative-drive';
 import { logoIcon, CommandIDs as BaseCommandIDs } from '@jupytercad/base';
 import {
   SCHEMA_VERSION,
@@ -24,6 +21,7 @@ import {
   IThemeManager,
   WidgetTracker
 } from '@jupyterlab/apputils';
+import { SharedDocumentFactory } from '@jupyterlab/services';
 import { IEditorServices } from '@jupyterlab/codeeditor';
 import { ConsolePanel, IConsoleTracker } from '@jupyterlab/console';
 import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
@@ -58,7 +56,7 @@ const activate = async (
   consoleTracker: IConsoleTracker,
   launcher: ILauncher | null,
   palette: ICommandPalette | null,
-  drive: ICollaborativeDrive | null,
+  collaborativeContentProvider: ICollaborativeContentProvider | null,
   settingRegistry?: ISettingRegistry
 ): Promise<void> => {
   let settings: ISettingRegistry.ISettings | null = null;
@@ -123,8 +121,8 @@ const activate = async (
   const jcadSharedModelFactory: SharedDocumentFactory = () => {
     return new JupyterCadDoc();
   };
-  if (drive) {
-    drive.sharedModelFactory.registerDocumentFactory(
+  if (collaborativeContentProvider) {
+    collaborativeContentProvider.sharedModelFactory.registerDocumentFactory(
       CONTENT_TYPE,
       jcadSharedModelFactory
     );
@@ -237,7 +235,7 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IRenderMimeRegistry,
     IConsoleTracker
   ],
-  optional: [ILauncher, ICommandPalette, ICollaborativeDrive, ISettingRegistry],
+  optional: [ILauncher, ICommandPalette, ICollaborativeContentProvider, ISettingRegistry],
   autoStart: true,
   activate
 };

@@ -14,7 +14,7 @@ import {
   ISessionModel,
   requestDocSession
 } from '@jupyter/docprovider';
-import { ICollaborativeDrive } from '@jupyter/collaborative-drive';
+import { ICollaborativeContentProvider } from '@jupyter/collaborative-drive';
 
 export class SuggestionModel {
   constructor(options: SuggestionModel.IOptions) {
@@ -23,11 +23,11 @@ export class SuggestionModel {
       forkManager,
       filePath,
       jupytercadModel,
-      collaborativeDrive
+      collaborativeContentProvider
     } = options;
     this._tracker = tracker;
     this._forkManager = forkManager;
-    this._drive = collaborativeDrive;
+    this._contentProvider = collaborativeContentProvider;
     this.switchContext({
       filePath,
       jupytercadModel
@@ -142,8 +142,8 @@ export class SuggestionModel {
       return;
     }
     this._jupytercadModel?.sharedModel.dispose();
-    if (this._drive && this._currentSession && this._filePath) {
-      const currentSharedModel = this._drive.sharedModelFactory.createNew({
+    if (this._contentProvider && this._currentSession && this._filePath) {
+      const currentSharedModel = this._contentProvider.sharedModelFactory.createNew({
         path: this._filePath,
         format: this._currentSession.format,
         contentType: this._currentSession.type,
@@ -233,7 +233,7 @@ export class SuggestionModel {
   private _forkManager: IForkManager;
   private _forkProvider?: IForkProvider;
   private _currentSession?: ISessionModel;
-  private _drive?: ICollaborativeDrive;
+  private _contentProvider?: ICollaborativeContentProvider;
   private _currentForkId: string | undefined;
   private _currentUser?: IUserData;
 }
@@ -244,6 +244,6 @@ namespace SuggestionModel {
     filePath: string;
     tracker: IJupyterCadTracker;
     forkManager: IForkManager;
-    collaborativeDrive?: ICollaborativeDrive;
+    collaborativeContentProvider?: ICollaborativeContentProvider;
   }
 }

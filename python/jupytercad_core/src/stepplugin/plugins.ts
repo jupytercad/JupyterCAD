@@ -1,7 +1,4 @@
-import {
-  ICollaborativeDrive,
-  SharedDocumentFactory
-} from '@jupyter/collaborative-drive';
+import { ICollaborativeContentProvider } from '@jupyter/collaborative-drive';
 import {
   IJCadWorkerRegistry,
   IJCadWorkerRegistryToken,
@@ -14,6 +11,7 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
+import { SharedDocumentFactory } from '@jupyterlab/services';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
@@ -31,7 +29,7 @@ const activate = async (
   themeManager: IThemeManager,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
-  drive: ICollaborativeDrive | null,
+  collaborativeContentProvider: ICollaborativeContentProvider | null,
   settingRegistry?: ISettingRegistry
 ): Promise<void> => {
   let settings: ISettingRegistry.ISettings | null = null;
@@ -77,8 +75,8 @@ const activate = async (
   const stepSharedModelFactory: SharedDocumentFactory = () => {
     return new JupyterCadStepDoc();
   };
-  if (drive) {
-    drive.sharedModelFactory.registerDocumentFactory(
+  if (collaborativeContentProvider) {
+    collaborativeContentProvider.sharedModelFactory.registerDocumentFactory(
       'step',
       stepSharedModelFactory
     );
@@ -106,7 +104,7 @@ const stepPlugin: JupyterFrontEndPlugin<void> = {
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken
   ],
-  optional: [ICollaborativeDrive, ISettingRegistry],
+  optional: [ICollaborativeContentProvider, ISettingRegistry],
   autoStart: true,
   activate
 };

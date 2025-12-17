@@ -35,7 +35,7 @@ export class JupyterCadDocumentWidgetFactory extends ABCWidgetFactory<
 > {
   constructor(private options: IOptions) {
     const { backendCheck, externalCommandRegistry, ...rest } = options;
-    super(rest);
+    super({ ...rest, contentProviderId: 'rtc' });
     this._backendCheck = backendCheck;
     this._commands = options.commands;
     this._workerRegistry = options.workerRegistry;

@@ -1,7 +1,4 @@
-import {
-  ICollaborativeDrive,
-  SharedDocumentFactory
-} from '@jupyter/collaborative-drive';
+import { ICollaborativeContentProvider } from '@jupyter/collaborative-drive';
 import {
   IJCadWorkerRegistry,
   IJCadWorkerRegistryToken,
@@ -16,6 +13,7 @@ import {
 } from '@jupyterlab/application';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 import { ITranslator, nullTranslator } from '@jupyterlab/translation';
+import { SharedDocumentFactory } from '@jupyterlab/services';
 
 import { JupyterCadStlModelFactory } from './modelfactory';
 import { JupyterCadDocumentWidgetFactory } from '../factory';
@@ -34,7 +32,7 @@ const activate = async (
   themeManager: IThemeManager,
   workerRegistry: IJCadWorkerRegistry,
   externalCommandRegistry: IJCadExternalCommandRegistry,
-  drive: ICollaborativeDrive | null,
+  collaborativeContentProvider: ICollaborativeContentProvider | null,
   settingRegistry?: ISettingRegistry,
   translator?: ITranslator
 ): Promise<void> => {
@@ -95,8 +93,8 @@ const activate = async (
   const stlSharedModelFactory: SharedDocumentFactory = () => {
     return new JupyterCadStlDoc();
   };
-  if (drive) {
-    drive.sharedModelFactory.registerDocumentFactory(
+  if (collaborativeContentProvider) {
+    collaborativeContentProvider.sharedModelFactory.registerDocumentFactory(
       'stl',
       stlSharedModelFactory
     );
@@ -124,7 +122,7 @@ const stlPlugin: JupyterFrontEndPlugin<void> = {
     IJCadWorkerRegistryToken,
     IJCadExternalCommandRegistryToken
   ],
-  optional: [ICollaborativeDrive, ISettingRegistry, ITranslator],
+  optional: [ICollaborativeContentProvider, ISettingRegistry, ITranslator],
   autoStart: true,
   activate
 };

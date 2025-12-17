@@ -1,4 +1,4 @@
-import { ICollaborativeDrive } from '@jupyter/collaborative-drive';
+import { ICollaborativeContentProvider } from '@jupyter/collaborative-drive';
 import {
   JupyterCadPanel,
   JupyterCadOutputWidget,
@@ -138,7 +138,7 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
     IJCadExternalCommandRegistryToken,
     IJupyterCadDocTracker,
     IJupyterYWidgetManager,
-    ICollaborativeDrive,
+    ICollaborativeContentProvider,
     ISettingRegistry
   ],
   activate: async (
@@ -147,7 +147,7 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
     externalCommandRegistry?: IJCadExternalCommandRegistry,
     jcadTracker?: JupyterCadTracker,
     yWidgetManager?: IJupyterYWidgetManager,
-    drive?: ICollaborativeDrive,
+    collaborativeContentProvider?: ICollaborativeContentProvider,
     settingRegistry?: ISettingRegistry
   ): Promise<void> => {
     let settings: ISettingRegistry.ISettings | null = null;
@@ -173,7 +173,7 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
         const { path, format, contentType } = commMetadata;
         const fileFormat = format as Contents.FileFormat;
 
-        if (!drive) {
+        if (!collaborativeContentProvider) {
           showErrorMessage(
             'Error using the JupyterCAD Python API',
             'You cannot use the JupyterCAD Python API without a collaborative drive. You need to install a package providing collaboration features (e.g. jupyter-collaboration).'
@@ -214,7 +214,7 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
           );
         }
 
-        const sharedModel = drive!.sharedModelFactory.createNew({
+        const sharedModel = collaborativeContentProvider.sharedModelFactory.createNew({
           path: localPath,
           format: fileFormat,
           contentType,

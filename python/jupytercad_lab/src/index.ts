@@ -29,7 +29,7 @@ import { ITranslator, nullTranslator } from '@jupyterlab/translation';
 
 import { notebookRenderePlugin } from './notebookrenderer';
 import { IForkManagerToken, IForkManager } from '@jupyter/docprovider';
-import { ICollaborativeDrive } from '@jupyter/collaborative-drive';
+import { ICollaborativeContentProvider } from '@jupyter/collaborative-drive';
 
 const NAME_SPACE = 'jupytercad';
 
@@ -83,14 +83,14 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
     IAnnotationToken,
     IJCadFormSchemaRegistryToken
   ],
-  optional: [ICollaborativeDrive, IForkManagerToken],
+  optional: [ICollaborativeContentProvider, IForkManagerToken],
   activate: (
     app: JupyterFrontEnd,
     restorer: ILayoutRestorer,
     tracker: IJupyterCadTracker,
     annotationModel: IAnnotationModel,
     formSchemaRegistry: IJCadFormSchemaRegistry,
-    collaborativeDrive?: ICollaborativeDrive,
+    collaborativeContentProvider?: ICollaborativeContentProvider,
     forkManager?: IForkManager
   ) => {
     const controlModel = new ControlPanelModel({ tracker });
@@ -107,7 +107,7 @@ const controlPanel: JupyterFrontEndPlugin<void> = {
       tracker,
       annotationModel,
       forkManager,
-      collaborativeDrive
+      collaborativeContentProvider
     });
     rightControlPanel.id = 'jupytercad::rightControlPanel';
     rightControlPanel.title.caption = 'JupyterCad Control Panel';

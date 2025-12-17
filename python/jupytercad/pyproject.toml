@@ -17,16 +17,18 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
   "jupytercad_core==3.1.7",
   "jupytercad_lab==3.1.7",
   "jupytercad_app==3.1.7",
-  "jupyter-collaboration>=3,<4",
-  "jupyter-docprovider>=1,<2",
-  "jupyter-server-ydoc>=1,<2",
-  "jupyter-collaboration-ui>=1,<2",
-  "jupyterlab>=4.3,<5",
+  "jupyter-collaboration>=4,<5",
+  "jupyter-docprovider>=2,<3",
+  "jupyter-server-ydoc>=2,<3",
+  "jupyter-collaboration-ui>=2,<3",
+  "jupyterlab>=4.5.1,<5",
 ]
 dynamic = ["version"]
 license = {file = "LICENSE"}
