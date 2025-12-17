@@ -30,9 +30,7 @@ class JupyterCadStepModel extends JupyterCadModel {
 /**
  * A Model factory to create new instances of JupyterCadModel.
  */
-export class JupyterCadStepModelFactory
-  implements DocumentRegistry.IModelFactory<JupyterCadStepModel>
-{
+export class JupyterCadStepModelFactory implements DocumentRegistry.IModelFactory<JupyterCadStepModel> {
   constructor(options: { settingRegistry?: ISettingRegistry }) {
     this._settingRegistry = options.settingRegistry;
   }

@@ -468,8 +468,7 @@ export class JupyterCadModel implements IJupyterCadModel {
 }
 
 export namespace JupyterCadModel {
-  export interface IOptions
-    extends DocumentRegistry.IModelOptions<IJupyterCadDoc> {
+  export interface IOptions extends DocumentRegistry.IModelOptions<IJupyterCadDoc> {
     annotationModel?: IAnnotationModel;
     settingRegistry?: ISettingRegistry;
   }

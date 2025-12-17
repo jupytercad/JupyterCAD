@@ -121,8 +121,7 @@ export namespace App {
    * The instantiation options for an App application.
    */
   export interface IOptions
-    extends JupyterFrontEnd.IOptions<IShell>,
-      Partial<IInfo> {
+    extends JupyterFrontEnd.IOptions<IShell>, Partial<IInfo> {
     paths?: Partial<JupyterFrontEnd.IPaths>;
   }
 

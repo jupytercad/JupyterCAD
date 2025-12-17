@@ -30,9 +30,7 @@ class JupyterCadStlModel extends JupyterCadModel {
 /**
  * A Model factory to create new instances of JupyterCadSTLModel.
  */
-export class JupyterCadStlModelFactory
-  implements DocumentRegistry.IModelFactory<JupyterCadStlModel>
-{
+export class JupyterCadStlModelFactory implements DocumentRegistry.IModelFactory<JupyterCadStlModel> {
   constructor(options: { settingRegistry?: ISettingRegistry }) {
     this._settingRegistry = options.settingRegistry;
   }

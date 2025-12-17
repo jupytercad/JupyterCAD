@@ -376,8 +376,10 @@ export interface IJCadWorkerRegistry {
 
 export type IJupyterCadTracker = IWidgetTracker<IJupyterCadWidget>;
 
-export interface IJupyterCadDocumentWidget
-  extends IDocumentWidget<SplitPanel, IJupyterCadModel> {
+export interface IJupyterCadDocumentWidget extends IDocumentWidget<
+  SplitPanel,
+  IJupyterCadModel
+> {
   readonly model: IJupyterCadModel;
 }
 

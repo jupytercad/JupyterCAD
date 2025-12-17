@@ -3,9 +3,7 @@ import {
   IJCadExternalCommandRegistry
 } from '@jupytercad/schema';
 
-export class JupyterCadExternalCommandRegistry
-  implements IJCadExternalCommandRegistry
-{
+export class JupyterCadExternalCommandRegistry implements IJCadExternalCommandRegistry {
   constructor() {
     this._registry = new Set();
   }

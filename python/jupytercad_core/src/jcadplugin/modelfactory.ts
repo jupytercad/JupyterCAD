@@ -10,9 +10,7 @@ import { ISettingRegistry } from '@jupyterlab/settingregistry';
 /**
  * A Model factory to create new instances of JupyterCadModel.
  */
-export class JupyterCadJcadModelFactory
-  implements DocumentRegistry.IModelFactory<JupyterCadModel>
-{
+export class JupyterCadJcadModelFactory implements DocumentRegistry.IModelFactory<JupyterCadModel> {
   constructor(options: JupyterCadJcadModelFactory.IOptions) {
     this._annotationModel = options.annotationModel;
     this._settingRegistry = options.settingRegistry;
