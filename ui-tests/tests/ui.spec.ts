@@ -295,7 +295,7 @@ test.describe('UI Test', () => {
     test.describe('Extension activation test', () => {
       test('should create a CAD File', async ({ page, request }) => {
         await page.goto();
-        await page.getByLabel('notebook content').getByText('CAD File').click();
+        await page.getByText('CAD File').click();
 
         await page.getByTitle('New Box').getByRole('button').click();
         await page.getByRole('button', { name: 'Submit' }).click();
@@ -355,7 +355,7 @@ test.describe('UI Test', () => {
       await page.goto();
       await page.sidebar.close('right');
       await page.sidebar.close('left');
-      await page.getByLabel('notebook content').getByText('CAD File').click();
+      await page.getByText('CAD File').click();
       await page.getByRole('button', { name: 'Toggle console' }).click();
       await page.getByRole('button', { name: 'Remove console' });
       await page.getByRole('textbox').nth(1).click();
