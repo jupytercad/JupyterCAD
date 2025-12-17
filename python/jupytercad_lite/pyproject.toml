@@ -23,7 +23,7 @@ classifiers = [
 dependencies = [
   "jupytercad_core==3.1.7",
   "jupytercad_lab==3.1.7",
-  "my-jupyter-shared-drive<0.2",
+  "my-jupyter-shared-drive>=0.2.2",
 ]
 dynamic = ["version"]
 license = {file = "LICENSE"}

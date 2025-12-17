@@ -7,13 +7,12 @@ dependencies:
   - pip
   - xeus-python
   - requests
-  - jupyter_ydoc=2.1.5
   - ypywidgets>=0.9.6,<0.10.0
   - comm>=0.1.2,<0.2.0
   - pydantic>=2,<3
   - pip:
       - yjs-widgets>=0.4,<0.5
-      - my-jupyter-shared-drive <0.2
+      - my-jupyter-shared-drive >=0.2.2
       - ../jupytercad_core-0.0.1-py3-none-any.whl
       - ../jupytercad_lab-0.0.1-py3-none-any.whl
       - ../jupytercad_lite-0.0.1-py3-none-any.whl
