@@ -235,7 +235,12 @@ const jcadPlugin: JupyterFrontEndPlugin<void> = {
     IRenderMimeRegistry,
     IConsoleTracker
   ],
-  optional: [ILauncher, ICommandPalette, ICollaborativeContentProvider, ISettingRegistry],
+  optional: [
+    ILauncher,
+    ICommandPalette,
+    ICollaborativeContentProvider,
+    ISettingRegistry
+  ],
   autoStart: true,
   activate
 };

@@ -214,12 +214,13 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
           );
         }
 
-        const sharedModel = collaborativeContentProvider.sharedModelFactory.createNew({
-          path: localPath,
-          format: fileFormat,
-          contentType,
-          collaborative: true
-        })!;
+        const sharedModel =
+          collaborativeContentProvider.sharedModelFactory.createNew({
+            path: localPath,
+            format: fileFormat,
+            contentType,
+            collaborative: true
+          })!;
         const jupyterCadDoc = sharedModel as IJupyterCadDoc;
         this.jupyterCADModel = new JupyterCadModel({
           sharedModel: jupyterCadDoc,

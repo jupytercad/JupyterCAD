@@ -20,8 +20,13 @@ export class RightPanelWidget extends SidePanel {
     this.addClass('jpcad-sidepanel-widget');
     this.addClass('data-jcad-keybinding');
     this.node.tabIndex = 0;
-    const { model, tracker, forkManager, collaborativeContentProvider, annotationModel } =
-      options;
+    const {
+      model,
+      tracker,
+      forkManager,
+      collaborativeContentProvider,
+      annotationModel
+    } = options;
     this._model = model;
     this._annotationModel = annotationModel;
 

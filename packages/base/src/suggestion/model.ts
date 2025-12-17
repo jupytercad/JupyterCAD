@@ -143,12 +143,13 @@ export class SuggestionModel {
     }
     this._jupytercadModel?.sharedModel.dispose();
     if (this._contentProvider && this._currentSession && this._filePath) {
-      const currentSharedModel = this._contentProvider.sharedModelFactory.createNew({
-        path: this._filePath,
-        format: this._currentSession.format,
-        contentType: this._currentSession.type,
-        collaborative: true
-      });
+      const currentSharedModel =
+        this._contentProvider.sharedModelFactory.createNew({
+          path: this._filePath,
+          format: this._currentSession.format,
+          contentType: this._currentSession.type,
+          collaborative: true
+        });
 
       if (currentSharedModel) {
         this._jupytercadModel?.swapSharedModel(
