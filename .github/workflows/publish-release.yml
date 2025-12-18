@@ -16,14 +16,7 @@ jobs:
   publish_release:
     runs-on: ubuntu-latest
     steps:
-      - name: Install Conda environment with Micromamba
-        uses: mamba-org/setup-micromamba@v1
-        with:
-          environment-name: cad
-          create-args: >-
-            python=3.9
-            jupyterlab
-            yarn=3
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
       - name: Populate Release
         id: populate-release
@@ -38,10 +31,7 @@ jobs:
       - name: Finalize Release
         id: finalize-release
         env:
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-          PYPI_TOKEN_MAP: ${{ secrets.PYPI_TOKEN_MAP }}
           TWINE_USERNAME: __token__
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         uses: jupyter-server/jupyter-releaser/.github/actions/finalize-release@v2
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
