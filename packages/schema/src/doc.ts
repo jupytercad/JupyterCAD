@@ -345,7 +345,7 @@ export class JupyterCadDoc
       changes.set(key, {
         action: event.action,
         oldValue: event.oldValue,
-        newValue: this._metadata.get(key),
+        newValue: this._metadata.get(key)
       });
     });
     this._metadataChanged.emit(changes);
@@ -357,7 +357,7 @@ export class JupyterCadDoc
       changes.set(key, {
         action: event.action,
         oldValue: event.oldValue,
-        newValue: this._options.get(key),
+        newValue: this._options.get(key)
       });
     });
     this._optionsChanged.emit(changes);
