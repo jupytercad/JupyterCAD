@@ -22,7 +22,7 @@ jobs:
           environment-name: cad
           create-args: >-
             python=3.9
-            jupyterlab=4.0.12
+            jupyterlab
             yarn=3
 
       - name: Populate Release
