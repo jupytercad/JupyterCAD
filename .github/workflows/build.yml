@@ -171,9 +171,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jupytercad-playwright-tests
-          path: |
-            ui-tests/test-results
-            ui-tests/playwright-report
+          path: ui-tests
 
       - name: Save artifact data
         if: always()
