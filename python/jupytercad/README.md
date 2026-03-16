@@ -37,6 +37,13 @@ Once you have installed the extension, you should be able to open the CAD viewer
 
 Additionally, you can install `jupytercad-freecad` and edit `.FCStd` files in JupyterLab.
 
+## Use JupyterCAD in Notebook.link
+
+The easiest way to get a deployment with JupyterCAD live is using [Notebook.link](https://notebook.link).
+Simply install `jupytercad-lite` in your Notebook.link environment.
+
+Click on this link to try it out: https://notebook.link/github.com/jupytercad/JupyterCAD
+
 ## Deploying JupyterCAD with JupyterLite
 
 You can run JupyterCAD entirely in the browser using **JupyterLite**.
