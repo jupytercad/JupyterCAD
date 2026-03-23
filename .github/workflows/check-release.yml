@@ -21,6 +21,7 @@ jobs:
             jupyterlab=4
             yarn=3
             pip
+            pytz
             tomlkit
             jupyter-releaser
 
