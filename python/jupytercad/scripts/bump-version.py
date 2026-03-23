@@ -8,7 +8,7 @@ import json
 from typing import List
 from packaging.version import parse as parse_version
 from pathlib import Path
-from subprocess import run
+from subprocess import run, CalledProcessError
 import tomlkit
 
 ENC = dict(encoding="utf-8")
@@ -17,8 +17,21 @@ ROOT = Path(__file__).parent.parent
 
 
 def get_version():
-    cmd = run([HATCH_VERSION], capture_output=True, shell=True, check=True, cwd=ROOT)
-    return cmd.stdout.decode("utf-8").strip().split("\n")[-1]
+    try:
+        cmd = run(
+            [HATCH_VERSION], capture_output=True, shell=True, check=True, cwd=ROOT
+        )
+        return cmd.stdout.decode("utf-8").strip().split("\n")[-1]
+    except CalledProcessError as e:
+        print("Command failed: %s", HATCH_VERSION)
+        print("Return code: %s", e.returncode)
+
+        if e.stdout:
+            print("STDOUT:\n%s", e.stdout.decode("utf-8", errors="ignore"))
+        if e.stderr:
+            print("STDERR:\n%s", e.stderr.decode("utf-8", errors="ignore"))
+
+        raise
 
 
 def next_version():

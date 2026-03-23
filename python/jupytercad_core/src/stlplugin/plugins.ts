@@ -86,7 +86,6 @@ const activate = async (
     mimeTypes: ['text/plain'],
     extensions: ['.stl', '.STL'],
     fileFormat: 'text',
-    contentType: 'stl',
     icon: stlIcon
   });
 

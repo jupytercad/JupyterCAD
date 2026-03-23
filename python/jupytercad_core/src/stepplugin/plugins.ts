@@ -68,7 +68,6 @@ const activate = async (
     mimeTypes: ['text/plain'],
     extensions: ['.step', '.STEP'],
     fileFormat: 'text',
-    contentType: 'step',
     icon: stpIcon
   });
 
