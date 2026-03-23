@@ -23,7 +23,7 @@ jobs:
             pip
             pytz
             tomlkit
-            jupyter-releaser
+            jupyter-releaser>=1.10.2
 
       - name: Check Release
         uses: jupyter-server/jupyter_releaser/.github/actions/check-release@v2
