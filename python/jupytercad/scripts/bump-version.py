@@ -18,7 +18,9 @@ ROOT = Path(__file__).parent.parent
 
 def get_version():
     try:
-        cmd = run([HATCH_VERSION], capture_output=True, shell=True, check=True, cwd=ROOT)
+        cmd = run(
+            [HATCH_VERSION], capture_output=True, shell=True, check=True, cwd=ROOT
+        )
         return cmd.stdout.decode("utf-8").strip().split("\n")[-1]
     except CalledProcessError as e:
         print("Command failed: %s", HATCH_VERSION)
@@ -30,6 +32,7 @@ def get_version():
             print("STDERR:\n%s", e.stderr.decode("utf-8", errors="ignore"))
 
         raise
+
 
 def next_version():
     v = parse_version(get_version())
