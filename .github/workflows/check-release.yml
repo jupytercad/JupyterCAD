@@ -17,7 +17,7 @@ jobs:
         with:
           environment-name: cad
           create-args: >-
-            python=3.9
+            python
             jupyterlab=4
             yarn=3
             pip
