@@ -114,7 +114,6 @@ const activate = async (
     mimeTypes: ['text/json'],
     extensions: ['.jcad', '.JCAD'],
     fileFormat: 'text',
-    contentType: CONTENT_TYPE,
     icon: logoIcon
   });
 
