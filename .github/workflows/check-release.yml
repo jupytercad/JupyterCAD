@@ -12,18 +12,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Conda environment with Micromamba
-        uses: mamba-org/setup-micromamba@v1
-        with:
-          environment-name: cad
-          create-args: >-
-            python
-            jupyterlab=4
-            yarn=3
-            pip
-            pytz
-            tomlkit
-            jupyter-releaser>=1.8.6
+      - name: Base Setup
+        uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
       - name: Check Release
         uses: jupyter-server/jupyter_releaser/.github/actions/check-release@v2
