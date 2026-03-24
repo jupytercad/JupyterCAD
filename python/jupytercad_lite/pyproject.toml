@@ -21,8 +21,8 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-  "jupytercad_core==3.4.0",
-  "jupytercad_lab==3.4.0",
+  "jupytercad_core==3.4.1",
+  "jupytercad_lab==3.4.1",
   "my-jupyter-shared-drive>=0.2.2",
 ]
 dynamic = ["version"]

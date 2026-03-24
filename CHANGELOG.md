@@ -2,6 +2,33 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.4.1
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.4.0...2d6ffe81d8c4cadb67e0d88e1fd95677855afd21))
+
+### Bugs fixed
+
+- Bring back icons in filebrowser [#861](https://github.com/jupytercad/JupyterCAD/pull/861) ([@martinRenou](https://github.com/martinRenou), [@trungleduc](https://github.com/trungleduc))
+
+### Maintenance and upkeep improvements
+
+- Bot: Use official jupyterlab action to check user permission [#850](https://github.com/jupytercad/JupyterCAD/pull/850) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Add notebook link lock [#860](https://github.com/jupytercad/JupyterCAD/pull/860) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2025-12-18&to=2026-03-24&type=c))
+
+@martinRenou ([activity](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2025-12-18..2026-03-24&type=Issues)) | @trungleduc ([activity](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2025-12-18..2026-03-24&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.4.0
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.1.7...61b5513d1ec7e03ee243b3f6632442b36bdc23ec))
@@ -34,8 +61,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2025-09-18&to=2025-12-18&type=c))
 
 @arjxn-py ([activity](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2025-09-18..2025-12-18&type=Issues)) | @asmith26 ([activity](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aasmith26+updated%3A2025-09-18..2025-12-18&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2025-09-18..2025-12-18&type=Issues)) | @trungleduc ([activity](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2025-09-18..2025-12-18&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.1.7
 
