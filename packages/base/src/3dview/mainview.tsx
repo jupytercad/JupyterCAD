@@ -22,6 +22,7 @@ import { TransformControls } from 'three/examples/jsm/controls/TransformControls
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { ViewHelper } from 'three/examples/jsm/helpers/ViewHelper';
+import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 import { FloatingAnnotation } from '../annotation';
 import { getCSSVariableColor, throttle } from '../tools';
@@ -55,6 +56,7 @@ import {
   SPLITVIEW_BACKGROUND_COLOR_CSS
 } from './helpers';
 import { MainViewModel } from './mainviewmodel';
+import { Measurement } from './measurement';
 import { Spinner } from './spinner';
 interface IProps {
   viewModel: MainViewModel;
@@ -81,6 +83,7 @@ interface IStates {
   rotationSnapValue: number;
   translationSnapValue: number;
   transformMode: string | undefined;
+  measurement: boolean;
 }
 
 interface ILineIntersection extends THREE.Intersection {
@@ -131,7 +134,8 @@ export class MainView extends React.Component<IProps, IStates> {
       explodedViewFactor: 0,
       rotationSnapValue: 10,
       translationSnapValue: 1,
-      transformMode: 'translate'
+      transformMode: 'translate',
+      measurement: false
     };
 
     this._model.settingsChanged.connect(this._handleSettingsChange, this);
@@ -165,14 +169,24 @@ export class MainView extends React.Component<IProps, IStates> {
   }
 
   componentDidUpdate(oldProps: IProps, oldState: IStates): void {
+    // Resize the canvas to fit the display area
     this.resizeCanvasToDisplaySize();
+
+    // Update transform controls rotation snap if the value has changed
     if (oldState.rotationSnapValue !== this.state.rotationSnapValue) {
       this._transformControls.rotationSnap = THREE.MathUtils.degToRad(
         this.state.rotationSnapValue
       );
     }
+
+    // Update transform controls translation snap if the value has changed
     if (oldState.translationSnapValue !== this.state.translationSnapValue) {
       this._transformControls.translationSnap = this.state.translationSnapValue;
+    }
+
+    // Handle measurement display when the measurement tool is toggled.
+    if (oldState.measurement !== this.state.measurement) {
+      this._refreshMeasurement();
     }
   }
 
@@ -316,6 +330,15 @@ export class MainView extends React.Component<IProps, IStates> {
       this._renderer.setClearColor(0x000000, 0);
       this._renderer.setSize(500, 500, false);
       this._divRef.current.appendChild(this._renderer.domElement); // mount using React ref
+
+      // Initialize the CSS2DRenderer for displaying labels
+      this._labelRenderer = new CSS2DRenderer();
+      this._labelRenderer.setSize(500, 500); // Set initial size
+      this._labelRenderer.domElement.style.position = 'absolute';
+      this._labelRenderer.domElement.style.top = '0px';
+      // Disable pointer events so the 3D view can be controlled from behind the labels
+      this._labelRenderer.domElement.style.pointerEvents = 'none';
+      this._divRef.current.appendChild(this._labelRenderer.domElement);
 
       this._syncPointer = throttle(
         (position: THREE.Vector3 | undefined, parent: string | undefined) => {
@@ -481,6 +504,15 @@ export class MainView extends React.Component<IProps, IStates> {
       this._transformControls.addEventListener('dragging-changed', event => {
         this._controls.enabled = !event.value;
       });
+      this._transformControls.addEventListener(
+        'change',
+        throttle(() => {
+          if (this.state.measurement) {
+            this._refreshMeasurement();
+            // Refresh measurement annotations when the transformed object changes.
+          }
+        }, 100)
+      );
       // Update the currently transformed object in the shared model once finished moving
       this._transformControls.addEventListener('mouseUp', async () => {
         const updatedObject = this._selectedMeshes[0];
@@ -656,6 +688,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._renderer.render(this._scene, this._camera);
 
+    this._labelRenderer.render(this._scene, this._camera); // Render the 2D labels on top of the 3D scene
     this._viewHelper.render(this._renderer);
     this.updateCameraRotation();
   };
@@ -667,6 +700,13 @@ export class MainView extends React.Component<IProps, IStates> {
         this._divRef.current.clientHeight,
         false
       );
+
+      // Update the size of the label renderer to match the container div.
+      this._labelRenderer.setSize(
+        this._divRef.current.clientWidth,
+        this._divRef.current.clientHeight
+      );
+
       if (this._camera instanceof THREE.PerspectiveCamera) {
         this._camera.aspect =
           this._divRef.current.clientWidth / this._divRef.current.clientHeight;
@@ -1020,6 +1060,7 @@ export class MainView extends React.Component<IProps, IStates> {
     });
 
     this._updateTransformControls(selectedNames);
+    this._refreshMeasurement();
 
     // Update the reflength.
     this._updateRefLength(this._refLength === null);
@@ -1358,7 +1399,52 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     this._updateTransformControls(selectedNames);
+
+    // Refresh measurement annotations when the selection changes.
+    this._refreshMeasurement();
   }
+
+  private _refreshMeasurement = (): void => {
+    // Clear existing measurement annotations if any.
+    if (this._measurementGroup) {
+      this._measurementGroup.clear();
+      this._scene.remove(this._measurementGroup);
+      this._measurementGroup = null;
+    }
+
+    // If measurement tool is enabled and there are selected meshes, create new measurement annotations.
+    if (this.state.measurement && this._selectedMeshes.length > 0) {
+      if (this._selectedMeshes.length === 1) {
+        // For a single selected object, create an oriented measurement that aligns with the object's rotation.
+        const mesh = this._selectedMeshes[0];
+        const meshGroup = mesh.parent as THREE.Group;
+
+        if (!mesh.geometry.boundingBox) {
+          mesh.geometry.computeBoundingBox();
+        }
+        const localBox = mesh.geometry.boundingBox!.clone();
+
+        // Pass the local bounding box, position, and quaternion to the Measurement constructor.
+        const measurement = new Measurement(
+          localBox,
+          meshGroup.position,
+          meshGroup.quaternion
+        );
+        this._measurementGroup = measurement.group;
+        this._scene.add(this._measurementGroup);
+      } else {
+        // For multiple selected objects, create a single axis-aligned bounding box that encloses all of them.
+        const combinedBox = new THREE.Box3();
+        for (const mesh of this._selectedMeshes) {
+          const box = new THREE.Box3().setFromObject(mesh.parent!);
+          combinedBox.union(box);
+        }
+        const measurement = new Measurement(combinedBox);
+        this._measurementGroup = measurement.group;
+        this._scene.add(this._measurementGroup);
+      }
+    }
+  };
 
   /*
    * Attach the transform controls to the current selection, or detach it
@@ -1672,6 +1758,14 @@ export class MainView extends React.Component<IProps, IStates> {
             );
           }
         );
+      }
+    }
+    if (change.key === 'measurement') {
+      // Update the measurement state when the measurement tool is toggled.
+      const measurementEnabled = change.newValue as boolean | undefined;
+
+      if (measurementEnabled !== undefined) {
+        this.setState(old => ({ ...old, measurement: measurementEnabled }));
       }
     }
   }
@@ -2203,6 +2297,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _edgeMaterials: any[] = [];
 
   private _currentSelection: { [key: string]: ISelection } | null = null;
+  private _measurementGroup: THREE.Group | null = null;
 
   private _scene: THREE.Scene; // Threejs scene
   private _ambientLight: THREE.AmbientLight;
@@ -2210,6 +2305,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _cameraLight: THREE.PointLight;
   private _raycaster = new THREE.Raycaster();
   private _renderer: THREE.WebGLRenderer; // Threejs render
+  private _labelRenderer: CSS2DRenderer;
   private _requestID: any = null; // ID of window.requestAnimationFrame
   private _geometry: THREE.BufferGeometry; // Threejs BufferGeometry
   private _refLength: number | null = null; // Length of bounding box of current object
