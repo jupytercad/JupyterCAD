@@ -21,9 +21,9 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-  "jupytercad_core==3.4.1",
-  "jupytercad_lab==3.4.1",
-  "jupytercad_app==3.4.1",
+  "jupytercad_core==3.4.2",
+  "jupytercad_lab==3.4.2",
+  "jupytercad_app==3.4.2",
   "jupyter-collaboration>=4,<5",
   "jupyter-docprovider>=2,<3",
   "jupyter-server-ydoc>=2,<3",
