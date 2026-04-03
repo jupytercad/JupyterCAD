@@ -13,6 +13,7 @@ class YSTEP(YBaseDoc):
         super().__init__(*args, **kwargs)
         self._ydoc["source"] = self._ysource = Text()
 
+    @property
     def version(self) -> str:
         return SCHEMA_VERSION
 

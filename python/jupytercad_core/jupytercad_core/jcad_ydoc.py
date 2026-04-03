@@ -20,6 +20,7 @@ class YJCad(YBaseDoc):
         self._ydoc["outputs"] = self._youtputs = Map()
         self.undo_manager.expand_scope(self._yobjects)
 
+    @property
     def version(self) -> str:
         return SCHEMA_VERSION
 
