@@ -8,7 +8,6 @@ from packaging.version import parse as parse_version
 from pathlib import Path
 from subprocess import run
 
-
 ENC = dict(encoding="utf-8")
 HATCH_VERSION = "hatch version"
 ROOT = Path(__file__).parent.parent
