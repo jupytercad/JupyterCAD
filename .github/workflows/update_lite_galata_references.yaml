@@ -42,7 +42,7 @@ jobs:
           jlpm install
           yarn playwright install
 
-      - uses: jupyterlab/maintainer-tools/.github/actions/update-snapshots@main
+      - uses: jupyterlab/maintainer-tools/.github/actions/update-snapshots@v0.31.1
         with:
           npm_client: jlpm
           browser: chromium
