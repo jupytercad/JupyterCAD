@@ -176,7 +176,13 @@ const activate = async (
         ...model,
         format: 'text',
         size: undefined,
-        content: `{\n\t"schemaVersion": "${SCHEMA_VERSION}",\n\t"objects": [],\n\t"options": {},\n\t"metadata": {},\n\t"outputs": {}}`
+        content: {
+          schemaVersion: SCHEMA_VERSION,
+          objects: [],
+          options: {},
+          metadata: {},
+          outputs: {}
+        }
       });
 
       // Open the newly created file with the 'Editor'

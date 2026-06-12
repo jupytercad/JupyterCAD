@@ -202,8 +202,8 @@ export const notebookRenderePlugin: JupyterFrontEndPlugin<void> = {
             await app.serviceManager.contents.get(localPath);
           } catch (e) {
             await app.serviceManager.contents.save(localPath, {
-              content: btoa('{}'),
-              format: 'base64'
+              content: {},
+              format: 'json'
             });
           }
         } else {

@@ -45,7 +45,7 @@ export class JupyterCadJcadModelFactory implements DocumentRegistry.IModelFactor
    * @returns the file format
    */
   get fileFormat(): Contents.FileFormat {
-    return 'text';
+    return 'json';
   }
 
   /**
