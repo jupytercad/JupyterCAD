@@ -111,9 +111,9 @@ const activate = async (
   app.docRegistry.addFileType({
     name: CONTENT_TYPE,
     displayName: 'JCAD',
-    mimeTypes: ['text/json'],
+    mimeTypes: ['application/json'],
     extensions: ['.jcad', '.JCAD'],
-    fileFormat: 'text',
+    fileFormat: 'json',
     icon: logoIcon
   });
 

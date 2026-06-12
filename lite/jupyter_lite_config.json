@@ -4,20 +4,20 @@
       "jcad": {
         "name": "jcad",
         "extensions": [".jcad", ".JCAD"],
-        "mimeTypes": ["text/plain"],
-        "fileFormat": "text"
+        "mimeTypes": ["application/json"],
+        "fileFormat": "json"
       },
       "step": {
         "name": "step",
         "extensions": [".step", ".STEP"],
-        "mimeTypes": ["text/plain"],
-        "fileFormat": "text"
+        "mimeTypes": ["application/json"],
+        "fileFormat": "json"
       },
       "stl": {
         "name": "stl",
         "extensions": [".stl", ".STL"],
-        "mimeTypes": ["text/plain"],
-        "fileFormat": "text"
+        "mimeTypes": ["application/json"],
+        "fileFormat": "json"
       }
     }
   }
