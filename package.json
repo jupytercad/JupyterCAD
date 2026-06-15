@@ -76,6 +76,6 @@
     "stylelint-csstree-validator": "^3.0.0",
     "stylelint-prettier": "^4.0.0",
     "typescript": "^5",
-    "webpack": "^5.76.3"
+    "webpack": ">=5.76.3 <5.107.0"
   }
 }

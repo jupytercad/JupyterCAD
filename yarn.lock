@@ -1007,7 +1007,7 @@ __metadata:
     rimraf: ^3.0.2
     tsc-watch: ^6.0.0
     typescript: ^5
-    webpack: ^5.76.3
+    webpack: ">=5.76.3 <5.107.0"
     yjs: ^13.5.40
     yjs-widgets: ^0.4
   languageName: unknown
@@ -1043,7 +1043,7 @@ __metadata:
     style-loader: ^3.3.1
     typescript: ^5
     util: ^0.12.5
-    webpack: ^5.76.3
+    webpack: ">=5.76.3 <5.107.0"
     yjs: ^13.5.0
   languageName: unknown
   linkType: soft
@@ -1101,7 +1101,7 @@ __metadata:
     stylelint-csstree-validator: ^3.0.0
     stylelint-prettier: ^4.0.0
     typescript: ^5
-    webpack: ^5.76.3
+    webpack: ">=5.76.3 <5.107.0"
   languageName: unknown
   linkType: soft
 
@@ -1122,7 +1122,7 @@ __metadata:
     tsc-watch: ^6.0.0
     typescript: ^5
     uuid: ^8.3.2
-    webpack: ^5.76.3
+    webpack: ">=5.76.3 <5.107.0"
   languageName: unknown
   linkType: soft
 
@@ -10146,6 +10146,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mime-db@npm:^1.54.0":
+  version: 1.54.0
+  resolution: "mime-db@npm:1.54.0"
+  checksum: e99aaf2f23f5bd607deb08c83faba5dd25cf2fec90a7cc5b92d8260867ee08dab65312e1a589e60093dc7796d41e5fae013268418482f1db4c7d52d0a0960ac9
+  languageName: node
+  linkType: hard
+
 "mime-types@npm:^2.1.12, mime-types@npm:^2.1.27":
   version: 2.1.35
   resolution: "mime-types@npm:2.1.35"
@@ -14363,7 +14370,44 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.76.1, webpack@npm:^5.76.3, webpack@npm:^5.77.0":
+"webpack@npm:>=5.76.3 <5.107.0":
+  version: 5.106.2
+  resolution: "webpack@npm:5.106.2"
+  dependencies:
+    "@types/eslint-scope": ^3.7.7
+    "@types/estree": ^1.0.8
+    "@types/json-schema": ^7.0.15
+    "@webassemblyjs/ast": ^1.14.1
+    "@webassemblyjs/wasm-edit": ^1.14.1
+    "@webassemblyjs/wasm-parser": ^1.14.1
+    acorn: ^8.16.0
+    acorn-import-phases: ^1.0.3
+    browserslist: ^4.28.1
+    chrome-trace-event: ^1.0.2
+    enhanced-resolve: ^5.20.0
+    es-module-lexer: ^2.0.0
+    eslint-scope: 5.1.1
+    events: ^3.2.0
+    glob-to-regexp: ^0.4.1
+    graceful-fs: ^4.2.11
+    loader-runner: ^4.3.1
+    mime-db: ^1.54.0
+    neo-async: ^2.6.2
+    schema-utils: ^4.3.3
+    tapable: ^2.3.0
+    terser-webpack-plugin: ^5.3.17
+    watchpack: ^2.5.1
+    webpack-sources: ^3.3.4
+  peerDependenciesMeta:
+    webpack-cli:
+      optional: true
+  bin:
+    webpack: bin/webpack.js
+  checksum: fd44725871b6777b62cdcbb32492b48740bbd575811c2c45e1c9c9413d0cbf4de7aa9931b3ccfd072d155f811de3584951264bfa30164a5e2f5db66cbf52b260
+  languageName: node
+  linkType: hard
+
+"webpack@npm:^5.76.1, webpack@npm:^5.77.0":
   version: 5.105.4
   resolution: "webpack@npm:5.105.4"
   dependencies:
