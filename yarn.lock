@@ -9144,7 +9144,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-parse-even-better-errors@npm:^2.3.0, json-parse-even-better-errors@npm:^2.3.1":
+"json-parse-even-better-errors@npm:^2.3.0":
   version: 2.3.1
   resolution: "json-parse-even-better-errors@npm:2.3.1"
   checksum: 798ed4cf3354a2d9ccd78e86d2169515a0097a5c133337807cdf7f1fc32e1391d207ccfc276518cc1d7d8d4db93288b8a50ba4293d212ad1336e52a8ec0a941f
@@ -10168,7 +10168,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime-types@npm:^2.1.12, mime-types@npm:^2.1.27":
+"mime-types@npm:^2.1.12":
   version: 2.1.35
   resolution: "mime-types@npm:2.1.35"
   dependencies:
@@ -14423,7 +14423,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:>=5.76.3 <5.107.0":
+"webpack@npm:>=5.76.3 <5.107.0, webpack@npm:^5.76.1, webpack@npm:^5.77.0":
   version: 5.106.2
   resolution: "webpack@npm:5.106.2"
   dependencies:
@@ -14457,44 +14457,6 @@ __metadata:
   bin:
     webpack: bin/webpack.js
   checksum: fd44725871b6777b62cdcbb32492b48740bbd575811c2c45e1c9c9413d0cbf4de7aa9931b3ccfd072d155f811de3584951264bfa30164a5e2f5db66cbf52b260
-  languageName: node
-  linkType: hard
-
-"webpack@npm:^5.76.1, webpack@npm:^5.77.0":
-  version: 5.105.4
-  resolution: "webpack@npm:5.105.4"
-  dependencies:
-    "@types/eslint-scope": ^3.7.7
-    "@types/estree": ^1.0.8
-    "@types/json-schema": ^7.0.15
-    "@webassemblyjs/ast": ^1.14.1
-    "@webassemblyjs/wasm-edit": ^1.14.1
-    "@webassemblyjs/wasm-parser": ^1.14.1
-    acorn: ^8.16.0
-    acorn-import-phases: ^1.0.3
-    browserslist: ^4.28.1
-    chrome-trace-event: ^1.0.2
-    enhanced-resolve: ^5.20.0
-    es-module-lexer: ^2.0.0
-    eslint-scope: 5.1.1
-    events: ^3.2.0
-    glob-to-regexp: ^0.4.1
-    graceful-fs: ^4.2.11
-    json-parse-even-better-errors: ^2.3.1
-    loader-runner: ^4.3.1
-    mime-types: ^2.1.27
-    neo-async: ^2.6.2
-    schema-utils: ^4.3.3
-    tapable: ^2.3.0
-    terser-webpack-plugin: ^5.3.17
-    watchpack: ^2.5.1
-    webpack-sources: ^3.3.4
-  peerDependenciesMeta:
-    webpack-cli:
-      optional: true
-  bin:
-    webpack: bin/webpack.js
-  checksum: b1a109016630b2817463981d28aa760f2a9a4cbb0098875ea40abbe694f5b93c708ab3cbca577865faf4046d9946cca7f660fa5a872440605008e19a5874182b
   languageName: node
   linkType: hard
 
