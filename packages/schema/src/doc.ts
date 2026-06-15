@@ -66,13 +66,13 @@ export class JupyterCadDoc
     return this._optionsChanged;
   }
 
-  getSource(): JSONObject {
+  getSource(): string {
     const objects = this._objects.toJSON();
     const options = this._options.toJSON();
     const metadata = this._metadata.toJSON();
     const outputs = this._outputs.toJSON();
 
-    return { objects, options, metadata, outputs };
+    return JSON.stringify({ objects, options, metadata, outputs }, null, '  ');
   }
 
   setSource(source: JSONObject | string): void {
