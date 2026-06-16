@@ -522,13 +522,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@discoveryjs/json-ext@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@discoveryjs/json-ext@npm:1.1.0"
-  checksum: f16d3732629095cbe37d42d504a80c44261dd5ad703ec5963729dab0786b2b8a2b86f81cf9d1dd593ad914d50146ecd281eeac60bfe9cf246257f84c57b72204
-  languageName: node
-  linkType: hard
-
 "@emotion/is-prop-valid@npm:^1.1.0, @emotion/is-prop-valid@npm:^1.2.0":
   version: 1.4.0
   resolution: "@emotion/is-prop-valid@npm:1.4.0"
@@ -1109,7 +1102,7 @@ __metadata:
     stylelint-prettier: ^4.0.0
     typescript: ^5
     webpack: ">=5.76.3 <5.107.0"
-    webpack-cli: ^7.0.3
+    webpack-cli: ^5
   languageName: unknown
   linkType: soft
 
@@ -5403,13 +5396,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^14.0.3":
-  version: 14.0.3
-  resolution: "commander@npm:14.0.3"
-  checksum: b8440159124aefbb02784a8996cd0481d8ce503d8d3cd413f4289d06db7e912c36b511277c2faba62f59152dd9ff79239d75e3b9400d9402851878994201d429
-  languageName: node
-  linkType: hard
-
 "commander@npm:^2.20.0":
   version: 2.20.3
   resolution: "commander@npm:2.20.3"
@@ -6715,7 +6701,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"envinfo@npm:^7.14.0, envinfo@npm:^7.7.3":
+"envinfo@npm:^7.7.3":
   version: 7.21.0
   resolution: "envinfo@npm:7.21.0"
   bin:
@@ -14325,7 +14311,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-cli@npm:^5.0.1":
+"webpack-cli@npm:^5, webpack-cli@npm:^5.0.1":
   version: 5.1.4
   resolution: "webpack-cli@npm:5.1.4"
   dependencies:
@@ -14357,33 +14343,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-cli@npm:^7.0.3":
-  version: 7.0.3
-  resolution: "webpack-cli@npm:7.0.3"
-  dependencies:
-    "@discoveryjs/json-ext": ^1.1.0
-    commander: ^14.0.3
-    cross-spawn: ^7.0.6
-    envinfo: ^7.14.0
-    import-local: ^3.0.2
-    interpret: ^3.1.1
-    rechoir: ^0.8.0
-    webpack-merge: ^6.0.1
-  peerDependencies:
-    webpack: ^5.101.0
-    webpack-bundle-analyzer: ^4.0.0 || ^5.0.0
-    webpack-dev-server: ^5.0.0
-  peerDependenciesMeta:
-    webpack-bundle-analyzer:
-      optional: true
-    webpack-dev-server:
-      optional: true
-  bin:
-    webpack-cli: bin/cli.js
-  checksum: bf3f9ef77c305945a4033b7b08b52ac2fd3c0373aeb8e06abc158d4568e60ecc0f42ddf932fef42bbaf10835b1a34c61ef2a0920ab187822123b907d10b5bf5d
-  languageName: node
-  linkType: hard
-
 "webpack-merge@npm:^5.7.3, webpack-merge@npm:^5.8.0":
   version: 5.10.0
   resolution: "webpack-merge@npm:5.10.0"
@@ -14392,17 +14351,6 @@ __metadata:
     flat: ^5.0.2
     wildcard: ^2.0.0
   checksum: 1fe8bf5309add7298e1ac72fb3f2090e1dfa80c48c7e79fa48aa60b5961332c7d0d61efa8851acb805e6b91a4584537a347bc106e05e9aec87fa4f7088c62f2f
-  languageName: node
-  linkType: hard
-
-"webpack-merge@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "webpack-merge@npm:6.0.1"
-  dependencies:
-    clone-deep: ^4.0.1
-    flat: ^5.0.2
-    wildcard: ^2.0.1
-  checksum: e8a604c686b944605a1c57cc7b75e886ab902dc5ffdd15259a092c5c2dd5f58868fe39f995ea4bad4f189e38843b061c4ae1eb22822d7169813f4adab571dc3d
   languageName: node
   linkType: hard
 
@@ -14628,7 +14576,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wildcard@npm:^2.0.0, wildcard@npm:^2.0.1":
+"wildcard@npm:^2.0.0":
   version: 2.0.1
   resolution: "wildcard@npm:2.0.1"
   checksum: e0c60a12a219e4b12065d1199802d81c27b841ed6ad6d9d28240980c73ceec6f856771d575af367cbec2982d9ae7838759168b551776577f155044f5a5ba843c
