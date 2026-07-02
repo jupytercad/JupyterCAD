@@ -111,7 +111,7 @@ export interface IJupyterCadDoc extends YDocument<IJupyterCadDocChange> {
   setOutput(key: string, value: IPostResult): void;
   removeOutput(key: string): void;
 
-  getSource(): JSONObject;
+  getSource(): string;
   setSource(value: JSONObject | string): void;
 
   getMetadata(key: string): string | undefined;
