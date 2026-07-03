@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
+  <g transform="rotate(-45 12 12)">
+    <rect x="2" y="7" width="20" height="10" rx="2" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Tick marks: 1st/3rd/5th full, 2nd/4th shorter but touching the top (y=8) -->
+    <line x1="6"  y1="8" x2="6"  y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+    <line x1="9"  y1="8" x2="9"  y2="11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+    <line x1="15" y1="8" x2="15" y2="11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="18" y1="8" x2="18" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -137,6 +137,7 @@ export class JupyterCadPanel extends SplitPanel {
     this._view.set('cameraSettings', cameraSettings);
     this._view.set('explodedView', explodedView);
     this._view.set('axes', axes);
+    this._view.set('measurement', false);
 
     this._mainViewModel = new MainViewModel({
       jcadModel: options.model,
@@ -247,6 +248,14 @@ export class JupyterCadPanel extends SplitPanel {
 
   set transform(value: boolean) {
     this._view.set('transform', value);
+  }
+
+  get measurement(): boolean {
+    return this._view.get('measurement') as boolean;
+  }
+
+  set measurement(value: boolean) {
+    this._view.set('measurement', value);
   }
 
   get consoleOpened(): boolean {
