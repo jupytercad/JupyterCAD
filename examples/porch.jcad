@@ -1,0 +1,4287 @@
+{
+  "metadata": {},
+  "objects": [
+    {
+      "name": "Lawn",
+      "parameters": {
+        "Color": "#6E9E4E",
+        "Height": 0.5,
+        "Length": 430.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -40.0,
+            -120.0,
+            -0.5
+          ]
+        },
+        "Width": 560.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Walkway",
+      "parameters": {
+        "Color": "#B9B2A3",
+        "Height": 1.0,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            246.0,
+            123.0,
+            -0.6
+          ]
+        },
+        "Width": 74.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Foundation",
+      "parameters": {
+        "Color": "#8C8577",
+        "Height": 16.0,
+        "Length": 144.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            3.0,
+            4.0,
+            0.0
+          ]
+        },
+        "Width": 312.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 1",
+      "parameters": {
+        "Color": "#C08A4E",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 2",
+      "parameters": {
+        "Color": "#AE7A40",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            20.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 3",
+      "parameters": {
+        "Color": "#C08A4E",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            40.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 4",
+      "parameters": {
+        "Color": "#AE7A40",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            60.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 5",
+      "parameters": {
+        "Color": "#C08A4E",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            80.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 6",
+      "parameters": {
+        "Color": "#AE7A40",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            100.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 7",
+      "parameters": {
+        "Color": "#C08A4E",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            120.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 8",
+      "parameters": {
+        "Color": "#AE7A40",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            140.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 9",
+      "parameters": {
+        "Color": "#C08A4E",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            160.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 10",
+      "parameters": {
+        "Color": "#AE7A40",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            180.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 11",
+      "parameters": {
+        "Color": "#C08A4E",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            200.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 12",
+      "parameters": {
+        "Color": "#AE7A40",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            220.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 13",
+      "parameters": {
+        "Color": "#C08A4E",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            240.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 14",
+      "parameters": {
+        "Color": "#AE7A40",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            260.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 15",
+      "parameters": {
+        "Color": "#C08A4E",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            280.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Deck Plank 16",
+      "parameters": {
+        "Color": "#AE7A40",
+        "Height": 2.5,
+        "Length": 150.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            300.0,
+            17.5
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Rim Front",
+      "parameters": {
+        "Color": "#6E4B2E",
+        "Height": 6.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            150.0,
+            0.0,
+            13.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Rim Left",
+      "parameters": {
+        "Color": "#6E4B2E",
+        "Height": 6.0,
+        "Length": 153.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            -3.0,
+            13.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Rim Right",
+      "parameters": {
+        "Color": "#6E4B2E",
+        "Height": 6.0,
+        "Length": 153.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            320.0,
+            13.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Step 1",
+      "parameters": {
+        "Color": "#E6E1D4",
+        "Height": 15.0,
+        "Length": 32.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            150.0,
+            95.0,
+            0.0
+          ]
+        },
+        "Width": 130.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Step Tread 1",
+      "parameters": {
+        "Color": "#C08A4E",
+        "Height": 2.0,
+        "Length": 34.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            149.0,
+            94.0,
+            15.0
+          ]
+        },
+        "Width": 132.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Step 2",
+      "parameters": {
+        "Color": "#E6E1D4",
+        "Height": 9.0,
+        "Length": 32.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            182.0,
+            95.0,
+            0.0
+          ]
+        },
+        "Width": 130.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Step Tread 2",
+      "parameters": {
+        "Color": "#C08A4E",
+        "Height": 2.0,
+        "Length": 34.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            181.0,
+            94.0,
+            9.0
+          ]
+        },
+        "Width": 132.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Step 3",
+      "parameters": {
+        "Color": "#E6E1D4",
+        "Height": 3.0,
+        "Length": 32.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            214.0,
+            95.0,
+            0.0
+          ]
+        },
+        "Width": 130.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Step Tread 3",
+      "parameters": {
+        "Color": "#C08A4E",
+        "Height": 2.0,
+        "Length": 34.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            213.0,
+            94.0,
+            3.0
+          ]
+        },
+        "Width": 132.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Post 1 Base",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 18.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            129.0,
+            6.0,
+            20.0
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Post 1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 112.0,
+        "Length": 14.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            131.0,
+            8.0,
+            20.0
+          ]
+        },
+        "Width": 14.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Post 1 Cap",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 18.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            129.0,
+            6.0,
+            126.0
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Post 2 Base",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 18.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            129.0,
+            90.0,
+            20.0
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Post 2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 112.0,
+        "Length": 14.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            131.0,
+            92.0,
+            20.0
+          ]
+        },
+        "Width": 14.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Post 2 Cap",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 18.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            129.0,
+            90.0,
+            126.0
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Post 3 Base",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 18.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            129.0,
+            226.0,
+            20.0
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Post 3",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 112.0,
+        "Length": 14.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            131.0,
+            228.0,
+            20.0
+          ]
+        },
+        "Width": 14.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Post 3 Cap",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 18.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            129.0,
+            226.0,
+            126.0
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Post 4 Base",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 18.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            129.0,
+            310.0,
+            20.0
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Post 4",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 112.0,
+        "Length": 14.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            131.0,
+            312.0,
+            20.0
+          ]
+        },
+        "Width": 14.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Post 4 Cap",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 18.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            129.0,
+            310.0,
+            126.0
+          ]
+        },
+        "Width": 18.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Beam Front",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 12.0,
+        "Length": 12.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            130.0,
+            0.0,
+            132.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Beam Left",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 12.0,
+        "Length": 142.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            -6.0,
+            132.0
+          ]
+        },
+        "Width": 12.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Beam Right",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 12.0,
+        "Length": 142.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            314.0,
+            132.0
+          ]
+        },
+        "Width": 12.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Rail Bot FL",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 4.0,
+        "Length": 6.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            134.0,
+            17.0,
+            30.0
+          ]
+        },
+        "Width": 69.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Rail Top FL",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 5.0,
+        "Length": 7.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            133.5,
+            17.0,
+            60.0
+          ]
+        },
+        "Width": 69.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FL-0",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            20.0,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FL-1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            30.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FL-2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            41.0,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FL-3",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            51.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FL-4",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            62.0,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FL-5",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            72.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FL-6",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            83.0,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Rail Bot FR",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 4.0,
+        "Length": 6.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            134.0,
+            234.0,
+            30.0
+          ]
+        },
+        "Width": 71.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Rail Top FR",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 5.0,
+        "Length": 7.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            133.5,
+            234.0,
+            60.0
+          ]
+        },
+        "Width": 71.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FR-0",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            237.0,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FR-1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            247.83333333333334,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FR-2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            258.6666666666667,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FR-3",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            269.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FR-4",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            280.3333333333333,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FR-5",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            291.1666666666667,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster FR-6",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            135.5,
+            302.0,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Rail Bot SL",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 4.0,
+        "Length": 123.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            10.0,
+            3.0,
+            30.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Rail Top SL",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 5.0,
+        "Length": 123.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            10.0,
+            2.5,
+            60.0
+          ]
+        },
+        "Width": 7.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SL-0",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            13.0,
+            4.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SL-1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            23.636363636363637,
+            4.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SL-2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            34.27272727272727,
+            4.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SL-3",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            44.90909090909091,
+            4.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SL-4",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            55.54545454545455,
+            4.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SL-5",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            66.18181818181819,
+            4.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SL-6",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            76.81818181818181,
+            4.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SL-7",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            87.45454545454545,
+            4.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SL-8",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            98.0909090909091,
+            4.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SL-9",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            108.72727272727273,
+            4.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SL-10",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            119.36363636363637,
+            4.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SL-11",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            130.0,
+            4.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Rail Bot SR",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 4.0,
+        "Length": 123.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            10.0,
+            311.0,
+            30.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Rail Top SR",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 5.0,
+        "Length": 123.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            10.0,
+            310.5,
+            60.0
+          ]
+        },
+        "Width": 7.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SR-0",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            13.0,
+            312.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SR-1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            23.636363636363637,
+            312.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SR-2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            34.27272727272727,
+            312.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SR-3",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            44.90909090909091,
+            312.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SR-4",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            55.54545454545455,
+            312.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SR-5",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            66.18181818181819,
+            312.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SR-6",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            76.81818181818181,
+            312.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SR-7",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            87.45454545454545,
+            312.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SR-8",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            98.0909090909091,
+            312.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SR-9",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            108.72727272727273,
+            312.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SR-10",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            119.36363636363637,
+            312.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Baluster SR-11",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 26.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            130.0,
+            312.5,
+            34.0
+          ]
+        },
+        "Width": 3.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "House Wall",
+      "parameters": {
+        "Color": "#E7D8B8",
+        "Height": 235.0,
+        "Length": 14.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -14.0,
+            0.0,
+            0.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 0",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            12.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 1",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            26.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 2",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            40.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 3",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            54.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 4",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            68.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 5",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            82.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 6",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            96.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 7",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            110.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 8",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            124.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 9",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            138.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 10",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            152.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 11",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            166.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 12",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            180.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 13",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            194.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 14",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            208.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Siding 15",
+      "parameters": {
+        "Color": "#D8C6A0",
+        "Height": 1.2,
+        "Length": 1.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            222.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Corner Left",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 235.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -3.0,
+            -2.0,
+            0.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Corner Right",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 235.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -3.0,
+            316.0,
+            0.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Water Table",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -4.0,
+            0.0,
+            0.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Frieze",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 9.0,
+        "Length": 5.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -5.0,
+            0.0,
+            227.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Door",
+      "parameters": {
+        "Color": "#7E3B33",
+        "Height": 118.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            132.0,
+            20.0
+          ]
+        },
+        "Width": 56.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Door Casing Top",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 8.0,
+        "Length": 6.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -1.0,
+            126.0,
+            138.0
+          ]
+        },
+        "Width": 68.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Door Casing Left",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 124.0,
+        "Length": 6.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -1.0,
+            126.0,
+            20.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Door Casing Right",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 124.0,
+        "Length": 6.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -1.0,
+            182.0,
+            20.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Door Panel Low",
+      "parameters": {
+        "Color": "#8E4A40",
+        "Height": 40.0,
+        "Length": 1.5,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            4.0,
+            138.0,
+            30.0
+          ]
+        },
+        "Width": 44.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Door Panel Mid",
+      "parameters": {
+        "Color": "#8E4A40",
+        "Height": 34.0,
+        "Length": 1.5,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            4.0,
+            138.0,
+            74.0
+          ]
+        },
+        "Width": 44.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Door Glass",
+      "parameters": {
+        "Color": "#9FC1D6",
+        "Height": 24.0,
+        "Length": 1.5,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            4.0,
+            138.0,
+            110.0
+          ]
+        },
+        "Width": 44.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Door Knob",
+      "parameters": {
+        "Angle1": -90.0,
+        "Angle2": 90.0,
+        "Angle3": 360.0,
+        "Color": "#C9A24B",
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            6.0,
+            178.0,
+            78.0
+          ]
+        },
+        "Radius": 2.6
+      },
+      "shape": "Part::Sphere",
+      "visible": true
+    },
+    {
+      "name": "Welcome Mat",
+      "parameters": {
+        "Color": "#5A4632",
+        "Height": 0.6,
+        "Length": 16.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            4.0,
+            140.0,
+            20.0
+          ]
+        },
+        "Width": 40.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Glass G1",
+      "parameters": {
+        "Color": "#9FC1D6",
+        "Height": 62.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            41.0,
+            67.0
+          ]
+        },
+        "Width": 46.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Top G1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            35.0,
+            129.0
+          ]
+        },
+        "Width": 58.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Sill G1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 5.0,
+        "Length": 6.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -1.0,
+            33.0,
+            62.0
+          ]
+        },
+        "Width": 62.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Left G1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 74.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            35.0,
+            61.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Right G1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 74.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            87.0,
+            61.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win MulV G1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 62.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.5,
+            63.0,
+            67.0
+          ]
+        },
+        "Width": 2.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win MulH G1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 2.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.5,
+            41.0,
+            97.0
+          ]
+        },
+        "Width": 46.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Shutter L G1",
+      "parameters": {
+        "Color": "#33475A",
+        "Height": 62.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            24.0,
+            67.0
+          ]
+        },
+        "Width": 10.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Shutter R G1",
+      "parameters": {
+        "Color": "#33475A",
+        "Height": 62.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            94.0,
+            67.0
+          ]
+        },
+        "Width": 10.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Glass G2",
+      "parameters": {
+        "Color": "#9FC1D6",
+        "Height": 62.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            233.0,
+            67.0
+          ]
+        },
+        "Width": 46.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Top G2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            227.0,
+            129.0
+          ]
+        },
+        "Width": 58.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Sill G2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 5.0,
+        "Length": 6.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -1.0,
+            225.0,
+            62.0
+          ]
+        },
+        "Width": 62.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Left G2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 74.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            227.0,
+            61.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Right G2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 74.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            279.0,
+            61.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win MulV G2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 62.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.5,
+            255.0,
+            67.0
+          ]
+        },
+        "Width": 2.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win MulH G2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 2.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.5,
+            233.0,
+            97.0
+          ]
+        },
+        "Width": 46.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Shutter L G2",
+      "parameters": {
+        "Color": "#33475A",
+        "Height": 62.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            216.0,
+            67.0
+          ]
+        },
+        "Width": 10.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Shutter R G2",
+      "parameters": {
+        "Color": "#33475A",
+        "Height": 62.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            286.0,
+            67.0
+          ]
+        },
+        "Width": 10.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Glass U1",
+      "parameters": {
+        "Color": "#9FC1D6",
+        "Height": 50.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            60.0,
+            175.0
+          ]
+        },
+        "Width": 40.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Top U1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            54.0,
+            225.0
+          ]
+        },
+        "Width": 52.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Sill U1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 5.0,
+        "Length": 6.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -1.0,
+            52.0,
+            170.0
+          ]
+        },
+        "Width": 56.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Left U1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 62.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            54.0,
+            169.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Right U1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 62.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            100.0,
+            169.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win MulV U1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 50.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.5,
+            79.0,
+            175.0
+          ]
+        },
+        "Width": 2.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win MulH U1",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 2.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.5,
+            60.0,
+            199.0
+          ]
+        },
+        "Width": 40.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Shutter L U1",
+      "parameters": {
+        "Color": "#33475A",
+        "Height": 50.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            43.0,
+            175.0
+          ]
+        },
+        "Width": 10.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Shutter R U1",
+      "parameters": {
+        "Color": "#33475A",
+        "Height": 50.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            107.0,
+            175.0
+          ]
+        },
+        "Width": 10.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Glass U2",
+      "parameters": {
+        "Color": "#9FC1D6",
+        "Height": 50.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            140.0,
+            175.0
+          ]
+        },
+        "Width": 40.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Top U2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            134.0,
+            225.0
+          ]
+        },
+        "Width": 52.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Sill U2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 5.0,
+        "Length": 6.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -1.0,
+            132.0,
+            170.0
+          ]
+        },
+        "Width": 56.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Left U2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 62.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            134.0,
+            169.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Right U2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 62.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            180.0,
+            169.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win MulV U2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 50.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.5,
+            159.0,
+            175.0
+          ]
+        },
+        "Width": 2.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win MulH U2",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 2.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.5,
+            140.0,
+            199.0
+          ]
+        },
+        "Width": 40.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Shutter L U2",
+      "parameters": {
+        "Color": "#33475A",
+        "Height": 50.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            123.0,
+            175.0
+          ]
+        },
+        "Width": 10.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Shutter R U2",
+      "parameters": {
+        "Color": "#33475A",
+        "Height": 50.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            187.0,
+            175.0
+          ]
+        },
+        "Width": 10.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Glass U3",
+      "parameters": {
+        "Color": "#9FC1D6",
+        "Height": 50.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            220.0,
+            175.0
+          ]
+        },
+        "Width": 40.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Top U3",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            214.0,
+            225.0
+          ]
+        },
+        "Width": 52.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Sill U3",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 5.0,
+        "Length": 6.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -1.0,
+            212.0,
+            170.0
+          ]
+        },
+        "Width": 56.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Left U3",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 62.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            214.0,
+            169.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win Right U3",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 62.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            260.0,
+            169.0
+          ]
+        },
+        "Width": 6.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win MulV U3",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 50.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.5,
+            239.0,
+            175.0
+          ]
+        },
+        "Width": 2.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Win MulH U3",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 2.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.5,
+            220.0,
+            199.0
+          ]
+        },
+        "Width": 40.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Shutter L U3",
+      "parameters": {
+        "Color": "#33475A",
+        "Height": 50.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            203.0,
+            175.0
+          ]
+        },
+        "Width": 10.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Shutter R U3",
+      "parameters": {
+        "Color": "#33475A",
+        "Height": 50.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -0.5,
+            267.0,
+            175.0
+          ]
+        },
+        "Width": 10.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Porch Roof",
+      "parameters": {
+        "Color": "#464C55",
+        "Height": 5.0,
+        "Length": 195.0,
+        "Placement": {
+          "Angle": 10.0,
+          "Axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "Position": [
+            -22.0,
+            -12.0,
+            176.0
+          ]
+        },
+        "Width": 344.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Roof Ledger",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 6.0,
+        "Length": 4.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -4.0,
+            0.0,
+            172.0
+          ]
+        },
+        "Width": 320.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Chimney",
+      "parameters": {
+        "Color": "#9E4B3B",
+        "Height": 46.0,
+        "Length": 16.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -16.0,
+            60.0,
+            225.0
+          ]
+        },
+        "Width": 24.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Chimney Cap",
+      "parameters": {
+        "Color": "#8C8577",
+        "Height": 4.0,
+        "Length": 20.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            -18.0,
+            58.0,
+            271.0
+          ]
+        },
+        "Width": 28.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Lantern Plate L",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 12.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            114.0,
+            150.0
+          ]
+        },
+        "Width": 8.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Lantern Light L",
+      "parameters": {
+        "Angle1": -90.0,
+        "Angle2": 90.0,
+        "Angle3": 360.0,
+        "Color": "#F6E27A",
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            6.0,
+            118.0,
+            148.0
+          ]
+        },
+        "Radius": 4.0
+      },
+      "shape": "Part::Sphere",
+      "visible": true
+    },
+    {
+      "name": "Lantern Plate R",
+      "parameters": {
+        "Color": "#F3F0E7",
+        "Height": 12.0,
+        "Length": 3.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            0.0,
+            196.0,
+            150.0
+          ]
+        },
+        "Width": 8.0
+      },
+      "shape": "Part::Box",
+      "visible": true
+    },
+    {
+      "name": "Lantern Light R",
+      "parameters": {
+        "Angle1": -90.0,
+        "Angle2": 90.0,
+        "Angle3": 360.0,
+        "Color": "#F6E27A",
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            6.0,
+            200.0,
+            148.0
+          ]
+        },
+        "Radius": 4.0
+      },
+      "shape": "Part::Sphere",
+      "visible": true
+    },
+    {
+      "name": "Pot L",
+      "parameters": {
+        "Angle": 360.0,
+        "Color": "#B5623B",
+        "Height": 14.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            22.0,
+            116.0,
+            20.0
+          ]
+        },
+        "Radius": 9.0
+      },
+      "shape": "Part::Cylinder",
+      "visible": true
+    },
+    {
+      "name": "Shrub L",
+      "parameters": {
+        "Angle1": -90.0,
+        "Angle2": 90.0,
+        "Angle3": 360.0,
+        "Color": "#4E7A3A",
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            22.0,
+            116.0,
+            42.0
+          ]
+        },
+        "Radius": 12.0
+      },
+      "shape": "Part::Sphere",
+      "visible": true
+    },
+    {
+      "name": "Shrub Top L",
+      "parameters": {
+        "Angle1": -90.0,
+        "Angle2": 90.0,
+        "Angle3": 360.0,
+        "Color": "#5E8C45",
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            22.0,
+            122.0,
+            52.0
+          ]
+        },
+        "Radius": 8.0
+      },
+      "shape": "Part::Sphere",
+      "visible": true
+    },
+    {
+      "name": "Pot R",
+      "parameters": {
+        "Angle": 360.0,
+        "Color": "#B5623B",
+        "Height": 14.0,
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            22.0,
+            204.0,
+            20.0
+          ]
+        },
+        "Radius": 9.0
+      },
+      "shape": "Part::Cylinder",
+      "visible": true
+    },
+    {
+      "name": "Shrub R",
+      "parameters": {
+        "Angle1": -90.0,
+        "Angle2": 90.0,
+        "Angle3": 360.0,
+        "Color": "#4E7A3A",
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            22.0,
+            204.0,
+            42.0
+          ]
+        },
+        "Radius": 12.0
+      },
+      "shape": "Part::Sphere",
+      "visible": true
+    },
+    {
+      "name": "Shrub Top R",
+      "parameters": {
+        "Angle1": -90.0,
+        "Angle2": 90.0,
+        "Angle3": 360.0,
+        "Color": "#5E8C45",
+        "Placement": {
+          "Angle": 0.0,
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Position": [
+            22.0,
+            210.0,
+            52.0
+          ]
+        },
+        "Radius": 8.0
+      },
+      "shape": "Part::Sphere",
+      "visible": true
+    }
+  ],
+  "options": {},
+  "outputs": {},
+  "schemaVersion": "3.0.0"
+}
