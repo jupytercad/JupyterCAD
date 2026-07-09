@@ -64,7 +64,7 @@ export class JupyterCadStepModelFactory implements DocumentRegistry.IModelFactor
    * @returns the file format
    */
   get fileFormat(): Contents.FileFormat {
-    return 'text';
+    return 'json';
   }
 
   /**

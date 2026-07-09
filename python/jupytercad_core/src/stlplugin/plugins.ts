@@ -83,9 +83,9 @@ const activate = async (
   app.docRegistry.addFileType({
     name: 'stl',
     displayName: 'STL',
-    mimeTypes: ['text/plain'],
+    mimeTypes: ['application/json'],
     extensions: ['.stl', '.STL'],
-    fileFormat: 'text',
+    fileFormat: 'json',
     icon: stlIcon
   });
 

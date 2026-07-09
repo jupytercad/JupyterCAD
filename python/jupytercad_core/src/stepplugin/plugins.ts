@@ -65,9 +65,9 @@ const activate = async (
   app.docRegistry.addFileType({
     name: 'step',
     displayName: 'STEP',
-    mimeTypes: ['text/plain'],
+    mimeTypes: ['application/json'],
     extensions: ['.step', '.STEP'],
-    fileFormat: 'text',
+    fileFormat: 'json',
     icon: stpIcon
   });
 

@@ -61,7 +61,7 @@ export class JupyterCadStlModelFactory implements DocumentRegistry.IModelFactory
    * @returns the file format
    */
   get fileFormat(): Contents.FileFormat {
-    return 'text';
+    return 'json';
   }
 
   /**
