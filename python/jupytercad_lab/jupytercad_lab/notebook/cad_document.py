@@ -545,9 +545,7 @@ class CadDocument(CommWidget):
     def add_sketch(
         self,
         name: str = "",
-        geometry: list[
-            geomCircle.IGeomCircle | geomLineSegment.IGeomLineSegment
-        ] = [],
+        geometry: list[geomCircle.IGeomCircle | geomLineSegment.IGeomLineSegment] = [],
         attachment_offset_position: list[float] = [0, 0, 0],
         attachment_offset_rotation_axis: list[float] = [0, 0, 1],
         attachment_offset_rotation_angle: float = 0,
@@ -977,7 +975,21 @@ class PythonJcadObject(BaseModel):
 
     name: str
     shape: Parts
-    parameters: IAny | IBox | ICone | ICut | ICylinder | IExtrusion | IIntersection | IFuse | ISphere | ITorus | ISketchObject | IFillet | IChamfer
+    parameters: (
+        IAny
+        | IBox
+        | ICone
+        | ICut
+        | ICylinder
+        | IExtrusion
+        | IIntersection
+        | IFuse
+        | ISphere
+        | ITorus
+        | ISketchObject
+        | IFillet
+        | IChamfer
+    )
     metadata: ShapeMetadata | None
     _caddoc = Optional[CadDocument]
     _parent = Optional[CadDocument]
