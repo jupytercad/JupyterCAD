@@ -1,9 +1,9 @@
 import json
 from pathlib import Path
 
-from jupyter_server.base.handlers import APIHandler
-from jupyter_server.utils import url_path_join, ApiPath, to_os_path
 import tornado
+from jupyter_server.base.handlers import APIHandler
+from jupyter_server.utils import ApiPath, to_os_path, url_path_join
 
 from .schema import SCHEMA_VERSION
 
