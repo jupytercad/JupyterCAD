@@ -54,3 +54,7 @@ repos:
           - '@typescript-eslint/eslint-plugin@5.55.0'
           - '@typescript-eslint/parser@5.55.0'
           - 'eslint-plugin-react-hooks@4.6.2'
+          # Pin typescript: it is an unpinned peer dep of @typescript-eslint 5,
+          # and npm now resolves it to TS 7, whose entry point drops the
+          # compiler API the plugin reads at load time.
+          - 'typescript@~5.9.0'
