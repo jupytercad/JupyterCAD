@@ -14,4 +14,4 @@ from .interfaces.any import IAny  # noqa
 from .interfaces.sketch import ISketchObject  # noqa
 from .interfaces.jcad import IJCadContent
 
-SCHEMA_VERSION = IJCadContent.model_fields["schemaVersion"].default  # noqa
+SCHEMA_VERSION = IJCadContent.model_fields["schemaVersion"].default

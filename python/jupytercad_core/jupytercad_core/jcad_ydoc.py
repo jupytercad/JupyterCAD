@@ -1,11 +1,11 @@
 import json
-from typing import Any, Callable
+from collections.abc import Callable
 from functools import partial
+from typing import Any
 
-from packaging.version import Version
-
-from pycrdt import Array, Map, Text
 from jupyter_ydoc.ybasedoc import YBaseDoc
+from packaging.version import Version
+from pycrdt import Array, Map, Text
 
 from .schema import SCHEMA_VERSION
 

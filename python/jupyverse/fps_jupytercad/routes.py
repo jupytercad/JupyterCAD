@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from jupyverse_api import Router
-from jupyverse_api.auth import Auth, User
 from jupyverse_api.app import App
+from jupyverse_api.auth import Auth, User
 from starlette.requests import Request
 
 from .models import Backend, Install

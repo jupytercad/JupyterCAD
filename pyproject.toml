@@ -41,3 +41,7 @@ ignore = ["W002"]
 extend-exclude = [
     "*.ipynb",
 ]
+
+[tool.ruff.lint]
+# Ruff 0.16 widened the default rule set; keep the previous defaults.
+select = ["E4", "E7", "E9", "F"]

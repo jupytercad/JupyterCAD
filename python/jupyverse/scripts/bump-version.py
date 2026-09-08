@@ -4,9 +4,10 @@
 # Distributed under the terms of the Modified BSD License.import click
 
 import argparse
-from packaging.version import parse as parse_version
 from pathlib import Path
 from subprocess import run
+
+from packaging.version import parse as parse_version
 
 ENC = dict(encoding="utf-8")
 HATCH_VERSION = "hatch version"

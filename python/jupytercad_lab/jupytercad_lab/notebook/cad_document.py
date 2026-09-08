@@ -4,33 +4,31 @@ import json
 import logging
 import tempfile
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
-
-from pycrdt import Array, Doc, Map, Text
-from pydantic import BaseModel
-from ypywidgets.comm import CommWidget
-
+from typing import Any, Optional
 from uuid import uuid4
 
 from jupytercad_core.schema import (
+    SCHEMA_VERSION,
+    IAny,
     IBox,
+    IChamfer,
     ICone,
     ICut,
     ICylinder,
     IExtrusion,
+    IFillet,
     IFuse,
     IIntersection,
-    ISphere,
-    IChamfer,
-    IFillet,
-    ITorus,
     ISketchObject,
+    ISphere,
+    ITorus,
     Parts,
     ShapeMetadata,
-    IAny,
-    SCHEMA_VERSION,
 )
-from jupytercad_core.schema.interfaces import geomLineSegment, geomCircle
+from jupytercad_core.schema.interfaces import geomCircle, geomLineSegment
+from pycrdt import Array, Doc, Map, Text
+from pydantic import BaseModel
+from ypywidgets.comm import CommWidget
 
 logger = logging.getLogger(__file__)
 
@@ -43,7 +41,7 @@ class CadDocument(CommWidget):
     If not provided, a new empty document will be created.
     """
 
-    def __init__(self, path: Optional[str] = None):
+    def __init__(self, path: str | None = None):
         comm_metadata = CadDocument._path_to_comm(path)
 
         ydoc = Doc()
@@ -60,7 +58,7 @@ class CadDocument(CommWidget):
         self.ydoc["options"] = self._options = Map()
 
     @property
-    def objects(self) -> List[str]:
+    def objects(self) -> list[str]:
         """
         Get the list of objects that the document contains as a list of strings.
         """
@@ -112,7 +110,7 @@ class CadDocument(CommWidget):
             json.dump(content, f, indent=4)
 
     @classmethod
-    def _path_to_comm(cls, filePath: Optional[str]) -> Dict:
+    def _path_to_comm(cls, filePath: str | None) -> dict:
         path = None
         format = None
         contentType = None
@@ -136,7 +134,7 @@ class CadDocument(CommWidget):
             path=path, format=format, contentType=contentType, createydoc=path is None
         )
 
-    def get_object(self, name: str) -> Optional["PythonJcadObject"]:
+    def get_object(self, name: str) -> PythonJcadObject | None:
         if self.check_exist(name):
             data = self._get_yobject_by_name(name).to_py()
             return OBJECT_FACTORY.create_object(data, self)
@@ -182,7 +180,7 @@ class CadDocument(CommWidget):
         self.add_object(new_obj).remove(old_name)
         return self
 
-    def add_object(self, new_object: "PythonJcadObject") -> CadDocument:
+    def add_object(self, new_object: PythonJcadObject) -> CadDocument:
         if self._objects_array is not None and not self.check_exist(new_object.name):
             obj_dict = json.loads(new_object.model_dump_json())
             obj_dict["visible"] = True
@@ -197,9 +195,9 @@ class CadDocument(CommWidget):
         parent: str,
         message: str,
         *,
-        position: Optional[List[float]] = None,
-        user: Optional[Dict] = None,
-    ) -> Optional[str]:
+        position: list[float] | None = None,
+        user: dict | None = None,
+    ) -> str | None:
         """
         Add an annotation to the document.
 
@@ -244,8 +242,8 @@ class CadDocument(CommWidget):
         self,
         path: str,
         name: str = "",
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         shape_name = name if name else Path(path).stem
@@ -279,8 +277,8 @@ class CadDocument(CommWidget):
         self,
         shape,
         name: str = "",
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -334,8 +332,8 @@ class CadDocument(CommWidget):
         width: float = 1,
         height: float = 1,
         color: str = "#808080",
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -376,8 +374,8 @@ class CadDocument(CommWidget):
         height: float = 1,
         angle: float = 360,
         color: str = "#808080",
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -393,7 +391,7 @@ class CadDocument(CommWidget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """  # noqa 501
+        """
         data = {
             "shape": Parts.Part__Cone.value,
             "name": name if name else self._new_name("Cone"),
@@ -419,8 +417,8 @@ class CadDocument(CommWidget):
         height: float = 1,
         angle: float = 360,
         color: str = "#808080",
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -435,7 +433,7 @@ class CadDocument(CommWidget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """  # noqa E501
+        """
         data = {
             "shape": Parts.Part__Cylinder.value,
             "name": name if name else self._new_name("Cylinder"),
@@ -461,8 +459,8 @@ class CadDocument(CommWidget):
         angle2: float = 90,
         angle3: float = 360,
         color: str = "#808080",
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -478,7 +476,7 @@ class CadDocument(CommWidget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """  # noqa E501
+        """
         data = {
             "shape": Parts.Part__Sphere.value,
             "name": name if name else self._new_name("Sphere"),
@@ -506,8 +504,8 @@ class CadDocument(CommWidget):
         angle2: float = 180,
         angle3: float = 360,
         color: str = "#808080",
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -524,7 +522,7 @@ class CadDocument(CommWidget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """  # noqa E501
+        """
         data = {
             "shape": Parts.Part__Torus.value,
             "name": name if name else self._new_name("Torus"),
@@ -547,15 +545,13 @@ class CadDocument(CommWidget):
     def add_sketch(
         self,
         name: str = "",
-        geometry: List[
-            Union[geomCircle.IGeomCircle, geomLineSegment.IGeomLineSegment]
-        ] = [],
-        attachment_offset_position: List[float] = [0, 0, 0],
-        attachment_offset_rotation_axis: List[float] = [0, 0, 1],
+        geometry: list[geomCircle.IGeomCircle | geomLineSegment.IGeomLineSegment] = [],
+        attachment_offset_position: list[float] = [0, 0, 0],
+        attachment_offset_rotation_axis: list[float] = [0, 0, 1],
         attachment_offset_rotation_angle: float = 0,
         color: str = "#808080",
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -598,9 +594,9 @@ class CadDocument(CommWidget):
         base: str | int = None,
         tool: str | int = None,
         refine: bool = False,
-        color: Optional[str] = None,
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        color: str | None = None,
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -615,7 +611,7 @@ class CadDocument(CommWidget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """  # noqa E501
+        """
         base, tool = self._get_boolean_operands(base, tool)
 
         # Use specified color or fall back to the base object's color
@@ -647,9 +643,9 @@ class CadDocument(CommWidget):
         shape1: str | int = None,
         shape2: str | int = None,
         refine: bool = False,
-        color: Optional[str] = None,
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        color: str | None = None,
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -664,7 +660,7 @@ class CadDocument(CommWidget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """  # noqa E501
+        """
         shape1, shape2 = self._get_boolean_operands(shape1, shape2)
 
         # Use specified color or fall back to the base object's color
@@ -695,9 +691,9 @@ class CadDocument(CommWidget):
         shape1: str | int = None,
         shape2: str | int = None,
         refine: bool = False,
-        color: Optional[str] = None,
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        color: str | None = None,
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -713,7 +709,7 @@ class CadDocument(CommWidget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """  # noqa E501
+        """
         shape1, shape2 = self._get_boolean_operands(shape1, shape2)
 
         # Use specified color or fall back to the base object's color
@@ -742,13 +738,13 @@ class CadDocument(CommWidget):
         self,
         name: str = "",
         shape: str | int = None,
-        direction: List[float] = [0, 0, 1],
+        direction: list[float] = [0, 0, 1],
         length_fwd: float = 10,
         length_rev: float = 0,
         solid: bool = False,
-        color: Optional[str] = None,
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        color: str | None = None,
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -798,9 +794,9 @@ class CadDocument(CommWidget):
         shape: str | int = None,
         edge: int = 0,
         dist: float = 0.1,
-        color: Optional[str] = None,
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        color: str | None = None,
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -816,7 +812,7 @@ class CadDocument(CommWidget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """  # noqa E501
+        """
         shape = self._get_operand(shape)
 
         # Use specified color or fall back to the base object's color
@@ -847,9 +843,9 @@ class CadDocument(CommWidget):
         shape: str | int = None,
         edge: int = 0,
         radius: float = 0.1,
-        color: Optional[str] = None,
-        position: List[float] = [0, 0, 0],
-        rotation_axis: List[float] = [0, 0, 1],
+        color: str | None = None,
+        position: list[float] = [0, 0, 0],
+        rotation_axis: list[float] = [0, 0, 1],
         rotation_angle: float = 0,
     ) -> CadDocument:
         """
@@ -865,7 +861,7 @@ class CadDocument(CommWidget):
         :param rotation_axis: The 3D axis used for the rotation.
         :param rotation_angle: The shape rotation angle, in degrees.
         :return: The document itself.
-        """  # noqa E501
+        """
         shape = self._get_operand(shape)
 
         # Use specified color or fall back to the base object's color
@@ -904,7 +900,7 @@ class CadDocument(CommWidget):
     def _get_boolean_operands(self, shape1: str | int | None, shape2: str | int | None):
         if len(self.objects) < 2:
             raise ValueError(
-                "Cannot apply boolean operator if there are less than two objects in the document."  # noqa E501
+                "Cannot apply boolean operator if there are less than two objects in the document."
             )
 
         shape1 = self._get_operand(shape1, -2)
@@ -919,7 +915,7 @@ class CadDocument(CommWidget):
         :param name: The name of the object.
         :param value: The visibility value (True or False).
         """
-        obj: Optional[Map] = self._get_yobject_by_name(name)
+        obj: Map | None = self._get_yobject_by_name(name)
 
         if obj is None:
             raise RuntimeError(f"No object named {name}")
@@ -933,7 +929,7 @@ class CadDocument(CommWidget):
         :param name: The name of the object.
         :param value: The color in hex format (e.g., "#FF5733").
         """
-        obj: Optional[Map] = self._get_yobject_by_name(name)
+        obj: Map | None = self._get_yobject_by_name(name)
 
         if obj is None:
             raise RuntimeError(f"No object named {name}")
@@ -946,7 +942,7 @@ class CadDocument(CommWidget):
             return name in self.objects
         return False
 
-    def _get_yobject_by_name(self, name: str) -> Optional[Map]:
+    def _get_yobject_by_name(self, name: str) -> Map | None:
         if self._objects_array:
             for index, item in enumerate(self._objects_array):
                 if item["name"] == name:
@@ -979,26 +975,26 @@ class PythonJcadObject(BaseModel):
 
     name: str
     shape: Parts
-    parameters: Union[
-        IAny,
-        IBox,
-        ICone,
-        ICut,
-        ICylinder,
-        IExtrusion,
-        IIntersection,
-        IFuse,
-        ISphere,
-        ITorus,
-        ISketchObject,
-        IFillet,
-        IChamfer,
-    ]
-    metadata: Optional[ShapeMetadata]
+    parameters: (
+        IAny
+        | IBox
+        | ICone
+        | ICut
+        | ICylinder
+        | IExtrusion
+        | IIntersection
+        | IFuse
+        | ISphere
+        | ITorus
+        | ISketchObject
+        | IFillet
+        | IChamfer
+    )
+    metadata: ShapeMetadata | None
     _caddoc = Optional[CadDocument]
     _parent = Optional[CadDocument]
 
-    def __init__(__pydantic_self__, parent, **data: Any) -> None:  # noqa
+    def __init__(__pydantic_self__, parent, **data: Any) -> None:
         super().__init__(**data)
         __pydantic_self__._caddoc = CadDocument()
         __pydantic_self__._caddoc.add_object(__pydantic_self__)
@@ -1017,15 +1013,15 @@ class SingletonMeta(type):
 
 class ObjectFactoryManager(metaclass=SingletonMeta):
     def __init__(self):
-        self._factories: Dict[str, type[BaseModel]] = {}
+        self._factories: dict[str, type[BaseModel]] = {}
 
     def register_factory(self, shape_type: str, cls: type[BaseModel]) -> None:
         if shape_type not in self._factories:
             self._factories[shape_type] = cls
 
     def create_object(
-        self, data: Dict, parent: Optional[CadDocument] = None
-    ) -> Optional[PythonJcadObject]:
+        self, data: dict, parent: CadDocument | None = None
+    ) -> PythonJcadObject | None:
         object_type = data.get("shape", None)
         name: str = data.get("name", None)
         meta = data.get("shapeMetadata", None)

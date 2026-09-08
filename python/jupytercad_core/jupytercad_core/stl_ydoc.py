@@ -1,9 +1,10 @@
 import json
-from typing import Any, Callable
+from collections.abc import Callable
 from functools import partial
+from typing import Any
 
-from pycrdt import Text
 from jupyter_ydoc.ybasedoc import YBaseDoc
+from pycrdt import Text
 
 from .schema import SCHEMA_VERSION
 

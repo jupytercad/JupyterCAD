@@ -3,11 +3,11 @@ try:
 except ImportError:
     __version__ = "dev"
 
-from typing import Dict
+
+from jupyter_core.paths import jupyter_path
+from jupyter_server.config_manager import recursive_update
 from jupyter_server.utils import url_path_join
 from jupyterlab_server.config import get_page_config as gpc
-from jupyter_server.config_manager import recursive_update
-from jupyter_core.paths import jupyter_path
 
 
 def get_page_config(base_url, app_name):
@@ -34,7 +34,7 @@ def get_page_config(base_url, app_name):
         "@jupyter/docprovider-extension",
         "yjs-widgets",
     ]
-    federated_extensions: Dict[str, Dict] = page_config["federated_extensions"]
+    federated_extensions: dict[str, dict] = page_config["federated_extensions"]
     page_config["federated_extensions"] = [
         x
         for x in federated_extensions
