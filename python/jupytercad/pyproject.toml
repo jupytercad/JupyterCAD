@@ -24,10 +24,10 @@ dependencies = [
   "jupytercad_core==3.4.2",
   "jupytercad_lab==3.4.2",
   "jupytercad_app==3.4.2",
-  "jupyter-collaboration>=4,<5",
-  "jupyter-docprovider>=2,<3",
-  "jupyter-server-ydoc>=2,<3",
-  "jupyter-collaboration-ui>=2,<3",
+  "jupyter-collaboration>=5,<6",
+  "jupyter-docprovider>=3,<4",
+  "jupyter-server-ydoc>=3,<4",
+  "jupyter-collaboration-ui>=3,<4",
   "jupyterlab>=4.6.0,<5",
 ]
 dynamic = ["version"]

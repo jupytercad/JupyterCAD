@@ -54,7 +54,7 @@
     "build:worker:prod": "webpack --config worker.webpack.config.js --mode=production"
   },
   "dependencies": {
-    "@jupyter/collaborative-drive": "^4 || ^5.0.0-alpha.0",
+    "@jupyter/collaborative-drive": "^5",
     "@jupytercad/base": "^3.4.2",
     "@jupytercad/occ-worker": "^3.4.2",
     "@jupytercad/schema": "^3.4.2",

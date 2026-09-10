@@ -52,7 +52,7 @@
     "build:app": "lerna run --ignore @jupytercad/jupytercad-lab build"
   },
   "resolutions": {
-    "@jupyter/ydoc": "^3.0.0 || ^4.0.0",
+    "@jupyter/ydoc": "^4.0.0",
     "@jupyterlab/apputils": "^4.6",
     "@lumino/coreutils": "^2.0.0",
     "@lumino/widgets": "^2.8.0",

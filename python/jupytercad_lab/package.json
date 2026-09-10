@@ -51,7 +51,8 @@
     "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
-    "@jupyter/collaborative-drive": "^4 || ^5.0.0-alpha.0",
+    "@jupyter/collaborative-drive": "^5",
+    "@jupyter/docprovider": "^5",
     "@jupytercad/base": "^3.4.2",
     "@jupytercad/jupytercad-core": "^3.4.2",
     "@jupytercad/schema": "^3.4.2",
