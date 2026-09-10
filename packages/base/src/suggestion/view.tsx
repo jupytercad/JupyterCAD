@@ -20,6 +20,39 @@ interface ISuggestionProps {
   model: SuggestionModel;
 }
 
+interface ISuggestionUserIconProps {
+  /*
+   * The user who created the suggestion.
+   **/
+  user?: User.IIdentity;
+}
+
+const SuggestionUserIcon = (props: ISuggestionUserIconProps): JSX.Element => {
+  const { user } = props;
+  const avatarUrl = user?.avatar_url;
+  const [avatarFailed, setAvatarFailed] = React.useState(false);
+
+  React.useEffect(() => setAvatarFailed(false), [avatarUrl]);
+
+  const showAvatar = !!avatarUrl && !avatarFailed;
+
+  return (
+    <div
+      title={`Created at: ${user?.display_name ?? ''}`}
+      className={'jcad-suggestion-tree-node-user'}
+      style={{
+        backgroundColor: showAvatar ? undefined : (user?.color ?? '#999999')
+      }}
+    >
+      {showAvatar ? (
+        <img src={avatarUrl} alt="" onError={() => setAvatarFailed(true)} />
+      ) : (
+        <span>{user?.initials ?? ''}</span>
+      )}
+    </div>
+  );
+};
+
 export const Suggestion = (props: ISuggestionProps): JSX.Element => {
   const [currentForkId, setCurrentForkId] = React.useState<
     string | undefined
@@ -114,13 +147,7 @@ export const Suggestion = (props: ISuggestionProps): JSX.Element => {
               >
                 <div title={metadata?.timestamp ?? ''}>
                   {opts.type === 'leaf' && (
-                    <div
-                      title={`Created at: ${userData?.display_name ?? ''}`}
-                      className={'jcad-suggestion-tree-node-user'}
-                      style={{ backgroundColor: userData?.color ?? '#999999' }}
-                    >
-                      <span>{userData?.initials ?? ''}</span>
-                    </div>
+                    <SuggestionUserIcon user={userData} />
                   )}
                   <span className="jcad-suggestion-tree-node-label">
                     {opts.node.label}
