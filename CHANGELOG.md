@@ -2,6 +2,40 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.4.3
+
+([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.4.2...51c0d19ee17bb9e97c26b5e5fa6b539514d7b31f))
+
+### Bugs fixed
+
+- Show profile pictures in the annotation panel and the suggestion tree [#2759](https://github.com/jupytercad/JupyterCAD/pull/2759) ([@arjxn-py](https://github.com/arjxn-py), [@martinRenou](https://github.com/martinRenou))
+- Fix: sharedModel.source should be a string, not JSON [#873](https://github.com/jupytercad/JupyterCAD/pull/873) ([@arjxn-py](https://github.com/arjxn-py), [@martinRenou](https://github.com/martinRenou))
+- Dispose underlying CAD model to fix multiple cursors [#870](https://github.com/jupytercad/JupyterCAD/pull/870) ([@arjxn-py](https://github.com/arjxn-py), [@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Update `jupyter-collaboration` version [#2762](https://github.com/jupytercad/JupyterCAD/pull/2762) ([@arjxn-py](https://github.com/arjxn-py), [@martinRenou](https://github.com/martinRenou))
+- Bump `yjs-widgets` to 0.6 so the Python pin matches the labextension [#2760](https://github.com/jupytercad/JupyterCAD/pull/2760) ([@arjxn-py](https://github.com/arjxn-py), [@trungleduc](https://github.com/trungleduc))
+- Fix Galata snapshot-update workflow for JupyterLab 4.6 [#875](https://github.com/jupytercad/JupyterCAD/pull/875) ([@arjxn-py](https://github.com/arjxn-py))
+- Update latest jupyter-ydoc + JupyterLab + Galata [#874](https://github.com/jupytercad/JupyterCAD/pull/874) ([@arjxn-py](https://github.com/arjxn-py), [@martinRenou](https://github.com/martinRenou))
+- Fix Read the Docs build: use supported build OS/tools [#872](https://github.com/jupytercad/JupyterCAD/pull/872) ([@arjxn-py](https://github.com/arjxn-py), [@martinRenou](https://github.com/martinRenou))
+- Update galata bot version [#865](https://github.com/jupytercad/JupyterCAD/pull/865) ([@arjxn-py](https://github.com/arjxn-py))
+
+### Other merged PRs
+
+- Update galata bot version [#864](https://github.com/jupytercad/JupyterCAD/pull/864) ([@arjxn-py](https://github.com/arjxn-py))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2026-04-03&to=2026-09-10&type=c))
+
+@arjxn-py ([activity](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Aarjxn-py+updated%3A2026-04-03..2026-09-10&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2026-04-03..2026-09-10&type=Issues)) | @trungleduc ([activity](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3Atrungleduc+updated%3A2026-04-03..2026-09-10&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.4.2
 
 ([Full Changelog](https://github.com/jupytercad/JupyterCAD/compare/@jupytercad/base@3.4.1...f61694fdbdb976f9defd677153c3e0ff9efd0a93))
@@ -18,8 +52,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/jupytercad/JupyterCAD/graphs/contributors?from=2026-03-24&to=2026-04-03&type=c))
 
 @martinRenou ([activity](https://github.com/search?q=repo%3Ajupytercad%2FJupyterCAD+involves%3AmartinRenou+updated%3A2026-03-24..2026-04-03&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.4.1
 

@@ -1,6 +1,6 @@
 {
   "name": "@jupytercad/jupytercad-lab",
-  "version": "3.4.2",
+  "version": "3.4.3",
   "description": "JupyterCad Lab extension.",
   "keywords": [
     "jupyter",
@@ -53,9 +53,9 @@
   "dependencies": {
     "@jupyter/collaborative-drive": "^5",
     "@jupyter/docprovider": "^5",
-    "@jupytercad/base": "^3.4.2",
-    "@jupytercad/jupytercad-core": "^3.4.2",
-    "@jupytercad/schema": "^3.4.2",
+    "@jupytercad/base": "^3.4.3",
+    "@jupytercad/jupytercad-core": "^3.4.3",
+    "@jupytercad/schema": "^3.4.3",
     "@jupyterlab/application": "^4.6",
     "@jupyterlab/apputils": "^4.6",
     "@jupyterlab/coreutils": "^6.6",
