@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^9.0.9",
-    "@jupyter/ydoc": "^3.0.0 || ^4.0.0",
+    "@jupyter/ydoc": "^4.0.0",
     "@jupyterlab/apputils": "^4.6",
     "@jupyterlab/coreutils": "^6.6",
     "@jupyterlab/docregistry": "^4.6",

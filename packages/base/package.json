@@ -35,9 +35,9 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@jupyter/collaboration": "^4",
-    "@jupyter/collaborative-drive": "^4 || ^5.0.0-alpha.0",
-    "@jupyter/ydoc": "^3.0.0 || ^4.0.0",
+    "@jupyter/collaboration": "^5",
+    "@jupyter/collaborative-drive": "^5",
+    "@jupyter/ydoc": "^4.0.0",
     "@jupytercad/occ-worker": "^3.4.2",
     "@jupytercad/schema": "^3.4.2",
     "@jupyterlab/application": "^4.6",
