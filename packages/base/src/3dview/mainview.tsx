@@ -597,9 +597,12 @@ export class MainView extends React.Component<IProps, IStates> {
 
     this._divRef.current?.appendChild(this._viewHelperDiv);
 
-    this._viewHelperDiv.addEventListener('pointerup', event =>
-      this._viewHelper.handleClick(event)
-    );
+    this._viewHelperDiv.addEventListener('pointerup', event => {
+      if (this._model.localState?.remoteUser) {
+        return;
+      }
+      this._viewHelper.handleClick(event);
+    });
   }
 
   animate = (): void => {
@@ -1456,6 +1459,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       if (remoteState.user?.username !== this.state.remoteUser?.username) {
         this.setState(old => ({ ...old, remoteUser: remoteState.user }));
+        this._controls.enabled = false;
       }
 
       // Sync selected
@@ -1475,6 +1479,7 @@ export class MainView extends React.Component<IProps, IStates> {
       // If we are unfollowing a remote user, we reset our camera to its old position
       if (this.state.remoteUser !== null) {
         this.setState(old => ({ ...old, remoteUser: null }));
+        this._controls.enabled = true;
         const camera = this._model.localState?.camera?.value;
 
         if (camera) {
