@@ -382,11 +382,23 @@ export class JupyterCadModel implements IJupyterCadModel {
       number,
       IJupyterCadClientState
     >;
+    this._unfollowIfUserLeft(changed.removed);
     this._clientStateChanged.emit(clients);
     if (changed.added.length || changed.removed.length) {
       this._userChanged.emit(this.users);
     }
   };
+
+  /**
+   * Stop following a user once they leave
+   */
+  private _unfollowIfUserLeft(removed?: number[]): void {
+    const followedClientId = this.localState?.remoteUser;
+
+    if (followedClientId !== undefined && removed?.includes(followedClientId)) {
+      this.setUserToFollow(undefined);
+    }
+  }
 
   private _connectSignal() {
     this._sharedModel.changed.connect(this._onSharedModelChanged);
