@@ -31,6 +31,10 @@ import {
   ExplodedView,
   SplitScreenSettings
 } from '../types';
+import {
+  CollaboratorPointers,
+  ICollaboratorPointer
+} from './collaboratorpointers';
 import { FollowIndicator } from './followindicator';
 import {
   BasicMesh,
@@ -72,6 +76,7 @@ interface IStates {
   loading: boolean;
   remoteUser?: User.IIdentity | null;
   annotations: IDict<IAnnotation>;
+  collaboratorPointers: IDict<User.IIdentity>;
   firstLoad: boolean;
   wireframe: boolean;
   transform: boolean;
@@ -123,6 +128,7 @@ export class MainView extends React.Component<IProps, IStates> {
       id: this._mainViewModel.id,
       loading: true,
       annotations: {},
+      collaboratorPointers: {},
       firstLoad: true,
       wireframe: false,
       transform: false,
@@ -378,6 +384,7 @@ export class MainView extends React.Component<IProps, IStates> {
 
       this._controls.addEventListener('change', () => {
         this._updateAnnotation();
+        this._updateCollaboratorPointerLabels();
       });
 
       this._controls.addEventListener(
@@ -1502,6 +1509,8 @@ export class MainView extends React.Component<IProps, IStates> {
     }
 
     // Displaying collaborators pointers
+    const visibleCollaborators: IDict<User.IIdentity> = {};
+
     clients.forEach((clientState, clientId) => {
       const pointer = clientState.pointer?.value;
 
@@ -1554,13 +1563,83 @@ export class MainView extends React.Component<IProps, IStates> {
         }
 
         collaboratorPointer.parent = parent;
+
+        if (clientState.user) {
+          visibleCollaborators[clientId] = clientState.user;
+        }
       } else {
         if (this._collaboratorPointers[clientId]) {
           this._collaboratorPointers[clientId].mesh.visible = false;
         }
       }
     });
+
+    this._updateCollaboratorPointers(visibleCollaborators);
   };
+
+  private _updateCollaboratorPointers(
+    collaborators: IDict<User.IIdentity>
+  ): void {
+    const previous = this.state.collaboratorPointers;
+    const changed =
+      Object.keys(previous).length !== Object.keys(collaborators).length ||
+      Object.keys(collaborators).some(
+        clientId =>
+          previous[clientId]?.username !== collaborators[clientId].username ||
+          previous[clientId]?.color !== collaborators[clientId].color ||
+          previous[clientId]?.avatar_url !== collaborators[clientId].avatar_url
+      );
+
+    if (changed) {
+      this.setState(old => ({ ...old, collaboratorPointers: collaborators }));
+    }
+
+    this._updateCollaboratorPointerLabels();
+  }
+
+  private _computeCollaboratorPointerPosition(clientId: string): THREE.Vector2 {
+    const mesh = this._collaboratorPointers[clientId]?.mesh;
+
+    if (!mesh) {
+      return new THREE.Vector2();
+    }
+
+    const canvas = this._renderer.domElement;
+    return projectVector({
+      vector: mesh.position,
+      camera: this._camera,
+      width: canvas.width,
+      height: canvas.height
+    });
+  }
+
+  private _computeCollaboratorPointers(): IDict<ICollaboratorPointer> {
+    const pointers: IDict<ICollaboratorPointer> = {};
+
+    for (const clientId in this.state.collaboratorPointers) {
+      pointers[clientId] = {
+        user: this.state.collaboratorPointers[clientId],
+        position: this._computeCollaboratorPointerPosition(clientId)
+      };
+    }
+
+    return pointers;
+  }
+
+  private _updateCollaboratorPointerLabels(): void {
+    for (const clientId in this.state.collaboratorPointers) {
+      const el = document.getElementById(`jcad-remote-pointer-${clientId}`);
+
+      if (!el) {
+        continue;
+      }
+
+      const screenPosition = this._computeCollaboratorPointerPosition(clientId);
+
+      el.style.left = `${Math.round(screenPosition.x)}px`;
+      el.style.top = `${Math.round(screenPosition.y)}px`;
+    }
+  }
 
   private _onSharedOptionsChanged(
     sender: IJupyterCadModel,
@@ -1929,6 +2008,7 @@ export class MainView extends React.Component<IProps, IStates> {
   private _handleWindowResize = (): void => {
     this.resizeCanvasToDisplaySize();
     this._updateAnnotation();
+    this._updateCollaboratorPointerLabels();
   };
 
   private _computeAnnotationPosition(annotation: IAnnotation): THREE.Vector2 {
@@ -2002,6 +2082,7 @@ export class MainView extends React.Component<IProps, IStates> {
       >
         <Spinner loading={this.state.loading} />
         <FollowIndicator remoteUser={this.state.remoteUser} />
+        <CollaboratorPointers clients={this._computeCollaboratorPointers()} />
         {Object.entries(this.state.annotations).map(([key, annotation]) => {
           if (!this._model.annotationModel) {
             return null;
