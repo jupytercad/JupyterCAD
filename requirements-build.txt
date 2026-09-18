@@ -1,6 +1,6 @@
 # minimum needed to build jupytercad.
 datamodel-code-generator>=0.23.0
-hatchling>=1.5.0,<2
+hatchling>=1.5.0,<1.32.2
 jupyter-collaboration>=5,<6
 jupyter-collaboration-ui>=3,<4
 jupyter-docprovider>=3,<4
