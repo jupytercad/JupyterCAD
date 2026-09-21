@@ -1594,7 +1594,7 @@ export class MainView extends React.Component<IProps, IStates> {
       this.setState(old => ({ ...old, collaboratorPointers: collaborators }));
     }
 
-    this._updateCollaboratorPointerLabels();
+    this._updateCollaboratorPointerLabels(true);
   }
 
   private _computeCollaboratorPointerPosition(clientId: string): THREE.Vector2 {
@@ -1626,7 +1626,7 @@ export class MainView extends React.Component<IProps, IStates> {
     return pointers;
   }
 
-  private _updateCollaboratorPointerLabels(): void {
+  private _updateCollaboratorPointerLabels(smooth = false): void {
     for (const clientId in this.state.collaboratorPointers) {
       const el = document.getElementById(`jcad-remote-pointer-${clientId}`);
 
@@ -1636,8 +1636,10 @@ export class MainView extends React.Component<IProps, IStates> {
 
       const screenPosition = this._computeCollaboratorPointerPosition(clientId);
 
-      el.style.left = `${Math.round(screenPosition.x)}px`;
-      el.style.top = `${Math.round(screenPosition.y)}px`;
+      // Only animate between pointer samples, never while the local camera
+      // moves, or the label would trail its own sphere.
+      el.classList.toggle('jcad-Remote-Pointer-Smooth', smooth);
+      el.style.transform = `translate3d(${Math.round(screenPosition.x)}px, ${Math.round(screenPosition.y)}px, 0)`;
     }
   }
 

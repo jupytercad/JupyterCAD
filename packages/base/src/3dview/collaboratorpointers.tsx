@@ -47,7 +47,9 @@ export const CollaboratorPointers = (props: IProps): JSX.Element => {
           key={clientId}
           id={`jcad-remote-pointer-${clientId}`}
           className="jcad-Remote-Pointer"
-          style={{ left: position.x, top: position.y }}
+          style={{
+            transform: `translate3d(${position.x}px, ${position.y}px, 0)`
+          }}
         >
           <div
             className="jcad-Remote-Pointer-Label"

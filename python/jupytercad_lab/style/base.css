@@ -372,8 +372,16 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
 
 .jcad-Remote-Pointer {
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 20;
   pointer-events: none;
+  will-change: transform;
+}
+
+/* Matched to the 100ms pointer throttle, so motion between samples is even. */
+.jcad-Remote-Pointer-Smooth {
+  transition: transform 100ms linear;
 }
 
 .jcad-Remote-Pointer-Label {
