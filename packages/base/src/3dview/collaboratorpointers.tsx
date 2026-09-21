@@ -1,3 +1,4 @@
+import { collaboratorPill } from '@jupyter/collaboration';
 import { IDict } from '@jupytercad/schema';
 import { User } from '@jupyterlab/services';
 import * as React from 'react';
@@ -12,31 +13,15 @@ interface IProps {
   clients: IDict<ICollaboratorPointer>;
 }
 
-const CollaboratorAvatar = (props: { user: User.IIdentity }): JSX.Element => {
+const CollaboratorPill = (props: { user: User.IIdentity }): JSX.Element => {
   const { user } = props;
-  const [avatarFailed, setAvatarFailed] = React.useState(false);
+  const host = React.useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => setAvatarFailed(false), [user.avatar_url]);
+  React.useEffect(() => {
+    host.current?.replaceChildren(collaboratorPill(user));
+  }, [user]);
 
-  const showAvatar = !!user.avatar_url && !avatarFailed;
-
-  return (
-    <div
-      className="jcad-Remote-Pointer-Avatar"
-      style={{ backgroundColor: showAvatar ? undefined : user.color }}
-      title={user.display_name}
-    >
-      {showAvatar ? (
-        <img
-          src={user.avatar_url}
-          alt=""
-          onError={() => setAvatarFailed(true)}
-        />
-      ) : (
-        <span>{user.initials ?? ''}</span>
-      )}
-    </div>
-  );
+  return <div className="jcad-Remote-Pointer-Pill-Host" ref={host} />;
 };
 
 export const CollaboratorPointers = (props: IProps): JSX.Element => {
@@ -51,15 +36,7 @@ export const CollaboratorPointers = (props: IProps): JSX.Element => {
             transform: `translate3d(${position.x}px, ${position.y}px, 0)`
           }}
         >
-          <div
-            className="jcad-Remote-Pointer-Label"
-            style={{ borderColor: user.color }}
-          >
-            <CollaboratorAvatar user={user} />
-            <span className="jcad-Remote-Pointer-Name">
-              {user.display_name}
-            </span>
-          </div>
+          <CollaboratorPill user={user} />
         </div>
       ))}
     </>

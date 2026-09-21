@@ -384,7 +384,13 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
   transition: transform 100ms linear;
 }
 
-.jcad-Remote-Pointer-Label {
+/* The pill comes from @jupyter/collaboration, whose own CSS is a CodeMirror
+   base theme and so only applies inside an editor. Restyle it here. */
+.jcad-Remote-Pointer-Pill-Host {
+  display: contents;
+}
+
+.jcad-Remote-Pointer .jp-remote-userFlag {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -400,7 +406,7 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
   line-height: 1.2;
 }
 
-.jcad-Remote-Pointer-Avatar {
+.jcad-Remote-Pointer .jp-remote-userFlag-avatar {
   width: 16px;
   height: 16px;
   flex: 0 0 auto;
@@ -413,13 +419,13 @@ div.jpcad-toolbar-widget > div.jp-Toolbar-item:last-child {
   font-size: 8px;
 }
 
-.jcad-Remote-Pointer-Avatar > img {
+.jcad-Remote-Pointer .jp-remote-userFlag-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.jcad-Remote-Pointer-Name {
+.jcad-Remote-Pointer .jp-remote-userFlag-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

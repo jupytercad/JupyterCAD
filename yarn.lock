@@ -721,9 +721,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyter/collaboration@npm:^5":
-  version: 5.0.3
-  resolution: "@jupyter/collaboration@npm:5.0.3"
+"@jupyter/collaboration@npm:^5.0.4":
+  version: 5.0.4
+  resolution: "@jupyter/collaboration@npm:5.0.4"
   dependencies:
     "@codemirror/state": ^6.2.0
     "@codemirror/view": ^6.7.0
@@ -740,7 +740,7 @@ __metadata:
     react: ^18.2.0
     y-protocols: ^1.0.5
     yjs: ^13.5.40
-  checksum: a07d5d15b831c91f696fd48031c1ffbf80b6c8f1384ac6f25e2c3ab7b9b88e4811ff9ff8a576f482b137a0b79d97a9f27ae69293958113bc05a00f2f4ccb1d1b
+  checksum: 8122bf86d1b5ee4f2f62783e62acfa44277b90e4f1571fd266c827a2732acb0c8a7bb6b04f64768416b89ebee424cce7ca58f65c42dfd861a0f5578b84cce20f
   languageName: node
   linkType: hard
 
@@ -821,7 +821,7 @@ __metadata:
   resolution: "@jupytercad/base@workspace:packages/base"
   dependencies:
     "@apidevtools/json-schema-ref-parser": ^9.0.9
-    "@jupyter/collaboration": ^5
+    "@jupyter/collaboration": ^5.0.4
     "@jupyter/collaborative-drive": ^5
     "@jupyter/ydoc": ^4.0.0
     "@jupytercad/occ-worker": ^3.4.4
@@ -865,7 +865,7 @@ __metadata:
   dependencies:
     "@codemirror/state": ^6.2.0
     "@codemirror/view": ^6.9.3
-    "@jupyter/collaboration": ^5
+    "@jupyter/collaboration": ^5.0.4
     "@jupyter/collaborative-drive": ^5
     "@jupyter/docprovider": ^5
     "@jupyter/ydoc": ^4.0.0
