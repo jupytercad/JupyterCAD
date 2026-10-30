@@ -1,6 +1,4 @@
-Please view our releasing guide on ReadTheDocs:
-
-<https://jupytercad.readthedocs.io/en/latest/releasing.html>
+Please view our [releasing guide](docs/source/releasing.rst) in the project documentation (published on [ReadTheDocs](https://jupytercad.readthedocs.io/) after each docs release).
 
 The sections below are kept for reference on manual PyPI/npm publishing.
 
